@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/financial-management/feature-home",
+  "sourceRoot": "libs/financial-management/feature-home/src",
+  "prefix": "cms",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/financial-management/feature-home"],
+      "options": {
+        "jestConfig": "libs/financial-management/feature-home/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/financial-management/feature-home/src/**/*.ts",
+          "libs/financial-management/feature-home/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

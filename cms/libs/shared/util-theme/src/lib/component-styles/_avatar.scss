@@ -1,0 +1,76 @@
+.app-c-avatar {
+  border-radius: $border-radius-xlg;
+  width: auto;
+  height: auto;
+  .profile-avatar {
+    border-radius: $border-radius-xlg;
+    width: $size-xxxx + $size-m;
+    height: $size-xxxx + $size-m;
+  }
+  .profile-text-avatar {
+    width: $size-xxxx + $size-m;
+    height: $size-xxxx + $size-m;
+    border-radius: $border-radius-xlg;
+    background-color: $app-primary-lighten;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-l;
+    text-transform: uppercase;
+    color: $white;
+    font-family: $font-family-light;
+    transition: ease-in all 0.3s;
+    line-height: $size-xxxx + $size-l;
+    padding-top: $size-s;
+    &:hover {
+      background: $app-primary !important;
+    }
+  }
+  &.avatar-lg {
+    width: $size-xxxx + $size-xx;
+    min-width: $size-xxxx + $size-xx;
+    height: $size-xxxx + $size-xx;
+    min-height: $size-xxxx + $size-xx;
+    .profile-avatar,
+    .profile-text-avatar {
+      width: $size-xxxx + $size-xx;
+      height: $size-xxxx + $size-xx;
+    }
+  }
+  &.avatar-sm {
+    width: $size-xxx + $size-m;
+    height: $size-xxx + $size-m;
+    min-width: $size-xxx + $size-m;
+    min-height: $size-xxx + $size-m;
+    .profile-avatar,
+    .profile-text-avatar {
+      width: $size-xxx + $size-m;
+      height: $size-xxx + $size-m;
+      font-size: $font-size-s;
+    }
+  }
+  &.avatar-xlg {
+    width: 110px;
+    height: 110px;
+    min-width: 110px;
+    min-height: 110px;
+    position: relative;
+    .profile-avatar,
+    .profile-text-avatar {
+      width: 110px;
+      height: 110px;
+      font-size: $font-size-xlg * 2;
+    }
+    &:before {
+      width: 120px;
+      height: 120px;
+      border: 1px solid #ddd;
+      content: '';
+      position: absolute;
+      border-radius: 100%;
+      left: -9px;
+      top: -9px;
+    }
+  }
+}

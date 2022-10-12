@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/system-config/domain/src",
+  "prefix": "system-config",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/system-config/domain"],
+      "options": {
+        "project": "libs/system-config/domain/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/system-config/domain/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/system-config/domain/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/system-config/domain"],
+      "options": {
+        "jestConfig": "libs/system-config/domain/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/system-config/domain/src/**/*.ts",
+          "libs/system-config/domain/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:system-config", "type:domain-logic"]
+}

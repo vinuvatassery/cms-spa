@@ -1,0 +1,232 @@
+<div class="add-client-wrapper" kendoRippleContainer>
+  <div class="add-client_left">
+    <!-- Case Navigation -->
+        <!-- Case Navigation -->
+    <case-management-case-navigation
+      [routes$]="routes$"
+      [completeStaus$]="completeStaus$"
+      [saveAndContinueClicked]="saveAndContinueEvent"
+    ></case-management-case-navigation>
+    <!-- Send Letter Side profile -->
+    <case-management-send-letter-profile
+      hidden
+    ></case-management-send-letter-profile>
+  </div>
+  <div class="add-client_right">
+    <!-- Breadcrumb Section -->
+    <section class="app-l-breadcrumb mb-1 py-0 fixed-top-breadcrumb">
+      <common-bread-crumb></common-bread-crumb>
+      <div class="breadcrumb-right app-c-split-button">
+        <kendo-splitbutton
+          [data]="saveForLaterData"
+          class="app-c-split-button app-dropdown-action"
+          buttonClass="k-split-button"
+          (click)="onSaveAndContinueClicked()"
+          [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }"
+        >
+          <div class="btn-inner-block">
+            <span  class="material-icons"  aria-label="save and continue"  aria-hidden="false" >save</span>
+            Save For Later
+          </div>
+          <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem>
+            <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                <label>   {{ dataItem.text }} </label>
+            </button>
+              <!-- <button
+                kendoButton
+                look="flat"
+                class="btn-h-danger"
+                (click)="onDiscardConfirmClicked()"
+                aria-label="discard changes"
+              >
+                <span
+                  class="material-icons"
+                  aria-label="discard changes"
+                  aria-hidden="true"
+                  >do_disturb_alt</span
+                >
+                <label>Discard Changes</label>
+              </button> -->
+              <!-- <button
+                kendoButton
+                look="flat"
+                class="btn-h-danger"
+                (click)="onDeleteConfirmClicked()"
+                aria-label="delete application"
+              >
+                <span
+                  class="material-icons"
+                  aria-label="delete application"
+                  aria-hidden="true"
+                  >delete</span
+                >
+                <label>Delete Application</label>
+              </button> -->
+        
+          </ng-template>
+        </kendo-splitbutton>
+      </div>
+    </section>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<!-- Finish the application later Modal -->
+<kendo-dialog
+  *ngIf="isShowSaveLaterPopup"
+  (close)="onCloseSaveLaterClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Finish the application later?"
+>
+  <section class="k-dialog-body">
+    <p class="text-muted mb-2">
+      The application status will be set to REJECT if not completed within 45
+      days. Select the case status below, specify if you need to send the client
+      a letter or email, then click “Save & Exit.”
+    </p>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel text="Assigned Case Worker">
+          <!-- <input kendoTextBox /> -->
+          <kendo-textbox aria-label="Assigned Case Worker"  [fillMode]="fillMode">   </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Case Status">
+          <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlCommonActions$ | async">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col mb-2">
+        <h5>Do you need to send the client a letter?</h5>
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper">
+            <input
+              type="radio"
+              aria-labelledby="send Letter"
+              kendoRadioButton
+              name="sendLetter"
+            />
+            <kendo-label
+              class="k-radio-label"
+              id="yes"
+              text="Yes"
+            ></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input
+              type="radio"
+              aria-labelledby="send Letter"
+              kendoRadioButton
+              name="sendLetter"
+            />
+            <kendo-label class="k-radio-label" id="No" text="No"></kendo-label>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          (click)="onCloseSaveLaterClicked()"
+          aria-label="cancel new case"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          [primary]="true"
+          (click)="onSendNewLetterClicked()"
+          aria-label="save and exit new case"
+        >
+          Save & Exit
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<!-- Delete Application Modal -->
+<kendo-dialog
+  *ngIf="isShowDeleteConfirmPopup"
+  (close)="onCloseDeleteConfirmClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Delete application?"
+>
+  <section class="k-dialog-body mb-2">
+    <p>
+      All progress will be lost and the client’s data will be permanently
+      deleted from the system.
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel delete"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="delete client’s data"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<!-- Discard Application Modal -->
+<kendo-dialog
+  *ngIf="isShowDiscardConfirmPopup"
+  (close)="onCloseDiscardConfirmClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Discard changes?"
+>
+  <section class="k-dialog-body mb-2">
+    <p>
+      All unsaved changes will be permanently lost, and you’ll be navigated back
+      to the client’s profile.
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel permanent delete"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label=" permanent delete"
+        >
+          Discard
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<!-- Send New Letter Modal -->
+<case-management-send-letter
+  *ngIf="isShowSendNewLetterPopup"
+  [data]="ScreenName"
+  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
+></case-management-send-letter>

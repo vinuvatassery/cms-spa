@@ -1,0 +1,236 @@
+<!-- Header Section -->
+<div class="block-section">
+  <h2>
+    <span
+      class="material-icons sidebar-menu_icon mr-1"
+      aria-label="user settings"
+      aria-hidden="true"
+    >
+      settings
+    </span>
+    Users
+  </h2>
+  <button
+    icon="add"
+    kendoButton
+    [primary]="true"
+    aria-label="add user"
+    class="add-button-top"
+    (click)="onUserDetailsClicked(false)"
+  >
+    User
+  </button>
+</div>
+
+<!-- Table Top Filter, Search and Export -->
+<div class="table-filter-section mat-form-no-b-space">
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel text="All Columns">
+      <kendo-dropdownlist fillMode="outline" [data]="usersFilterColumn$ | async"> </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons">search</span>
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox  fillMode="outline"> </kendo-textbox>
+      <!-- <input kendoTextBox /> -->
+    </kendo-floatinglabel>
+  </span>
+  <span>
+    <button kendoButton [primary]="true" look="flat" class="button-lg">
+      <span class="material-icons" aria-label="export" aria-invalid="true"
+        >exit_to_app</span
+      >Export
+    </button>
+  </span>
+</div>
+
+<!-- Sorted Info -->
+<div class="table-sorted-info">
+  Sorted by <span class="sort-items">Name</span>
+  <span class="sort-items">No Filters</span>
+  <span class="sort-items">All Columns</span>
+</div>
+
+<!-- User List table -->
+<div class="app-c-table">
+  <kendo-grid [data]="usersData$ | async" 
+  [pageable]="true"
+  [skip]="0"
+  [pageSize]="pageSize"
+  >
+    <kendo-grid-column field="name" title="Name" [width]="150">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          class="card-link-button"
+          aria-label="user name"
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          kendoPopoverAnchor
+        >
+          {{ dataItem.name }}
+        </button>
+        <!-- User Card -->
+        <kendo-popover #onUserProfileDetailsHovered width="330">
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="email" title="Email Address" [width]="200">
+    </kendo-grid-column>
+    <kendo-grid-column field="roleAssigned" title="Role Assigned" [width]="150">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="d-flex align-items-center">
+          <span class="role-identifier role-super-admins"></span
+          >{{ dataItem.roleAssigned }}
+        </span>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="lastModified" title="Last Modified" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column field="modifiedBy" title="Modified by" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column field="status" title="Status" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column
+      field=""
+      title=""
+      [width]="40"
+      class="text-center"
+      [sticky]="true"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <kendo-dropdownbutton
+        [data]="moreactions"
+        icon="more-vertical"
+        aria-label="more actions"
+        class="TableActionPopup app-dropdown-action"
+        buttonClass="k-icon-button"
+        [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+      >
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+            <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+            <label>   {{ dataItem.text }} </label>
+        </button>
+ 
+        </ng-template>
+      </kendo-dropdownbutton>
+
+        <!-- <div class="TableActionPopup">
+          <button
+            kendoButton
+            aria-label="user name"
+            [popover]="onTableActionClicked"
+            showOn="click"
+            kendoPopoverAnchor
+            class="k-icon-button "
+          >
+            <span class="material-icons" aria-label="action" aria-hidden="true"
+              >more_vert</span
+            >
+          </button>
+    
+          <kendo-popover #onTableActionClicked width="150" position="bottom">
+            <ng-template kendoPopoverBodyTemplate>
+              <div class="TableActionInner">
+                <button
+                  kendoButton
+                  icon="edit"
+                  look="flat"
+                  class="btn-h-primary"
+                  aria-label="edit user"
+                  (click)="onUserDetailsClicked(true)"
+                >
+                  Edit
+                </button>
+                <button
+                  kendoButton
+                  look="flat"
+                  class="btn-h-primary"
+                  aria-label="deactivate user"
+                  (click)="onUserDeactivateClicked()"
+                >
+                  <span
+                    class="material-icons"
+                    aria-label="deactivate"
+                    aria-hidden="true"
+                    >block</span
+                  >Deactivate
+                </button>
+                <button
+                  kendoButton
+                  icon="delete"
+                  look="flat"
+                  class="btn-h-danger"
+                  aria-label="delete user"
+                >
+                  Delete
+                </button>
+              </div>
+            </ng-template>
+          </kendo-popover>
+        </div> -->
+      </ng-template>
+    </kendo-grid-column>
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+      let-currentPage="currentPage">
+      <div class="grid-custom-paginationtemplates d-flex">
+
+        <div class="d-flex align-items-center">
+          <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
+          <label class="mr-1">Rows Per Page</label> 
+          <kendo-dropdownlist fillMode="outline" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
+            [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
+          <kendo-pager-info> </kendo-pager-info>
+          <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+
+        </div>
+        <div class="d-flex">
+
+          <kendo-pager-input></kendo-pager-input>
+
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+        </div>
+
+      </div>
+    </ng-template>
+  </kendo-grid>
+</div>
+<div class="mt-2 block-section">
+  <!-- Add User Button -->
+  <button
+    icon="add"
+    kendoButton
+    [primary]="true"
+    aria-label="add user"
+    (click)="onUserDetailsClicked(false)"
+  >
+    User
+  </button>
+</div>
+
+<!-- Add User Modal Html-->
+<kendo-dialog
+  *ngIf="isUserDetailsPopup"
+  (close)="onUserDetailsClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar>{{isEditUsersData ? 'Edit User' : 'Add New User'}}</kendo-dialog-titlebar>
+  <system-config-user-detail [isEditValue]="isEditUsersData" (isDeactivatePopupOpened)="onUserDetailsClosed()"></system-config-user-detail>
+</kendo-dialog>
+
+<!-- Deactivate User Modal Html-->
+<kendo-dialog
+  *ngIf="isUserDeactivatePopup"
+  (close)="onUserDeactivateClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Deactivate User </kendo-dialog-titlebar>
+  <system-config-deactivate-user-confirmation></system-config-deactivate-user-confirmation>
+</kendo-dialog>

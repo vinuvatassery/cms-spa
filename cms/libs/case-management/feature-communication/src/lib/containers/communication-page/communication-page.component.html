@@ -1,0 +1,9 @@
+<h1>case-management-communication</h1>
+
+<table class="table">
+  <tr *ngFor="let email of emails$ | async">
+    <td>{{ email.id }}</td>
+    <td>{{ email.name }}</td>
+    <td>{{ email.description }}</td>
+  </tr>
+</table>

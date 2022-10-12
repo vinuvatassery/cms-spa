@@ -1,0 +1,117 @@
+/*Expansion panel*/
+.app-c-expansion-panel {
+  margin: $size-0 !important;
+  padding-bottom: $size-0;
+  border: $size-0;
+  border-bottom: 1px solid lighten($theme-border, 5%);
+  width: 100%;
+  .k-expander-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+    flex-direction: row-reverse;
+    cursor: pointer;
+    padding: $size-xx $size-xlg;
+    .k-expander-indicator {
+      margin-left: $size-0;
+    }
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: $size-xx;
+      margin-left: 10px;
+      .material-icons {
+        font-size: $font-size-xl;
+      }
+    }
+  }
+  .k-expander-content {
+    padding: 0px 0 10px 24px;
+  }
+  &.k-state-focus {
+    box-shadow: none;
+  }
+  &.border-expansion-panel {
+    border: 1px solid $theme-border !important;
+    border-radius: $border-radius-sm;
+    display: block;
+    margin-top: $size-xlg !important;
+    .k-expander-header {
+      .k-expander-indicator {
+        display: none;
+      }
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: $size-xx;
+        margin-left: 0 !important;
+        justify-content: space-between;
+        width: 100%;
+        .header-content-label {
+          font-family: $font-family-bold;
+          font-size: $font-size-xl;
+        }
+      }
+      .small-dropdown-form {
+        .k-floating-label-container {
+          width: 120px;
+          padding: $size-0;
+          .k-label {
+            display: none;
+          }
+        }
+      }
+    }
+    .k-expander-content {
+      padding: $size-xlg $size-0;
+    }
+    &.k-expanded {
+      .k-expander-header {
+        background: material-color($hive-success-palette, 100);
+        color: $app-primary;
+      }
+    }
+  }
+}
+
+.block-sections-items {
+  border-left: $size-m solid $app-primary;
+  padding: $size-0 $size-xlg;
+  + .block-sections-items {
+    margin-top: 30px;
+  }
+  .permission-item-table {
+    th {
+      padding: $size-xx $size-0;
+      font-weight: normal;
+      font-family: $font-family-bold;
+      &.item-header-left {
+        text-align: left;
+        text-transform: uppercase;
+      }
+      &.item-header-center {
+        text-align: center;
+        width: 100px;
+      }
+    }
+    tr {
+      td {
+        padding: $size-xx $size-0;
+        border-bottom: 1px solid $theme-border;
+        &.item-data-left {
+          text-align: left;
+        }
+        &.item-data-center {
+          text-align: center;
+          width: 100px;
+        }
+      }
+      &:hover {
+        td {
+          background: lighten(material-color($hive-neutral-palette, 50), 2%);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+<div *ngIf="status$ | async as status">
+  <div
+    *ngIf="status.type === 'authenticated'"
+    class="circle-status auth-connecting"
+  ></div>
+
+  <div
+    *ngIf="status.type === 'Connected'"
+    class="circle-status auth-connected"
+  ></div>
+
+  <div
+    *ngIf="status.type === 'Reconnecting' || status === 'AutoReconnect'"
+    class="circle-status auth-reconnecting"
+  ></div>
+
+  <span
+    *ngIf="status.type === 'Disconnected'"
+    class="notification-badge auth-error"
+    >!</span
+  >
+  <div
+    *ngIf="status.type === 'Disconnected'"
+    class="circle-status auth-error"
+  ></div>
+</div>

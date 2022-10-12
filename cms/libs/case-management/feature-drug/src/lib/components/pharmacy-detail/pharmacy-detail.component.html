@@ -1,0 +1,164 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    To select a pharmacy, start typing the pharmacy name and/or number. If you
+    don’t see the correct one, click “Add New” to add a new pharmacy to the
+    master list.
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <div class="autoSelect-search mat-form-no-b-space">
+        <div class="global-search">
+          <span
+            class="material-icons global-search-icon"
+            aria-label="search pharmacy"
+            aria-hidden="true"
+            >search</span
+          >
+          <kendo-multicolumncombobox
+          fillMode="outline"
+            [data]="pharmacies$ | async"
+            textField="name"
+            valueField="id"
+            placeholder="Search Pharmacy Name/Number"
+            [(ngModel)]="filteredSelectedPharmacy"
+          >
+            <kendo-combobox-column [width]="250">
+              <ng-template
+                kendoMultiColumnComboBoxColumnCellTemplate
+                let-dataItem
+              >
+                <span class="pr-1">{{ dataItem.name }}</span>
+                <span class="pr-1"> {{ dataItem.id }}</span>
+                <span class="text-muted">{{ dataItem.address }}</span>
+              </ng-template>
+            </kendo-combobox-column>
+          </kendo-multicolumncombobox>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div>
+      <button
+        kendoButton
+        [primary]="true"
+        look="flat"
+        (click)="onOpenNewPharmacyClicked()"
+        *ngIf="!isEditPharmacy"
+        aria-label="add new pharmacy"
+      >
+        Add New
+      </button>
+      <button
+        kendoButton
+        class="k-danger-link"
+        *ngIf="isEditPharmacy"
+        aria-label="remove pharmacy"
+      >
+        Remove
+      </button>
+    </div>
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        (click)="onClosePharmacyClicked()"
+        aria-label="cancel adding pharmacy"
+      >
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="add or update pharmacy">
+        {{ isEditPharmacy ? 'Update' : 'Add' }}
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
+
+<!-- Add New Pharmacy Modal -->
+<kendo-dialog
+  *ngIf="isOpenNewPharmacyClicked"
+  (close)="onCloseNewPharmacyClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Add New Pharmacy </kendo-dialog-titlebar>
+  <section class="k-dialog-body">
+    <p class="text-muted mb-2">
+      Enter the pharmacy’s information, then click “Add” to add it to the master
+      list.
+    </p>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel text="Pharmacy Name and Number">
+          <input kendoTextBox aria-label="pharmacy name and number" />
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Pharmacy Phone Number">
+          <input kendoTextBox aria-label="pharmacy phone number" />
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Contact Name (optional)">
+          <input kendoTextBox aria-label="contact name optional" />
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Address line 1">
+          <input kendoTextBox aria-label="address line 1" />
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Address line 2 (optional)">
+          <input kendoTextBox aria-label="address line 2" />
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="City">
+          <input kendoTextBox aria-label="city" />
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col flex-col-6">
+        <kendo-floatinglabel text="State">
+          <kendo-dropdownlist [data]="ddlStates$ | async"> </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col flex-col-6">
+        <kendo-floatinglabel text="Zip">
+          <input kendoTextBox aria-label="zip" />
+        </kendo-floatinglabel>
+      </div>
+    </div>
+  </section>
+
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div>
+        <button
+          kendoButton
+          class="k-danger-link"
+          *ngIf="!isOpenNewPharmacyClicked"
+          aria-label="remove pharmacy"
+        >
+          Remove
+        </button>
+      </div>
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          (click)="onCloseNewPharmacyClicked()"
+          aria-label="cancel adding pharmacy"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="add pharmacy">
+          Add
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

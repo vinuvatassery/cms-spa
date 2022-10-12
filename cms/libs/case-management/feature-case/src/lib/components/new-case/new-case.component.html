@@ -1,0 +1,133 @@
+<section kendoRippleContainer>
+  <p class="text-muted mb-1">
+    Search CAREAssist and OHOP clients to see if they are already in the system
+    before starting an application.
+  </p>
+  <section>
+    <div class="flex-row">
+      <div class="flex-col">
+        <div class="global-search mat-form-no-b-space">
+          <span
+            class="material-icons global-search-icon"
+            aria-label="search case"
+            aria-hidden="true"
+            >search</span
+          >
+          <kendo-multicolumncombobox
+            [data]="caseSearchResults$ | async"
+            textField="name"
+            valueField="id"
+            placeholder="Search Case Name, Member ID or SSN"
+            fillMode="outline"
+          >
+            <kendo-combobox-column>
+              <ng-template
+                kendoMultiColumnComboBoxColumnCellTemplate
+                let-dataItem
+              >
+                <span class="pr-1">{{ dataItem.name }}</span>
+                <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
+                <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
+                <span class="text-muted">SSN {{ dataItem.ssn }}</span>
+              </ng-template>
+            </kendo-combobox-column>
+            <ng-template kendoMultiColumnComboBoxFooterTemplate>
+              <div class="app-c-globalSearch">
+                <div class="flex-row">
+                  <div class="flex-col">
+                    <p class="looking-for-message">
+                      Don’t see find who you are looking for?
+                    </p>
+                    <button
+                      aria-label=" create new case"
+                      kendoButton
+                      [primary]="true"
+                      class="btn-full-no-radius"
+                      (click)="onOpenProgramSelectionClicked()"
+                    >
+                      Create New Case
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-multicolumncombobox>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- Program Selection Modal -->
+<kendo-dialog
+  *ngIf="isProgramSelectionOpened"
+  (close)="onCloseProgramSelectionClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
+  title="Create New Case"
+  kendoTooltip
+>
+  <section class="k-dialog-body newcase">
+    <p class="text-muted mb-2">
+      All fields are required unless otherwise stated.
+    </p>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel text="Date Application Received">
+          <kendo-datepicker
+          [fillMode]="fillMode"
+            format="MM-dd-yyyy"
+            formatPlaceholder="formatPattern"
+            [(ngModel)]="currentDate" 
+          >
+          </kendo-datepicker>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Case Origin">
+          <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Case Owner">
+          <kendo-autocomplete [fillMode]="fillMode" [data]="caseOwners$ | async">
+          </kendo-autocomplete>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Program">
+          <kendo-dropdownlist
+          [fillMode]="fillMode"
+            [data]="ddlPrograms$ | async"
+            textField="value"
+            valueField="key"
+            [(ngModel)]="selectedProgram"
+          >
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          aria-label="cancel new case"
+          kendoButton
+          [primary]="true"
+          look="outline"
+        >
+          Cancel
+        </button>
+        <button
+          aria-label="save and continue"
+          kendoButton
+          [primary]="true"
+          (click)="onCreateCaseClicked()"
+        >
+          Save & Continue
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

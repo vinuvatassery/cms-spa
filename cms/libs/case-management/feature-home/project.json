@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/case-management/feature-home",
+  "sourceRoot": "libs/case-management/feature-home/src",
+  "prefix": "cms",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/case-management/feature-home"],
+      "options": {
+        "jestConfig": "libs/case-management/feature-home/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/case-management/feature-home/src/**/*.ts",
+          "libs/case-management/feature-home/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

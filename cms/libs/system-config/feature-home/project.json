@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/system-config/feature-home",
+  "sourceRoot": "libs/system-config/feature-home/src",
+  "prefix": "cms",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/system-config/feature-home"],
+      "options": {
+        "jestConfig": "libs/system-config/feature-home/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/system-config/feature-home/src/**/*.ts",
+          "libs/system-config/feature-home/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
