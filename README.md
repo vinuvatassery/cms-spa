@@ -1,20 +1,27 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+HIVE is the Web-based Case Management System for Oregon's HIV Care and Treatment Programs.
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+# Environment Setup
+> Install nodejs (https://nodejs.org, Use latest LTS version)
+> Install git (https://git-scm.com/downloads)
+> Install angular (npm install -g @angular/cli)\
+> Install NX (npm install -g nx https://nx.dev/l/a/getting-started/intro)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+# Build
+> npm install\
+> nx serve cms\
+> nx build cms --verbose
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+# Solution upgrade
+> do not use 'ng update', use 'nx migrate latest' instead (https://nx.dev/l/a/core-concepts/updating-nx)
+>> nx migrate latest\
+>> npm install\
+>> nx migrate --run-migrations
+# Branching Strategy
+> [Gitflow] (https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+# Versioning Strategy
+https://semver.org/
+
+# Commit message format
+https://www.conventionalcommits.org/en/v1.0.0-beta.2/

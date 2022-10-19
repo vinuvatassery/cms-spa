@@ -1,0 +1,109 @@
+<ul class="kendo-list-base with-heading-label">
+  <li class="sections-heading pt-0">
+    <div class="input-search">
+      <span class="material-icons" aria-label="search" aria-hidden="true"
+        >search</span
+      >
+      <kendo-floatinglabel text="Search" class="pb-0">
+        <kendo-textbox fillMode="outline" >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+  </li>
+  <li class="sections-heading bold-text text-capital mt-1 pl-2">
+    User Management
+  </li>
+  <li
+    class="kendo-list-items"
+    routerLink="/system-config/users"
+    [routerLinkActive]="['active-item']"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <span>Users</span>
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/roles-and-permissions"
+  >
+    <span>Roles & Permissions</span>
+  </li>
+  <li class="kendo-list-items">Case Managers</li>
+  <li class="sections-heading bold-text text-capital mt-1 pl-2">
+    Client Profile
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/pronouns"
+  >
+    Pronouns
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/gender"
+  >
+    Gender
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/sexual-orientation"
+  >
+    Sexual Orientation
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/racial-or-ethnic-identity"
+  >
+    Racial or Ethnic Identity
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/languages"
+  >
+    Languages
+  </li>
+  <li class="sections-heading bold-text text-capital mt-1 pl-2">
+    Housing Coordination
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/slots"
+  >
+    Slots
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/case-availability"
+  >
+    Case Availability
+  </li>
+  <li
+    class="kendo-list-items"
+    [routerLinkActive]="['active-item']"
+    routerLink="/system-config/eid-period"
+  >
+    EID Lifetime Period
+  </li>
+  <li class="kendo-list-items">Housing Actual Levels</li>
+  <li class="kendo-list-items">Income Inclusions & Exclusions</li>
+  <li class="kendo-list-items">Region Assignment</li>
+  <li class="kendo-list-items">PS/FMR/ZIP</li>
+  <li class="kendo-list-items">Service Providers</li>
+  <li class="sections-heading bold-text text-capital mt-1 pl-2">Financials</li>
+  <li class="kendo-list-items">Funds</li>
+  <li class="kendo-list-items">Expense Types</li>
+  <li class="kendo-list-items">Income Types</li>
+  <li class="kendo-list-items">Index</li>
+  <li class="kendo-list-items">PCA Codes</li>
+  <li class="sections-heading bold-text text-capital mt-1 pl-2">
+    Communication
+  </li>
+  <li class="kendo-list-items">Email Templates</li>
+</ul>

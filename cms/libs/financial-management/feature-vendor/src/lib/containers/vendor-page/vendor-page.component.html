@@ -1,0 +1,19 @@
+<common-bread-crumb></common-bread-crumb>
+<div class="app-l-inner-rapper pt-0">
+  <!-- Main Title Section -->
+  <section class="app-l-mainTittle">
+    <h2>
+      <span class="material-icons sidebar-menu_icon"> monetization_on </span>
+      Financial Management
+    </h2>
+  </section>
+  <section class="app-l-wrapper">
+    <table class="table">
+      <tr *ngFor="let vendor of vendors$ | async">
+        <td>{{ vendor.id }}</td>
+        <td>{{ vendor.name }}</td>
+        <td>{{ vendor.description }}</td>
+      </tr>
+    </table>
+  </section>
+</div>

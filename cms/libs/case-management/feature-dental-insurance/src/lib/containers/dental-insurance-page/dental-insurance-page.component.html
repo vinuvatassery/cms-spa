@@ -1,0 +1,9 @@
+<h1>case-management-dental-insurance</h1>
+
+<table class="table">
+  <tr *ngFor="let dentalInsurance of dentalInsurances$ | async">
+    <td>{{ dentalInsurance.id }}</td>
+    <td>{{ dentalInsurance.name }}</td>
+    <td>{{ dentalInsurance.description }}</td>
+  </tr>
+</table>

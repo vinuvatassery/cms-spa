@@ -1,0 +1,17 @@
+.card-buttons-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  .k-button {
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+.toggle-wrap {
+  cursor: pointer;
+}
+.top-lg-space {
+  margin-top: 100px;
+}

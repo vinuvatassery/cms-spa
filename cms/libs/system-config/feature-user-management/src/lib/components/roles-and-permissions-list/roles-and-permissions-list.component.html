@@ -1,0 +1,192 @@
+<!-- Header Section -->
+<div class="block-section">
+  <h2>
+    <span
+      class="material-icons sidebar-menu_icon mr-1"
+      aria-label="user settings"
+      aria-hidden="true"
+    >
+      settings
+    </span>
+    Roles & Permissions
+  </h2>
+  <button
+    icon="add"
+    kendoButton
+    [primary]="true"
+    aria-label="add role"
+    class="add-button-top"
+    (click)="onSelectRoleClicked()"
+  >
+    Role
+  </button>
+</div>
+<!-- Table Top Filter, Search and Export -->
+<div class="table-filter-section mat-form-no-b-space">
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel text="All Columns">
+      <kendo-dropdownlist fillMode="outline" [data]="ddlRolesAndPermissionsFilter$ | async"> </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons">search</span>
+    <kendo-floatinglabel text="Search">
+      <!-- <input kendoTextBox /> -->
+      <kendo-textbox  fillMode="outline"> </kendo-textbox>
+    </kendo-floatinglabel>
+  </span>
+  <!-- <span>
+    <button kendoButton [primary]="true" look="flat" class="button-lg">
+      <span class="material-icons" aria-label="export" aria-invalid="true"
+        >exit_to_app</span
+      >Export
+    </button>
+  </span> -->
+</div>
+
+<!-- Sorted Info -->
+<div class="table-sorted-info">
+  Sorted by <span class="sort-items">Name</span>
+  <span class="sort-items">No Filters</span>
+  <span class="sort-items">All Columns</span>
+</div>
+
+<!-- User List table -->
+<div class="app-c-table">
+  <kendo-grid [data]="usersRoleAndPermissions$ | async">
+    <kendo-grid-column field="roleName" title="Role Name" [width]="200">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="d-flex align-items-center">
+          <span class="role-identifier role-super-admins"></span
+          >{{ dataItem.roleName }}
+        </span>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="programAccess"
+      title="Program Access"
+      [width]="130"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="usersPerRole"
+      title="Users per Role"
+      [width]="120"
+      class="text-right"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column field="status" title="Status" [width]="100">
+    </kendo-grid-column>
+    <kendo-grid-column field="lastModified" title="last Modified" [width]="100">
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="modifiedBy"
+      title="Modified By"
+      [width]="100"
+      class="text-center"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          [primary]="true"
+          class="avatar-sm-btn c-default"
+          kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          aria-label="modified by"
+        >
+          <div class="app-c-avatar avatar-sm">
+            <img
+              src="../assets/images/avatar-1.png"
+              alt="Profile Avatar"
+              class="profile-avatar"
+              hidden
+            /><span class="profile-text-avatar">AK</span>
+          </div>
+        </button>
+        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field=""
+      title=""
+      [width]="50"
+      class="text-center"
+      [sticky]="true"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <kendo-dropdownbutton
+        [data]="moreactions"
+        icon="more-vertical"
+        aria-label="more actions"
+        class="TableActionPopup app-dropdown-action"
+        buttonClass="k-icon-button"
+        [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+      >
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+            <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+            <label>   {{ dataItem.text }} </label>
+        </button>
+ 
+        </ng-template>
+      </kendo-dropdownbutton>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+</div>
+<div class="mt-2 block-section">
+  <!-- Add Role Button -->
+  <button
+    icon="add"
+    kendoButton
+    [primary]="true"
+    aria-label="add role"
+    (click)="onSelectRoleClicked()"
+  >
+    Role
+  </button>
+</div>
+
+<!-- Deactivate Role Modal Html-->
+<kendo-dialog
+  *ngIf="isRoleDeactivatePopup"
+  (close)="onCloseRoleDeactivateClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Deactivate Role </kendo-dialog-titlebar>
+  <system-config-deactivate-roles-and-permissions-confirmation></system-config-deactivate-roles-and-permissions-confirmation>
+</kendo-dialog>
+
+<!-- Select Role Modal Html-->
+<kendo-dialog
+  *ngIf="isSelectRolePopup"
+  (close)="onCloseSelectRoleClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar>
+    Is this an internal or external role
+  </kendo-dialog-titlebar>
+  <div class="select-option-wrapper">
+    <button
+      class=""
+      kendoButton
+      look="flat"
+      routerLink="/roles-and-permissions-detail"
+    >
+      Internal Role
+    </button>
+    <button
+      class=""
+      kendoButton
+      look="flat"
+      routerLink="/roles-and-permissions-detail"
+    >
+      External Role
+    </button>
+  </div>
+</kendo-dialog>

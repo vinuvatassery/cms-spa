@@ -1,0 +1,82 @@
+<div class="client-data-block">
+  <h3>HIV Case Manager</h3>
+  <section>
+    <h5 class="mt-1">Currently has HIV Case Manager?</h5>
+    <div class="component-list-h">
+      <span class="d-inline-block mr-2">
+        <input
+          type="radio"
+          kendoRadioButton
+          name="HIVManager"
+          aria-labelledby="currentlyHasHivManagerYes"
+          id="hivManager1"
+          tabindex="1"
+        />
+        <kendo-label
+          class="k-radio-label"
+          for="hivManager1"
+          text="Yes"
+        ></kendo-label>
+      </span>
+      <span class="d-inline-block mr-2">
+        <input
+          type="radio"
+          kendoRadioButton
+          aria-labelledby="currentlyHasHivManagerNo"
+          name="HIVManager"
+          id="hivManager2"
+          tabindex="2"
+        />
+        <kendo-label
+          class="k-radio-label"
+          for="hivManager2"
+          text="No"
+        ></kendo-label>
+      </span>
+    </div>
+  </section>
+
+  <section>
+    <case-management-case-manager-list></case-management-case-manager-list>
+  </section>
+  <section>
+    <h5 class="mt-1">Would you like one?</h5>
+    <div class="component-list-h">
+      <span class="d-inline-block mr-2">
+        <input
+          type="radio"
+          [value]="1" 
+          [(ngModel)]="isVisible" 
+          kendoRadioButton
+          name="HIVManager"
+          aria-labelledby="currentlyHasHivManagerYes"
+          id="hivManager2"
+          tabindex="1"
+        />
+        <kendo-label
+          class="k-radio-label"
+          for="hivManager2"
+          text="Yes"
+        > </kendo-label>
+      </span>
+      <span class="d-inline-block mr-2">
+        <input
+          type="radio"        [value]="0" 
+          [(ngModel)]="isVisible" 
+          kendoRadioButton
+          aria-labelledby="currentlyHasHivManagerNo"
+          name="HIVManager"
+          id="hivManager4"
+          tabindex="2"
+        />
+        <kendo-label
+          class="k-radio-label"
+          for="hivManager4"
+          text="No"
+        ></kendo-label>
+      </span>
+    </div>
+    <div class="voterreg-info d-flex mt-1" *ngIf="isVisible === 1">
+      <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>Case Manager Referral is send once the application is saved   </div>
+  </section>
+</div>

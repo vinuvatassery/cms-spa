@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/financial-management/feature-vendor/src",
+  "prefix": "financial-management",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/financial-management/feature-vendor"],
+      "options": {
+        "project": "libs/financial-management/feature-vendor/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/financial-management/feature-vendor/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/financial-management/feature-vendor/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/financial-management/feature-vendor"],
+      "options": {
+        "jestConfig": "libs/financial-management/feature-vendor/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/financial-management/feature-vendor/src/**/*.ts",
+          "libs/financial-management/feature-vendor/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:financial-management", "type:feature"]
+}

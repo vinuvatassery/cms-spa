@@ -1,0 +1,12 @@
+.sidePanel-todo-reminders {
+  .sidePanel_body {
+    max-height: 360px;
+    overflow: auto;
+    &.todo-list {
+      .due-main-heading {
+        font-size: 14px !important;
+        margin: 10px 14px 8px;
+      }
+    }
+  }
+}
