@@ -1,0 +1,9 @@
+<h1>financial-management-income</h1>
+
+<table class="table">
+  <tr *ngFor="let income of incomes$ | async">
+    <td>{{ income.id }}</td>
+    <td>{{ income.name }}</td>
+    <td>{{ income.description }}</td>
+  </tr>
+</table>

@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/case-management/domain/src",
+  "prefix": "case-management",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/case-management/domain"],
+      "options": {
+        "project": "libs/case-management/domain/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/case-management/domain/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/case-management/domain/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/case-management/domain"],
+      "options": {
+        "jestConfig": "libs/case-management/domain/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/case-management/domain/src/**/*.ts",
+          "libs/case-management/domain/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:case-management", "type:domain-logic"]
+}
