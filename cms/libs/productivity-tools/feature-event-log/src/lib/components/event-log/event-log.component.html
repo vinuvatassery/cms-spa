@@ -1,0 +1,350 @@
+<div class="app-c-fab-sidePanel sidePanel-event-log">
+  <!-- Side Panel Header -->
+  <div class="sidePanel_header">
+    <div class="sidePanel_header-left">
+      <h3>Event Log</h3>
+      <button
+        kendoButton
+        class="k-icon-button small-i-btn"
+        title="New event"
+        aria-label="add event log"
+        (click)="onOpenEventDetailsClicked()"
+      >
+        <span
+          class="material-icons"
+          aria-label="add event log"
+          aria-hidden="true"
+          >add</span
+        >
+      </button>
+    </div>
+    <div class="sidePanel_header-right">
+      <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
+        <!-- <span
+          class="material-icons"
+          aria-label="search event"
+          aria-hidden="true"
+          >search</span> -->
+        <!-- <kendilabe text="Search Events" class="medium-input-form"> -->
+          <!-- <input kendoTextBox aria-label="search event" /> -->
+          <kendo-textbox aria-label="search event"  placeholder="Search Events"  fillMode="outline"> 
+           </kendo-textbox>
+
+           
+        <!-- </kendo-floatinglabel> -->
+      </div>
+      <button
+        kendoButton
+        class="k-icon-button small-i-btn"
+        aria-label="search event"
+        (click)="onShowSearchClicked()"
+        *ngIf="!isShownSearch"
+      >
+        <span
+          class="material-icons"
+          aria-label="search event"
+          aria-hidden="true"
+          >search</span
+        >
+      </button>
+      <kendo-dropdownbutton
+        [data]="actions"
+        icon="more-vertical"
+        class="TableActionPopup app-dropdown-action"
+        buttonClass="k-icon-button"
+        aria-label="more actions"
+        [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+      >
+    
+      <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+        <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+          <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+          <label>   {{ dataItem.text }} </label>
+      </button>
+      
+<!--       <button
+            kendoButton
+            look="flat"
+            class="btn-h-primary"
+            aria-label="sort event in ascending"
+          >
+            <span
+              class="material-icons"
+              aria-label="sort ascending"
+              aria-hidden="true"
+              >arrow_upward</span
+            >Sort Ascending
+          </button>
+          <button
+            kendoButton
+            look="flat"
+            class="btn-h-primary"
+            aria-label="sort event in descending"
+          >
+            <span
+              class="material-icons"
+              aria-label="sort descending"
+              aria-hidden="true"
+              >arrow_downward</span
+            >Sort Descending
+          </button>
+          <button
+            kendoButton
+            look="flat"
+            class="btn-h-primary"
+            aria-label="filter event"
+          >
+            <span
+              class="material-icons"
+              aria-label="filter list"
+              aria-hidden="true"
+              >filter_list</span
+            >Filter
+          </button> -->
+        </ng-template>
+      </kendo-dropdownbutton>
+      <button
+        kendoButton
+        class="k-icon-button small-i-btn"
+        aria-label="close event log"
+        (click)="onCloseEventLogClicked()"
+      >
+        <span
+          class="material-icons"
+          aria-label="close event log"
+          aria-hidden="true"
+          >close</span
+        >
+      </button>
+    </div>
+  </div>
+  <div class="sidePanel_body">
+    <ul aria-label="event log menu" class="event-log-list">
+      <!-- Event list items -->
+      <li aria-label="event log menu item" class="event-log-list_items">
+        <section>
+          <div class="items-head">
+            <p class="items-head_label">Letter Sent</p>
+            <p class="items-head_info">
+              09-01-2022 by <span class="items-head_info-user">Sara Lisa</span>
+            </p>
+          </div>
+          <div class="items-body">
+            <button
+              kendoButton
+              class="k-icon-button small-i-btn add-sub-button"
+              title="New sub-event"
+              (click)="onOpenEventDetailsClicked()"
+              aria-label="add event log"
+            >
+              <span
+                class="material-icons"
+                aria-label="add event log"
+                aria-hidden="true"
+                >add</span
+              >
+            </button>
+            <span class="items-body_details"
+              >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+              nibh tellus, sollicitudin vitae ante vel, fermentum
+              consequat</span
+            >
+            <span class="text-primary text-underline c-pointer"
+              >View Letter</span
+            >
+          </div>
+        </section>
+        <!-- Event sub list items -->
+        <ul aria-label="event log menu" class="event-log-list">
+          <!-- Event list items -->
+          <li aria-label="event log menu item" class="event-log-list_items">
+            <section>
+              <div class="items-head">
+                <p class="items-head_label">Sub Event One</p>
+                <p class="items-head_info">
+                  09-01-2022 by
+                  <span class="items-head_info-user">Lorem jocks</span>
+                </p>
+              </div>
+              <div class="items-body">
+                <button
+                  kendoButton
+                  class="k-icon-button small-i-btn add-sub-button"
+                  title="New sub-event"
+                  (click)="onOpenEventDetailsClicked()"
+                  aria-label="add event log details"
+                >
+                  <span
+                    class="material-icons"
+                    aria-label="add event log details"
+                    aria-hidden="true"
+                    >add</span
+                  >
+                </button>
+                <span class="items-body_details text-ellipsis"
+                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Integer nibh tellus, sollicitudin vitae ante vel, fermentum
+                  consequat leo. Nunc scelerisque purus ex, eget eleifend ligula
+                  convallis vitae. Pellentesque habitant morbi tristique
+                  senectus et netus et malesuada fames ac turpis egesta</span
+                >
+                <span class="text-primary text-underline c-pointer"
+                  >Read More</span
+                >
+              </div>
+            </section>
+          </li>
+          <!-- Event list items -->
+          <li aria-label="event log menu item" class="event-log-list_items">
+            <section>
+              <div class="items-head">
+                <p class="items-head_label">Letter Sent</p>
+                <p class="items-head_info">
+                  09-01-2022 by
+                  <span class="items-head_info-user">Lisa Jackson</span>
+                </p>
+              </div>
+              <div class="items-body">
+                <button
+                  kendoButton
+                  class="k-icon-button small-i-btn add-sub-button"
+                  title="New sub-event"
+                  (click)="onOpenEventDetailsClicked()"
+                  aria-label="add event log details"
+                >
+                  <span
+                    class="material-icons"
+                    aria-label="add event log details"
+                    aria-hidden="true"
+                    >add</span
+                  >
+                </button>
+                <span class="items-body_details text-ellipsis"
+                  >Consectetur adipiscing elit. Integer nibh tellus,
+                  sollicitudin vitae ante vel, fermentum consequat leo. Nunc
+                  scelerisque purus ex, eget eleifend ligula convallis vitae.
+                  Pellentesque habitant morbi tristique</span
+                >
+                <span class="text-primary text-underline c-pointer"
+                  >Read More</span
+                >
+              </div>
+            </section>
+          </li>
+        </ul>
+      </li>
+      <!-- Event list items -->
+      <li aria-label="event log menu item" class="event-log-list_items">
+        <section>
+          <div class="items-head">
+            <p class="items-head_label">Event Type Two</p>
+            <p class="items-head_info">
+              09-01-2022 by
+              <span class="items-head_info-user">Philip Lisa</span>
+            </p>
+          </div>
+          <div class="items-body">
+            <button
+              kendoButton
+              class="k-icon-button small-i-btn add-sub-button"
+              title="New sub-event"
+              (click)="onOpenEventDetailsClicked()"
+              aria-label="add event log details"
+            >
+              <span
+                class="material-icons"
+                aria-label="add event log details"
+                aria-hidden="true"
+                >add</span
+              >
+            </button>
+            <span class="items-body_details"
+              >Sollicitudin elit. Integer nibh tellus, sollicitudin vitae ante
+              vel, fermentum consequat leo. Nunc scelerisque purus ex, eget
+              eleifend ligula convallis vitae. Pellentesque habitant morbi
+              tristique</span
+            >
+            <span class="text-primary text-underline c-pointer">Read More</span>
+          </div>
+        </section>
+      </li>
+      <!-- Event list items -->
+      <li aria-label="event log menu item" class="event-log-list_items">
+        <section>
+          <div class="items-head">
+            <p class="items-head_label">Event Type Three</p>
+            <p class="items-head_info">
+              09-01-2022 by <span class="items-head_info-user">Dora Lisa</span>
+            </p>
+          </div>
+          <div class="items-body">
+            <button
+              kendoButton
+              class="k-icon-button small-i-btn add-sub-button"
+              title="New sub-event"
+              (click)="onOpenEventDetailsClicked()"
+              aria-label="add event log details"
+            >
+              <span
+                class="material-icons"
+                aria-label="add event log details"
+                aria-hidden="true"
+                >add</span
+              >
+            </button>
+            <span class="items-body_details"
+              >Llicitudin elit. Integer nibh tellus, sollicitudin vitae ante
+              vel, fermentum consequat leo. Nunc scelerisque purus ex, eget
+              eleifend ligula convallis vitae. Pellentesque habitant morbi
+              tristique</span
+            >
+            <span class="text-primary text-underline c-pointer">Read More</span>
+          </div>
+        </section>
+      </li>
+      <!-- Event list items -->
+      <li aria-label="event log menu item" class="event-log-list_items">
+        <section>
+          <div class="items-head">
+            <p class="items-head_label">Event Type Four</p>
+            <p class="items-head_info">
+              09-01-2022 by <span class="items-head_info-user">Kill Lisa</span>
+            </p>
+          </div>
+          <div class="items-body">
+            <button
+              kendoButton
+              class="k-icon-button small-i-btn add-sub-button"
+              title="New sub-event"
+              (click)="onOpenEventDetailsClicked()"
+              aria-label="add event log details"
+            >
+              <span
+                class="material-icons"
+                aria-label="add event log details"
+                aria-hidden="true"
+                >add</span
+              >
+            </button>
+            <span class="items-body_details"
+              >Integer elit. Integer nibh tellus, sollicitudin vitae ante vel,
+              fermentum consequat leo. Nunc scelerisque purus ex, eget eleifend
+              ligula convallis vitae. Pellentesque habitant morbi
+              tristique</span
+            >
+            <span class="text-primary text-underline c-pointer">Read More</span>
+          </div>
+        </section>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- Add Event Modal Html-->
+<kendo-dialog
+  *ngIf="isOpenEventLogDetails"
+  (close)="onCloseEventDetailsClicked()"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Add Event </kendo-dialog-titlebar>
+  <productivity-tools-event-detail></productivity-tools-event-detail>
+</kendo-dialog>

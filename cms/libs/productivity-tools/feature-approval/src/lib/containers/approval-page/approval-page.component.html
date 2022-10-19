@@ -1,0 +1,16 @@
+<common-bread-crumb></common-bread-crumb>
+<div class="app-l-inner-rapper pt-0">
+  <!-- Main Title Section -->
+  <section class="app-l-mainTittle">
+    <h1>productivity-tools-approval</h1>
+  </section>
+  <section class="app-l-wrapper">
+    <table class="table">
+      <tr *ngFor="let approval of approvals$ | async">
+        <td>{{ approval.id }}</td>
+        <td>{{ approval.name }}</td>
+        <td>{{ approval.description }}</td>
+      </tr>
+    </table>
+  </section>
+</div>

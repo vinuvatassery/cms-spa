@@ -1,0 +1,35 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    Send new ID card to the mailing address below? This action cannot be undone.
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <p>1700 Boulevard Blvd</p>
+      <p>Box 703 Portland, OR 97205</p>
+      <p>Portland, OR 97205</p>
+    </div>
+  </div>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        (click)="onCloseSendIdClicked()"
+        aria-label="cancel send id"
+      >
+        Cancel
+      </button>
+      <button
+        kendoButton
+        [primary]="true"
+        (click)="onCloseSendIdClicked()"
+        aria-label="send id"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

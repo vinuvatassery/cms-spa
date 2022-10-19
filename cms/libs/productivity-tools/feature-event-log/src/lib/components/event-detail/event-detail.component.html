@@ -1,0 +1,74 @@
+<section class="k-dialog-body">
+  <p class="text-muted">
+    Choose the type of event, enter a description, and upload a file if needed.
+    Events cannot be edited or deleted once added.
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel text="Choose Event Type">
+        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlEvents$"> </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Event Description" class="pb-0">
+        <kendo-textarea
+        [fillMode]="fillMode"
+          name="Event Description"
+          aria-label="event description"
+          [rows]="2"
+          [cols]="40"
+        >
+        <kendo-textarea-suffix class="justify-content-end">
+          <kendo-formhint class="justify-content-end">0/750</kendo-formhint>
+  
+            </kendo-textarea-suffix>
+        </kendo-textarea>
+        <!-- <kendo-formhint class="justify-content-end">0/750</kendo-formhint> -->
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Attachment Type (attachment upload optional)">
+        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlEvents$"> </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-12 mt-2 c-pt-12">
+      <kendo-upload></kendo-upload>
+      <kendo-formhint>Max file size 25MB</kendo-formhint>
+    </div>
+    <div class="flex-col flex-col-12">
+      <kendo-floatinglabel text="Attachment Note">
+        <kendo-textarea
+        [fillMode]="fillMode"
+          name="Attachment Note"
+          aria-label="attachment note"
+          [rows]="1"
+          [cols]="40"
+          class="ta-height-50"
+        >
+        <kendo-textarea-suffix class="justify-content-end">
+        <kendo-formhint class="justify-content-end">0/100</kendo-formhint>
+
+          </kendo-textarea-suffix>
+        </kendo-textarea>
+      </kendo-floatinglabel>
+    </div>
+  </div>
+</section>
+
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        aria-label="cancel event"
+      >
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="add new event">
+        Add
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

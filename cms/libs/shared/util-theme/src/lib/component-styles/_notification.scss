@@ -1,0 +1,111 @@
+.app-c-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $size-m;
+  background: material-color($hive-neutral-palette, 100);
+  padding: $size-l $size-xx;
+  border-radius: $border-radius-sm;
+  color: $app-primary-font-color;
+  font-size: $font-size-m;
+  margin-right: $size-s;
+  margin-bottom: $size-s;
+  &.full-rounded {
+    border-radius: $border-radius-xl;
+  }
+  .material-icons {
+    font-size: $font-size-xlg;
+  }
+  &.badge-primary {
+    background: material-color($hive-primary-palette, 500);
+    color: $white;
+  }
+  &.badge-error {
+    background: material-color($hive-error-palette, 500);
+    color: $white;
+  }
+  &.badge-warn {
+    background: material-color($hive-warn-palette, 900);
+    color: $white;
+  }
+  &.badge-warn-light {
+    background: material-color($hive-warn-palette, 400);
+    color: $black-3;
+  }
+}
+.k-notification-group {
+  z-index: 9;
+  padding-top: $size-xxxx;
+  .k-notification-wrap > .k-icon {
+    margin-top: $size-0;
+    font-size: $font-size-xlg + 2;
+  }
+  .k-notification {
+    min-width: 500px;
+    width: 100%;
+    max-width: 500px;
+    .k-notification-content {
+      margin-top: $size-m;
+      .k-notification-title {
+        font-family: $font-family-bold;
+      }
+      .k-notification-sub-title {
+        font-family: $font-family;
+        padding-left: $size-l;
+      }
+    }
+    .k-i-close {
+      &:before {
+        content: '\e5cd';
+        font-family: 'Material Icons';
+      }
+    }
+    &.k-notification-success {
+      border-color: material-color($hive-success-palette, 500);
+      background-color: material-color($hive-success-palette, 500);
+      .k-i-success {
+        &:before {
+          content: '\e86c';
+          font-family: 'Material Icons';
+        }
+      }
+    }
+    &.k-notification-error {
+      border-color: material-color($hive-error-palette, 400);
+      background-color: material-color($hive-error-palette, 400);
+      .k-i-error {
+        &:before {
+          content: '\e5c9';
+          font-family: 'Material Icons';
+        }
+      }
+    }
+    &.k-notification-warning {
+      border-color: material-color($hive-warn-palette, 400);
+      background-color: material-color($hive-warn-palette, 400);
+      color: $black-3;
+      .k-i-warning {
+        &:before {
+          content: '\e000';
+          font-family: 'Material Icons';
+        }
+      }
+    }
+    &.k-notification-info {
+      border-color: material-color($hive-primary-palette, 400);
+      background-color: material-color($hive-primary-palette, 400);
+      .k-i-info {
+        &:before {
+          content: '\e88e';
+          font-family: 'Material Icons';
+        }
+      }
+    }
+  }
+}
+.badge-dot-info {
+  width: $size-m;
+  height: $size-m;
+  display: inline-flex;
+  border-radius: $border-radius-xl;
+  background: material-color($hive-primary-palette, 300);
+}

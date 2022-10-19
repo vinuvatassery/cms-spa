@@ -1,0 +1,134 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    All fields are required unless otherwise stated.
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel text="Title">
+        <!-- <input kendoTextBox aria-label="todo title" /> -->
+        <kendo-textbox aria-label="todo title"    [fillMode]="fillMode">   </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Due Date (Optional)">
+        <kendo-datepicker [(ngModel)]="date" format="MM-dd-yyyy" [fillMode]="fillMode" formatPlaceholder="formatPattern">
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Repeat">
+        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="End Date (Optional)" >
+        <kendo-datepicker
+          format="MM-dd-yyyy"
+          formatPlaceholder="formatPattern"
+          [fillMode]="fillMode"
+          [(ngModel)]="date"
+        >
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Description(Optional)">
+        <kendo-textarea
+        [fillMode]="fillMode"
+          aria-label="custom todo description"
+          #tareaCustomTodo
+          resizable="auto"
+          [maxlength]="tareaCustomTodoMaxLength"
+          [value]="tareaCustomTodoDescription"
+          (valueChange)="onTareaCustomTodoValueChange($event)"
+        >
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="tareacustomtodocounter">{{
+              tareaCustomTodoCounter
+            }}</span>
+          </kendo-textarea-suffix>
+        </kendo-textarea>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col mt-2">
+      <div class="autoSelect-search mat-form-no-b-space">
+        <div class="global-search">
+          <span
+            class="material-icons global-search-icon"
+            aria-label="search"
+            aria-hidden="true"
+            >search</span
+          >
+          <kendo-multicolumncombobox
+            [data]="search$ | async"
+            textField="name"
+            valueField="id"
+            [fillMode]="fillMode"
+            placeholder="Link to Client or Service Provider (Optional)"
+          >
+            <kendo-combobox-column [width]="250">
+              <ng-template
+                kendoMultiColumnComboBoxColumnCellTemplate
+                let-dataItem
+              >
+                <span class="pr-1">{{ dataItem.name }}</span>
+                <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
+                <span class="text-muted">URN {{ dataItem.urn }}</span>
+              </ng-template>
+            </kendo-combobox-column>
+          </kendo-multicolumncombobox>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col mt-2">
+      <div class="global-search mat-form-no-b-space">
+        <span
+          class="material-icons global-search-icon"
+          aria-label="search case"
+          aria-hidden="true"
+          >search</span
+        >
+        <kendo-multicolumncombobox
+           
+          [data]="caseSearched$ | async"
+          textField="name"
+          valueField="id"
+          placeholder="Search Case Name, Member ID or SSN"
+          fillMode="outline"
+        >
+          <kendo-combobox-column>
+            <ng-template
+              kendoMultiColumnComboBoxColumnCellTemplate
+              let-dataItem
+            >
+              <span class="pr-1">{{ dataItem.name }}</span>
+              <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
+              <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
+              <span class="text-muted">SSN {{ dataItem.ssn }}</span>
+            </ng-template>
+          </kendo-combobox-column>
+          
+        </kendo-multicolumncombobox>
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        aria-label="cancel todo"
+      >
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="add todo">Create</button>
+    </div>
+  </div>
+</kendo-dialog-actions>

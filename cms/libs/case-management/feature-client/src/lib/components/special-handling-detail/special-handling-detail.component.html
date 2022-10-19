@@ -1,0 +1,461 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">Click "Update" to save changes.</p>
+  <div *ngFor="let item of tareacaseWorkerNote">
+    <div class="block-section mb-3">
+      <h5 class="text-capital mb-0">Case Worker Notes</h5>
+      <div class="flex-row">
+        <div class="flex-col flex-col-11">
+          <kendo-floatinglabel text="Note">
+            <kendo-textarea
+            [fillMode]="fillMode"
+              #tareaCaseWorkerNote
+              resizable="auto"
+              [id]="item.id"
+              [maxlength]="tareaCaseWorkerNoteMaxLength"
+              [value]="item.description"
+              (valueChange)="onTareaCaseWorkerChanged($event, item.id)"
+              aria-label="case worker note"
+            >
+              <kendo-textarea-suffix class="justify-content-end">
+                <span class="tareacounter"
+                  >{{ item.tareaCaseWorkerNoteCounter }}/{{
+                    tareaCaseWorkerNoteMaxLength
+                  }}</span
+                >
+              </kendo-textarea-suffix>
+            </kendo-textarea>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-1 py-0">
+          <button
+            kendoButton
+            class="k-icon-button small-i-btn fade-5 btn-h-danger mt-3"
+            aria-label="delete case worker note"
+          >
+            <span
+              class="material-icons"
+              (click)="onDeleteCaseWorkerNote(item.id)"
+              aria-label="delete case worker note"
+              aria-hidden="true"
+              >delete</span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex-row mb-4">
+    <div class="flex-col flex-col-8">
+      <button
+        kendoButton
+        [primary]="true"
+        icon="add"
+        (click)="onAddCaseWorkerNote()"
+        aria-label="add case worker note"
+      >
+        Note
+      </button>
+    </div>
+  </div>
+
+  <div class="block-section mb-3">
+    <h5 class="mb-0">
+      Needs materials in alternate format (Braille, large print, audio
+      recordings, etc.)?
+    </h5>
+    <div class="component-list-h">
+      <span>
+        <div class="flex-row mb-4">
+          <div class="flex-col flex-col-8">
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper" *ngFor="let materials of rdoMaterials$ | async">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  id="{{ materials.id }}"
+                  value="{{ materials.value }}"
+                  name="rdoMaterialFormat"
+                  (click)="onMaterialsRadioButtonClicked($event)"
+                  aria-labelledby="needsMaterials"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="{{ materials.value }}"
+                  for="{{ materials.id }}"
+                ></kendo-label>
+                <kendo-floatinglabel
+                  *ngIf="materials.id === 1"
+                  text="Enter formats"
+                  class="small-input-form"
+                >
+                  <!-- <input
+                    kendoTextBox
+                    [disabled]="isMaterialsTextBoxDisabled"
+                    aria-label="enter formats"
+                  /> -->
+                  <kendo-textbox aria-label="enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+                </kendo-floatinglabel>
+              </span>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">Needs interpreter?</h5>
+    <div class="component-list-h">
+      <span>
+        <div class="flex-row mb-4">
+          <div class="flex-col flex-col-8">
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper" *ngFor="let routes of rdoInterpreters$ | async">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  name="rdoInterpreter"
+                  id="rdoInterpreter"
+                  aria-labelledby="needsInterpreter"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="{{ routes.value }}"
+                  for="rdoInterpreter"
+                ></kendo-label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">Deaf or serious difficulty hearing?</h5>
+    <div class="component-list-h">
+      <span>
+        <div class="flex-row mb-4">
+          <div class="flex-col flex-col-8">
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper" *ngFor="let deaf of rdoDeafs$ | async">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  id="{{ deaf.id }}"
+                  value="{{ deaf.value }}"
+                  name="rdoHearingDifficulty"
+                  (click)="onDeafRadioButtonClicked($event)"
+                  aria-labelledby="difficultyInHearing"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="{{ deaf.value }}"
+                  for="{{ deaf.id }}"
+                ></kendo-label>
+                <kendo-floatinglabel
+                  *ngIf="deaf.id === 1"
+                  text="Age this condition began"
+                  class="small-input-form"
+                >
+                  <!-- <input
+                    kendoTextBox
+                    [disabled]="isDeafTextBoxDisabled"
+                    aria-label="age this condition began"
+                  /> -->
+                  <kendo-textbox aria-label="age this condition began" [disabled]="isDeafTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+
+                </kendo-floatinglabel>
+              </span>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">
+      Blind or serious difficulty seeing, even when wearing glasses?
+    </h5>
+    <div class="component-list-h">
+      <span>
+        <div class="flex-row mb-4">
+          <div class="flex-col flex-col-8">
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper" *ngFor="let blind of rdoBlinds$ | async">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  id="{{ blind.id }}"
+                  value="{{ blind.value }}"
+                  name="rdoSeeingDifficulty"
+                  (click)="onBlindRadioButtonClicked($event)"
+                  aria-labelledby="difficultyInSeeing"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="{{ blind.value }}"
+                  for="{{ blind.id }}"
+                ></kendo-label>
+                <kendo-floatinglabel
+                  *ngIf="blind.id === 1"
+                  text="Age this condition began"
+                  class="small-input-form"
+                >
+                  <!-- <input
+                    kendoTextBox
+                    [disabled]="isBlindTextBoxDisabled"
+                    aria-label="age this condition began"
+                  /> -->
+                  <kendo-textbox aria-label="age this condition began" [disabled]="isBlindTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+
+                </kendo-floatinglabel>
+              </span>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">Any limiting physical, mental or emotional conditions?</h5>
+    <div class="component-list-h">
+      <span>
+        <div class="flex-row mb-4">
+          <div class="flex-col flex-col-8">
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
+                  name="rdoEmotional"
+                  id="rdoEmotional1"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="Yes"
+                  for="rdoEmotional1"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  name="rdoEmotional"
+                  id="rdoEmotional2"
+                  aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="No"
+                  for="rdoEmotional2"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  name="rdoEmotional"
+                  id="rdoEmotional3"
+                  aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="Don’t know"
+                  for="rdoEmotional3"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  name="rdoEmotional"
+                  id="rdoEmotional4"
+                  aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="Don’t want to answer"
+                  for="rdoEmotional4"
+                ></kendo-label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">Serious difficulty walking or climbing stairs?</h5>
+    <div class="flex-row mt-4">
+      <div class="flex-col flex-col-8">
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper" *ngFor="let walking of rdoWalked$ | async">
+            <input
+              type="radio"
+              kendoRadioButton
+              id="{{ walking.id }}"
+              value="{{ walking.value }}"
+              name="rdoClimbingStairs"
+              (click)="onWalkingRadioButtonClicked($event)"
+              aria-labelledby="difficultyInWalking"
+            />
+            <kendo-label
+              class="k-radio-label"
+              text="{{ walking.value }}"
+              for="{{ walking.id }}"
+            ></kendo-label>
+            <kendo-floatinglabel
+              *ngIf="walking.id === 1"
+              text="Age this condition began"
+              class="small-input-form"
+            >
+              <!-- <input
+                kendoTextBox
+                [disabled]="isWalkingTextBoxDisabled"
+                aria-label="age this condition began"
+              /> -->
+              <kendo-textbox aria-label="age this condition began" [disabled]="isWalkingTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+
+            </kendo-floatinglabel>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">Difficulty dressing or bathing?</h5>
+    <div class="flex-row mt-4">
+      <div class="flex-col flex-col-8">
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper" *ngFor="let dressingorbathing of rdoDressedorBathed$ | async">
+            <input
+              type="radio"
+              kendoRadioButton
+              id="{{ dressingorbathing.id }}"
+              value="{{ dressingorbathing.value }}"
+              name="rdoDifficultyDressing"
+              (click)="onDressingorBathingRadioButtonClicked($event)"
+              aria-labelledby="difficultyInDressing"
+            />
+            <kendo-label
+              class="k-radio-label"
+              text="{{ dressingorbathing.value }}"
+              for="{{ dressingorbathing.id }}"
+            ></kendo-label>
+            <kendo-floatinglabel
+              *ngIf="dressingorbathing.id === 1"
+              text="Age this condition began"
+              class="small-input-form"
+            >
+              <!-- <input
+                kendoTextBox
+                [disabled]="isDressingorBathingTextBoxDisabled"
+                aria-label="age this condition began"
+              /> -->
+              <kendo-textbox aria-label="age this condition began" [disabled]="isDressingorBathingTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+
+            </kendo-floatinglabel>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">
+      Serious difficulty concentrating, remembering, or making decisions due to
+      a physical, mental, or emotional conditions?
+    </h5>
+    <div class="flex-row mb-4">
+      <div class="flex-col flex-col-8">
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper" *ngFor="let concentration of rdoConcentration$ | async">
+            <input
+              type="radio"
+              kendoRadioButton
+              id="{{ concentration.id }}"
+              value="{{ concentration.value }}"
+              name="rdoEmotionalCondition"
+              (click)="onConcentrationRadioButtonClicked($event)"
+              aria-labelledby="difficultyInConcentrating"
+            />
+            <kendo-label
+              class="k-radio-label"
+              text="{{ concentration.value }}"
+              for="{{ concentration.id }}"
+            ></kendo-label>
+            <kendo-floatinglabel
+              *ngIf="concentration.id === 1"
+              text="Age this condition began"
+              class="small-input-form"
+            >
+            <kendo-textbox aria-label="age this condition began"   [disabled]="isConcentrationTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+              <!-- <input
+                kendoTextBox
+                [disabled]="isConcentrationTextBoxDisabled"
+                aria-label="age this condition began"
+              /> -->
+            </kendo-floatinglabel>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="block-section mb-3">
+    <h5 class="mb-0">
+      Serious difficulty doing errands alone due to physical, mental, or
+      emotional conditions?
+    </h5>
+    <div class="flex-row mb-4">
+      <div class="flex-col flex-col-8">
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper" *ngFor="let errands of rdoErrands$ | async">
+            <input
+              type="radio"
+              kendoRadioButton
+              id="{{ errands.id }}"
+              value="{{ errands.value }}"
+              name="rdoDifficultyEmotional"
+              (click)="onErrandsRadioButtonClicked($event)"
+              aria-labelledby="difficultyInDoingErrands"
+            />
+            <kendo-label
+              class="k-radio-label"
+              text="{{ errands.value }}"
+              for="{{ errands.id }}"
+            ></kendo-label>
+            <kendo-floatinglabel
+              *ngIf="errands.id === 1"
+              text="Age this condition began"
+              class="small-input-form"
+            >
+              <!-- <input
+                kendoTextBox
+                [disabled]="isErrandsTextBoxDisabled"
+                aria-label="age this condition began"
+              /> -->
+              <kendo-textbox aria-label="age this condition began" [disabled]="isErrandsTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+
+            </kendo-floatinglabel>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        aria-label="cancle special handling"
+      >
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="update special handling">
+        Update
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
