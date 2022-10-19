@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {  CaseDetailPageComponent } from '@cms/case-management/feature-case';
+import { Case360PageComponent, CaseDetailPageComponent, CasePageComponent } from '@cms/case-management/feature-case';
 
 const routes: Routes = [
   {
@@ -161,6 +161,13 @@ const routes: Routes = [
         pathMatch: 'full',
       },
     ],
+  },
+  {
+    path: 'case360/:id',
+    component: Case360PageComponent,
+    data: {
+      title: null,
+    }, 
   },
   {
     path: '',
