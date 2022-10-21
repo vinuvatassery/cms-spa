@@ -4,6 +4,7 @@ import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CaseDetailsFacade, ClientFacade } from '@cms/case-management/domain';
 import { Observable, of, Subscription } from 'rxjs';
+import { CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-client-page',
@@ -17,9 +18,18 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
+  private programList:any;
+  private caseOwners:any;
+  private caseOrigins:any;
+
+  caseOwners$ = this.caseFacade.caseOwners$;
+  ddlPrograms$ = this.caseFacade.ddlPrograms$;
+  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
 
   constructor(private caseDetailsFacade: CaseDetailsFacade,
-    private clientFacade:ClientFacade){
+    private clientFacade:ClientFacade,
+    private readonly caseFacade: CaseFacade){
+
     
   }
 
@@ -28,9 +38,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.saveClickSubscribed();
+    this.loadDdlCaseOrigins();
+    this.loadCaseOwners();
   }
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+  }
+
+  private loadCaseOwners() {
+    this.caseFacade.loadCaseOwners();
+  }
+
+  private loadDdlCaseOrigins() {
+    this.caseFacade.loadDdlCaseOrigins();
   }
 
   /** Public  methods **/

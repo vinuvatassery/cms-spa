@@ -6,9 +6,16 @@
     through the eligibility checklist. All items must be addressed before
     starting the application review.
   </p>
+  <div class="flex-row" style="padding-bottom:3em;padding-left:1em;">
+  <div class="flex-col flex-col-5">
+  <common-case-card-type [programList]="ddlPrograms$ | async" [caseOwners]="caseOwners$ | async" [caseOrigins]="ddlCaseOrigins$ | async" [isSaveAndChangeClickedFromNewCase]="false"></common-case-card-type>
+</div>
+</div>
+
 </section>
 
-<div class="client-data-block">
+<div class="client-data-block" >
+ 
   <h3>Applicant Info</h3>
   <div class="block-section">
     <case-management-client-edit-view></case-management-client-edit-view>

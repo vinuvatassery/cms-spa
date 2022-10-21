@@ -394,4 +394,106 @@ export class CaseDataService {
   loadDdlEPEmployments() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
+
+  getClientInfo(){
+   return of([{
+      "client": {
+        "clientId": 0,
+        "firstName": "Post Man 10",
+        "middleName": "C",
+        "lastName": "API",   
+        "dob": "1990-10-08T00:56:56.239Z",
+        "ssn": "345-45-6756",   
+        "ssnNotApplicableFlag": "N",
+        "genderAtBirthCode": "MALE",
+        "genderAtBirthDesc": "",
+        "urn": "OH 12345 (CN)",
+        "encryptedUrn": "string",
+        "genderType": "string",
+        "clientTransgenderCode": "N",
+        "clientTransgenderDesc": "NA",
+        "materialInAlternateFormatCode": "NA",
+        "materialInAlternateFormatDesc": "NA",
+        "spokenLanguageCode": "E",
+        "writtenLanguageCode": "C",
+        "englishProficiencyCode": "VERY_WELL",
+        "interpreterCode": "Y",
+        "interpreterType": "interpreter example type",
+        "deafOrHearingCode": "Y",
+        "startAgeDeafOrHearing": 10,
+        "blindSeeingCode": "Y",
+        "startAgeBlindSeeing": 20,
+        "limitingConditionCode": "Y",
+        "startAgeLimitingCondition": 30,
+        "walkingClimbingDifficultyCode": "Y",
+        "startAgeWalkingClimbingDifficulty": 26,
+        "dressingBathingDifficultyCode": "Y",
+        "startAgeDressingBathingDifficulty": 70,
+        "concentratingDifficultyCode": "Y",
+        "startAgeConcentratingDifficulty": 58,
+        "errandsDifficultyCode": "N",
+        "startAgeErrandsDifficulty": 0,
+        "preferredContactCode": "s",
+        "contactName": "string",
+        "contactRelationshipCode": "string"
+      },
+      "clientCase": {
+        "clientCaseId": "00000000-0000-0000-0000-000000000000",
+        "clientId": 0,
+        "programId": "7b52cda2-aadd-4d4d-a42a-fc765165b506",
+        "caseOriginCode": "Email",
+        "caseStartDate": "2022-10-11",  
+        "caseStatusCode": "s"
+        
+      },
+     "clientCaseEligibility": {
+        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
+        "clientCaseId": "00000000-0000-0000-0000-000000000000",
+        "insuranceFirstName": "string",
+        "insuranceLastName": "string",
+        "officialIdFirstName": "string",
+        "officialIdLastName": "string",
+        "groupCode": "string",
+        "registerToVoteFlag": "Y",
+        "assignedCwUserId":"6367D893-679D-488B-BA8D-6B2E04B16711"
+      },
+      "clientPronoun": [
+        {
+          "clientPronounId": "00000000-0000-0000-0000-000000000000",
+          "clientId": 0,
+          "clientPronounCode": "NOT_LISTED",
+          "otherDesc": "my own"
+        }
+      ],
+    
+      "clientSexualIdentity": [
+        {
+          "clientSexualIdentityId": "00000000-0000-0000-0000-000000000000",
+          "clientId": 0,
+          "clientSexualIdentityCode": "Straight",
+          "otherDesc": ""
+        }
+      ],
+      "clientRace": [
+        {
+          "clientRaceId": "00000000-0000-0000-0000-000000000000",
+          "clientId": 0,
+          "clientRaceCategoryCode": "ASIAN",
+          "clientEthnicIdentityCode": "ASIAN",
+          "isPrimaryFlag": "Y",
+          "raceDesc": "string"
+        }
+      ]
+      ,
+       "clientGender": [
+        {
+          "clientGenderId": "00000000-0000-0000-0000-000000000000",
+          "clientId": 0,
+          "clientGenderCode": "string",
+          "otherDesc": "string"
+        }
+      ]
+    }]);
+  }
+
 }

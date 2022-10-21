@@ -16,3 +16,4 @@ export * from './lib/delete-confirmation/delete-confirmation.component';
 export * from './lib/entities/delete-request';
 export * from './lib/account-settings/account-settings.component';
 export * from './lib/user-profile-card/user-profile-card.component';
+export * from './lib/case-common-card/case-common-card.component';

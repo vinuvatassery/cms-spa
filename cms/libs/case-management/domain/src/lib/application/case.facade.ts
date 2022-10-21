@@ -26,6 +26,8 @@ export class CaseFacade {
   private ddlCommonActionsSubject = new BehaviorSubject<any>([]);
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
   private routesSubject = new BehaviorSubject<any>([]);
+  private clientInfo=new BehaviorSubject<any>([]);
+ 
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -43,6 +45,7 @@ export class CaseFacade {
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
   routes$ = this.routesSubject.asObservable();
+  caseInfo$=this.clientInfo.asObservable();
 
   constructor(
     private readonly caseDataService: CaseDataService,
@@ -216,6 +219,17 @@ export class CaseFacade {
     this.caseDataService.loadDdlEPEmployments().subscribe({
       next: (data) => {
         this.ddlEmploymentEPSubject.next(data);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+  getClientInfo(): void {
+    this.caseDataService.getClientInfo().subscribe({
+      next: (data) => {
+        this.clientInfo.next(data);
       },
       error: (err) => {
         console.error('err', err);
