@@ -1,12 +1,49 @@
+/**Angualr **/
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { ScreenFlowStep } from '../entities/case';
+import { HttpClient } from '@angular/common/http';
+
+
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
+/**Models */
+import { UpdateWorkFlowProgress, Workflow, WorkFlowProgress } from '../entities/workflow';
+import { ScreenFlowType } from '../enums/screen-flow-type.enum';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScreenRouteDataService {
-  constructor() {}
+  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
+
+  loadWorkflow(screen_flow_type_code: string, program_id: number, case_id?: number) {
+    if (screen_flow_type_code === ScreenFlowType.NewCase) {
+      return this.http.get<Workflow[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/workflows/${program_id}`
+      );
+    }
+    else {
+      return this.http.get<Workflow[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/workflows/progress/${case_id}`
+      );
+    }
+  }
+
+  saveWorkflowProgress(updateWorkFlowProgress: UpdateWorkFlowProgress) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/workflows/navigate?workFlowNavType=next`,
+      updateWorkFlowProgress
+    );
+  }
+
+  saveManualWorkflowChange(currentWorkflow:any){
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/workflows/mark_as_current`,
+      currentWorkflow
+    );
+  }
 
   load(screen_flow_type_code: string, program_id: number, case_id?: number) {
     if (case_id) {
@@ -270,7 +307,7 @@ export class ScreenRouteDataService {
           },
           {
             name: 'HIV Verification',
-            url: '/case-management/case-detail/case-manager',
+            url: '/case-management/case-detail/verification',
             sequence_nbr: 109,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',

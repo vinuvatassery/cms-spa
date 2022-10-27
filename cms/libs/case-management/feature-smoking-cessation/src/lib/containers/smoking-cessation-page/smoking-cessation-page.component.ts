@@ -1,9 +1,10 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 /** services **/
-import { CaseDetailsFacade, CompletionStatusFacade, SmokingCessationFacade } from '@cms/case-management/domain';
-import { debounceTime, distinctUntilChanged, filter, map, Observable, of, Subscription } from 'rxjs';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, Workflow, UpdateWorkFlowProgress } from '@cms/case-management/domain';
+import { forkJoin, mergeMap, Observable, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -20,20 +21,19 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationCharachtersCount!: number;
   tareaCessationCounter!: string;
   tareaCessationNote = '';
-  smokingCessationForm!: UntypedFormGroup;
-  completeStaus$ = this.completionStatusFacade.completionStatus$;
+  smokingCessationForm!: FormGroup;
 
   constructor(
-    private caseDetailsFacade: CaseDetailsFacade,
+    private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,
-    private completionStatusFacade: CompletionStatusFacade) {
+    private caseFacad: CaseFacade) {
   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.buildForm();
     this.tareaVariablesIntiation();
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
     this.smokingCessationFromChanged();
   }
 
@@ -57,29 +57,59 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   /** Private methods **/
   private buildForm() {
-    this.smokingCessationForm = new UntypedFormGroup({
-      mokingCessation: new UntypedFormControl('', Validators.required),
-      mokingCessationNote: new UntypedFormControl('')
+    this.smokingCessationForm = new FormGroup({
+      mokingCessation: new FormControl('', Validators.required),
+      mokingCessationNote: new FormControl('')
     });
   }
 
   private smokingCessationFromChanged() {
-    this.smokingCessationForm.valueChanges.subscribe(val => {
-      this.updateFormCompleteCount();
-    });
+    this.smokingCessationForm.valueChanges
+      .subscribe(val => {
+        this.updateFormCompleteCount();
+      });
   }
 
-  private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.smokingCessationFacade.save().subscribe((response: boolean) => {
-        if (response) {
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-    });
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+      mergeMap(([navigationType, isSaved]) =>
+        isSaved ? this.applyWorkflowChanges(navigationType) : of(false))
+    ).subscribe();
   }
 
-  private updateFormCompleteCount(): void {
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.smokingCessationFacade.save();
+    }
+
+    return of(false)
+  }
+
+  private applyWorkflowChanges(navigationType: NavigationType) {
+    let clientEligilbilityID =
+      this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId ?
+      this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId
+        : '2500D14F-FB9E-4353-A73B-0336D79418CF'; //TODO: should be from the save response
+
+    let updateWorkFlowProgress: UpdateWorkFlowProgress = {
+      clientCaseEligibilityId: clientEligilbilityID,
+      workflowStepId: this.caseFacad.currentWorkflowStage.workflowStepId,
+      totalDatapointsCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsTotalCount,
+      datapointsCompletedCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount,
+    }
+
+    return this.caseFacad.appyAutomaticWorkflowProgress(
+      updateWorkFlowProgress,
+      this.caseFacad.currentWorkflowStage,
+      navigationType);
+  } 
+
+  private updateFormCompleteCount(): void {    
     let filledCount = 0;
     Object.keys(this.smokingCessationForm.controls).forEach(key => {
       if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
@@ -87,11 +117,10 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.updateCompletionStatus({
-      name: 'Cessation',
-      completed: filledCount,
-      total: 2,
-    });
+    if (this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount !== filledCount) {
+      this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount = filledCount;
+      this.caseFacad.updateWorkflowStageCount(this.caseFacad.currentWorkflowStage);
+    }
   }
 
   private tareaVariablesIntiation() {
@@ -99,10 +128,6 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       ? this.tareaCessationNote.length
       : 0;
     this.tareaCessationCounter = `${this.tareaCessationCharachtersCount}/${this.tareaCessationMaxLength}`;
-  }
-
-  private updateCompletionStatus(status: any) {
-    this.completionStatusFacade.updateCompletionStatus(status);
   }
 
   /** Internal event methods **/

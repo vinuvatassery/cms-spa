@@ -10,31 +10,29 @@
     <h5 class="text-capital">Completed Items</h5>
   </div>
   <div *ngFor="let route of routes$ | async">
-    <div *ngFor="let status of completeStaus$ | async">
+    <!-- <div *ngFor="let status of completeStaus$ | async"> -->
       <li
-        *ngIf="route.name === status.name"
         routerLinkActive="active-item"
         [ngClass]="
-          status.completed === status.total
+        route.workFlowProgress[0].datapointsCompletedCount === route.workFlowProgress[0].datapointsTotalCount
             ? 'kendo-list-items section-completed'
             : 'kendo-list-items'
         "
-        [routerLink]="route.url"
-        [queryParamsHandling]="'preserve'"
+        (click)="onRouteChange(route)"
       >
-        <span>{{ route.name }}</span>
-        <span *ngIf="status.completed !== status.total"
-          >{{ status.completed }} of {{ status.total }}</span
+        <span>{{ route.title }}</span>
+        <span *ngIf="route.workFlowProgress[0].datapointsCompletedCount !== route.workFlowProgress[0]?.datapointsTotalCount"
+          >{{ route.workFlowProgress[0]?.datapointsCompletedCount }} of {{ route.workFlowProgress[0]?.datapointsTotalCount }}</span
         >
         <span
           *ngIf="
-            route.name === status.name && status.completed === status.total
+            route.workFlowProgress[0].datapointsCompletedCount === route.workFlowProgress[0].datapointsTotalCount
           "
           class="material-icons"
           >check_circle</span
         >
       </li>
-    </div>
+    <!-- </div> -->
   </div>
   <div class="sections-heading sh-top-border">
     <span>Application Review</span>

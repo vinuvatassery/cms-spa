@@ -1,11 +1,11 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { filter } from 'rxjs/internal/operators/filter';
 /** Facades **/
-import { CaseDetailsFacade, ScreenType } from '@cms/case-management/domain';
+import { ScreenType, NavigationType, Workflow } from '@cms/case-management/domain';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
@@ -18,7 +18,8 @@ export class CaseNavigationComponent implements OnInit {
   /** Input Properties **/
   @Input() routes$!: Observable<any>;
   @Input() completeStaus$!: Observable<any>;
-  @Input() saveAndContinueClicked = new EventEmitter();
+  // @Input() navigationEvent = new EventEmitter<string>();
+  @Output() workflowChange = new EventEmitter<Workflow>();
 
   /** Public Properties **/
   isSendLetterProfileOpenedSubject = new BehaviorSubject<boolean>(false);
@@ -27,28 +28,28 @@ export class CaseNavigationComponent implements OnInit {
   isApplicationReviewOpened = false;
   isCheckRouteExcecuted = false; // for checking  the if conditions in the loop has been excecuted or not
   navigationIndex = 0;
+  routes!: any[];
 
   /** Private Properties */
 
-  
+
   /** constructor **/
-  constructor(private router: Router,
-    private caseDetailFacade: CaseDetailsFacade
-  ) { }
+  constructor(private router: Router) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
     this.loadCaseNavigationDeatils();
     this.navigationInitiated();
+    //this.addNavigationSubscription();
   }
 
   /** Private Methods **/
   private loadCaseNavigationDeatils() {
     this.routes$.subscribe({
       next: (routes: any) => {
-        this.navigateByUrl(routes);
-        //this.saveAndContinueSubscribed(routes);
-        this.navigationSubscribed(routes);
+        console.log(routes);
+        this.navigate(routes, NavigationType.Default)
+        this.routes = routes;
       },
       error: (err: any) => {
         console.error('error', err);
@@ -56,47 +57,40 @@ export class CaseNavigationComponent implements OnInit {
     });
   }
 
-  private saveAndContinueSubscribed(routes: any) {
-    this.saveAndContinueClicked.subscribe({
-      next: () => {
-        // TODO: Save Application Functionality.
-        this.caseDetailFacade.save();
-        this.nextNavigation(routes);
-      },
-      error: (err: any) => {
-        console.error('error', err);
-      },
-    });
+  // private addNavigationSubscription() {
+  //   this.navigationEvent.subscribe({
+  //     next: (navigationType: NavigationType) => {
+  //       this.navigate(this.routes, navigationType);
+  //     },
+  //     error: (err: any) => {
+  //       console.error('error', err);
+  //     },
+  //   });
+  // }
 
-  }
+  private navigate(routes: any, navigationType: NavigationType) {
+    this.navigationIndex = routes.findIndex((route: Workflow) =>
+      route?.workFlowProgress[0]?.currentFlag === 'Y'
+    );
 
-  private navigationSubscribed(routes:any){
-    this.caseDetailFacade.navigateToNextCaseScreen.subscribe({
-      next: () => {       
-        this.nextNavigation(routes);
-      },
-      error: (err: any) => {
-        console.error('error', err);
-      },
-    });
-  }
-
-  private nextNavigation(routes: any) {
-    const CurrentRoute = this.router.url;
-    this.navigationIndex =
-      routes.findIndex((route: any) => CurrentRoute.includes(route.url)) +
-      1;
     this.navigateByUrl(routes);
   }
 
+  // private previousNavigation(routes: any) {
+  //   const CurrentRoute = this.router.url;
+  //   this.navigationIndex =
+  //     routes.findIndex((route: any) => CurrentRoute.includes(route.url)) -
+  //     1;
+  //   this.navigateByUrl(routes);
+  // }
+
   private navigateByUrl(routes: any) {
-    if (this.navigationIndex < routes.length) {
+    if (this.navigationIndex > -1 && this.navigationIndex < routes.length) {
       this.router.navigate([routes[this.navigationIndex].url], { queryParamsHandling: 'preserve' });
     }
     // TODO: In else case we can start the application review process.
   }
 
-  /** Private methods **/
   private navigationInitiated() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -155,5 +149,9 @@ export class CaseNavigationComponent implements OnInit {
 
   onApplicationReviewClosed() {
     this.isApplicationReviewOpened = false;
+  }
+
+  onRouteChange(route: Workflow) {
+    this.workflowChange.emit(route);
   }
 }

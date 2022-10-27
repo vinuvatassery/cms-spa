@@ -2,8 +2,8 @@
 import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 /** Internal Libraries **/
-import { CaseDetailsFacade, CompletionStatusFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, NavigationType } from '@cms/case-management/domain';
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-family-and-dependent-page',
@@ -24,14 +24,14 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
     private completionStatusFacade: CompletionStatusFacade,
-    private caseDetailsFacade: CaseDetailsFacade
+    private workflowFacade: WorkflowFacade
   ) { }
 
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
     this.loadDependents();
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
   }
 
   ngOnDestroy(): void {
@@ -43,18 +43,30 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.familyAndDependentFacade.loadDependents();
   }
 
-  updateCompletionStatus(status: any) {
+  private updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
-  private saveClickSubscribed():void{
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.familyAndDependentFacade.save().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-     });
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
+    });
+  }
+
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.familyAndDependentFacade.save();
+    }
+
+    return of(false)
   }
 
   /** Internal event methods **/

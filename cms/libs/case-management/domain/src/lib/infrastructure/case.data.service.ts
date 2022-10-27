@@ -373,7 +373,7 @@ export class CaseDataService {
 
   loadDdlPrograms() {
     return of([
-      { key: 1, value: 'CAREAssist', default: true },
+      { key: '7b52cda2-aadd-4d4d-a42a-fc765165b506', value: 'CAREAssist', default: true },
       { key: 2, value: 'OHOP', default: false },
     ]);
   }

@@ -2,10 +2,11 @@
   <div class="add-client_left">
     <!-- Case Navigation -->
         <!-- Case Navigation -->
+         <!--[navigationEvent]="workflowNavigationEvent"-->
     <case-management-case-navigation
       [routes$]="routes$"
       [completeStaus$]="completeStaus$"
-      [saveAndContinueClicked]="saveAndContinueEvent"
+      (workflowChange)="applyWorkflowChanges($event)"
     ></case-management-case-navigation>
     <!-- Send Letter Side profile -->
     <case-management-send-letter-profile
@@ -26,7 +27,7 @@
         >
           <div class="btn-inner-block">
             <span  class="material-icons"  aria-label="save and continue"  aria-hidden="false" >save</span>
-            Save For Later
+            Save & Continue
           </div>
           <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem>
             <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">

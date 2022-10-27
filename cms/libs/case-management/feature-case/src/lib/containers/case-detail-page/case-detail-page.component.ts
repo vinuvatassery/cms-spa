@@ -1,8 +1,8 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** Enums **/
-import { CaseDetailsFacade, CommunicationEvents, CompletionStatusFacade, ScreenFlowType, ScreenType } from '@cms/case-management/domain';
+import { WorkflowFacade, CommunicationEvents, CompletionStatusFacade, ScreenFlowType, ScreenType, NavigationType, Workflow } from '@cms/case-management/domain';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
 import {
@@ -10,6 +10,7 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
+import { Subscription } from 'rxjs';
 /**Services**/
 
 @Component({
@@ -18,14 +19,17 @@ import {
   styleUrls: ['./case-detail-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailPageComponent implements OnInit {
+export class CaseDetailPageComponent implements OnInit, OnDestroy {
+
+  /**Private properties**/
+  private navigationSubscription !: Subscription;
 
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
-  
-  
-  saveAndContinueEvent = new EventEmitter();
+
+  /**Public properties**/
+  workflowNavigationEvent = new EventEmitter<string>();
   openedSaveLater = false;
   openedDeleteConfirm = false;
   openedDiscardConfirm = false;
@@ -47,30 +51,30 @@ export class CaseDetailPageComponent implements OnInit {
   ];
   public saveForLaterData = [
     {
-      buttonType:"btn-h-primary",
-      text: "Save & Continue",
+      buttonType: "btn-h-primary",
+      text: "Save For Later",
       icon: "save",
       click: (): void => {
-        this.onSaveAndContinueClicked();
+        this.onSaveLaterClicked();
       },
     },
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Discard Changes",
       icon: "do_disturb_alt",
       click: (): void => {
-       this.onDiscardConfirmClicked()
+        this.onDiscardConfirmClicked()
       },
     },
     {
-      buttonType:"btn-h-danger",
+      buttonType: "btn-h-danger",
       text: "Delete Application",
       icon: "delete",
       click: (): void => {
-       this.onDeleteConfirmClicked()
+        this.onDeleteConfirmClicked()
       },
     },
- 
+
   ];
   routes$ = this.caseFacade.routes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
@@ -80,13 +84,18 @@ export class CaseDetailPageComponent implements OnInit {
     private route: ActivatedRoute,
     private navRoute: Router,
     private completionStatusFacade: CompletionStatusFacade,
-    private caseDetailsFacade:CaseDetailsFacade
-  ) {}
+    private workflowFacade: WorkflowFacade
+  ) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadQueryParams();
     this.loadDdlCommonAction();
+    this.addNavigationSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe();
   }
 
   /** Private Methods */
@@ -110,20 +119,20 @@ export class CaseDetailPageComponent implements OnInit {
         if (paramCaseId) {
           this.routes$.subscribe({
             next: (routes) => {
-                this.navRoute.navigate(
-                  [
-                    routes.filter(
-                      (route: any) => route.current_screen_flag === 'Y'
-                    )[0].url,
-                  ],
-                  {
-                    queryParams: {
-                      screenFlowType: paramScreenFlowType,
-                      caseId: paramCaseId,
-                      programId: paramProgramId,
-                    },
-                  }
-                );
+              this.navRoute.navigate(
+                [
+                  routes.filter(
+                    (route: any) => route.current_screen_flag === 'Y'
+                  )[0].url,
+                ],
+                {
+                  queryParams: {
+                    screenFlowType: paramScreenFlowType,
+                    caseId: paramCaseId,
+                    programId: paramProgramId,
+                  },
+                }
+              );
             },
             complete: () => {
               console.log('Completed');
@@ -149,7 +158,7 @@ export class CaseDetailPageComponent implements OnInit {
   private loadCompletionStatus(caseId?: number) {
     this.completionStatusFacade.loadCompletionStatus(caseId);
   }
-  
+
   private loadDdlCommonAction() {
     this.caseFacade.loadDdlCommonActions();
   }
@@ -183,10 +192,20 @@ export class CaseDetailPageComponent implements OnInit {
     this.isShowSendNewLetterPopup = true;
     this.isShowSaveLaterPopup = false;
   }
-  
+
   onSaveAndContinueClicked() {
-    //this.saveAndContinueEvent.emit();
-    this.caseDetailsFacade.saveAndContinueClicked.next(true);
+    this.workflowFacade.save(NavigationType.Next);
+  }
+
+  private addNavigationSubscription() {
+    this.navigationSubscription = this.workflowFacade.navigationTrigger$.subscribe({
+      next: (navigationType: string) => {
+        this.workflowNavigationEvent.emit(navigationType);
+      },
+      error: (err: any) => {
+        console.error('error', err);
+      },
+    });
   }
 
   /** External event methods **/
@@ -227,6 +246,10 @@ export class CaseDetailPageComponent implements OnInit {
     this.openedSendLetterToPrint = true;
     this.openedSendNewLetter = false;
     this.openedPreviewLetter = false;
+  }
+
+  applyWorkflowChanges(route: Workflow) {
+    this.caseFacade.applyManualWorkflowChange(route).subscribe();
   }
 
 }

@@ -1,9 +1,13 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Case } from '../entities/case';
+import { UpdateWorkFlowProgress, Workflow, WorkFlowProgress } from '../entities/workflow';
+import { NavigationType } from '../enums/navigation-type.enum';
+
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
 import { ScreenRouteDataService } from '../infrastructure/screen-route.data.service';
@@ -26,6 +30,7 @@ export class CaseFacade {
   private ddlCommonActionsSubject = new BehaviorSubject<any>([]);
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
   private routesSubject = new BehaviorSubject<any>([]);
+  private workflowRoutes!: Workflow[];
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -43,11 +48,21 @@ export class CaseFacade {
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
   routes$ = this.routesSubject.asObservable();
+  currentWorkflowStage!: Workflow;
 
   constructor(
     private readonly caseDataService: CaseDataService,
     private readonly routeService: ScreenRouteDataService
-  ) {}
+  ) { }
+
+  private updateWorkflow(data: any, currentWorkflowStage: any) {
+    this.workflowRoutes = data;
+    this.currentWorkflowStage = currentWorkflowStage === undefined ?
+      this.deepCopy(data)?.filter((wf: Workflow) => wf.workFlowProgress[0]?.currentFlag === 'Y')[0]
+      : currentWorkflowStage;
+
+    this.routesSubject.next(data);
+  }
 
   /** Public methods **/
   loadCases(): void {
@@ -111,10 +126,27 @@ export class CaseFacade {
     case_id?: number
   ) {
     this.routeService
-      .load(screen_flow_type_code, program_id, case_id)
+      .loadWorkflow(screen_flow_type_code, program_id, case_id)
+      .pipe(
+        map(wf => wf.map((workflowItem: Workflow, index) => {
+          if (workflowItem.workFlowProgress.length === 0) {
+            if (workflowItem?.processMetadata) {
+              var processMetadata = JSON.parse(workflowItem.processMetadata);
+
+              let workflowProgress: WorkFlowProgress = {
+                currentFlag: index === 5 ? 'Y' : 'N',
+                datapointsCompletedCount: 0,
+                datapointsTotalCount: Number(processMetadata?.datapointsTotalCount ?? 0)
+              };
+              workflowItem.workFlowProgress.push(workflowProgress);
+            }
+          }
+          return workflowItem;
+        }))
+      )
       .subscribe({
         next: (data) => {
-          this.routesSubject.next(data);
+          this.updateWorkflow(data, undefined);
         },
         error: (err) => {
           console.log('Error', err);
@@ -221,6 +253,101 @@ export class CaseFacade {
         console.error('err', err);
       },
     });
+  }
+
+  getCurrentWorkflowStage(processName: string) {
+    return this.deepCopy(this.workflowRoutes)?.filter((wf: Workflow) => wf.processName === processName)[0];
+  }
+
+  updateWorkflowStageCount(currentWorkflowStage: Workflow) {
+    if (currentWorkflowStage) {
+      let currentWorkflowIndex = this.workflowRoutes?.findIndex(wf => wf.workflowStepId === currentWorkflowStage.workflowStepId);
+      if (currentWorkflowIndex !== -1) {
+        this.workflowRoutes[currentWorkflowIndex] = currentWorkflowStage;
+      }
+
+      this.updateWorkflow(this.workflowRoutes, currentWorkflowStage);
+    }
+  }
+
+  updateAutomaticWorkflowChange(currentWorkflowStage: Workflow, navigationType: NavigationType) {
+    if (currentWorkflowStage) {
+
+      let nextWorkflowStage: Workflow = this.deepCopy(this.workflowRoutes)
+        .filter((wf: Workflow) =>
+          wf.sequenceNbr === (navigationType === NavigationType.Next ?
+            (currentWorkflowStage.sequenceNbr + 1)
+            : (currentWorkflowStage.sequenceNbr - 1))
+        )[0];
+
+      currentWorkflowStage.workFlowProgress[0].currentFlag = 'N';
+      currentWorkflowStage.workFlowProgress[0].visitedFlag = 'Y';
+      nextWorkflowStage.workFlowProgress[0].currentFlag = 'Y';
+
+      let currentWorkflowIndex = this.workflowRoutes?.findIndex(wf => wf.workflowStepId === currentWorkflowStage.workflowStepId);
+      let nextWorkflowStepIndex = this.workflowRoutes?.findIndex(wf => wf.workflowStepId === nextWorkflowStage.workflowStepId);
+      if (currentWorkflowIndex !== -1) {
+        this.workflowRoutes[currentWorkflowIndex] = currentWorkflowStage;
+      }
+
+      if (nextWorkflowStepIndex !== -1) {
+        this.workflowRoutes[nextWorkflowStepIndex] = nextWorkflowStage;
+      }
+
+      // it will trigger the work flow and update the work current screen.
+      this.updateWorkflow(this.workflowRoutes, nextWorkflowStage);
+    }
+  }
+
+  appyAutomaticWorkflowProgress(updateworkflowProgress: UpdateWorkFlowProgress, currentWorkflowStage: Workflow, navigationType: NavigationType) {
+    let resp = this.routeService.saveWorkflowProgress(updateworkflowProgress)
+    this.updateAutomaticWorkflowChange(currentWorkflowStage, navigationType);
+    return resp;
+  }
+
+  applyManualWorkflowChange(currentWorkflowStage: Workflow) {
+    let model = {
+      clientCaseEligibilityId: currentWorkflowStage?.workFlowProgress[0]?.clientCaseEligibilityId ?? '2500D14F-FB9E-4353-A73B-0336D79418CF',
+      workflowStepId: currentWorkflowStage?.workflowStepId,
+      workflowProgressId: currentWorkflowStage?.workFlowProgress[0]?.workflowProgressId ?? 'e3b0a899-8a42-4ff7-bc90-ca545f02b3f0',
+    }
+    let wokflowUpdate = this.routeService.saveManualWorkflowChange(model);
+    this.updateManualWorkflowChange(currentWorkflowStage);
+    return wokflowUpdate;
+
+  }
+
+  updateManualWorkflowChange(currentWorkflow: Workflow) {
+    let previousWorkflow: Workflow[] = this.deepCopy(this.workflowRoutes)
+      .filter((wf: Workflow) =>
+        wf.workFlowProgress[0].currentFlag === 'Y'
+        && wf.workflowStepId != currentWorkflow.workflowStepId);
+
+    let wfWithoutCurrentStage = this.deepCopy(this.workflowRoutes)
+      .filter((wf: Workflow) =>
+        !previousWorkflow.map(w => w.processName).includes(wf.processName)
+        && wf.workflowStepId !== currentWorkflow?.workflowStepId
+      );
+
+    previousWorkflow.forEach((i: Workflow) => {
+      i.workFlowProgress[0].currentFlag = 'N'
+      i.workFlowProgress[0].visitedFlag = 'Y'
+      let index = this.deepCopy(this.workflowRoutes)?.findIndex((wf:Workflow) => wf.workflowStepId === i.workflowStepId);
+      if (index !== -1) {
+        this.workflowRoutes[index] = i;
+      }
+    });
+
+    currentWorkflow.workFlowProgress[0].currentFlag = 'Y';
+    currentWorkflow.workFlowProgress[0].visitedFlag = 'Y';
+    let currentWorkflowIndex = this.deepCopy(this.workflowRoutes)?.findIndex((wf:Workflow) => wf.workflowStepId === currentWorkflow.workflowStepId);
+    this.workflowRoutes[currentWorkflowIndex] = currentWorkflow;
+
+    this.updateWorkflow(this.workflowRoutes, currentWorkflow);
+  }
+
+  deepCopy(data: any): any {
+    return JSON.parse(JSON.stringify(data === undefined ? null : data));
   }
 
 }

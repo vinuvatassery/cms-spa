@@ -20,7 +20,7 @@
     </div>
     <div
       *ngFor="let case of lastVisitedCases$ | async; let i = index"
-      [routerLink]="[case.isApplicationComplete ? '/case360/{{case.id}}' : '/case-detail']"
+      [routerLink]="[case.isApplicationComplete ? '/case-management/cases/case360/{{case.id}}' : 'case-management/case-detail']"
       [queryParams]="getQueryParams(case)"
       [routerLinkActive]="'activeCase'"
       >
