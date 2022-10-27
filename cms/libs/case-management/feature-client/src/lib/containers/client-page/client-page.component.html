@@ -18,6 +18,6 @@
  
   <h3>Applicant Info</h3>
   <div class="block-section">
-    <case-management-client-edit-view></case-management-client-edit-view>
+    <case-management-client-edit-view [clientData]="caseInfo$ | async"></case-management-client-edit-view>
   </div>
 </div>

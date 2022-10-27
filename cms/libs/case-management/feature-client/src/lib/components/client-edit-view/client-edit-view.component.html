@@ -3,13 +3,13 @@
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Enter First Name" class="k-form">
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
-        <kendo-textbox aria-label="enter first name"   [fillMode]="fillMode">
+        <kendo-textbox aria-label="enter first name"   [fillMode]="fillMode" [(ngModel)]="clientData[0].client.firstName">
       </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Middle Initial (Optional)">
-        <kendo-textbox    [disabled]="!isMiddleNameChecked" aria-label="middle initial" [fillMode]="fillMode">
+        <kendo-textbox    [disabled]="!isMiddleNameChecked" aria-label="middle initial" [fillMode]="fillMode"  [(ngModel)]="clientData[0].client.middleName">
         </kendo-textbox>
         <!-- <input
           kendoTextBox
@@ -32,7 +32,7 @@
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name">
-        <kendo-textbox aria-label="last name" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="last name" [fillMode]="fillMode" [(ngModel)]="clientData[0].client.lastName">   </kendo-textbox>
         <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
       </kendo-floatinglabel>
     </div>
@@ -283,7 +283,7 @@
         >Not listed, please specify:</label
       >
       <kendo-floatinglabel text="Enter Pronouns" >
-        <kendo-textbox aria-label="enter pronouns"  [disabled]="!isPronounsChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="enter pronouns"  [disabled]="!isPronounsChecked" [fillMode]="fillMode" >   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="!isPronounsChecked"
@@ -318,7 +318,6 @@
     <div class="flex-col flex-col-8">
       <kendo-floatinglabel text="How do they describe their gender? Optional">
         <kendo-textbox aria-label="how do they describe their gender"  [disabled]="isDescribeGenderChecked" [fillMode]="fillMode">   </kendo-textbox>
-
         <!-- <input
           kendoTextBox
           [disabled]="isDescribeGenderChecked"

@@ -5,6 +5,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CaseDetailsFacade, ClientFacade } from '@cms/case-management/domain';
 import { Observable, of, Subscription } from 'rxjs';
 import { CaseFacade } from '@cms/case-management/domain';
+import { UntypedFormControl, FormGroup, Validators,UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'case-management-client-page',
@@ -12,6 +13,7 @@ import { CaseFacade } from '@cms/case-management/domain';
   styleUrls: ['./client-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Public properties **/
@@ -21,10 +23,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   private programList:any;
   private caseOwners:any;
   private caseOrigins:any;
+  clientPageForm!: UntypedFormGroup;
+  private clientData:any;
 
   caseOwners$ = this.caseFacade.caseOwners$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
   ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+  caseInfo$=this.caseFacade.caseInfo$;
 
   constructor(private caseDetailsFacade: CaseDetailsFacade,
     private clientFacade:ClientFacade,
@@ -40,7 +45,21 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscribed();
     this.loadDdlCaseOrigins();
     this.loadCaseOwners();
+    this.loadClientInfo();
+    this.buildForm();
   }
+
+  private buildForm() {
+    console.log(this.caseInfo$);
+    this.clientPageForm = new UntypedFormGroup({
+      clientDetails: new UntypedFormControl('', Validators.required)
+    });
+  }
+
+  private loadClientInfo() {
+    this.caseFacade.getClientInfo();
+  }
+  
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
   }

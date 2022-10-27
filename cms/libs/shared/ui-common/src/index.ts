@@ -3,6 +3,7 @@ export * from './lib/shared-ui-common.module';
 
 /** Entites **/
 export * from './lib/entities/snack-bar';
+export * from './lib/entities/client-response';
 
 /** Components **/
 export * from './lib/address-validation/address-validation.component';

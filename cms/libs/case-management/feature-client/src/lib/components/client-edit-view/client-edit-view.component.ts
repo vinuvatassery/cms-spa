@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit,Input, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
 /** Facades **/
@@ -9,6 +9,7 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
+import { ClientResponse } from '@cms/shared/ui-common';
 
 export type Option = {
   type: string;
@@ -25,9 +26,11 @@ export class ClientEditViewComponent implements OnInit {
 
   isVisible: any;
   isSelected = true;
+  @Input() clientData: any;
   
   /** Public properties **/
   public currentDate = new Date();
+
 
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
@@ -82,6 +85,7 @@ export class ClientEditViewComponent implements OnInit {
   tareaRaceAndEthinicity = '';
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
+  firstName:string='';
 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade) {}
@@ -104,6 +108,18 @@ export class ClientEditViewComponent implements OnInit {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
+    this.loadClientData();
+    
+  }
+
+
+  private loadClientData(){
+    console.log(this.clientData);
+    console.log(this.clientData[0]);
+  this.firstName=this.clientData[0].client.firstName;
+    console.log(this.clientData.client);
+       const clientResponse:ClientResponse=this.clientData;
+       console.log(clientResponse);
   }
 
   /** Private methods **/
