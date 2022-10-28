@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component,
+  Component, ViewChild,
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -15,8 +15,12 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
-
-
+import {
+  ButtonSize,
+  ButtonRounded,
+  ButtonFillMode,
+  ButtonThemeColor,
+} from "@progress/kendo-angular-buttons";
 
 @Component({
   selector: 'case-management-new-case',
@@ -25,6 +29,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewCaseComponent implements OnInit {
+  public buttonFillMode: ButtonFillMode = "outline"
   currentDate = new Date();
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';

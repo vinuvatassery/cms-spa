@@ -6,7 +6,7 @@
   <section>
     <div class="flex-row">
       <div class="flex-col">
-        <div class="global-search mat-form-no-b-space">
+        <div class="global-search mat-form-no-b-space search-case">
           <span
             class="material-icons global-search-icon"
             aria-label="search case"
@@ -19,6 +19,7 @@
             valueField="id"
             placeholder="Search Case Name, Member ID or SSN"
             fillMode="outline"
+            [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }" 
           >
             <kendo-combobox-column>
               <ng-template
@@ -31,12 +32,13 @@
                 <span class="text-muted">SSN {{ dataItem.ssn }}</span>
               </ng-template>
             </kendo-combobox-column>
-            <ng-template kendoMultiColumnComboBoxFooterTemplate>
-              <div class="app-c-globalSearch">
-                <div class="flex-row">
-                  <div class="flex-col">
+            <ng-template kendoMultiColumnComboBoxFooterTemplate class="p-0" >
+              <div class="app-c-globalSearch app-c-globalSearch-footer p-0">
+                <div class="flex-row p-0">
+                  <div class="flex-col p-0">
                     <p class="looking-for-message">
-                      Don’t see find who you are looking for?
+                      <!-- Don’t see find who you are looking for? -->
+                      Don’t see who you are looking for?
                     </p>
                     <button
                       aria-label=" create new case"
@@ -45,7 +47,8 @@
                       class="btn-full-no-radius"
                       (click)="onOpenProgramSelectionClicked()"
                     >
-                      Create New Case
+                      <!-- Create New Case -->
+                      START NEW APPLICATION
                     </button>
                   </div>
                 </div>
@@ -102,6 +105,7 @@
             textField="value"
             valueField="key"
             [(ngModel)]="selectedProgram"
+            [disabled]="true"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>

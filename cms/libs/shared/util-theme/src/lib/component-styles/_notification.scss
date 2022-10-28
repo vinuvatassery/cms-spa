@@ -61,6 +61,7 @@
     }
     &.k-notification-success {
       border-color: material-color($hive-success-palette, 500);
+      color: $white;
       background-color: material-color($hive-success-palette, 500);
       .k-i-success {
         &:before {

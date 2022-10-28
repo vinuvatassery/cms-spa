@@ -14,17 +14,17 @@
   </div>
   <div class="add-client_right">
     <!-- Breadcrumb Section -->
-    <section class="app-l-breadcrumb mb-1 py-0 fixed-top-breadcrumb">
+    <section class="app-l-breadcrumb mb-3 py-0 fixed-top-breadcrumb">
       <common-bread-crumb></common-bread-crumb>
       <div class="breadcrumb-right app-c-split-button">
         <kendo-splitbutton
           [data]="saveForLaterData"
           class="app-c-split-button app-dropdown-action"
           buttonClass="k-split-button"
-          (click)="onSaveAndContinueClicked()"
+         
           [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }"
         >
-          <div class="btn-inner-block">
+          <div class="btn-inner-block"  (click)="onSaveAndContinueClicked()">
             <span  class="material-icons"  aria-label="save and continue"  aria-hidden="false" >save</span>
             Save For Later
           </div>

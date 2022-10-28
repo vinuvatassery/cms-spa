@@ -10,5 +10,11 @@ $app-primary-lighten: material-color($hive-primary-palette, 200) !default;
 $app-primary-darken: material-color($hive-primary-palette, 600) !default;
 $secondary: material-color($hive-warn-palette, 500) !default;
 
+
+$primary-palette-name: $app-primary !important;
+$secondary-palette-name: $secondary !important;
+$theme-type: $app-primary-lighten !important;
 /* importing App Component Styles*/
 @import '../../component-styles/app-style.scss';
+
+

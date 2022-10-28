@@ -50,6 +50,9 @@
   }
 }
 /* Card in popover */
+.use-profile-card-wrapper{
+  max-width: 320px;
+}
 .k-popover {
   border: 1px solid $theme-border;
   background: $white;
