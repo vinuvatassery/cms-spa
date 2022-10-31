@@ -11,8 +11,7 @@
             class="material-icons global-search-icon"
             aria-label="search case"
             aria-hidden="true"
-            >search</span
-          >
+            >search</span>
           <kendo-multicolumncombobox
             [data]="caseSearchResults$ | async"
             textField="name"
@@ -59,6 +58,7 @@
 </section>
 
 <!-- Program Selection Modal -->
+<div class="form-group" [formGroup]="newCaseForm" #formDir="ngForm">
 <kendo-dialog
   *ngIf="isProgramSelectionOpened"
   (close)="onCloseProgramSelectionClicked()"
@@ -66,11 +66,12 @@
   title="Create New Case"
   kendoTooltip
 >
+
   <section class="k-dialog-body newcase">
     <p class="text-muted mb-2">
       All fields are required unless otherwise stated.
     </p>
-    <common-case-card [isProgramControlVisible]="true"></common-case-card>
+    <common-case-card [isProgramControlVisible]="true" [parentForm]="newCaseForm" [submitted]="isSubmitted"></common-case-card>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -95,3 +96,4 @@
     </div>
   </kendo-dialog-actions>
 </kendo-dialog>
+</div>

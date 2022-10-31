@@ -15,6 +15,7 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
+import {FormGroup,FormBuilder,Validators} from '@angular/forms';
 
 
 
@@ -29,6 +30,7 @@ export class NewCaseComponent implements OnInit {
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
+  newCaseForm!: FormGroup;
   
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
@@ -40,20 +42,32 @@ export class NewCaseComponent implements OnInit {
   ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
   isProgramSelectionOpened = false;
   selectedProgram!: any;
+  isSubmitted!:boolean;
 
   /** Constructor**/
   constructor(
+    private fb:FormBuilder,
     private readonly router: Router,
     private readonly caseFacade: CaseFacade,
-    private readonly ref: ChangeDetectorRef
-  ) {}
+    private readonly ref: ChangeDetectorRef,
+    
+  ) {
+    this.newCaseForm=this.fb.group({
+      caseOrigin:['',Validators.required],
+      caseOwner:['',Validators.required],
+      dateApplicationReceived:[this.currentDate,Validators.required],
+    });
+  }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void {   
+      
+
     this.loadCaseBySearchText();
     this.loadCaseOwners();
     this.loadDdlPrograms();
     this.loadDdlCaseOrigins();
+    
   }
 
   /** Private methods **/
@@ -70,7 +84,8 @@ export class NewCaseComponent implements OnInit {
     this.ddlPrograms$.subscribe({
       next: (programs: any) => {
         this.selectedProgram = programs.filter(
-          (data: any) => data.default === true
+          (data: any) => {console.log(data);
+            data.default === true}
         )[0];
       },
       error: (err: any) => {
@@ -90,12 +105,15 @@ export class NewCaseComponent implements OnInit {
   }
 
   onCreateCaseClicked() {
+    this.isSubmitted=true;
+    if(this.newCaseForm.valid){
     this.router.navigate(['case-management/case-detail'], {
       queryParams: {
         screenFlowType: ScreenFlowType.NewCase,
         programId: this.selectedProgram.key,
       },
     });
+  }
   }
 
   onCloseProgramSelectionClicked() {

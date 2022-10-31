@@ -9,37 +9,42 @@ import {
   } from '@progress/kendo-angular-dateinputs';
 
 import { Router } from '@angular/router';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'common-case-card',
   templateUrl: './case-common-card.component.html',
+  styleUrls: ['./case-common-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseCommonCardComponent implements OnInit {
-
     currentDate = new Date();
     public size: DateInputSize = 'medium';
     public rounded: DateInputRounded = 'full';
     public fillMode: DateInputFillMode = 'outline';
     selectedProgram!: any;
-    @Input() isProgramControlVisible:any;
+    @Input() isProgramControlVisible: any;
+    @Input() parentForm!: FormGroup;
+    @Input() submitted!: Boolean;
+    
+    caseOwners$ = this.caseFacade.caseOwners$;
+    ddlPrograms$ = this.caseFacade.ddlPrograms$;
+    ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+    caseCommon:any;
 
-  caseOwners$ = this.caseFacade.caseOwners$;
-  ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
-
-  constructor(
-    private readonly router: Router,
-    private readonly caseFacade: CaseFacade,
-    private readonly ref: ChangeDetectorRef
-  ) {}
+    constructor(
+      private readonly router: Router,
+      private readonly caseFacade: CaseFacade,
+      private readonly ref: ChangeDetectorRef
+    ) {
+    }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadCaseOwners();
     this.loadDdlPrograms();
     this.loadDdlCaseOrigins();
-  }
+   }
 
   private loadCaseOwners() {
     this.caseFacade.loadCaseOwners();
@@ -62,8 +67,4 @@ export class CaseCommonCardComponent implements OnInit {
   private loadDdlCaseOrigins() {
     this.caseFacade.loadDdlCaseOrigins();
   }
-
-
-
-
 }

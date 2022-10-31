@@ -1,37 +1,48 @@
-<div class="flex-row">
+<div class="form-group" [formGroup]="parentForm">
+  <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Date Application Received">
         <kendo-datepicker
         [fillMode]="fillMode"
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
-          [(ngModel)]="currentDate" 
+          formControlName="dateApplicationReceived"
+          [value]="currentDate"
+          required
         >
         </kendo-datepicker>
+        <div *ngIf="submitted && parentForm.hasError('required','dateApplicationReceived')" class="mt-1 invalid">Date Application Received required</div>  
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Origin">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async">
+        <kendo-dropdownlist required [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async" formControlName="caseOrigin">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <div *ngIf="submitted && parentForm.hasError('required','caseOrigin')" class="mt-1 invalid">Case Origin required</div>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Owner">
-        <kendo-autocomplete [fillMode]="fillMode" [data]="caseOwners$ | async">
+        <kendo-autocomplete [fillMode]="fillMode" required [data]="caseOwners$ | async" formControlName="caseOwner">
         </kendo-autocomplete>
       </kendo-floatinglabel>
+      <div *ngIf="submitted && parentForm.hasError('required','caseOwner')" class="mt-1 invalid">Case Owners required</div>
     </div>
     <div class="flex-col" *ngIf="isProgramControlVisible==true">
       <kendo-floatinglabel text="Program">
         <kendo-dropdownlist
+        required
         [fillMode]="fillMode"
           [data]="ddlPrograms$ | async"
           textField="value"
           valueField="key"
-          [(ngModel)]="selectedProgram"
+          formControlName="selectedProgram"
+          [value]="1"
+          [valuePrimitive]="true"
+         
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
   </div>
+</div>
