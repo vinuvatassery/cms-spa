@@ -22,7 +22,7 @@ export type Option = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit {
-
+  public value = "";
   isVisible: any;
   isSelected = true;
   

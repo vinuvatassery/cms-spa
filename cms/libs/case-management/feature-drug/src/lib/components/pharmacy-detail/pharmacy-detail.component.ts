@@ -9,7 +9,11 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
-
+import {
+  DateInputSize,
+  DateInputRounded,
+  DateInputFillMode,
+} from '@progress/kendo-angular-dateinputs';
 @Component({
   selector: 'case-management-pharmacy-detail',
   templateUrl: './pharmacy-detail.component.html',
@@ -23,7 +27,7 @@ export class PharmacyDetailComponent implements OnInit {
 
   /** Output properties  **/
   @Output() closePharmacyEvent = new EventEmitter();
-
+  public fillMode: DateInputFillMode = 'outline';
   /** Public properties **/
   pharmacies$ = this.drugPharmacyFacade.pharmacies$;
   ddlStates$ = this.drugPharmacyFacade.ddlStates$;
