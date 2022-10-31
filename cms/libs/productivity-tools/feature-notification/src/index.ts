@@ -1,7 +1,0 @@
-/** Modules **/
-export * from './lib/productivity-tools-feature-notification.module';
-
-/** Components **/
-export * from './lib/components/notification-list/notification-list.component';
-export * from './lib/components/notification-panel/notification-panel.component';
-export * from './lib/containers/notification-page/notification-page.component';
