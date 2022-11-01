@@ -5,7 +5,11 @@ import { CommonModule } from '@angular/common';
 import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
+
 import { CaseManagementFeatureClientRoutingModule } from './case-management-feature-client-routing.module';
+import { CaseManagementFeatureCaseModule } from '@cms/case-management/feature-case';
+
+
 /** Components  **/
 import { ClientPageComponent } from './containers/client-page/client-page.component';
 import { ClientEditViewComponent } from './components/client-edit-view/client-edit-view.component';
@@ -24,6 +28,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
+    CaseManagementFeatureCaseModule
   ],
   declarations: [
     ClientPageComponent,
@@ -31,7 +36,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     ClientReadOnlyViewComponent,
     SpecialHandlingComponent,
     DuplicateClientFoundComponent,
-    CaseDetailsComponent,
+   // CaseDetailsComponent,
     SpecialHandlingDetailComponent,
   ],
   exports: [
