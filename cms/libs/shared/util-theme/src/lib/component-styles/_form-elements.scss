@@ -511,7 +511,13 @@
     margin-bottom: $size-0;
   }
 }
+.k-list-ul{
+  .k-list-group-item{
+   
+    // border-bottom: 1px solid $black-e;
+  }
 
+}
 // ************************************************** /* Search-input */************************************************************
 
 // /*Search-input*/
@@ -520,7 +526,7 @@
   .material-icons {
     position: absolute;
     left: $size-xx;
-    top: $size-xx * 2;
+    top: 27px;
     z-index: 1;
     opacity: 0.5;
   }

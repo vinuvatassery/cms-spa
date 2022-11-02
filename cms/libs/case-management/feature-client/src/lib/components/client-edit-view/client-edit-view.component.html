@@ -6,10 +6,10 @@
       <kendo-floatinglabel text="Enter First Name" class="k-form">
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
         <kendo-textbox aria-label="enter first name"  
-        formControlName="firstname"
-        showErrorIcon="initial"
-        #firstname
-        required
+          formControlName="firstname"
+          showErrorIcon="initial"
+          #firstname
+          required  
          [fillMode]="fillMode">
       </kendo-textbox>
       <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
@@ -768,12 +768,14 @@
           arrow_drop_down
         </span> -->
         <kendo-multiselect
-          [checkboxes]="true"
-          [clearButton]="false"
-          [autoClose]="false"
-         
+        [checkboxes]="{ checkOnClick: true, enabled: true }"
+       
+     
+          #multiselect 
+          (close)="onClose($event)"
           [fillMode]="fillMode"
           [data]="racialIdentityOptions"
+          [(ngModel)]="racialName"
           [textField]="'racialName'"
           [valueField]="'racialName'"
           [popupSettings]="{ popupClass: popupClassMultiSelect, animate: true }"
@@ -799,15 +801,14 @@
               type="checkbox"
               kendoCheckBox
               aria-labelledby="racialName"
-              id="racialName"
+              [id]="dataItem.racialName"
             />
-            <label class="k-checkbox-label" for="racialName">{{
-              dataItem.racialName
-            }}</label>
+            <label class="k-checkbox-label" [for]="dataItem.racialName" >{{  dataItem.racialName   }}</label>
             </span>
-          </ng-template>
+          </ng-template> 
         </kendo-multiselect>
       </kendo-floatinglabel>
+      
     </div>
   </div>
 </section>

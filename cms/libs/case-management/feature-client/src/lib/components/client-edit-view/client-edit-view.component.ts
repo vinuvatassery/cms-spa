@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ViewEncapsulation , OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation , ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
 /** Facades **/
@@ -22,6 +22,7 @@ export type Option = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit {
+ 
   public value = "";
   isVisible: any;
   isSelected = true;
@@ -87,7 +88,7 @@ export class ClientEditViewComponent implements OnInit {
   tareaRaceAndEthinicity = '';
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
-
+  public racialName: any = [];
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade) {
     this.form = new FormGroup({
@@ -114,11 +115,18 @@ export class ClientEditViewComponent implements OnInit {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
+ 
   }
   public submitForm(): void {
     this.form.markAllAsTouched();
   }
+ 
 
+  public onClose(event: any) {
+    
+      event.preventDefault();
+   
+  }
   public clearForm(): void {
     this.form.reset();
   }
