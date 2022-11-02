@@ -32,7 +32,6 @@ import { Case360HeaderComponent } from './components/case360-header/case360-head
 import { ReAssignCaseComponent } from './components/re-assign-case/re-assign-case.component';
 import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
-import { CaseDetailComponent } from './components/case-details/case-details.component';
 
 @NgModule({
   imports: [
@@ -67,8 +66,8 @@ import { CaseDetailComponent } from './components/case-details/case-details.comp
     Case360HeaderComponent,
     ReAssignCaseComponent,
     CommonActionsComponent,
-    SendLetterProfileComponent,
-    CaseDetailComponent
+    SendLetterProfileComponent
+    
   ],
   exports: [
     CasePageComponent,
@@ -81,8 +80,8 @@ import { CaseDetailComponent } from './components/case-details/case-details.comp
     Case360HeaderComponent,
     ReAssignCaseComponent,
     CommonActionsComponent,
-    SendLetterProfileComponent,
-    CaseDetailComponent
+    SendLetterProfileComponent
+    
   ],
 })
 export class CaseManagementFeatureCaseModule {}

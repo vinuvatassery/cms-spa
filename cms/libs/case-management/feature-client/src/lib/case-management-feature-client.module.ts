@@ -7,7 +7,7 @@ import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 import { CaseManagementFeatureClientRoutingModule } from './case-management-feature-client-routing.module';
-import { CaseManagementFeatureCaseModule } from '@cms/case-management/feature-case';
+
 
 
 /** Components  **/
@@ -16,7 +16,6 @@ import { ClientEditViewComponent } from './components/client-edit-view/client-ed
 import { ClientReadOnlyViewComponent } from './components/client-read-only-view/client-read-only-view.component';
 import { SpecialHandlingComponent } from './components/special-handling/special-handling.component';
 import { DuplicateClientFoundComponent } from './components/duplicate-client-found/duplicate-client-found.component';
-import { CaseDetailsComponent } from './components/case-details/case-details.component';
 import { SpecialHandlingDetailComponent } from './components/special-handling-detail/special-handling-detail.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
@@ -28,8 +27,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
-    CaseManagementFeatureCaseModule
-  ],
+      ],
   declarations: [
     ClientPageComponent,
     ClientEditViewComponent,
