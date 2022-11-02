@@ -18,7 +18,7 @@ export class CaseNavigationComponent implements OnInit {
   /** Input Properties **/
   @Input() routes$!: Observable<any>;
   @Input() completeStaus$!: Observable<any>;
-  // @Input() navigationEvent = new EventEmitter<string>();
+  @Input() navigationEvent = new EventEmitter<string>();
   @Output() workflowChange = new EventEmitter<Workflow>();
 
   /** Public Properties **/
@@ -40,14 +40,13 @@ export class CaseNavigationComponent implements OnInit {
   ngOnInit(): void {
     this.loadCaseNavigationDeatils();
     this.navigationInitiated();
-    //this.addNavigationSubscription();
+    this.addNavigationSubscription();
   }
 
   /** Private Methods **/
   private loadCaseNavigationDeatils() {
     this.routes$.subscribe({
       next: (routes: any) => {
-        console.log(routes);
         this.navigate(routes, NavigationType.Default)
         this.routes = routes;
       },
@@ -57,32 +56,37 @@ export class CaseNavigationComponent implements OnInit {
     });
   }
 
-  // private addNavigationSubscription() {
-  //   this.navigationEvent.subscribe({
-  //     next: (navigationType: NavigationType) => {
-  //       this.navigate(this.routes, navigationType);
-  //     },
-  //     error: (err: any) => {
-  //       console.error('error', err);
-  //     },
-  //   });
-  // }
+  private addNavigationSubscription() {
+    this.navigationEvent.subscribe({
+      next: (navigationType: NavigationType) => {
+        this.navigate(this.routes, navigationType);
+      },
+      error: (err: any) => {
+        console.error('error', err);
+      },
+    });
+  }
 
   private navigate(routes: any, navigationType: NavigationType) {
-    this.navigationIndex = routes.findIndex((route: Workflow) =>
-      route?.workFlowProgress[0]?.currentFlag === 'Y'
-    );
+    const CurrentRoute = this.router.url;
+    switch (navigationType) {
+      case NavigationType.Next:
+        this.navigationIndex = routes.findIndex((route: any) => CurrentRoute.includes(route.url)) + 1;
+        break;
+      case NavigationType.Previous:
+        this.navigationIndex = routes.findIndex((route: any) => CurrentRoute.includes(route.url)) + 1;
+        break;
+      case NavigationType.Default:
+        this.navigationIndex = routes.findIndex((route: Workflow) =>
+          route?.workFlowProgress[0]?.currentFlag === 'Y'
+        );
+        break;
+      default:
+        this.navigationIndex = -1;
+    }
 
     this.navigateByUrl(routes);
   }
-
-  // private previousNavigation(routes: any) {
-  //   const CurrentRoute = this.router.url;
-  //   this.navigationIndex =
-  //     routes.findIndex((route: any) => CurrentRoute.includes(route.url)) -
-  //     1;
-  //   this.navigateByUrl(routes);
-  // }
 
   private navigateByUrl(routes: any) {
     if (this.navigationIndex > -1 && this.navigationIndex < routes.length) {

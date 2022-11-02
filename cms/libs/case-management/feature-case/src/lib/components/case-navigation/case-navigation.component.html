@@ -18,9 +18,15 @@
             ? 'kendo-list-items section-completed'
             : 'kendo-list-items'
         "
+        [routerLink]="route.url"
+        [queryParamsHandling]="'preserve'"
         (click)="onRouteChange(route)"
       >
-        <span>{{ route.title }}</span>
+      <span>{{ route.title }}</span>
+      <page-completion-status
+      [workflowStepId] = "route.workflowStepId"
+      ></page-completion-status>
+        <!-- 
         <span *ngIf="route.workFlowProgress[0].datapointsCompletedCount !== route.workFlowProgress[0]?.datapointsTotalCount"
           >{{ route.workFlowProgress[0]?.datapointsCompletedCount }} of {{ route.workFlowProgress[0]?.datapointsTotalCount }}</span
         >
@@ -30,7 +36,7 @@
           "
           class="material-icons"
           >check_circle</span
-        >
+        > -->
       </li>
     <!-- </div> -->
   </div>
@@ -42,7 +48,7 @@
       [primary]="true"
       (click)="onApplicationReviewClicked()"
       [queryParamsHandling]="'preserve'"
-      routerLink="/case-detail/application-eligibility/eligibility"
+      routerLink="/case-management/case-detail/application-eligibility/eligibility"
     >
       Start
     </button>

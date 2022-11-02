@@ -21,6 +21,7 @@ export * from './lib/entities/provider';
 export * from './lib/entities/search';
 export * from './lib/entities/verification';
 export * from './lib/entities/workflow';
+export * from './lib/entities/workflow-stage-completion-status';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';

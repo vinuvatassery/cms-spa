@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
 /** Facades **/
@@ -9,6 +9,8 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 export type Option = {
   type: string;
@@ -25,7 +27,12 @@ export class ClientEditViewComponent implements OnInit {
 
   isVisible: any;
   isSelected = true;
-  
+
+  /** Onput Properties **/
+  @Output() AppInfoChanged = new EventEmitter<string[]>();
+  @Output() AdjustAttributeChanged = new EventEmitter<string[]>();
+
+
   /** Public properties **/
   public currentDate = new Date();
 
@@ -82,9 +89,11 @@ export class ClientEditViewComponent implements OnInit {
   tareaRaceAndEthinicity = '';
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
+  appInfoForm!: FormGroup;
+  adjustmentAttributeList!: string[];
 
   /** Constructor**/
-  constructor(private readonly clientfacade: ClientFacade) {}
+  constructor(private readonly clientfacade: ClientFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -104,9 +113,55 @@ export class ClientEditViewComponent implements OnInit {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
+    this.buildForm();
+    this.addAppInfoFormChangeSubscription();
   }
 
   /** Private methods **/
+
+  private buildForm() {
+    this.appInfoForm = new FormGroup({
+      firstName: new FormControl('', Validators.required,),
+      middleName: new FormControl(''),
+      chkmiddleName: new FormControl(false),
+      lastName: new FormControl('', Validators.required),
+      prmInsFirstName: new FormControl(''),
+      prmInsLastName: new FormControl(''),
+      prmInsNotApplicable: new FormControl(false),
+      officialIdFirstName: new FormControl(''),
+      officialIdLastName: new FormControl(''),
+      officialIdsNotApplicable: new FormControl(false),
+      dateOfBirth: new FormControl(''),
+      ssn: new FormControl(''),
+      ssnNotApplicable: new FormControl(false),
+      //TODO: other form controls 
+    })
+  }
+
+  private addAppInfoFormChangeSubscription() {
+    this.appInfoForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((val1) => {
+        this.updateFormCompleteCount();
+      });
+  }
+
+  private updateFormCompleteCount() {
+    let completedDataPoints: string[] = [];
+    Object.keys(this.appInfoForm.controls).forEach(key => {
+      if (this.appInfoForm?.get(key)?.value && this.appInfoForm?.get(key)?.valid) {
+        completedDataPoints.push(key);
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.AppInfoChanged.emit(completedDataPoints);
+    }
+  }
+
   private loadTareaRaceAndEthinicity() {
     this.tareaRaceAndEthinicityCharachtersCount = this.tareaRaceAndEthinicity
       ? this.tareaRaceAndEthinicity.length

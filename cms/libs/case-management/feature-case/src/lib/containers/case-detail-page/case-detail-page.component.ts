@@ -76,7 +76,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     },
 
   ];
-  routes$ = this.caseFacade.routes$;
+  routes$ = this.workflowFacade.routes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
 
   constructor(
@@ -152,7 +152,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     program_id: number,
     case_id?: number
   ) {
-    this.caseFacade.loadRoutes(screen_flow_type_code, program_id, case_id);
+    this.workflowFacade.loadRoutes(screen_flow_type_code, program_id, case_id);
   }
 
   private loadCompletionStatus(caseId?: number) {
@@ -249,7 +249,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
 
   applyWorkflowChanges(route: Workflow) {
-    this.caseFacade.applyManualWorkflowChange(route).subscribe();
+    this.workflowFacade.applyManualWorkflowChange(route).subscribe();
   }
 
 }

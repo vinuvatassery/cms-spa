@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 /** services **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, Workflow, UpdateWorkFlowProgress } from '@cms/case-management/domain';
-import { forkJoin, mergeMap, Observable, of, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, Observable, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -65,7 +65,13 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   private smokingCessationFromChanged() {
     this.smokingCessationForm.valueChanges
-      .subscribe(val => {
+      // .pipe(
+      //   debounceTime(2000),
+      //   distinctUntilChanged()
+      // )
+      .subscribe((val1) => {
+        console.log(val1);
+        //console.log(val2);
         this.updateFormCompleteCount();
       });
   }
@@ -75,9 +81,11 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
-      mergeMap(([navigationType, isSaved]) =>
-        isSaved ? this.applyWorkflowChanges(navigationType) : of(false))
-    ).subscribe();
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
+    });
   }
 
   private save() {
@@ -90,37 +98,37 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     return of(false)
   }
 
-  private applyWorkflowChanges(navigationType: NavigationType) {
-    let clientEligilbilityID =
-      this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId ?
-      this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId
-        : '2500D14F-FB9E-4353-A73B-0336D79418CF'; //TODO: should be from the save response
+  // private applyWorkflowChanges(navigationType: NavigationType) {
+  //   let clientEligilbilityID =
+  //     this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId ?
+  //     this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId
+  //       : '2500D14F-FB9E-4353-A73B-0336D79418CF'; //TODO: should be from the save response
 
-    let updateWorkFlowProgress: UpdateWorkFlowProgress = {
-      clientCaseEligibilityId: clientEligilbilityID,
-      workflowStepId: this.caseFacad.currentWorkflowStage.workflowStepId,
-      totalDatapointsCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsTotalCount,
-      datapointsCompletedCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount,
-    }
+  //   let updateWorkFlowProgress: UpdateWorkFlowProgress = {
+  //     clientCaseEligibilityId: clientEligilbilityID,
+  //     workflowStepId: this.caseFacad.currentWorkflowStage.workflowStepId,
+  //     totalDatapointsCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsTotalCount,
+  //     datapointsCompletedCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount,
+  //   }
 
-    return this.caseFacad.appyAutomaticWorkflowProgress(
-      updateWorkFlowProgress,
-      this.caseFacad.currentWorkflowStage,
-      navigationType);
-  } 
+  //   return this.caseFacad.appyAutomaticWorkflowProgress(
+  //     updateWorkFlowProgress,
+  //     this.caseFacad.currentWorkflowStage,
+  //     navigationType);
+  // } 
 
-  private updateFormCompleteCount(): void {    
+  private updateFormCompleteCount(): void {
     let filledCount = 0;
+    let completedDataPoints: string[] = [];
     Object.keys(this.smokingCessationForm.controls).forEach(key => {
       if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
+        completedDataPoints.push(key);
         filledCount++;
       }
     });
 
-    if (this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount !== filledCount) {
-      this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount = filledCount;
-      this.caseFacad.updateWorkflowStageCount(this.caseFacad.currentWorkflowStage);
-    }
+   // if (completedDataPoints.length > 0)
+    //  this.workflowFacade.updateChecklist('SmokingCessation', completedDataPoints);
   }
 
   private tareaVariablesIntiation() {

@@ -1,30 +1,37 @@
 <section kendoRippleContainer>
-  <div class="flex-row">
+<form [formGroup]="appInfoForm">
+
+  <div class="flex-row AdjMiddleName" >
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Enter First Name" class="k-form">
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
-        <kendo-textbox aria-label="enter first name"   [fillMode]="fillMode">
+        <kendo-textbox  aria-label="enter first name" formControlName="firstName"  [fillMode]="fillMode">
       </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Middle Initial (Optional)">
-        <kendo-textbox    [disabled]="!isMiddleNameChecked" aria-label="middle initial" [fillMode]="fillMode">
+        <kendo-textbox    [disabled]="!isMiddleNameChecked" aria-label="middle initial" [fillMode]="fillMode" formControlName="middleName">
         </kendo-textbox>
         <!-- <input
           kendoTextBox
        
           aria-label="middle initial"
+             [(ngModel)]="isMiddleNameChecked"
         /> -->
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
       <span class="app-checkboxwidtext-wrapper">
       <input
+        class="adjust-attr"
         type="checkbox"
         aria-labelledby="middleInitial"
         id="middleInitial"
-        kendoCheckBox
+        name="chkmiddleName"
+        adjustment-attr="middleName"
+        formControlName="chkmiddleName"
+        kendoCheckBox 
         [(ngModel)]="isMiddleNameChecked"
       />
       <label class="k-checkbox-label" for="middleInitial">Middle Initial</label>
@@ -32,15 +39,16 @@
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name">
-        <kendo-textbox aria-label="last name" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="last name" [fillMode]="fillMode" formControlName="lastName">   </kendo-textbox>
         <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
       </kendo-floatinglabel>
     </div>
   </div>
+
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Primary Insurance Card">
-        <kendo-textbox aria-label="first name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="fillMode" formControlName="prmInsFirstName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
@@ -50,7 +58,7 @@
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name on Primary Insurance Card">
-        <kendo-textbox aria-label="last name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="fillMode" formControlName="prmInsLastName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
@@ -66,6 +74,7 @@
         aria-labelledby="insuranceCardNotApplicable"
         kendoCheckBox
         [(ngModel)]="isInsuranceCardChecked"
+        formControlName="prmInsNotApplicable"
       />
       <label class="k-checkbox-label" for="cardNotApplicable"
         >Not Applicable</label
@@ -76,7 +85,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Official ID">
-        <kendo-textbox aria-label="first name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="fillMode" formControlName="officialIdFirstName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isOfficialIdChecked"
@@ -91,7 +100,7 @@
           [disabled]="isOfficialIdChecked"
           aria-label="last name on official id"
         /> -->
-        <kendo-textbox aria-label="last name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="fillMode" formControlName="officialIdLastName">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
@@ -99,9 +108,11 @@
       <input
         type="checkbox"
         id="idNotApplicable"
+        name="idNotApplicable"
         aria-labelledby="officialIdNotApplicable"
         kendoCheckBox
         [(ngModel)]="isOfficialIdChecked"
+        formControlName="officialIdsNotApplicable"
       />
       <label class="k-checkbox-label" for="idNotApplicable"
         >Not Applicable</label
@@ -114,7 +125,8 @@
       <kendo-floatinglabel text="Date of Birth">
         <kendo-datepicker  
         [fillMode]="fillMode"
-        [value]="currentDate"></kendo-datepicker>
+        [value]="currentDate"
+        formControlName="dateOfBirth"></kendo-datepicker>
         <!-- <kendo-datepicker    id="datepicker">
         </kendo-datepicker> -->
       </kendo-floatinglabel>
@@ -129,7 +141,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Social Security Number">
-        <kendo-textbox aria-label="social security number"  [disabled]="isSSNChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="social security number"  [disabled]="isSSNChecked" [fillMode]="fillMode" formControlName="ssn">   </kendo-textbox>
 
         <!-- <input
           kendoTextBox
@@ -143,9 +155,11 @@
       <input
         type="checkbox"
         id="ssnNotApplicable"
+        name="ssnNotApplicable"
         aria-labelledby="ssnNotApplicable"
         kendoCheckBox
         [(ngModel)]="isSSNChecked"
+        formControlName="ssnNotApplicable"
       />
       <label class="k-checkbox-label" for="ssnNotApplicable"
         >Not Applicable</label
@@ -153,6 +167,7 @@
     </span>
     </div>
   </div>
+</form>
 </section>
 <section class="mb-3">
   <h5>Register to vote ?</h5>

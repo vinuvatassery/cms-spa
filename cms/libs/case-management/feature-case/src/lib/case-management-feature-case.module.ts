@@ -32,6 +32,7 @@ import { Case360HeaderComponent } from './components/case360-header/case360-head
 import { ReAssignCaseComponent } from './components/re-assign-case/re-assign-case.component';
 import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
+import { PageCompletionStatusComponent } from './components/page-completion-status/page-completion-status.component';
 
 @NgModule({
   imports: [
@@ -40,20 +41,20 @@ import { SendLetterProfileComponent } from './components/send-letter-profile/sen
     CaseManagementDomainModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
-    CaseManagementFeatureCerTrackingModule,    
+    CaseManagementFeatureCerTrackingModule,
     ProductivityToolsFeatureTodoModule,
     CaseManagementFeatureClientModule,
     CaseManagementFeatureCommunicationModule,
     SystemConfigFeatureUserManagementModule,
     ProductivityToolsFeatureEventLogModule,
     ProductivityToolsFeatureDirectMessageModule,
-    CaseManagementFeatureClientEligibilityModule,    
+    CaseManagementFeatureClientEligibilityModule,
     CaseManagementFeatureContactModule,
     CaseManagementFeatureFamilyAndDependentModule,
     CaseManagementFeatureIncomeModule,
     CaseManagementFeatureEmploymentModule,
     CaseManagementFeatureVerificationModule,
-    CaseManagementFeatureHealthInsuranceModule
+    CaseManagementFeatureHealthInsuranceModule,
   ],
   declarations: [
     LastVisitedCasesComponent,
@@ -67,6 +68,7 @@ import { SendLetterProfileComponent } from './components/send-letter-profile/sen
     ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
+    PageCompletionStatusComponent,
   ],
   exports: [
     CasePageComponent,

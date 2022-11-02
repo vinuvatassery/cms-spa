@@ -34,9 +34,11 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
-      mergeMap(([navigationType, isSaved]) =>
-        isSaved ? this.applyWorkflowChanges(navigationType) : of(false))
-    ).subscribe();
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
+    });
   }
 
   private save() {
@@ -48,26 +50,5 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
     return of(false)
   }
-
-  private applyWorkflowChanges(navigationType: NavigationType) {
-    let clientEligilbilityID =
-      this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId ?
-        this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId
-        : '2500D14F-FB9E-4353-A73B-0336D79418CF'; //TODO: should be from the save response
-
-    let updateWorkFlowProgress: UpdateWorkFlowProgress = {
-      clientCaseEligibilityId: clientEligilbilityID,
-      workflowStepId: this.caseFacad.currentWorkflowStage.workflowStepId,
-      totalDatapointsCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsTotalCount,
-      datapointsCompletedCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount,
-    }
-
-    return this.caseFacad.appyAutomaticWorkflowProgress(
-      updateWorkFlowProgress,
-      this.caseFacad.currentWorkflowStage,
-      navigationType);
-  }
-
-
 
 }
