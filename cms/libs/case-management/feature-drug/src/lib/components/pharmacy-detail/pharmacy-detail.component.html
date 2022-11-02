@@ -91,43 +91,54 @@
     </p>
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel text="Pharmacy Name and Number">
-          <input kendoTextBox aria-label="pharmacy name and number" />
+        <kendo-floatinglabel  text="Pharmacy Name and Number">
+          <!-- <input kendoTextBox aria-label="pharmacy name and number" /> -->
+          <kendo-textbox   aria-label="pharmacy name and number" [fillMode]="fillMode"> </kendo-textbox>
+       
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Pharmacy Phone Number">
-          <input kendoTextBox aria-label="pharmacy phone number" />
+          <kendo-textbox   aria-label="pharmacy phone number" [fillMode]="fillMode"> </kendo-textbox>
+    
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Contact Name (optional)">
-          <input kendoTextBox aria-label="contact name optional" />
+ 
+          <kendo-textbox   aria-label="contact name optional" [fillMode]="fillMode"> </kendo-textbox>
+
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Address line 1">
-          <input kendoTextBox aria-label="address line 1" />
+          <kendo-textbox   aria-label="address line 1" [fillMode]="fillMode"> </kendo-textbox>
+
+     
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Address line 2 (optional)">
-          <input kendoTextBox aria-label="address line 2" />
+          <kendo-textbox   aria-label="address line 2" [fillMode]="fillMode"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="City">
-          <input kendoTextBox aria-label="city" />
+          <kendo-textbox   aria-label="city" [fillMode]="fillMode"> </kendo-textbox>
+
+    
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="State">
-          <kendo-dropdownlist [data]="ddlStates$ | async"> </kendo-dropdownlist>
+          <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlStates$ | async"> </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Zip">
-          <input kendoTextBox aria-label="zip" />
+          <kendo-textbox   aria-label="Zip" [fillMode]="fillMode"> </kendo-textbox>
+
+        
         </kendo-floatinglabel>
       </div>
     </div>

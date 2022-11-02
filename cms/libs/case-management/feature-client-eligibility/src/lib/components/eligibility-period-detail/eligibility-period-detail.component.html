@@ -11,19 +11,19 @@
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status Start Date">
-        <kendo-datepicker [fillMode]="fillMode" [(ngModel)]="currentDate" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        <kendo-datepicker [fillMode]="fillMode" [(ngModel)]="currentDate" [disabled]="true" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status End Date">
-        <kendo-datepicker [fillMode]="fillMode" [(ngModel)]="currentDate" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        <kendo-datepicker [fillMode]="fillMode" [(ngModel)]="currentDate" [disabled]="true" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Group">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlGroups$ | async"> </kendo-dropdownlist>
+        <kendo-dropdownlist [fillMode]="fillMode" [disabled]="true" [data]="ddlGroups$ | async"> </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
   </div>

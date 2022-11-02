@@ -1,10 +1,19 @@
+ 
 <section kendoRippleContainer>
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Enter First Name" class="k-form">
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
-        <kendo-textbox aria-label="enter first name"   [fillMode]="fillMode">
+        <kendo-textbox aria-label="enter first name"  
+ 
+       
+   
+ 
+  
+         [fillMode]="fillMode">
       </kendo-textbox>
+      <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
+      <kendo-formerror>First Name is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4">
@@ -27,7 +36,7 @@
         kendoCheckBox
         [(ngModel)]="isMiddleNameChecked"
       />
-      <label class="k-checkbox-label" for="middleInitial">Middle Initial</label>
+      <label class="k-checkbox-label" for="middleInitial">  Middle Initial</label>
       </span>
     </div>
     <div class="flex-col flex-col-4">
@@ -154,6 +163,7 @@
     </div>
   </div>
 </section>
+ 
 <section class="mb-3">
   <h5>Register to vote ?</h5>
   <div class="flex-row gap-m">

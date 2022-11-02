@@ -21,7 +21,7 @@
   th,
   .k-header,
   .k-grid-header-sticky {
-    padding: $size-xl ($size-l * 2);
+    padding: $size-xl $size-xl;
     background-color: material-color($hive-neutral-palette, 700) !important;
     color: $white !important;
     font-size: $font-size-m;
@@ -38,7 +38,7 @@
     padding: $size-0 !important;
   }
   td {
-    padding: $size-xl ($size-l * 2);
+    padding: $size-l $size-xl;
     border-left-color: material-color($hive-neutral-palette, 200);
   }
   .k-grid-content {
@@ -404,4 +404,8 @@ table,
       order: 1;
     }
   }
+}
+
+.k-pager-wrap, .k-pager{
+  background: $light-bgcolor;
 }
