@@ -11,22 +11,22 @@
           required
         >
         </kendo-datepicker>
-        <div *ngIf="submitted && parentForm.hasError('required','dateApplicationReceived')" class="mt-1 invalid">Date Application Received required</div>  
+        <kendo-formerror *ngIf="submitted && parentForm.hasError('required','dateApplicationReceived')" class="mt-1 invalid">Date Application Received required</kendo-formerror>  
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Origin">
-        <kendo-dropdownlist required [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async" formControlName="caseOrigin">
+        <kendo-dropdownlist [ngClass]="{ 'ng-invalid ng-touched': submitted && parentForm.hasError('required','caseOrigin') }" [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async" formControlName="caseOrigin">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <div *ngIf="submitted && parentForm.hasError('required','caseOrigin')" class="mt-1 invalid">Case Origin required</div>
+      <kendo-formerror *ngIf="submitted && parentForm.hasError('required','caseOrigin')" class="invalid">Case Origin required</kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Owner">
-        <kendo-autocomplete [fillMode]="fillMode" required [data]="caseOwners$ | async" formControlName="caseOwner">
+        <kendo-autocomplete [fillMode]="fillMode" [ngClass]="{ 'ng-invalid ng-touched': submitted && parentForm.hasError('required','caseOwner') }" required [data]="caseOwners$ | async" formControlName="caseOwner">
         </kendo-autocomplete>
       </kendo-floatinglabel>
-      <div *ngIf="submitted && parentForm.hasError('required','caseOwner')" class="mt-1 invalid">Case Owners required</div>
+      <kendo-formerror *ngIf="submitted && parentForm.hasError('required','caseOwner')" class="invalid">Case Owners required</kendo-formerror>
     </div>
     <div class="flex-col" *ngIf="isProgramControlVisible==true">
       <kendo-floatinglabel text="Program">
