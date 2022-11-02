@@ -12,7 +12,11 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
-
+import {
+ 
+  DropDownFillMode
+   ,
+} from "@progress/kendo-angular-dropdowns";
 @Component({
   selector: 'case-management-letter-editor',
   templateUrl: './letter-editor.component.html',
@@ -22,7 +26,7 @@ import { CommunicationFacade } from '@cms/case-management/domain';
 export class LetterEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
-
+  public buttonFillMode : DropDownFillMode = "outline"
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
 

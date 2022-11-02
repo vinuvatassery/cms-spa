@@ -29,6 +29,13 @@
     white-space: normal;
     vertical-align: middle;
     font-weight: normal;
+    .k-link{
+      &:hover{
+        color: $white !important;
+    
+        }
+    }
+   
   }
   .k-grid-header-sticky {
     border-left-color: material-color($hive-neutral-palette, 600) !important;
