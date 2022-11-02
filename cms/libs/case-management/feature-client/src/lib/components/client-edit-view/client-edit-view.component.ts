@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation , OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
 /** Facades **/
@@ -9,7 +9,7 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
-
+import { Validators, FormGroup, FormControl } from "@angular/forms";
 export type Option = {
   type: string;
   data: string[];
@@ -25,7 +25,12 @@ export class ClientEditViewComponent implements OnInit {
   public value = "";
   isVisible: any;
   isSelected = true;
-  
+  public form: FormGroup;
+
+  public data: any = {
+    firstname: "",
+ 
+  };
   /** Public properties **/
   public currentDate = new Date();
 
@@ -84,7 +89,12 @@ export class ClientEditViewComponent implements OnInit {
   popupClassMultiSelect = 'multiSelectSearchPopup';
 
   /** Constructor**/
-  constructor(private readonly clientfacade: ClientFacade) {}
+  constructor(private readonly clientfacade: ClientFacade) {
+    this.form = new FormGroup({
+      firstname: new FormControl(this.data.firstname, [Validators.required]),
+     
+    });
+  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -105,7 +115,13 @@ export class ClientEditViewComponent implements OnInit {
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
   }
+  public submitForm(): void {
+    this.form.markAllAsTouched();
+  }
 
+  public clearForm(): void {
+    this.form.reset();
+  }
   /** Private methods **/
   private loadTareaRaceAndEthinicity() {
     this.tareaRaceAndEthinicityCharachtersCount = this.tareaRaceAndEthinicity

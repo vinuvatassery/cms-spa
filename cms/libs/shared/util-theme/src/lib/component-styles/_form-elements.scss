@@ -255,6 +255,7 @@
 .k-form-field-error .k-label {
   color: $error-color-1;
   line-height: 12px;
+  padding:$size-m $size-l;
 }
 
 // .k-textbox-container,
@@ -743,6 +744,9 @@ kendo-timepicker {
   display: inline-block;
   margin: 6px;
   width: 100%;
+  > .k-label{
+    display: inline;
+  }
 }
 
 .k-checkbox {
