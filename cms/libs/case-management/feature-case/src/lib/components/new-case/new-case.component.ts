@@ -10,18 +10,7 @@ import {
 import { Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, ScreenFlowType } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
-import {
-  ButtonSize,
-  ButtonRounded,
-  ButtonFillMode,
-  ButtonThemeColor,
-} from "@progress/kendo-angular-buttons";
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'  
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
@@ -29,11 +18,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewCaseComponent implements OnInit {
-  public buttonFillMode: ButtonFillMode = "outline"
+
   currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+ 
   
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
@@ -45,7 +32,7 @@ export class NewCaseComponent implements OnInit {
   ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
   isProgramSelectionOpened = false;
   selectedProgram!: any;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor**/
   constructor(
     private readonly router: Router,

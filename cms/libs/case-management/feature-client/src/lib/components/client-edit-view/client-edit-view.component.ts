@@ -1,20 +1,13 @@
 /** Angular **/
-import { Component, ViewEncapsulation , ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation , ViewChild, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
 /** Facades **/
 import { ClientFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
 import { Validators, FormGroup, FormControl } from "@angular/forms";
-export type Option = {
-  type: string;
-  data: string[];
-  default: DateInputSize | DateInputRounded | DateInputFillMode;
-};
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+
+ 
 @Component({
   selector: 'case-management-client-edit-view',
   templateUrl: './client-edit-view.component.html',
@@ -30,14 +23,11 @@ export class ClientEditViewComponent implements OnInit {
 
   public data: any = {
     firstname: "",
- 
   };
+  
   /** Public properties **/
   public currentDate = new Date();
-
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+ 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
   rdoMaterials$ = this.clientfacade.rdoMaterials$;
@@ -89,8 +79,9 @@ export class ClientEditViewComponent implements OnInit {
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
   public racialName: any = [];
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor**/
-  constructor(private readonly clientfacade: ClientFacade) {
+  constructor(private readonly clientfacade: ClientFacade ) {
     this.form = new FormGroup({
       firstname: new FormControl(this.data.firstname, [Validators.required]),
      
