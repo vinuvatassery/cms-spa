@@ -24,9 +24,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   }
 
-
   /** Lifecycle hooks **/
-
   ngOnInit(): void {
     this.addSaveSubscription();
   }
@@ -61,6 +59,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     let isValid = true;
     // TODO: validate the form
     if (isValid) {
+      this.workflowFacade.clientCaseEligibilityId = "3500D14F-FB9E-4353-A73B-0336D79418EF";
       return this.clientFacade.save();
     }
 
@@ -69,11 +68,11 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   updatePageCount(completedDataPoints: string[]) {
     if (completedDataPoints?.length > 0) {
-      this.workflowFacade.updateChecklist('ApplicantInfo', completedDataPoints);
+      this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
 
   updateAdjustmentAttrCount(completedDataPoints: string[]) {
-   // this.workflowFacade.calculateAdjustmentAttributeCount('ApplicantInfo', completedDataPoints)
+    // this.workflowFacade.calculateAdjustmentAttributeCount('ApplicantInfo', completedDataPoints)
   }
 }

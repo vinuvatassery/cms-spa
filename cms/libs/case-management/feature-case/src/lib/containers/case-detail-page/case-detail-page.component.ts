@@ -10,7 +10,7 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
-import { Subscription } from 'rxjs';
+import { mergeMap, Subscription } from 'rxjs';
 /**Services**/
 
 @Component({
@@ -198,7 +198,13 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
 
   private addNavigationSubscription() {
-    this.navigationSubscription = this.workflowFacade.navigationTrigger$.subscribe({
+    this.navigationSubscription = this.workflowFacade.navigationTrigger$
+    // .pipe(
+    //   mergeMap((navigationType: NavigationType) =>
+    //   this.workflowFacade.updateWorkflowNavigation(navigationType)
+    //   )
+    // )
+    .subscribe({
       next: (navigationType: string) => {
         this.workflowNavigationEvent.emit(navigationType);
       },
@@ -249,7 +255,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
 
   applyWorkflowChanges(route: Workflow) {
-    this.workflowFacade.applyManualWorkflowChange(route).subscribe();
+    this.workflowFacade.updateActiveWorkflowStep(route?.workFlowProgress?.workflowProgressId).subscribe();
   }
 
 }

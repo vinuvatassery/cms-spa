@@ -78,7 +78,7 @@ export class CaseNavigationComponent implements OnInit {
         break;
       case NavigationType.Default:
         this.navigationIndex = routes.findIndex((route: Workflow) =>
-          route?.workFlowProgress[0]?.currentFlag === 'Y'
+          route?.workFlowProgress?.currentFlag === 'Y'
         );
         break;
       default:

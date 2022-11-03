@@ -8,7 +8,7 @@ export interface Workflow {
   workFlowTypeCode: any
   processMetadata: string
   processDatapointsAdjustment: ProcessDatapointsAdjustment[]
-  workFlowProgress: WorkFlowProgress[]
+  workFlowProgress: WorkFlowProgress
   completionChecklist: CompletionChecklist[]
 }
 
@@ -16,16 +16,14 @@ export interface ProcessDatapointsAdjustment {
   dataPointAdjustmentId: string
   processId: string
   dataPointName: string
-  children:string
+  children?:string
   adjustment: number
   adjustmentOperator: string
 }
 
 export interface WorkFlowProgress {
   workflowProgressId?: string
-  workflowMetadata?: string
-  clientCaseEligibilityId?: string
-  datapointsTotalCount?: number
+  datapointsDerivedTotalCount?: number
   datapointsCompletedCount?: number
   currentFlag?: string
   visitedFlag?: string
@@ -49,4 +47,8 @@ export interface CompletionChecklist {
 export interface CompletionStatusUpdate {
   completedFields:string[],
   AdjustmentFields:string[]
+}
+
+export interface AdjustAttrChildren {
+  fieldNames:string
 }
