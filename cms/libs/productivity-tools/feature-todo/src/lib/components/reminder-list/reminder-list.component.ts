@@ -3,11 +3,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'productivity-tools-reminder-list',
@@ -16,9 +12,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderListComponent {
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   
   /** Public properties **/
   snackbarMessage!: SnackBar;

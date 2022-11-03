@@ -7,11 +7,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { IncomeFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'case-management-income-detail',
@@ -21,9 +17,7 @@ import {
 })
 export class IncomeDetailComponent implements OnInit {
 
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() isEditValue!: boolean;
  currentDate = new Date();

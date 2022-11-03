@@ -32,7 +32,7 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Client Signed">
                   <kendo-datepicker
-                   [fillMode]="fillMode"
+                   [fillMode]="formUiStyle.dateInputFillMode"
                     format="MM-dd-yyyy"
                     [(ngModel)]="currentDate"
                     formatPlaceholder="formatPattern"
@@ -46,7 +46,7 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Signature Noted">
                   <kendo-datepicker
-                  [fillMode]="fillMode"
+                  [fillMode]="formUiStyle.dateInputFillMode"
                     format="MM-dd-yyyy"
                     [(ngModel)]="currentDate"
                     formatPlaceholder="formatPattern"
@@ -63,7 +63,7 @@
               <div class="flex-col">
                 <kendo-floatinglabel text="WHat resources do they use to meet basic needs such as food, housing, transportation, etc..,">
                   <kendo-textarea
-                  [fillMode]="fillMode"
+                  [fillMode]="formUiStyle.inputFillMode"
                     #tareaJustifications
                     resizable="auto"
                     [maxlength]="tareaJustificationMaxLength"

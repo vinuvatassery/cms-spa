@@ -6,12 +6,12 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="New Group">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlGroups$ | async"> </kendo-dropdownlist>
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlGroups$ | async"> </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="New Group Start Date">
-        <kendo-datepicker [fillMode]="fillMode" format="MM-dd-yyyy" [(ngModel)]="currentDate" formatPlaceholder="formatPattern">
+        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" [(ngModel)]="currentDate" formatPlaceholder="formatPattern">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>

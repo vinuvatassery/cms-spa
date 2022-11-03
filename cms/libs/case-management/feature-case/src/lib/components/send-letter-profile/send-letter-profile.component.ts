@@ -2,11 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'  
 
 
 @Component({
@@ -17,14 +13,13 @@ import {
 })
 export class SendLetterProfileComponent implements OnInit {
  currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+ 
 
   /** Public properties **/
   ddlSendLetters$ = this.caseFacade.ddlSendLetters$;
   isEligibilityInfoDialogOpened = false;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
+    
   /** Constructor **/
   constructor(private readonly caseFacade: CaseFacade) {}
 

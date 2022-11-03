@@ -18,7 +18,7 @@
             textField="name"
             valueField="id"
             placeholder="Search Case Name, Member ID or SSN"
-            fillMode="outline"
+            [fillMode]="formUiStyle.dropDownFillMode"
             [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }" 
           >
             <kendo-combobox-column>
@@ -77,7 +77,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Date Application Received">
           <kendo-datepicker
-          [fillMode]="fillMode"
+          [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-dd-yyyy"
             formatPlaceholder="formatPattern"
             [(ngModel)]="currentDate" 
@@ -87,20 +87,20 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Case Origin">
-          <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Case Owner">
-          <kendo-autocomplete [fillMode]="fillMode" [data]="caseOwners$ | async">
+          <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="caseOwners$ | async">
           </kendo-autocomplete>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Program">
           <kendo-dropdownlist
-          [fillMode]="fillMode"
+          [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlPrograms$ | async"
             textField="value"
             valueField="key"

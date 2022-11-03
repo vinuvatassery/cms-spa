@@ -6,18 +6,18 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Title">
         <!-- <input kendoTextBox aria-label="todo title" /> -->
-        <kendo-textbox aria-label="todo title"    [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="todo title"    [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Due Date (Optional)">
-        <kendo-datepicker [(ngModel)]="date" format="MM-dd-yyyy" [fillMode]="fillMode" formatPlaceholder="formatPattern">
+        <kendo-datepicker [(ngModel)]="date" format="MM-dd-yyyy" [fillMode]="formUiStyle.dateInputFillMode" formatPlaceholder="formatPattern">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Repeat">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -26,7 +26,7 @@
         <kendo-datepicker
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
-          [fillMode]="fillMode"
+          [fillMode]="formUiStyle.dateInputFillMode"
           [(ngModel)]="date"
         >
         </kendo-datepicker>
@@ -35,7 +35,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Description(Optional)">
         <kendo-textarea
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.inputFillMode"
           aria-label="custom todo description"
           #tareaCustomTodo
           resizable="auto"
@@ -64,7 +64,7 @@
             [data]="search$ | async"
             textField="name"
             valueField="id"
-            [fillMode]="fillMode"
+            [fillMode]="formUiStyle.dropDownFillMode"
             placeholder="Link to Client or Service Provider (Optional)"
           >
             <kendo-combobox-column [width]="250">
@@ -95,7 +95,7 @@
           textField="name"
           valueField="id"
           placeholder="Search Case Name, Member ID or SSN"
-          fillMode="outline"
+          [fillMode]="formUiStyle.dropDownFillMode"
         >
           <kendo-combobox-column>
             <ng-template

@@ -2,11 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CaseFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'productivity-tools-reminder-detail',
@@ -16,9 +12,7 @@ import {
 })
 export class ReminderDetailComponent implements OnInit {
 currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+public formUiStyle : UIFormStyle = new UIFormStyle();
   
   /** Public properties **/
   caseSearched$ = this.caseFacade.caseSearched$;
