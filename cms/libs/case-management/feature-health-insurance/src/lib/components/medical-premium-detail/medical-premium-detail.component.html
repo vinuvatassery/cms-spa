@@ -255,13 +255,15 @@
             </kendo-floatinglabel>
           </div>
           <div class="flex-col flex-col-6">
-            <kendo-floatinglabel text="Premium Amount">
+            <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
               <!-- <input
                 [disabled]="isViewContentEditable"
                 kendoTextBox
                 aria-label="premium amount"
               /> -->
-              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="premium amount"  [fillMode]="fillMode">   </kendo-textbox>
+              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="premium amount"  [fillMode]="fillMode">  
+                <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
+               </kendo-textbox>
             </kendo-floatinglabel>
           </div>
           <div class="flex-col flex-col-6">
@@ -375,8 +377,10 @@
         </span>
       </div>
       <div class="block-section mt-2">
-        <kendo-floatinglabel text="Monthly APTC Amount (may be $0)">
-          <kendo-textbox [disabled]="isViewContentEditable" aria-label="monthly aptc amount"  [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
+          <kendo-textbox [disabled]="isViewContentEditable" aria-label="monthly aptc amount"  [fillMode]="fillMode"> 
+            <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
+            </kendo-textbox>
            
         </kendo-floatinglabel>
       </div>
@@ -466,6 +470,7 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Relationship to Client">
             <kendo-dropdownlist
+            fillMode="outline"
               [disabled]="isViewContentEditable"
               [data]="ddlMedicalHealthInsurancePlans$ | async"
             >
@@ -474,20 +479,16 @@
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="First Name">
-            <input
-              [disabled]="isViewContentEditable"
-              kendoTextBox
-              aria-label="first name"
-            />
+
+            <kendo-textbox    [disabled]="isViewContentEditable"  aria-label="First Name"  fillMode="outline">   </kendo-textbox>
+           
           </kendo-floatinglabel>
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Last Name">
-            <input
-              [disabled]="isViewContentEditable"
-              kendoTextBox
-              aria-label="last name"
-            />
+            <kendo-textbox    [disabled]="isViewContentEditable"  aria-label="last name"  fillMode="outline">   </kendo-textbox>
+
+   
           </kendo-floatinglabel>
         </div>
       </div>

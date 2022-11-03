@@ -738,9 +738,16 @@ kendo-timepicker {
     &.mw-100 {
       max-width: 100px;
     }
+    .k-input-prefix{
+      position: relative;
+      top: auto;  
+    }
   }
   .k-label {
     display: none;
+  }
+  .k-input-inner{
+    text-align: right;
   }
 }
 

@@ -28,10 +28,10 @@
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col flex-col-6 input-icon-right">
-      <kendo-floatinglabel text="Amount" class="">
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Amount" class="amount-with-symbol">
         <kendo-textbox aria-label="amount"  class="input-icon-right"   [fillMode]="fillMode" name="amount" [tabIndex]="3">
-          <ng-template kendoTextBoxSuffixTemplate> $ </ng-template>
+          <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
