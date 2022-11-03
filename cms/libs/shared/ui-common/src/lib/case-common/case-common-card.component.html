@@ -1,4 +1,4 @@
-<div class="form-group" [formGroup]="parentForm">
+<div class="k-form" [formGroup]="parentForm">
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Date Application Received">
@@ -9,6 +9,7 @@
           formControlName="dateApplicationReceived"
           [value]="currentDate"
           required
+          showErrorIcon="initial"
         >
         </kendo-datepicker>
         <kendo-formerror *ngIf="submitted && parentForm.hasError('required','dateApplicationReceived')">Date Application Received required</kendo-formerror>  
@@ -16,17 +17,17 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Origin">
-        <kendo-dropdownlist [ngClass]="{ 'ng-invalid ng-touched': submitted && parentForm.hasError('required','caseOrigin') }" [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async" formControlName="caseOrigin">
+        <kendo-dropdownlist [fillMode]="fillMode"  showErrorIcon="initial" [data]="ddlCaseOrigins$ | async" formControlName="caseOrigin">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="submitted && parentForm.hasError('required','caseOrigin')">Case Origin required</kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Case Owner">
-        <kendo-autocomplete [fillMode]="fillMode" [ngClass]="{ 'ng-invalid ng-touched': submitted && parentForm.hasError('required','caseOwner') }" required [data]="caseOwners$ | async" formControlName="caseOwner">
+      <kendo-floatinglabel text="Case Owner" for="caseowner">
+        <kendo-autocomplete [fillMode]="fillMode" showErrorIcon="initial"  [data]="caseOwners$ | async" formControlName="caseOwner" [kendoDropDownFilter]="{ operator: 'contains' }">
         </kendo-autocomplete>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="submitted && parentForm.hasError('required','caseOwner')">Case Owners required</kendo-formerror>
+      <kendo-formerror *ngIf="submitted && parentForm.hasError('required','caseOrigin')">Case Owners required</kendo-formerror>
     </div>
     <div class="flex-col" *ngIf="isProgramControlVisible==true">
       <kendo-floatinglabel text="Program">

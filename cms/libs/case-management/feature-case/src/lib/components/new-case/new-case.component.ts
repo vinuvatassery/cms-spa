@@ -58,8 +58,8 @@ export class NewCaseComponent implements OnInit {
     
   ) {
     this.newCaseForm=this.fb.group({
-      caseOrigin:['',Validators.required],
-      caseOwner:['',Validators.required],
+      caseOrigin:[null,Validators.required],
+      caseOwner:[null,Validators.required],
       dateApplicationReceived:[this.currentDate,Validators.required],
     });
   }
