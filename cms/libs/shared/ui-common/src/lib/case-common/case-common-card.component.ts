@@ -10,6 +10,7 @@ import {
 
 import { Router } from '@angular/router';
 import {FormGroup} from '@angular/forms';
+import { UIFormStyle } from '@cms/shared/ui-tpa' ;
 
 @Component({
   selector: 'common-case-card',
@@ -26,6 +27,7 @@ export class CaseCommonCardComponent implements OnInit {
     @Input() isProgramControlVisible: any;
     @Input() parentForm!: FormGroup;
     @Input() submitted!: Boolean;
+    public formUiStyle : UIFormStyle = new UIFormStyle();
     
     caseOwners$ = this.caseFacade.caseOwners$;
     ddlPrograms$ = this.caseFacade.ddlPrograms$;

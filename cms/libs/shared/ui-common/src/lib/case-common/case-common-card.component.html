@@ -3,7 +3,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Date Application Received">
         <kendo-datepicker
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
           formControlName="dateApplicationReceived"
@@ -12,28 +12,27 @@
           showErrorIcon="initial"
         >
         </kendo-datepicker>
-        <kendo-formerror *ngIf="submitted && parentForm.hasError('required','dateApplicationReceived')">Date Application Received required</kendo-formerror>  
+        <kendo-formerror *ngIf="parentForm.hasError('required','dateApplicationReceived')">Error: Date Application Received required</kendo-formerror>  
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Origin">
-        <kendo-dropdownlist [fillMode]="fillMode"  showErrorIcon="initial" [data]="ddlCaseOrigins$ | async" formControlName="caseOrigin">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  showErrorIcon="initial" [data]="ddlCaseOrigins$ | async" formControlName="caseOrigin">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="submitted && parentForm.hasError('required','caseOrigin')">Case Origin required</kendo-formerror>
+      <kendo-formerror *ngIf="parentForm.hasError('required','caseOrigin')">Error: Case Origin required</kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Owner" for="caseowner">
-        <kendo-autocomplete [fillMode]="fillMode" showErrorIcon="initial"  [data]="caseOwners$ | async" formControlName="caseOwner" [kendoDropDownFilter]="{ operator: 'contains' }">
+        <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" showErrorIcon="initial"  [data]="caseOwners$ | async" formControlName="caseOwner" [kendoDropDownFilter]="{ operator: 'contains' }">
         </kendo-autocomplete>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="submitted && parentForm.hasError('required','caseOrigin')">Case Owners required</kendo-formerror>
+      <kendo-formerror *ngIf="parentForm.hasError('required','caseOrigin')">Error: Case Owners required</kendo-formerror>
     </div>
     <div class="flex-col" *ngIf="isProgramControlVisible==true">
       <kendo-floatinglabel text="Program">
         <kendo-dropdownlist
-        required
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ddlPrograms$ | async"
           textField="value"
           valueField="key"
