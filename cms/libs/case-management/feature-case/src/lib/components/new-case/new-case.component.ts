@@ -115,7 +115,7 @@ export class NewCaseComponent implements OnInit {
     this.router.navigate(['case-management/case-detail'], {
       queryParams: {
         screenFlowType: ScreenFlowType.NewCase,
-        programId: this.selectedProgram.key,
+        programId: this.selectedProgram!=undefined? this.selectedProgram.key:0,
       },
     });
   }
@@ -126,3 +126,4 @@ export class NewCaseComponent implements OnInit {
     this.isProgramSelectionOpened = false;
   }
 }
+
