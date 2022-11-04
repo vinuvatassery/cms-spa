@@ -72,6 +72,9 @@
       "@cms/case-management/feature-search": [
         "libs/case-management/feature-search/src/index.ts"
       ],
+      "@cms/case-management/feature-shared": [
+        "libs/case-management/feature-shared/src/index.ts"
+      ],
       "@cms/case-management/feature-smoking-cessation": [
         "libs/case-management/feature-smoking-cessation/src/index.ts"
       ],

@@ -1,4 +1,5 @@
 {
+  "name": "case-management-feature-communication",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/case-management/feature-communication/src",

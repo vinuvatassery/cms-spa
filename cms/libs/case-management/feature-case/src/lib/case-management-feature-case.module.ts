@@ -32,6 +32,7 @@ import { Case360HeaderComponent } from './components/case360-header/case360-head
 import { ReAssignCaseComponent } from './components/re-assign-case/re-assign-case.component';
 import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
+import { CaseManagementFeatureSharedModule } from '@cms/case-management/feature-shared';
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { SendLetterProfileComponent } from './components/send-letter-profile/sen
     CaseManagementFeatureIncomeModule,
     CaseManagementFeatureEmploymentModule,
     CaseManagementFeatureVerificationModule,
-    CaseManagementFeatureHealthInsuranceModule
+    CaseManagementFeatureHealthInsuranceModule,
+    CaseManagementFeatureSharedModule
   ],
   declarations: [
     LastVisitedCasesComponent,

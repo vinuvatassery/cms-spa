@@ -20,6 +20,7 @@
     "case-management-feature-income": "libs/case-management/feature-income",
     "case-management-feature-management": "libs/case-management/feature-management",
     "case-management-feature-search": "libs/case-management/feature-search",
+    "case-management-feature-shared": "libs/case-management/feature-shared",
     "case-management-feature-smoking-cessation": "libs/case-management/feature-smoking-cessation",
     "case-management-feature-verification": "libs/case-management/feature-verification",
     "cmp": "apps/cmp",

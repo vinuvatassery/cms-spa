@@ -18,6 +18,7 @@ import { SpecialHandlingComponent } from './components/special-handling/special-
 import { DuplicateClientFoundComponent } from './components/duplicate-client-found/duplicate-client-found.component';
 import { SpecialHandlingDetailComponent } from './components/special-handling-detail/special-handling-detail.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { CaseManagementFeatureSharedModule } from '@cms/case-management/feature-shared';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
+    CaseManagementFeatureSharedModule
       ],
   declarations: [
     ClientPageComponent,

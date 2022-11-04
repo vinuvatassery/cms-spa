@@ -1,4 +1,5 @@
 {
+  "name": "productivity-tools-feature-approval",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/productivity-tools/feature-approval/src",
