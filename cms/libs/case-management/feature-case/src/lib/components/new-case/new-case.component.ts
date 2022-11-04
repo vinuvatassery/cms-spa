@@ -23,6 +23,7 @@ import {
   ButtonThemeColor,
 } from "@progress/kendo-angular-buttons";
 
+import { UIFormStyle } from '@cms/shared/ui-tpa'  
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
@@ -49,6 +50,7 @@ export class NewCaseComponent implements OnInit {
   selectedProgram!: any;
   isSubmitted!:boolean;
 
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor**/
   constructor(
     private fb:FormBuilder,

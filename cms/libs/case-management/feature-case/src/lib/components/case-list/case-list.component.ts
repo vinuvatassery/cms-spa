@@ -7,12 +7,8 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
-
+ 
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
  
 @Component({
   selector: 'case-management-case-list',
@@ -33,12 +29,10 @@ export class CaseListComponent implements OnInit {
   ];
   /*** Input properties ***/
   @Input() cases: any;
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+ 
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   public buttonCount = 2;
   public sizes = [10, 20, 50];
   /** Constructor**/

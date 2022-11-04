@@ -255,6 +255,7 @@
 .k-form-field-error .k-label {
   color: $error-color-1;
   line-height: 12px;
+  padding:$size-m $size-l;
 }
 
 // .k-textbox-container,
@@ -510,7 +511,13 @@
     margin-bottom: $size-0;
   }
 }
+.k-list-ul{
+  .k-list-group-item{
+   
+    // border-bottom: 1px solid $black-e;
+  }
 
+}
 // ************************************************** /* Search-input */************************************************************
 
 // /*Search-input*/
@@ -519,7 +526,7 @@
   .material-icons {
     position: absolute;
     left: $size-xx;
-    top: $size-xx * 2;
+    top: 27px;
     z-index: 1;
     opacity: 0.5;
   }
@@ -731,9 +738,16 @@ kendo-timepicker {
     &.mw-100 {
       max-width: 100px;
     }
+    .k-input-prefix{
+      position: relative;
+      top: auto;  
+    }
   }
   .k-label {
     display: none;
+  }
+  .k-input-inner{
+    text-align: right;
   }
 }
 
@@ -743,6 +757,9 @@ kendo-timepicker {
   display: inline-block;
   margin: 6px;
   width: 100%;
+  > .k-label{
+    display: inline;
+  }
 }
 
 .k-checkbox {

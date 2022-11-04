@@ -17,7 +17,7 @@
             textField="name"
             valueField="id"
             placeholder="Search Case Name, Member ID or SSN"
-            fillMode="outline"
+            [fillMode]="formUiStyle.dropDownFillMode"
             [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }" 
           >
             <kendo-combobox-column>

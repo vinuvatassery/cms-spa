@@ -20,6 +20,15 @@
     .attachment-item-list {
       display: flex;
       align-items: center;
+      margin: 4px 2px;
+      justify-content: space-between;
+      .attachment-item_remove{
+        width: 25px;
+        height: 25px;
+        padding: 0;
+        border-radius: 50%;
+        background: $black-e;
+      }
       .attachment-item_name {
       }
       .attachment-item_size {
@@ -30,7 +39,7 @@
       .attachment-item_remove {
         span {
           font-size: $font-size-l;
-          color: material-color($hive-neutral-palette, 100);
+          color: material-color($hive-neutral-palette, 900);
         }
       }
     }

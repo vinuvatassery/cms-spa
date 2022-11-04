@@ -21,7 +21,7 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Applicant Signed">
           <kendo-datepicker
-          [fillMode]="fillMode"
+          [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-dd-yyyy"
             [(ngModel)]="currentDate"
             formatPlaceholder="formatPattern"
@@ -31,7 +31,7 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Signature Noted">
-          <kendo-textbox aria-label="Date Signature Noted"  [fillMode]="fillMode">   </kendo-textbox>
+          <kendo-textbox aria-label="Date Signature Noted"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           <!-- <input kendoTextBox aria-label="Signature noted date" /> -->
         </kendo-floatinglabel>
       </div>

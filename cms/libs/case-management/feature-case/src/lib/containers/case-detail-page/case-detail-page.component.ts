@@ -5,11 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CaseDetailsFacade, CommunicationEvents, CompletionStatusFacade, ScreenFlowType, ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 /**Services**/
 
 @Component({
@@ -20,11 +16,8 @@ import {
 })
 export class CaseDetailPageComponent implements OnInit {
 
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
-  
-  
+ 
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   saveAndContinueEvent = new EventEmitter();
   openedSaveLater = false;
   openedDeleteConfirm = false;

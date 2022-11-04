@@ -2,11 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 /** Facades **/
 import { ClientFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'case-management-case-details',
@@ -16,9 +12,7 @@ import {
 })
 export class CaseDetailsComponent implements OnInit {
   currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Public properties **/
   ddlCaseOrigins$ = this.clientFacade.ddlCaseOrigins$;
 

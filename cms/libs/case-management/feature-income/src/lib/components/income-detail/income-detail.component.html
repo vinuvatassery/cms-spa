@@ -6,7 +6,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Income Source">
         <kendo-dropdownlist 
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
         [(ngModel)]="currentDate"
           [data]="incomeSources$ | async"
           aria-label="income sources"
@@ -19,7 +19,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Income Type">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="incomeTypes$ | async"
           aria-label="income types"
           name="income types"
@@ -28,17 +28,17 @@
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col flex-col-6 input-icon-right">
-      <kendo-floatinglabel text="Amount" class="">
-        <kendo-textbox aria-label="amount"  class="input-icon-right"   [fillMode]="fillMode" name="amount" [tabIndex]="3">
-          <ng-template kendoTextBoxSuffixTemplate> $ </ng-template>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+        <kendo-textbox aria-label="amount"  class="input-icon-right"   [fillMode]="formUiStyle.inputFillMode" name="amount" [tabIndex]="3">
+          <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Frequency">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="frequencies$ | async"
           aria-label="frequencies"
           name="frequencies"
@@ -50,7 +50,7 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Income Start">
         <kendo-datepicker
-         [fillMode]="fillMode"
+         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           [(ngModel)]="currentDate"
           formatPlaceholder="formatPattern"
@@ -64,7 +64,7 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Income End (Optional)">
         <kendo-datepicker
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
           aria-label="income end"
@@ -103,7 +103,7 @@
     <div class="flex-col" *ngIf="!hasNoProofOfIncome">
       <kendo-floatinglabel text="Proof of Income Type">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="proofOfIncomeTypes$ | async"
           aria-label="proof of income types"
           name="proof of income types"
@@ -115,7 +115,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Financial justification or Income Note">
         <kendo-textarea
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.inputFillMode"
           #tareaJustifications
           resizable="auto"
           [maxlength]="tareaJustificationMaxLength"
