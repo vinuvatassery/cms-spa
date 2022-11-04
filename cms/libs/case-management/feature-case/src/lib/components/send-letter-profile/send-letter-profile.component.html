@@ -104,19 +104,19 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Case Status">
-          <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlSendLetters$ | async">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSendLetters$ | async">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Group">
-          <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlSendLetters$ | async">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSendLetters$ | async">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Eligibility Start Date">
-          <kendo-datepicker [fillMode]="fillMode"
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-DD-YYY"
             formatPlaceholder="formatPattern"
             [(ngModel)]="currentDate"
@@ -126,7 +126,7 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Eligibility End Date">
-          <kendo-datepicker [fillMode]="fillMode"
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-DD-YYY"
             formatPlaceholder="formatPattern"
             [(ngModel)]="currentDate"
@@ -136,7 +136,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
-          <kendo-textbox aria-label="Sara John" [disabled]="true" value="Sara John"  [fillMode]="fillMode">   </kendo-textbox>
+          <kendo-textbox aria-label="Sara John" [disabled]="true" value="Sara John"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           <!-- <input kendoTextBox  value="Sara John" /> -->
         </kendo-floatinglabel>
       </div>

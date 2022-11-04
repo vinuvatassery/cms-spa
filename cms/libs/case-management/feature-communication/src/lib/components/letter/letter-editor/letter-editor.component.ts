@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
-
 @Component({
   selector: 'case-management-letter-editor',
   templateUrl: './letter-editor.component.html',
@@ -22,7 +21,7 @@ import { CommunicationFacade } from '@cms/case-management/domain';
 export class LetterEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
-
+ 
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
 

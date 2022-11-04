@@ -2,11 +2,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { PagerPosition, PagerType } from '@progress/kendo-angular-grid/pager/pager-settings';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from "@progress/kendo-angular-dateinputs";
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+
 @Component({
   selector: 'system-config-user-list',
   templateUrl: './user-list.component.html',
@@ -24,7 +21,7 @@ export class UserListComponent implements OnInit {
   ];
   
  
- 
+  public formUiStyle : UIFormStyle = new UIFormStyle();
 
   usersData$ = this.userManagementFacade.usersData$;
   usersFilterColumn$ = this.userManagementFacade.usersFilterColumn$;

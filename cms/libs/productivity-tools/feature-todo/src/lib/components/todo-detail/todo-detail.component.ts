@@ -4,11 +4,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CaseFacade } from '@cms/case-management/domain';
 /** facades **/
 import { TodoFacade } from '@cms/productivity-tools/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'productivity-tools-todo-detail',
@@ -32,9 +28,7 @@ export class TodoDetailComponent implements OnInit {
   constructor(private readonly todoFacade: TodoFacade,private readonly caseFacade: CaseFacade,) {}
   
   public date = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadTodosearch();

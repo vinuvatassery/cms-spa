@@ -10,7 +10,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Health Insurance Type">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ddlMedicalHealthInsurancePlans$ | async"
           (valueChange)="onHealthInsuranceTypeChanged()"
           [(ngModel)]="ddlInsuranceType"
@@ -27,7 +27,7 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Insurance Start Date">
         <kendo-datepicker
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           [(ngModel)]="currentDate"
           [disabled]="isViewContentEditable"
@@ -39,7 +39,7 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Insurance End Date (Optional)">
         <kendo-datepicker
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           [(ngModel)]="currentDate"
           [disabled]="isViewContentEditable"
@@ -50,7 +50,7 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Insurance ID Number">
-        <kendo-textbox  [disabled]="isViewContentEditable" aria-label="lainsurance id number"  [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox  [disabled]="isViewContentEditable" aria-label="lainsurance id number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
         <!-- <input
           [disabled]="isViewContentEditable"
           kendoTextBox
@@ -68,7 +68,7 @@
           kendoTextBox
           aria-label="insurance carrier name"
         /> -->
-        <kendo-textbox  [disabled]="isViewContentEditable" aria-label="insurance carrier name"  [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox  [disabled]="isViewContentEditable" aria-label="insurance carrier name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
       <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
@@ -90,7 +90,7 @@
           kendoTextBox
           aria-label="insurance plan name"
         /> -->
-        <kendo-textbox  [disabled]="isViewContentEditable" aria-label="insurance plan name"  [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox  [disabled]="isViewContentEditable" aria-label="insurance plan name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
       <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
@@ -111,7 +111,7 @@
     >
       <kendo-floatinglabel text="Metal Level">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ddlMedicalHealthPlanMetalLevel$ | async"
           [disabled]="isViewContentEditable"
         >
@@ -233,7 +233,7 @@
           <div class="flex-col flex-col-6">
             <kendo-floatinglabel text="Date Currently Paid through">
               <kendo-datepicker
-              [fillMode]="fillMode"
+              [fillMode]="formUiStyle.dateInputFillMode"
                 format="MM-dd-yyyy"
                 [(ngModel)]="currentDate"
                 [disabled]="isViewContentEditable"
@@ -245,7 +245,7 @@
           <div class="flex-col flex-col-6">
             <kendo-floatinglabel text="Next Payment Premium Due Date">
               <kendo-datepicker
-              [fillMode]="fillMode"
+              [fillMode]="formUiStyle.dateInputFillMode"
                 format="MM-dd-yyyy"
                 [(ngModel)]="currentDate"
                 [disabled]="isViewContentEditable"
@@ -255,19 +255,21 @@
             </kendo-floatinglabel>
           </div>
           <div class="flex-col flex-col-6">
-            <kendo-floatinglabel text="Premium Amount">
+            <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
               <!-- <input
                 [disabled]="isViewContentEditable"
                 kendoTextBox
                 aria-label="premium amount"
               /> -->
-              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="premium amount"  [fillMode]="fillMode">   </kendo-textbox>
+              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="premium amount"  [fillMode]="formUiStyle.inputFillMode">  
+                <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
+               </kendo-textbox>
             </kendo-floatinglabel>
           </div>
           <div class="flex-col flex-col-6">
             <kendo-floatinglabel text="Premium Frequency">
               <kendo-dropdownlist
-              [fillMode]="fillMode"
+              [fillMode]="formUiStyle.dropDownFillMode"
                 [disabled]="isViewContentEditable"
                 [data]="ddlMedicalHealthPalnPremiumFrequecy$ | async"
               >
@@ -276,7 +278,7 @@
           </div>
           <div class="flex-col">
             <kendo-floatinglabel text="Payment ID Number">
-              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="payment id number"  [fillMode]="fillMode">   </kendo-textbox>
+              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="payment id number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
               <!-- <input
                 [disabled]="isViewContentEditable"
@@ -375,8 +377,10 @@
         </span>
       </div>
       <div class="block-section mt-2">
-        <kendo-floatinglabel text="Monthly APTC Amount (may be $0)">
-          <kendo-textbox [disabled]="isViewContentEditable" aria-label="monthly aptc amount"  [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
+          <kendo-textbox [disabled]="isViewContentEditable" aria-label="monthly aptc amount"  [fillMode]="formUiStyle.inputFillMode"> 
+            <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
+            </kendo-textbox>
            
         </kendo-floatinglabel>
       </div>
@@ -466,6 +470,7 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Relationship to Client">
             <kendo-dropdownlist
+            fillMode="outline"
               [disabled]="isViewContentEditable"
               [data]="ddlMedicalHealthInsurancePlans$ | async"
             >
@@ -474,20 +479,12 @@
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="First Name">
-            <input
-              [disabled]="isViewContentEditable"
-              kendoTextBox
-              aria-label="first name"
-            />
+            <kendo-textbox    [disabled]="isViewContentEditable"  aria-label="First Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Last Name">
-            <input
-              [disabled]="isViewContentEditable"
-              kendoTextBox
-              aria-label="last name"
-            />
+            <kendo-textbox    [disabled]="isViewContentEditable"  aria-label="last name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
         </div>
       </div>

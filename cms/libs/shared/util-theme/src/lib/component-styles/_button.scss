@@ -2,10 +2,15 @@
    text-transform: uppercase;
    font-family: $font-family-medium;
    border-width: $size-0;
-   padding: $size-xl $size-xlg;
+   padding: $size-l $size-xlg;
    border-radius: $border-radius-sm;
   //  height: 32px;
 
+  &.k-button-outline-primary {
+    border: 1px solid;
+    color:  $app-primary;
+    border-color:  $app-primary;
+}
    &.k-primary,
    &.k-button-solid-primary {
      background: $app-primary;
@@ -180,19 +185,19 @@
    }
 
    &.btn-h-primary {
-     &:hover {
+     &:hover, &:active {
        color: $app-primary !important;
      }
    }
 
    &.btn-h-warn {
-     &:hover {
+     &:hover, &:active  {
        color: material-color($hive-warn-palette, 600) !important;
      }
    }
 
    &.btn-h-danger {
-     &:hover {
+     &:hover, &:active  {
        color: material-color($hive-error-palette, 800) !important;
        opacity: 1;
      }
@@ -261,13 +266,16 @@
      background: $app-primary;
      color: $white;
 
-     &.k-button-icon {
+     &.k-button-icon, &.k-split-button-arrow {
        border-left: 1px solid $white;
        margin-left: 0px;
 
        span {
          color: $white;
        }
+     }
+     &.k-split-button-arrow{
+      padding: $size-xl;
      }
    }
  }
@@ -330,7 +338,11 @@
 
    }
  }
-
+.k-actions{
+  .k-button{
+    box-shadow: $button-box-shadow;
+  }
+}
 .app-dropdown-action{
   &.k-dropdown-button{
     .k-icon-button{

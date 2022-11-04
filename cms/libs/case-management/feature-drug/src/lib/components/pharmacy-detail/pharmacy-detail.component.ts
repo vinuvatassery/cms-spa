@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
 @Component({
   selector: 'case-management-pharmacy-detail',
   templateUrl: './pharmacy-detail.component.html',
@@ -23,7 +23,7 @@ export class PharmacyDetailComponent implements OnInit {
 
   /** Output properties  **/
   @Output() closePharmacyEvent = new EventEmitter();
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Public properties **/
   pharmacies$ = this.drugPharmacyFacade.pharmacies$;
   ddlStates$ = this.drugPharmacyFacade.ddlStates$;

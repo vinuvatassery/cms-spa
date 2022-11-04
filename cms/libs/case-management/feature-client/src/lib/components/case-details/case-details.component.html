@@ -1,13 +1,13 @@
 <div class="flex-row mb-2">
   <div class="flex-col flex-col-4">
     <kendo-floatinglabel text="Date Application Received">
-      <kendo-datepicker format="MM-dd-yyyy" [(ngModel)]="currentDate" [fillMode]="fillMode" formatPlaceholder="formatPattern">
+      <kendo-datepicker format="MM-dd-yyyy" [(ngModel)]="currentDate" [fillMode]="formUiStyle.dateInputFillMode" formatPlaceholder="formatPattern">
       </kendo-datepicker>
     </kendo-floatinglabel>
   </div>
   <div class="flex-col flex-col-4">
     <kendo-floatinglabel text="Case Origin">
-      <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlCaseOrigins$ | async">
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </div>
@@ -15,7 +15,7 @@
     <kendo-floatinglabel text="Case Owner">
 
       <kendo-textbox aria-label="case owner"   value="David Miller"
-      [disabled]="true"   [fillMode]="fillMode">   </kendo-textbox>
+      [disabled]="true"   [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       <!-- <input 
         kendoTextBox
