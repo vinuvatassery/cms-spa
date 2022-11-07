@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'  ;
@@ -17,8 +17,10 @@ export class CaseSummaryComponent implements OnInit {
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
   ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
   isProgramSelectionOpened = false;
+  
   selectedProgram!: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  @Input() isProgramVIsible!: any;
 
   /** Constructor**/
   constructor(

@@ -9,20 +9,23 @@
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
+      <kendo-formerror>Date Application Received required</kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Origin">
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror>Case Origin is Required</kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Case Owner">
         <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="caseOwners$ | async">
         </kendo-autocomplete>
       </kendo-floatinglabel>
+      <kendo-formerror>Case Owner is Required</kendo-formerror>
     </div>
-    <div class="flex-col">
+    <div class="flex-col" *ngIf="isProgramVIsible==true">
       <kendo-floatinglabel text="Program">
         <kendo-dropdownlist
         [fillMode]="formUiStyle.dropDownFillMode"
