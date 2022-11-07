@@ -9,16 +9,38 @@
   }
   .app-l-client-left {
     width: 100%;
+    max-width: 100%;
     @media (max-width: $breakpoint-xlg) {
       max-width: 100%;
     }
   }
   .app-l-client-right {
-    max-width: 225px;
-    width: 225px;
+    max-width: 200px;
+    width: 200px;
+    min-width: 200px;
     @media (max-width: $breakpoint-xlg) {
       width: 100%;
       max-width: 100%;
+    }
+  }
+
+  &.due-notification-on{
+    .app-l-client-left {
+      // width: 100%;
+      width: calc(100% - 219px);
+      max-width: 100%;
+      @media (max-width: $breakpoint-xlg) {
+        max-width: 100%;
+      }
+    }
+    .app-l-client-right {
+      max-width: 200px;
+      width: 200px;
+      min-width: 200px;
+      @media (max-width: $breakpoint-xlg) {
+        width: 100%;
+        max-width: 100%;
+      }
     }
   }
 }
@@ -26,6 +48,7 @@
 /* Case Tabs*/
 .client-tab-section {
   position: relative;
+  margin-top: $size-xx;
   .tab-over-icon-btn {
     position: absolute;
     right: $size-xlg;
@@ -35,6 +58,12 @@
     align-items: center;
     opacity: 0.8;
     gap: $size-l;
+    .small-i-btn {
+      &.k-button{
+        width: 32px;
+        height: 32px;
+      }
+    }
   }
 }
 /* Add client details wrapper*/
@@ -388,7 +417,7 @@
 
 
 .info-banners{
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 5px;
 }
@@ -400,4 +429,16 @@
           top: auto !important;
       }
   }
+}
+
+ 
+.k-list-item.k-selected, .k-selected.k-list-optionlabel{
+  color: material-color($hive-primary-palette, 400);
+}
+
+.k-list-item.k-selected:hover, 
+.k-selected.k-list-optionlabel:hover, 
+.k-list-item.k-selected.k-hover, 
+.k-selected.k-hover.k-list-optionlabel{
+  color: material-color($hive-primary-palette, 400);
 }

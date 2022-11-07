@@ -1,5 +1,4 @@
 {
-  "name": "system-config-feature-lov",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/system-config/feature-lov/src",

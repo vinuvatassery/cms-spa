@@ -1,5 +1,4 @@
 {
-  "name": "financial-management-feature-vendor",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/financial-management/feature-vendor/src",

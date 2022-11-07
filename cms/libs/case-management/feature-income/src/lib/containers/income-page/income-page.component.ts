@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core
 /** Internal Libraries **/
 import { CaseDetailsFacade, CompletionStatusFacade, IncomeFacade } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
-import { DateInputFillMode, DateInputRounded, DateInputSize } from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
 
 @Component({
   selector: 'case-management-income-page',
@@ -19,10 +19,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   hasNoIncome = false;
 
 
-
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() isEditValue!: boolean;
   currentDate = new Date();

@@ -27,13 +27,14 @@ export class UserManagementFacade {
   private clientProfileRacialOrEthnicIdentitySubject = new BehaviorSubject<any>([]);
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
+ 
   private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
   private clientProfileIncomeInclusionsExlusionsSubject = new BehaviorSubject<any>([]);
   private clientProfileRegionAssignmentSubject = new BehaviorSubject<any>([]);
   private clientProfilePSMFRZIPSubject = new BehaviorSubject<any>([]);
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   
-
+ 
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -53,11 +54,13 @@ export class UserManagementFacade {
   clientProfileRacialOrEthnicIdentity$ = this.clientProfileRacialOrEthnicIdentitySubject.asObservable();
   clientProfilePronouns$ = this.clientProfilePronounsSubject.asObservable();
   clientProfileGender$ = this.clientProfileGenderSubject.asObservable();
+ 
   clientProfileHousingAcuityLevel$ = this.clientProfileHousingAcuityLevelSubject.asObservable();
   clientProfilIncomeInclusionsExlusions$ = this.clientProfileIncomeInclusionsExlusionsSubject.asObservable();
   clientProfilRegionAssignment$ = this.clientProfileRegionAssignmentSubject.asObservable();
   clientProfilPSMFRZIP$ = this.clientProfilePSMFRZIPSubject.asObservable();
   clientProfilServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
+ 
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService) {}
 
@@ -231,6 +234,7 @@ export class UserManagementFacade {
       },
     });
   }
+ 
   loadHousingAcuityLevelList(){
     this.userDataService.loadHousingAcuityLevelList().subscribe({
       next: (clientProfileHousingAcuityLevel) => {
@@ -283,4 +287,5 @@ export class UserManagementFacade {
       },
     });
   }
+ 
 }

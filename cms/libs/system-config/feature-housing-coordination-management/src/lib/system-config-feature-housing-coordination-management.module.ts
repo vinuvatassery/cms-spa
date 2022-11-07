@@ -44,11 +44,7 @@ import { PsMfrZipListComponent } from './components/ps-mfr-zip-list/ps-mfr-zip-l
     IncomeInclusionsExclusionsDetailComponent,
     HousingAcuityLevelDetailComponent,
     PsMfrZipDetailComponent,
-    PsMfrZipListComponent
-   
-    
-    
-    
+    PsMfrZipListComponent,
   ],
   exports: [
     HousingCoordinationPageComponent,
@@ -66,9 +62,6 @@ import { PsMfrZipListComponent } from './components/ps-mfr-zip-list/ps-mfr-zip-l
     HousingAcuityLevelDetailComponent, 
     PsMfrZipDetailComponent, 
     PsMfrZipListComponent
-      
-     
-   
   ],
 })
 export class SystemConfigFeatureHousingCoordinationManagementModule { }

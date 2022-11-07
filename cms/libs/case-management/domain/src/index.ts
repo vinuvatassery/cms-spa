@@ -49,7 +49,6 @@ export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
 export * from './lib/infrastructure/statusperiod.data.service';
 
-
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
 export * from './lib/application/authorization.facade';

@@ -345,6 +345,7 @@ export class UserDataService {
       },
     ])
   }
+ 
   loadHousingAcuityLevelList(){
     return of([
       {
@@ -527,4 +528,5 @@ export class UserDataService {
       
     ])
   }
+ 
 }

@@ -1,5 +1,4 @@
 {
-  "name": "cp-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/cp-e2e/src",
   "projectType": "application",

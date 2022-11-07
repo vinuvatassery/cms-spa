@@ -60,7 +60,7 @@ import { StatusesPeriodsComponent } from './components/statuses-periods/statuses
     CaseManagementFeatureHealthInsuranceModule,
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
-    CaseManagementFeatureDocumentModule
+    CaseManagementFeatureDocumentModule,
   ],
   declarations: [
     LastVisitedCasesComponent,

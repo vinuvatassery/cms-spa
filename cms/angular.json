@@ -51,8 +51,6 @@
     "shared-util-theme": "libs/shared/util-theme",
     "system-config-domain": "libs/system-config/domain",
     "system-config-feature-client-profile-management": "libs/system-config/feature-client-profile-management",
-    "system-config-feature-communication": "libs/system-config/feature-communication",
-    "system-config-feature-financials": "libs/system-config/feature-financials",
     "system-config-feature-home": "libs/system-config/feature-home",
     "system-config-feature-housing-coordination-management": "libs/system-config/feature-housing-coordination-management",
     "system-config-feature-lov": "libs/system-config/feature-lov",

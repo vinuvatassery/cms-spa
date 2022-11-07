@@ -5,11 +5,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from "@progress/kendo-angular-dateinputs";
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
 
 @Component({
   selector: 'system-config-eid-lifetime-period-detail',
@@ -20,5 +16,5 @@ import {
 })
 export class EidLifetimePeriodDetailComponent {
 currentDate = new Date();
-  public fillMode: DateInputFillMode = "outline";
+public formUiStyle : UIFormStyle = new UIFormStyle();
 }

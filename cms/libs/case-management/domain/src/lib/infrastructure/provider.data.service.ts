@@ -20,6 +20,7 @@ export class ProviderDataService {
         EffectiveDate: '12-2-2022',
         AssigningCaseManager: 'FName LName',
         by: 'FName LName',
+        CaseManagerPhoneNumber: '(415) 555-2671',
       },
       {
         CaseManagerName: 'David Miller',
@@ -126,3 +127,4 @@ export class ProviderDataService {
     ]);
   }
 }
+ 

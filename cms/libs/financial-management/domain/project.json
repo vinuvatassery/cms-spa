@@ -1,5 +1,4 @@
 {
-  "name": "financial-management-domain",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/financial-management/domain/src",

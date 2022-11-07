@@ -1,5 +1,4 @@
 {
-  "name": "productivity-tools-feature-direct-message",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/productivity-tools/feature-direct-message/src",

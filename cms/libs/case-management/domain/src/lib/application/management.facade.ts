@@ -65,6 +65,7 @@ export class ManagementFacade {
     });
   }
 
+ 
 
   loadCd4Count(): void {
     this.providerDataService.loadCd4Count().subscribe({
@@ -89,6 +90,7 @@ export class ManagementFacade {
       },
     });
   }
+ 
   save():Observable<boolean>{
     //TODO: save api call   
     return of(true);

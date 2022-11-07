@@ -36,11 +36,9 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     SetAsPrimaryPharmacyComponent,
     PharmacyClaimListComponent,
     NewPharmacyApprovalRequestComponent,
-    SetPharmacyPriorityComponent,
- 
-    PharmaciesListComponent,
-       
-       DrugsPurchasedListComponent,
+    SetPharmacyPriorityComponent, 
+    PharmaciesListComponent, 
+    DrugsPurchasedListComponent,
   ],
   exports: [
     DrugPageComponent,
@@ -52,10 +50,8 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     PharmacyClaimListComponent,
     NewPharmacyApprovalRequestComponent,
     SetPharmacyPriorityComponent,
- 
-    PharmaciesListComponent,
-       
-       DrugsPurchasedListComponent,
+    PharmaciesListComponent,       
+    DrugsPurchasedListComponent,
   ],
 })
 export class CaseManagementFeatureDrugModule {}

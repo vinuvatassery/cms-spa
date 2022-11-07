@@ -60,6 +60,7 @@ export class DrugPharmacyFacade {
       },
     });
   }
+ 
   loadPharmacieslist(): void {
     this.drugDataService.loadtPharmacies().subscribe({
       next: (PharmacieslistResponse) => {
@@ -81,6 +82,7 @@ export class DrugPharmacyFacade {
       },
     });
   }
+ 
   loadDdlPriorities(): void {
     this.drugDataService.loadDdlPriorities().subscribe({
       next: (ddlPrioritiesResponse) => {

@@ -1,5 +1,4 @@
 {
-  "name": "cms-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/cms-e2e/src",
   "projectType": "application",

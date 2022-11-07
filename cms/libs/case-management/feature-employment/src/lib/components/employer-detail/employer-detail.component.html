@@ -5,13 +5,13 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Name of Employer">
-        <kendo-textbox aria-label="name of employer"  [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="name of employer"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
         <!-- <input kendoTextBox aria-label="name of employer" /> -->
       </kendo-floatinglabel>
     </div>
     <div class="flex-col mb-1">
       <kendo-floatinglabel aria-label="date of hire" text="Date of Hire">
-        <kendo-datepicker  [(ngModel)]="currentDate" [fillMode]="fillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        <kendo-datepicker  [(ngModel)]="currentDate" [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>

@@ -2,10 +2,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 // import { GenderListComponent, LanguageListComponent, PronounsListComponent, RacialOrEthnicIdentityListComponent, SexualOrientationListComponent } from '@cms/system-config/feature-client-profile-management';
-// import { ExpenseTypesListComponent, FundsListComponent, IncomeTypesListComponent, IndexListComponent, PcaCodesListComponent } from '@cms/system-config/feature-financials';
-// import { CaseAvailabilityListComponent, EidLifetimePeriodListComponent, HousingAcuityLevelListComponent, IncomeInclusionsExclusionsListComponent, PsMfrZipListComponent, RegionAssignmentListComponent, ServiceProviderListComponent, SlotListComponent } from '@cms/system-config/feature-housing-coordination-management';
-// import { EmailTemplateListComponent, LetterTemplateListComponent, SmsTextTemplateListComponent } from 'libs/system-config/feature-communication/src';
-//import { CaseAvailabilityListComponent, EidLifetimePeriodListComponent, SlotListComponent } from 'libs/system-config/feature-housing-coordination-management/src';
+// import { CaseAvailabilityListComponent, EidLifetimePeriodListComponent, SlotListComponent } from 'libs/system-config/feature-housing-coordination-management/src';
 import { RolesAndPermissionsDetailComponent } from './components/roles-and-permissions-detail/roles-and-permissions-detail.component';
 import { RolesAndPermissionsListComponent } from './components/roles-and-permissions-list/roles-and-permissions-list.component';
 import { UserListComponent } from './components/user-list/user-list.component';
@@ -60,62 +57,6 @@ const routes: Routes = [
       //   path: 'eid-period',
       //   component: EidLifetimePeriodListComponent,
       // },
-      // {
-      //   path: 'housing-acuity-level',
-      //   component: HousingAcuityLevelListComponent,
-      // },
-      // {
-      //   path: 'income-inclusions-exlusions',
-      //   component: IncomeInclusionsExclusionsListComponent
-      // },
-      
-      // {
-      //   path: 'region-assignment',
-      //   component: RegionAssignmentListComponent
-      // },
-      
-      // {
-      //   path: 'service-provider',
-      //   component: ServiceProviderListComponent
-      // },
-      // {
-      //   path: 'ps-fmr-zip',
-      //   component: PsMfrZipListComponent
-      // },
-      // {
-      //   path: 'funds',
-      //   component: FundsListComponent
-      // },
-      // {
-      //   path: 'expende-types',
-      //   component: ExpenseTypesListComponent
-      // },
-      // {
-      //   path: 'income-types',
-      //   component: IncomeTypesListComponent
-      // },
-      // {
-      //   path: 'index',
-      //   component: IndexListComponent
-      // },
-      // {
-      //   path: 'pca-codes',
-      //   component: PcaCodesListComponent
-      // },
-      // {
-      //   path: 'email-template',
-      //   component: EmailTemplateListComponent
-      // },
-      // {
-      //   path: 'letter-template',
-      //   component: LetterTemplateListComponent
-      // },
-      // {
-      //   path: 'sms-text-template',
-      //   component: SmsTextTemplateListComponent
-      // },
-     
-      
     ],
   },
   {

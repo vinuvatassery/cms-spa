@@ -23,6 +23,7 @@ export class DocumentDataService {
         attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem' ,
         by: 'James' ,
       },
+      { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {
         id: 2,
         name: 'At vero eos',

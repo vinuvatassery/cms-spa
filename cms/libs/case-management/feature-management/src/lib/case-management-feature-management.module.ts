@@ -25,7 +25,6 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     CaseManagementDomainModule,
     CaseManagementFeatureManagementRoutingModule,
     SharedUiTpaModule,
-    SharedUiCommonModule
   ],
   declarations: [
     CaseManagerListComponent,

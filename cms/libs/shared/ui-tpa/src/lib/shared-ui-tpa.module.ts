@@ -23,6 +23,8 @@ import {
 import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 
+import {UIFormStyle} from './kendo-uiform-style-config';
+ 
 const MODULES = [
   InputsModule,
   DropDownsModule,
@@ -48,5 +50,8 @@ const MODULES = [
 @NgModule({
   imports: MODULES,
   exports: MODULES,
+  providers: [
+    UIFormStyle
+  ]
 })
 export class SharedUiTpaModule {}
