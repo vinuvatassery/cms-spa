@@ -14,7 +14,7 @@ export class ScreenRouteDataService {
         return of([
           {
             name: 'Case Details',
-            url: '/case-detail/case-summary',
+            url: '/case-management/case-detail/case-summary',
             sequence_nbr: 99,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
@@ -121,7 +121,7 @@ export class ScreenRouteDataService {
         return of([
           {
             name: 'Case Details',
-            url: '/case-detail/case-summary',
+            url: '/case-management/case-detail/case-summary',
             sequence_nbr: 99,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
@@ -206,7 +206,7 @@ export class ScreenRouteDataService {
         return of([
           {
             name: 'Case Details',
-            url: '/case-detail/case-summary',
+            url: '/case-management/case-detail/case-summary',
             sequence_nbr: 99,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
@@ -313,7 +313,7 @@ export class ScreenRouteDataService {
         return of([
           {
             name: 'Case Details',
-            url: '/case-details/case-summary',
+            url: '/case-management/case-detail/case-summary',
             sequence_nbr: 99,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
