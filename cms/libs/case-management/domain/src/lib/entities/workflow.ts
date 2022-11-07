@@ -1,23 +1,23 @@
 export interface Workflow {
   workflowStepId: string
   sequenceNbr: number
-  processName: string
-  url: string
   title: string
+  url: string
   workflowStepTypeCode: string
-  workFlowTypeCode: any
-  processMetadata: string
-  processDatapointsAdjustment: ProcessDatapointsAdjustment[]
-  workFlowProgress: WorkFlowProgress
-  completionChecklist: CompletionChecklist[]
+ // workFlowTypeCode: any
+ processMetadata: string
+ processDatapointsAdjustment: ProcessDatapointsAdjustment[]
+ workFlowProgress: WorkFlowProgress
+  //completionChecklist: CompletionChecklist[]
 }
 
 export interface ProcessDatapointsAdjustment {
   dataPointAdjustmentId: string
+  parentId: string
   processId: string
-  dataPointName: string
-  children?:string
-  adjustment: number
+  datapointName: string
+  adjustmentTypeCode?:string
+  adjustmentValue: number
   adjustmentOperator: string
 }
 
@@ -41,14 +41,12 @@ export interface UpdateWorkFlowProgress {
 export interface CompletionChecklist {
   dataPointName?: string,
   status?: string,
-  count?: number
+  //count?: number
 }
 
-export interface CompletionStatusUpdate {
-  completedFields:string[],
-  AdjustmentFields:string[]
-}
-
-export interface AdjustAttrChildren {
-  fieldNames:string
+export interface AjustedDataPointsCheckList {
+  parentId:string,
+  parentName?: string,
+  children?: string[],
+  adjustmentOperator: string  
 }

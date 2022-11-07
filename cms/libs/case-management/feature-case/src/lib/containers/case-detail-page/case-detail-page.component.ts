@@ -100,12 +100,12 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   /** Private Methods */
   private loadQueryParams() {
-    let paramScreenFlowType: ScreenFlowType;
+    let paramScreenFlowType: string;
     let paramCaseId: any;
     let paramProgramId: any;
     this.route.queryParamMap.subscribe({
       next: (params) => {
-        paramScreenFlowType = params.get('screenFlowType') as ScreenFlowType;
+        paramScreenFlowType = 'C'; //params.get('screenFlowType') as ScreenFlowType;
         paramCaseId = params.get('caseId');
         paramProgramId = params.get('programId');
         this.loadRoutes(
@@ -205,8 +205,9 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     //   )
     // )
     .subscribe({
-      next: (navigationType: string) => {
-        this.workflowNavigationEvent.emit(navigationType);
+      next: (navigationType: NavigationType) => {
+        //this.workflowNavigationEvent.emit(navigationType);
+        this.workflowFacade.updateWorkflowNavigation(navigationType)
       },
       error: (err: any) => {
         console.error('error', err);
@@ -255,7 +256,9 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
 
   applyWorkflowChanges(route: Workflow) {
-    this.workflowFacade.updateActiveWorkflowStep(route?.workFlowProgress?.workflowProgressId).subscribe();
+    if(route?.workFlowProgress?.visitedFlag === 'Y'){
+      this.workflowFacade.updateActiveWorkflowStep(route).subscribe();
+    }
   }
 
 }

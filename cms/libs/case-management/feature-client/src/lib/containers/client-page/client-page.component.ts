@@ -3,7 +3,8 @@ import { outputAst } from '@angular/compiler';
 import { EventEmitter, OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { WorkflowFacade, ClientFacade, NavigationType, CompletionStatusUpdate } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, NavigationType, CompletionChecklist } from '@cms/case-management/domain';
+import { TokenHelperService } from 'angular-auth-oidc-client/lib/utils/tokenHelper/token-helper.service';
 import { forkJoin, mergeMap, Observable, of, Subscription } from 'rxjs';
 
 @Component({
@@ -66,13 +67,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     return of(false)
   }
 
-  updatePageCount(completedDataPoints: string[]) {
+  updatePageCount(completedDataPoints: CompletionChecklist[]) {
     if (completedDataPoints?.length > 0) {
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
 
-  updateAdjustmentAttrCount(completedDataPoints: string[]) {
-    // this.workflowFacade.calculateAdjustmentAttributeCount('ApplicantInfo', completedDataPoints)
+  updateAdjustmentAttrCount(ajustData: CompletionChecklist[]) {
+   if(ajustData){
+    this.workflowFacade.updateBasedOnDtAttrChecklist(ajustData);
+   }
   }
 }

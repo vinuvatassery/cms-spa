@@ -20,15 +20,16 @@ export class ScreenRouteDataService {
   constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
 
   loadWorkflow(screen_flow_type_code: string, program_id: number, case_id?: number) {
-    if (screen_flow_type_code === ScreenFlowType.NewCase) {
+    console.log(case_id);
+    if (case_id) {
       return this.http.get<Workflow[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/workflows/${program_id}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/workflows/progress?parameter=clientCaseEligibilityId&value=${case_id}`
       );
     }
     else {
       return this.http.get<Workflow[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/workflows/progress?parameter=clientCaseEligibilityId&value=${case_id}`
-      );
+        `${this.configurationProvider.appSettings.caseApiUrl}/workflow_master?programId=${program_id}&workflowTypeCode=${screen_flow_type_code}`
+      );  
     }
   }
 

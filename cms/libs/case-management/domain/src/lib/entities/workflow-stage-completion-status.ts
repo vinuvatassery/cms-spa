@@ -1,4 +1,4 @@
-import { CompletionChecklist } from "./workflow"
+import { AjustedDataPointsCheckList, CompletionChecklist } from "./workflow"
 
 export interface WorkflowStageCompletionStatus {
     workflowStepId:string
@@ -7,4 +7,5 @@ export interface WorkflowStageCompletionStatus {
     dataPointsCompleted:number
     dataPointsTotal:number
     completionChecklist:CompletionChecklist[]
+    adjustDataPointChecklist: AjustedDataPointsCheckList[]
 }

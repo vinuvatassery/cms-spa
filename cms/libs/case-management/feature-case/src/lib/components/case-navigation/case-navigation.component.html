@@ -18,7 +18,7 @@
             ? 'kendo-list-items section-completed'
             : 'kendo-list-items'
         "
-        [routerLink]="route.url"
+        [routerLink]="route?.workFlowProgress?.visitedFlag == 'Y'? route.url: null"
         [queryParamsHandling]="'preserve'"
         (click)="onRouteChange(route)"
       >

@@ -1,16 +1,16 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, ElementRef } from '@angular/core';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
 /** Facades **/
-import { ClientFacade } from '@cms/case-management/domain';
+import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
 import {
   DateInputSize,
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, pairwise, startWith } from 'rxjs';
 
 export type Option = {
   type: string;
@@ -29,8 +29,8 @@ export class ClientEditViewComponent implements OnInit {
   isSelected = true;
 
   /** Onput Properties **/
-  @Output() AppInfoChanged = new EventEmitter<string[]>();
-  @Output() AdjustAttributeChanged = new EventEmitter<string[]>();
+  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
+  @Output() AdjustAttributeChanged = new EventEmitter<CompletionChecklist[]>();
 
 
   /** Public properties **/
@@ -93,7 +93,8 @@ export class ClientEditViewComponent implements OnInit {
   adjustmentAttributeList!: string[];
 
   /** Constructor**/
-  constructor(private readonly clientfacade: ClientFacade) { }
+  constructor(private readonly clientfacade: ClientFacade,
+    private readonly elementRef: ElementRef) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -117,22 +118,50 @@ export class ClientEditViewComponent implements OnInit {
     this.addAppInfoFormChangeSubscription();
   }
 
+  ngAfterViewInit() {
+    const initialAjustment: CompletionChecklist[] = [];
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      console.log(control.value);
+      console.log(this.appInfoForm.get(control.name));
+      const data: CompletionChecklist = {
+        dataPointName: control.name,
+        status: control.checked ? 'Y' : 'N'
+      };
+      initialAjustment.push(data);
+      control.addEventListener('click', this.onClick.bind(this));
+    });
+
+    if (initialAjustment.length > 0) {
+      this.AdjustAttributeChanged.emit(initialAjustment);
+    }
+  }
+
   /** Private methods **/
+
+  private onClick(event: Event) {
+    const data: CompletionChecklist = {
+      dataPointName: (event.target as HTMLInputElement).name,
+      status: (event.target as HTMLInputElement).checked ? 'Y' : 'N'
+    };
+
+    this.AdjustAttributeChanged.emit([data]);
+  }
 
   private buildForm() {
     this.appInfoForm = new FormGroup({
-      firstName: new FormControl('', Validators.required,),
-      middleName: new FormControl(''),
-      chkmiddleName: new FormControl(false),
-      lastName: new FormControl('', Validators.required),
-      prmInsFirstName: new FormControl(''),
-      prmInsLastName: new FormControl(''),
+      firstName: new FormControl('', { updateOn: 'blur' }),
+      middleName: new FormControl({ value: '', disabled: false }, { updateOn: 'blur' }),
+      chkmiddleName: new FormControl(true),
+      lastName: new FormControl('', { updateOn: 'blur' }),
+      prmInsFirstName: new FormControl('', { updateOn: 'blur' }),
+      prmInsLastName: new FormControl('', { updateOn: 'blur' }),
       prmInsNotApplicable: new FormControl(false),
-      officialIdFirstName: new FormControl(''),
-      officialIdLastName: new FormControl(''),
+      officialIdFirstName: new FormControl('', { updateOn: 'blur' }),
+      officialIdLastName: new FormControl('', { updateOn: 'blur' }),
       officialIdsNotApplicable: new FormControl(false),
-      dateOfBirth: new FormControl(''),
-      ssn: new FormControl(''),
+      dateOfBirth: new FormControl('', { updateOn: 'blur' }),
+      ssn: new FormControl('', { updateOn: 'blur' }),
       ssnNotApplicable: new FormControl(false),
       //TODO: other form controls 
     })
@@ -142,18 +171,35 @@ export class ClientEditViewComponent implements OnInit {
     this.appInfoForm.valueChanges
       .pipe(
         debounceTime(500),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        startWith(null), pairwise()
       )
-      .subscribe((val1) => {
-        this.updateFormCompleteCount();
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
       });
   }
 
-  private updateFormCompleteCount() {
-    let completedDataPoints: string[] = [];
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.appInfoForm.controls).forEach(key => {
-      if (this.appInfoForm?.get(key)?.value && this.appInfoForm?.get(key)?.valid) {
-        completedDataPoints.push(key);
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? 'Y' : 'N'
+          };
+          completedDataPoints.push(item);
+        }
+      }
+      else {
+        if (this.appInfoForm?.get(key)?.value && this.appInfoForm?.get(key)?.valid) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: 'Y'
+          };
+
+          completedDataPoints.push(item);
+        }
       }
     });
 
@@ -240,6 +286,56 @@ export class ClientEditViewComponent implements OnInit {
   }
 
   /** Internal event methods **/
+  onMiddleNameChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['middleName'].reset();
+      this.appInfoForm.controls['middleName'].enable();
+    }
+    else {
+      this.appInfoForm.controls['middleName'].disable();
+    }
+  }
+
+  onInsuranceCardChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['prmInsLastName'].disable();
+      this.appInfoForm.controls['prmInsFirstName'].disable();
+    }
+    else {
+      this.appInfoForm.controls['prmInsLastName'].reset();
+      this.appInfoForm.controls['prmInsFirstName'].reset();
+      this.appInfoForm.controls['prmInsLastName'].enable();
+      this.appInfoForm.controls['prmInsFirstName'].enable();
+    }
+  }
+
+  onOfficialIdChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['officialIdFirstName'].disable();
+      this.appInfoForm.controls['officialIdLastName'].disable();
+    }
+    else {
+      this.appInfoForm.controls['officialIdFirstName'].reset();
+      this.appInfoForm.controls['officialIdLastName'].reset();
+      this.appInfoForm.controls['officialIdFirstName'].enable();
+      this.appInfoForm.controls['officialIdLastName'].enable();
+    }
+  }
+
+  onSsnNotApplicableChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['ssn'].disable();
+    }
+    else {
+      this.appInfoForm.controls['ssn'].reset();
+      this.appInfoForm.controls['ssn'].enable();
+    }
+  }
+
   onTransgenderRdoClicked(event: any) {
     this.transgenderSelectedValue = event.target.id;
     if (this.transgenderSelectedValue == 3) {
