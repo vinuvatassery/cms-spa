@@ -46,6 +46,7 @@ export class CaseNavigationComponent implements OnInit {
   private loadCaseNavigationDeatils() {
     this.routes$.subscribe({
       next: (routes: any) => {
+        console.log(routes);
         this.navigateByUrl(routes);
         //this.saveAndContinueSubscribed(routes);
         this.navigationSubscribed(routes);

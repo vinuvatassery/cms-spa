@@ -27,9 +27,7 @@
           >{{ status.completed }} of {{ status.total }}</span
         >
         <span
-          *ngIf="
-            route.name === status.name && status.completed === status.total
-          "
+          *ngIf="route.name === status.name && status.completed === status.total"
           class="material-icons"
           >check_circle</span
         >

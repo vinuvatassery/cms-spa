@@ -13,9 +13,17 @@ export class ScreenRouteDataService {
       if (program_id == 1) {
         return of([
           {
+            name: 'Case Details',
+            url: '/case-detail/case-summary',
+            sequence_nbr: 99,
+            screen_flow_step_type_code: 'EDIT',
+            current_screen_flag: 'N',
+            visited_flag: 'Y',
+          },
+          {
             name: 'Applicant Info',
             url: '/case-management/case-detail/client',
-            sequence_nbr: 99,
+            sequence_nbr: 100,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -23,7 +31,7 @@ export class ScreenRouteDataService {
           {
             name: 'Contact Info',
             url: '/case-management/case-detail/contact-info',
-            sequence_nbr: 100,
+            sequence_nbr: 101,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'Y',
             visited_flag: 'Y',
@@ -31,7 +39,7 @@ export class ScreenRouteDataService {
           {
             name: 'Family & Dependents',
             url: '/case-management/case-detail/family-dependents',
-            sequence_nbr: 101,
+            sequence_nbr: 102,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -39,7 +47,7 @@ export class ScreenRouteDataService {
           {
             name: 'Income',
             url: '/case-management/case-detail/income',
-            sequence_nbr: 102,
+            sequence_nbr: 103,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -47,7 +55,7 @@ export class ScreenRouteDataService {
           {
             name: 'Employment',
             url: '/case-management/case-detail/employment',
-            sequence_nbr: 103,
+            sequence_nbr: 104,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -55,7 +63,7 @@ export class ScreenRouteDataService {
           {
             name: 'Cessation',
             url: '/case-management/case-detail/smoking-cessation',
-            sequence_nbr: 104,
+            sequence_nbr: 105,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -63,7 +71,7 @@ export class ScreenRouteDataService {
           {
             name: 'Health Insurance',
             url: '/case-management/case-detail/health-insurance',
-            sequence_nbr: 105,
+            sequence_nbr: 106,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -71,7 +79,7 @@ export class ScreenRouteDataService {
           {
             name: 'Prescription Drugs',
             url: '/case-management/case-detail/prescription-drugs',
-            sequence_nbr: 106,
+            sequence_nbr: 107,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -112,9 +120,17 @@ export class ScreenRouteDataService {
       } else {
         return of([
           {
+            name: 'Case Details',
+            url: '/case-detail/case-summary',
+            sequence_nbr: 99,
+            screen_flow_step_type_code: 'EDIT',
+            current_screen_flag: 'N',
+            visited_flag: 'Y',
+          },
+          {
             name: 'Applicant Info',
             url: '/case-management/case-detail/client',
-            sequence_nbr: 99,
+            sequence_nbr: 100,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -122,7 +138,7 @@ export class ScreenRouteDataService {
           {
             name: 'Contact Info',
             url: '/case-management/case-detail/contact-info',
-            sequence_nbr: 100,
+            sequence_nbr: 101,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'Y',
             visited_flag: 'Y',
@@ -130,7 +146,7 @@ export class ScreenRouteDataService {
           {
             name: 'Family & Dependents',
             url: '/case-management/case-detail/family-dependents',
-            sequence_nbr: 101,
+            sequence_nbr: 102,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -138,7 +154,7 @@ export class ScreenRouteDataService {
           {
             name: 'Income',
             url: '/case-management/case-detail/income',
-            sequence_nbr: 102,
+            sequence_nbr: 103,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -146,7 +162,7 @@ export class ScreenRouteDataService {
           {
             name: 'Employment',
             url: '/case-management/case-detail/employment',
-            sequence_nbr: 103,
+            sequence_nbr: 104,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -154,7 +170,7 @@ export class ScreenRouteDataService {
           {
             name: 'Cessation',
             url: '/case-management/case-detail/smoking-cessation',
-            sequence_nbr: 104,
+            sequence_nbr: 105,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -162,7 +178,7 @@ export class ScreenRouteDataService {
           {
             name: 'Health Insurance',
             url: '/case-management/case-detail/health-insurance',
-            sequence_nbr: 105,
+            sequence_nbr: 106,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -170,7 +186,7 @@ export class ScreenRouteDataService {
           {
             name: 'Prescription Drugs',
             url: '/case-management/case-detail/prescription-drugs',
-            sequence_nbr: 106,
+            sequence_nbr: 107,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -189,9 +205,17 @@ export class ScreenRouteDataService {
       if (program_id == 1) {
         return of([
           {
+            name: 'Case Details',
+            url: '/case-detail/case-summary',
+            sequence_nbr: 99,
+            screen_flow_step_type_code: 'EDIT',
+            current_screen_flag: 'N',
+            visited_flag: 'Y',
+          },
+          {
             name: 'Applicant Info',
             url: '/case-management/case-detail/client',
-            sequence_nbr: 99,
+            sequence_nbr: 100,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -199,7 +223,7 @@ export class ScreenRouteDataService {
           {
             name: 'Contact Info',
             url: '/case-management/case-detail/contact-info',
-            sequence_nbr: 100,
+            sequence_nbr: 101,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'Y',
             visited_flag: 'Y',
@@ -207,7 +231,7 @@ export class ScreenRouteDataService {
           {
             name: 'Family & Dependents',
             url: '/case-management/case-detail/family-dependents',
-            sequence_nbr: 101,
+            sequence_nbr: 102,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -215,7 +239,7 @@ export class ScreenRouteDataService {
           {
             name: 'Income',
             url: '/case-management/case-detail/income',
-            sequence_nbr: 102,
+            sequence_nbr: 103,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -223,7 +247,7 @@ export class ScreenRouteDataService {
           {
             name: 'Employment',
             url: '/case-management/case-detail/employment',
-            sequence_nbr: 103,
+            sequence_nbr: 104,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -231,7 +255,7 @@ export class ScreenRouteDataService {
           {
             name: 'Cessation',
             url: '/case-management/case-detail/smoking-cessation',
-            sequence_nbr: 104,
+            sequence_nbr: 105,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -239,7 +263,7 @@ export class ScreenRouteDataService {
           {
             name: 'Health Insurance',
             url: '/case-management/case-detail/health-insurance',
-            sequence_nbr: 105,
+            sequence_nbr: 106,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -247,7 +271,7 @@ export class ScreenRouteDataService {
           {
             name: 'Prescription Drugs',
             url: '/case-management/case-detail/prescription-drugs',
-            sequence_nbr: 106,
+            sequence_nbr: 107,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -255,7 +279,7 @@ export class ScreenRouteDataService {
           {
             name: 'HIV Healthcare Provider',
             url: '/case-management/case-detail/healthcare-provider',
-            sequence_nbr: 107,
+            sequence_nbr: 108,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -263,7 +287,7 @@ export class ScreenRouteDataService {
           {
             name: 'HIV Case Manager',
             url: '/case-management/case-detail/case-manager',
-            sequence_nbr: 108,
+            sequence_nbr: 109,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -271,7 +295,7 @@ export class ScreenRouteDataService {
           {
             name: 'HIV Verification',
             url: '/case-management/case-detail/case-manager',
-            sequence_nbr: 109,
+            sequence_nbr: 110,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -279,7 +303,7 @@ export class ScreenRouteDataService {
           {
             name: 'Authorization',
             url: '/case-management/case-detail/authorization',
-            sequence_nbr: 110,
+            sequence_nbr: 111,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -288,9 +312,17 @@ export class ScreenRouteDataService {
       } else {
         return of([
           {
+            name: 'Case Details',
+            url: '/case-details/case-summary',
+            sequence_nbr: 99,
+            screen_flow_step_type_code: 'EDIT',
+            current_screen_flag: 'N',
+            visited_flag: 'Y',
+          },
+          {
             name: 'Applicant Info',
             url: '/case-management/case-detail/client',
-            sequence_nbr: 99,
+            sequence_nbr: 100,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -298,7 +330,7 @@ export class ScreenRouteDataService {
           {
             name: 'Contact Info',
             url: '/case-management/case-detail/contact-info',
-            sequence_nbr: 100,
+            sequence_nbr: 101,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'Y',
             visited_flag: 'Y',
@@ -306,7 +338,7 @@ export class ScreenRouteDataService {
           {
             name: 'Family & Dependents',
             url: '/case-management/case-detail/family-dependents',
-            sequence_nbr: 101,
+            sequence_nbr: 102,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -314,7 +346,7 @@ export class ScreenRouteDataService {
           {
             name: 'Income',
             url: '/case-management/case-detail/income',
-            sequence_nbr: 102,
+            sequence_nbr: 103,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -322,7 +354,7 @@ export class ScreenRouteDataService {
           {
             name: 'Employment',
             url: '/case-management/case-detail/employment',
-            sequence_nbr: 103,
+            sequence_nbr: 104,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -330,7 +362,7 @@ export class ScreenRouteDataService {
           {
             name: 'Cessation',
             url: '/case-management/case-detail/smoking-cessation',
-            sequence_nbr: 104,
+            sequence_nbr: 105,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -338,7 +370,7 @@ export class ScreenRouteDataService {
           {
             name: 'Health Insurance',
             url: '/case-management/case-detail/health-insurance',
-            sequence_nbr: 105,
+            sequence_nbr: 106,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -346,7 +378,7 @@ export class ScreenRouteDataService {
           {
             name: 'Prescription Drugs',
             url: '/case-management/case-detail/prescription-drugs',
-            sequence_nbr: 106,
+            sequence_nbr: 107,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',
@@ -354,7 +386,7 @@ export class ScreenRouteDataService {
           {
             name: 'Authorization',
             url: '/case-management/case-detail/authorization',
-            sequence_nbr: 110,
+            sequence_nbr: 108,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',
             visited_flag: 'Y',

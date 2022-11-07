@@ -1,0 +1,38 @@
+<div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel text="Date Application Received">
+        <kendo-datepicker
+        [fillMode]="formUiStyle.dateInputFillMode"
+          format="MM-dd-yyyy"
+          formatPlaceholder="formatPattern"
+          [(ngModel)]="currentDate" 
+        >
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Case Origin">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Case Owner">
+        <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="caseOwners$ | async">
+        </kendo-autocomplete>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Program">
+        <kendo-dropdownlist
+        [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="ddlPrograms$ | async"
+          textField="value"
+          valueField="key"
+          [(ngModel)]="selectedProgram"
+          [disabled]="true"
+        >
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+  </div>

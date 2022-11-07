@@ -114,6 +114,7 @@ export class CaseFacade {
       .load(screen_flow_type_code, program_id, case_id)
       .subscribe({
         next: (data) => {
+          console.log(data);
           this.routesSubject.next(data);
         },
         error: (err) => {
