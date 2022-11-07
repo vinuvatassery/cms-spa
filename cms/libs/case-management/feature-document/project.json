@@ -1,0 +1,43 @@
+{
+  "name": "case-management-feature-document",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/case-management/feature-document/src",
+  "prefix": "case-management",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/case-management/feature-document"],
+      "options": {
+        "project": "libs/case-management/feature-document/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/case-management/feature-document/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/case-management/feature-document/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/case-management/feature-document"],
+      "options": {
+        "jestConfig": "libs/case-management/feature-document/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/case-management/feature-document/src/**/*.ts",
+          "libs/case-management/feature-document/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:case-management", "type:feature"]
+}

@@ -1,0 +1,47 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    Except for PENDING, changing the status initiates a new Status Period. The
+    new Status Period may not overlap with a previous one.
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel text="Status">
+        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlStatus$ | async"> </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Status Start Date">
+        <kendo-datepicker [fillMode]="fillMode" [(ngModel)]="currentDate" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Status End Date">
+        <kendo-datepicker [fillMode]="fillMode" [(ngModel)]="currentDate" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Group">
+        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlGroups$ | async"> </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+  </div>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        aria-label="cancel new status period"
+        [primary]="true"
+        look="outline"
+      >
+        Cancel
+      </button>
+      <button kendoButton aria-label="start new status period" [primary]="true">
+        Start
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

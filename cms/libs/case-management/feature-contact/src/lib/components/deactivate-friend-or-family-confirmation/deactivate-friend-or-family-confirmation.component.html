@@ -1,0 +1,41 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    To deactivate the current contact, you must add a new one.
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel text="Contact’s Name">
+        <input kendoTextBox aria-label="contacts name" />
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Contact’s Relationship to Client">
+        <kendo-dropdownlist [data]="ddlRelationshipToClient$ | async">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Contact’s Phone Number">
+        <input kendoTextBox aria-label="contacts phone number" />
+      </kendo-floatinglabel>
+    </div>
+  </div>
+</section>
+
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        aria-label="cancel deactivation of friend or family confirmation"
+      >
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="deactivate and add">
+        Deactivate & Add
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

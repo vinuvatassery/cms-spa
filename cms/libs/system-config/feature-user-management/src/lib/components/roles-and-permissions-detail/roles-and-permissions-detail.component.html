@@ -1,0 +1,1864 @@
+<div class="role-details-header">
+  <section class="app-l-breadcrumb py-0 fixed-top-breadcrumb">
+    <common-bread-crumb></common-bread-crumb>
+    <div class="breadcrumb-right">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        routerLink="/roles-and-permissions"
+        class="mr-1"
+        aria-label="cancel"
+      >
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="add role">
+        Add Role
+      </button>
+    </div>
+  </section>
+</div>
+<div class="add-new-dashed-block">
+  <kendo-textbox     
+  class="add-new-input"
+  placeholder="New User Role"
+  aria-label="new user role" fillMode="outline"> </kendo-textbox>
+   
+  <p>
+    Select which modules this role will have access to for each program, then
+    select the permissions for each module. All users will have access to the
+    Productivity Tools module.
+  </p>
+</div>
+<div class="inner-split-wrapper" kendoRippleContainer>
+  <!-- Roles Navigation Menu Section -->
+  <div class="inner-split_left roles-navigation">
+    <ul class="kendo-list-base with-heading-label">
+      <li class="sections-heading bold-text text-capital pl-2">CAREAssist</li>
+      <li class="kendo-list-items active-item">Clients</li>
+      <li class="kendo-list-items">Financial Management</li>
+      <li class="kendo-list-items">System Configuration</li>
+
+      <li class="sections-heading bold-text text-capital mt-1 pl-2">OHOP</li>
+      <li class="kendo-list-items">Clients</li>
+      <li class="kendo-list-items">Waitlist</li>
+      <li class="kendo-list-items">Service Tracking</li>
+      <li class="kendo-list-items">Financial Management</li>
+      <li class="kendo-list-items">System Configuration</li>
+      <li class="sections-heading bold-text text-capital mt-1 pl-2">
+        Shared Sections
+      </li>
+      <li class="kendo-list-items">System Configuration</li>
+    </ul>
+  </div>
+  <div class="inner-split_right roles-navigation-right pt-3">
+    <!-- CAREAssist Modules Block -->
+    <section>
+      <h2>CAREAssist Modules</h2>
+      <!-- CAREAssist Modules - Clients Expand Panel -->
+      <kendo-expansionpanel
+        class="app-c-expansion-panel border-expansion-panel"
+      >
+        <ng-template kendoExpansionPanelTitleDirective>
+          <div class="header-content small-dropdown-form">
+            <h3>Clients</h3>
+            <kendo-floatinglabel text="role permission">
+              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              </kendo-dropdownlist>
+            </kendo-floatinglabel>
+          </div>
+        </ng-template>
+        <section>
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">APPLICATIONS & CERS</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Applications and CERs</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoApplicationsCers"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoApplicationsCers"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoApplicationsCers"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">CER Tracking</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCerTracking"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCerTracking"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCerTracking"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Client Profiles</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Client Information</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoClientInformation"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoClientInformation"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoClientInformation"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Health Insurance</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoHealthInsurance"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoHealthInsurance"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoHealthInsurance"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Dental</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDental"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDental"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDental"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Drugs</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDrugs"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDrugs"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDrugs"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Management</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoManagement"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoManagement"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoManagement"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Eligibility</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoEligibility"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoEligibility"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoEligibility"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Attachment</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoAttachment"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoAttachment"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoAttachment"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Event Log</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoEventLog"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoEventLog"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoEventLog"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Direct Message</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDirectMessage"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDirectMessage"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoDirectMessage"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="block-sections-items">
+            <h4>Allow this role to:</h4>
+            <div class="component-list-h">
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkReassignCases"
+                  aria-label="reassign cases"
+                />
+                <label class="k-checkbox-label" for="chkReassignCases"
+                  >Re-assign cases</label
+                >
+              </span>
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkSendEmailToClient"
+                  aria-label="send email to client"
+                />
+                <label class="k-checkbox-label" for="chkSendEmailToClient"
+                  >Send emails to clients</label
+                >
+              </span>
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkPrintLetter"
+                  aria-label="print letter for clients"
+                />
+                <label class="k-checkbox-label" for="chkPrintLetter"
+                  >Print letters for clients</label
+                >
+              </span>
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkSendSMSText"
+                  aria-label="send sms text to clients"
+                />
+                <label class="k-checkbox-label" for="chkSendSMSText"
+                  >Send SMS Texts to clients</label
+                >
+              </span>
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkSendIdCards"
+                  aria-label="send id cards to client"
+                />
+                <label class="k-checkbox-label" for="chkSendIdCards"
+                  >Send ID cards to clients</label
+                >
+              </span>
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkPermenentlyDeleteRecords"
+                  aria-label="Permanently delete records within the Clients module"
+                />
+                <label
+                  class="k-checkbox-label"
+                  for="chkPermenentlyDeleteRecords"
+                  >Permanently delete records within the Clients module</label
+                >
+              </span>
+              <span >
+                <p>
+                  Deletion is only possible when the record does not have any
+                  dependencies. Any role with Create/Update permissions is able
+                  to deactivate records when applicable.
+                </p>
+              </span>
+            </div>
+          </div>
+        </section>
+      </kendo-expansionpanel>
+
+      <!-- CAREAssist Modules - Financial Management Expand Panel -->
+      <kendo-expansionpanel
+        class="app-c-expansion-panel border-expansion-panel"
+      >
+        <ng-template kendoExpansionPanelTitleDirective>
+          <div class="header-content small-dropdown-form">
+            <h3>Financial Management</h3>
+            <kendo-floatinglabel text="role permission">
+              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              </kendo-dropdownlist>
+            </kendo-floatinglabel>
+          </div>
+        </ng-template>
+        <section>
+          <!-- Replenishment Model block section-->
+          <div class="block-sections-items">
+            <h4 class="text-capital mt-1">Replenishment Model</h4>
+            <h4>Allow this role to:</h4>
+            <div class="component-list-h">
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkViewReplenishmentModel"
+                  aria-label="view replenishment model"
+                />
+                <label class="k-checkbox-label" for="chkViewReplenishmentModel"
+                  >View replenishment model</label
+                >
+              </span>
+            </div>
+          </div>
+          <!-- Manufacturer Rebates block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Manufacturer Rebates Section</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Manufacturer Rebates</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoManufacturerRebates"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoManufacturerRebates"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoManufacturerRebates"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Invoice Event Log</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInvoiceEventLog"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInvoiceEventLog"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInvoiceEventLog"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Vendor Refunds block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Vendor Refunds Section</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">TPA Refunds (TPA)s</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoTPARefunds"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoTPARefunds"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoTPARefunds"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Insurance Refunds (INS)</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInsuranceRefunds"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInsuranceRefunds"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInsuranceRefunds"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Tax Refunds (TAX)</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoTaxRefunds"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoTaxRefunds"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoTaxRefunds"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Prescription Refunds (RX)</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoPrescriptionRefunds"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoPrescriptionRefunds"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoPrescriptionRefunds"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+            <div class="block-section">
+              <h4>Allow this role to:</h4>
+              <div class="component-list-h">
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkPrintAndDownload"
+                    aria-label="Print and download receipting logs"
+                  />
+                  <label class="k-checkbox-label" for="chkPrintAndDownload"
+                    >Print and download receipting logs</label
+                  >
+                </span>
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkPermanentlyDeleteRefunds"
+                    aria-label="permanently delete refunds"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkPermanentlyDeleteRefunds"
+                    >Permanently delete refunds</label
+                  >
+                </span>
+                <span>
+                  <p>
+                    This only applies to the refund types that this role has
+                    access to, selected above. Deletion is only possible for
+                    refunds that do not have any dependencies.
+                  </p>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- Medical Claims (TPA) Section block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Medical Claims (TPA) Section</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Medical Claims</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoMedicalClaims"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoMedicalClaims"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoMedicalClaims"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+            <div class="block-section">
+              <h4>Allow this role to:</h4>
+              <div class="component-list-h">
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkManagerApprovalMaxBenefits"
+                    aria-label="Manager Approval approve or deny exceptions for exceeding max benefits"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkManagerApprovalMaxBenefits"
+                    >Manager Approval - approve or deny exceptions for exceeding
+                    max benefits</label
+                  >
+                </span>
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkManagerApprovalPaymentRequest"
+                    aria-label="Manager Approval approve or deny payment requests"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkManagerApprovalPaymentRequest"
+                    >Manager Approval - approve or deny payment requests</label
+                  >
+                  <div class="ml-2 mt-1 pl-1">
+                    <label class="text-bold">Max Approval Amount</label>
+                    <kendo-floatinglabel
+                      class="small-input-form p-0 amount-with-symbol"
+                      text="max approval amount"
+                    >
+                      <!-- <span class="amount-prefix">$</span> -->
+                      <kendo-textbox    kendoTextBox
+                      aria-label="max approval amount"
+                        class="mw-100" fillMode="outline"> 
+                        <ng-template kendoTextBoxPrefixTemplate>
+                          <span class="amount-prefix">$</span>
+                        </ng-template></kendo-textbox>
+                      <!-- <input
+                        kendoTextBox
+                        aria-label="max approval amount"
+                        class="mw-100"
+                      /> -->
+                    </kendo-floatinglabel>
+                  </div>
+                </span>
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkPermanentlyDeleteMedicalClaims"
+                    aria-label="Permanently delete medical claims"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkPermanentlyDeleteMedicalClaims"
+                    >Permanently delete medical claims</label
+                  >
+                </span>
+                <span>
+                  <p>
+                    Deletion is only possible for claims that do not have any
+                    dependencies.
+                  </p>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- Insurance Premiums block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Insurance Premiums Section</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Insurance Premiums</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInsurancePremiums"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInsurancePremiums"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoInsurancePremiums"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+            <div class="block-section">
+              <h4>Allow this role to:</h4>
+              <div class="component-list-h">
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkManagerApprovalPaymentRequestPremium"
+                    aria-label="Manager Approval approve or deny payment requests"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkManagerApprovalPaymentRequestPremium"
+                    >Manager Approval - approve or deny payment requests</label
+                  >
+                  <div class="ml-2 mt-1 pl-1">
+                    <label class="text-bold">Max Approval Amount</label>
+                    <kendo-floatinglabel
+                      class="small-input-form p-0 amount-with-symbol"
+                      text="max approval amount"
+                    >
+                      <!-- <span class="amount-prefix">$</span> -->
+                      <kendo-textbox    kendoTextBox
+                      aria-label="max approval amount"
+                        class="mw-100" fillMode="outline"> 
+                        <ng-template kendoTextBoxPrefixTemplate>
+                          <span class="amount-prefix">$</span>
+                        </ng-template></kendo-textbox>
+                      
+                    </kendo-floatinglabel>
+                  </div>
+                </span>
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="ckkPermanentlyDeleteInsurancePremiums"
+                    aria-label="Permanently delete insurance premiums"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="ckkPermanentlyDeleteInsurancePremiums"
+                    >Permanently delete insurance premiums</label
+                  >
+                </span>
+                <span>
+                  <p>
+                    Deletion is only possible for premiums that do not have any
+                    dependencies.
+                  </p>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- Pharmacy Claims block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Pharmacy Claims Section</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Pharmacy Claims</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoPharmacyClaims"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoPharmacyClaims"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoPharmacyClaims"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+            <div class="block-section">
+              <h4>Allow this role to:</h4>
+              <div class="component-list-h">
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkManagerApprovalPaymentRequestPharmacy"
+                    aria-label="Manager Approval approve or deny payment requests"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkManagerApprovalPaymentRequestPharmacy"
+                    >Manager Approval - approve or deny payment requests</label
+                  >
+                  <div class="ml-2 mt-1 pl-1">
+                    <label class="text-bold">Max Approval Amount</label>
+                    <kendo-floatinglabel
+                      class="small-input-form p-0 amount-with-symbol"
+                      text="max approval amount"
+                    >
+                    
+                      <kendo-textbox    kendoTextBox
+                      aria-label="max approval amount"
+                        class="mw-100" fillMode="outline">
+                        <ng-template kendoTextBoxPrefixTemplate>
+                          <span class="amount-prefix">$</span>
+                        </ng-template>
+
+                      </kendo-textbox>
+                    </kendo-floatinglabel>
+                  </div>
+                </span>
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="ckkPermanentlyDeleteInsurancePharmacy"
+                    aria-label="Permanently delete pharmacy claims"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="ckkPermanentlyDeleteInsurancePharmacy"
+                    >Permanently delete pharmacy claims</label
+                  >
+                </span>
+                <span>
+                  <p>
+                    Deletion is only possible for claims that do not have any
+                    dependencies.
+                  </p>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- Service Provider Profiles block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Service Provider Profiles</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">
+                  General Info, Billing Info, Contacts
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProviderInfo"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProviderInfo"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProviderInfo"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Event Logs</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProviderEventlog"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProviderEventlog"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProviderEventlog"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+            <div class="block-section">
+              <h4>Allow this role to:</h4>
+              <div class="component-list-h">
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkSendEmailsToServiceProviders"
+                    aria-label="Send emails to service providers"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkSendEmailsToServiceProviders"
+                    >Send emails to service providers</label
+                  >
+                </span>
+                <span class="app-checkboxwidtext-wrapper">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    id="chkPrintLettersForServiceProviders"
+                    aria-label="Print letters for service providers"
+                  />
+                  <label
+                    class="k-checkbox-label"
+                    for="chkPrintLettersForServiceProviders"
+                    >Print letters for service providers</label
+                  >
+                </span>
+                <span>
+                  <p>
+                    Service Providers include Manufacturers, Insurance Vendors,
+                    Medical Providers, and Pharmacies
+                  </p>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </kendo-expansionpanel>
+
+      <!-- CAREAssist Modules - System Configuration Expand Panel -->
+      <kendo-expansionpanel
+        class="app-c-expansion-panel border-expansion-panel"
+      >
+        <ng-template kendoExpansionPanelTitleDirective>
+          <div class="header-content small-dropdown-form">
+            <h3>System Configuration</h3>
+            <kendo-floatinglabel text="role permission">
+              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              </kendo-dropdownlist>
+            </kendo-floatinglabel>
+          </div>
+        </ng-template>
+        <section>
+          <!-- User Management block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">User Management</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Users</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoSysConfigUsers"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoSysConfigUsers"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoSysConfigUsers"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Roles & Permissions</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoSysConfigRolesPermissions"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoSysConfigRolesPermissions"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoSysConfigRolesPermissions"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Communication block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Communication</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Email Templates</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsEmail"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsEmail"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsEmail"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Letter Template</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsLetter"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsLetter"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsLetter"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">SMS Text Template</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsSMSText"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsSMSText"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsSMSText"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Client Notification Defaults</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsClientNotifications"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsClientNotifications"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsClientNotifications"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Master Forms & Documents</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsClientFormsDocuments"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsClientFormsDocuments"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCommunicationsClientFormsDocuments"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Financials block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Financials</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Federal Poverty Limit</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsFederalPoverty"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsFederalPoverty"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsFederalPoverty"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Funds & PCA Codes</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsFunds"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsFunds"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsFunds"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Group Service Defaults</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsGroupService"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsGroupService"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsGroupService"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Client Maximums</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsClientMaximums"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsClientMaximums"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoFinancialsClientMaximums"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Service providers block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Service Providers</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Manufacturers</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersManufacturers"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersManufacturers"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersManufacturers"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Drugs</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersDrugs"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersDrugs"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersDrugs"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Medical Providers (TPA)</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersMedical"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersMedical"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersMedical"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">CPT Codes</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersCPTCodes"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersCPTCodes"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersCPTCodes"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Insurance Vendor</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsuranceVendor"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsuranceVendor"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsuranceVendor"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Insurance Provider</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsuranceProvider"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsuranceProvider"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsuranceProvider"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Insurance Plans</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsurancePlans"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsurancePlans"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersInsurancePlans"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Pharmacies</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersPharmacies"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersPharmacies"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersPharmacies"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">HIV Healthcare Providers</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersHIVHealthcareProviders"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersHIVHealthcareProviders"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoServiceProvidersHIVHealthcareProviders"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Client Profile block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Client Profile</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Direct Message</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoClientProfileDirectMessage"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoClientProfileDirectMessage"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoClientProfileDirectMessage"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Cases block section-->
+          <div class="block-sections-items">
+            <table class="permission-item-table">
+              <tr>
+                <th class="item-header-left">Cases</th>
+                <th class="item-header-center">Create/Update</th>
+                <th class="item-header-center">View Only</th>
+                <th class="item-header-center">No Access</th>
+              </tr>
+              <tr>
+                <td class="item-data-left">Eligibility Checklist</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCasesEligibilityChecklist"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCasesEligibilityChecklist"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCasesEligibilityChecklist"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="item-data-left">Case Management</td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCasesCaseManagement"
+                    aria-label="create or update"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCasesCaseManagement"
+                    aria-label="view only"
+                  />
+                </td>
+                <td class="item-data-center">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    name="rdoCasesCaseManagement"
+                    aria-label="no access"
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Allow Delete Permanently -->
+          <div class="block-sections-items">
+            <h4>Allow this role to:</h4>
+            <div class="component-list-h">
+              <span class="app-checkboxwidtext-wrapper">
+                <input
+                  type="checkbox"
+                  kendoCheckBox
+                  id="chkSysConfigDeletePermanently"
+                  aria-label="Permanently delete records in System Configuration"
+                />
+                <label
+                  class="k-checkbox-label"
+                  for="chkSysConfigDeletePermanently"
+                  >Permanently delete records in System Configuration</label
+                >
+              </span>
+              <span class="app-checkboxwidtext-wrapper"> 
+                <p>
+                  This only applies to records that the role has Create/Update
+                  permissions for. Deletion is only possible for records that do
+                  not have any dependencies.
+                </p>
+              </span>
+            </div>
+          </div>
+        </section>
+      </kendo-expansionpanel>
+    </section>
+
+    <!-- OHOP Modules Block -->
+    <section class="mt-4 pt-1">
+      <h2>OHOP Modules</h2>
+    </section>
+
+    <!-- Shared Sections Modules Block -->
+    <section class="mt-4 pt-1" hidden>
+      <h2>Shared Sections Modules</h2>
+    </section>
+  </div>
+</div>

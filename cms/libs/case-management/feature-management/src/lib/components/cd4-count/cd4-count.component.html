@@ -1,0 +1,27 @@
+<div class="flex-row">
+    <div class="flex-col">
+      <div class="app-c-table">
+        <kendo-grid [data]="loadCd4Count$ | async">
+ 
+          <kendo-grid-column
+            field="Result"
+            title="Result"
+            [width]="150"
+          ></kendo-grid-column>
+          <kendo-grid-column
+            field="DateofTest"
+            title="Date of Test"
+            [width]="150"
+          ></kendo-grid-column>
+          <kendo-grid-column
+            field="EntryDate"
+            title="Entry Date"
+            [width]="100"
+          ></kendo-grid-column>
+        </kendo-grid>
+      </div>
+ 
+    </div>
+  </div>
+  
+ 

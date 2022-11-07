@@ -1,0 +1,104 @@
+<div class="flex-row" *ngIf="!hasNoProvider">
+  <div class="flex-col">
+    <div class="app-c-table">
+      <kendo-grid [data]="healthCareProviders$ | async">
+        <kendo-grid-column field="ClinicName" title="Clinic Name" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="ProviderName"
+          title="Provider Name"
+          [width]="150"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="ProviderPhone"
+          title="Provider Phone"
+          [width]="150"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="ProviderAddress"
+          title="Provider Address"
+          [width]="200"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="Option"
+          title="Option"
+          [width]="75"
+          class="text-center"
+          [sticky]="true"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <kendo-dropdownbutton
+              [data]="actions"
+              icon="more-vertical"
+              class="TableActionPopup app-dropdown-action"
+              buttonClass="k-icon-button"
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+              aria-label="more actions"
+            >
+              <!-- <span
+                class="material-icons"
+                aria-label="actions"
+                aria-hidden="true"
+                role="menuitem"
+                >more_vert</span
+              > -->
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                  <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                  <label>   {{ dataItem.text }} </label>
+              </button>
+                 
+               <!-- <button
+                  kendoButton
+                  icon="edit"
+                  look="flat"
+                  class="btn-h-primary"
+                  (click)="onOpenProviderClicked(true)"
+                  aria-label="edit healthcare provider"
+                >
+                  Edit Provider
+                </button>
+                <button
+                  kendoButton
+                  icon="delete"
+                  look="flat"
+                  class="btn-h-danger"
+                  aria-label="remove healthcare provider"
+                >
+                  Remove Provider
+                </button> -->
+              </ng-template>
+            </kendo-dropdownbutton>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col mt-1">
+        <button
+          kendoButton
+          [primary]="true"
+          icon="add"
+          (click)="onOpenProviderClicked(false)"
+          aria-label="add healthcare provider"
+        >
+          Provider
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Provider  Modal -->
+<kendo-dialog
+  *ngIf="isOpenedProvider"
+  (close)="onCloseProviderClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar
+    >{{ isEditHealthProvider ? 'Edit Provider' : 'Add Provider' }}
+  </kendo-dialog-titlebar>
+  <case-management-health-care-provider-detail
+    [isEditHealthProviderValue]="isEditHealthProvider"
+  ></case-management-health-care-provider-detail>
+</kendo-dialog>

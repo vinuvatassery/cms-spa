@@ -1,0 +1,86 @@
+<div class="flex-row">
+  <div class="flex-col">
+    <div class="app-c-table">
+      <kendo-grid [data]="employers$ | async">
+        <kendo-grid-column field="NameofEmployer" title="Name of Employer">
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="DateofHire"
+          title="Date of Hire"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="Option"
+          title="Option"
+          [width]="75"
+          class="text-center"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <kendo-dropdownbutton
+              [data]="actions"
+              icon="more-vertical"
+              class="TableActionPopup app-dropdown-action"
+              aria-label="more actions"
+              buttonClass="k-icon-button"
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+            >
+              
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+              <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                <label>   {{ dataItem.text }} </label>
+            </button>
+                <!-- <button
+                  kendoButton
+                  icon="edit"
+                  look="flat"
+                  class="btn-h-primary"
+                  aria-label="edit employer"
+                  (click)="onEmployerClicked(false)"
+                >
+                  Edit Employer
+                </button>
+                <button
+                  kendoButton
+                  icon="delete"
+                  look="flat"
+                  class="btn-h-danger"
+                  aria-label="delete employer"
+                >
+                  Delete Employer
+                </button> -->
+              </ng-template>
+            </kendo-dropdownbutton>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col mt-1">
+        <button
+          *ngIf="isAddEmployerButtonDisplayed"
+          kendoButton
+          [primary]="true"
+          icon="add"
+          aria-label="add employer"
+          (click)="onEmployerClicked(true)"
+        >
+          Employer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Income  Modal -->
+<kendo-dialog
+  *ngIf="isEmployerOpened"
+  (close)="onEmployerClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar>
+    {{ isAdd ? 'Add Employer' : 'Edit Employer ' }}
+  </kendo-dialog-titlebar>
+  <case-management-employer-detail
+    [isAdd]="isAdd"
+  ></case-management-employer-detail>
+</kendo-dialog>

@@ -1,0 +1,71 @@
+<div class="client-data-block">
+  <h3>HIV Verification</h3>
+  <section>
+    <h5 class="mt-1">Verification method</h5>
+    <div class="component-list-h">
+      <span class="app-radiobtnwidtext-wrapper">
+        <input
+          type="radio"
+          kendoRadioButton
+          name="verificationMethod"
+          value="Request from Case Manager"
+          [(ngModel)]="rdoVerificationMethod"
+          [disabled]="
+            rdoVerificationMethod ===
+              'Request from Healthcare Provider via email' ||
+            rdoVerificationMethod === 'Upload an attachment'
+          "
+          aria-labelledby="verificationMethodFromCaseManager"
+          id="verificationMethod1"
+          tabindex="1"
+        />
+        <kendo-label
+          class="k-radio-label"
+          text="Request from Case Manager"
+          for="verificationMethod1"
+        ></kendo-label>
+      </span>
+
+      <span class="app-radiobtnwidtext-wrapper">
+        <input
+          type="radio"
+          kendoRadioButton
+          name="verificationMethod"
+          value="Request from Healthcare Provider via email"
+          [(ngModel)]="rdoVerificationMethod"
+          aria-labelledby="verificationMethodFromHealthcareProvider"
+          id="verificationMethod2"
+          tabindex="2"
+        />
+        <kendo-label
+          class="k-radio-label"
+          text="Request from Healthcare Provider via email"
+          for="verificationMethod2"
+        ></kendo-label>
+      </span>
+
+      <span class="app-radiobtnwidtext-wrapper">
+        <input
+          type="radio"
+          kendoRadioButton
+          name="verificationMethod"
+          value="Upload an attachment"
+          [(ngModel)]="rdoVerificationMethod"
+          aria-labelledby="verificationMethodUploadAttachment"
+          id="verificationMethod3"
+          tabindex="3"
+        />
+        <kendo-label
+          class="k-radio-label"
+          text="Upload an attachment"
+          for="verificationMethod3"
+        ></kendo-label>
+      </span>
+    </div>
+  </section>
+  <div *ngIf="rdoVerificationMethod">
+    <case-management-hiv-verification-request
+      [data]="rdoVerificationMethod"
+    ></case-management-hiv-verification-request>
+  </div>
+</div>

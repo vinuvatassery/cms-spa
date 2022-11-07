@@ -1,0 +1,47 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    Enter the employer’s name and the date the client was hired.
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel text="Name of Employer">
+        <kendo-textbox aria-label="name of employer"  [fillMode]="fillMode">   </kendo-textbox>
+        <!-- <input kendoTextBox aria-label="name of employer" /> -->
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col mb-1">
+      <kendo-floatinglabel aria-label="date of hire" text="Date of Hire">
+        <kendo-datepicker  [(ngModel)]="currentDate" [fillMode]="fillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+    </div>
+  </div>
+</section>
+
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div>
+      <button
+        kendoButton
+        class="k-danger-link"
+        aria-label="delete employer"
+        *ngIf="!isAdd"
+      >
+        Delete
+      </button>
+    </div>
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        aria-label="cancel employer"
+        look="outline"
+      >
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="add new employer">
+        Add
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

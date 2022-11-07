@@ -1,0 +1,180 @@
+<!-- Table Top Filter, Search and Export -->
+<section class="mat-form-no-b-space table-filter-section cer-table-filter">
+  <div class="filter-col-select">
+    <span>SP End Date</span>
+    <kendo-floatinglabel text="Date" >
+      <kendo-dropdownlist fillMode="outline" [data]="ddlCer$ | async"> </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </div>
+  <div class="table-sorted-info filter-col-sort-info">
+    <span class="sort-items">33 clients due for CER</span>
+    <span class="sort-items">0 Completed</span>
+    <span class="sort-items">7 Restricted</span>
+  </div>
+  <button
+    kendoButton
+    [primary]="true"
+    (click)="onOpenSendCERClicked()"
+    appendTo="body"
+    aria-label="send cers"
+  >
+    Send CERS
+  </button>
+
+  <!-- Bulk dropdown -->
+  <kendo-dropdownbutton
+    [data]="actions"
+    icon="expand_more"
+    class="TableActionPopup app-dropdown-action"
+    buttonClass="k-flat-button"
+    aria-label="more actions"
+    [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+    hidden
+  >
+    Bulk
+    <!-- <span
+      class="material-icons"
+      aria-label="expand"
+      aria-hidden="true"
+      role="menuitem"
+      >expand_more</span
+    > -->
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
+        <label>   {{ dataItem.text }} </label>
+    </button>
+      <!-- <button kendoButton look="flat" aria-label="send cer reminders">
+        Send CER Reminders
+      </button>
+      <button kendoButton look="flat" aria-label="send restricted notices">
+        Send Restricted Notices
+      </button> -->
+    </ng-template>
+  </kendo-dropdownbutton>
+</section>
+
+<!-- Sorted Info -->
+<div class="table-sorted-info">
+  Sorted by <span class="sort-items">Client Name</span>
+  <span class="sort-items">No Filters</span>
+  <span class="sort-items">Default Columns</span>
+  <!-- <button kendoButton look="flat" class="card-link-button">Set to Default</button> -->
+</div>
+
+<!-- Case List table -->
+<div class="app-c-table">
+  <kendo-grid [data]="cerGrid$ | async">
+    <kendo-grid-column field="ClientName" title="Client Name" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          look="flat"
+          class="card-link-button"
+          aria-label="client name"
+        >
+          {{ dataItem.ClientName }}
+        </button>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="MemID" title="Mem. ID" [width]="80">
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="DateOfBirth"
+      title="Date of Birth"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="CERID"
+      title="CER ID"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="CurrentStatus"
+      title="Current Status"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="DateCERSent"
+      title="Date CER Sent"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="DateCERReceived"
+      title="Date CER Received"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="DateCERCompleted"
+      title="Date CER Completed"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="ReminderSentDate"
+      title="Reminder Sent Date"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="CERResentDate"
+      title="CER Resent Date"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="RestrictedSentDate"
+      title="Restricted Sent Date"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column
+      field="SpokenLanguage"
+      title="Spoken Language"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column field="CaseManager" title="Case Manager" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          look="flat"
+          class="card-link-button"
+          kendoPopoverAnchor
+          [popover]="userCard"
+          showOn="hover"
+          aria-label="case manager"
+        >
+          {{ dataItem.CaseManager }}
+        </button>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="CaseWorker" title="Case Worker" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          look="flat"
+          class="card-link-button"
+          kendoPopoverAnchor
+          [popover]="userCard"
+          showOn="hover"
+          aria-label="case worker"
+        >
+          {{ dataItem.CaseWorker }}
+        </button>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+</div>
+
+<!-- User Card -->
+<kendo-popover #userCard width="330">
+  <ng-template kendoPopoverBodyTemplate>
+    <common-user-profile-card></common-user-profile-card>
+  </ng-template>
+</kendo-popover>
+
+<!-- Send CER Modal Html-->
+<kendo-dialog
+  *ngIf="isOpenSendCER"
+  (close)="onCloseSendCERClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-top"
+  title="Send CERs?"
+>
+  <case-management-send-cer></case-management-send-cer>
+</kendo-dialog>

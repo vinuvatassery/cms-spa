@@ -1,0 +1,43 @@
+{
+  "name": "shared-util-core",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/util-core/src",
+  "prefix": "core",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/shared/util-core"],
+      "options": {
+        "project": "libs/shared/util-core/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/shared/util-core/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/shared/util-core/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/shared/util-core"],
+      "options": {
+        "jestConfig": "libs/shared/util-core/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/shared/util-core/src/**/*.ts",
+          "libs/shared/util-core/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:shared", "type:util"]
+}

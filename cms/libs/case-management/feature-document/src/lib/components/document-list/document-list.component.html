@@ -1,0 +1,85 @@
+<div class="flex-row">
+    <div class="flex-col">
+        <div class="app-c-table">
+            <kendo-grid [data]="documents$ | async">
+
+                <kendo-grid-column field="name" title="File Name" [width]="120"></kendo-grid-column>
+                <kendo-grid-column field="filesize" title="File Size" [width]="80"></kendo-grid-column>
+                <kendo-grid-column field="attachmenttType" title="Attachment Type" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="attachmentnote" title="Attachment Nnote" [width]="200"></kendo-grid-column>
+
+                <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+                            [popover]="onUserProfileDetailsHovered" showOn="hover" aria-labelledby="profile avathar">
+                            <div mat-card-avatar="" class="app-c-avatar avatar-sm">
+                                <!-- <img
+        src="../assets/images/avatar-1.png"
+        alt="Profile Avatar"
+        class="profile-avatar"
+        hidden
+      /> -->
+                                <span class="profile-text-avatar">AK</span>
+                            </div>
+                        </button>
+                        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                            <ng-template kendoPopoverBodyTemplate>
+                                <common-user-profile-card></common-user-profile-card>
+                            </ng-template>
+                        </kendo-popover>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column field="Option" title="Option" [width]="50" class="text-center" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <kendo-dropdownbutton [data]="actions" icon="more-vertical"
+                            class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
+                            aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+
+                            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                                <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
+                                    [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                                    <span class="material-icons"
+                                        [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                                    <label> {{ dataItem.text }} </label>
+                                </button>
+
+                                <!--   <button
+                    kendoButton
+                    icon="edit"
+                    look="flat"
+                    class="btn-h-primary"
+                    aria-label="edit healthcare provider"
+                  >
+                    Edit Provider
+                  </button>
+                  <button
+                    kendoButton
+                    icon="delete"
+                    look="flat"
+                    class="btn-h-danger"
+                    aria-label="remove healthcare provider"
+                  >
+                    Remove Provider
+                  </button> -->
+                            </ng-template>
+                        </kendo-dropdownbutton>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+        </div>
+        <div class="flex-row">
+            <div class="flex-col mt-1">
+                <button kendoButton [primary]="true" icon="add" (click)="isOpenDocAttachment = true"
+                    aria-label="add healthcare provider">
+                    Attachment
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Document  Modal -->
+<kendo-dialog *ngIf="isOpenDocAttachment" (close)="isOpenDocAttachment = false"
+    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    <kendo-dialog-titlebar> Upload Document </kendo-dialog-titlebar>
+    <case-management-upload-proof-document></case-management-upload-proof-document>
+</kendo-dialog>

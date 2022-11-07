@@ -1,0 +1,104 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2" *ngIf="!isEditValue">
+    Adding a new phone number will deactivate the current phone number for that
+    type. For example, adding a new home phone will deactivate the current home
+    phone.
+  </p>
+  <p class="text-muted mb-2" *ngIf="isEditValue">
+    Edit or deactivate client's phone number
+  </p>
+  <div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel text="Choose Phone Type">
+        <kendo-dropdownlist fillMode="outline" [data]="ddlPhoneTypes$ | async">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Phone Number">
+        <kendo-textbox aria-label="phone number"  fillMode="outline">   </kendo-textbox>
+        <!-- <input kendoTextBox aria-label="phone number" /> -->
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col">
+      <div class="component-list-h">
+        <span class="app-checkboxwidtext-wrapper">
+          <input
+            type="checkbox"
+            kendoCheckBox
+            aria-labelledby="detailedMessagesOk"
+            id="detailedMessagesOk"
+          />
+          <label class="k-checkbox-label" for="detailedMessagesOk"
+            >Detailed Messages OK</label
+          >
+        </span>
+        <span class="app-checkboxwidtext-wrapper">
+          <input
+            type="checkbox"
+            kendoCheckBox
+            aria-labelledby="smsTextOk"
+            id="smsTextOk"
+          />
+          <label class="k-checkbox-label" for="smsTextOk">SMS Texts OK</label>
+        </span>
+      </div>
+    </div>
+    <div class="flex-col mt-3 mb-3">
+      <span class="app-checkboxwidtext-wrapper">
+        <input
+          type="checkbox"
+          kendoCheckBox
+          aria-labelledby="preferredContactMethod"
+          id="preferredContactMethod"
+        />
+        <label class="k-checkbox-label" for="preferredContactMethod"
+          >Preferred contact method</label
+        >
+      </span>
+    </div>
+  </div>
+</section>
+
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div *ngIf="isEditValue === true">
+      <button
+        kendoButton
+        [primary]="true"
+        look="flat"
+        (click)="onDeactivateClicked()"
+        aria-label="deactivate phone"
+      >
+        Deactivate
+      </button>
+      <div *ngIf="isDeactivateValue">
+        <kendo-dialog
+          *ngIf="isDeactivatePhoneNumberPopup"
+          (close)="onDeactivatePhoneNumberClosed()"
+          class="app-c-modal app-c-modal-sm app-c-modal-np"
+          title="Deactivate phone number?"
+        >
+          <case-management-deactivate-phone-confirmation></case-management-deactivate-phone-confirmation>
+        </kendo-dialog>
+      </div>
+    </div>
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        aria-label="cancel adding phone detail"
+      >
+        Cancel
+      </button>
+      <button
+        kendoButton
+        [primary]="true"
+        aria-label="update or add phone detail"
+      >
+        {{ isEditValue ? 'Update' : 'Add' }}
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

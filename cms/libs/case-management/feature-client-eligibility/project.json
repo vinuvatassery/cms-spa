@@ -1,0 +1,43 @@
+{
+  "name": "case-management-feature-client-eligibility",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/case-management/feature-client-eligibility/src",
+  "prefix": "case-management",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/case-management/feature-client-eligibility"],
+      "options": {
+        "project": "libs/case-management/feature-client-eligibility/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/case-management/feature-client-eligibility/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/case-management/feature-client-eligibility/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/case-management/feature-client-eligibility"],
+      "options": {
+        "jestConfig": "libs/case-management/feature-client-eligibility/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/case-management/feature-client-eligibility/src/**/*.ts",
+          "libs/case-management/feature-client-eligibility/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:case-management", "type:feature"]
+}

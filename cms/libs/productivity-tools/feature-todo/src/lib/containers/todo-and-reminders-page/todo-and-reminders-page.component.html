@@ -1,0 +1,37 @@
+<div class="app-c-fab-sidePanel sidePanel-todo-reminders" kendoTooltip>
+  <!-- Side Panel Header -->
+  <div class="sidePanel_header">
+    <div class="sidePanel_header-left">
+      <h3>Donna’s To-Do & Reminders</h3>
+    </div>
+    <div class="sidePanel_header-right max-w-small">
+      <button
+        kendoButton
+        class="k-icon-button small-i-btn"
+        (click)="onCloseTodoRemindersClicked()"
+        aria-label="close todo and reminder"
+      >
+        <span class="material-icons" aria-label="close" aria-hidden="true"
+          >close</span
+        >
+      </button>
+    </div>
+  </div>
+  <div class="sidePanel_body todo-list">
+    <section>
+      <p class="due-main-heading text-red-dark">Due within 7 days</p>
+      <productivity-tools-todo-item></productivity-tools-todo-item>
+      <productivity-tools-reminder-item></productivity-tools-reminder-item>
+    </section>
+    <section class="pt-2">
+      <p class="due-main-heading text-canyon-dark">Due within 30 days</p>
+      <productivity-tools-reminder-item></productivity-tools-reminder-item>
+      <productivity-tools-todo-item></productivity-tools-todo-item>
+    </section>
+    <section class="pt-2">
+      <p class="due-main-heading">Due Later</p>
+      <productivity-tools-reminder-item></productivity-tools-reminder-item>
+      <productivity-tools-todo-item></productivity-tools-todo-item>
+    </section>
+  </div>
+</div>

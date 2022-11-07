@@ -1,0 +1,326 @@
+<section class="app-l-mainTittle" kendoTooltip>
+  <h2>Application Review - Anthony Hopkins</h2>
+  <p class="mt-1 mb-3">
+    Please indicate whether the applicant meets the eligibility criteria below.
+    If approved, specify Status, Group, Eligibility Period, and initiate the
+    approval notice. If rejected, specify Status and initiate the rejection
+    notice.
+  </p>
+  <div class="app-c-card app-c-card--border-box mb-2">
+    <div class="flex-row">
+      <div class="flex-col flex-col-8">
+        <h4 class="mb-1 mt-0">Is the client an Oregon resident?</h4>
+        <span class="card-buttons-wrap">
+          <button
+            kendoButton
+            look="flat"
+            aria-label="download file"
+            class="k-icon-button"
+            title="Download"
+          >
+            <span
+              class="material-icons"
+              aria-label="download file"
+              aria-hidden="true"
+              >file_download</span
+            >
+          </button>
+          <button
+            kendoButton
+            look="flat"
+            aria-label="open in new tab"
+            class="k-icon-button"
+            title="Open in new tab"
+          >
+            <span
+              class="material-icons"
+              aria-label="open in new tab"
+              aria-hidden="true"
+              >open_in_new</span
+            >
+          </button>
+          <a class="text-bold text-underline">Proof of address</a>
+          <span class="text-muted">(2MB)</span>
+        </span>
+      </div>
+      <div class="flex-col flex-col-4 text-right">
+        <kendo-buttongroup selection="single">
+          <button
+            kendoButton
+            aria-label="proof of address yes"
+            [toggleable]="true"
+          >
+            Yes
+          </button>
+          <button
+            kendoButton
+            aria-label="proof of address no"
+            [toggleable]="true"
+          >
+            No
+          </button>
+        </kendo-buttongroup>
+      </div>
+    </div>
+  </div>
+  <div class="app-c-card app-c-card--border-box mb-2">
+    <div class="flex-row">
+      <div class="flex-col flex-col-8">
+        <h4 class="mb-1 mt-0">Does the client meet income requirements?</h4>
+        <span class="card-buttons-wrap mb-1">
+          <span class="pr-3"
+            ><span class="text-bold">Family Size:</span> 4</span
+          >
+          <span class="pr-3"
+            ><span class="text-bold">Monthly Income:</span> $1,153.00</span
+          >
+          <span class="pr-3"><span class="text-bold">FPL:</span> 150%</span>
+        </span>
+        <span class="card-buttons-wrap">
+          <button
+            kendoButton
+            look="flat"
+            aria-label="download file"
+            class="k-icon-button"
+            title="Download"
+          >
+            <span
+              class="material-icons"
+              aria-label="download file"
+              aria-hidden="true"
+              >file_download</span
+            >
+          </button>
+          <button
+            kendoButton
+            look="flat"
+            aria-label="open in new tab"
+            class="k-icon-button"
+            title="Open in new tab"
+          >
+            <span
+              class="material-icons"
+              aria-label="open in new tab"
+              aria-hidden="true"
+              >open_in_new</span
+            >
+          </button>
+          <a class="text-bold text-underline">Proof of Income 1</a>
+          <span class="text-muted">(2MB)</span>
+        </span>
+        <span class="card-buttons-wrap">
+          <button
+            kendoButton
+            look="flat"
+            aria-label="download file"
+            class="k-icon-button"
+            title="Download"
+          >
+            <span
+              class="material-icons"
+              aria-label="download file"
+              aria-hidden="true"
+              >file_download</span
+            >
+          </button>
+          <button
+            kendoButton
+            look="flat"
+            aria-label="open in new tab"
+            class="k-icon-button"
+            title="Open in new tab"
+          >
+            <span
+              class="material-icons"
+              aria-label="open in new tab"
+              aria-hidden="true"
+              >open_in_new</span
+            >
+          </button>
+          <a class="text-bold text-underline">Proof of Income 2</a>
+          <span class="text-muted">(2MB)</span>
+        </span>
+      </div>
+      <div class="flex-col flex-col-4 text-right">
+        <kendo-buttongroup selection="single">
+          <button
+            kendoButton
+            aria-label="proof of income yes"
+            [toggleable]="true"
+          >
+            Yes
+          </button>
+          <button
+            kendoButton
+            aria-label="proof of income no"
+            [toggleable]="true"
+          >
+            No
+          </button>
+        </kendo-buttongroup>
+      </div>
+    </div>
+  </div>
+  <div class="app-c-card app-c-card--border-box mb-2">
+    <div class="flex-row">
+      <div class="flex-col flex-col-8">
+        <h4 class="mb-1 mt-0">
+          Is the client HIV positive/can you verify their HIV status?
+        </h4>
+        <span class="card-buttons-wrap">
+          <button
+            kendoButton
+            look="flat"
+            aria-label="download file"
+            class="k-icon-button"
+            title="Download"
+          >
+            <span
+              class="material-icons"
+              aria-label="download file"
+              aria-hidden="true"
+              >file_download</span
+            >
+          </button>
+          <button
+            kendoButton
+            look="flat"
+            aria-label="open in new tab"
+            class="k-icon-button"
+            title="Open in new tab"
+          >
+            <span
+              class="material-icons"
+              aria-label="open in new tab"
+              aria-hidden="true"
+              >open_in_new</span
+            >
+          </button>
+          <a class="text-bold text-underline">Proof of HIV</a>
+          <span class="text-muted">(2MB)</span>
+        </span>
+      </div>
+      <div class="flex-col flex-col-4 text-right">
+        <kendo-buttongroup selection="single">
+          <button kendoButton aria-label="proof of hiv yes" [toggleable]="true">
+            Yes
+          </button>
+          <button kendoButton aria-label="proof of hiv no" [toggleable]="true">
+            No
+          </button>
+        </kendo-buttongroup>
+      </div>
+    </div>
+  </div>
+  <div class="app-c-card app-c-card--border-box mb-2">
+    <div class="flex-row">
+      <div
+        class="flex-col flex-col-8 toggle-wrap"
+        (click)="onToggleExceptionClicked()"
+      >
+        <h4 class="mb-1 mt-0">Does client meet criteria XYZ?</h4>
+      </div>
+      <div class="flex-col flex-col-4 text-right">
+        <kendo-buttongroup selection="single">
+          <button
+            kendoButton
+            aria-label="does client meet criteria yes"
+            [toggleable]="true"
+          >
+            Yes
+          </button>
+          <button
+            kendoButton
+            aria-label="does client meet criteria no"
+            [toggleable]="true"
+          >
+            No
+          </button>
+        </kendo-buttongroup>
+      </div>
+    </div>
+    <div class="flex-row pl-3 mt-2" *ngIf="isShowException">
+      <div class="flex-col flex-col-8">
+        <h4 class="mb-1 mt-0">Make an exception?</h4>
+      </div>
+      <div class="flex-col flex-col-4 text-right">
+        <kendo-buttongroup selection="single">
+          <button
+            kendoButton
+            aria-label="make an exception yes"
+            [toggleable]="true"
+          >
+            Yes
+          </button>
+          <button
+            kendoButton
+            aria-label="make an exception no"
+            [toggleable]="true"
+          >
+            No
+          </button>
+        </kendo-buttongroup>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Exception Note">
+          <kendo-textarea
+          fillMode="outline"
+            aria-label="exception note description"
+            name="Exception Note"
+            [rows]="5"
+            [cols]="40"
+          >
+          </kendo-textarea>
+          <kendo-formhint class="justify-content-end">0/300</kendo-formhint>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-c-card app-c-card--border-box top-lg-space">
+    <div class="flex-row">
+      <div class="flex-col flex-col-8 align-items-center">
+        <h4 class="mb-0 mt-0">Is the application accepted?</h4>
+      </div>
+      <div class="flex-col flex-col-4 text-right">
+        <button
+          kendoButton
+          aria-label="application accepted yes"
+          [primary]="true"
+          (click)="isOpenAcceptanceClicked()"
+        >
+          Yes
+        </button>
+        <button
+          kendoButton
+          aria-label="application accepted no"
+          [primary]="true"
+          class="ml-2"
+          (click)="isOpenDenyClicked()"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Application Acceptance Modal Html-->
+<kendo-dialog
+  *ngIf="isOpenAcceptance"
+  (close)="onCloseAcceptanceClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Application Accepted </kendo-dialog-titlebar>
+  <case-management-accept-application></case-management-accept-application>
+</kendo-dialog>
+
+<!-- Application Deny Modal Html-->
+<kendo-dialog
+  *ngIf="isOpenDeny"
+  (close)="isCloseDenyClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Deny application? </kendo-dialog-titlebar>
+  <case-management-reject-application></case-management-reject-application>
+</kendo-dialog>

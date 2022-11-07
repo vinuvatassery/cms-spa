@@ -1,0 +1,16 @@
+<div
+  #surface
+  class="signature"
+  (pointerdown)="onPointerDownClicked($event)"
+  (pointermove)="onPointerMoved($event)"
+  (pointerup)="onPointerUpClicked($event)"
+></div>
+
+<button class="k-button" (click)="onExportClicked()" aria-label="export as svg">
+  Export as SVG
+</button>
+<button class="k-button" (click)="onClearClicked()" aria-label="clear drawing">
+  Clear drawing
+</button>
+<hr />
+Is empty? {{ isEmpty }}

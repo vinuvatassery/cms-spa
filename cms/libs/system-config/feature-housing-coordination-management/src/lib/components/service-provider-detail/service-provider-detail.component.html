@@ -1,0 +1,153 @@
+<section class="k-dialog-body">
+  <div class="flex-row">
+    <div class="flex-col" >
+      <kendo-floatinglabel  text ="Service provider Name">
+        <kendo-textbox fillMode="outline" >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+  </div>
+  <div class="flex-row">
+    <div class="flex-col">
+      <kendo-floatinglabel >
+          <kendo-dropdownlist  value="Type ">
+          </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+  </div>
+  <div class="flex-row">
+      <div class="flex-col" >
+        <kendo-floatinglabel  text ="Vendor ID">
+          <kendo-textbox fillMode="outline" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+ 
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel  text ="Account Number">
+          <kendo-textbox fillMode="outline" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel  text ="Phone Number">
+          <kendo-textbox fillMode="outline" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel  text ="Mail Code">
+          <kendo-textbox fillMode="outline" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel  text ="Address line 1">
+          <kendo-textbox fillMode="outline" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel  text ="Address line 2">
+          <kendo-textbox fillMode="outline" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel  text ="city">
+          <kendo-textbox fillMode="outline" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row ">
+            
+      <div class="flex-col flex-col-5">
+        <kendo-floatinglabel class="k-form">
+          
+          <kendo-dropdownlist  value="State">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col  flex-col-5">
+        <kendo-floatinglabel class="k-form" text="Zip">
+          <kendo-textbox fillMode="outline"> </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      </div>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel  text ="Email ID ">
+            <kendo-textbox fillMode="outline" >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel  text ="Contact Person ">
+            <kendo-textbox fillMode="outline" >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel  >
+            <p>Receives Combined Payments?</p>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+      <div class="flex-row">
+        <div class="flex-col flex-col-5">
+          <kendo-floatinglabel   >
+            <input  type="radio" #terms kendoRadioButton   />
+            
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-5">
+          <kendo-floatinglabel   >
+            <input  type="radio" #terms kendoRadioButton  />
+          </kendo-floatinglabel>
+        </div>
+      </div>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel  text ="Name on Check ">
+            <kendo-textbox fillMode="outline" >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel  text ="Comments ">
+            <kendo-textbox fillMode="outline" >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+      
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton aria-label="cancel" [primary]="true" look="outline">
+        Cancel
+      </button>
+      <button kendoButton aria-label="update" [primary]="true">Update</button>
+    </div>
+  </div>
+</kendo-dialog-actions>
