@@ -62,6 +62,7 @@
 </section>
 
 <!-- Program Selection Modal -->
+<div class="form-group" [formGroup]="parentForm" #formDir="ngForm" class="k-form">
 <kendo-dialog
   *ngIf="isProgramSelectionOpened"
   (close)="onCloseProgramSelectionClicked()"
@@ -69,11 +70,12 @@
   title="Create New Case"
   kendoTooltip
 >
+
   <section class="k-dialog-body newcase">
     <p class="text-muted mb-2">
       All fields are required unless otherwise stated.
     </p>
-    <case-management-case-summary [isProgramVIsible]="true" formName="newCaseForm`"></case-management-case-summary>
+    <case-management-case-detailed-summary [isProgramVIsible]="true" [parentForm]="parentForm" [isSubmitted]="isSubmitted"></case-management-case-detailed-summary>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -97,4 +99,6 @@
       </div>
     </div>
   </kendo-dialog-actions>
+
 </kendo-dialog>
+</div>

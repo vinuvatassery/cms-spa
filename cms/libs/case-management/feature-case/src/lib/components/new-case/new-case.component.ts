@@ -7,6 +7,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, ScreenFlowType } from '@cms/case-management/domain';
@@ -25,6 +26,7 @@ export class NewCaseComponent implements OnInit {
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
 
+
   /** Public properties **/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.caseFacade.caseOwners$;
@@ -33,15 +35,23 @@ export class NewCaseComponent implements OnInit {
   isProgramSelectionOpened = false;
   selectedProgram!: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  parentForm!: FormGroup;
+  isSubmitted: boolean=false;
   /** Constructor**/
   constructor(
     private readonly router: Router,
     private readonly caseFacade: CaseFacade,
-    private readonly ref: ChangeDetectorRef
+    private readonly ref: ChangeDetectorRef,
+    private fb:FormBuilder
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.parentForm=this.fb.group({
+        caseOrigin: ['', Validators.required],
+        caseOwner:['',Validators.required],
+        dateApplicationReceived:[this.currentDate,Validators.required]
+  });
     this.loadCaseBySearchText();
     this.loadCaseOwners();
     this.loadDdlPrograms();
@@ -82,12 +92,16 @@ export class NewCaseComponent implements OnInit {
   }
 
   onCreateCaseClicked() {
+    this.isSubmitted=true;
+    if(this.parentForm.valid){
+    
     this.router.navigate(['case-management/case-detail'], {
       queryParams: {
         screenFlowType: ScreenFlowType.NewCase,
         programId: this.selectedProgram.key,
       },
     });
+  }
   }
 
   onCloseProgramSelectionClicked() {
