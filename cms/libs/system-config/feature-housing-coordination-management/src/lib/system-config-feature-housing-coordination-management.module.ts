@@ -20,13 +20,14 @@ import { HousingAcuityLevelDetailComponent } from './components/housing-acuity-l
 
 import { PsMfrZipDetailComponent } from './components/ps-mfr-zip-detail/ps-mfr-zip-detail.component';
 import { PsMfrZipListComponent } from './components/ps-mfr-zip-list/ps-mfr-zip-list.component';
+import { SystemConfigFeatureHousingCoordinationManagementRoutingModule } from './system-config-feature-housing-coordination-management-routing.module';
 
 
 
 
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureHousingCoordinationManagementRoutingModule],
   declarations: [
     HousingCoordinationPageComponent,
     SlotListComponent,

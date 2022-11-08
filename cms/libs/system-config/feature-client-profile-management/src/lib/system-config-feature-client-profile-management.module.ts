@@ -15,6 +15,7 @@ import { RacialOrEthnicIdentityListComponent } from './components/racial-or-ethn
 import { RacialOrEthnicIdentityDetailComponent } from './components/racial-or-ethnic-identity-detail/racial-or-ethnic-identity-detail.component';
 import { LanguageListComponent } from './components/language-list/language-list.component';
 import { LanguageDetailComponent } from './components/language-detail/language-detail.component';
+import { SystemConfigFeatureClientProfileManagementRoutingModule } from './system-config-feature-client-profile-management-routing.module';
 // const routes: Routes = [
 //   {
 //     path: '',
@@ -23,7 +24,7 @@ import { LanguageDetailComponent } from './components/language-detail/language-d
 // ];
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureClientProfileManagementRoutingModule],
   declarations: [
     ClientProfileManagementPageComponent,
     PronounsListComponent,

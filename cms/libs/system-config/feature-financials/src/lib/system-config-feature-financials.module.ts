@@ -7,9 +7,10 @@ import { IndexListComponent } from './components/index-list/index-list.component
 import { PcaCodesListComponent } from './components/pca-codes/pca-codes-list.component';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { SystemConfigFeatureFinancialsRoutingModule } from './system-config-feature-financials-routing.module';
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureFinancialsRoutingModule],
   declarations: [
     FundsListComponent,
     ExpenseTypesListComponent,

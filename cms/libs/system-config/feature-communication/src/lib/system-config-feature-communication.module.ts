@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { EmailTemplateListComponent } from './components/email-template-list/email-template-list.component';
 import { LetterTemplateListComponent } from './components/letter-template-list/letter-template-list.component';
 import { SmsTextTemplateListComponent } from './components/sms-text-template-list/sms-text-template-list.component';
+import { SystemConfigFeatureCommunicationRoutingModule } from './system-config-feature-communication-routing.module';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, SystemConfigFeatureCommunicationRoutingModule],
   declarations: [
     EmailTemplateListComponent,
     LetterTemplateListComponent,
