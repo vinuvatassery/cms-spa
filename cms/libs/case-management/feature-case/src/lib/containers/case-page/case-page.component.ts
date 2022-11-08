@@ -1,7 +1,8 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab } from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab, ScreenFlowType, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case-page',
@@ -19,7 +20,10 @@ export class CasePageComponent implements OnInit {
   recentCases$ = this.caseFacade.lastVisitedCases$;
 
   /** Constructor**/
-  constructor(private readonly caseFacade: CaseFacade) {}
+    
+    constructor(private readonly router: Router,
+      private readonly caseFacade: CaseFacade,
+      private readonly workflowFasad:WorkflowFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -55,5 +59,8 @@ export class CasePageComponent implements OnInit {
   /** External event methods **/
   handleNewCaseDialogClosed() {
     this.isNewCaseDialogClicked = false;
+  }
+  newcaseSaved(entityId:any){   
+     this.workflowFasad.createSession(entityId); 
   }
 }

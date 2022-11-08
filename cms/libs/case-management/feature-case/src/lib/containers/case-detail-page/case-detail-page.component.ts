@@ -10,7 +10,7 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
-import { mergeMap, Subscription } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /**Services**/
 
 @Component({
@@ -101,38 +101,37 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   /** Private Methods */
   private loadQueryParams() {
     let paramScreenFlowType: string;
-    let paramCaseId: any;
-    let paramProgramId: any;
+    let paramSessionId: any;
+    let paramEntityId: any;
     this.route.queryParamMap.subscribe({
       next: (params) => {
-        paramScreenFlowType = 'C'; //params.get('screenFlowType') as ScreenFlowType;
-        paramCaseId = params.get('caseId');
-        paramProgramId = params.get('programId');
+        paramScreenFlowType = params.get('type') as ScreenFlowType;
+        paramSessionId = params.get('sid');
+        paramEntityId = params.get('eid');
         this.loadRoutes(
           paramScreenFlowType,
-          paramProgramId,
-          +paramCaseId === 0 ? undefined : +paramCaseId
+          paramEntityId,
+          paramSessionId
         );
-        this.loadCompletionStatus(
-          +paramCaseId === 0 ? undefined : +paramCaseId
-        );
-        if (paramCaseId) {
+        if (paramSessionId) {
           this.routes$.subscribe({
             next: (routes) => {
-              this.navRoute.navigate(
-                [
-                  routes.filter(
-                    (route: any) => route.current_screen_flag === 'Y'
-                  )[0].url,
-                ],
-                {
-                  queryParams: {
-                    screenFlowType: paramScreenFlowType,
-                    caseId: paramCaseId,
-                    programId: paramProgramId,
-                  },
-                }
-              );
+              if (routes?.length > 0) {
+                this.navRoute.navigate(
+                  [
+                    routes.filter(
+                      (route: any) => route?.workFlowProgress?.currentFlag === 'Y'
+                    )[0].url,
+                  ],
+                  {
+                    queryParams: {
+                      type: paramScreenFlowType,
+                      sid: paramSessionId,
+                      eid: paramEntityId,
+                    },
+                  }
+                );
+              }
             },
             complete: () => {
               console.log('Completed');
@@ -149,10 +148,10 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   private loadRoutes(
     screen_flow_type_code: string,
-    program_id: number,
-    case_id?: number
+    entity_id: string,
+    session_id?: string
   ) {
-    this.workflowFacade.loadRoutes(screen_flow_type_code, program_id, case_id);
+    this.workflowFacade.loadRoutes(screen_flow_type_code, entity_id, session_id);
   }
 
   private loadCompletionStatus(caseId?: number) {
@@ -199,20 +198,23 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   private addNavigationSubscription() {
     this.navigationSubscription = this.workflowFacade.navigationTrigger$
-    // .pipe(
-    //   mergeMap((navigationType: NavigationType) =>
-    //   this.workflowFacade.updateWorkflowNavigation(navigationType)
-    //   )
-    // )
-    .subscribe({
-      next: (navigationType: NavigationType) => {
-        //this.workflowNavigationEvent.emit(navigationType);
-        this.workflowFacade.updateWorkflowNavigation(navigationType)
-      },
-      error: (err: any) => {
-        console.error('error', err);
-      },
-    });
+      .pipe(
+        mergeMap((navigationType: NavigationType) =>
+          forkJoin(
+            [
+              of(navigationType),
+              this.workflowFacade.saveWorkflowProgress(navigationType)
+            ])
+        )
+      )
+      .subscribe({
+        next: ([navigationType, Object]) => {
+          this.workflowFacade.updateSequenceNavigation(navigationType);
+        },
+        error: (err: any) => {
+          console.error('error', err);
+        },
+      });
   }
 
   /** External event methods **/
@@ -256,8 +258,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
 
   applyWorkflowChanges(route: Workflow) {
-    if(route?.workFlowProgress?.visitedFlag === 'Y'){
-      this.workflowFacade.updateActiveWorkflowStep(route).subscribe();
+    if (route?.workFlowProgress?.visitedFlag === 'Y') {
+      this.workflowFacade.updateNonequenceNavigation(route).subscribe();
     }
   }
 

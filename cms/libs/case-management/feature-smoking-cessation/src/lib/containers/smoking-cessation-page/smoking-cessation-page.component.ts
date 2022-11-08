@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 /** services **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, Workflow, UpdateWorkFlowProgress } from '@cms/case-management/domain';
-import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, Observable, of, Subscription } from 'rxjs';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, Workflow, UpdateWorkFlowProgress, CompletionChecklist } from '@cms/case-management/domain';
+import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, Observable, of, pairwise, startWith, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -41,20 +41,6 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
   }
 
-  canDeactivate(): Observable<boolean> {
-    //if (!this.isSaved) {
-    //const result = window.confirm('There are unsaved changes! Are you sure?');
-    //return of(result);
-    if (this.smokingCessationForm?.dirty ?? false) {
-      const result = window.confirm('There are unsaved changes! Are you sure?');
-      return of(result);
-    }
-    //}
-
-    return of(true);
-  }
-
-
   /** Private methods **/
   private buildForm() {
     this.smokingCessationForm = new FormGroup({
@@ -65,14 +51,14 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   private smokingCessationFromChanged() {
     this.smokingCessationForm.valueChanges
-      // .pipe(
-      //   debounceTime(2000),
-      //   distinctUntilChanged()
-      // )
-      .subscribe((val1) => {
-        console.log(val1);
-        //console.log(val2);
-        this.updateFormCompleteCount();
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        startWith(null), 
+        pairwise()
+      )
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
       });
   }
 
@@ -98,38 +84,35 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     return of(false)
   }
 
-  // private applyWorkflowChanges(navigationType: NavigationType) {
-  //   let clientEligilbilityID =
-  //     this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId ?
-  //     this.caseFacad.currentWorkflowStage.workFlowProgress[0].clientCaseEligibilityId
-  //       : '2500D14F-FB9E-4353-A73B-0336D79418CF'; //TODO: should be from the save response
-
-  //   let updateWorkFlowProgress: UpdateWorkFlowProgress = {
-  //     clientCaseEligibilityId: clientEligilbilityID,
-  //     workflowStepId: this.caseFacad.currentWorkflowStage.workflowStepId,
-  //     totalDatapointsCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsTotalCount,
-  //     datapointsCompletedCount: this.caseFacad.currentWorkflowStage.workFlowProgress[0].datapointsCompletedCount,
-  //   }
-
-  //   return this.caseFacad.appyAutomaticWorkflowProgress(
-  //     updateWorkFlowProgress,
-  //     this.caseFacad.currentWorkflowStage,
-  //     navigationType);
-  // } 
-
-  private updateFormCompleteCount(): void {
-    let filledCount = 0;
-    let completedDataPoints: string[] = [];
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.smokingCessationForm.controls).forEach(key => {
-      if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
-        completedDataPoints.push(key);
-        filledCount++;
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? 'Y' : 'N'
+          };
+          completedDataPoints.push(item);
+        }
+      }
+      else {
+        if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: 'Y'
+          };
+
+          completedDataPoints.push(item);
+        }
       }
     });
 
-   // if (completedDataPoints.length > 0)
-    //  this.workflowFacade.updateChecklist('SmokingCessation', completedDataPoints);
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
   }
+
 
   private tareaVariablesIntiation() {
     this.tareaCessationCharachtersCount = this.tareaCessationNote

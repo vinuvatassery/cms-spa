@@ -1,4 +1,4 @@
 export enum ScreenFlowType {
-    NewCase = "CA_NEW_CASE",
+    NewCase = "CA-NewCase",
     ExistingCase = "CA_EXISTING_CASE",
 }

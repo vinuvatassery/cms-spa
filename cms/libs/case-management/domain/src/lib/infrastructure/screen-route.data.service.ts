@@ -19,40 +19,36 @@ import { NavigationType } from '../enums/navigation-type.enum';
 export class ScreenRouteDataService {
   constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
 
-  loadWorkflow(screen_flow_type_code: string, program_id: number, case_id?: number) {
-    console.log(case_id);
-    if (case_id) {
+  loadWorkflow(screen_flow_type_code: string, entity_id: string, session_id?: string) {
+    if (session_id) {
       return this.http.get<Workflow[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/workflows/progress?parameter=clientCaseEligibilityId&value=${case_id}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/session/${session_id}`
       );
     }
     else {
       return this.http.get<Workflow[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/workflow_master?programId=${program_id}&workflowTypeCode=${screen_flow_type_code}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows?entityId=${entity_id}&workflowTypeCode=${screen_flow_type_code}`
       );  
     }
   }
 
   saveWorkflowProgress(updateWorkFlowProgress: UpdateWorkFlowProgress, navType: NavigationType) {
-    return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/workflows/navigate?workFlowNavType=${navType == NavigationType.Next ? 'next' : 'previous'}`,
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows?navtype=${navType == NavigationType.Next ? 'Next' : 'Prev'}`,
       updateWorkFlowProgress
     );
   }
 
   updateActiveWorkflowStep(workflowProgressId: string) {
-    let postModel ={
-      workflowProgressId: workflowProgressId
-    }
-    return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/workflows/mark_as_current`,
-      postModel
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/mark-as-current/${workflowProgressId}`,
+      {}
     );
   }
 
   createNewSession(newSessionData: any){
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/workflows`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/session`,
       newSessionData
     );
   }

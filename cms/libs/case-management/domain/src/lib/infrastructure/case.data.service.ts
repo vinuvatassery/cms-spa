@@ -324,7 +324,7 @@ export class CaseDataService {
     return of([
       {
         name: 'Donna 1',
-        id: '1',
+        id: '9A680D4A-D286-C83A-7A15-3A0764E1D3A0',
         programId: '2',
         isApplicationComplete: false,
       },
@@ -373,7 +373,7 @@ export class CaseDataService {
 
   loadDdlPrograms() {
     return of([
-      { key: '7b52cda2-aadd-4d4d-a42a-fc765165b506', value: 'CAREAssist', default: true },
+      { key: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B', value: 'CAREAssist', default: true },
       { key: 2, value: 'OHOP', default: false },
     ]);
   }

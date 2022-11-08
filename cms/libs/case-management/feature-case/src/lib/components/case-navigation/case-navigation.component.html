@@ -14,7 +14,7 @@
       <li
         routerLinkActive="active-item"
         [ngClass]="
-        route.workFlowProgress.datapointsCompletedCount === route.workFlowProgress.datapointsDerivedTotalCount
+        route.workFlowProgress.completedDatapointsCount === route.workFlowProgress.requiredDatapointsCount
             ? 'kendo-list-items section-completed'
             : 'kendo-list-items'
         "

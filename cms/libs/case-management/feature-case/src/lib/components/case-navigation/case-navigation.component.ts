@@ -90,6 +90,7 @@ export class CaseNavigationComponent implements OnInit {
 
   private navigateByUrl(routes: any) {
     if (this.navigationIndex > -1 && this.navigationIndex < routes.length) {
+     // this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
       this.router.navigate([routes[this.navigationIndex].url], { queryParamsHandling: 'preserve' });
     }
     // TODO: In else case we can start the application review process.

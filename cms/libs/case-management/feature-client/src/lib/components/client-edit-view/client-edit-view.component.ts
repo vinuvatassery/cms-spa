@@ -121,9 +121,7 @@ export class ClientEditViewComponent implements OnInit {
   ngAfterViewInit() {
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
-    adjustControls.forEach((control: any) => {
-      console.log(control.value);
-      console.log(this.appInfoForm.get(control.name));
+    adjustControls.forEach((control: any) => {     
       const data: CompletionChecklist = {
         dataPointName: control.name,
         status: control.checked ? 'Y' : 'N'
