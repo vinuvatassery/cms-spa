@@ -12,6 +12,14 @@
       justify-content: space-between;
       padding: $size-l $size-xl;
       color: lighten($black-3, 20%);
+      cursor: pointer;
+      &.k-selected {
+        background-color: material-color($hive-primary-palette, 200);
+        &:hover, &.k-focus{
+        background-color: material-color($hive-primary-palette, 300);
+
+        }
+      }
     }
   }
   .k-content {

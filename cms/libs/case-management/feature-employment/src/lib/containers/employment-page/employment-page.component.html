@@ -10,6 +10,7 @@
     <div class="block-section pt-1">
       <div class="flex-row">
         <div class="flex-col mb-1">
+          <span class="app-checkboxwidtext-wrapper">  
           <input
             type="checkbox"
             kendoCheckBox
@@ -18,6 +19,7 @@
             (click)="onUnEmployedClicked()"
           />
           <label class="k-checkbox-label" for="employment">Unemployed</label>
+          </span>
         </div>
         <div class="flex-col" *ngIf="isEmploymentGridDisplay">
           <case-management-employer-list></case-management-employer-list>
