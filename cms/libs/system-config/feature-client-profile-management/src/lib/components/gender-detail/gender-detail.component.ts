@@ -1,5 +1,5 @@
-/** Angular **/
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+
 @Component({
   selector: 'system-config-gender-detail',
   templateUrl: './gender-detail.component.html',
@@ -8,10 +8,9 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenderDetailComponent implements OnInit {
-  /** Constructor **/
+
   constructor() { }
 
-  /** Lifecycle hooks **/
   ngOnInit(): void {
   }
 

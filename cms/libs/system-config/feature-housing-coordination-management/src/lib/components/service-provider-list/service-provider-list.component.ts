@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { SortDescriptor } from '@progress/kendo-data-query';
-
 @Component({
-  selector: 'cms-service-provider-list',
+  selector: 'system-config-service-provider-list',
   templateUrl: './service-provider-list.component.html',
   styleUrls: ['./service-provider-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServiceProviderListComponent implements OnInit {
 

@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { SortDescriptor } from '@progress/kendo-data-query';
-
 @Component({
-  selector: 'cms-ps-mfr-zip-list',
+  selector: 'system-config-ps-mfr-zip-list',
   templateUrl: './ps-mfr-zip-list.component.html',
   styleUrls: ['./ps-mfr-zip-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PsMfrZipListComponent implements OnInit {
+
 
   public pageSize = 10;
   public skip = 0;

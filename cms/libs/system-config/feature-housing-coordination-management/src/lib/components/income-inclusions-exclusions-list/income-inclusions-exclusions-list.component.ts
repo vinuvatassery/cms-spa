@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { SortDescriptor } from '@progress/kendo-data-query';
-
 @Component({
-  selector: 'cms-income-inclusions-exclusions-list',
+  selector: 'system-config-income-inclusions-exclusions-list',
   templateUrl: './income-inclusions-exclusions-list.component.html',
   styleUrls: ['./income-inclusions-exclusions-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IncomeInclusionsExclusionsListComponent implements OnInit {
+
   public pageSize = 10;
   public skip = 0;
   public pageSizes = [

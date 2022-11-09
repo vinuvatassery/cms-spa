@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'cms-email-template-list',
+  selector: 'system-config-email-template-list',
   templateUrl: './email-template-list.component.html',
   styleUrls: ['./email-template-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmailTemplateListComponent implements OnInit {
 

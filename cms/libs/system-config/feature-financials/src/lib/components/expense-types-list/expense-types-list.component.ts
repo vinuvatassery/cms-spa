@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'cms-expense-types',
+  selector: 'system-config-expense-types-list',
   templateUrl: './expense-types-list.component.html',
   styleUrls: ['./expense-types-list.component.scss'],
   encapsulation: ViewEncapsulation.None,

@@ -6,15 +6,15 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
 @Component({
   selector: 'system-config-case-availability-list',
   templateUrl: './case-availability-list.component.html',
   styleUrls: ['./case-availability-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CaseAvailabilityListComponent implements OnInit {
+
   public pageSize = 10;
   public skip = 0;
   public pageSizes = [
@@ -69,4 +69,5 @@ export class CaseAvailabilityListComponent implements OnInit {
   onCaseAvailabilityDetailClicked() {
     this.isCaseAvailabilityDetailPopup = true;
   }
+
 }

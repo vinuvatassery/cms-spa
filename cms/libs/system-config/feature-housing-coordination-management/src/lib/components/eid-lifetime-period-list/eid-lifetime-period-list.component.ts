@@ -6,13 +6,12 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
 @Component({
   selector: 'system-config-eid-lifetime-period-list',
   templateUrl: './eid-lifetime-period-list.component.html',
   styleUrls: ['./eid-lifetime-period-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EidLifetimePeriodListComponent implements OnInit {
 
@@ -74,4 +73,5 @@ export class EidLifetimePeriodListComponent implements OnInit {
   onPeriodDetailClicked() {
     this.isPeriodDetailPopup = true;
   }
+
 }

@@ -11,9 +11,7 @@ describe('GenderDetailComponent', () => {
       declarations: [ GenderDetailComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GenderDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

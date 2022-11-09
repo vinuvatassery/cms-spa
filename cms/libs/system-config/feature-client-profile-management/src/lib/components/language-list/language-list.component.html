@@ -1,220 +1,221 @@
 <!-- Header Section -->
 <div class="block-section">
-  <h2>
-    <span
-      class="material-icons sidebar-menu_icon mr-1"
-      aria-label="icon"
-      aria-hidden="true"
-    >
-      settings
-    </span>
-    Language
-  </h2>
-  <button
-    icon="add"
-    kendoButton
-    [primary]="true"
-    aria-label="add language"
-    class="add-button-top"
-    (click)="onLanguageDetailClicked()"
-  >
-    Language
-  </button>
-</div>
-
-<!-- Language List Section -->
-<section>
-  <!-- Label info show only in list -->
-  <p class="pt-1">Add, edit, deactivate and re-order Languages.</p>
-  <!-- Label info show only in reorder list -->
-  <p class="pt-1" hidden>
-    Select a sorting option or manually drag and drop the items in the list.
-    This is how the items will be displayed in the interface.
-  </p>
-
-  <div class="flex-row">
-    <!-- Table header show only in list -->
-    <div class="flex-col">
-      <div class="table-filter-section mat-form-no-b-space">
-        <span class="filter-section_items filter--select">
-          <kendo-floatinglabel text="All Columns">
-            <kendo-dropdownlist  fillMode="outline" [data]="ddlColumnFilters$ | async"> </kendo-dropdownlist>
-          </kendo-floatinglabel>
-        </span>
-        <span class="filter-section_items filter--search">
-          <span class="material-icons">search</span>
-          <kendo-floatinglabel text="Search">
-            <kendo-textbox fillMode="outline" >
-            </kendo-textbox>
-          </kendo-floatinglabel>
-        </span>
-        <span>
-          <button kendoButton [primary]="true" look="flat" class="button-lg">
-            <span class="material-icons" aria-label="export" aria-invalid="true"
-              >exit_to_app</span
-            >Export
-          </button>
-        </span>
-      </div>
-    </div>
-    <!-- Table header show only in reorder list -->
-    <div class="flex-col flex-col-4" hidden>
-      <kendo-floatinglabel text="Sort">
-        <kendo-dropdownlist [data]="ddlColumnFilters$ |async"> </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-  </div>
-
-  <!-- Sorted Info show only in list -->
-  <div class="table-sorted-info">
-    Sorted by <span class="sort-items">Name</span>
-    <span class="sort-items">No Filters</span>
-    <span class="sort-items">All Columns</span>
-  </div>
-
-  <!-- Language list -->
-  <div class="app-c-table">
-    <kendo-grid [data]="clientProfileLanguages$ | async">
-      <kendo-grid-column
-        field=""
-        title=""
-        [width]="50"
-        class="text-center text-muted"
+    <h2>
+      <span
+        class="material-icons sidebar-menu_icon mr-1"
+        aria-label="icon"
+        aria-hidden="true"
       >
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="material-icons">drag_indicator</span>
-        </ng-template>
-      </kendo-grid-column>
-      <kendo-grid-column field="order" title="Order" [width]="60">
-      </kendo-grid-column>
-      <kendo-grid-column field="language" title="Language" [width]="150">
-      </kendo-grid-column>
-      <kendo-grid-column
-        field="lastModified"
-        title="Last Modified"
-        [width]="150"
-      >
-      </kendo-grid-column>
-      <kendo-grid-column
-        field="modifiedBy"
-        title="Modified By"
-        [width]="100"
-        class="text-center"
-      >
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <button
-            kendoButton
-            [primary]="true"
-            class="avatar-sm-btn c-default"
-            kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered"
-            showOn="hover"
-            aria-label="modified by"
-          >
-            <div class="app-c-avatar avatar-sm">
-              <!-- <img
-                src="../assets/images/avatar-1.png"
-                alt="Profile Avatar"
-                class="profile-avatar"
-                hidden
-              /> -->
-              <span class="profile-text-avatar">AK</span>
-            </div>
-          </button>
-          <kendo-popover
-            #onUserProfileDetailsHovered
-            width="330"
-            position="left"
-          >
-            <ng-template kendoPopoverBodyTemplate>
-              <!-- <common-user-profile-card></common-user-profile-card> -->
-            </ng-template>
-          </kendo-popover>
-        </ng-template>
-      </kendo-grid-column>
-      <kendo-grid-column field="status" title="Status" [width]="150">
-      </kendo-grid-column>
-      <kendo-grid-column
-        field=""
-        title=""
-        [width]="50"
-        class="text-center"
-        [sticky]="true"
-      >
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <kendo-dropdownbutton
-          [data]="moreactions"
-          icon="more-vertical"
-          aria-label="more actions"
-          class="TableActionPopup app-dropdown-action"
-          buttonClass="k-icon-button"
-          [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-        >
-          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-            <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-              <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-              <label>   {{ dataItem.text }} </label>
-          </button>
-   
-          </ng-template>
-        </kendo-dropdownbutton>
-        </ng-template>
-      </kendo-grid-column>
-    </kendo-grid>
-  </div>
-
-  <!-- Add Language show only in list -->
-  <div class="mt-2 block-section">
-    <!-- Add Language Button -->
+        settings
+      </span>
+      Language
+    </h2>
     <button
       icon="add"
       kendoButton
       [primary]="true"
       aria-label="add language"
+      class="add-button-top"
       (click)="onLanguageDetailClicked()"
     >
       Language
     </button>
   </div>
-
-  <!-- Reorder button block show only in reorder list -->
-  <div class="mt-2 block-section" hidden>
-    <div class="justify-content-end">
-      <button kendoButton aria-label="cancel" [primary]="true" look="outline">
-        Cancel
-      </button>
-      <button kendoButton aria-label="update" [primary]="true" class="ml-1">
-        Update
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- Add Language Modal Html-->
-<kendo-dialog
-  *ngIf="isLanguageDetailPopup"
-  (close)="onCloseLanguageDetailClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
->
-  <kendo-dialog-titlebar> Add Language </kendo-dialog-titlebar>
-  <system-config-language-detail></system-config-language-detail>
-</kendo-dialog>
-
-<!-- Deactivate Language Modal Html-->
-<kendo-dialog
-  *ngIf="isLanguageDeactivatePopup"
-  (close)="onCloseLanguageDeactivateClicked()"
-  class="app-c-modal app-c-modal-sm"
->
-  <kendo-dialog-titlebar> Deactivate Language? </kendo-dialog-titlebar>
-  The selected language will be deactivated and won’t be available for selection
-  in the Client Profile pages.
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline">Cancel</button>
-        <button kendoButton [primary]="true">Deactivate</button>
+  
+  <!-- Language List Section -->
+  <section>
+    <!-- Label info show only in list -->
+    <p class="pt-1">Add, edit, deactivate and re-order Languages.</p>
+    <!-- Label info show only in reorder list -->
+    <p class="pt-1" hidden>
+      Select a sorting option or manually drag and drop the items in the list.
+      This is how the items will be displayed in the interface.
+    </p>
+  
+    <div class="flex-row">
+      <!-- Table header show only in list -->
+      <div class="flex-col">
+        <div class="table-filter-section mat-form-no-b-space">
+          <span class="filter-section_items filter--select">
+            <kendo-floatinglabel text="All Columns">
+              <kendo-dropdownlist  fillMode="outline" [data]="ddlColumnFilters$ | async"> </kendo-dropdownlist>
+            </kendo-floatinglabel>
+          </span>
+          <span class="filter-section_items filter--search">
+            <span class="material-icons">search</span>
+            <kendo-floatinglabel text="Search">
+              <kendo-textbox fillMode="outline" >
+              </kendo-textbox>
+            </kendo-floatinglabel>
+          </span>
+          <span>
+            <button kendoButton [primary]="true" look="flat" class="button-lg">
+              <span class="material-icons" aria-label="export" aria-invalid="true"
+                >exit_to_app</span
+              >Export
+            </button>
+          </span>
+        </div>
+      </div>
+      <!-- Table header show only in reorder list -->
+      <div class="flex-col flex-col-4" hidden>
+        <kendo-floatinglabel text="Sort">
+          <kendo-dropdownlist [data]="ddlColumnFilters$ |async"> </kendo-dropdownlist>
+        </kendo-floatinglabel>
       </div>
     </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
+  
+    <!-- Sorted Info show only in list -->
+    <div class="table-sorted-info">
+      Sorted by <span class="sort-items">Name</span>
+      <span class="sort-items">No Filters</span>
+      <span class="sort-items">All Columns</span>
+    </div>
+  
+    <!-- Language list -->
+    <div class="app-c-table">
+      <kendo-grid [data]="clientProfileLanguages$ | async">
+        <kendo-grid-column
+          field=""
+          title=""
+          [width]="50"
+          class="text-center text-muted"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="material-icons">drag_indicator</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="order" title="Order" [width]="60">
+        </kendo-grid-column>
+        <kendo-grid-column field="language" title="Language" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="lastModified"
+          title="Last Modified"
+          [width]="150"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="modifiedBy"
+          title="Modified By"
+          [width]="100"
+          class="text-center"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="modified by"
+            >
+              <div class="app-c-avatar avatar-sm">
+                <!-- <img
+                  src="../assets/images/avatar-1.png"
+                  alt="Profile Avatar"
+                  class="profile-avatar"
+                  hidden
+                /> -->
+                <span class="profile-text-avatar">AK</span>
+              </div>
+            </button>
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              position="left"
+            >
+              <ng-template kendoPopoverBodyTemplate>
+                <!-- <common-user-profile-card></common-user-profile-card> -->
+              </ng-template>
+            </kendo-popover>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="status" title="Status" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column
+          field=""
+          title=""
+          [width]="50"
+          class="text-center"
+          [sticky]="true"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <kendo-dropdownbutton
+            [data]="moreactions"
+            icon="more-vertical"
+            aria-label="more actions"
+            class="TableActionPopup app-dropdown-action"
+            buttonClass="k-icon-button"
+            [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+          >
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+              <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                <label>   {{ dataItem.text }} </label>
+            </button>
+     
+            </ng-template>
+          </kendo-dropdownbutton>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+  
+    <!-- Add Language show only in list -->
+    <div class="mt-2 block-section">
+      <!-- Add Language Button -->
+      <button
+        icon="add"
+        kendoButton
+        [primary]="true"
+        aria-label="add language"
+        (click)="onLanguageDetailClicked()"
+      >
+        Language
+      </button>
+    </div>
+  
+    <!-- Reorder button block show only in reorder list -->
+    <div class="mt-2 block-section" hidden>
+      <div class="justify-content-end">
+        <button kendoButton aria-label="cancel" [primary]="true" look="outline">
+          Cancel
+        </button>
+        <button kendoButton aria-label="update" [primary]="true" class="ml-1">
+          Update
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Add Language Modal Html-->
+  <kendo-dialog
+    *ngIf="isLanguageDetailPopup"
+    (close)="onCloseLanguageDetailClicked()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np"
+  >
+    <kendo-dialog-titlebar> Add Language </kendo-dialog-titlebar>
+    <system-config-language-detail></system-config-language-detail>
+  </kendo-dialog>
+  
+  <!-- Deactivate Language Modal Html-->
+  <kendo-dialog
+    *ngIf="isLanguageDeactivatePopup"
+    (close)="onCloseLanguageDeactivateClicked()"
+    class="app-c-modal app-c-modal-sm"
+  >
+    <kendo-dialog-titlebar> Deactivate Language? </kendo-dialog-titlebar>
+    The selected language will be deactivated and won’t be available for selection
+    in the Client Profile pages.
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" look="outline">Cancel</button>
+          <button kendoButton [primary]="true">Deactivate</button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+  </kendo-dialog>
+  

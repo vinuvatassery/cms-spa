@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'cms-letter-template-list',
+  selector: 'system-config-letter-template-list',
   templateUrl: './letter-template-list.component.html',
   styleUrls: ['./letter-template-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LetterTemplateListComponent implements OnInit {
 

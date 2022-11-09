@@ -16,5 +16,3 @@ export * from './lib/components/region-assignment-detail/region-assignment-detai
 //export * from './lib/components/ps-fmr-zip-detail/ps-fmr-zip-detail.component';
 export * from './lib/components/service-provider-detail/service-provider-detail.component';
 export * from './lib/components/housing-acuity-level-detail/housing-acuity-level-detail.component';
-
- 

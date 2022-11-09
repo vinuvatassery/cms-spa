@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
 @Component({
   selector: 'system-config-funds-list',
   templateUrl: './funds-list.component.html',
@@ -14,6 +13,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FundsListComponent implements OnInit {
+
 
   public pageSize = 10;
   public skip = 0;

@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'cms-sms-text-template-list',
+  selector: 'system-config-sms-text-template-list',
   templateUrl: './sms-text-template-list.component.html',
   styleUrls: ['./sms-text-template-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SmsTextTemplateListComponent implements OnInit {
 

@@ -1,14 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Component({
-  selector: 'cms-housing-acuity-level-list',
+  selector: 'system-config-housing-acuity-level-list',
   templateUrl: './housing-acuity-level-list.component.html',
   styleUrls: ['./housing-acuity-level-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HousingAcuityLevelListComponent implements OnInit {
+
 
   public pageSize = 10;
   public skip = 0;

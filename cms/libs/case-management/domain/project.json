@@ -1,4 +1,5 @@
 {
+  "name": "case-management-domain",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/case-management/domain/src",

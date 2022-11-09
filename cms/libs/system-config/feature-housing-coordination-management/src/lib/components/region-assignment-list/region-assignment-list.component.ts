@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { SortDescriptor } from '@progress/kendo-data-query';
-
 @Component({
-  selector: 'cms-region-assignment-list',
+  selector: 'system-config-region-assignment-list',
   templateUrl: './region-assignment-list.component.html',
   styleUrls: ['./region-assignment-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegionAssignmentListComponent implements OnInit {
+
   isRegionAssignmentDetailPopup = false;
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
   clientProfilRegionAssignment$ =

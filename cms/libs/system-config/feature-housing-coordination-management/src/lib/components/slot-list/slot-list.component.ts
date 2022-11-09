@@ -1,21 +1,14 @@
-/** Angular **/
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-/** Facades **/
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
 @Component({
   selector: 'system-config-slot-list',
   templateUrl: './slot-list.component.html',
   styleUrls: ['./slot-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SlotListComponent implements OnInit {
+
   public pageSize = 10;
   public skip = 0;
   public pageSizes = [
