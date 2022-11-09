@@ -22,7 +22,7 @@ export class ScreenRouteDataService {
   loadWorkflow(screen_flow_type_code: string, entity_id: string, session_id?: string) {
     if (session_id) {
       return this.http.get<Workflow[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/session/${session_id}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${session_id}`
       );
     }
     else {
@@ -32,23 +32,23 @@ export class ScreenRouteDataService {
     }
   }
 
-  saveWorkflowProgress(updateWorkFlowProgress: UpdateWorkFlowProgress, navType: NavigationType) {
+  saveWorkflowProgress(updateWorkFlowProgress: UpdateWorkFlowProgress, sessionId:string) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows?navtype=${navType == NavigationType.Next ? 'Next' : 'Prev'}`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${sessionId}/progress`,
       updateWorkFlowProgress
     );
   }
 
-  updateActiveWorkflowStep(workflowProgressId: string) {
+  updateActiveWorkflowStep(workflowProgressId: string, sessionId:string) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/mark-as-current/${workflowProgressId}`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${sessionId}/progress/${workflowProgressId}`,
       {}
     );
   }
 
   createNewSession(newSessionData: any){
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/session`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions`,
       newSessionData
     );
   }

@@ -44,6 +44,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isShowDeleteConfirmPopup = false;
   isShowDiscardConfirmPopup = false;
   isShowSendNewLetterPopup = false;
+  sessionId!: string | null;
   data: Array<any> = [
     {
       text: '',
@@ -101,19 +102,18 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   /** Private Methods */
   private loadQueryParams() {
     let paramScreenFlowType: string;
-    let paramSessionId: any;
     let paramEntityId: any;
     this.route.queryParamMap.subscribe({
       next: (params) => {
         paramScreenFlowType = params.get('type') as ScreenFlowType;
-        paramSessionId = params.get('sid');
+        this.sessionId = params.get('sid');
         paramEntityId = params.get('eid');
         this.loadRoutes(
           paramScreenFlowType,
           paramEntityId,
-          paramSessionId
+          this.sessionId ?? ''
         );
-        if (paramSessionId) {
+        if (this.sessionId) {
           this.routes$.subscribe({
             next: (routes) => {
               if (routes?.length > 0) {
@@ -126,7 +126,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
                   {
                     queryParams: {
                       type: paramScreenFlowType,
-                      sid: paramSessionId,
+                      sid: this.sessionId,
                       eid: paramEntityId,
                     },
                   }
@@ -203,7 +203,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
           forkJoin(
             [
               of(navigationType),
-              this.workflowFacade.saveWorkflowProgress(navigationType)
+              this.workflowFacade.saveWorkflowProgress(navigationType, this.sessionId ?? '')
             ])
         )
       )
@@ -259,7 +259,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   applyWorkflowChanges(route: Workflow) {
     if (route?.workFlowProgress?.visitedFlag === 'Y') {
-      this.workflowFacade.updateNonequenceNavigation(route).subscribe();
+      this.workflowFacade.updateNonequenceNavigation(route, this.sessionId??'').subscribe();
     }
   }
 

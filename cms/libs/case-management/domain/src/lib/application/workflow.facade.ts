@@ -60,9 +60,8 @@ export class WorkflowFacade {
       .pipe(
         map((wf: any) =>
           wf.map((workflowItem: Workflow, index: number) => {
-            if (workflowItem?.workFlowProgress?.requiredDatapointsCount == 0 && workflowItem?.metadata) {
-              var metadata = JSON.parse(workflowItem.metadata);
-              workflowItem.workFlowProgress.requiredDatapointsCount = Number(metadata?.datapointsTotalCount ?? 0)
+            if (workflowItem?.workFlowProgress?.requiredDatapointsCount == 0) {
+              workflowItem.workFlowProgress.requiredDatapointsCount = Number(workflowItem?.dataPointsTotalCount ?? 0)
             }
             return workflowItem;
           }))
@@ -275,12 +274,12 @@ export class WorkflowFacade {
     }
   }
 
-  updateNonequenceNavigation(currentWorkflow: Workflow) {
+  updateNonequenceNavigation(currentWorkflow: Workflow, sessionId: string) {
     const previousRoute = this.deepCopy(this.workflowRoutes)?.filter((wf: Workflow) =>
       wf?.workFlowProgress?.currentFlag == 'Y')[0];
 
     return currentWorkflow?.workFlowProgress?.workflowProgressId ?
-      this.routeService.updateActiveWorkflowStep(currentWorkflow?.workFlowProgress?.workflowProgressId)
+      this.routeService.updateActiveWorkflowStep(currentWorkflow?.workFlowProgress?.workflowProgressId, sessionId)
       : of(false);
   }
 
@@ -302,7 +301,7 @@ export class WorkflowFacade {
     }
   }
 
-  saveWorkflowProgress(navType: NavigationType) {
+  saveWorkflowProgress(navType: NavigationType, sessionld: string) {
     const currentRoute = this.router.url;
     const currentWorkflowStep = this.deepCopy(this.workflowRoutes)?.filter((wf: Workflow) =>
       currentRoute.includes(wf.url))[0];
@@ -313,36 +312,39 @@ export class WorkflowFacade {
       )[0];
 
     const navUpdate: UpdateWorkFlowProgress = {
+      navType: navType == NavigationType.Next ? 'Next' : 'Prev',
       workflowProgressId: currentWorkflowStep?.workFlowProgress?.workflowProgressId,
       datapointsDerivedTotalCount: completionStatus?.dataPointsTotal,
       datapointsCompletedCount: completionStatus?.dataPointsCompleted
     }
 
-    return this.routeService.saveWorkflowProgress(navUpdate, navType);
+    return this.routeService.saveWorkflowProgress(navUpdate, sessionld);
   }
 
   createSession(entityId: string) {
+
     let sessionData = {
-      entityId: "3B8DD4FC-86FD-43E7-8493-0037A6F9160B",
+      entityId: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B',
+      EntityTypeCode: 'Program',
       workflowTypeCode: ScreenFlowType.NewCase,
       sessiondata: {
-        clientCaseEligibilityId: "8600D14F-FB9E-4353-A73B-0336D79418E5"
+        clientCaseEligibilityId: '8600D14F-FB9E-4353-A73B-0336D79418E5'
       }
     }
 
-    this.routeService.createNewSession(sessionData).subscribe((resp: any)=>{
-      if(resp && resp.workflowSessionId){
+    this.routeService.createNewSession(sessionData).subscribe((resp: any) => {
+      if (resp && resp.workflowSessionId) {
         this.workflowsessionId = resp.workflowSessionId;
         this.router.navigate(['case-management/case-detail/contact-info'], {
           queryParams: {
             type: ScreenFlowType.NewCase,
             pid: entityId,
-            sid:resp.workflowSessionId
+            sid: resp.workflowSessionId
           },
         });
-    
+
       }
-    });       
+    });
   }
 
   deepCopy(data: any): any {

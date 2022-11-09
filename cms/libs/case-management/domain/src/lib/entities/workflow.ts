@@ -3,7 +3,8 @@ export interface Workflow {
   sequenceNbr: number
   title: string
   url: string
-  metadata:string
+  dataPointsTotalCount:number
+  sessionData:string
   datapointsAdjustment: DatapointsAdjustment[]
   workFlowProgress: WorkFlowProgress
 }
@@ -27,6 +28,7 @@ export interface WorkFlowProgress {
 }
 
 export interface UpdateWorkFlowProgress {
+  navType: string
   workflowProgressId?: string
   datapointsDerivedTotalCount?: number
   datapointsCompletedCount?: number
