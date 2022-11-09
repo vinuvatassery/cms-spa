@@ -146,5 +146,15 @@
       justify-content: flex-end;
       gap: $size-xx;
     }
+
+  }
+}
+
+.card-list{
+  .card-list_items{
+    .k-button-solid-primary.k-icon-button{
+      box-shadow: none;
+      max-height: 40px;
+    }
   }
 }
