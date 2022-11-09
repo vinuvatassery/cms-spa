@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { SortDescriptor } from '@progress/kendo-data-query';
+ 
 
 @Component({
   selector: 'system-config-housing-acuity-level-list',
@@ -26,19 +26,7 @@ export class HousingAcuityLevelListComponent implements OnInit {
    clientProfileHousingAcuityLevel$ = this.userManagementFacade.clientProfileHousingAcuityLevel$;
    popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
-
-   public sort: SortDescriptor[] = [];
-   gridConfiguration = {
-     pageSize: 10,
-     skip: 0,
-     pageable: true,
-     reorderable: true,
-     resizable: true,
-     sortable: true,
-     sort: this.sort,
-     columnMenu: true,
-     pageChange: 0.55,
-   };
+ 
 
    public girdMoreActionsList = [
     {

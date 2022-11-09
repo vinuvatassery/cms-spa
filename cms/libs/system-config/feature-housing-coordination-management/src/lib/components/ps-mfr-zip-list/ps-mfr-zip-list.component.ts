@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { SortDescriptor } from '@progress/kendo-data-query';
+ 
 @Component({
   selector: 'system-config-ps-mfr-zip-list',
   templateUrl: './ps-mfr-zip-list.component.html',
@@ -24,20 +24,7 @@ export class PsMfrZipListComponent implements OnInit {
   clientProfilPSMFRZIP$ =
     this.userManagementFacade.clientProfilPSMFRZIP$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
-
-    public sort: SortDescriptor[] = [];
-    gridConfiguration = {
-      pageSize: 10,
-      skip: 0,
-      pageable: true,
-      reorderable: true,
-      resizable: true,
-      sortable: true,
-      sort: this.sort,
-      columnMenu: true,
-      pageChange: 0.55,
-    };
+ 
 
     public girdMoreActionsList = [
       {

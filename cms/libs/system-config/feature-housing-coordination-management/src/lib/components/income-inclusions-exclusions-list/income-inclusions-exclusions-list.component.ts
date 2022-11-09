@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { SortDescriptor } from '@progress/kendo-data-query';
+ 
 @Component({
   selector: 'system-config-income-inclusions-exclusions-list',
   templateUrl: './income-inclusions-exclusions-list.component.html',
@@ -23,70 +23,6 @@ export class IncomeInclusionsExclusionsListComponent implements OnInit {
   clientProfilIncomeInclusionsExlusions$ =
     this.userManagementFacade.clientProfilIncomeInclusionsExlusions$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
-
-    public sort: SortDescriptor[] = [];
-    gridConfiguration = {
-      pageSize: 10,
-      skip: 0,
-      pageable: true,
-      reorderable: true,
-      resizable: true,
-      sortable: true,
-      sort: this.sort,
-      columnMenu: true,
-      pageChange: 0.55,
-    };
-  
-    // gridColumns = [
-      
-    //   {
-    //     field: 'inclusions',
-    //     title: 'Inclusions/Exclusions',
-    //     width: '130',
-    //     sticky: false,
-    //     format: 'item.format',
-    //     filter: true,
-    //     sortable: true,
-    //     fieldType: 'text',
-    //   },
-      
-     
-    //   {
-    //     field: 'lastModified',
-    //     title: 'Last Modified',
-    //     width: '130',
-    //     sticky: false,
-    //     format: 'item.format',
-    //     filter: true,
-    //     sortable: true,
-    //     fieldType: 'date',
-    //   },
-    //   {
-    //     field: 'modifiedBy',
-    //     title: 'Modified by',
-    //     width: '100',
-    //     sticky: false,
-    //     format: 'item.format',
-    //     filter: true,
-    //     sortable: true,
-    //     fieldType: 'profilecard',
-    //   },
-      
-      
-    //   {
-    //     field: 'options',
-    //     title: '',
-    //     width: '50',
-    //     sticky: true,
-    //     filter: false,
-    //     sortable: false,
-    //     fieldType: 'actions',
-    //   },
-    // ];
-  
-  
-  
     public girdMoreActionsList = [
       {
         buttonType:"btn-h-primary",

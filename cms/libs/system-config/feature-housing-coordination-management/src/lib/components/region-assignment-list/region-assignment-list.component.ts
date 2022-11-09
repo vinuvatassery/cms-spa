@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { SortDescriptor } from '@progress/kendo-data-query';
+ 
 @Component({
   selector: 'system-config-region-assignment-list',
   templateUrl: './region-assignment-list.component.html',
@@ -25,19 +25,7 @@ export class RegionAssignmentListComponent implements OnInit {
       {text: 'All', value: 100}
     ];
 
-    public sort: SortDescriptor[] = [];
-    gridConfiguration = {
-      pageSize: 10,
-      skip: 0,
-      pageable: true,
-      reorderable: true,
-      resizable: true,
-      sortable: true,
-      sort: this.sort,
-      columnMenu: true,
-      pageChange: 0.55,
-    };
-  
+ 
     public girdMoreActionsList = [
       {
         buttonType:"btn-h-primary",
