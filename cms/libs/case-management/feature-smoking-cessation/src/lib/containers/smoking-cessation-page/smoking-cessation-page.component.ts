@@ -21,6 +21,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationCounter!: string;
   tareaCessationNote = '';
   smokingCessationForm!: UntypedFormGroup;
+  isDisabled =true;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
 
   constructor(
@@ -62,20 +63,33 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       mokingCessationNote: new UntypedFormControl('')
     });
   }
-
+  
   private smokingCessationFromChanged() {
     this.smokingCessationForm.valueChanges.subscribe(val => {
+      if(this.smokingCessationForm.value.mokingCessation =="No"){
+        this.smokingCessationForm.controls["mokingCessationNote"].clearValidators();
+      }
+      this.smokingCessationForm.controls['mokingCessationNote'].updateValueAndValidity()
       this.updateFormCompleteCount();
     });
   }
 
   private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
+    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {    
+      if(this.smokingCessationForm.value.mokingCessation =="Yes"){
+        this.smokingCessationForm.controls["mokingCessationNote"].setValidators([Validators.required]);
+      }
+      else{
+        this.smokingCessationForm.controls["mokingCessationNote"].clearValidators();
+      }
+      this.smokingCessationForm.controls['mokingCessationNote'].updateValueAndValidity()
+      if(this.smokingCessationForm.valid){
       this.smokingCessationFacade.save().subscribe((response: boolean) => {
         if (response) {
           this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
         }
       })
+     }
     });
   }
 
@@ -105,6 +119,9 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
+  disableSmokingCessationNote(disable:boolean){
+    this.isDisabled = disable;
+  }
   /** Internal event methods **/
   onChangeCounterClick() {
 

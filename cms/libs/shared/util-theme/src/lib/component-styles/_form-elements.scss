@@ -54,6 +54,11 @@
   gap: $size-xx;
   border-radius: $border-radius-sm;
   transition: ease all 0.4s;
+  &.blue-banner {
+    background: $app-primary;
+    color: $white;
+    padding: $size-xx $size-xx;
+  }
   &.red-banner {
     background: material-color($hive-error-palette, 100);
     color: material-color($hive-error-palette, 900);

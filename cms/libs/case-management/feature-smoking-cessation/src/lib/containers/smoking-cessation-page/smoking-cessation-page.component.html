@@ -17,6 +17,7 @@
                 class="form-control" 
                 formControlName="mokingCessation"
                 value="Yes"
+                (click)="disableSmokingCessationNote(false)"
               />
               <kendo-label
                 class="k-radio-label"
@@ -35,6 +36,7 @@
                 class="form-control" 
                 formControlName="mokingCessation"
                 value="No"
+                (click)="disableSmokingCessationNote(true)"
               />
               <kendo-label
               class="k-radio-label"
@@ -52,6 +54,7 @@
                 tabindex="2"
                 formControlName="mokingCessation"
                 value="DoNotAnswer"
+                (click)="disableSmokingCessationNote(true)"
               />
               <kendo-label
                 class="k-radio-label"
@@ -61,7 +64,7 @@
             </span>
           </div>
         </div>
-        <div class="flex-col" >
+        <div class="flex-col flex-col-6" >
           <div class="form-group"> 
           <kendo-floatinglabel text="Smoking Cessation Note">
             <kendo-textarea
@@ -74,12 +77,17 @@
               aria-label="smoking cessation note"
               class="form-control" 
               formControlName="mokingCessationNote"
+              [disabled]="isDisabled"
             >
               <kendo-textarea-suffix class="justify-content-end">
                 <span class="counter">{{ tareaCessationCounter }}</span>
               </kendo-textarea-suffix>
             </kendo-textarea>
           </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!smokingCessationForm.controls['mokingCessationNote'].valid">Smoking Cessation Note is required</kendo-formerror>
+        </div>
+        <div class="info-banners blue-banner d-flex mt-2" *ngIf="!isDisabled">
+          <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>The applicant will be sent smoking cessation collateral via letter or email once the application is saved with the necessary contact information</p>
         </div>
         </div>
       </div>
