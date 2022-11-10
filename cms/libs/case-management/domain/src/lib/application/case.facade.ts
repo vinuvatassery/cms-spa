@@ -5,7 +5,7 @@ import { map } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Case } from '../entities/case';
-import { UpdateWorkFlowProgress, Workflow, WorkFlowProgress } from '../entities/workflow';
+import { WorkFlowProgress } from '../entities/workflow';
 import { NavigationType } from '../enums/navigation-type.enum';
 
 /** Data services **/

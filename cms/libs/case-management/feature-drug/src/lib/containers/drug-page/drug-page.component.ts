@@ -2,8 +2,12 @@
 import { OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DrugPharmacyFacade, NavigationType, WorkflowFacade } from '@cms/case-management/domain';
+/** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facades **/
+import { DrugPharmacyFacade,  WorkflowFacade } from '@cms/case-management/domain';
+/** Enums **/
+import {  NavigationType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-drug-page',

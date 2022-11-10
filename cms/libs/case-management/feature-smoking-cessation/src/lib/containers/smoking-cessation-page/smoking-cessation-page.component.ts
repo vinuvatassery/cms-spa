@@ -1,10 +1,10 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-/** services **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, Workflow, UpdateWorkFlowProgress, CompletionChecklist } from '@cms/case-management/domain';
-import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, Observable, of, pairwise, startWith, Subscription } from 'rxjs';
+/** External libraries **/
+import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+/** Internal Libraries **/
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',

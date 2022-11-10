@@ -1,8 +1,12 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-/** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, EmploymentFacade, NavigationType } from '@cms/case-management/domain';
+/** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facades **/
+import { WorkflowFacade, CompletionStatusFacade, EmploymentFacade } from '@cms/case-management/domain';
+/** Enums **/
+import { NavigationType } from '@cms/case-management/domain';
+
 
 @Component({
   selector: 'case-management-employment-page',

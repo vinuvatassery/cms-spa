@@ -1,9 +1,14 @@
 /** Angular **/
 import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-/** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, NavigationType } from '@cms/case-management/domain';
+/** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facades **/
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
+/** Enums **/
+import {  NavigationType } from '@cms/case-management/domain';
+
+
 
 @Component({
   selector: 'case-management-family-and-dependent-page',

@@ -10,37 +10,21 @@
     <h5 class="text-capital">Completed Items</h5>
   </div>
   <div *ngFor="let route of routes$ | async">
-    <!-- <div *ngFor="let status of completeStaus$ | async"> -->
       <li
-        routerLinkActive="active-item"
-        [ngClass]="
-        route.workFlowProgress.completedDatapointsCount === route.workFlowProgress.requiredDatapointsCount
-            ? 'kendo-list-items section-completed'
-            : 'kendo-list-items'
-        "
-        [routerLink]="route?.workFlowProgress?.visitedFlag == 'Y'? route.url: null"
-        [queryParamsHandling]="'preserve'"
-        (click)="onRouteChange(route)"
+      [ngClass]="{ 'kendo-list-items':true,
+      'section-completed':route.completedDatapointsCount === route.requiredDatapointsCount && route.requiredDatapointsCount !== 0,
+      'active-item': route.currentFlag ==='Y'
+      }"            
+      (click)="onRouteChange(route)"
       >
       <span>{{ route.title }}</span>
       <page-completion-status
-      [workflowStepId] = "route.workflowStepId"
+      [workflowProcessId] = "route.processId"
+      [completionStatus$]="completeStaus$"
       ></page-completion-status>
-        <!-- 
-        <span *ngIf="route.workFlowProgress[0].datapointsCompletedCount !== route.workFlowProgress[0]?.datapointsTotalCount"
-          >{{ route.workFlowProgress[0]?.datapointsCompletedCount }} of {{ route.workFlowProgress[0]?.datapointsTotalCount }}</span
-        >
-        <span
-          *ngIf="
-            route.workFlowProgress[0].datapointsCompletedCount === route.workFlowProgress[0].datapointsTotalCount
-          "
-          class="material-icons"
-          >check_circle</span
-        > -->
       </li>
-    <!-- </div> -->
   </div>
-  <div class="sections-heading sh-top-border">
+  <div class="sections-heading sh-top-border"> 
     <span>Application Review</span>
     <button
       aria-label="start review"

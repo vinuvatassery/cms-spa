@@ -1,11 +1,17 @@
 /** Angular **/
-import { outputAst } from '@angular/compiler';
-import { EventEmitter, OnInit } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { WorkflowFacade, ClientFacade, NavigationType, CompletionChecklist } from '@cms/case-management/domain';
-import { TokenHelperService } from 'angular-auth-oidc-client/lib/utils/tokenHelper/token-helper.service';
+/** External libraries **/
 import { forkJoin, mergeMap, Observable, of, Subscription } from 'rxjs';
+/** Facade **/
+import { WorkflowFacade, ClientFacade } from '@cms/case-management/domain';
+/** Entities **/
+import { CompletionChecklist } from '@cms/case-management/domain';
+/** Enums **/
+import { NavigationType } from '@cms/case-management/domain';
+
+
 
 @Component({
   selector: 'case-management-client-page',
@@ -33,16 +39,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
   }
 
-  /** Public  methods **/
-  canDeactivate(): Observable<boolean> {
-    //if (!this.isSaved) {
-    const result = window.confirm('There are unsaved changes! Are you sure?');
-    return of(result);
-    //}
-
-    //return of(true);
-  }
-
   /** Private methods **/
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
@@ -59,14 +55,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   private save() {
     let isValid = true;
     // TODO: validate the form
-    if (isValid) {
-      this.workflowFacade.clientCaseEligibilityId = "3500D14F-FB9E-4353-A73B-0336D79418EF";
+    if (isValid) { 
       return this.clientFacade.save();
     }
 
     return of(false)
   }
-
+  
+  /** Public  methods **/
   updatePageCount(completedDataPoints: CompletionChecklist[]) {
     if (completedDataPoints?.length > 0) {
       this.workflowFacade.updateChecklist(completedDataPoints);

@@ -1,16 +1,13 @@
 /**Angualr **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-
 
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 /**Models */
-import { UpdateWorkFlowProgress, Workflow, WorkFlowProgress } from '../entities/workflow';
-import { ScreenFlowType } from '../enums/screen-flow-type.enum';
-import { NavigationType } from '../enums/navigation-type.enum';
+import { WorkflowMaster, WorkflowSession } from '../entities/workflow';
 
 
 @Injectable({
@@ -19,20 +16,19 @@ import { NavigationType } from '../enums/navigation-type.enum';
 export class ScreenRouteDataService {
   constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
 
-  loadWorkflow(screen_flow_type_code: string, entity_id: string, session_id?: string) {
-    if (session_id) {
-      return this.http.get<Workflow[]>(
+  loadWorkflow(screen_flow_type_code?: string, entity_id?: string, session_id?: string) {
+      return this.http.get<WorkflowSession>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${session_id}`
       );
-    }
-    else {
-      return this.http.get<Workflow[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows?entityId=${entity_id}&workflowTypeCode=${screen_flow_type_code}`
-      );  
-    }
   }
 
-  saveWorkflowProgress(updateWorkFlowProgress: UpdateWorkFlowProgress, sessionId:string) {
+  loadWorkflowMaster(entityId:string, entityTypeCode:string, workflowTypeCode: string, ){
+    return this.http.get<WorkflowMaster[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/entityId=${entityId}&workflowTypeCode=${workflowTypeCode}&entityTypeCode=${entityTypeCode}`
+    );  
+  }
+
+  saveWorkflowProgress(updateWorkFlowProgress: any, sessionId:string) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${sessionId}/progress`,
       updateWorkFlowProgress

@@ -1,7 +1,11 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { WorkflowFacade, HealthInsuranceFacade, NavigationType, UpdateWorkFlowProgress, CaseFacade } from '@cms/case-management/domain';
+/** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facades **/
+import { WorkflowFacade, HealthInsuranceFacade, CaseFacade } from '@cms/case-management/domain';
+/** Enums **/
+import {  NavigationType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-health-insurance-page',

@@ -44,7 +44,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private workflowFacade: WorkflowFacade
   ) { }
 
-
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadDdlRelationships();
@@ -55,16 +54,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-  }
-
-  canDeactivate(): Observable<boolean> {
-    //if (!this.isSaved) {
-    //const result = window.confirm('There are unsaved changes! Are you sure?');
-    //return of(result);
-    return of(true);
-    //}
-
-    //return of(true);
   }
 
   /** Private methods **/

@@ -1,10 +1,11 @@
 /** Angular **/
 import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
-/** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType } from '@cms/case-management/domain';
+/** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { DateInputFillMode, DateInputRounded, DateInputSize } from '@progress/kendo-angular-dateinputs';
+/** Internal Libraries **/
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-income-page',
@@ -21,8 +22,6 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
-
-
 
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';

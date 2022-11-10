@@ -1,7 +1,10 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+/** External libraries **/
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Internal Libraries **/
 import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-management/domain';
-import { combineLatest, forkJoin, map, mergeMap, of, Subscription, take, takeWhile, tap } from 'rxjs';
+
 
 @Component({
   selector: 'case-management-verification-page',

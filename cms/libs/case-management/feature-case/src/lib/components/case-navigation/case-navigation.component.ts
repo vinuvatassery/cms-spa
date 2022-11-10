@@ -1,12 +1,12 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { filter } from 'rxjs/internal/operators/filter';
-/** Facades **/
-import { ScreenType, NavigationType, Workflow } from '@cms/case-management/domain';
 import { Observable } from 'rxjs/internal/Observable';
+/** Internal Libraries **/
+import { ScreenType, WorkFlowProgress } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case-navigation',
@@ -19,7 +19,8 @@ export class CaseNavigationComponent implements OnInit {
   @Input() routes$!: Observable<any>;
   @Input() completeStaus$!: Observable<any>;
   @Input() navigationEvent = new EventEmitter<string>();
-  @Output() workflowChange = new EventEmitter<Workflow>();
+    /** Output Properties **/
+  @Output() workflowChange = new EventEmitter<WorkFlowProgress>();
 
   /** Public Properties **/
   isSendLetterProfileOpenedSubject = new BehaviorSubject<boolean>(false);
@@ -30,11 +31,8 @@ export class CaseNavigationComponent implements OnInit {
   navigationIndex = 0;
   routes!: any[];
 
-  /** Private Properties */
-
-
   /** constructor **/
-  constructor(private router: Router) { }
+  constructor(private router: Router, private actRoute: ActivatedRoute) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -47,19 +45,21 @@ export class CaseNavigationComponent implements OnInit {
   private loadCaseNavigationDeatils() {
     this.routes$.subscribe({
       next: (routes: any) => {
-        this.navigate(routes, NavigationType.Default)
-        this.routes = routes;
+        if (routes.length > 0) {
+          this.navigate(routes)
+          this.routes = routes;
+        }
       },
       error: (err: any) => {
         console.error('error', err);
       },
-    });
+    });   
   }
 
   private addNavigationSubscription() {
     this.navigationEvent.subscribe({
-      next: (navigationType: NavigationType) => {
-        this.navigate(this.routes, navigationType);
+      next: () => {
+        this.navigate(this.routes);
       },
       error: (err: any) => {
         console.error('error', err);
@@ -67,30 +67,37 @@ export class CaseNavigationComponent implements OnInit {
     });
   }
 
-  private navigate(routes: any, navigationType: NavigationType) {
+  private navigate(routes: any) {
     const CurrentRoute = this.router.url;
-    switch (navigationType) {
-      case NavigationType.Next:
-        this.navigationIndex = routes.findIndex((route: any) => CurrentRoute.includes(route.url)) + 1;
-        break;
-      case NavigationType.Previous:
-        this.navigationIndex = routes.findIndex((route: any) => CurrentRoute.includes(route.url)) + 1;
-        break;
-      case NavigationType.Default:
-        this.navigationIndex = routes.findIndex((route: Workflow) =>
-          route?.workFlowProgress?.currentFlag === 'Y'
-        );
-        break;
-      default:
-        this.navigationIndex = -1;
-    }
+    this.navigationIndex = routes.findIndex((route: WorkFlowProgress) =>
+      route?.currentFlag === 'Y'
+    );
 
-    this.navigateByUrl(routes);
+    let paramScreenFlowType: string = this.actRoute.snapshot.queryParams['type'];
+    let paramEntityId: string = this.actRoute.snapshot.queryParams['eid'];
+    let paramSessionId = this.actRoute.snapshot.queryParams['sid'];
+
+    if (this.navigationIndex > -1
+      && this.navigationIndex < routes.length
+      && paramScreenFlowType
+      && paramEntityId
+      && paramSessionId) {
+      this.router.navigate(
+        [routes[this.navigationIndex].url],
+        {
+          queryParams: {
+            type: paramScreenFlowType,
+            sid: paramSessionId,
+            eid: paramEntityId,
+            pid: routes[this.navigationIndex].processId
+          }
+        }
+      );
+    }
   }
 
   private navigateByUrl(routes: any) {
     if (this.navigationIndex > -1 && this.navigationIndex < routes.length) {
-     // this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
       this.router.navigate([routes[this.navigationIndex].url], { queryParamsHandling: 'preserve' });
     }
     // TODO: In else case we can start the application review process.
@@ -156,7 +163,7 @@ export class CaseNavigationComponent implements OnInit {
     this.isApplicationReviewOpened = false;
   }
 
-  onRouteChange(route: Workflow) {
+  onRouteChange(route: WorkFlowProgress) {
     this.workflowChange.emit(route);
   }
 }

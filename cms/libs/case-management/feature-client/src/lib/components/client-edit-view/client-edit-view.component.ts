@@ -1,16 +1,16 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, ElementRef } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
-/** Facades **/
-import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
 import {
   DateInputSize,
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, pairwise, startWith } from 'rxjs';
+/** Facades **/
+import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
 
 export type Option = {
   type: string;
@@ -28,9 +28,9 @@ export class ClientEditViewComponent implements OnInit {
   isVisible: any;
   isSelected = true;
 
-  /** Onput Properties **/
+  /** Output Properties **/
   @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
-  @Output() AdjustAttributeChanged = new EventEmitter<CompletionChecklist[]>();
+  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
 
 
   /** Public properties **/
@@ -118,7 +118,14 @@ export class ClientEditViewComponent implements OnInit {
     this.addAppInfoFormChangeSubscription();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(){
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {   
+      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
+    }); 
+  }
+
+  ngAfterViewChecked() {
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -127,24 +134,14 @@ export class ClientEditViewComponent implements OnInit {
         status: control.checked ? 'Y' : 'N'
       };
       initialAjustment.push(data);
-      control.addEventListener('click', this.onClick.bind(this));
     });
 
     if (initialAjustment.length > 0) {
-      this.AdjustAttributeChanged.emit(initialAjustment);
+      this.AdjustAttrChanged.emit(initialAjustment);
     }
   }
 
-  /** Private methods **/
-
-  private onClick(event: Event) {
-    const data: CompletionChecklist = {
-      dataPointName: (event.target as HTMLInputElement).name,
-      status: (event.target as HTMLInputElement).checked ? 'Y' : 'N'
-    };
-
-    this.AdjustAttributeChanged.emit([data]);
-  }
+  /** Private methods **/ 
 
   private buildForm() {
     this.appInfoForm = new FormGroup({
@@ -163,6 +160,15 @@ export class ClientEditViewComponent implements OnInit {
       ssnNotApplicable: new FormControl(false),
       //TODO: other form controls 
     })
+  }
+
+  private adjustAttributeChanged(event: Event) { 
+    const data: CompletionChecklist = {
+      dataPointName: (event.target as HTMLInputElement).name,
+      status: (event.target as HTMLInputElement).checked ? 'Y' : 'N'
+    };
+
+    this.AdjustAttrChanged.emit([data]);
   }
 
   private addAppInfoFormChangeSubscription() {

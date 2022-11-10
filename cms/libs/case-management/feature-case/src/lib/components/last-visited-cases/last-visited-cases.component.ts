@@ -30,9 +30,9 @@ export class LastVisitedCasesComponent implements OnInit {
 
   getQueryParams(_case: any): object {
     return {
-      screenFlowType: ScreenFlowType.ExistingCase,
-      caseId: _case.id,
-      programId: _case.programId,
+      type: ScreenFlowType.NewCase,
+      sid: _case.id,
+      eid: _case.programId,
     };
   }
 }

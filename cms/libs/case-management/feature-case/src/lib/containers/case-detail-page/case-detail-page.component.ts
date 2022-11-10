@@ -1,17 +1,16 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-/** Enums **/
-import { WorkflowFacade, CommunicationEvents, CompletionStatusFacade, ScreenFlowType, ScreenType, NavigationType, Workflow } from '@cms/case-management/domain';
-/** Facades **/
-import { CaseFacade } from '@cms/case-management/domain';
+/** External libraries **/
 import {
   DateInputSize,
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
-/**Services**/
+/** Internal Libraries **/
+import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, CaseFacade, WorkflowFacade } from '@cms/case-management/domain';
+
 
 @Component({
   selector: 'case-management-case-detail-page',
@@ -44,7 +43,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isShowDeleteConfirmPopup = false;
   isShowDiscardConfirmPopup = false;
   isShowSendNewLetterPopup = false;
-  sessionId!: string | null;
+  sessionId!: string;
   data: Array<any> = [
     {
       text: '',
@@ -77,16 +76,16 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     },
 
   ];
-  routes$ = this.workflowFacade.routes$;
-  completeStaus$ = this.completionStatusFacade.completionStatus$;
 
+  routes$ = this.workflowFacade.routes$;
+  completeStaus$ = this.workflowFacade.completionStatus$;
+  
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
-    private navRoute: Router,
-    private completionStatusFacade: CompletionStatusFacade,
     private workflowFacade: WorkflowFacade
-  ) { }
+  ) {
+  }
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -101,65 +100,38 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   /** Private Methods */
   private loadQueryParams() {
-    let paramScreenFlowType: string;
-    let paramEntityId: any;
-    this.route.queryParamMap.subscribe({
-      next: (params) => {
-        paramScreenFlowType = params.get('type') as ScreenFlowType;
-        this.sessionId = params.get('sid');
-        paramEntityId = params.get('eid');
-        this.loadRoutes(
-          paramScreenFlowType,
-          paramEntityId,
-          this.sessionId ?? ''
-        );
-        if (this.sessionId) {
-          this.routes$.subscribe({
-            next: (routes) => {
-              if (routes?.length > 0) {
-                this.navRoute.navigate(
-                  [
-                    routes.filter(
-                      (route: any) => route?.workFlowProgress?.currentFlag === 'Y'
-                    )[0].url,
-                  ],
-                  {
-                    queryParams: {
-                      type: paramScreenFlowType,
-                      sid: this.sessionId,
-                      eid: paramEntityId,
-                    },
-                  }
-                );
-              }
-            },
-            complete: () => {
-              console.log('Completed');
-            },
-          });
-        }
-
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
-    });
-  }
-
-  private loadRoutes(
-    screen_flow_type_code: string,
-    entity_id: string,
-    session_id?: string
-  ) {
-    this.workflowFacade.loadRoutes(screen_flow_type_code, entity_id, session_id);
-  }
-
-  private loadCompletionStatus(caseId?: number) {
-    this.completionStatusFacade.loadCompletionStatus(caseId);
+    let paramScreenFlowType: string = this.route.snapshot.queryParams['type'];
+    let paramEntityId: string = this.route.snapshot.queryParams['eid'];
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkflowSession(paramScreenFlowType, paramEntityId, this.sessionId);
   }
 
   private loadDdlCommonAction() {
     this.caseFacade.loadDdlCommonActions();
+  }
+
+  private addNavigationSubscription() {
+    this.navigationSubscription = this.workflowFacade.navigationTrigger$
+      .pipe(
+        mergeMap((navigationType: NavigationType) =>
+          forkJoin(
+            [
+              of(navigationType),
+              this.workflowFacade.saveWorkflowProgress(navigationType, this.sessionId, this.route.snapshot.queryParams['pid'])
+            ])
+        )
+      )
+      .subscribe({
+        next: ([navigationType, Object]) => {
+          let paramProcessId: string = this.route.snapshot.queryParams['pid'];
+          if (paramProcessId) {
+            this.workflowFacade.updateSequenceNavigation(navigationType, paramProcessId);
+          }
+        },
+        error: (err: any) => {
+          console.error('error', err);
+        },
+      });
   }
 
   /** Internal event methods **/
@@ -190,31 +162,6 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   onSendNewLetterClicked() {
     this.isShowSendNewLetterPopup = true;
     this.isShowSaveLaterPopup = false;
-  }
-
-  onSaveAndContinueClicked() {
-    this.workflowFacade.save(NavigationType.Next);
-  }
-
-  private addNavigationSubscription() {
-    this.navigationSubscription = this.workflowFacade.navigationTrigger$
-      .pipe(
-        mergeMap((navigationType: NavigationType) =>
-          forkJoin(
-            [
-              of(navigationType),
-              this.workflowFacade.saveWorkflowProgress(navigationType, this.sessionId ?? '')
-            ])
-        )
-      )
-      .subscribe({
-        next: ([navigationType, Object]) => {
-          this.workflowFacade.updateSequenceNavigation(navigationType);
-        },
-        error: (err: any) => {
-          console.error('error', err);
-        },
-      });
   }
 
   /** External event methods **/
@@ -257,9 +204,16 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.openedPreviewLetter = false;
   }
 
-  applyWorkflowChanges(route: Workflow) {
-    if (route?.workFlowProgress?.visitedFlag === 'Y') {
-      this.workflowFacade.updateNonequenceNavigation(route, this.sessionId??'').subscribe();
+  onSaveAndContinueClicked() {
+    this.workflowFacade.save(NavigationType.Next);
+  }
+
+  applyWorkflowChanges(route: WorkFlowProgress) {
+    if (route?.visitedFlag === 'Y') {
+      this.workflowFacade.saveNonequenceNavigation(route, this.sessionId ?? '')
+        .subscribe(resp => {
+          this.workflowFacade.updateNonequenceNavigation(route);
+        });
     }
   }
 

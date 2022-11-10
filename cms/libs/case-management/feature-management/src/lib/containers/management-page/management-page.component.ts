@@ -1,7 +1,9 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { WorkflowFacade, ManagementFacade, NavigationType } from '@cms/case-management/domain';
+/** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Internal Libraries **/
+import { WorkflowFacade, ManagementFacade, NavigationType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-management-page',

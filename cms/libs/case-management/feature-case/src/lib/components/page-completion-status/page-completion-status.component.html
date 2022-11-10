@@ -1,4 +1,4 @@
-<div *ngIf="workflowFacade.wfStageCompletionStatus$ | async ">
+<div *ngIf="completionStatus$ | async ">
     <span *ngIf="completed !== total">
         {{ completed }} of {{ total }}
     </span>
