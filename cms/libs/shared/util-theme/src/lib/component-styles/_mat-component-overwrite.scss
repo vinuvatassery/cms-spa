@@ -4,9 +4,19 @@
   &.k-calendar-infinite {
     max-width: 350px;
   }
+  .k-calendar-navigation{
+    li{
+      &:hover{
+        // background-color: material-color($hive-primary-palette, 100) !important;
+        color: $app-primary !important;
+      }
+    }
+  }
+ 
 }
 .k-calendar .k-footer .k-nav-today,
-.k-calendar .k-calendar-header .k-today {
+.k-calendar .k-calendar-header .k-today
+{
   color: $app-primary !important;
   font-family: $font-family-medium;
   border: 1px solid $app-primary;
@@ -17,10 +27,11 @@
   justify-content: center;
 }
 .k-calendar .k-content .k-today,
-.k-calendar .k-calendar-content .k-today {
+.k-calendar .k-calendar-content .k-today,
+.k-calendar .k-content .k-selected.k-today  {
   color: $app-primary !important;
   span {
-    background-color: material-color($hive-primary-palette, 100);
+    background-color: material-color($hive-primary-palette, 100) !important;
     border: 1px solid $app-primary;
     font-family: $font-family-medium;
     color: $app-primary !important;
@@ -30,7 +41,8 @@
 .k-calendar td:hover .k-link,
 .k-calendar td.k-state-hover .k-link,
 .k-calendar .k-calendar-td:hover .k-link,
-.k-calendar .k-calendar-td.k-state-hover .k-link {
+.k-calendar .k-calendar-td.k-state-hover .k-link,
+.k-calendar .k-calendar-td.k-selected   {
   background-color: $app-primary !important;
   border: 1px solid $app-primary;
   font-family: $font-family-medium;
@@ -91,10 +103,12 @@
     z-index: 1;
     color: material-color($hive-neutral-palette, 800);
   }
-  .k-input-md .k-input-inner, .k-picker-md .k-input-inner{
+  .k-input-md .k-input-inner,
+  .k-picker-md .k-input-inner {
     padding-left: 38px;
+    font-size: $font-size;
   }
-  .k-icon-button{
+  .k-icon-button {
     min-height: 36px;
   }
   .global-search-list {
@@ -107,16 +121,45 @@
     padding: $size-xlg;
   }
   &.header-search {
-    position: fixed;
+    // position: fixed;
     z-index: 9;
     max-width: 475px;
     width: 475px;
-    left: 50%;
-    top: 10px;
-    transform: translate(-50%, 0);
+    // left: 50%;
+    // top: 10px;
+    // transform: translate(-50%, 0);
     @media (max-width: $breakpoint-xlg) {
       min-width: 300px;
       max-width: 300px;
+    }
+  }
+  kendo-multicolumncombobox > .k-button {
+    display: none;
+  }
+}
+// New case search
+.search-case {
+  kendo-multicolumncombobox > kendo-popup {
+    max-width: 500px;
+    width: 100% !important;
+    margin: 0 auto;
+    left: 0 !important;
+    right: 0;
+  }
+  .case-search-footer {
+    .k-table-body {
+      .k-table {
+        border-color: rgb(0 0 0 / 0%);
+        &.k-table-list .k-table-row {
+          cursor: pointer;
+        }
+      }
+    }
+    .k-table-footer {
+      .k-table-td {
+        padding: 0px;
+        border-bottom: 0px;
+      }
     }
   }
 }

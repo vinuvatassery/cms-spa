@@ -118,18 +118,19 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
-          <kendo-dropdownlist [data]="ddlRelationships$ | async">
+          <kendo-dropdownlist  fillMode="outline" [data]="ddlRelationships$ | async">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal First Name">
-          <input kendoTextBox aria-label="legal first name" />
+          <kendo-textbox    aria-label="Legal First Name"  fillMode="outline">   </kendo-textbox>
+ 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal Last Name">
-          <input kendoTextBox aria-label="legal last name" />
+          <kendo-textbox aria-label="legal last name"  fillMode="outline">   </kendo-textbox> 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
@@ -144,13 +145,13 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Social Security Number (optional)">
-          <input kendoTextBox aria-label="social security number optional" />
+          <kendo-textbox aria-label="social security number optional"  fillMode="outline">   </kendo-textbox> 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mb-3">
         <h5>Currently enrolled in client’s health insurance plan?</h5>
         <div class="radio-column-list">
-          <span>
+          <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"
               #terms
@@ -159,14 +160,14 @@
               aria-labelledby="currentlyEnrolledInClient’sHealthInsurancePlanYes"
               id="enrolledInHealthInsurancePlanYes"
             />
-            <kendo-label
+            <label
               class="k-radio-label"
               [for]="terms"
               text="Yes"
               for="enrolledInHealthInsurancePlanYes"
-            ></kendo-label>
+            ></label>
           </span>
-          <span>
+          <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"
               #terms
@@ -175,12 +176,12 @@
               aria-labelledby="currentlyEnrolledInClient’sHealthInsurancePlanNo"
               id="enrolledInHealthInsurancePlanNo"
             />
-            <kendo-label
+            <label
               class="k-radio-label"
               [for]="terms"
               text="No"
-              for="enrolledInHealthInsurancePlanNo"
-            ></kendo-label>
+              for="enrolledInHealthInsurancePlanNo">
+          </label>
           </span>
         </div>
       </div>

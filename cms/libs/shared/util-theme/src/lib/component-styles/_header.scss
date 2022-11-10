@@ -104,6 +104,23 @@
         border-radius: $border-radius-xlg;
       }
     }
+
+    .topright-profile {
+      > .k-button{
+        padding: 0px;
+        border-radius: 50%;
+      }
+      .k-animation-container-shown{
+        top: 70.5px;
+      }
+      .k-menu-group-md .k-menu-link {
+        padding: 0;
+        padding-inline-end: 0;
+    }
+    .k-menu-group, .k-menu-item.k-focus{
+      background: $white;
+    }
+    }
   }
 }
 .notification-inner {

@@ -6,6 +6,7 @@ import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { DateInputFillMode, DateInputRounded, DateInputSize } from '@progress/kendo-angular-dateinputs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
 
 @Component({
   selector: 'case-management-income-page',
@@ -23,9 +24,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
 
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() isEditValue!: boolean;
   currentDate = new Date();

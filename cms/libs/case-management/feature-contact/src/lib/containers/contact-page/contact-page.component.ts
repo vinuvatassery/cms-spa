@@ -8,6 +8,7 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 import { Subscription, Observable, of, mergeMap, forkJoin } from 'rxjs';
 @Component({
@@ -18,9 +19,7 @@ import { Subscription, Observable, of, mergeMap, forkJoin } from 'rxjs';
 
 export class ContactPageComponent implements OnInit, OnDestroy {
 
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Public properties **/
   ddlPreferredContactMethods$ = this.contactFacade.ddlPreferredContactMethods$;
   ddlStates$ = this.contactFacade.ddlStates$;

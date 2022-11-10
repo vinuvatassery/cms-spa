@@ -2,11 +2,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** Enums **/
 import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
+ 
 
 @Component({
   selector: 'case-management-authorization',
@@ -16,9 +13,7 @@ import {
 })
 export class AuthorizationComponent {
   currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+ 
   /** Public properties **/
   screenName = ScreenType.Authorization;
   isPrintClicked!: boolean;
@@ -26,6 +21,7 @@ export class AuthorizationComponent {
   isSendNewLetterPopupOpened = false;
   isSendNewEmailPopupOpened = false;
   isAuthorizationNoticePopupOpened = false;
+  public formUiStyle : UIFormStyle = new UIFormStyle();
 
   /** Internal event methods **/
   onSendNewLetterClicked() {

@@ -10,6 +10,8 @@ import {
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, CaseFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+
 
 
 @Component({
@@ -18,7 +20,7 @@ import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, Case
   styleUrls: ['./case-detail-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailPageComponent implements OnInit, OnDestroy {
+export class CaseDetailPageComponent implements OnInit {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
@@ -26,8 +28,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
-
-  /**Public properties**/
+  
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
   openedSaveLater = false;
   openedDeleteConfirm = false;

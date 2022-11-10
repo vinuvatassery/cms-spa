@@ -6,12 +6,12 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Income Source">
         <kendo-dropdownlist 
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
         [(ngModel)]="currentDate"
           [data]="incomeSources$ | async"
           aria-label="income sources"
           name="income sources"
-          [tabIndex]="1"
+   
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
@@ -19,18 +19,18 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Income Type">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="incomeTypes$ | async"
           aria-label="income types"
           name="income types"
-          [tabIndex]="2"
+        
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col flex-col-6 input-icon-left">
-      <kendo-floatinglabel text="Amount" class="">
-        <kendo-textbox aria-label="amount" class="input-icon-left" [fillMode]="fillMode" name="amount" [tabIndex]="3">
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+        <kendo-textbox aria-label="amount"  class="input-icon-right"   [fillMode]="formUiStyle.inputFillMode" name="amount" [tabIndex]="3">
           <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -38,11 +38,11 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Frequency">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="frequencies$ | async"
           aria-label="frequencies"
           name="frequencies"
-          [tabIndex]="4"
+       
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
@@ -50,13 +50,13 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Income Start">
         <kendo-datepicker
-         [fillMode]="fillMode"
+         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           [(ngModel)]="currentDate"
           formatPlaceholder="formatPattern"
           aria-label="income start"
           name="income start"
-          [tabIndex]="5"
+        
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
@@ -64,38 +64,41 @@
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Income End (Optional)">
         <kendo-datepicker
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
           aria-label="income end"
           name="income end"
-          [tabIndex]="6"
+         
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col justify-content-between align-items-center">
+    <div class="flex-col justify-content-between align-items-center ">
       <h5 class="text-caital">Poof of Income</h5>
-      <span>
-        <input
-          kendoCheckBox
-          id="noProofOfIncome"
-          name="no proof of income"
-          type="checkbox"
-          (change)="onProofOfIncomeValueChanged()"
-          aria-labelledby="noProofOfIncome"
-          [tabIndex]="7"
-        />
-        <label class="k-checkbox-label" for="noProofOfIncome"
-          >No proof of Income</label
-        >
-      </span>
+      <div>
+        <span class="app-checkboxwidtext-wrapper">
+          <input
+            kendoCheckBox
+            id="noProofOfIncome"
+            name="no proof of income"
+            type="checkbox"
+            (change)="onProofOfIncomeValueChanged()"
+            aria-labelledby="noProofOfIncome"
+          
+          />
+          <label class="k-checkbox-label" for="noProofOfIncome"
+            >No proof of Income</label
+          >
+        </span>
+      </div>
+  
     </div>
     <div class="flex-col mb-2" *ngIf="!hasNoProofOfIncome">
       <kendo-upload
         aria-label="upload proof"
         name="upload proof"
-        [tabIndex]="8"
+ 
       >
       </kendo-upload>
       <kendo-formhint>Max file size 25MB</kendo-formhint>
@@ -103,11 +106,11 @@
     <div class="flex-col" *ngIf="!hasNoProofOfIncome">
       <kendo-floatinglabel text="Proof of Income Type">
         <kendo-dropdownlist
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dropDownFillMode"
           [data]="proofOfIncomeTypes$ | async"
           aria-label="proof of income types"
           name="proof of income types"
-          [tabIndex]="9"
+   
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
@@ -115,7 +118,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Financial justification or Income Note">
         <kendo-textarea
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.inputFillMode"
           #tareaJustifications
           resizable="auto"
           [maxlength]="tareaJustificationMaxLength"
@@ -123,7 +126,7 @@
           (valueChange)="onTareaJustificationValueChange($event)"
           aria-label="income note"
           name="income-note"
-          [tabIndex]="10"
+      
         >
           <kendo-textarea-suffix class="justify-content-end">
             <span class="tareajustificationcounter">{{

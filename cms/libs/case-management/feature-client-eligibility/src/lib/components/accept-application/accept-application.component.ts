@@ -2,12 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { ClientEligibilityFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
 
 
 @Component({
@@ -18,9 +13,7 @@ import {
 })
 export class AcceptApplicationComponent implements OnInit {
 
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Public properties **/
   ddlAcceptApplications$ = this.clientEligibilityFacade.ddlAcceptApplications$;
 

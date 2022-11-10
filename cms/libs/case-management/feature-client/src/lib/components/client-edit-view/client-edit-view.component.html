@@ -1,17 +1,26 @@
+ 
 <section kendoRippleContainer>
 <form [formGroup]="appInfoForm">
 
-  <div class="flex-row AdjMiddleName" >
+  <div class="flex-row" >
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Enter First Name" class="k-form">
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
-        <kendo-textbox  aria-label="enter first name" formControlName="firstName"  [fillMode]="fillMode">
+        <kendo-textbox  aria-label="enter first name"  
+          formControlName="firstname"
+          showErrorIcon="initial"
+          #firstname
+          required  
+       formControlName="firstName"  [fillMode]="formUiStyle.inputFillMode">
       </kendo-textbox>
+      <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
+      <kendo-formerror>Error: Full Name is required</kendo-formerror>
+   
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Middle Initial (Optional)">
-        <kendo-textbox   aria-label="middle initial" [fillMode]="fillMode" formControlName="middleName">
+        <kendo-textbox   aria-label="middle initial" [fillMode]="formUiStyle.inputFillMode" formControlName="middleName">
         </kendo-textbox>
         <!-- <input
           kendoTextBox
@@ -34,21 +43,22 @@
         kendoCheckBox     
         (change)="onMiddleNameChecked($event)"    
       />
-      <label class="k-checkbox-label" for="middleInitial">Middle Initial</label>
+      <label class="k-checkbox-label" for="middleInitial">  Middle Initial</label>
       </span>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name">
-        <kendo-textbox aria-label="last name" [fillMode]="fillMode" formControlName="lastName">   </kendo-textbox>
+        <kendo-textbox aria-label="last name" [fillMode]="formUiStyle.inputFillMode" formControlName="lastName">   </kendo-textbox>
         <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
       </kendo-floatinglabel>
     </div>
   </div>
 
+</form>
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Primary Insurance Card">
-        <kendo-textbox aria-label="first name on primary insurance card"  [fillMode]="fillMode" formControlName="prmInsFirstName">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on primary insurance card"  [fillMode]="formUiStyle.inputFillMode" formControlName="prmInsFirstName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
@@ -58,7 +68,7 @@
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name on Primary Insurance Card">
-        <kendo-textbox aria-label="last name on primary insurance card"  [fillMode]="fillMode" formControlName="prmInsLastName">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on primary insurance card"  [fillMode]="formUiStyle.inputFillMode" formControlName="prmInsLastName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
@@ -87,7 +97,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Official ID">
-        <kendo-textbox aria-label="first name on official id"  [fillMode]="fillMode" formControlName="officialIdFirstName">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on official id"  [fillMode]="fillMode" formControlName="offormUiStyle.inputFicialIdFirstName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isOfficialIdChecked"
@@ -103,7 +113,7 @@
           aria-label="last name on official id"
            [(ngModel)]="isOfficialIdChecked"
         /> -->
-        <kendo-textbox aria-label="last name on official id"  [fillMode]="fillMode" formControlName="officialIdLastName">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on official id"  [fillMode]="fillMode" formControlName="offormUiStyle.inputFicialIdLastName">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
@@ -128,7 +138,7 @@
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Date of Birth">
         <kendo-datepicker  
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.dateInputFillMode"
         [value]="currentDate"
         formControlName="dateOfBirth"></kendo-datepicker>
         <!-- <kendo-datepicker    id="datepicker">
@@ -145,7 +155,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Social Security Number">
-        <kendo-textbox aria-label="social security number"  [fillMode]="fillMode" formControlName="ssn">   </kendo-textbox>
+        <kendo-textbox aria-label="social security number"  [fillMode]="formUiStyle.inputFillMode" formControlName="ssn">   </kendo-textbox>
 
         <!-- <input
           kendoTextBox
@@ -174,6 +184,7 @@
   </div>
 </form>
 </section>
+ 
 <section class="mb-3">
   <h5>Register to vote ?</h5>
   <div class="flex-row gap-m">
@@ -303,7 +314,7 @@
         >Not listed, please specify:</label
       >
       <kendo-floatinglabel text="Enter Pronouns" >
-        <kendo-textbox aria-label="enter pronouns"  [disabled]="!isPronounsChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="enter pronouns"  [disabled]="!isPronounsChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="!isPronounsChecked"
@@ -337,7 +348,7 @@
   <div class="flex-row mb-4">
     <div class="flex-col flex-col-8">
       <kendo-floatinglabel text="How do they describe their gender? Optional">
-        <kendo-textbox aria-label="how do they describe their gender"  [disabled]="isDescribeGenderChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="how do they describe their gender"  [disabled]="isDescribeGenderChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
         <!-- <input
           kendoTextBox
@@ -451,7 +462,7 @@
           [disabled]="!isGenderChecked"
           aria-label="enter gender"
         /> -->
-        <kendo-textbox aria-label="enter gender"  [disabled]="!isGenderChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="enter gender"  [disabled]="!isGenderChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </span>
@@ -524,7 +535,7 @@
               [disabled]="isTransTextBoxDisabled"
               aria-label="transgender"
             /> -->
-        <kendo-textbox aria-label="transgender"  [disabled]="isTransTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="transgender"  [disabled]="isTransTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
           </kendo-floatinglabel>
           </span>
@@ -542,7 +553,7 @@
           [disabled]="isDescribeOrientaionChecked"
           aria-label="how do they describe their sexual orientation or sexual identity"
         /> -->
-        <kendo-textbox aria-label="how do they describe their sexual orientation or sexual identity"  [disabled]="isDescribeOrientaionChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="how do they describe their sexual orientation or sexual identity"  [disabled]="isDescribeOrientaionChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </div>
@@ -649,7 +660,7 @@
           [disabled]="!isOrientationChecked"
           aria-label="sexual orientation"
         /> -->
-        <kendo-textbox aria-label="sexual orientation"  [disabled]="!isOrientationChecked" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="sexual orientation"  [disabled]="!isOrientationChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </span>
@@ -722,7 +733,7 @@
               [disabled]="isSexAssignedTextBoxDisabled"
               aria-label="sex assigned at birth"
             /> -->
-        <kendo-textbox aria-label="sex assigned at birth"  [disabled]="isSexAssignedTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="sex assigned at birth"  [disabled]="isSexAssignedTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
           </kendo-floatinglabel>
           </span>
@@ -736,7 +747,7 @@
         text="Race, ethnicity, tribal affiliation, country of origin, or ancestry"
       >
         <kendo-textarea
-        [fillMode]="fillMode"
+        [fillMode]="formUiStyle.inputFillMode"
           #tareaRaceAndEthinicities
           resizable="auto"
           [maxlength]="tareaRaceAndEthinicityMaxLength"
@@ -776,12 +787,14 @@
           arrow_drop_down
         </span> -->
         <kendo-multiselect
-          [checkboxes]="true"
-          [clearButton]="false"
-          [autoClose]="false"
-         
-          [fillMode]="fillMode"
+        [checkboxes]="{ checkOnClick: true, enabled: true }"
+       
+     
+          #multiselect 
+          (close)="onClose($event)"
+          [fillMode]="formUiStyle.dropDownFillMode"
           [data]="racialIdentityOptions"
+          [(ngModel)]="racialName"
           [textField]="'racialName'"
           [valueField]="'racialName'"
           [popupSettings]="{ popupClass: popupClassMultiSelect, animate: true }"
@@ -796,7 +809,7 @@
               >
               <kendo-floatinglabel text="Search">
                 <!-- <input kendoTextBox aria-label="search racial identity" /> -->
-                  <kendo-textbox aria-label="search racial identity" [fillMode]="fillMode">   </kendo-textbox>
+                  <kendo-textbox aria-label="search racial identity" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
               </kendo-floatinglabel>
             </div>
@@ -807,15 +820,14 @@
               type="checkbox"
               kendoCheckBox
               aria-labelledby="racialName"
-              id="racialName"
+              [id]="dataItem.racialName"
             />
-            <label class="k-checkbox-label" for="racialName">{{
-              dataItem.racialName
-            }}</label>
+            <label class="k-checkbox-label" [for]="dataItem.racialName" >{{  dataItem.racialName   }}</label>
             </span>
-          </ng-template>
+          </ng-template> 
         </kendo-multiselect>
       </kendo-floatinglabel>
+      
     </div>
   </div>
 </section>
@@ -827,7 +839,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Primary identity">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlPrimaryIdentities$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlPrimaryIdentities$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -865,7 +877,7 @@
           [disabled]="isMaterialsTextBoxDisabled"
           aria-label="enter formats"
         /> -->
-        <kendo-textbox aria-label="enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
     </span>
     <span class="app-checkboxwidtext-wrapper">
@@ -884,7 +896,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Spoken language">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlSpokenLanguages$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSpokenLanguages$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -892,7 +904,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Written language">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlWrittenLanguages$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlWrittenLanguages$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -900,7 +912,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="English proficiency">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlEnglishProficiencies$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEnglishProficiencies$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -934,7 +946,7 @@
           [disabled]="isInterpreterTextBoxDisabled"
           aria-label="type of interpreter"
         /> -->
-        <kendo-textbox aria-label="type of interpreter" [disabled]="isInterpreterTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="type of interpreter" [disabled]="isInterpreterTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
     </span>
   </div>
@@ -964,7 +976,7 @@
           [disabled]="isDeafTextBoxDisabled"
           aria-label="age this condition began"
         /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isDeafTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="age this condition began" [disabled]="isDeafTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
     </span>
   </div>
@@ -996,7 +1008,7 @@
           [disabled]="isBlindTextBoxDisabled"
           aria-label="age this condition began"
         /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isBlindTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="age this condition began" [disabled]="isBlindTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </span>
@@ -1081,7 +1093,7 @@
           [disabled]="isWalkingTextBoxDisabled"
           aria-label="age this condition began"
         /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isWalkingTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="age this condition began" [disabled]="isWalkingTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </span>
@@ -1115,7 +1127,7 @@
           [disabled]="isDressingorBathingTextBoxDisabled"
           aria-label="age this condition began"
         /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isDressingorBathingTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="age this condition began" [disabled]="isDressingorBathingTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </span>
@@ -1153,7 +1165,7 @@
           aria-label="age this condition began"
         /> -->
 
-        <kendo-textbox aria-label="age this condition began" [disabled]="isConcentrationTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="age this condition began" [disabled]="isConcentrationTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </span>
@@ -1190,7 +1202,7 @@
           [disabled]="isErrandsTextBoxDisabled"
           aria-label="age this condition began"
         /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isErrandsTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="age this condition began" [disabled]="isErrandsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
     </span>

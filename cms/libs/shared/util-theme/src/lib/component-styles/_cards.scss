@@ -50,6 +50,9 @@
   }
 }
 /* Card in popover */
+.use-profile-card-wrapper{
+  max-width: 320px;
+}
 .k-popover {
   border: 1px solid $theme-border;
   background: $white;
@@ -142,6 +145,16 @@
       display: flex;
       justify-content: flex-end;
       gap: $size-xx;
+    }
+
+  }
+}
+
+.card-list{
+  .card-list_items{
+    .k-button-solid-primary.k-icon-button{
+      box-shadow: none;
+      max-height: 40px;
     }
   }
 }

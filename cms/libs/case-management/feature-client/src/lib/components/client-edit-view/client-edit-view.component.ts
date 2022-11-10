@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
@@ -12,11 +12,10 @@ import { debounceTime, distinctUntilChanged, pairwise, startWith } from 'rxjs';
 /** Facades **/
 import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
 
-export type Option = {
-  type: string;
-  data: string[];
-  default: DateInputSize | DateInputRounded | DateInputFillMode;
-};
+/** Facades **/
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+
+ 
 @Component({
   selector: 'case-management-client-edit-view',
   templateUrl: './client-edit-view.component.html',
@@ -24,7 +23,8 @@ export type Option = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit {
-
+ 
+  public value = "";
   isVisible: any;
   isSelected = true;
 
@@ -35,10 +35,7 @@ export class ClientEditViewComponent implements OnInit {
 
   /** Public properties **/
   public currentDate = new Date();
-
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+ 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
   rdoMaterials$ = this.clientfacade.rdoMaterials$;
@@ -89,7 +86,8 @@ export class ClientEditViewComponent implements OnInit {
   tareaRaceAndEthinicity = '';
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
-  appInfoForm!: FormGroup;
+  public racialName: any = [];
+  public formUiStyle : UIFormStyle = new UIFormStyle();  appInfoForm!: FormGroup;
   adjustmentAttributeList!: string[];
 
   /** Constructor**/
@@ -140,7 +138,16 @@ export class ClientEditViewComponent implements OnInit {
       this.AdjustAttrChanged.emit(initialAjustment);
     }
   }
+ 
 
+  public onClose(event: any) {
+    
+      event.preventDefault();
+   
+  }
+  public clearForm(): void {
+    this.form.reset();
+  }
   /** Private methods **/ 
 
   private buildForm() {

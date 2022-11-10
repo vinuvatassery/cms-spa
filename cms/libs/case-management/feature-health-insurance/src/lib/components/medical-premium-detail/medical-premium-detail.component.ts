@@ -9,11 +9,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -23,9 +19,7 @@ import {
 })
 export class MedicalPremiumDetailComponent implements OnInit {
  currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+ public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() dialogTitle!: string;
   @Input() insuranceType!: string;

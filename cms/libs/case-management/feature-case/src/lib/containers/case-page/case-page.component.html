@@ -25,7 +25,7 @@
   </section>
 
   <!-- Page Content Section -->
-  <section class="app-l-client-wrapper" kendoRippleContainer>
+  <section class="app-l-client-wrapper " [ngClass]="{'due-notification-on': selectedTab !== caseScreenTab.CER_TRACKING}" kendoRippleContainer>
     <!-- Left Tab Section -->
     <div class="app-l-client-left">
       <kendo-tabstrip class="app-c-tab" (tabSelect)="onTabSelected($event)">
@@ -73,7 +73,7 @@
     *ngIf="isNewCaseDialogClicked"
     (close)="handleNewCaseDialogClosed()"
     title="Search Case"
-    class="app-c-modal app-c-modal-md app-c-modal-top"
+    class="app-c-modal app-c-modal-sm app-c-modal-top"
     kendoTooltip
   >
     <case-management-new-case
