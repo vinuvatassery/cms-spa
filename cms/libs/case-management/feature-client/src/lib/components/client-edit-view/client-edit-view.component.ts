@@ -87,7 +87,8 @@ export class ClientEditViewComponent implements OnInit {
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
   public racialName: any = [];
-  public formUiStyle : UIFormStyle = new UIFormStyle();  appInfoForm!: FormGroup;
+  public formUiStyle : UIFormStyle = new UIFormStyle();  
+  appInfoForm!: FormGroup;
   adjustmentAttributeList!: string[];
 
   /** Constructor**/
@@ -146,7 +147,7 @@ export class ClientEditViewComponent implements OnInit {
    
   }
   public clearForm(): void {
-    this.form.reset();
+    //this.form.reset();
   }
   /** Private methods **/ 
 

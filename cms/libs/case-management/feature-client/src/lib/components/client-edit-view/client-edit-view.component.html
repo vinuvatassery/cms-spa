@@ -54,7 +54,6 @@
     </div>
   </div>
 
-</form>
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Primary Insurance Card">
@@ -97,7 +96,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Official ID">
-        <kendo-textbox aria-label="first name on official id"  [fillMode]="fillMode" formControlName="offormUiStyle.inputFicialIdFirstName">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on official id"  [fillMode]="formUiStyle.inputFillMode" formControlName="officialIdFirstName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isOfficialIdChecked"
@@ -113,7 +112,7 @@
           aria-label="last name on official id"
            [(ngModel)]="isOfficialIdChecked"
         /> -->
-        <kendo-textbox aria-label="last name on official id"  [fillMode]="fillMode" formControlName="offormUiStyle.inputFicialIdLastName">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on official id"  [fillMode]="formUiStyle.inputFillMode" formControlName="officialIdLastName">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
@@ -177,12 +176,12 @@
         (change)="onSsnNotApplicableChecked($event)"
       />
       <label class="k-checkbox-label" for="ssnNotApplicable"
-        >Not Applicable</label
+        >Not Applicable</label 
       >
     </span>
     </div>
   </div>
-</form>
+</form> 
 </section>
  
 <section class="mb-3">

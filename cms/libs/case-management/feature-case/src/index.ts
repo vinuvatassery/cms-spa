@@ -13,3 +13,5 @@ export * from './lib/containers/case-page/case-page.component';
 export * from './lib/containers/case-detail-page/case-detail-page.component';
 export * from './lib/components/common-actions/common-actions.component';
 export * from './lib/components/send-letter-profile/send-letter-profile.component';
+export * from './lib/components/page-completion-status/page-completion-status.component';
+
