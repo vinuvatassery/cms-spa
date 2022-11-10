@@ -10,6 +10,17 @@
       </span>
       Region Assignment
     </h2>
+    <button
+    icon="add"
+    kendoButton
+    [primary]="true"
+    aria-label="add language"
+    class="add-button-top"
+    (click)="onRegionAssignmentDetailClicked()"
+ 
+  >
+  Region
+  </button>
   </div>
   
   <!-- case availability List Section -->
@@ -173,7 +184,7 @@
   <!-- Add/Edit Case Availability Modal Html-->
   <kendo-dialog
     *ngIf="isRegionAssignmentDetailPopup"
-    (close)="onRegionAssignmentDetailClicked()"
+    (close)="onCloseRegionAssignmentDetailClicked()"
     class="app-c-modal app-c-modal-sm app-c-modal-np"
   >
     <kendo-dialog-titlebar

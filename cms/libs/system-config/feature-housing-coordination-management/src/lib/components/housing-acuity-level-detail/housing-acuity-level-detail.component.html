@@ -1,20 +1,16 @@
 <section class="k-dialog-body">
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel >
-          <kendo-dropdownlist  value="Acuity Level">
+        <kendo-floatinglabel text=" Acuity Level">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
     </div>
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel text=" Suitation Description">
-          <kendo-textarea
-         
-         
-        >
-          
+        <kendo-floatinglabel  text=" Suitation Description">
+          <kendo-textarea [fillMode]="formUiStyle.inputFillMode"> 
         </kendo-textarea>
         </kendo-floatinglabel>
       </div>

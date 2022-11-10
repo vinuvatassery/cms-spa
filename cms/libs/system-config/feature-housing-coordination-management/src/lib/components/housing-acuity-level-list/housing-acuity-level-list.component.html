@@ -10,6 +10,17 @@
       </span>
       House Acuity Level
     </h2>
+    <button
+    icon="add"
+    kendoButton
+    [primary]="true"
+    aria-label="add language"
+    class="add-button-top"
+    (click)="onHousingAcuityLevelDetailClicked()"
+ 
+  >
+    Situation
+  </button>
   </div>
   
   <!-- case availability List Section -->
@@ -174,7 +185,7 @@
     class="app-c-modal app-c-modal-sm app-c-modal-np"
   >
     <kendo-dialog-titlebar
-      >Edit Housing Suitation</kendo-dialog-titlebar
+      >Add Housing Situation</kendo-dialog-titlebar
     >
     
     <system-config-housing-acuity-level-detail></system-config-housing-acuity-level-detail>

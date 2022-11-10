@@ -1,32 +1,32 @@
 <section class="k-dialog-body">
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel >
-          <kendo-dropdownlist  value="PS/MFR/ZIP">
+        <kendo-floatinglabel text="PS/MFR/ZIP">
+          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
     </div>
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel >
-            <kendo-dropdownlist  value="Year ">
+        <kendo-floatinglabel text="Year ">
+            <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode">
             </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
     </div>
     <div class="flex-row">
         <div class="flex-col">
-          <kendo-floatinglabel >
-              <kendo-dropdownlist  value="Country ">
+          <kendo-floatinglabel text="Country ">
+              <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode">
               </kendo-dropdownlist>
           </kendo-floatinglabel>
         </div>
       </div>
       <div class="flex-row">
         <div class="flex-col">
-          <kendo-floatinglabel >
-              <kendo-dropdownlist  value="Housing Type ">
+          <kendo-floatinglabel text="Housing Type ">
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" >
               </kendo-dropdownlist>
           </kendo-floatinglabel>
         </div>
@@ -34,7 +34,7 @@
       <div class="flex-row">
         <div class="flex-col">
           <kendo-floatinglabel  text ="Amount">
-            <kendo-textbox fillMode="outline" >
+            <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
             </kendo-textbox>
           </kendo-floatinglabel>
         </div>
