@@ -59,30 +59,30 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   /** Private methods **/
   private buildForm() {
     this.smokingCessationForm = new UntypedFormGroup({
-      mokingCessation: new UntypedFormControl('', Validators.required),
-      mokingCessationNote: new UntypedFormControl('')
+      smokingCessation: new UntypedFormControl('', Validators.required),
+      smokingCessationNote: new UntypedFormControl('')
     });
   }
   
   private smokingCessationFromChanged() {
     this.smokingCessationForm.valueChanges.subscribe(val => {
-      if(this.smokingCessationForm.value.mokingCessation =="No"){
-        this.smokingCessationForm.controls["mokingCessationNote"].clearValidators();
+      if(this.smokingCessationForm.value.smokingCessation =="No"){
+        this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
       }
-      this.smokingCessationForm.controls['mokingCessationNote'].updateValueAndValidity()
+      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
       this.updateFormCompleteCount();
     });
   }
 
   private saveClickSubscribed(): void {
     this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {    
-      if(this.smokingCessationForm.value.mokingCessation =="Yes"){
-        this.smokingCessationForm.controls["mokingCessationNote"].setValidators([Validators.required]);
+      if(this.smokingCessationForm.value.smokingCessation =="Yes"){
+        this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
       }
       else{
-        this.smokingCessationForm.controls["mokingCessationNote"].clearValidators();
+        this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
       }
-      this.smokingCessationForm.controls['mokingCessationNote'].updateValueAndValidity()
+      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
       if(this.smokingCessationForm.valid){
       this.smokingCessationFacade.save().subscribe((response: boolean) => {
         if (response) {

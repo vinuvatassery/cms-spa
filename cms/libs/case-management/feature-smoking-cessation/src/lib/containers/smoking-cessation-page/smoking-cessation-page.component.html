@@ -10,12 +10,12 @@
               <input
                 type="radio"
                 kendoRadioButton
-                name="mokingCessation"
+                name="smokingCessation"
                 aria-labelledby="smokingCessationYes"
                 id="smokingCessationYes"
                 tabindex="1"
                 class="form-control" 
-                formControlName="mokingCessation"
+                formControlName="smokingCessation"
                 value="Yes"
                 (click)="disableSmokingCessationNote(false)"
               />
@@ -29,12 +29,12 @@
               <input
                 type="radio"
                 kendoRadioButton
-                name="mokingCessation"
+                name="smokingCessation"
                 aria-labelledby="smokingCessationNo"
                 id="smokingCessationNo"
                 tabindex="2"
                 class="form-control" 
-                formControlName="mokingCessation"
+                formControlName="smokingCessation"
                 value="No"
                 (click)="disableSmokingCessationNote(true)"
               />
@@ -48,11 +48,11 @@
               <input
                 type="radio"
                 kendoRadioButton
-                name="mokingCessation"
+                name="smokingCessation"
                 aria-labelledby="smokingCessationNo"
                 id="smokingCessationDoNotAnswer"
                 tabindex="2"
-                formControlName="mokingCessation"
+                formControlName="smokingCessation"
                 value="DoNotAnswer"
                 (click)="disableSmokingCessationNote(true)"
               />
@@ -76,7 +76,7 @@
               (valueChange)="onTareaCessationValueChange($event)"
               aria-label="smoking cessation note"
               class="form-control" 
-              formControlName="mokingCessationNote"
+              formControlName="smokingCessationNote"
               [disabled]="isDisabled"
             >
               <kendo-textarea-suffix class="justify-content-end">
@@ -84,7 +84,7 @@
               </kendo-textarea-suffix>
             </kendo-textarea>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!smokingCessationForm.controls['mokingCessationNote'].valid">Smoking Cessation Note is required</kendo-formerror>
+          <kendo-formerror *ngIf="!smokingCessationForm.controls['smokingCessationNote'].valid">Smoking Cessation Note is required</kendo-formerror>
         </div>
         <div class="info-banners blue-banner d-flex mt-2" *ngIf="!isDisabled">
           <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>The applicant will be sent smoking cessation collateral via letter or email once the application is saved with the necessary contact information</p>
