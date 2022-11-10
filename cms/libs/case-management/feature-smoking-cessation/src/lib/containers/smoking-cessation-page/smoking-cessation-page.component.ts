@@ -4,7 +4,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 /** services **/
 import { CaseDetailsFacade, CompletionStatusFacade, SmokingCessationFacade } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, of, Subscription } from 'rxjs';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-smoking-cessation-page',
   templateUrl: './smoking-cessation-page.component.html',
@@ -22,7 +22,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationNote = '';
   smokingCessationForm!: UntypedFormGroup;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   constructor(
     private caseDetailsFacade: CaseDetailsFacade,
     private smokingCessationFacade: SmokingCessationFacade,

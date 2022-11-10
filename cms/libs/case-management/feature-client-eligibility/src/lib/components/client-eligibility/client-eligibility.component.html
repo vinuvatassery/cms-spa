@@ -264,7 +264,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Exception Note">
           <kendo-textarea
-          fillMode="outline"
+          [fillMode]="formUiStyle.inputFillMode"
             aria-label="exception note description"
             name="Exception Note"
             [rows]="5"

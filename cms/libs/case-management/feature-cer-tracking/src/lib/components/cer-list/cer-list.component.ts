@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { CerTrackingFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -14,6 +14,7 @@ export class CerListComponent implements OnInit {
   cerGrid$ = this.cerTrackingFacade.cerGrid$;
   ddlCer$ = this.cerTrackingFacade.ddlCer$;
   isOpenSendCER = false;
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [

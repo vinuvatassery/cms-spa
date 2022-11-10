@@ -10,18 +10,18 @@
     <div class="flex-col">
       <kendo-floatinglabel  text="Contact’s Name">
         <!-- <input kendoTextBox aria-label="contacts name" /> -->
-        <kendo-textbox aria-label="contacts name"  fillMode="outline">   </kendo-textbox>
+        <kendo-textbox aria-label="contacts name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Contact’s Relationship to Client">
-        <kendo-dropdownlist fillMode="outline" [data]="ddlRelationshipToClient$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRelationshipToClient$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Contact’s Phone Number">
-        <kendo-textbox aria-label="contacts phone number"  fillMode="outline">   </kendo-textbox>
+        <kendo-textbox aria-label="contacts phone number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
         <!-- <input kendoTextBox aria-label="contacts phone number" /> -->
       </kendo-floatinglabel>

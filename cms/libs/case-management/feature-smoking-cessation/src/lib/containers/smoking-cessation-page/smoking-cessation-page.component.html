@@ -66,7 +66,7 @@
           <kendo-floatinglabel text="Smoking Cessation Note">
             <kendo-textarea
               #tareaCessation
-              fillMode="outline"
+              [fillMode]="formUiStyle.inputFillMode"
               resizable="auto"
               [maxlength]="tareaCessationMaxLength"
               [value]="tareaCessationNote"

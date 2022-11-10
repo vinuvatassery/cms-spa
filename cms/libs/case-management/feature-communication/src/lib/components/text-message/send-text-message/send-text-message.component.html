@@ -12,7 +12,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="SMS Template">
           <kendo-dropdownlist
-          fillMode="outline"
+          [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlTemplates"
             textField="value"
             valueField="key"
@@ -27,7 +27,7 @@
           aria-label="send messages to"
         >
           <kendo-dropdownlist
-          fillMode="outline"
+          [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlMessageRecipients$ | async"
             textField="value"
             valueField="key"

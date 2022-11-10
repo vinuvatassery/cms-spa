@@ -166,7 +166,7 @@
                     >
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist  fillMode="outline" 
+                        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" 
                           [data]="ddlFamilyAndDependentEP$ | async"
                         >
                         </kendo-dropdownlist>
@@ -204,7 +204,7 @@
                     >
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist fillMode="outline" [data]="ddlIncomeEP$ | async">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlIncomeEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -229,7 +229,7 @@
                     >
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist fillMode="outline" [data]="ddlEmploymentEP$ | async">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>

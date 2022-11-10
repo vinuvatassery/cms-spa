@@ -11,7 +11,7 @@ import {
 import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'case-management-send-text-message',
   templateUrl: './send-text-message.component.html',
@@ -33,7 +33,7 @@ export class SendTextMessageComponent implements OnInit {
   isOpenMessageTemplate = false;
   isShowSendMessageConfirmPopupClicked = false;
   isShowSaveForLaterPopupClicked = false;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 
