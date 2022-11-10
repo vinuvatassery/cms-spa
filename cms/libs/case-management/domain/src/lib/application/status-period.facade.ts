@@ -7,15 +7,15 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Provider } from '../entities/provider';
 /** Data services **/
  
-import { StatusPeriodDataService } from '../infrastructure/statusperiod.data.service';
+import { StatusPeriodDataService } from '../infrastructure/status-period.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class StatusPeriodFacade {
   /** Private properties **/
-  private StatusPeriodSubject = new BehaviorSubject<any>([]);
+  private statusPeriodSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
-  StatusPeriod$ = this.StatusPeriodSubject.asObservable();
+  statusPeriod$ = this.statusPeriodSubject.asObservable();
  
 
   /** Constructor**/
@@ -24,8 +24,8 @@ export class StatusPeriodFacade {
   /** Public methods **/
   loadStatusPeriod(): void {
     this.statusPeriodDataService.loadStatusPeriod().subscribe({
-      next: (StatusPeriodResponse) => {
-        this.StatusPeriodSubject.next(StatusPeriodResponse);
+      next: (statusPeriodResponse) => {
+        this.statusPeriodSubject.next(statusPeriodResponse);
       },
       error: (err) => {
         console.error('err', err);

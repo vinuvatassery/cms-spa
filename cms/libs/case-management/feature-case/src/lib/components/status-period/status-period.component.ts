@@ -4,15 +4,15 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { StatusPeriodFacade } from '@cms/case-management/domain';
 
 @Component({
-  selector: 'case-management-statuses-periods',
-  templateUrl: './statuses-periods.component.html',
-  styleUrls: ['./statuses-periods.component.scss'],
+  selector: 'case-management-status-period',
+  templateUrl: './status-period.component.html',
+  styleUrls: ['./status-period.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatusesPeriodsComponent implements OnInit {
+export class StatusPeriodComponent implements OnInit {
 
   /** Public properties **/
-  StatusPeriod$ = this.statusPeriodFacade.StatusPeriod$;
+  StatusPeriod$ = this.statusPeriodFacade.statusPeriod$;
     public expandedDetailKeys: number[] = [1];
  
   popupClassAction = 'TableActionPopup app-dropdown-action-list';

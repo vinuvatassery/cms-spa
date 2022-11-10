@@ -35,7 +35,7 @@ import { SendLetterProfileComponent } from './components/send-letter-profile/sen
 import { CaseManagementFeatureDrugModule } from '@cms/case-management/feature-drug';
 import { CaseManagementFeatureManagementModule } from '@cms/case-management/feature-management';
 import { CaseManagementFeatureDocumentModule } from '@cms/case-management/feature-document';
-import { StatusesPeriodsComponent } from './components/statuses-periods/statuses-periods.component';
+import { StatusPeriodComponent } from './components/status-period/status-period.component';
 
 @NgModule({
   imports: [
@@ -74,7 +74,7 @@ import { StatusesPeriodsComponent } from './components/statuses-periods/statuses
     ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
-    StatusesPeriodsComponent,
+    StatusPeriodComponent,
   ],
   exports: [
     CasePageComponent,
@@ -88,7 +88,7 @@ import { StatusesPeriodsComponent } from './components/statuses-periods/statuses
     ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
-    StatusesPeriodsComponent,
+    StatusPeriodComponent,
   ],
 })
 export class CaseManagementFeatureCaseModule {}

@@ -1,5 +1,7 @@
 <div class="flex-row">
-    <div class="flex-col">
+
+    <div class="flex-col  ">
+         
         <div class="app-c-table">
 
             <kendo-grid [data]="StatusPeriod$ | async">
@@ -52,7 +54,7 @@
                         </table>
 
                     </div>
-                    <div *ngIf="dataItem.FlipHostory" class="mt-5 mb-2">
+                    <div *ngIf="dataItem.FlipHistory" class="mt-5 mb-2">
                         <h4>FPL History</h4>
 
                         <table>
@@ -65,13 +67,13 @@
                                 <th>Record Created By</th>
                             </tr>
                             <tbody>
-                            <tr *ngFor="let FlipHostory of dataItem.FlipHostory">
-                                <td> {{FlipHostory.Flp}}</td>
-                                <td> {{FlipHostory.StartDate}}</td>
-                                <td> {{FlipHostory.EndDate}}</td>
-                                <td> {{FlipHostory.ActualDayswithFlp}}</td>
-                                <td> {{FlipHostory.DateRecordCreated}}</td>
-                                <td> {{FlipHostory.RecordCreatedBy}}</td>
+                            <tr *ngFor="let FlipHistory of dataItem.FlipHistory">
+                                <td> {{FlipHistory.Flp}}</td>
+                                <td> {{FlipHistory.StartDate}}</td>
+                                <td> {{FlipHistory.EndDate}}</td>
+                                <td> {{FlipHistory.ActualDayswithFlp}}</td>
+                                <td> {{FlipHistory.DateRecordCreated}}</td>
+                                <td> {{FlipHistory.RecordCreatedBy}}</td>
                             </tr>
                             </tbody>
                         </table>

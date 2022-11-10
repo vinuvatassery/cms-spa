@@ -13,4 +13,4 @@ export * from './lib/containers/case-page/case-page.component';
 export * from './lib/containers/case-detail-page/case-detail-page.component';
 export * from './lib/components/common-actions/common-actions.component';
 export * from './lib/components/send-letter-profile/send-letter-profile.component';
-export * from './lib/components/statuses-periods/statuses-periods.component';
+export * from './lib/components/status-period/status-period.component';

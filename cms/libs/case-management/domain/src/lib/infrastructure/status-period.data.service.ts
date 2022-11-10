@@ -63,7 +63,7 @@ export class StatusPeriodDataService {
           },
         ],
         
-        FlipHostory:[
+        FlipHistory:[
           {
             id: 1,
             Flp : '253%',
@@ -133,7 +133,7 @@ export class StatusPeriodDataService {
           },
         ],
         
-        FlipHostory:[
+        FlipHistory:[
           {
             id: 1,
             Flp : '253%',

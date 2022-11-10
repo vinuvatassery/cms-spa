@@ -14,7 +14,7 @@ import { DrugPharmacyFacade } from '@cms/case-management/domain';
 })
 export class DrugsPurchasedListComponent implements OnInit {
   /** Public properties **/
-  DrugsPurchased$ = this.drugPharmacyFacade.DrugsPurchased$;
+  DrugsPurchased$ = this.drugPharmacyFacade.drugsPurchased$;
   isOpenChangePriorityClicked = false;
   isOpenPharmacyClicked = false;
   isEditPharmacyListClicked = false;

@@ -47,7 +47,7 @@ export * from './lib/infrastructure/provider.data.service';
 export * from './lib/infrastructure/search.data.service';
 export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
-export * from './lib/infrastructure/statusperiod.data.service';
+export * from './lib/infrastructure/status-period.data.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -75,4 +75,4 @@ export * from './lib/application/smoking-cessation.facade';
 export * from './lib/application/verification.facade';
 export * from './lib/application/completion-status.facade';
 export * from './lib/application/case-details.facade';
-export * from './lib/application/statusperiod.facade';
+export * from './lib/application/status-period.facade';
