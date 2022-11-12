@@ -9,6 +9,7 @@ import { CaseManagementFeatureHealthcareProviderRoutingModule } from './case-man
 import { HealthcareProviderPageComponent } from './containers/healthcare-provider-page/healthcare-provider-page.component';
 import { HealthCareProviderListComponent } from './components/health-care-provider-list/health-care-provider-list.component';
 import { HealthCareProviderDetailComponent } from './components/health-care-provider-detail/health-care-provider-detail.component';
+import { RemoveHealthCareProviderConfirmationComponent } from './components/remove-health-care-provider-confirmation/remove-health-care-provider-confirmation.component';
 
 
 @NgModule({
@@ -22,11 +23,13 @@ import { HealthCareProviderDetailComponent } from './components/health-care-prov
     HealthcareProviderPageComponent,
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
+    RemoveHealthCareProviderConfirmationComponent
   ],
   exports: [
     HealthcareProviderPageComponent,
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
+    RemoveHealthCareProviderConfirmationComponent
   ],
 })
 export class CaseManagementFeatureHealthcareProviderModule {}
