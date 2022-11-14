@@ -44,24 +44,7 @@
               for="smokingCessationNo"
             ></kendo-label>
             </span>
-            <span class="app-radiobtnwidtext-wrapper">
-              <input
-                type="radio"
-                kendoRadioButton
-                name="smokingCessation"
-                aria-labelledby="smokingCessationNo"
-                id="smokingCessationDoNotAnswer"
-                tabindex="2"
-                formControlName="smokingCessation"
-                value="DoNotAnswer"
-                (click)="disableSmokingCessationNote(true)"
-              />
-              <kendo-label
-                class="k-radio-label"
-                text="Do not Answer"
-                for="smokingCessationDoNotAnswer"
-              ></kendo-label>
-            </span>
+            <kendo-formerror *ngIf="!smokingCessationForm.controls['smokingCessation'].valid">Smoking Cessation is required</kendo-formerror>
           </div>
         </div>
         <div class="flex-col flex-col-6" >

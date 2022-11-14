@@ -4,6 +4,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 /** services **/
 import { CaseDetailsFacade, CompletionStatusFacade, SmokingCessationFacade } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, of, Subscription } from 'rxjs';
+import {  SmokingCessation}  from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -22,7 +23,14 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationNote = '';
   smokingCessationForm!: UntypedFormGroup;
   isDisabled =true;
-  completeStaus$ = this.completionStatusFacade.completionStatus$;
+  smokingCessation:SmokingCessation= {    
+    clientCaseEligibilityId: '',
+    smokingCessationReferralFlag: '',
+    smokingCessationNoteApplicableFlag: '',
+    smokingCessationNote: ''
+  };
+
+   completeStaus$ = this.completionStatusFacade.completionStatus$;
 
   constructor(
     private caseDetailsFacade: CaseDetailsFacade,
@@ -59,32 +67,23 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   /** Private methods **/
   private buildForm() {
     this.smokingCessationForm = new UntypedFormGroup({
-      smokingCessation: new UntypedFormControl('', Validators.required),
+      smokingCessation: new UntypedFormControl(''),
       smokingCessationNote: new UntypedFormControl('')
     });
   }
   
   private smokingCessationFromChanged() {
     this.smokingCessationForm.valueChanges.subscribe(val => {
-      if(this.smokingCessationForm.value.smokingCessation =="No"){
-        this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
-      }
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
       this.updateFormCompleteCount();
     });
   }
 
   private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {    
-      if(this.smokingCessationForm.value.smokingCessation =="Yes"){
-        this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
-      }
-      else{
-        this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
-      }
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
+    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {   
+      this.validate();
       if(this.smokingCessationForm.valid){
-      this.smokingCessationFacade.save().subscribe((response: boolean) => {
+        this.smokingCessation.smokingCessationNote =this.smokingCessationForm.value.smokingCessationNote;
+         this.smokingCessationFacade.saveSmokingCessation( this.smokingCessation).subscribe((response: boolean) => {
         if (response) {
           this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
         }
@@ -93,6 +92,21 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  private validate():void{
+    this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]) 
+      if(this.smokingCessationForm.value.smokingCessation =="Yes"){
+        this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
+        this.smokingCessation.smokingCessationNoteApplicableFlag ='Y';
+        this.smokingCessation.smokingCessationReferralFlag = 'Y';
+      }
+      else{
+        this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();     
+        this.smokingCessation.smokingCessationNoteApplicableFlag ='N';
+        this.smokingCessation.smokingCessationReferralFlag = 'N';
+      }
+      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
+      this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity()
+  }
   private updateFormCompleteCount(): void {
     let filledCount = 0;
     Object.keys(this.smokingCessationForm.controls).forEach(key => {
