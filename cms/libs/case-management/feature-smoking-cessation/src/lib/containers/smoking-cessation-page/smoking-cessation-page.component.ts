@@ -24,7 +24,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   smokingCessationForm!: UntypedFormGroup;
   isDisabled =true;
   smokingCessation:SmokingCessation= {    
-    clientCaseEligibilityId: '',
+    clientCaseEligibilityId: '68903d50-3aa9-41e6-b6eb-9558ab9d9bad',
+    clientCaseId:'c969e9a1-2309-4d02-b762-dd42c8fbe2c1',
     smokingCessationReferralFlag: '',
     smokingCessationNoteApplicableFlag: '',
     smokingCessationNote: ''
@@ -83,11 +84,15 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       this.validate();
       if(this.smokingCessationForm.valid){
         this.smokingCessation.smokingCessationNote =this.smokingCessationForm.value.smokingCessationNote;
-         this.smokingCessationFacade.saveSmokingCessation( this.smokingCessation).subscribe((response: boolean) => {
-        if (response) {
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
+         this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation)
+         .subscribe({         
+            next: response => {
+               this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
+            },
+            error: error => {               
+                console.error(error);
+            }
+        });
      }
     });
   }

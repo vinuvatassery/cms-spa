@@ -1,12 +1,13 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { SmokingCessation } from '../entities/smoking-cessation';
+import { SmokingCessationDataService } from '../infrastructure/smoking-cessation.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class SmokingCessationFacade {
-
-    save(): Observable<boolean> {
-        //TODO: save api call   
-        return of(true);
+   
+    constructor(private readonly smokingCessationDataService:SmokingCessationDataService){}
+    updateSmokingCessation(smokingCessation:SmokingCessation) {
+        return this.smokingCessationDataService.updateSmokingCessation(smokingCessation);
     }
 }
