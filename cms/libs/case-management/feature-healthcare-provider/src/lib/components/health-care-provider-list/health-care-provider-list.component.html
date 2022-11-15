@@ -53,7 +53,7 @@
           kendoButton
           [primary]="true"
           icon="add"
-          (click)="onOpenProviderClicked(false)"
+          (click)="onOpenProviderSearchClicked(false)"
           aria-label="add healthcare provider"
         >
           Provider
@@ -76,6 +76,23 @@
     [isEditHealthProviderValue]="isEditHealthProvider"
   ></case-management-health-care-provider-detail>
 </kendo-dialog>
+
+
+<!-- Search Provider  Modal -->
+<kendo-dialog
+  *ngIf="isOpenedProviderSearch"
+  (close)="onCloseProviderSearchClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar
+    >{{ isEditSearchHealthProvider ? 'Edit Health Care Provider' : 'Add Health Care Provider' }}
+  </kendo-dialog-titlebar>
+  <case-management-health-care-provider-search
+    [isEditSearchHealthProviderValue]="isEditSearchHealthProvider"
+    (closeProviderSearchEvent)="onCloseProviderSearchClicked()"
+  ></case-management-health-care-provider-search>
+</kendo-dialog>
+
 
 
 <!-- Delete Modal -->

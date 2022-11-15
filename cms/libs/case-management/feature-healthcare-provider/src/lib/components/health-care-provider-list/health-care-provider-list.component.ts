@@ -4,9 +4,10 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
-/** Facades **/
-import { HealthcareProviderFacade } from '@cms/case-management/domain';
+
 
 @Component({
   selector: 'case-management-health-care-provider-list',
@@ -17,15 +18,20 @@ import { HealthcareProviderFacade } from '@cms/case-management/domain';
 export class HealthCareProviderListComponent implements OnInit {
   /** Input properties **/
   @Input() hasNoProvider!: boolean;
-  ClientCaseEligibilityId  = "90478CC0-1EB5-4D76-BC49-05423EFA3D93";
+  @Input() healthCareProvidersData! : any;
+
+  @Output() deleteConfimedEvent =  new EventEmitter<string>();
+  
   /** Public properties **/
-  healthCareProviders$ = this.providerFacade.healthCareProviders$;
-  removeHealthProvider$ =this.providerFacade.removeHealthProvider$;
+   healthCareProviders$! :any ;
+  // removeHealthProvider$ ;
   isEditHealthProvider!: boolean;
   isOpenedProvider = false;
   isOpenedDeleteConfirm = false;
   prvSelectedId! : string; 
-
+  isEditSearchHealthProvider!: boolean;
+  isOpenedProviderSearch = false;
+  
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -33,7 +39,7 @@ export class HealthCareProviderListComponent implements OnInit {
       text: "Edit Provider",
       icon: "edit",
       click: (): void => {                      
-        this.onOpenProviderClicked(true);
+        this.onOpenProviderSearchClicked(true);
       },
     },
    
@@ -47,23 +53,11 @@ export class HealthCareProviderListComponent implements OnInit {
     },
   ];
 
-  /** Constructor **/
-  constructor(private readonly providerFacade: HealthcareProviderFacade) {}
-
+  
   /** Lifecycle hooks **/
-  ngOnInit(): void {
-    this.loadHealthCareProviders(this.ClientCaseEligibilityId);
-  }
-
-  /** Private methods **/
-  private loadHealthCareProviders(ClientCaseEligibilityId : string) {  
-    this.providerFacade.loadHealthCareProviders(ClientCaseEligibilityId);   
-  }
-
-  private removeHealthCareProvider(ClientCaseEligibilityId : string , ProviderId : string)
-  {
-     this.providerFacade.removeHealthCareProviders(ClientCaseEligibilityId, ProviderId);      
-  }
+   ngOnInit(): void {
+    this.healthCareProviders$ = this.healthCareProvidersData;
+   }
 
   /** Internal event methods **/
   onCloseProviderClicked() {
@@ -75,6 +69,13 @@ export class HealthCareProviderListComponent implements OnInit {
     this.isEditHealthProvider = isEditHealthProviderValue;
   }
 
+  onOpenProviderSearchClicked(isEditSearchHealthProviderValue: boolean) {
+    this.isOpenedProviderSearch = true;
+    this.isEditSearchHealthProvider = isEditSearchHealthProviderValue;
+  }
+  onCloseProviderSearchClicked() {
+    this.isOpenedProviderSearch = false;
+  }
   onRemoveProviderClicked()
   { 
     this.isOpenedDeleteConfirm = true;
@@ -99,7 +100,7 @@ export class HealthCareProviderListComponent implements OnInit {
    {  
       if(isDelete)
       {
-        this.removeHealthCareProvider(this.ClientCaseEligibilityId  ,this.prvSelectedId) ; 
+        this.deleteConfimedEvent.emit(this.prvSelectedId);
       }      
       this.onDeleteConfirmCloseClicked()        
    }

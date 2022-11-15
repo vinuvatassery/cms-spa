@@ -12,11 +12,13 @@ export class HealthcareProviderFacade {
   private ddlStatesSubject = new BehaviorSubject<any>([]);
   private healthCareProvidersSubject = new BehaviorSubject<any>([]);
   private healthCareProvideRemoveSubject = new BehaviorSubject<any>([]);
+  private healthCareProvideUpdateFlagSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   healthCareProviders$ = this.healthCareProvidersSubject.asObservable();
   removeHealthProvider$ = this.healthCareProvideRemoveSubject.asObservable();
+  updateHealthProvider$ = this.healthCareProvideUpdateFlagSubject.asObservable();
   /** Constructor**/
   constructor(
     private readonly healthcareProviderDataService: HealthcareProviderDataService
@@ -40,6 +42,18 @@ export class HealthcareProviderFacade {
       next: (removeHealthCareProvidersResponse) => {        
         this.healthCareProvideRemoveSubject.next(removeHealthCareProvidersResponse);
         this.loadHealthCareProviders(ClientCaseEligibilityId);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+  UpdateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string): void {
+    this.healthcareProviderDataService.UpdateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
+    .subscribe({
+      next: (updateHealthCareProvidersFlagResponse) => {        
+        this.healthCareProvideUpdateFlagSubject.next(updateHealthCareProvidersFlagResponse);        
       },
       error: (err) => {
         console.error('err', err);

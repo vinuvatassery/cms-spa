@@ -10,6 +10,7 @@ import { HealthcareProviderPageComponent } from './containers/healthcare-provide
 import { HealthCareProviderListComponent } from './components/health-care-provider-list/health-care-provider-list.component';
 import { HealthCareProviderDetailComponent } from './components/health-care-provider-detail/health-care-provider-detail.component';
 import { RemoveHealthCareProviderConfirmationComponent } from './components/remove-health-care-provider-confirmation/remove-health-care-provider-confirmation.component';
+import { HealthCareProviderSearchComponent } from './components/health-care-provider-search/health-care-provider-search.component';
 
 
 @NgModule({
@@ -23,13 +24,15 @@ import { RemoveHealthCareProviderConfirmationComponent } from './components/remo
     HealthcareProviderPageComponent,
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
-    RemoveHealthCareProviderConfirmationComponent
+    RemoveHealthCareProviderConfirmationComponent,
+    HealthCareProviderSearchComponent
   ],
   exports: [
     HealthcareProviderPageComponent,
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
-    RemoveHealthCareProviderConfirmationComponent
+    RemoveHealthCareProviderConfirmationComponent,
+    HealthCareProviderSearchComponent
   ],
 })
 export class CaseManagementFeatureHealthcareProviderModule {}

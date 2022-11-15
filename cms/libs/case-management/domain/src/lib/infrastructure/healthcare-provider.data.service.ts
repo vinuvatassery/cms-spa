@@ -34,6 +34,15 @@ export class HealthcareProviderDataService {
     );
   }
 
+  UpdateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
+  {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers/clientCaseEligibilityId=${ClientCaseEligibilityId}`+
+      `&nohealthCareProviderFlag=${nohealthCareProviderFlag}`     
+    ,null);
+  }
+
   loadDdlStates() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
