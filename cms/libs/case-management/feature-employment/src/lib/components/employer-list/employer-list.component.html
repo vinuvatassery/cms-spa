@@ -2,33 +2,26 @@
   <div class="flex-col">
     <div class="app-c-table">
       <kendo-grid [data]="employers$ | async">
-        <kendo-grid-column field="NameofEmployer" title="Name of Employer">
+        <kendo-grid-column field="employerName" title="Name of Employer">
         </kendo-grid-column>
-        <kendo-grid-column
-          field="DateofHire"
-          title="Date of Hire"
-        ></kendo-grid-column>
-        <kendo-grid-column
-          field="Option"
-          title="Option"
-          [width]="75"
-          class="text-center"
-        >
+        <kendo-grid-column field="dateOfHire" title="Date of Hire">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton
-              [data]="actions"
-              icon="more-vertical"
-              class="TableActionPopup app-dropdown-action"
-              aria-label="more actions"
-              buttonClass="k-icon-button"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-            >
-              
-            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-              <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-                <label>   {{ dataItem.text }} </label>
-            </button>
+            {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="Option" title="Option" [width]="75" class="text-center">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action"
+              aria-label="more actions" buttonClass="k-icon-button"
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                  [class]="buttondataItem.buttonType" aria-hidden="false"
+                  (click)="onEmployerActionClicked(dataItem,buttondataItem.type)">
+                  <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                  <label> {{ buttondataItem.text }} </label>
+                </button>
                 <!-- <button
                   kendoButton
                   icon="edit"
@@ -56,14 +49,8 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button
-          *ngIf="isAddEmployerButtonDisplayed"
-          kendoButton
-          [primary]="true"
-          icon="add"
-          aria-label="add employer"
-          (click)="onEmployerClicked(true)"
-        >
+        <button *ngIf="isAddEmployerButtonDisplayed" kendoButton [primary]="true" icon="add" aria-label="add employer"
+          (click)="onEmployerClicked(true)">
           Employer
         </button>
       </div>
@@ -72,15 +59,16 @@
 </div>
 
 <!-- Add Income  Modal -->
-<kendo-dialog
-  *ngIf="isEmployerOpened"
-  (close)="onEmployerClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
->
+<kendo-dialog *ngIf="isEmployerOpened" (close)="onEmployerClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>
     {{ isAdd ? 'Add Employer' : 'Edit Employer ' }}
   </kendo-dialog-titlebar>
-  <case-management-employer-detail
-    [isAdd]="isAdd"
-  ></case-management-employer-detail>
+  <case-management-employer-detail [isAdd]="isAdd" [selectedEmployer]="selectedEmployer"
+    (closeModal)="onEmployerClosed()">
+  </case-management-employer-detail>
+</kendo-dialog>
+<kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove employer">
+  <case-management-remove-employer-confirmation [selectedEmployer]="selectedEmployer"
+    (closeModal)="onRemoveEmployerConfirmationClosed()"></case-management-remove-employer-confirmation>
 </kendo-dialog>

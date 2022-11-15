@@ -4,11 +4,14 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
+  ViewChild,
 } from '@angular/core';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import { EmploymentFacade } from '@cms/case-management/domain';
+import { ClientEmployer } from 'libs/case-management/domain/src/lib/entities/client-employer';
+import { RemoveEmployerConfirmationComponent } from '../remove-employer-confirmation/remove-employer-confirmation.component';
 
 @Component({
   selector: 'case-management-employer-list',
@@ -24,41 +27,35 @@ export class EmployerListComponent implements OnInit {
   employers$ = this.employmentFacade.employers$;
   isAddEmployerButtonDisplayed!: boolean;
   isAdd = true;
+  isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
- 
+  selectedEmployer: ClientEmployer = new ClientEmployer();
+
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Edit Employer",
       icon: "edit",
-      click: (): void => {
-        this.onEmployerClicked(false);
-      },
+      type: "edit"
     },
     {
-      buttonType:"btn-h-danger",
+      buttonType: "btn-h-danger",
       text: "Delete Employer",
       icon: "delete",
-      click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
-      },
+      type: "delete"
     },
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadEmployers();
     this.addEmployerButtonDisplay();
   }
 
   /** Private methods **/
-  private loadEmployers() {
-    this.employmentFacade.loadEmployers();
-  }
 
   private addEmployerButtonDisplay() {
     if (this.data === ScreenType.Case360Page) {
@@ -76,5 +73,20 @@ export class EmployerListComponent implements OnInit {
   onEmployerClicked(isEmployerAdd: boolean) {
     this.isEmployerOpened = true;
     this.isAdd = isEmployerAdd;
+  }
+
+  onEmployerActionClicked(selectedEmployer: ClientEmployer, modalType: string = "") {
+    this.selectedEmployer = selectedEmployer;
+    if (modalType == "edit") {
+      this.isEmployerOpened = true;
+      this.isAdd = false;
+    }
+    if (modalType == "delete") {
+      this.isRemoveEmployerConfirmationPopupOpened = true;
+    }
+  }
+  
+  onRemoveEmployerConfirmationClosed() {
+    this.isRemoveEmployerConfirmationPopupOpened = false;
   }
 }

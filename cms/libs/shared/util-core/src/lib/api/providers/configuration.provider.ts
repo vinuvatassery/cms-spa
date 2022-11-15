@@ -31,12 +31,13 @@ export class ConfigurationProvider {
           responseType: config.oidc.responseType,
           silentRenew: config.oidc.silentRenew,
           maxIdTokenIatOffsetAllowedInSeconds:
-            config.oidc.maxIdTokenIatOffsetAllowedInSeconds,
+          config.oidc.maxIdTokenIatOffsetAllowedInSeconds,
           issValidationOff: config.oidc.issValidationOff,
           autoUserInfo: config.oidc.autoUserInfo,
           ignoreNonceAfterRefresh: true,
           useRefreshToken: config.oidc.useRefreshToken,
           logLevel: this.logLevel(config.oidc.logLevel),
+          caseApiUrl:config.caseApiUrl,
           customParamsAuthRequest: {
             prompt: 'select_account', // login, consent, select_account, admin_consent
           },

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { ClientEmployer } from '../entities/client-employer';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 
@@ -15,7 +16,7 @@ export class EmploymentFacade {
   employers$ = this.employersSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) {}
+  constructor(private readonly contactDataService: ContactDataService) { }
 
   /** Public methods **/
   loadEmployers(): void {
@@ -29,8 +30,20 @@ export class EmploymentFacade {
     });
   }
 
-  save():Observable<boolean>{
+  save(): Observable<boolean> {
     //TODO: save api call   
-    return of(true);
+    return of(true)
+  }
+
+  createEmployer(clientEmployer: ClientEmployer): Observable<any> {
+    return this.contactDataService.createClientEmployer(clientEmployer)
+  }
+
+  updateEmployer(clientEmployer: ClientEmployer): Observable<any> {
+    return this.contactDataService.updateClientEmployer(clientEmployer)
+  }
+
+  deleteEmployer(clientEmployerId:string){
+    return this.contactDataService.deleteClientEmployer(clientEmployerId)
   }
 }

@@ -5,13 +5,15 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Name of Employer">
-        <kendo-textbox aria-label="name of employer"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="name of employer" [(ngModel)]="employer.employerName"
+          [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         <!-- <input kendoTextBox aria-label="name of employer" /> -->
       </kendo-floatinglabel>
     </div>
     <div class="flex-col mb-1">
       <kendo-floatinglabel aria-label="date of hire" text="Date of Hire">
-        <kendo-datepicker  [(ngModel)]="currentDate" [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        <kendo-datepicker [(ngModel)]="employer.dateOfHire" [fillMode]="formUiStyle.dateInputFillMode"
+          format="MM-dd-yyyy" formatPlaceholder="formatPattern">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
@@ -21,27 +23,23 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div>
-      <button
-        kendoButton
-        class="k-danger-link"
-        aria-label="delete employer"
-        *ngIf="!isAdd"
-      >
+      <button kendoButton class="k-danger-link" aria-label="delete employer" *ngIf="!isAdd" (click)="onRemoveEmployerConfirmationClicked()">
         Delete
       </button>
     </div>
     <div class="justify-content-end">
-      <button
-        kendoButton
-        [primary]="true"
-        aria-label="cancel employer"
-        look="outline"
-      >
+      <button kendoButton [primary]="true" aria-label="cancel employer" look="outline" (click)="cancelModal()">
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="add new employer">
+      <button kendoButton [primary]="true" aria-label="add new employer" (click)="saveEmployer()">
         Add
       </button>
     </div>
   </div>
 </kendo-dialog-actions>
+
+<kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove employer">
+  <case-management-remove-employer-confirmation [selectedEmployer]="selectedEmployer"
+    (closeModal)="onRemoveEmployerConfirmationClosed()"></case-management-remove-employer-confirmation>
+</kendo-dialog>

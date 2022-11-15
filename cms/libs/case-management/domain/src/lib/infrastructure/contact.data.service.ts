@@ -1,23 +1,37 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ClientEmployer } from '../entities/client-employer';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private readonly configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadEmployers() {
-    return of([
-      {
-        NameofEmployer: 'John Cena',
-        DateofHire: '01-01-2022',
-      },
-    ]);
+    return this.http.get<ClientEmployer>(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`);
+  }
+
+  createClientEmployer(clientEmployer: ClientEmployer) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`, clientEmployer)
+  }
+
+  updateClientEmployer(clientEmployer: ClientEmployer) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`, clientEmployer)
+  }
+
+  deleteClientEmployer(clientEmployerId: string) {
+    let params = new HttpParams();
+    params = params.append('client_employer_id', clientEmployerId);
+    const httpOptions = {
+      params: params
+    };
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`, httpOptions)
   }
 
   loadMedicalHealthPlans() {

@@ -1,5 +1,7 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { EmploymentFacade } from '@cms/case-management/domain';
+import { ClientEmployer } from 'libs/case-management/domain/src/lib/entities/client-employer';
 
 @Component({
   selector: 'case-management-remove-employer-confirmation',
@@ -9,14 +11,32 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class RemoveEmployerConfirmationComponent {
   /** Public properties **/
-  isRemoveEmployerConfirmationPopupOpened = false;
+  @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
+  @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
+  /** Constructor **/
+  constructor(private readonly employmentFacade: EmploymentFacade) { }
+
+  /** Lifecycle hooks **/
+  ngOnInit(): void {
+  }
 
   /** Internal event methods **/
   onRemoveEmployerConfirmationClosed() {
-    this.isRemoveEmployerConfirmationPopupOpened = false;
+    this.closeModal.emit(true);
   }
 
-  onRemoveEmployerConfirmationClicked() {
-    this.isRemoveEmployerConfirmationPopupOpened = true;
+  removeEmployer() {
+    if (this.selectedEmployer) {
+      this.employmentFacade.deleteEmployer(this.selectedEmployer.id).subscribe({
+        next: (response) => {
+          this.employmentFacade.loadEmployers();
+          this.onRemoveEmployerConfirmationClosed();
+        },
+        error: (err) => {
+          console.error('err', err);
+        },
+      }
+      );
+    }
   }
 }
