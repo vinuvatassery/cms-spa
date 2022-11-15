@@ -15,8 +15,14 @@ export class ManagementFacade {
   private managersSubject = new BehaviorSubject<any>([]);
   private ddlStatesSubject = new BehaviorSubject<any>([]);
   private providersGridSubject = new BehaviorSubject<any>([]);
+  private loadCd4CountSubject = new BehaviorSubject<any>([]);
+  private loadViralLoadSubject = new BehaviorSubject<any>([]);
+
+  
 
   /** Public properties **/
+  loadViralLoad$ = this.loadViralLoadSubject.asObservable();
+  loadCd4Count$ = this.loadCd4CountSubject.asObservable();
   providers$ = this.providersSubject.asObservable();
   managers$ = this.managersSubject.asObservable();
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -59,6 +65,32 @@ export class ManagementFacade {
     });
   }
 
+ 
+
+  loadCd4Count(): void {
+    this.providerDataService.loadCd4Count().subscribe({
+      next: (loadCd4CountResponse) => {
+        this.loadCd4CountSubject.next(loadCd4CountResponse); 
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+
+  
+  loadViralLoad(): void {
+    this.providerDataService.loadCd4Count().subscribe({
+      next: (loadViralLoadResponse) => {
+        this.loadViralLoadSubject.next(loadViralLoadResponse); 
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+ 
   save():Observable<boolean>{
     //TODO: save api call   
     return of(true);

@@ -11,9 +11,7 @@ describe('RacialOrEthnicIdentityDetailComponent', () => {
       declarations: [ RacialOrEthnicIdentityDetailComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(RacialOrEthnicIdentityDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,4 +1,5 @@
 {
+  "name": "system-config-feature-user-management",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/system-config/feature-user-management/src",

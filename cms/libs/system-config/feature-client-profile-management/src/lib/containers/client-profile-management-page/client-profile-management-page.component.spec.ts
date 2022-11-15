@@ -11,9 +11,7 @@ describe('ClientProfileManagementPageComponent', () => {
       declarations: [ ClientProfileManagementPageComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ClientProfileManagementPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

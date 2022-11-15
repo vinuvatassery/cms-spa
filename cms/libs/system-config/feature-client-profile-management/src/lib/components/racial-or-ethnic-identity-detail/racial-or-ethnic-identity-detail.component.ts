@@ -1,5 +1,4 @@
-/** Angular **/
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'system-config-racial-or-ethnic-identity-detail',
@@ -9,6 +8,7 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RacialOrEthnicIdentityDetailComponent implements OnInit {
+
   /** Public properties **/
   ddlIdentityCategory: Array<string> = ["Value 1", "Value 2", "Value 3", "Value 4",];
 
