@@ -43,7 +43,7 @@ export class EmploymentFacade {
     return this.contactDataService.updateClientEmployer(clientEmployer)
   }
 
-  deleteEmployer(clientEmployerId:string){
+  deleteEmployer(clientEmployerId: string) {
     return this.contactDataService.deleteClientEmployer(clientEmployerId)
   }
 }

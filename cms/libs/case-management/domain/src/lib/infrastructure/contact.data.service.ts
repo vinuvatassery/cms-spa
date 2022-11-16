@@ -26,10 +26,10 @@ export class ContactDataService {
   }
 
   deleteClientEmployer(clientEmployerId: string) {
-    let params = new HttpParams();
-    params = params.append('client_employer_id', clientEmployerId);
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append('client_employer_id', clientEmployerId);
     const httpOptions = {
-      params: params
+      params: queryParams
     };
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`, httpOptions)
   }
