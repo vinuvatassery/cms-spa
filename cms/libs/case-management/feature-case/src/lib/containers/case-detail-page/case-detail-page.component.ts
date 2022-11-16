@@ -9,9 +9,9 @@ import {
 } from '@progress/kendo-angular-dateinputs';
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, CaseFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, CaseFacade, WorkflowFacade, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+
 
 
 

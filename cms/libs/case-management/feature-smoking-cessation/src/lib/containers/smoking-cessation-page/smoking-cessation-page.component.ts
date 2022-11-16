@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist, SmokingCessation, YNFlag, YesNoFlag, StatusFlag } from '@cms/case-management/domain';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist, SmokingCessation, YesNoFlag, StatusFlag } from '@cms/case-management/domain';
 
 
 
@@ -66,11 +66,11 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       this.smokingCessation.clientCaseId).subscribe({         
         next: response => {
           this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.smokingCessationNote)
-          if(response.smokingCessationReferralFlag == YNFlag.Y){
+          if(response.smokingCessationReferralFlag ==StatusFlag.Yes){
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.Yes)
             this.isDisabled = false;
           }
-          else if(response.smokingCessationReferralFlag == YNFlag.N){
+          else if(response.smokingCessationReferralFlag == StatusFlag.No){
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
             this.isDisabled = true;
           }
@@ -107,20 +107,15 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   }
 
   private save() {
-    let isValid = true;
-    // TODO: validate the form
-    // if (isValid) {
-    //   return this.smokingCessationFacade.();
-    // }
     this.validate();
     if(this.smokingCessationForm.valid){
       this.smokingCessation.smokingCessationNote =this.smokingCessationForm.value.smokingCessationNote;
        this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation)
        .subscribe({         
-          next: response => {
+          next: () => {
              return true;
           },
-          error: error => {               
+          error: () => {               
              return false
           }
       });
@@ -131,13 +126,13 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]) 
       if(this.smokingCessationForm.value.smokingCessation ==YesNoFlag.Yes){
         this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
-        this.smokingCessation.smokingCessationNoteApplicableFlag =YNFlag.Y;
-        this.smokingCessation.smokingCessationReferralFlag = YNFlag.Y;
+        this.smokingCessation.smokingCessationNoteApplicableFlag =StatusFlag.Yes;
+        this.smokingCessation.smokingCessationReferralFlag = StatusFlag.Yes;
       }
       else{
         this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();     
-        this.smokingCessation.smokingCessationNoteApplicableFlag =YNFlag.N;
-        this.smokingCessation.smokingCessationReferralFlag = YNFlag.N;
+        this.smokingCessation.smokingCessationNoteApplicableFlag =StatusFlag.No;
+        this.smokingCessation.smokingCessationReferralFlag = StatusFlag.No;
       }
       this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
       this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity()

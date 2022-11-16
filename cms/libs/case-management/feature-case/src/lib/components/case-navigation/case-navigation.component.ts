@@ -6,8 +6,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { filter } from 'rxjs/internal/operators/filter';
 import { Observable } from 'rxjs/internal/Observable';
 /** Internal Libraries **/
-import { ScreenType, WorkFlowProgress } from '@cms/case-management/domain';
-import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+import { ScreenType, StatusFlag, WorkFlowProgress } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case-navigation',
