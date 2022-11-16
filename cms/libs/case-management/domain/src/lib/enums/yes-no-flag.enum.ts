@@ -1,4 +1,8 @@
 export enum YesNoFlag {
-    Yes = 'Y',
-    No = 'N'
+    Yes = 'Yes',
+    No = 'No'
+}
+export enum YNFlag {
+    Y = 'Y',
+    N = 'N'
 }

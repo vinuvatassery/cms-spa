@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 /** services **/
-import { CaseDetailsFacade, CompletionStatusFacade, SmokingCessationFacade } from '@cms/case-management/domain';
+import { CaseDetailsFacade, CompletionStatusFacade, SmokingCessationFacade, YNFlag } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, of, Subscription } from 'rxjs';
 import {  SmokingCessation, YesNoFlag}  from '@cms/case-management/domain';
 
@@ -79,12 +79,12 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       this.smokingCessation.clientCaseId).subscribe({         
         next: response => {
           this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.smokingCessationNote)
-          if(response.smokingCessationReferralFlag == YesNoFlag.Yes){
-            this.smokingCessationForm.controls["smokingCessation"].setValue('Yes')
+          if(response.smokingCessationReferralFlag == YNFlag.Y){
+            this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.Yes)
             this.isDisabled = false;
           }
-          else if(response.smokingCessationReferralFlag == YesNoFlag.No){
-            this.smokingCessationForm.controls["smokingCessation"].setValue('No')
+          else if(response.smokingCessationReferralFlag == YNFlag.N){
+            this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
             this.isDisabled = true;
           }
        
@@ -121,15 +121,15 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   private validate():void{
     this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]) 
-      if(this.smokingCessationForm.value.smokingCessation =="Yes"){
+      if(this.smokingCessationForm.value.smokingCessation ==YesNoFlag.Yes){
         this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
-        this.smokingCessation.smokingCessationNoteApplicableFlag ='Y';
-        this.smokingCessation.smokingCessationReferralFlag = 'Y';
+        this.smokingCessation.smokingCessationNoteApplicableFlag =YNFlag.Y;
+        this.smokingCessation.smokingCessationReferralFlag = YNFlag.Y;
       }
       else{
         this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();     
-        this.smokingCessation.smokingCessationNoteApplicableFlag ='N';
-        this.smokingCessation.smokingCessationReferralFlag = 'N';
+        this.smokingCessation.smokingCessationNoteApplicableFlag =YNFlag.N;
+        this.smokingCessation.smokingCessationReferralFlag = YNFlag.N;
       }
       this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
       this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity()
