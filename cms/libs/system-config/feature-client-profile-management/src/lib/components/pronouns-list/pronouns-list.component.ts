@@ -9,6 +9,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PronounsListComponent implements OnInit {
+
   /** Public properties **/
   isPronounsDeactivatePopup = false;
   isPronounsDetailPopup = false;

@@ -8,6 +8,8 @@ import { CaseManagementFeatureDocumentRoutingModule } from './case-management-fe
 import { UploadProofDocumentComponent } from './components/upload-proof-document/upload-proof-document.component';
 import { DocumentPageComponent } from './containers/document-page/document-page.component';
 import { DocumentListComponent } from './components/document-list/document-list.component';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 
 
 @NgModule({
@@ -15,6 +17,8 @@ import { DocumentListComponent } from './components/document-list/document-list.
     CommonModule,
     CaseManagementDomainModule,
     CaseManagementFeatureDocumentRoutingModule,
+    SharedUiCommonModule,
+    SharedUiTpaModule
   ],
   declarations: [
     UploadProofDocumentComponent,

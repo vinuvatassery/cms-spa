@@ -2,8 +2,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
+ 
 import { UIFormStyle } from '@cms/shared/ui-tpa' 
-
+ 
 @Component({
   selector: 'productivity-tools-event-detail',
   templateUrl: './event-detail.component.html',
@@ -12,7 +13,9 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class EventDetailComponent implements OnInit {
 
+ 
   public formUiStyle : UIFormStyle = new UIFormStyle();
+ 
   /** Public properties **/
   ddlEvents$ = this.eventLogFacade.ddlEvents$;
 

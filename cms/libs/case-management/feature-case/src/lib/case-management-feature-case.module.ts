@@ -33,6 +33,10 @@ import { ReAssignCaseComponent } from './components/re-assign-case/re-assign-cas
 import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
 import { PageCompletionStatusComponent } from './components/page-completion-status/page-completion-status.component';
+import { CaseManagementFeatureDrugModule } from '@cms/case-management/feature-drug';
+import { CaseManagementFeatureManagementModule } from '@cms/case-management/feature-management';
+import { CaseManagementFeatureDocumentModule } from '@cms/case-management/feature-document';
+import { StatusPeriodComponent } from './components/status-period/status-period.component';
 
 @NgModule({
   imports: [
@@ -55,6 +59,9 @@ import { PageCompletionStatusComponent } from './components/page-completion-stat
     CaseManagementFeatureEmploymentModule,
     CaseManagementFeatureVerificationModule,
     CaseManagementFeatureHealthInsuranceModule,
+    CaseManagementFeatureDrugModule,
+    CaseManagementFeatureManagementModule,
+    CaseManagementFeatureDocumentModule,
   ],
   declarations: [
     LastVisitedCasesComponent,
@@ -68,6 +75,7 @@ import { PageCompletionStatusComponent } from './components/page-completion-stat
     ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
+    StatusPeriodComponent,
     PageCompletionStatusComponent,
   ],
   exports: [
@@ -82,6 +90,7 @@ import { PageCompletionStatusComponent } from './components/page-completion-stat
     ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
+    StatusPeriodComponent,
   ],
 })
 export class CaseManagementFeatureCaseModule {}

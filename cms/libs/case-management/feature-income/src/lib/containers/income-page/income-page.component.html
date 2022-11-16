@@ -48,11 +48,9 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Signature Noted">
                   <kendo-datepicker
+ 
                   [fillMode]="formUiStyle.dateInputFillMode"
-                    format="MM-dd-yyyy"
-                    [(ngModel)]="currentDate"
                     formatPlaceholder="formatPattern"
-                    aria-label="Date Signature Noted"
                     name="Date Signature Noted"
                     [tabIndex]="6"
                   >
@@ -65,7 +63,9 @@
               <div class="flex-col">
                 <kendo-floatinglabel text="WHat resources do they use to meet basic needs such as food, housing, transportation, etc..,">
                   <kendo-textarea
+ 
                   [fillMode]="formUiStyle.inputFillMode"
+ 
                     #tareaJustifications
                     resizable="auto"
                     [maxlength]="tareaJustificationMaxLength"
