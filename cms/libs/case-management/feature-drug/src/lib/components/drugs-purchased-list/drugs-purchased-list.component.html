@@ -1,0 +1,111 @@
+<div class="flex-row">
+    <div class="flex-col flex-space-bw align-items-center">
+        <h5 class="title-md mb-0 text-capital">Drugs Purchased</h5>
+        <span>
+            <input type="checkbox" kendoCheckBox aria-labelledby="premiumsWithinLast12Months" id="premiums" />
+            <label class="k-checkbox-label" for="premiums">Show only premiums within the last 12 months</label>
+        </span>
+    </div>
+    <div class="flex-col mt-1">
+        <div class="app-c-table">
+            <kendo-grid [data]="DrugsPurchased$ | async">
+                <kendo-grid-column field="FillDate" title="Fill Date" [width]="100">
+                </kendo-grid-column>
+                <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="180"></kendo-grid-column>
+                <kendo-grid-column field="Drug" title="Drug" [width]="200"></kendo-grid-column>
+                <kendo-grid-column field="NDC" title="NDC" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="Qty" title="Qty" [width]="80"></kendo-grid-column>
+                <kendo-grid-column field="ClientGroup" title="Client Group" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="PayType" title="Pay Type" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="TransType" title="Trans Type" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="PayAmt" title="Pay Amt" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="IngrdCost" title="Ingrd Cost" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="PhmFee" title="Phm Fee" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="TotalDrug" title="Total Drug" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="PBMFee" title="PBM Fee" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="Revenue" title="Revenue" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="UC" title="UC" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="EntryDate" title="Entry Date" [width]="100"></kendo-grid-column>
+
+
+                <kendo-grid-column field="Option" title="Option" [width]="75" class="text-center" [sticky]="true">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <kendo-dropdownbutton [data]="actions" icon="more-vertical"
+                            class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
+                            aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+
+                            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                                <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
+                                    [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                                    <span class="material-icons"
+                                        [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                                    <label> {{ dataItem.text }} </label>
+                                </button>
+
+                                <!--           <button
+                    kendoButton
+                    icon="edit"
+                    look="flat"
+                    class="btn-h-primary"
+                    (click)="onEditPharmacyClicked(dataItem)"
+                    aria-label="edit pharmacy"
+                  >
+                    Edit Pharmacy
+                  </button>
+                  <button
+                    kendoButton
+                    look="flat"
+                    class="btn-h-primary"
+                    (click)="onOpenChangePriorityClicked()"
+                    aria-label="change priority"
+                  >
+                    <span
+                      class="material-icons"
+                      aria-label="format line spacing"
+                      aria-hidden="true"
+                      >format_line_spacing</span
+                    >Change Priority
+                  </button>
+                  <button
+                    kendoButton
+                    icon="delete"
+                    look="flat"
+                    class="btn-h-danger"
+                    aria-label="remove pharmacy"
+                  >
+                    Remove Pharmacy
+                  </button> -->
+                            </ng-template>
+                        </kendo-dropdownbutton>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+        </div>
+        <div class="flex-row">
+            <div class="flex-col mt-1">
+                <button kendoButton [primary]="true" icon="add"  
+                    aria-label="add pharmacy">
+                    Pharmacy Claim
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Pharmacy  Modal -->
+<kendo-dialog *ngIf="isOpenPharmacyClicked" (close)="handleClosePharmacyClicked()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    <kendo-dialog-titlebar>
+        {{ isEditPharmacyListClicked ? 'Edit Pharmacy' : 'Add Pharmacy' }}
+    </kendo-dialog-titlebar>
+    <case-management-pharmacy-detail [isEditPharmacy]="isEditPharmacyListClicked" [selectedPharmacy]="selectedPharmacy"
+        (closePharmacyEvent)="handleClosePharmacyClicked()"></case-management-pharmacy-detail>
+</kendo-dialog>
+
+<!-- Change Pharmacy Priority Modal -->
+<kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClikced()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    <kendo-dialog-titlebar> Change Pharmacy Priority </kendo-dialog-titlebar>
+    <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClikced()">
+    </case-management-set-pharmacy-priority>
+</kendo-dialog>

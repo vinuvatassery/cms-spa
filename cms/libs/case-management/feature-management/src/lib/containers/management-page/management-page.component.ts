@@ -1,7 +1,9 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { CaseDetailsFacade, ManagementFacade } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
+/** External libraries **/
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Internal Libraries **/
+import { WorkflowFacade, ManagementFacade, NavigationType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-management-page',
@@ -9,35 +11,47 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./management-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManagementPageComponent  implements OnInit, OnDestroy {
-   /** Public properties **/
+export class ManagementPageComponent implements OnInit, OnDestroy {
+  /** Public properties **/
   isVisible: any;
   isSelected = true;
 
-   /** Private properties **/
-   private saveClickSubscription !: Subscription;
+  /** Private properties **/
+  private saveClickSubscription !: Subscription;
 
-   /** Constructor **/
-   constructor(private caseDetailsFacade: CaseDetailsFacade,
-    private managementFacade:ManagementFacade) { }
- 
-   /** Lifecycle Hooks **/
-   ngOnInit(): void {
-     this.saveClickSubscribed();
-   }
- 
-   ngOnDestroy(): void {
-     this.saveClickSubscription.unsubscribe();
-   }
- 
-   /** Private Methods **/
-   private saveClickSubscribed(): void {
-     this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.managementFacade.save().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-     });
-   }
+  /** Constructor **/
+  constructor(private workflowFacade: WorkflowFacade,
+    private managementFacade: ManagementFacade) { }
+
+  /** Lifecycle Hooks **/
+  ngOnInit(): void {
+    this.addSaveSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.saveClickSubscription.unsubscribe();
+  }
+
+  /** Private Methods **/
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
+    });
+  }
+
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.managementFacade.save();
+    }
+
+    return of(false)
+  }
 }

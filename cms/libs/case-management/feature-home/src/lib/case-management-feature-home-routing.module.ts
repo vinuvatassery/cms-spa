@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {  CaseDetailPageComponent } from '@cms/case-management/feature-case';
+import { CaseDetailPageComponent } from '@cms/case-management/feature-case';
 
-const routes: Routes = [
+const routes: Routes = [ 
   {
     path: 'cases',
     loadChildren: () =>
-    import('@cms/case-management/feature-case').then(
-      (m) => m.CaseManagementFeatureCaseModule
-    ),
+      import('@cms/case-management/feature-case').then(
+        (m) => m.CaseManagementFeatureCaseModule
+      ),
     data: {
       title: null,
-    }, 
+    },
   },
   {
     path: 'case-detail',
-    component: CaseDetailPageComponent,
+    component: CaseDetailPageComponent,    
     children: [
       {
         path: 'client',
@@ -24,9 +24,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-client').then(
             (m) => m.CaseManagementFeatureClientModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'contact-info',
@@ -34,9 +34,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-contact').then(
             (m) => m.CaseManagementFeatureContactModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'family-dependents',
@@ -44,9 +44,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-family-and-dependent').then(
             (m) => m.CaseManagementFeatureFamilyAndDependentModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'income',
@@ -54,9 +54,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-income').then(
             (m) => m.CaseManagementFeatureIncomeModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'employment',
@@ -64,9 +64,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-employment').then(
             (m) => m.CaseManagementFeatureEmploymentModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'smoking-cessation',
@@ -81,9 +81,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-health-insurance').then(
             (m) => m.CaseManagementFeatureHealthInsuranceModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'prescription-drugs',
@@ -91,9 +91,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-drug').then(
             (m) => m.CaseManagementFeatureDrugModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'healthcare-provider',
@@ -101,9 +101,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-healthcare-provider').then(
             (m) => m.CaseManagementFeatureHealthcareProviderModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'case-manager',
@@ -111,9 +111,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-management').then(
             (m) => m.CaseManagementFeatureManagementModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'verification',
@@ -121,9 +121,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-verification').then(
             (m) => m.CaseManagementFeatureVerificationModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'authorization',
@@ -131,9 +131,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-authorization').then(
             (m) => m.CaseManagementFeatureAuthorizationModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'application-eligibility',
@@ -141,9 +141,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-client-eligibility').then(
             (m) => m.CaseManagementFeatureClientEligibilityModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
       {
         path: 'send-letter',
@@ -151,15 +151,15 @@ const routes: Routes = [
           import('@cms/case-management/feature-communication').then(
             (m) => m.CaseManagementFeatureCommunicationModule
           ),
-          data: {
-            title: null,
-          }, 
+        data: {
+          title: null,
+        },
       },
-      {
-        path: '',
-        redirectTo: 'client',
-        pathMatch: 'full',
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'client',
+      //   pathMatch: 'full',
+      // },
     ],
   },
   {
@@ -175,4 +175,4 @@ const routes: Routes = [
   ],
 })
 
-export class CaseManagementFeatureHomeRoutingModule {}
+export class CaseManagementFeatureHomeRoutingModule { }

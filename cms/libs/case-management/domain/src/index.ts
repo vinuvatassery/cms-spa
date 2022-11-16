@@ -20,12 +20,15 @@ export * from './lib/entities/healthcare-provider';
 export * from './lib/entities/provider';
 export * from './lib/entities/search';
 export * from './lib/entities/verification';
+export * from './lib/entities/workflow';
+export * from './lib/entities/workflow-stage-completion-status';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
 export * from './lib/enums/screen-type.enum';
-export * from './lib/enums/screen-flow-type.enum';
+export * from './lib/enums/workflow-type.enum';
 export * from './lib/enums/case-screen-tab.enum';
+export * from './lib/enums/navigation-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -47,7 +50,7 @@ export * from './lib/infrastructure/provider.data.service';
 export * from './lib/infrastructure/search.data.service';
 export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
-
+export * from './lib/infrastructure/status-period.data.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -74,4 +77,5 @@ export * from './lib/application/search.facade';
 export * from './lib/application/smoking-cessation.facade';
 export * from './lib/application/verification.facade';
 export * from './lib/application/completion-status.facade';
-export * from './lib/application/case-details.facade';
+export * from './lib/application/status-period.facade';
+export * from './lib/application/workflow.facade';

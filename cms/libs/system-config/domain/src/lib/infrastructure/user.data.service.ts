@@ -346,4 +346,187 @@ export class UserDataService {
     ])
   }
  
+  loadHousingAcuityLevelList(){
+    return of([
+      {
+        acuitylevel:"2",
+        order: "1",
+        suitation:"Formerly Individual family",
+        lastModified: "XX/XX/XXXX",
+        status: "Active",
+      },
+      {
+        acuitylevel:"2",
+        order: "1",
+        suitation:"Formerly Individual family",
+        lastModified: "XX/XX/XXXX",
+        status: "Active",
+      },
+      {
+        acuitylevel:"2",
+        order: "1",
+        suitation:"Formerly Individual family",
+        lastModified: "XX/XX/XXXX",
+        status: "Active",
+      },
+      {
+        acuitylevel:"2",
+        order: "1",
+        suitation:"Formerly Individual family",
+        lastModified: "XX/XX/XXXX",
+        status: "Active",
+      },
+      {
+        acuitylevel:"2",
+        order: "1",
+        suitation:"Formerly Individual family",
+        lastModified: "XX/XX/XXXX",
+        status: "Active",
+      },
+    ])
+  }
+  loadIncomeInclusionsExlusionsList(){
+    return of([
+     {
+      inclusions:"Formerly Individual family",
+      lastModified: "XX/XX/XXXX",
+      
+     },
+     {
+      inclusions:"Formerly Individual family",
+      lastModified: "XX/XX/XXXX",
+     },
+     {
+      inclusions:"Formerly Individual family",
+      lastModified: "XX/XX/XXXX",
+     },
+     {
+      inclusions:"Formerly Individual family",
+      lastModified: "XX/XX/XXXX",
+     },
+     {
+      inclusions:"Formerly Individual family",
+      lastModified: "XX/XX/XXXX",
+     },
+      
+    ])
+  }
+  loadRegionAssignmentList(){
+    return of([
+     {
+      region:"Region1",
+      assignto:"Ethan Endrson",
+      countries:"Baker, Grant , Union,Umatilla",
+      lastmodified: "XX/XX/XXXX",
+      
+     },
+     
+     {
+      region:"Region2",
+      assignto:"Sophia Brown",
+      countries:"Harney, Lake , Malehur,Polk",
+      lastmodified: "XX/XX/XXXX",
+      
+     },
+     {
+      region:"Region3",
+      assignto:"Noah Davis",
+      countries:"Coos , Curry , Douglas,Jackson",
+      lastmodified: "XX/XX/XXXX",
+      
+     },
+     {
+      region:"Region4",
+      assignto:"Ava Johnson",
+      countries:"Crook, Deschutes , Lane,Wheeler",
+      lastmodified: "XX/XX/XXXX",
+      
+     },
+     {
+      region:"Region5",
+      assignto:"Sophia Jhons",
+      countries:"Benton, Morrow , Sherman,clatsop",
+      lastmodified: "XX/XX/XXXX",
+      
+     },
+     
+      
+    ])
+  }
+  loadPSMFRZIPList(){
+    return of([
+     {
+      year:"2020",
+      county:"Benton",
+      housingtype:"0-Studio",
+      psmfrzip:"FMR",
+      amount:"869.00",
+      lastModified: "XX/XX/XXXX",
+      status: "status",
+      
+     },
+     {
+      year:"2020",
+      county:"Benton",
+      housingtype:"0-Studio",
+      psmfrzip:"Payment Standard",
+      amount:"785.00",
+      lastModified: "XX/XX/XXXX",
+      status: "status",
+      
+     },
+     {
+      year:"2020",
+      county:"Benton",
+      housingtype:"0-Studio",
+      psmfrzip:"ZIP Code",
+      amount:"785.00",
+      lastModified: "XX/XX/XXXX",
+      status: "status",
+      
+     },
+     {
+      year:"2020",
+      county:"Benton",
+      housingtype:"0-Studio",
+      psmfrzip:"ZIP Code",
+      amount:"785.00",
+      lastModified: "XX/XX/XXXX",
+      status: "status",
+      
+     },
+     
+     
+     
+     
+      
+    ])
+  }
+  loadServiceProviderList(){
+    return of([
+     {
+      serviceprovidername:"2020",
+      type:"Benton",
+      vendorid:"0-Studio",
+      mailcode:"FMR",
+      accountno:"869.00",
+      phoneno:"Benton",
+      address:"0-Studio",
+      emailid:"FMR",
+      contactperson:"869.00",
+      combinedpayments:"0-Studio",
+      nameoncheck:"FMR",
+      comments:"869.00",
+      lastModified: "XX/XX/XXXX",
+      
+     },
+     
+     
+     
+     
+     
+      
+    ])
+  }
+ 
 }

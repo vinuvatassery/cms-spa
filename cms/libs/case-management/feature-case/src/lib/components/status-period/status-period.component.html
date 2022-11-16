@@ -1,0 +1,159 @@
+<div class="flex-row">
+
+    <div class="flex-col  ">
+         
+        <div class="app-c-table">
+
+            <kendo-grid [data]="StatusPeriod$ | async">
+                <ng-template kendoGridDetailTemplate let-dataItem>
+                    <section *ngIf="dataItem.RamseelInfo">
+                        <div class="flex-col flex-col-6 mt-2 p-0">
+                            <h4>Ramsell Info</h4>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td class="greycolor"> Most Recent Transfer</td>
+                                    <td> {{dataItem.RamseelInfo.MostRecentTransfer}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="greycolor"> Card Requested</td>
+                                    <td> {{dataItem.RamseelInfo.CardRequested}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="greycolor"> Date Card Last Sent</td>
+                                    <td> {{dataItem.RamseelInfo.DateCardLastSent}}</td>
+                                </tr>
+                            </tbody>
+                            </table>
+
+                        </div>
+
+                    </section>
+                    <div *ngIf="dataItem.GroupHistory" class="mt-5">
+                        <h4>Group History</h4>
+
+                        <table>
+                            <tr >
+                                <th>Group</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Actual Days in Group</th>
+                                <th>Date Record Created</th>
+                                <th>Record Created By</th>
+                            </tr>
+                            <tbody>
+                            <tr *ngFor="let GroupHistory of dataItem.GroupHistory">
+                                <td> {{GroupHistory.Group}}</td>
+                                <td> {{GroupHistory.StartDate}}</td>
+                                <td> {{GroupHistory.EndDate}}</td>
+                                <td> {{GroupHistory.ActualDaysinGroup}}</td>
+                                <td> {{GroupHistory.DateRecordCreated}}</td>
+                                <td> {{GroupHistory.RecordCreatedBy}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div *ngIf="dataItem.FlipHistory" class="mt-5 mb-2">
+                        <h4>FPL History</h4>
+
+                        <table>
+                            <tr >
+                                <th>FPL</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Actual Days with Flp</th>
+                                <th>Date Record Created</th>
+                                <th>Record Created By</th>
+                            </tr>
+                            <tbody>
+                            <tr *ngFor="let FlipHistory of dataItem.FlipHistory">
+                                <td> {{FlipHistory.Flp}}</td>
+                                <td> {{FlipHistory.StartDate}}</td>
+                                <td> {{FlipHistory.EndDate}}</td>
+                                <td> {{FlipHistory.ActualDayswithFlp}}</td>
+                                <td> {{FlipHistory.DateRecordCreated}}</td>
+                                <td> {{FlipHistory.RecordCreatedBy}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </ng-template>
+                <kendo-grid-column field="StatusStart" title="Status Start" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="StatusEnd" title="Status End" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="Status" title="Status" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="CurrentGroup" title="Current Group" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="DaysinGroup" title="Days in Group" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="FamilySize" title="Family Size" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="GrossMonthlyIncome" title="Gross Monthly Income" [width]="100">
+                </kendo-grid-column>
+                <kendo-grid-column field="FPLSPStart" title="FPLSP Start" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="CurrentFPL" title="Current FPL" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="ReviewCompleted" title="Review Completed" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="CurrentFPL" title="Current FPL" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="by" title="By" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+                            [popover]="onUserProfileDetailsHovered" showOn="hover" aria-labelledby="profile avathar">
+                            <div mat-card-avatar="" class="app-c-avatar avatar-sm">
+                                <!-- <img
+src="../assets/images/avatar-1.png"
+alt="Profile Avatar"
+class="profile-avatar"
+hidden
+/> -->
+                                <span class="profile-text-avatar">AK</span>
+                            </div>
+                        </button>
+                        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                            <ng-template kendoPopoverBodyTemplate>
+                                <common-user-profile-card></common-user-profile-card>
+                            </ng-template>
+                        </kendo-popover>
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column field="Option" title="Option" [width]="50" class="text-center">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <kendo-dropdownbutton [data]="actions" icon="more-vertical"
+                            class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
+                            aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+
+                            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                                <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
+                                    [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                                    <span class="material-icons"
+                                        [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                                    <label> {{ dataItem.text }} </label>
+                                </button>
+
+                                <!--   <button
+    kendoButton
+    icon="edit"
+    look="flat"
+    class="btn-h-primary"
+    aria-label="edit healthcare provider"
+  >
+    Edit Provider
+  </button>
+  <button
+    kendoButton
+    icon="delete"
+    look="flat"
+    class="btn-h-danger"
+    aria-label="remove healthcare provider"
+  >
+    Remove Provider
+  </button> -->
+                            </ng-template>
+                        </kendo-dropdownbutton>
+                    </ng-template>
+                </kendo-grid-column>
+
+
+
+            </kendo-grid>
+        </div>
+
+    </div>
+</div>

@@ -16,6 +16,8 @@ export class CaseDataService {
   loadCases(): Observable<Case[]> {
     return of([
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'John Sakariya',
         Pronouns: 'She/Her/Hers',
         ID: 100,
@@ -27,6 +29,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 101,
@@ -38,6 +42,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Clara Stephen',
         Pronouns: 'She/Her/Hers',
         ID: 102,
@@ -49,6 +55,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 103,
@@ -60,6 +68,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Johny Slot',
         Pronouns: 'She/Her/Hers',
         ID: 104,
@@ -71,6 +81,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Chris Fedex',
         Pronouns: 'She/Her/Hers',
         ID: 105,
@@ -82,6 +94,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Amaze Judge',
         Pronouns: 'She/Her/Hers',
         ID: 106,
@@ -93,6 +107,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Dude Vills',
         Pronouns: 'She/Her/Hers',
         ID: 107,
@@ -324,8 +340,8 @@ export class CaseDataService {
     return of([
       {
         name: 'Donna 1',
-        id: '1',
-        programId: '2',
+        id: '64b403cd-a580-7cb4-4696-3a0774f3db83',
+        programId: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B',
         isApplicationComplete: false,
       },
       {
@@ -373,7 +389,7 @@ export class CaseDataService {
 
   loadDdlPrograms() {
     return of([
-      { key: 1, value: 'CAREAssist', default: true },
+      { key: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B', value: 'CAREAssist', default: true },
       { key: 2, value: 'OHOP', default: false },
     ]);
   }

@@ -11,6 +11,9 @@
 <div class="client-data-block">
   <h3>Applicant Info</h3>
   <div class="block-section">
-    <case-management-client-edit-view></case-management-client-edit-view>
+    <case-management-client-edit-view
+    (AppInfoChanged)="updatePageCount($event)"
+    (AdjustAttrChanged)="updateAdjustmentAttrCount($event)"
+    ></case-management-client-edit-view>
   </div>
 </div>

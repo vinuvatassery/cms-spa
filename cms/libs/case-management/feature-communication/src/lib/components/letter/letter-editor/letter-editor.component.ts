@@ -96,4 +96,5 @@ export class LetterEditorComponent implements OnInit {
   onSearchclosed() {
     this.isSearchOpened = false;
   }
+  
 }

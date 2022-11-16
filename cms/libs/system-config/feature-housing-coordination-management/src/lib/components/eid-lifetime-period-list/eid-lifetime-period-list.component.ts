@@ -6,15 +6,23 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
 @Component({
   selector: 'system-config-eid-lifetime-period-list',
   templateUrl: './eid-lifetime-period-list.component.html',
   styleUrls: ['./eid-lifetime-period-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EidLifetimePeriodListComponent implements OnInit {
+
+  public pageSize = 10;
+  public skip = 0;
+  public pageSizes = [
+    {text: '5', value: 5}, 
+    {text: '10', value: 10},
+    {text: '20', value: 20},
+    {text: 'All', value: 100}
+  ];
   /** Public properties **/
   isPeriodDetailPopup = false;
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
@@ -65,4 +73,5 @@ export class EidLifetimePeriodListComponent implements OnInit {
   onPeriodDetailClicked() {
     this.isPeriodDetailPopup = true;
   }
+
 }

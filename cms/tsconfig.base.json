@@ -132,6 +132,12 @@
       "@cms/system-config/feature-client-profile-management": [
         "libs/system-config/feature-client-profile-management/src/index.ts"
       ],
+      "@cms/system-config/feature-communication": [
+        "libs/system-config/feature-communication/src/index.ts"
+      ],
+      "@cms/system-config/feature-financials": [
+        "libs/system-config/feature-financials/src/index.ts"
+      ],
       "@cms/system-config/feature-home": [
         "libs/system-config/feature-home/src/index.ts"
       ],

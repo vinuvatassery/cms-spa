@@ -1,5 +1,4 @@
-/** Angular **/
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'system-config-pronouns-detail',
@@ -9,10 +8,10 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PronounsDetailComponent implements OnInit {
-  /** Constructor **/
+
   constructor() { }
 
-  /** Lifecycle hooks **/
   ngOnInit(): void {
   }
+
 }

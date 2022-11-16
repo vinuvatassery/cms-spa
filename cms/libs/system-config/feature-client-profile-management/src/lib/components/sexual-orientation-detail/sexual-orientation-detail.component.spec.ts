@@ -11,9 +11,7 @@ describe('SexualOrientationDetailComponent', () => {
       declarations: [ SexualOrientationDetailComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SexualOrientationDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

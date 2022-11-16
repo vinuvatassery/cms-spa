@@ -1,8 +1,12 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-/** Internal Libraries **/
-import { CaseDetailsFacade, CompletionStatusFacade, EmploymentFacade } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
+/** External libraries **/
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facades **/
+import { WorkflowFacade, CompletionStatusFacade, EmploymentFacade } from '@cms/case-management/domain';
+/** Enums **/
+import { NavigationType } from '@cms/case-management/domain';
+
 
 @Component({
   selector: 'case-management-employment-page',
@@ -15,27 +19,27 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   isEmploymentGridDisplay = true;
   employers$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
-  
-    /** Private properties **/
-    private saveClickSubscription !: Subscription;
-    
+
+  /** Private properties **/
+  private saveClickSubscription !: Subscription;
+
   /** Constructor */
   constructor(
     private employmentFacade: EmploymentFacade,
     private completionStatusFacade: CompletionStatusFacade,
-    private caseDetailsFacade: CaseDetailsFacade
-    ) {}
-    
+    private workflowFacade: WorkflowFacade
+  ) { }
+
   /** Lifecycle Hooks */
   ngOnInit() {
     this.loadEmployers();
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
   }
-  
+
   /** Private Methods */
   loadEmployers(): void {
     this.employmentFacade.loadEmployers();
@@ -45,23 +49,35 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
-  
+
   /** Private Methods **/
-  private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.employmentFacade.save().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
     });
   }
-  
+
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.employmentFacade.save();
+    }
+
+    return of(false)
+  }
+
   /** Internal event methods **/
   onUnEmployedClicked() {
     this.isEmploymentGridDisplay = !this.isEmploymentGridDisplay;
   }
-  
+
   onChangeCounterClick() {
     this.updateCompletionStatus({
       name: 'Employment',
