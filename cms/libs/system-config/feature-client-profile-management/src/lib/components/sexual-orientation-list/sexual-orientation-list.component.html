@@ -38,13 +38,13 @@
         <div class="table-filter-section mat-form-no-b-space">
           <span class="filter-section_items filter--select">
             <kendo-floatinglabel text="All Columns">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlColumnFilters$ | async"> </kendo-dropdownlist>
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlColumnFilters$ | async"> </kendo-dropdownlist>
             </kendo-floatinglabel>
           </span>
           <span class="filter-section_items filter--search">
             <span class="material-icons">search</span>
             <kendo-floatinglabel text="Search">
-               <kendo-textbox fillMode="outline" >
+               <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
               </kendo-textbox>
             </kendo-floatinglabel>
           </span>
@@ -60,7 +60,7 @@
       <!-- Table header show only in reorder list -->
       <div class="flex-col flex-col-4" hidden>
         <kendo-floatinglabel text="Sort">
-          <kendo-dropdownlist [data]="ddlColumnFilters$ | async"> </kendo-dropdownlist>
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlColumnFilters$ | async"> </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
     </div>
