@@ -13,10 +13,14 @@ export class DrugPharmacyFacade {
   private clientPharmaciesSubject = new BehaviorSubject<any>([]);
   private ddlPrioritiesSubject = new BehaviorSubject<any>([]);
   private ddlStatesSubject = new BehaviorSubject<any>([]);
-
+  private pharmaciesListSubject = new BehaviorSubject<any>([]);
+  private drugsPurchasedSubject = new BehaviorSubject<any>([]);
+  
   /** Public properties **/
   pharmacies$ = this.pharmaciesSubject.asObservable();
   clientPharmacies$ = this.clientPharmaciesSubject.asObservable();
+  pharmaciesList$ = this.pharmaciesListSubject.asObservable();
+  drugsPurchased$ = this.drugsPurchasedSubject.asObservable();
   ddlPriorities$ = this.ddlPrioritiesSubject.asObservable();
   ddlStates$ = this.ddlStatesSubject.asObservable();
 
@@ -56,7 +60,29 @@ export class DrugPharmacyFacade {
       },
     });
   }
+ 
+  loadPharmacieslist(): void {
+    this.drugDataService.loadtPharmacies().subscribe({
+      next: (pharmacieslistResponse) => {
+        this.pharmaciesListSubject.next(pharmacieslistResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
 
+  loadDrugsPurchased(): void {
+    this.drugDataService.loadDrugsPurchased().subscribe({
+      next: (drugsPurchased) => {
+        this.drugsPurchasedSubject.next(drugsPurchased);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+ 
   loadDdlPriorities(): void {
     this.drugDataService.loadDdlPriorities().subscribe({
       next: (ddlPrioritiesResponse) => {

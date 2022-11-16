@@ -1,12 +1,17 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Case } from '../entities/case';
+import { WorkFlowProgress } from '../entities/workflow';
+import { NavigationType } from '../enums/navigation-type.enum';
+
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
-import { ScreenRouteDataService } from '../infrastructure/screen-route.data.service';
+import { WorkflowDataService } from '../infrastructure/workflow.data.service';
+import { WorkflowFacade } from './workflow.facade';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -25,7 +30,7 @@ export class CaseFacade {
   private ddlGridColumnsSubject = new BehaviorSubject<any>([]);
   private ddlCommonActionsSubject = new BehaviorSubject<any>([]);
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
-  private routesSubject = new BehaviorSubject<any>([]);
+
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -42,12 +47,11 @@ export class CaseFacade {
   ddlGridColumns$ = this.ddlGridColumnsSubject.asObservable();
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
-  routes$ = this.routesSubject.asObservable();
 
   constructor(
     private readonly caseDataService: CaseDataService,
-    private readonly routeService: ScreenRouteDataService
-  ) {}
+
+  ) { }
 
   /** Public methods **/
   loadCases(): void {
@@ -114,7 +118,6 @@ export class CaseFacade {
       .load(screen_flow_type_code, program_id, case_id)
       .subscribe({
         next: (data) => {
-          console.log(data);
           this.routesSubject.next(data);
         },
         error: (err) => {

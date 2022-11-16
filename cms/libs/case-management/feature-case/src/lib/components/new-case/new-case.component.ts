@@ -1,7 +1,6 @@
 /** Angular **/
 import {
-  Component, ViewChild,
-  OnInit,
+  Component, OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Output,
@@ -10,7 +9,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 /** Internal Libraries **/
-import { CaseFacade, ScreenFlowType } from '@cms/case-management/domain';
+import { CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'  
 @Component({
   selector: 'case-management-new-case',
@@ -25,6 +24,7 @@ export class NewCaseComponent implements OnInit {
   
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
+  @Output() newcaseSaveEvent = new EventEmitter<any>();
 
 
   /** Public properties **/
@@ -39,7 +39,6 @@ export class NewCaseComponent implements OnInit {
   isSubmitted: boolean=false;
   /** Constructor**/
   constructor(
-    private readonly router: Router,
     private readonly caseFacade: CaseFacade,
     private readonly ref: ChangeDetectorRef,
     private fb:FormBuilder
@@ -101,6 +100,7 @@ export class NewCaseComponent implements OnInit {
         programId: this.selectedProgram.key,
       },
     });
+    //this.newcaseSaveEvent.emit(this.selectedProgram.key);
   }
   }
 

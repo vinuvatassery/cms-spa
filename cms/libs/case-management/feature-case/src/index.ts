@@ -15,3 +15,6 @@ export * from './lib/components/common-actions/common-actions.component';
 export * from './lib/components/send-letter-profile/send-letter-profile.component';
 export * from './lib/containers/case-summary/case-summary.component';
 export * from './lib/components/case-details/case-details.component';
+export * from './lib/components/status-period/status-period.component';
+export * from './lib/components/page-completion-status/page-completion-status.component';
+

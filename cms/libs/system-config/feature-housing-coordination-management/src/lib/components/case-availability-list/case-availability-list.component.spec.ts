@@ -11,9 +11,7 @@ describe('CaseAvailabilityListComponent', () => {
       declarations: [ CaseAvailabilityListComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(CaseAvailabilityListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

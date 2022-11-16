@@ -1,14 +1,14 @@
-/** Angular **/
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
-  selector: 'system-config--sexual-orientation-list',
+  selector: 'system-config-sexual-orientation-list',
   templateUrl: './sexual-orientation-list.component.html',
   styleUrls: ['./sexual-orientation-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SexualOrientationListComponent implements OnInit {
+
   /** Public properties **/
   isSexualOrientationDeactivatePopup = false;
   isSexualOrientationDetailPopup = false;
@@ -84,3 +84,5 @@ export class SexualOrientationListComponent implements OnInit {
     this.isSexualOrientationDetailPopup = true;
   }
 }
+
+ 

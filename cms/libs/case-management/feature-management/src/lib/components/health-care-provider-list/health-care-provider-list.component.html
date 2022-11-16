@@ -20,6 +20,37 @@
           [width]="200"
         ></kendo-grid-column>
         <kendo-grid-column
+        field="Fax"
+        title="Fax"
+        [width]="100"
+      ></kendo-grid-column>
+      <kendo-grid-column
+      field="EffectiveDate"
+      title="Effective Date"
+      [width]="100"
+    ></kendo-grid-column>
+    <kendo-grid-column field="By" title="By" [width]="50" [sticky]="true">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered" showOn="hover" aria-labelledby="profile avathar">
+          <div mat-card-avatar="" class="app-c-avatar avatar-sm">
+            <!-- <img
+      src="../assets/images/avatar-1.png"
+      alt="Profile Avatar"
+      class="profile-avatar"
+      hidden
+    /> -->
+            <span class="profile-text-avatar">AK</span>
+          </div>
+        </button>
+        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
+    </kendo-grid-column>
+        <kendo-grid-column
           field="Option"
           title="Option"
           [width]="75"

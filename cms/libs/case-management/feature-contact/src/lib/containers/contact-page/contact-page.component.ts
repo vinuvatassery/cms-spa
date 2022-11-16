@@ -2,10 +2,15 @@
 import { OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 /** Internal Libraries **/
-import { CaseDetailsFacade, CompletionStatusFacade, ContactFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType } from '@cms/case-management/domain';
+import {
+  DateInputSize,
+  DateInputRounded,
+  DateInputFillMode,
+} from '@progress/kendo-angular-dateinputs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { Subscription,Observable, of } from 'rxjs';
+import { Subscription, Observable, of, mergeMap, forkJoin } from 'rxjs';
 @Component({
   selector: 'case-management-contact-page',
   templateUrl: './contact-page.component.html',
@@ -35,30 +40,19 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly contactFacade: ContactFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
-    private caseDetailsFacade: CaseDetailsFacade
-  ) {}
-
+    private workflowFacade: WorkflowFacade
+  ) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadDdlRelationships();
     this.loadDdlStates();
     this.loadDdlCountries();
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-  }
-
-  canDeactivate(): Observable<boolean> {
-    //if (!this.isSaved) {
-      //const result = window.confirm('There are unsaved changes! Are you sure?');
-      //return of(result);
-      return of(true);
-    //}
-
-    //return of(true);
   }
 
   /** Private methods **/
@@ -86,14 +80,26 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.contactFacade.loadDdlCountries();
   }
 
-  private saveClickSubscribed():void{
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.contactFacade.save().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-     });
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
+    });
+  }
+
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.contactFacade.save();
+    }
+
+    return of(false)
   }
 
   /** Internal event methods **/

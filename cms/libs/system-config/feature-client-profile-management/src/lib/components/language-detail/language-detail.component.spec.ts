@@ -11,9 +11,7 @@ describe('LanguageDetailComponent', () => {
       declarations: [ LanguageDetailComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LanguageDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

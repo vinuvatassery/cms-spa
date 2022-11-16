@@ -17,6 +17,7 @@ import { UnAssignCaseManagerComponent } from './components/un-assign-case-manage
 import { CaseManagerReferralRequestComponent } from './components/case-manager-referral-request/case-manager-referral-request.component';
 import { AssignCaseManagerComponent } from './components/assign-case-manager/assign-case-manager.component';
 import { ManagementPageComponent } from './containers/management-page/management-page.component';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { ManagementPageComponent } from './containers/management-page/management
     CaseManagementDomainModule,
     CaseManagementFeatureManagementRoutingModule,
     SharedUiTpaModule,
+    SharedUiCommonModule
   ],
   declarations: [
     CaseManagerListComponent,

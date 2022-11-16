@@ -11,9 +11,7 @@ describe('SlotDetailComponent', () => {
       declarations: [ SlotDetailComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SlotDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
