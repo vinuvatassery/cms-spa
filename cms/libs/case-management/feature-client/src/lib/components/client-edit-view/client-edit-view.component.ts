@@ -1,11 +1,20 @@
 /** Angular **/
-import { Component, ViewEncapsulation , ViewChild, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
+import {
+  DateInputSize,
+  DateInputRounded,
+  DateInputFillMode,
+} from '@progress/kendo-angular-dateinputs';
+import { debounceTime, distinctUntilChanged, pairwise, startWith } from 'rxjs';
 /** Facades **/
-import { ClientFacade } from '@cms/case-management/domain';
-import { Validators, FormGroup, FormControl } from "@angular/forms";
+import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
+
+/** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 
  
 @Component({
@@ -19,12 +28,12 @@ export class ClientEditViewComponent implements OnInit {
   public value = "";
   isVisible: any;
   isSelected = true;
-  public form: FormGroup;
 
-  public data: any = {
-    firstname: "",
-  };
-  
+  /** Output Properties **/
+  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
+  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
+
+
   /** Public properties **/
   public currentDate = new Date();
  
@@ -79,14 +88,13 @@ export class ClientEditViewComponent implements OnInit {
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
   public racialName: any = [];
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public formUiStyle : UIFormStyle = new UIFormStyle();  
+  appInfoForm!: FormGroup;
+  adjustmentAttributeList!: string[];
+
   /** Constructor**/
-  constructor(private readonly clientfacade: ClientFacade ) {
-    this.form = new FormGroup({
-      firstname: new FormControl(this.data.firstname, [Validators.required]),
-     
-    });
-  }
+  constructor(private readonly clientfacade: ClientFacade,
+    private readonly elementRef: ElementRef) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -106,10 +114,31 @@ export class ClientEditViewComponent implements OnInit {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
- 
+    this.buildForm();
+    this.addAppInfoFormChangeSubscription();
   }
-  public submitForm(): void {
-    this.form.markAllAsTouched();
+
+  ngAfterViewInit(){
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {   
+      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
+    }); 
+  }
+
+  ngAfterViewChecked() {
+    const initialAjustment: CompletionChecklist[] = [];
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {     
+      const data: CompletionChecklist = {
+        dataPointName: control.name,
+        status: control.checked ? StatusFlag.Yes : StatusFlag.No
+      };
+      initialAjustment.push(data);
+    });
+
+    if (initialAjustment.length > 0) {
+      this.AdjustAttrChanged.emit(initialAjustment);
+    }
   }
  
 
@@ -119,9 +148,79 @@ export class ClientEditViewComponent implements OnInit {
    
   }
   public clearForm(): void {
-    this.form.reset();
+    //this.form.reset();
   }
-  /** Private methods **/
+  /** Private methods **/ 
+
+  private buildForm() {
+    this.appInfoForm = new FormGroup({
+      firstName: new FormControl('', { updateOn: 'blur' }),
+      middleName: new FormControl({ value: '', disabled: false }, { updateOn: 'blur' }),
+      chkmiddleName: new FormControl(true),
+      lastName: new FormControl('', { updateOn: 'blur' }),
+      prmInsFirstName: new FormControl('', { updateOn: 'blur' }),
+      prmInsLastName: new FormControl('', { updateOn: 'blur' }),
+      prmInsNotApplicable: new FormControl(false),
+      officialIdFirstName: new FormControl('', { updateOn: 'blur' }),
+      officialIdLastName: new FormControl('', { updateOn: 'blur' }),
+      officialIdsNotApplicable: new FormControl(false),
+      dateOfBirth: new FormControl('', { updateOn: 'blur' }),
+      ssn: new FormControl('', { updateOn: 'blur' }),
+      ssnNotApplicable: new FormControl(false),
+      //TODO: other form controls 
+    })
+  }
+
+  private adjustAttributeChanged(event: Event) { 
+    const data: CompletionChecklist = {
+      dataPointName: (event.target as HTMLInputElement).name,
+      status: (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No
+    };
+
+    this.AdjustAttrChanged.emit([data]);
+  }
+
+  private addAppInfoFormChangeSubscription() {
+    this.appInfoForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        startWith(null), pairwise()
+      )
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
+      });
+  }
+
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.appInfoForm.controls).forEach(key => {
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+          };
+          completedDataPoints.push(item);
+        }
+      }
+      else {
+        if (this.appInfoForm?.get(key)?.value && this.appInfoForm?.get(key)?.valid) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: StatusFlag.Yes
+          };
+
+          completedDataPoints.push(item);
+        }
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.AppInfoChanged.emit(completedDataPoints);
+    }
+  }
+
   private loadTareaRaceAndEthinicity() {
     this.tareaRaceAndEthinicityCharachtersCount = this.tareaRaceAndEthinicity
       ? this.tareaRaceAndEthinicity.length
@@ -200,6 +299,56 @@ export class ClientEditViewComponent implements OnInit {
   }
 
   /** Internal event methods **/
+  onMiddleNameChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['middleName'].reset();
+      this.appInfoForm.controls['middleName'].enable();
+    }
+    else {
+      this.appInfoForm.controls['middleName'].disable();
+    }
+  }
+
+  onInsuranceCardChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['prmInsLastName'].disable();
+      this.appInfoForm.controls['prmInsFirstName'].disable();
+    }
+    else {
+      this.appInfoForm.controls['prmInsLastName'].reset();
+      this.appInfoForm.controls['prmInsFirstName'].reset();
+      this.appInfoForm.controls['prmInsLastName'].enable();
+      this.appInfoForm.controls['prmInsFirstName'].enable();
+    }
+  }
+
+  onOfficialIdChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['officialIdFirstName'].disable();
+      this.appInfoForm.controls['officialIdLastName'].disable();
+    }
+    else {
+      this.appInfoForm.controls['officialIdFirstName'].reset();
+      this.appInfoForm.controls['officialIdLastName'].reset();
+      this.appInfoForm.controls['officialIdFirstName'].enable();
+      this.appInfoForm.controls['officialIdLastName'].enable();
+    }
+  }
+
+  onSsnNotApplicableChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['ssn'].disable();
+    }
+    else {
+      this.appInfoForm.controls['ssn'].reset();
+      this.appInfoForm.controls['ssn'].enable();
+    }
+  }
+
   onTransgenderRdoClicked(event: any) {
     this.transgenderSelectedValue = event.target.id;
     if (this.transgenderSelectedValue == 3) {

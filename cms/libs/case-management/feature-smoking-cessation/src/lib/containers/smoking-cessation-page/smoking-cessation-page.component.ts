@@ -1,9 +1,11 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-/** services **/
-import { CaseDetailsFacade, CompletionStatusFacade, SmokingCessationFacade } from '@cms/case-management/domain';
-import { debounceTime, distinctUntilChanged, filter, map, Observable, of, Subscription } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+/** External libraries **/
+import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+/** Internal Libraries **/
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist } from '@cms/case-management/domain';
+import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -20,20 +22,19 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationCharachtersCount!: number;
   tareaCessationCounter!: string;
   tareaCessationNote = '';
-  smokingCessationForm!: UntypedFormGroup;
-  completeStaus$ = this.completionStatusFacade.completionStatus$;
+  smokingCessationForm!: FormGroup;
 
   constructor(
-    private caseDetailsFacade: CaseDetailsFacade,
+    private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,
-    private completionStatusFacade: CompletionStatusFacade) {
+    private caseFacad: CaseFacade) {
   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.buildForm();
     this.tareaVariablesIntiation();
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
     this.smokingCessationFromChanged();
   }
 
@@ -41,68 +42,84 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
   }
 
-  canDeactivate(): Observable<boolean> {
-    //if (!this.isSaved) {
-    //const result = window.confirm('There are unsaved changes! Are you sure?');
-    //return of(result);
-    if (this.smokingCessationForm?.dirty ?? false) {
-      const result = window.confirm('There are unsaved changes! Are you sure?');
-      return of(result);
-    }
-    //}
-
-    return of(true);
-  }
-
-
   /** Private methods **/
   private buildForm() {
-    this.smokingCessationForm = new UntypedFormGroup({
-      mokingCessation: new UntypedFormControl('', Validators.required),
-      mokingCessationNote: new UntypedFormControl('')
+    this.smokingCessationForm = new FormGroup({
+      mokingCessation: new FormControl('', Validators.required),
+      mokingCessationNote: new FormControl('')
     });
   }
 
   private smokingCessationFromChanged() {
-    this.smokingCessationForm.valueChanges.subscribe(val => {
-      this.updateFormCompleteCount();
+    this.smokingCessationForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        startWith(null), 
+        pairwise()
+      )
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
+      });
+  }
+
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
     });
   }
 
-  private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.smokingCessationFacade.save().subscribe((response: boolean) => {
-        if (response) {
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-    });
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.smokingCessationFacade.save();
+    }
+
+    return of(false)
   }
 
-  private updateFormCompleteCount(): void {
-    let filledCount = 0;
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.smokingCessationForm.controls).forEach(key => {
-      if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
-        filledCount++;
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+          };
+          completedDataPoints.push(item);
+        }
+      }
+      else {
+        if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: StatusFlag.Yes
+          };
+
+          completedDataPoints.push(item);
+        }
       }
     });
 
-    this.updateCompletionStatus({
-      name: 'Cessation',
-      completed: filledCount,
-      total: 2,
-    });
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
   }
+
 
   private tareaVariablesIntiation() {
     this.tareaCessationCharachtersCount = this.tareaCessationNote
       ? this.tareaCessationNote.length
       : 0;
     this.tareaCessationCounter = `${this.tareaCessationCharachtersCount}/${this.tareaCessationMaxLength}`;
-  }
-
-  private updateCompletionStatus(status: any) {
-    this.completionStatusFacade.updateCompletionStatus(status);
   }
 
   /** Internal event methods **/

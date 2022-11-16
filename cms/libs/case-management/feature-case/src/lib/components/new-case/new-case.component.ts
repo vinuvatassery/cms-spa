@@ -1,15 +1,13 @@
 /** Angular **/
 import {
-  Component, ViewChild,
-  OnInit,
+  Component, OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Output,
   EventEmitter,
 } from '@angular/core';
-import { Router } from '@angular/router';
 /** Internal Libraries **/
-import { CaseFacade, ScreenFlowType } from '@cms/case-management/domain';
+import { CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'  
 @Component({
   selector: 'case-management-new-case',
@@ -24,6 +22,7 @@ export class NewCaseComponent implements OnInit {
   
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
+  @Output() newcaseSaveEvent = new EventEmitter<any>();
 
   /** Public properties **/
   caseSearchResults$ = this.caseFacade.caseSearched$;
@@ -35,7 +34,6 @@ export class NewCaseComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor**/
   constructor(
-    private readonly router: Router,
     private readonly caseFacade: CaseFacade,
     private readonly ref: ChangeDetectorRef
   ) {}
@@ -82,12 +80,7 @@ export class NewCaseComponent implements OnInit {
   }
 
   onCreateCaseClicked() {
-    this.router.navigate(['case-management/case-detail'], {
-      queryParams: {
-        screenFlowType: ScreenFlowType.NewCase,
-        programId: this.selectedProgram.key,
-      },
-    });
+    this.newcaseSaveEvent.emit(this.selectedProgram.key);
   }
 
   onCloseProgramSelectionClicked() {
