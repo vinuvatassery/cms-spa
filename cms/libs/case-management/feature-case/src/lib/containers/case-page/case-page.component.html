@@ -78,6 +78,7 @@
   >
     <case-management-new-case
       (isCreateNewCasePopupOpened)="handleNewCaseDialogClosed()"
+      (newcaseSaveEvent) = "newcaseSaved($event)"
     ></case-management-new-case>
   </kendo-dialog>
 </div>

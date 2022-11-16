@@ -13,82 +13,83 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   templateUrl: './language-list.component.html',
   styleUrls: ['./language-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LanguageListComponent implements OnInit {
-  /** Public properties **/
-  isLanguageDeactivatePopup = false;
-  isLanguageDetailPopup = false;
-  ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-  clientProfileLanguages$ = this.userManagementFacade.clientProfileLanguages$;
-  popupClassAction = 'TableActionPopup app-dropdown-action-list';
+ /** Public properties **/
+ isLanguageDeactivatePopup = false;
+ isLanguageDetailPopup = false;
+ ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
+ clientProfileLanguages$ = this.userManagementFacade.clientProfileLanguages$;
+ popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
-  public moreactions = [
-    {
-      buttonType:"btn-h-primary",
-      text: "Edit",
-      icon: "edit",
-      click: (): void => {
-        // this.onUserDetailsClicked(true);
-      },
-    },
-    {
-      buttonType:"btn-h-primary",
-      text: "Reorder",
-      icon: "format_list_numbered",
-      click: (): void => {
-      //  this.onUserDeactivateClicked()
-      },
-    },
-    {
-      buttonType:"btn-h-primary",
-      text: "Deactivate",
-      icon: "block",
-      click: (): void => {
-       this.onLanguageDeactivateClicked()
-      },
-    },
-    {
-      buttonType:"btn-h-danger",
-      text: "Delete",
-      icon: "delete",
-      click: (): void => {
-      // this.onOpenDeleteTodoClicked()
-      },
-    },
-    
- 
-  ];
-  /** Constructor **/
-  constructor(private readonly userManagementFacade: UserManagementFacade) {}
+ public moreactions = [
+   {
+     buttonType:"btn-h-primary",
+     text: "Edit",
+     icon: "edit",
+     click: (): void => {
+       // this.onUserDetailsClicked(true);
+     },
+   },
+   {
+     buttonType:"btn-h-primary",
+     text: "Reorder",
+     icon: "format_list_numbered",
+     click: (): void => {
+     //  this.onUserDeactivateClicked()
+     },
+   },
+   {
+     buttonType:"btn-h-primary",
+     text: "Deactivate",
+     icon: "block",
+     click: (): void => {
+      this.onLanguageDeactivateClicked()
+     },
+   },
+   {
+     buttonType:"btn-h-danger",
+     text: "Delete",
+     icon: "delete",
+     click: (): void => {
+     // this.onOpenDeleteTodoClicked()
+     },
+   },
+   
 
-  /** Lifecycle hooks **/
-  ngOnInit(): void {
-    console.log(  this.clientProfileLanguages$,"aaaaaaaaaaaaa");
-    this.loadColumnFilters();
-    this.loadClientProfileLanguages();
-  }
+ ];
+ /** Constructor **/
+ constructor(private readonly userManagementFacade: UserManagementFacade) {}
 
-  /** Private methods **/
-  private loadColumnFilters() {
-    this.userManagementFacade.loadDdlColumnFilters();
-  }
+ /** Lifecycle hooks **/
+ ngOnInit(): void {
+   console.log(  this.clientProfileLanguages$,"aaaaaaaaaaaaa");
+   this.loadColumnFilters();
+   this.loadClientProfileLanguages();
+ }
 
-  private loadClientProfileLanguages() {
-    this.userManagementFacade.loadClientProfileLanguages();
-  }
+ /** Private methods **/
+ private loadColumnFilters() {
+   this.userManagementFacade.loadDdlColumnFilters();
+ }
 
-  /** Internal event methods **/
-  onCloseLanguageDeactivateClicked() {
-    this.isLanguageDeactivatePopup = false;
-  }
-  onLanguageDeactivateClicked() {
-    this.isLanguageDeactivatePopup = true;
-  }
-  onCloseLanguageDetailClicked() {
-    this.isLanguageDetailPopup = false;
-  }
-  onLanguageDetailClicked() {
-    this.isLanguageDetailPopup = true;
-  }
+ private loadClientProfileLanguages() {
+   this.userManagementFacade.loadClientProfileLanguages();
+ }
+
+ /** Internal event methods **/
+ onCloseLanguageDeactivateClicked() {
+   this.isLanguageDeactivatePopup = false;
+ }
+ onLanguageDeactivateClicked() {
+   this.isLanguageDeactivatePopup = true;
+ }
+ onCloseLanguageDetailClicked() {
+   this.isLanguageDetailPopup = false;
+ }
+ onLanguageDetailClicked() {
+   this.isLanguageDetailPopup = true;
+ }
+
 }

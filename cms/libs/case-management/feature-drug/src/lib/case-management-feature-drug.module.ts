@@ -15,6 +15,9 @@ import { SetAsPrimaryPharmacyComponent } from './components/set-as-primary-pharm
 import { PharmacyClaimListComponent } from './components/pharmacy-claim-list/pharmacy-claim-list.component';
 import { NewPharmacyApprovalRequestComponent } from './components/new-pharmacy-approval-request/new-pharmacy-approval-request.component';
 import { SetPharmacyPriorityComponent } from './components/set-pharmacy-priority/set-pharmacy-priority.component';
+import { PharmaciesListComponent } from './components/pharmacies-list/pharmacies-list.component';
+import { DrugsPurchasedListComponent } from './components/drugs-purchased-list/drugs-purchased-list.component';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
 @NgModule({
   imports: [
@@ -22,6 +25,7 @@ import { SetPharmacyPriorityComponent } from './components/set-pharmacy-priority
     CaseManagementDomainModule,
     CaseManagementFeatureDrugRoutingModule,
     SharedUiTpaModule,
+    SharedUiCommonModule,
   ],
   declarations: [
     DrugPageComponent,
@@ -32,7 +36,9 @@ import { SetPharmacyPriorityComponent } from './components/set-pharmacy-priority
     SetAsPrimaryPharmacyComponent,
     PharmacyClaimListComponent,
     NewPharmacyApprovalRequestComponent,
-    SetPharmacyPriorityComponent,
+    SetPharmacyPriorityComponent, 
+    PharmaciesListComponent, 
+    DrugsPurchasedListComponent,
   ],
   exports: [
     DrugPageComponent,
@@ -44,6 +50,8 @@ import { SetPharmacyPriorityComponent } from './components/set-pharmacy-priority
     PharmacyClaimListComponent,
     NewPharmacyApprovalRequestComponent,
     SetPharmacyPriorityComponent,
+    PharmaciesListComponent,       
+    DrugsPurchasedListComponent,
   ],
 })
 export class CaseManagementFeatureDrugModule {}

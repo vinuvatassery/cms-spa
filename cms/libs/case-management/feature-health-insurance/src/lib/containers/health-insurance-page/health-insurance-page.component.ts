@@ -1,7 +1,11 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { CaseDetailsFacade, HealthInsuranceFacade } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
+/** External libraries **/
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facades **/
+import { WorkflowFacade, HealthInsuranceFacade, CaseFacade } from '@cms/case-management/domain';
+/** Enums **/
+import {  NavigationType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -15,12 +19,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   private saveClickSubscription !: Subscription;
 
   /** Constructor **/
-  constructor(private caseDetailsFacade: CaseDetailsFacade,
-    private healthInsuranceFacade:HealthInsuranceFacade) {  }
+  constructor(private workflowFacade: WorkflowFacade,
+    private healthInsuranceFacade: HealthInsuranceFacade,
+    private caseFacad: CaseFacade) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
   }
 
   ngOnDestroy(): void {
@@ -28,15 +33,26 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods **/
-  private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.healthInsuranceFacade.save().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
     });
   }
 
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.healthInsuranceFacade.save();
+    }
+
+    return of(false)
+  }
 
 }

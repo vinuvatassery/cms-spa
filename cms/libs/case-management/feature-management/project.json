@@ -1,4 +1,5 @@
 {
+  "name": "case-management-feature-management",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/case-management/feature-management/src",

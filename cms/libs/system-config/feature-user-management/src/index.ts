@@ -10,4 +10,5 @@ export * from './lib/components/system-config-navigation/system-config-navigatio
 export * from './lib/components/roles-and-permissions-list/roles-and-permissions-list.component';
 export * from './lib/components/roles-and-permissions-detail/roles-and-permissions-detail.component';
 export * from './lib/components/deactivate-roles-and-permissions-confirmation/deactivate-roles-and-permissions-confirmation.component';
+
  

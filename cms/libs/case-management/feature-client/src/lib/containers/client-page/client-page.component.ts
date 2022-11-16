@@ -2,8 +2,16 @@
 import { OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CaseDetailsFacade, ClientFacade } from '@cms/case-management/domain';
-import { Observable, of, Subscription } from 'rxjs';
+/** External libraries **/
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facade **/
+import { WorkflowFacade, ClientFacade } from '@cms/case-management/domain';
+/** Entities **/
+import { CompletionChecklist } from '@cms/case-management/domain';
+/** Enums **/
+import { NavigationType } from '@cms/case-management/domain';
+
+
 
 @Component({
   selector: 'case-management-client-page',
@@ -18,39 +26,52 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
 
-  constructor(private caseDetailsFacade: CaseDetailsFacade,
-    private clientFacade:ClientFacade){
-    
+  constructor(private workflowFacade: WorkflowFacade,
+    private clientFacade: ClientFacade) {
+
   }
 
-
   /** Lifecycle hooks **/
-
   ngOnInit(): void {
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
   }
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
   }
 
-  /** Public  methods **/
-  canDeactivate(): Observable<boolean> {
-    //if (!this.isSaved) {
-      const result = window.confirm('There are unsaved changes! Are you sure?');
-      return of(result);
-    //}
-
-    //return of(true);
+  /** Private methods **/
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.workflowFacade.navigate(navigationType);
+      }
+    });
   }
 
-  /** Private methods **/
-  private saveClickSubscribed():void{
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.clientFacade.save().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-     });
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) { 
+      return this.clientFacade.save();
+    }
+
+    return of(false)
+  }
+  
+  /** Public  methods **/
+  updatePageCount(completedDataPoints: CompletionChecklist[]) {
+    if (completedDataPoints?.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
+  }
+
+  updateAdjustmentAttrCount(ajustData: CompletionChecklist[]) {
+   if(ajustData){
+    this.workflowFacade.updateBasedOnDtAttrChecklist(ajustData);
+   }
   }
 }

@@ -97,7 +97,7 @@ export class IncomeFacade {
     });
   }
 
-  saveIncome():Observable<boolean>{
+  save():Observable<boolean>{
     //TODO: save api call   
     return of(true);
   }

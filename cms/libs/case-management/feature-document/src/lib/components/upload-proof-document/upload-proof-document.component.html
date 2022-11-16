@@ -1,1 +1,49 @@
-<p>upload-proof-document works!</p>
+<section class="k-dialog-body">
+
+    <div class="flex-row">
+        <div class="flex-col mb-2">
+            <p>Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
+        </div>
+        <div class="flex-col">
+            <kendo-floatinglabel text="Attachment Type">
+                <kendo-dropdownlist fillMode="outline" [data]="listItems">
+                </kendo-dropdownlist>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col mt-2">
+            <kendo-upload></kendo-upload>
+            <kendo-formhint>Max file size 25MB</kendo-formhint>
+        </div>
+        <div class="flex-col mt-2">
+            <kendo-floatinglabel text="Attachment Note" class="pb-0">
+                <kendo-textarea fillMode="outline" name="Attachment Note" aria-label="Attachment Note" [rows]="2"
+                    [cols]="40">
+                    <kendo-textarea-suffix class="justify-content-end">
+                        <kendo-formhint class="justify-content-end">0/750</kendo-formhint>
+
+                    </kendo-textarea-suffix>
+                </kendo-textarea>
+                <!-- <kendo-formhint class="justify-content-end">0/750</kendo-formhint> -->
+            </kendo-floatinglabel>
+        </div>
+
+    </div>
+</section>
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div>
+
+            <button kendoButton class="k-danger-link" aria-label="remove pharmacy">
+                Remove
+            </button>
+        </div>
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding pharmacy">
+                Cancel
+            </button>
+            <button kendoButton [primary]="true" aria-label="add or update pharmacy">
+                Upload
+            </button>
+        </div>
+    </div>
+</kendo-dialog-actions>

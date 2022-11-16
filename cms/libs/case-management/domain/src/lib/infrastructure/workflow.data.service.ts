@@ -1,12 +1,53 @@
+/**Angualr **/
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { ScreenFlowStep } from '../entities/case';
+import { HttpClient } from '@angular/common/http';
+
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
+/**Models */
+import { WorkflowMaster, WorkflowSession } from '../entities/workflow';
+
 
 @Injectable({
   providedIn: 'root',
 })
-export class ScreenRouteDataService {
-  constructor() {}
+export class WorkflowDataService {
+  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
+
+  loadWorkflow(session_id?: string) {
+      return this.http.get<WorkflowSession>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${session_id}`
+      );
+  }
+
+  loadWorkflowMaster(entityId:string, entityTypeCode:string, workflowTypeCode: string, ){
+    return this.http.get<WorkflowMaster[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/entityId=${entityId}&workflowTypeCode=${workflowTypeCode}&entityTypeCode=${entityTypeCode}`
+    );  
+  }
+
+  saveWorkflowProgress(updateWorkFlowProgress: any, sessionId:string) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${sessionId}/progress`,
+      updateWorkFlowProgress
+    );
+  }
+
+  updateActiveWorkflowStep(workflowProgressId: string, sessionId:string) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${sessionId}/progress/${workflowProgressId}`,
+      {}
+    );
+  }
+
+  createNewSession(newSessionData: any){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions`,
+      newSessionData
+    );
+  }
 
   load(screen_flow_type_code: string, program_id: number, case_id?: number) {
     if (case_id) {
@@ -270,7 +311,7 @@ export class ScreenRouteDataService {
           },
           {
             name: 'HIV Verification',
-            url: '/case-management/case-detail/case-manager',
+            url: '/case-management/case-detail/verification',
             sequence_nbr: 109,
             screen_flow_step_type_code: 'EDIT',
             current_screen_flag: 'N',

@@ -1,4 +1,5 @@
 {
+  "name": "financial-management-feature-income",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/financial-management/feature-income/src",
