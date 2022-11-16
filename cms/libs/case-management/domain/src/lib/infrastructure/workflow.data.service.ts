@@ -13,10 +13,10 @@ import { WorkflowMaster, WorkflowSession } from '../entities/workflow';
 @Injectable({
   providedIn: 'root',
 })
-export class ScreenRouteDataService {
+export class WorkflowDataService {
   constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
 
-  loadWorkflow(screen_flow_type_code?: string, entity_id?: string, session_id?: string) {
+  loadWorkflow(session_id?: string) {
       return this.http.get<WorkflowSession>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${session_id}`
       );

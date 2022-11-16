@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist } from '@cms/case-management/domain';
+import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -91,7 +92,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
         if (prev[key] !== curr[key]) {
           let item: CompletionChecklist = {
             dataPointName: key,
-            status: curr[key] ? 'Y' : 'N'
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
           };
           completedDataPoints.push(item);
         }
@@ -100,7 +101,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
         if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
           let item: CompletionChecklist = {
             dataPointName: key,
-            status: 'Y'
+            status: StatusFlag.Yes
           };
 
           completedDataPoints.push(item);

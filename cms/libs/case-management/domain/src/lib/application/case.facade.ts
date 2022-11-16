@@ -10,7 +10,7 @@ import { NavigationType } from '../enums/navigation-type.enum';
 
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
-import { ScreenRouteDataService } from '../infrastructure/screen-route.data.service';
+import { WorkflowDataService } from '../infrastructure/workflow.data.service';
 import { WorkflowFacade } from './workflow.facade';
 
 @Injectable({ providedIn: 'root' })

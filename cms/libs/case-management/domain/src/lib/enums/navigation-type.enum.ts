@@ -1,5 +1,5 @@
 export enum NavigationType {
   Next = 'Next',
-  Previous = 'Previous',
+  Previous = 'Prev',
   Default = 'Default'
 }

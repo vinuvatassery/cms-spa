@@ -9,8 +9,9 @@
     <h5 class="text-capital">Section</h5>
     <h5 class="text-capital">Completed Items</h5>
   </div>
-  <div *ngFor="let route of routes$ | async">
+  <div *ngFor="let route of routes$ | async as routes; let i = index"> 
       <li
+      *ngIf="i != routes?.length-1"
       [ngClass]="{ 'kendo-list-items':true,
       'section-completed':route.completedDatapointsCount === route.requiredDatapointsCount && route.requiredDatapointsCount !== 0,
       'active-item': route.currentFlag ==='Y'
@@ -24,15 +25,14 @@
       ></page-completion-status>
       </li>
   </div>
-  <div class="sections-heading sh-top-border"> 
-    <span>Application Review</span>
+  <div class="sections-heading sh-top-border" *ngIf="review"> 
+    <span>{{ review.title }}</span>
     <button
       aria-label="start review"
       kendoButton
+      [disabled]="isNotReadyForReview"
       [primary]="true"
-      (click)="onApplicationReviewClicked()"
-      [queryParamsHandling]="'preserve'"
-      routerLink="/case-management/case-detail/application-eligibility/eligibility"
+      (click)="onApplicationReviewClicked()"   
     >
       Start
     </button>
@@ -43,20 +43,24 @@
 <ul
   class="kendo-list-base"
   *ngIf="
-    isApplicationReviewOpened && (isSendLetterProfileOpened$ | async) === false
+    isApplicationReviewOpened && (isSendLetterProfileOpened$ | async) === false && review
   "
 >
   <div
     class="sections-heading heading-as-menu"
-    routerLink="/case-detail/client"
-    [queryParamsHandling]="'preserve'"
     (click)="onApplicationReviewClosed()"
   >
     <span class="material-icons">arrow_back</span>
     <h5 class="pl-1 text-normal">Back to application</h5>
   </div>
   <li class="kendo-list-items">
-    <span>Application Review</span> <span>1 of 4</span>
+    <span>{{ review.title }}</span> 
+    <span>
+      <page-completion-status
+      [workflowProcessId] = "review.processId"
+      [completionStatus$]="completeStaus$"
+      ></page-completion-status>
+    </span>
   </li>
 </ul>
 

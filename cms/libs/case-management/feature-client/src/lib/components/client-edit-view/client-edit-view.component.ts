@@ -14,6 +14,7 @@ import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 
  
 @Component({
@@ -130,7 +131,7 @@ export class ClientEditViewComponent implements OnInit {
     adjustControls.forEach((control: any) => {     
       const data: CompletionChecklist = {
         dataPointName: control.name,
-        status: control.checked ? 'Y' : 'N'
+        status: control.checked ? StatusFlag.Yes : StatusFlag.No
       };
       initialAjustment.push(data);
     });
@@ -173,7 +174,7 @@ export class ClientEditViewComponent implements OnInit {
   private adjustAttributeChanged(event: Event) { 
     const data: CompletionChecklist = {
       dataPointName: (event.target as HTMLInputElement).name,
-      status: (event.target as HTMLInputElement).checked ? 'Y' : 'N'
+      status: (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No
     };
 
     this.AdjustAttrChanged.emit([data]);
@@ -198,7 +199,7 @@ export class ClientEditViewComponent implements OnInit {
         if (prev[key] !== curr[key]) {
           let item: CompletionChecklist = {
             dataPointName: key,
-            status: curr[key] ? 'Y' : 'N'
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
           };
           completedDataPoints.push(item);
         }
@@ -207,7 +208,7 @@ export class ClientEditViewComponent implements OnInit {
         if (this.appInfoForm?.get(key)?.value && this.appInfoForm?.get(key)?.valid) {
           let item: CompletionChecklist = {
             dataPointName: key,
-            status: 'Y'
+            status: StatusFlag.Yes
           };
 
           completedDataPoints.push(item);

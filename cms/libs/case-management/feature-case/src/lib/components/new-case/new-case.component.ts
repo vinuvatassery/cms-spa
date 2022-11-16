@@ -1,15 +1,13 @@
 /** Angular **/
 import {
-  Component, ViewChild,
-  OnInit,
+  Component, OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Output,
   EventEmitter,
 } from '@angular/core';
-import { Router } from '@angular/router';
 /** Internal Libraries **/
-import { CaseFacade, ScreenFlowType } from '@cms/case-management/domain';
+import { CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'  
 @Component({
   selector: 'case-management-new-case',

@@ -26,7 +26,7 @@ export * from './lib/entities/workflow-stage-completion-status';
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
 export * from './lib/enums/screen-type.enum';
-export * from './lib/enums/screen-flow-type.enum';
+export * from './lib/enums/workflow-type.enum';
 export * from './lib/enums/case-screen-tab.enum';
 export * from './lib/enums/navigation-type.enum';
 

@@ -3,7 +3,7 @@ import { OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
-import { forkJoin, mergeMap, Observable, of, Subscription } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade } from '@cms/case-management/domain';
 /** Entities **/

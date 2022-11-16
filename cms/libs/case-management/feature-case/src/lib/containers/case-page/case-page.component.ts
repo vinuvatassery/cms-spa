@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab, ScreenFlowType, WorkflowFacade } from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case-page',

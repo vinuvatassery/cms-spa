@@ -11,6 +11,7 @@ import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, CaseFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 
 
 
@@ -28,8 +29,8 @@ export class CaseDetailPageComponent implements OnInit {
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
-  
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
   openedSaveLater = false;
   openedDeleteConfirm = false;
@@ -81,7 +82,7 @@ export class CaseDetailPageComponent implements OnInit {
 
   routes$ = this.workflowFacade.routes$;
   completeStaus$ = this.workflowFacade.completionStatus$;
-  
+
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
@@ -102,10 +103,10 @@ export class CaseDetailPageComponent implements OnInit {
 
   /** Private Methods */
   private loadQueryParams() {
-    let paramScreenFlowType: string = this.route.snapshot.queryParams['type'];
-    let paramEntityId: string = this.route.snapshot.queryParams['eid'];
+    let workflowType: string = this.route.snapshot.queryParams['type'];
+    let entityId: string = this.route.snapshot.queryParams['eid'];
     this.sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkflowSession(paramScreenFlowType, paramEntityId, this.sessionId);
+    this.workflowFacade.loadWorkflowSession(workflowType, entityId, this.sessionId);
   }
 
   private loadDdlCommonAction() {
@@ -210,11 +211,14 @@ export class CaseDetailPageComponent implements OnInit {
     this.workflowFacade.save(NavigationType.Next);
   }
 
-  applyWorkflowChanges(route: WorkFlowProgress) {
-    if (route?.visitedFlag === 'Y') {
-      this.workflowFacade.saveNonequenceNavigation(route, this.sessionId ?? '')
-        .subscribe(resp => {
-          this.workflowFacade.updateNonequenceNavigation(route);
+  applyWorkflowChanges(object: any) {
+    if(object?.isReset ?? false){
+        this.workflowFacade.resetWorkflowNavigation();
+    }
+    else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
+      this.workflowFacade.saveNonequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
+        .subscribe(() => {
+          this.workflowFacade.updateNonequenceNavigation(object?.route); 
         });
     }
   }

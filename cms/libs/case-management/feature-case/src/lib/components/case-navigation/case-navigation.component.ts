@@ -7,6 +7,7 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { Observable } from 'rxjs/internal/Observable';
 /** Internal Libraries **/
 import { ScreenType, WorkFlowProgress } from '@cms/case-management/domain';
+import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 
 @Component({
   selector: 'case-management-case-navigation',
@@ -19,8 +20,8 @@ export class CaseNavigationComponent implements OnInit {
   @Input() routes$!: Observable<any>;
   @Input() completeStaus$!: Observable<any>;
   @Input() navigationEvent = new EventEmitter<string>();
-    /** Output Properties **/
-  @Output() workflowChange = new EventEmitter<WorkFlowProgress>();
+  /** Output Properties **/
+  @Output() workflowChange = new EventEmitter<object>();
 
   /** Public Properties **/
   isSendLetterProfileOpenedSubject = new BehaviorSubject<boolean>(false);
@@ -30,6 +31,8 @@ export class CaseNavigationComponent implements OnInit {
   isCheckRouteExcecuted = false; // for checking  the if conditions in the loop has been excecuted or not
   navigationIndex = 0;
   routes!: any[];
+  review!: WorkFlowProgress;
+  isNotReadyForReview: boolean = true;
 
   /** constructor **/
   constructor(private router: Router, private actRoute: ActivatedRoute) { }
@@ -46,14 +49,17 @@ export class CaseNavigationComponent implements OnInit {
     this.routes$.subscribe({
       next: (routes: any) => {
         if (routes.length > 0) {
-          this.navigate(routes)
           this.routes = routes;
+          const maxSequenceNumber = this.routes.reduce((prev, curr) => prev = prev > curr.sequenceNbr ? prev : curr.sequenceNbr, 0);
+          this.review = this.routes.filter((route: WorkFlowProgress) => route.sequenceNbr === maxSequenceNumber)[0];
+          this.isNotReadyForReview = this.routes.findIndex((route: any) => route.visitedFlag == StatusFlag.No && route.sequenceNbr !== maxSequenceNumber) != -1;
+          this.navigate(routes)
         }
       },
       error: (err: any) => {
         console.error('error', err);
       },
-    });   
+    });
   }
 
   private addNavigationSubscription() {
@@ -68,27 +74,30 @@ export class CaseNavigationComponent implements OnInit {
   }
 
   private navigate(routes: any) {
-    const CurrentRoute = this.router.url;
     this.navigationIndex = routes.findIndex((route: WorkFlowProgress) =>
-      route?.currentFlag === 'Y'
+      route?.currentFlag === StatusFlag.Yes
     );
 
-    let paramScreenFlowType: string = this.actRoute.snapshot.queryParams['type'];
-    let paramEntityId: string = this.actRoute.snapshot.queryParams['eid'];
-    let paramSessionId = this.actRoute.snapshot.queryParams['sid'];
+    if (routes[this.navigationIndex]?.sequenceNbr === this.review?.sequenceNbr) {
+      this.isApplicationReviewOpened = true;
+    }
+
+    let workflowType: string = this.actRoute.snapshot.queryParams['type'];
+    let entityId: string = this.actRoute.snapshot.queryParams['eid'];
+    let sessionId = this.actRoute.snapshot.queryParams['sid'];
 
     if (this.navigationIndex > -1
       && this.navigationIndex < routes.length
-      && paramScreenFlowType
-      && paramEntityId
-      && paramSessionId) {
+      && workflowType
+      && entityId
+      && sessionId) {
       this.router.navigate(
         [routes[this.navigationIndex].url],
         {
           queryParams: {
-            type: paramScreenFlowType,
-            sid: paramSessionId,
-            eid: paramEntityId,
+            type: workflowType,
+            sid: sessionId,
+            eid: entityId,
             pid: routes[this.navigationIndex].processId
           }
         }
@@ -156,14 +165,16 @@ export class CaseNavigationComponent implements OnInit {
 
   /** Internal event methods **/
   onApplicationReviewClicked() {
+    this.onRouteChange(this.review, true);
     this.isApplicationReviewOpened = true;
   }
 
   onApplicationReviewClosed() {
+    this.onRouteChange(this.review, false, true);
     this.isApplicationReviewOpened = false;
   }
 
-  onRouteChange(route: WorkFlowProgress) {
-    this.workflowChange.emit(route);
+  onRouteChange(route: WorkFlowProgress, isReview: boolean = false, isReset: boolean = false) {
+    this.workflowChange.emit({ route: route, isReview: isReview, isReset: isReset });
   }
 }

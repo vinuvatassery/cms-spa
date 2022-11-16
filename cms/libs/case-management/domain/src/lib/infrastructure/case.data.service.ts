@@ -16,6 +16,8 @@ export class CaseDataService {
   loadCases(): Observable<Case[]> {
     return of([
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'John Sakariya',
         Pronouns: 'She/Her/Hers',
         ID: 100,
@@ -27,6 +29,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 101,
@@ -38,6 +42,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Clara Stephen',
         Pronouns: 'She/Her/Hers',
         ID: 102,
@@ -49,6 +55,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 103,
@@ -60,6 +68,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Johny Slot',
         Pronouns: 'She/Her/Hers',
         ID: 104,
@@ -71,6 +81,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Chris Fedex',
         Pronouns: 'She/Her/Hers',
         ID: 105,
@@ -82,6 +94,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Amaze Judge',
         Pronouns: 'She/Her/Hers',
         ID: 106,
@@ -93,6 +107,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Dude Vills',
         Pronouns: 'She/Her/Hers',
         ID: 107,

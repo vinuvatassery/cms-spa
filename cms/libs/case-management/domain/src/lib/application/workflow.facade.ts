@@ -6,11 +6,15 @@ import { BehaviorSubject, forkJoin, mergeMap, of, Subject } from 'rxjs';
 /** Entities **/
 import { DatapointsAdjustment, WorkFlowProgress, WorkflowMaster, WorkflowSession } from '../entities/workflow';
 import { CompletionChecklist, WorkflowProcessCompletionStatus } from '../entities/workflow-stage-completion-status';
+import { AdjustOperator } from '../enums/adjustment-operator.enum';
+import { DataPointType } from '../enums/data-point-type.enum';
+import { EntityTypeCode } from '../enums/entity-type-code.enum';
 /** Enums **/
 import { NavigationType } from '../enums/navigation-type.enum';
-import { ScreenFlowType } from '../enums/screen-flow-type.enum';
+import { WorkflowTypeCode } from '../enums/workflow-type.enum';
+import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
-import { ScreenRouteDataService } from '../infrastructure/screen-route.data.service';
+import { WorkflowDataService } from '../infrastructure/workflow.data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +37,7 @@ export class WorkflowFacade {
   currentWorkflowMaster!: WorkflowMaster[];
 
   /**Constructor */
-  constructor(private readonly routeService: ScreenRouteDataService, private router: Router, private actRoute: ActivatedRoute) { }
+  constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute) { }
 
 
   /** Public methods **/
@@ -51,24 +55,25 @@ export class WorkflowFacade {
   }
 
   createNewSession(entityId: string) {
+    //TODO: remove hardcoded values for clientCaseEligibilityId
     let sessionData = {
-      entityId: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B',
-      EntityTypeCode: 'Program',
-      workflowTypeCode: ScreenFlowType.NewCase,
+      entityId: entityId,
+      EntityTypeCode: EntityTypeCode.Program,
+      workflowTypeCode: WorkflowTypeCode.NewCase,
       sessiondata: {
         clientCaseEligibilityId: '8600D14F-FB9E-4353-A73B-0336D79418E5'
       }
     }
 
-    this.routeService.createNewSession(sessionData)
+    this.workflowService.createNewSession(sessionData)
       .subscribe({
         next: (sessionResp: any) => {
           if (sessionResp && sessionResp?.workflowSessionId) {
             this.router.navigate(['case-management/case-detail'], {
               queryParams: {
-                type: ScreenFlowType.NewCase,
-                eid: entityId,
-                sid: sessionResp?.workflowSessionId
+                type: WorkflowTypeCode.NewCase,
+                sid: sessionResp?.workflowSessionId,
+                eid: entityId
               },
             });
           }
@@ -81,13 +86,13 @@ export class WorkflowFacade {
   }
 
   loadWorkflowSession(type: string, entityId: string, sessionId: string) {
-    this.routeService.loadWorkflowMaster(entityId, 'Program', type)
+    this.workflowService.loadWorkflowMaster(entityId, EntityTypeCode.Program, type)
       .pipe(
         mergeMap((wfMaster: any) =>
           forkJoin(
             [
               of(wfMaster),
-              this.routeService.loadWorkflow(type, entityId, sessionId)
+              this.workflowService.loadWorkflow(sessionId)
             ])
         ),
       ).subscribe({
@@ -124,25 +129,25 @@ export class WorkflowFacade {
 
     if (currentWorkflowStep && completionStatus) {
       const navUpdate = {
-        navType: navType == NavigationType.Next ? 'Next' : 'Prev',
+        navType: navType,
         workflowProgressId: currentWorkflowStep?.workflowProgressId,
         requiredDatapointsCount: completionStatus?.calcualtedTotalCount ?? 0,
         completedDatapointsCount: completionStatus?.completedCount ?? 0
       }
 
-      return this.routeService.saveWorkflowProgress(navUpdate, sessionld);
+      return this.workflowService.saveWorkflowProgress(navUpdate, sessionld);
     }
 
     return of(false);
   }
 
-  saveNonequenceNavigation(currentWorkflow: WorkFlowProgress, sessionId: string) {
-    return this.routeService.updateActiveWorkflowStep(currentWorkflow?.workflowProgressId, sessionId)
+  saveNonequenceNavigation(workflowProgressId: string, sessionId: string) {
+    return this.workflowService.updateActiveWorkflowStep(workflowProgressId, sessionId)
   }
 
   updateNonequenceNavigation(currentWorkflow: WorkFlowProgress,) {
     const previousRoute = this.deepCopy(this.currentSession?.workFlowProgress)?.filter((wf: WorkFlowProgress) =>
-      wf?.currentFlag == 'Y')[0];
+      wf?.currentFlag == StatusFlag.Yes)[0];
     this.updateRoutes(previousRoute, currentWorkflow);
   }
 
@@ -155,7 +160,7 @@ export class WorkflowFacade {
       ?.filter((wm: WorkflowMaster) =>
         wm.processId === processId)[0];
     const AdjustAttributes = workflowMaster?.datapointsAdjustment
-      ?.filter((adj: DatapointsAdjustment) => adj.adjustmentTypeCode === 'adjusted');
+      ?.filter((adj: DatapointsAdjustment) => adj.adjustmentTypeCode === DataPointType.Ajusted);
 
     if (processCompChecklist && AdjustAttributes) {
       ajustData?.forEach((data: CompletionChecklist) => {
@@ -164,21 +169,21 @@ export class WorkflowFacade {
 
         if (curAdjItem && children) {
           children?.forEach(child => {
-            if (data?.status == 'Y') {
-              if (curAdjItem?.adjustmentOperator === '+') {
+            if (data?.status == StatusFlag.Yes) {
+              if (curAdjItem?.adjustmentOperator === AdjustOperator.Add) {
                 this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
               }
-              if (curAdjItem?.adjustmentOperator === '-') {
+              if (curAdjItem?.adjustmentOperator === AdjustOperator.Remove) {
                 const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
                 processCompChecklist.completionChecklist = newList;
               }
             }
-            else if (data?.status == 'N') {
-              if (curAdjItem?.adjustmentOperator === '+') {
+            else if (data?.status == StatusFlag.No) {
+              if (curAdjItem?.adjustmentOperator === AdjustOperator.Add) {
                 const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
                 processCompChecklist.completionChecklist = newList;
               }
-              if (curAdjItem?.adjustmentOperator === '-') {
+              if (curAdjItem?.adjustmentOperator === AdjustOperator.Remove) {
                 this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
               }
             }
@@ -210,6 +215,16 @@ export class WorkflowFacade {
     }
   }
 
+  resetWorkflowNavigation() {
+    const newRoute = this.deepCopy(this.currentSession?.workFlowProgress)[0];
+    this.saveNonequenceNavigation(newRoute?.workflowProgressId, this.currentSession.workflowSessionId)
+      .subscribe(() => {
+        const currentRoute = this.deepCopy(this.currentSession?.workFlowProgress)?.filter((wf: WorkFlowProgress) =>
+          wf?.currentFlag == StatusFlag.Yes)[0];
+        this.updateRoutes(currentRoute, newRoute);
+      });
+  }
+
 
   /** Private methods **/
   private navigateNext() {
@@ -233,10 +248,10 @@ export class WorkflowFacade {
     workflowMaster.forEach((wf: WorkflowMaster) => {
       const completionChecklist: CompletionChecklist[] = [];
       wf.datapointsAdjustment.forEach((dtAdjust: DatapointsAdjustment) => {
-        if (dtAdjust?.adjustmentTypeCode === 'default') {
+        if (dtAdjust?.adjustmentTypeCode === DataPointType.Default) {
           const checklistItem: CompletionChecklist = {
             dataPointName: dtAdjust.datapointName,
-            status: 'N',
+            status: StatusFlag.No,
           }
           completionChecklist.push(checklistItem);
         }
@@ -257,10 +272,10 @@ export class WorkflowFacade {
   }
 
   private updateRoutes(currentWorkflow: WorkFlowProgress, nextWorkflow: WorkFlowProgress) {
-    currentWorkflow.currentFlag = 'N';
-    currentWorkflow.visitedFlag = 'Y';
-    nextWorkflow.currentFlag = 'Y';
-    nextWorkflow.visitedFlag = 'Y';
+    currentWorkflow.currentFlag = StatusFlag.No;
+    currentWorkflow.visitedFlag = StatusFlag.Yes;
+    nextWorkflow.currentFlag = StatusFlag.Yes;
+    nextWorkflow.visitedFlag = StatusFlag.Yes;
 
     const currentIndex = this.deepCopy(this.currentSession?.workFlowProgress)?.findIndex((wf: WorkFlowProgress) => wf.workflowProgressId === currentWorkflow.workflowProgressId);
     if (currentIndex !== -1) {
@@ -280,7 +295,7 @@ export class WorkflowFacade {
     if (index === -1) {
       const chkItem = {
         dataPointName: item,
-        status: 'N'
+        status: StatusFlag.No
       }
 
       checklist?.push(chkItem);
@@ -292,7 +307,7 @@ export class WorkflowFacade {
       let currentScreenStatus: WorkflowProcessCompletionStatus = this.deepCopy(this.completionChecklist)?.filter((status: WorkflowProcessCompletionStatus) => status?.processId === completionStatus?.processId)[0];
       let currentScreenStatusIndex = this.deepCopy(this.completionChecklist)?.findIndex((status: WorkflowProcessCompletionStatus) => status?.processId === completionStatus?.processId);
       if (currentScreenStatusIndex !== -1) {
-        currentScreenStatus.completedCount = completionStatus?.completionChecklist?.filter(chklist => chklist?.status === 'Y')?.length;
+        currentScreenStatus.completedCount = completionStatus?.completionChecklist?.filter(chklist => chklist?.status === StatusFlag.Yes)?.length;
         currentScreenStatus.calcualtedTotalCount = completionStatus?.completionChecklist?.length;
         currentScreenStatus.completionChecklist = completionStatus?.completionChecklist;
         this.completionChecklist[currentScreenStatusIndex] = currentScreenStatus;
