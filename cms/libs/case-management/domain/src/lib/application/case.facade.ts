@@ -109,22 +109,22 @@ export class CaseFacade {
     });
   }
 
-  loadRoutes(
-    screen_flow_type_code: string,
-    program_id: number,
-    case_id?: number
-  ) {
-    this.routeService
-      .load(screen_flow_type_code, program_id, case_id)
-      .subscribe({
-        next: (data) => {
-          this.routesSubject.next(data);
-        },
-        error: (err) => {
-          console.log('Error', err);
-        },
-      });
-  }
+ // loadRoutes(
+   // screen_flow_type_code: string,
+    //program_id: number,
+   // case_id?: number
+  //) {
+    //this.routeService
+      //.load(screen_flow_type_code, program_id, case_id)
+      //.subscribe({
+        //next: (data) => {
+          //this.routesSubject.next(data);
+        //},
+        //error: (err) => {
+       //   console.log('Error', err);
+     //   },
+   //   });
+ // }
 
   loadDdlGridColumns(): void {
     this.caseDataService.loadDdlGridColumns().subscribe({

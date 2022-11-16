@@ -60,7 +60,7 @@ export class CasePageComponent implements OnInit {
   handleNewCaseDialogClosed() {
     this.isNewCaseDialogClicked = false;
   }
-  newcaseSaved(entityId:any){   
+  newcaseSaved(entityId:any){
      this.workflowFasad.createNewSession(entityId); 
   }
 }

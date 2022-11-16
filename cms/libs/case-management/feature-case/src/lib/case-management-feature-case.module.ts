@@ -78,7 +78,7 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
     CommonActionsComponent,
     SendLetterProfileComponent,
     CaseSummaryComponent,
-    CaseDetailsSummaryComponent
+    CaseDetailsSummaryComponent,
     StatusPeriodComponent,
     PageCompletionStatusComponent,
   ],
@@ -95,7 +95,7 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
     CommonActionsComponent,
     SendLetterProfileComponent,
     CaseSummaryComponent,
-    CaseDetailsSummaryComponent
+    CaseDetailsSummaryComponent,
     StatusPeriodComponent,
   ],
 })
