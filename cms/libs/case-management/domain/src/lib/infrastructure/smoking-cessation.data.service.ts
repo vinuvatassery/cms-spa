@@ -14,8 +14,9 @@ export class SmokingCessationDataService{
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/smoking-cessation/update`,
            smokingCessation,
 
-        )
-        
+        )}
+      loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any){
+        return this.http.get<SmokingCessation>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/smoking-cessation/clientCaseEligibilityId/${clientCaseEligibilityId}/clientCaseId/${clientCaseId}`,);
       }
-      
 }

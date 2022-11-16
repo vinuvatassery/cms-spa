@@ -4,7 +4,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 /** services **/
 import { CaseDetailsFacade, CompletionStatusFacade, SmokingCessationFacade } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, of, Subscription } from 'rxjs';
-import {  SmokingCessation}  from '@cms/case-management/domain';
+import {  SmokingCessation, YesNoFlag}  from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -45,6 +45,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.tareaVariablesIntiation();
     this.saveClickSubscribed();
     this.smokingCessationFromChanged();
+    this.loadSmokingCessation();
   }
 
   ngOnDestroy(): void {
@@ -73,6 +74,27 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     });
   }
   
+  private loadSmokingCessation(){
+    this.smokingCessationFacade.loadSmokingCessation(this.smokingCessation.clientCaseEligibilityId,
+      this.smokingCessation.clientCaseId).subscribe({         
+        next: response => {
+          this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.smokingCessationNote)
+          if(response.smokingCessationReferralFlag == YesNoFlag.Yes){
+            this.smokingCessationForm.controls["smokingCessation"].setValue('Yes')
+            this.isDisabled = false;
+          }
+          else if(response.smokingCessationReferralFlag == YesNoFlag.No){
+            this.smokingCessationForm.controls["smokingCessation"].setValue('No')
+            this.isDisabled = true;
+          }
+       
+        },
+        error: error => {               
+            console.error(error);}
+        });
+  
+  }
+
   private smokingCessationFromChanged() {
     this.smokingCessationForm.valueChanges.subscribe(val => {
       this.updateFormCompleteCount();
@@ -139,6 +161,11 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   }
 
   disableSmokingCessationNote(disable:boolean){
+    if(disable){
+       this.smokingCessationForm.controls["smokingCessationNote"].setValue('')
+       this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();  
+       this.smokingCessationForm.controls["smokingCessationNote"].updateValueAndValidity() 
+      }    
     this.isDisabled = disable;
   }
   /** Internal event methods **/

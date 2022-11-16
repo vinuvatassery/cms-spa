@@ -27,6 +27,7 @@ export * from './lib/enums/communication-event.enum';
 export * from './lib/enums/screen-type.enum';
 export * from './lib/enums/screen-flow-type.enum';
 export * from './lib/enums/case-screen-tab.enum';
+export * from './lib/enums/yes-no-flag.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
