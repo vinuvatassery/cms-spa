@@ -62,6 +62,7 @@
 </section>
 
 <!-- Program Selection Modal -->
+<div class="form-group" [formGroup]="parentForm" #formDir="ngForm" class="k-form">
 <kendo-dialog
   *ngIf="isProgramSelectionOpened"
   (close)="onCloseProgramSelectionClicked()"
@@ -69,48 +70,12 @@
   title="Create New Case"
   kendoTooltip
 >
+
   <section class="k-dialog-body newcase">
     <p class="text-muted mb-2">
       All fields are required unless otherwise stated.
     </p>
-    <div class="flex-row">
-      <div class="flex-col">
-        <kendo-floatinglabel text="Date Application Received">
-          <kendo-datepicker
-          [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-dd-yyyy"
-            formatPlaceholder="formatPattern"
-            [(ngModel)]="currentDate" 
-          >
-          </kendo-datepicker>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Case Origin">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Case Owner">
-          <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="caseOwners$ | async">
-          </kendo-autocomplete>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Program">
-          <kendo-dropdownlist
-          [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlPrograms$ | async"
-            textField="value"
-            valueField="key"
-            [(ngModel)]="selectedProgram"
-            [disabled]="true"
-          >
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-    </div>
+    <case-management-case-detailed-summary [isProgramVIsible]="true" [parentForm]="parentForm" [isSubmitted]="isSubmitted"></case-management-case-detailed-summary>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -134,4 +99,6 @@
       </div>
     </div>
   </kendo-dialog-actions>
+
 </kendo-dialog>
+</div>

@@ -32,6 +32,8 @@ import { Case360HeaderComponent } from './components/case360-header/case360-head
 import { ReAssignCaseComponent } from './components/re-assign-case/re-assign-case.component';
 import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
+import { CaseSummaryComponent } from './containers/case-summary/case-summary.component';
+import { CaseDetailsSummaryComponent } from './components/case-details/case-details.component';
 import { PageCompletionStatusComponent } from './components/page-completion-status/page-completion-status.component';
 import { CaseManagementFeatureDrugModule } from '@cms/case-management/feature-drug';
 import { CaseManagementFeatureManagementModule } from '@cms/case-management/feature-management';
@@ -75,6 +77,8 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
     ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
+    CaseSummaryComponent,
+    CaseDetailsSummaryComponent,
     StatusPeriodComponent,
     PageCompletionStatusComponent,
   ],
@@ -90,6 +94,8 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
     ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
+    CaseSummaryComponent,
+    CaseDetailsSummaryComponent,
     StatusPeriodComponent,
   ],
 })

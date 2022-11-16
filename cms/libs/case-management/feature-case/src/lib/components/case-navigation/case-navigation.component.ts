@@ -29,7 +29,7 @@ export class CaseNavigationComponent implements OnInit {
     this.isSendLetterProfileOpenedSubject.asObservable();
   isApplicationReviewOpened = false;
   isCheckRouteExcecuted = false; // for checking  the if conditions in the loop has been excecuted or not
-  navigationIndex = 0;
+  navigationIndex = 1;
   routes!: any[];
   review!: WorkFlowProgress;
   isNotReadyForReview: boolean = true;
