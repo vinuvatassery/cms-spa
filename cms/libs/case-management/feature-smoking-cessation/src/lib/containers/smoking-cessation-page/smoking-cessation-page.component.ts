@@ -42,11 +42,11 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadSmokingCessation();
     this.buildForm();
     this.tareaVariablesIntiation();
     this.addSaveSubscription();
-    this.smokingCessationFromChanged();
-    this.loadSmokingCessation();
+    this.smokingCessationFormChanged();    
   }
 
   ngOnDestroy(): void {
@@ -62,6 +62,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   }
 
   private loadSmokingCessation(){
+    this.isDisabled = false;
     this.smokingCessationFacade.loadSmokingCessation(this.smokingCessation.clientCaseEligibilityId,
       this.smokingCessation.clientCaseId).subscribe({         
         next: response => {
@@ -81,7 +82,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
         });
   
   }
-  private smokingCessationFromChanged() {
+  private smokingCessationFormChanged() {
     this.smokingCessationForm.valueChanges
       .pipe(
         debounceTime(500),
