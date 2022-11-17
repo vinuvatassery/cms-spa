@@ -10,11 +10,11 @@ import {
 } from '@progress/kendo-angular-dateinputs';
 import { debounceTime, distinctUntilChanged, pairwise, startWith } from 'rxjs';
 /** Facades **/
-import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
+import { ClientFacade, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+
 
  
 @Component({
