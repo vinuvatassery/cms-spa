@@ -10,6 +10,11 @@ export class CompletionStatusDataService {
     if (caseId) {
       return of([
         {
+          name: 'Case Details',
+          completed: 2,
+          total: 31,
+        },
+        {
           name: 'Applicant Info',
           completed: 2,
           total: 31,
@@ -72,6 +77,11 @@ export class CompletionStatusDataService {
       ]);
     } else {
       return of([
+        {
+          name: 'Case Details',
+          completed: 0,
+          total: 31,
+        },
         {
           name: 'Applicant Info',
           completed: 0,
