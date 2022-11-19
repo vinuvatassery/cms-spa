@@ -29,6 +29,7 @@
     <div class="flex-col" *ngIf="isProgramVIsible==true">
       <kendo-floatinglabel text="Program">
         <kendo-dropdownlist
+        [fillMode]="formUiStyle.dropDownFillMode"
         [data]="ddlPrograms$ | async"
         textField="value"
         valueField="key"

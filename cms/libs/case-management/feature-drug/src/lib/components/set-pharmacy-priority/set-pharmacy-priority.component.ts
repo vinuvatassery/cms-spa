@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'case-management-set-pharmacy-priority',
   templateUrl: './set-pharmacy-priority.component.html',
@@ -21,7 +21,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
 
   /** Public properties **/
   ddlPriorities$ = this.drugPharmacyFacade.ddlPriorities$;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade) {}
 

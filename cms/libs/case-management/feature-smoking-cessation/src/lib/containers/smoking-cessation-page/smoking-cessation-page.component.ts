@@ -5,7 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-smoking-cessation-page',
@@ -23,7 +23,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationCounter!: string;
   tareaCessationNote = '';
   smokingCessationForm!: FormGroup;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   constructor(
     private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,
