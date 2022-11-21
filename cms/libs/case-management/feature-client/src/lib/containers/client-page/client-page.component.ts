@@ -1,11 +1,11 @@
 /** Angular **/
-import { OnInit } from '@angular/core';
+import { Input, OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
-import { WorkflowFacade, ClientFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, ApplicationInfoFacade } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -25,8 +25,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
-
-  constructor(private workflowFacade: WorkflowFacade,
+  isValid:boolean=true;
+  //validate$ = this.applicationInfoFacade.validate$;
+  showErrorMessage:boolean=false;
+  constructor(private workflowFacade: WorkflowFacade,private applicationInfoFacade:ApplicationInfoFacade,
     private clientFacade: ClientFacade) {
 
   }
@@ -53,10 +55,17 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private save() {
-    let isValid = true;
+    //let isValid = true;
     // TODO: validate the form
-    if (isValid) { 
+    // this.validate$.subscribe(data=>{
+    //   debugger;
+    // })
+    debugger;
+    if (this.isValid) { 
       return this.clientFacade.save();
+    }
+    else{
+      this.showErrorMessage =true;
     }
 
     return of(false)
@@ -73,5 +82,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
    if(ajustData){
     this.workflowFacade.updateBasedOnDtAttrChecklist(ajustData);
    }
+  }
+  validate(valid:boolean)
+  {
+    this.isValid=valid;
   }
 }

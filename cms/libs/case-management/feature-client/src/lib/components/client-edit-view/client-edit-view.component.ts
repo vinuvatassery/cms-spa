@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
@@ -8,13 +8,14 @@ import {
   DateInputRounded,
   DateInputFillMode,
 } from '@progress/kendo-angular-dateinputs';
-import { debounceTime, distinctUntilChanged, pairwise, startWith } from 'rxjs';
+import { debounceTime, distinctUntilChanged, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
-import { ClientFacade, CompletionChecklist } from '@cms/case-management/domain';
+import { ApplicationInfoFacade, ClientFacade, CompletionChecklist, WorkflowFacade } from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+import { kMaxLength } from 'buffer';
 
  
 @Component({
@@ -32,6 +33,9 @@ export class ClientEditViewComponent implements OnInit {
   /** Output Properties **/
   @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
   @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
+  @Output() ValidateFields = new EventEmitter<boolean>();
+ @Input() ShowErrorMessage = true;
+  
 
 
   /** Public properties **/
@@ -91,10 +95,14 @@ export class ClientEditViewComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
   adjustmentAttributeList!: string[];
+  lengthRestrictThirty=30;
+  lengthRestrictForty=40;
+  //validate$ = this.applicationInfoFacade.validate$;
+ //private saveClickSubscription !: Subscription;
 
   /** Constructor**/
-  constructor(private readonly clientfacade: ClientFacade,
-    private readonly elementRef: ElementRef) { }
+  constructor(private readonly clientfacade: ClientFacade,private readonly applicationInfoFacade:ApplicationInfoFacade,
+    private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -116,6 +124,7 @@ export class ClientEditViewComponent implements OnInit {
     this.loadTareaRaceAndEthinicity();
     this.buildForm();
     this.addAppInfoFormChangeSubscription();
+    this.addSaveSubscriptionToValidate();
   }
 
   ngAfterViewInit(){
@@ -124,7 +133,11 @@ export class ClientEditViewComponent implements OnInit {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
   }
-
+  private addSaveSubscriptionToValidate(): void {
+   this.workflowFacade.saveAndContinueClicked$.subscribe(() => {
+      this.validate();
+    });
+  }
   ngAfterViewChecked() {
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
@@ -154,9 +167,9 @@ export class ClientEditViewComponent implements OnInit {
 
   private buildForm() {
     this.appInfoForm = new FormGroup({
-      firstName: new FormControl('', { updateOn: 'blur' }),
-      middleName: new FormControl({ value: '', disabled: false }, { updateOn: 'blur' }),
-      chkmiddleName: new FormControl(true),
+      firstName: new FormControl('', {updateOn: 'blur'}),
+      middleName: new FormControl({ value: '', disabled: false }, {updateOn: 'blur'}),
+      chkmiddleName: new FormControl(''),
       lastName: new FormControl('', { updateOn: 'blur' }),
       prmInsFirstName: new FormControl('', { updateOn: 'blur' }),
       prmInsLastName: new FormControl('', { updateOn: 'blur' }),
@@ -189,9 +202,55 @@ export class ClientEditViewComponent implements OnInit {
       )
       .subscribe(([prev, curr]: [any, any]) => {
         this.updateFormCompleteCount(prev, curr);
+        //this.validate()
       });
+      this.appInfoForm.statusChanges.subscribe(a=>{        
+        this.ValidateFields.emit(this.appInfoForm.valid);
+    });
   }
-
+  private validate(){
+    debugger;
+    this.appInfoForm.controls["firstName"].setValidators([Validators.required]);
+    this.appInfoForm.controls["firstName"].updateValueAndValidity();
+    if(this.isMiddleNameChecked ){
+      this.appInfoForm.controls["middleName"].removeValidators(Validators.required);;
+      this.appInfoForm.controls["middleName"].updateValueAndValidity();
+    }
+    else{
+      this.appInfoForm.controls["middleName"].setValidators([Validators.required]);
+      this.appInfoForm.controls["middleName"].updateValueAndValidity();
+    }
+    this.appInfoForm.controls["lastName"].setValidators([Validators.required]);
+    this.appInfoForm.controls["lastName"].updateValueAndValidity();
+    if(this.isInsuranceCardChecked){
+      this.appInfoForm.controls["prmInsFirstName"].removeValidators(Validators.required);;
+      this.appInfoForm.controls["prmInsFirstName"].updateValueAndValidity();    
+      this.appInfoForm.controls["prmInsLastName"].removeValidators(Validators.required);;
+      this.appInfoForm.controls["prmInsLastName"].updateValueAndValidity();    
+    }
+    else{
+      this.appInfoForm.controls["prmInsFirstName"].setValidators(Validators.required);;
+      this.appInfoForm.controls["prmInsFirstName"].updateValueAndValidity();  
+      this.appInfoForm.controls["prmInsLastName"].setValidators(Validators.required);;
+      this.appInfoForm.controls["prmInsLastName"].updateValueAndValidity();    
+    }
+    if(this.isOfficialIdChecked){
+      this.appInfoForm.controls["officialIdFirstName"].removeValidators(Validators.required);;
+      this.appInfoForm.controls["officialIdFirstName"].updateValueAndValidity();    
+      this.appInfoForm.controls["officialIdLastName"].removeValidators(Validators.required);;
+      this.appInfoForm.controls["officialIdLastName"].updateValueAndValidity();    
+    }
+    else{
+      this.appInfoForm.controls["officialIdFirstName"].setValidators(Validators.required);;
+      this.appInfoForm.controls["officialIdFirstName"].updateValueAndValidity();  
+      this.appInfoForm.controls["officialIdLastName"].setValidators(Validators.required);;
+      this.appInfoForm.controls["officialIdLastName"].updateValueAndValidity();    
+    }
+    this.ValidateFields.emit(this.appInfoForm.valid);
+    //this.applicationInfoFacade.validate(this.appInfoForm.valid);
+  
+  }
+  
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.appInfoForm.controls).forEach(key => {
@@ -298,43 +357,78 @@ export class ClientEditViewComponent implements OnInit {
     this.clientfacade.loadDdlEnglishProficiencies();
   }
 
+ 
   /** Internal event methods **/
   onMiddleNameChecked(event: Event) {
+    debugger;
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.appInfoForm.controls['middleName'].reset();
-      this.appInfoForm.controls['middleName'].enable();
+      this.isMiddleNameChecked = true;
+      
+     
+      this.appInfoForm.controls['middleName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();
+      // this.appInfoForm.controls['middleName'].reset();
+      // this.appInfoForm.controls['middleName'].enable();
+   
+     
     }
     else {
-      this.appInfoForm.controls['middleName'].disable();
+      this.isMiddleNameChecked = false   
+      this.appInfoForm.controls['middleName'].setValidators(Validators.required);
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();
+      //this.appInfoForm.controls['middleName'].disable();
     }
   }
-
+  public disabledDates = (date: Date): boolean => {
+    return date.getDate() >= 0;
+  };
   onInsuranceCardChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.appInfoForm.controls['prmInsLastName'].disable();
-      this.appInfoForm.controls['prmInsFirstName'].disable();
+      this.isInsuranceCardChecked = true;
+      this.appInfoForm.controls['prmInsFirstName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['prmInsLastName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
+      // this.appInfoForm.controls['prmInsLastName'].disable();
+      // this.appInfoForm.controls['prmInsFirstName'].disable();
     }
     else {
-      this.appInfoForm.controls['prmInsLastName'].reset();
-      this.appInfoForm.controls['prmInsFirstName'].reset();
-      this.appInfoForm.controls['prmInsLastName'].enable();
-      this.appInfoForm.controls['prmInsFirstName'].enable();
+      this.isInsuranceCardChecked = false;
+      this.appInfoForm.controls['prmInsFirstName'].setValidators(Validators.required);
+      this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['prmInsLastName'].setValidators(Validators.required);
+      this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
+      // this.appInfoForm.controls['prmInsLastName'].reset();
+      // this.appInfoForm.controls['prmInsFirstName'].reset();
+      // this.appInfoForm.controls['prmInsLastName'].enable();
+      // this.appInfoForm.controls['prmInsFirstName'].enable();
     }
   }
 
   onOfficialIdChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.appInfoForm.controls['officialIdFirstName'].disable();
-      this.appInfoForm.controls['officialIdLastName'].disable();
+      this.isOfficialIdChecked = true;
+      this.appInfoForm.controls['officialIdFirstName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['officialIdLastName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
+      // this.appInfoForm.controls['officialIdFirstName'].disable();
+      // this.appInfoForm.controls['officialIdLastName'].disable();
     }
     else {
-      this.appInfoForm.controls['officialIdFirstName'].reset();
-      this.appInfoForm.controls['officialIdLastName'].reset();
-      this.appInfoForm.controls['officialIdFirstName'].enable();
-      this.appInfoForm.controls['officialIdLastName'].enable();
+      this.isOfficialIdChecked = false;
+      // this.appInfoForm.controls['officialIdFirstName'].setValidators(Validators.required);
+      // this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+      // this.appInfoForm.controls['officialIdLastName'].setValidators(Validators.required);
+      // this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
+
+      // this.appInfoForm.controls['officialIdFirstName'].reset();
+      // this.appInfoForm.controls['officialIdLastName'].reset();
+      // this.appInfoForm.controls['officialIdFirstName'].enable();
+      // this.appInfoForm.controls['officialIdLastName'].enable();
     }
   }
 

@@ -7,20 +7,26 @@
       <kendo-floatinglabel text="Enter First Name" class="k-form">
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
         <kendo-textbox  aria-label="enter first name"  
-          formControlName="firstname"
           showErrorIcon="initial"
           #firstname
-          required  
-       formControlName="firstName"  [fillMode]="formUiStyle.inputFillMode">
+          formControlName="firstName"  
+          [maxlength]="lengthRestrictForty"
+          [fillMode]="formUiStyle.inputFillMode" >
+          
       </kendo-textbox>
+      
       <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
-      <kendo-formerror>Error: Full Name is required</kendo-formerror>
-   
+      <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First Name is required</kendo-formerror>
+  
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Middle Initial (Optional)">
-        <kendo-textbox   aria-label="middle initial" [fillMode]="formUiStyle.inputFillMode" formControlName="middleName">
+        <kendo-textbox   aria-label="middle initial" 
+            [fillMode]="formUiStyle.inputFillMode" 
+            formControlName="middleName"
+            [maxlength]="lengthRestrictThirty" 
+            [disabled]="isMiddleNameChecked">
         </kendo-textbox>
         <!-- <input
           kendoTextBox
@@ -28,6 +34,7 @@
           aria-label="middle initial"
              [(ngModel)]="isMiddleNameChecked"
         /> -->
+        <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid">Middle Initial is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
@@ -44,10 +51,16 @@
       />
       <label class="k-checkbox-label" for="middleInitial">  Middle Initial</label>
       </span>
+      
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name">
-        <kendo-textbox aria-label="last name" [fillMode]="formUiStyle.inputFillMode" formControlName="lastName">   </kendo-textbox>
+        <kendo-textbox aria-label="last name" 
+            [fillMode]="formUiStyle.inputFillMode" 
+            formControlName="lastName"
+            [maxlength]="lengthRestrictForty">
+        </kendo-textbox>
+        <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last Name is required.</kendo-formerror>
         <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
       </kendo-floatinglabel>
     </div>
@@ -56,22 +69,34 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Primary Insurance Card">
-        <kendo-textbox aria-label="first name on primary insurance card"  [fillMode]="formUiStyle.inputFillMode" formControlName="prmInsFirstName">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on primary insurance card"  
+            [fillMode]="formUiStyle.inputFillMode"
+            formControlName="prmInsFirstName"
+            [maxlength]="lengthRestrictForty"
+            [disabled]="isInsuranceCardChecked">
+        </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
           aria-label="first name on primary insurance card"
         /> -->
+        <kendo-formerror *ngIf="!appInfoForm.controls['prmInsFirstName'].valid">First Name on Primary Insurance Card is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name on Primary Insurance Card">
-        <kendo-textbox aria-label="last name on primary insurance card"  [fillMode]="formUiStyle.inputFillMode" formControlName="prmInsLastName">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on primary insurance card"  
+            [fillMode]="formUiStyle.inputFillMode" 
+            formControlName="prmInsLastName"
+            [maxlength]="lengthRestrictForty"
+            [disabled]="isInsuranceCardChecked">   
+        </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
           aria-label="last name on primary insurance card"
         /> -->
+        <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid">Last Name on Primary Insurance Card is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
@@ -95,13 +120,19 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Official ID">
-        <kendo-textbox aria-label="first name on official id"  [fillMode]="formUiStyle.inputFillMode" formControlName="officialIdFirstName">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on official id"  
+          [fillMode]="formUiStyle.inputFillMode" 
+          formControlName="officialIdFirstName"
+          [maxlength]="lengthRestrictForty"
+          [disabled]="isOfficialIdChecked">   
+        </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isOfficialIdChecked"
           aria-label="first name on official id"
         /> -->
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid">First Name on Official ID is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name on Official ID">
@@ -111,8 +142,14 @@
           aria-label="last name on official id"
            [(ngModel)]="isOfficialIdChecked"
         /> -->
-        <kendo-textbox aria-label="last name on official id"  [fillMode]="formUiStyle.inputFillMode" formControlName="officialIdLastName">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on official id"  
+          [fillMode]="formUiStyle.inputFillMode" 
+          formControlName="officialIdLastName"
+          [maxlength]="lengthRestrictForty"
+          [disabled]="isOfficialIdChecked">   
+        </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid">Last Name on Official ID is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-4 mt-3">
       <span class="app-checkboxwidtext-wrapper">
@@ -138,7 +175,8 @@
         <kendo-datepicker  
         [fillMode]="formUiStyle.dateInputFillMode"
         [value]="currentDate"
-        formControlName="dateOfBirth"></kendo-datepicker>
+        formControlName="dateOfBirth"
+        [disabledDates]="disabledDates"></kendo-datepicker>
         <!-- <kendo-datepicker    id="datepicker">
         </kendo-datepicker> -->
       </kendo-floatinglabel>
@@ -192,8 +230,7 @@
           <input
             type="radio"
             [value]="1" 
-            [(ngModel)]="isVisible" 
-      
+            [(ngModel)]="isVisible"       
             kendoRadioButton
             name="register"
             aria-labelledby="registerToVoteYes"
