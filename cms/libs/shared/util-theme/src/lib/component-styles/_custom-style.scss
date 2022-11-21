@@ -107,8 +107,17 @@
         &.active-item {
           background: material-color($hive-success-palette, 100);
           border-radius: $size-0;
+          &.case-menu-disabled{
+            opacity: 1;
+          }
+        }
+        &.case-menu-disabled{
+          cursor: default;
+          pointer-events: none;
+          opacity: .4;
         }
       }
+  
     }
     .section-completed {
       background: material-color($hive-success-palette, 100);
