@@ -1,167 +1,153 @@
-<section class="k-dialog-body">
-  <p class="text-muted mb-2">
-    All fields are required unless otherwise stated.
-  </p>
-  <div class="flex-row">
-    <div class="flex-col">
-      <kendo-floatinglabel text="Income Source">
-        <kendo-dropdownlist 
-        [fillMode]="formUiStyle.dropDownFillMode"
-        [(ngModel)]="currentDate"
-          [data]="incomeSources$ | async"
-          aria-label="income sources"
-          name="income sources"
-   
-        >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="Income Type">
-        <kendo-dropdownlist
-        [fillMode]="formUiStyle.dropDownFillMode"
-          [data]="incomeTypes$ | async"
-          aria-label="income types"
-          name="income types"
-        
-        >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Amount" class="amount-with-symbol">
-        <kendo-textbox aria-label="amount"  class="input-icon-right"   [fillMode]="formUiStyle.inputFillMode" name="amount" [tabIndex]="3">
-          <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
-        </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Frequency">
-        <kendo-dropdownlist
-        [fillMode]="formUiStyle.dropDownFillMode"
-          [data]="frequencies$ | async"
-          aria-label="frequencies"
-          name="frequencies"
-       
-        >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Income Start">
-        <kendo-datepicker
-         [fillMode]="formUiStyle.dateInputFillMode"
-          format="MM-dd-yyyy"
-          [(ngModel)]="currentDate"
-          formatPlaceholder="formatPattern"
-          aria-label="income start"
-          name="income start"
-        
-        >
-        </kendo-datepicker>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Income End (Optional)">
-        <kendo-datepicker
-        [fillMode]="formUiStyle.dateInputFillMode"
-          format="MM-dd-yyyy"
-          formatPlaceholder="formatPattern"
-          aria-label="income end"
-          name="income end"
-         
-        >
-        </kendo-datepicker>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col justify-content-between align-items-center ">
-      <h5 class="text-caital">Poof of Income</h5>
-      <div>
-        <span class="app-checkboxwidtext-wrapper">
-          <input
-            kendoCheckBox
-            id="noProofOfIncome"
-            name="no proof of income"
-            type="checkbox"
-            (change)="onProofOfIncomeValueChanged()"
-            aria-labelledby="noProofOfIncome"
-          
-          />
-          <label class="k-checkbox-label" for="noProofOfIncome"
-            >No proof of Income</label
-          >
-        </span>
-      </div>
-  
-    </div>
-    <div class="flex-col mb-2" *ngIf="!hasNoProofOfIncome">
-      <kendo-upload
-        aria-label="upload proof"
-        name="upload proof"
- 
-      >
-      </kendo-upload>
-      <kendo-formhint>Max file size 25MB</kendo-formhint>
-    </div>
-    <div class="flex-col" *ngIf="!hasNoProofOfIncome">
-      <kendo-floatinglabel text="Proof of Income Type">
-        <kendo-dropdownlist
-        [fillMode]="formUiStyle.dropDownFillMode"
-          [data]="proofOfIncomeTypes$ | async"
-          aria-label="proof of income types"
-          name="proof of income types"
-   
-        >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="Financial justification or Income Note">
-        <kendo-textarea
-        [fillMode]="formUiStyle.inputFillMode"
-          #tareaJustifications
-          resizable="auto"
-          [maxlength]="tareaJustificationMaxLength"
-          [value]="tareaJustification"
-          (valueChange)="onTareaJustificationValueChange($event)"
-          aria-label="income note"
-          name="income-note"
-      
-        >
-          <kendo-textarea-suffix class="justify-content-end">
-            <span class="tareajustificationcounter">{{
-              tareaJustificationCounter
-            }}</span>
-          </kendo-textarea-suffix>
-        </kendo-textarea>
-      </kendo-floatinglabel>
-    </div>
-  </div>
-</section>
+  <form [formGroup]="IncomeDetailsForm" novalidate>
+    <section class="k-dialog-body">
+      <p class="text-muted mb-2">
+        All fields are required unless otherwise stated.
+      </p>
 
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div>
-      <button
-        kendoButton
-        class="k-danger-link"
-        *ngIf="isEditValue"
-        aria-label="delete income"
-      >
-        Delete
-      </button>
-    </div>
-    <div class="justify-content-end">
-      <button
-        kendoButton
-        [primary]="true"
-        look="outline"
-        aria
-        aria-label="cancel editing income"
-      >
-        Cancel
-      </button>
-      <button kendoButton [primary]="true" aria-label="add income">Add</button>
-    </div>
-  </div>
-</kendo-dialog-actions>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel text="Income Source">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeSources$ | async"
+              aria-label="income sources" name="income sources" formControlName="incomeSources" #incomeSources>
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeSources'].valid"> income sources is required
+          </kendo-formerror>
+        </div>
+        <div class="flex-col">
+          <kendo-floatinglabel text="Income Type">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeTypes$ | async"
+              aria-label="income types" name="income types" formControlName="incomeTypes" #incomeTypes>
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeTypes'].valid"> income types is required
+          </kendo-formerror>
+
+        </div>
+        <div class="flex-col flex-col-6">
+          <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+            <span class="k-input-prefix custom-currencysymbol"> $ </span>
+            <kendo-numerictextbox aria-label="amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
+              formControlName="incomeAmount" #incomeAmount [fillMode]="formUiStyle.inputFillMode" name="amount">
+
+            </kendo-numerictextbox>
+          </kendo-floatinglabel>
+
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeAmount'].valid"> income amount is required
+          </kendo-formerror>
+
+        </div>
+        <div class="flex-col flex-col-6">
+          <kendo-floatinglabel text="Frequency">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="frequencies$ | async"
+              aria-label="frequencies" name="frequencies" formControlName="incomeFrequencies" #incomeFrequencies>
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeFrequencies'].valid"> income Frequency is required
+          </kendo-formerror>
+
+        </div>
+        <div class="flex-col flex-col-6">
+          <kendo-floatinglabel text="Income Start">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+              formatPlaceholder="formatPattern" aria-label="income start" name="income start"
+              formControlName="incomeStartDate" #incomeStartDate>
+            </kendo-datepicker>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> income start date is required
+          </kendo-formerror>
+
+        </div>
+        <div class="flex-col flex-col-6">
+          <kendo-floatinglabel text="Income End (Optional)">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+              formatPlaceholder="formatPattern" aria-label="income end" name="income end" formControlName="incomeEndDate"
+              #incomeEndDate>
+            </kendo-datepicker>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid"> income end date is required
+          </kendo-formerror>
+
+        </div>
+        <div class="flex-col justify-content-between align-items-center ">
+          <h5 class="text-caital">Poof of Income</h5>
+          <div>
+            <span class="app-checkboxwidtext-wrapper">
+              <input kendoCheckBox id="noProofOfIncome" name="no proof of income" type="checkbox"
+                (change)="onProofOfIncomeValueChanged()" aria-labelledby="noProofOfIncome" />
+              <label class="k-checkbox-label" for="noProofOfIncome">No proof of Income</label>
+            </span>
+          </div>
+
+        </div>
+        <div class="flex-col" *ngIf="!hasNoProofOfIncome">
+          <kendo-upload aria-label="upload proof" name="upload proof"
+            [restrictions]="uploadFileRestrictions.fileRestrictions" formControlName="incomeUploadedProof"
+            #incomeUploadedProof>
+          </kendo-upload>
+          <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeUploadedProof'].valid"> upload proof is required
+          </kendo-formerror>
+
+        </div>
+        <div class="flex-col" *ngIf="!hasNoProofOfIncome">
+          <kendo-floatinglabel text="Proof of Income Type">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="proofOfIncomeTypes$ | async"
+              (valueChange)="selectProofOfIncome()" aria-label="proof of income types" name="proof of income types"
+              formControlName="proofOfIncomeTypes" #proofOfIncomeTypes>
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['proofOfIncomeTypes'].valid"> proof of income types is
+            required </kendo-formerror>
+
+        </div>
+
+        <div class="flex-col" *ngIf="!hasNoProofOfIncome && incomeTypesOther === 'other'">
+          <kendo-floatinglabel text="Name of other Proof">
+            <kendo-textbox [fillMode]="formUiStyle.dropDownFillMode" aria-label="Other income" name="Other income"
+              formControlName="otherProofOfIncome" #otherProofOfIncome>
+            </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['proofOfIncomeTypes'].valid"> Other income is required
+          </kendo-formerror>
+
+        </div>
+        <div class="flex-col">
+          <kendo-floatinglabel text="Financial justification or Income Note">
+            <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #tareaJustifications resizable="auto"
+              [maxlength]="tareaJustificationMaxLength" [value]="tareaJustification"
+              (valueChange)="onTareaJustificationValueChange($event)" aria-label="income note" name="income-note"
+              formControlName="tareaJustifications">
+              <kendo-textarea-suffix class="justify-content-end">
+                <span class="tareajustificationcounter">{{
+                  tareaJustificationCounter
+                  }}</span>
+              </kendo-textarea-suffix>
+            </kendo-textarea>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['tareaJustifications'].valid"> financial justification or
+            income note is required </kendo-formerror>
+
+        </div>
+      </div>
+    </section>
+
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div>
+          <button kendoButton class="k-danger-link" *ngIf="isEditValue" aria-label="delete income">
+            Delete
+          </button>
+        </div>
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" look="outline" aria aria-label="cancel editing income"
+            (click)="closeIncomeDetailPoup()">
+            Cancel
+          </button>
+          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income">Add</button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+  </form>
+
+  <common-notification-snack-bar [data$]="snackbar$"> </common-notification-snack-bar>
