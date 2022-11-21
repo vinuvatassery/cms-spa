@@ -6,11 +6,17 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Case } from '../entities/case';
+import { Program } from '../entities/program';
+
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ClientCase } from '../entities/client-case';
 
 @Injectable({ providedIn: 'root' })
 export class CaseDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
   loadCases(): Observable<Case[]> {
@@ -340,7 +346,7 @@ export class CaseDataService {
     return of([
       {
         name: 'Donna 1',
-        id: '64b403cd-a580-7cb4-4696-3a0774f3db83',
+        id: 'ae578070-7a8b-4c5c-aa2e-00a241d4cb5a',
         programId: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B',
         isApplicationComplete: false,
       },
@@ -374,28 +380,44 @@ export class CaseDataService {
 
   loadDdlSendLetters() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  }
+  } 
+   
 
-  loadCaseOwners() {
-    return of([
-      'Albania Bose',
-      'Doll Stpephy',
-      'John Scena',
-      'Anony Hooks',
-      'David Miller',
-      'Bellary John',
-    ]);
-  }
+    loadCasesById(clientCaseId : string) {
+      return this.http.get<ClientCase[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}`+
+        `/case-management/client-case/${clientCaseId}`
+      );
+    }
+  
 
   loadDdlPrograms() {
-    return of([
-      { key: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B', value: 'CAREAssist', default: true },
-      { key: 2, value: 'OHOP', default: false },
-    ]);
-  }
+        
+    return this.http.get<Program[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-case/programs`
+    );
+}
 
   loadDdlCaseOrigins() {
-    return of(['Client Portal', 'Email', 'Paper', 'Phone']);
+    return of([
+      {
+        "id" : "1",
+        "code" : "Client Portal"
+      },
+      {
+        "id" : "2",
+        "code" : "Email"
+      },
+      {
+        "id" : "3",
+        "code" : "Paper"
+      },
+      {
+        "id" : "4",
+        "code" : "Phone"
+      }     
+      ]);
   }
 
   loadDdlFamilyAndDependentEP() {
@@ -409,5 +431,12 @@ export class CaseDataService {
 
   loadDdlEPEmployments() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+  }
+
+  UpdateCase(caseData: any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case`,
+      caseData
+    );
   }
 }

@@ -4,8 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist } from '@cms/case-management/domain';
-import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag  } from '@cms/case-management/domain';
+
 
 @Component({
   selector: 'case-management-smoking-cessation-page',

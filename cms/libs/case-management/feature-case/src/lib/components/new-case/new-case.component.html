@@ -14,7 +14,7 @@
             >search</span
           >
           <kendo-multicolumncombobox
-            [data]="caseSearchResults$ | async"
+            [data]="caseSearchResults | async"
             textField="name"
             valueField="id"
             placeholder="Search Case Name, Member ID or SSN"
@@ -62,7 +62,7 @@
 </section>
 
 <!-- Program Selection Modal -->
-<div class="form-group" [formGroup]="parentForm" #formDir="ngForm" class="k-form">
+<form class="form-group" (ngSubmit)="onSubmit()" [formGroup]="parentForm" #formDir="ngForm" class="k-form">
 <kendo-dialog
   *ngIf="isProgramSelectionOpened"
   (close)="onCloseProgramSelectionClicked()"
@@ -75,7 +75,16 @@
     <p class="text-muted mb-2">
       All fields are required unless otherwise stated.
     </p>
-    <case-management-case-detailed-summary [isProgramVIsible]="true" [parentForm]="parentForm" [isSubmitted]="isSubmitted"></case-management-case-detailed-summary>
+    <case-management-case-detailed-summary
+     [isProgramVIsible]="true" 
+     [parentForm]="parentForm"
+     [isSubmitted]="isSubmitted"
+     [caseSearchResults]="caseSearchResults"
+     [caseOwners]="caseOwners"
+     [ddlPrograms]="ddlPrograms"
+     [ddlCaseOrigins]="ddlCaseOrigins"   
+     [selectedProgram]="selectedProgram"   
+     ></case-management-case-detailed-summary>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -83,7 +92,7 @@
         <button
           aria-label="cancel new case"
           kendoButton
-          [primary]="true"
+          (click)="onCloseProgramSelectionClicked()"
           look="outline"
         >
           Cancel
@@ -91,8 +100,8 @@
         <button
           aria-label="save and continue"
           kendoButton
-          [primary]="true"
-          (click)="onCreateCaseClicked()"
+          [primary]="true"     
+          [disabled]="formButtonDisabled"    
         >
           Save & Continue
         </button>
@@ -101,4 +110,4 @@
   </kendo-dialog-actions>
 
 </kendo-dialog>
-</div>
+</form>

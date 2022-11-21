@@ -1,16 +1,11 @@
 /** Angular **/
-import {
-  Component, OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {  Component, OnInit,  ChangeDetectionStrategy,
+   ChangeDetectorRef,  Output,  EventEmitter,  Input,} from '@angular/core';
+import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
+
 /** Internal Libraries **/
-import { CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
@@ -19,90 +14,64 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class NewCaseComponent implements OnInit {
 
-  currentDate = new Date();
-
-
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
   @Output() newcaseSaveEvent = new EventEmitter<any>();
 
+  /** input properties **/
+  @Input() caseSearchResults! : any
+  @Input() caseOwners ! : any
+  @Input() ddlPrograms! : any
+  @Input() ddlCaseOrigins! : any
+  @Input() formButtonDisabled! : boolean
 
-  /** Public properties **/
-  caseSearchResults$ = this.caseFacade.caseSearched$;
-  caseOwners$ = this.caseFacade.caseOwners$;
-  ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+    /** Public properties **/
+  parentForm! : FormGroup;
   isProgramSelectionOpened = false;
   selectedProgram!: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  parentForm!: FormGroup;
-  isSubmitted: boolean = false;
+ 
+  isSubmitted! : boolean ;
   /** Constructor**/
-  constructor(
-    private readonly caseFacade: CaseFacade,
-    private readonly ref: ChangeDetectorRef,
-    private fb: FormBuilder
+  constructor(   
+    private readonly ref: ChangeDetectorRef, 
+    private formBuilder: FormBuilder
   ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.parentForm = this.fb.group({
-      caseOrigin: ['', Validators.required],
-      caseOwner: ['', Validators.required],
-      dateApplicationReceived: [this.currentDate, Validators.required]
-    });
-    this.loadCaseBySearchText();
-    this.loadCaseOwners();
-    this.loadDdlPrograms();
-    this.loadDdlCaseOrigins();
+    this.setDefaultProgram();  
+    this.registerFormData();
   }
-
-  /** Private methods **/
-  private loadCaseBySearchText() {
-    this.caseFacade.loadCaseBySearchText();
-  }
-
-  private loadCaseOwners() {
-    this.caseFacade.loadCaseOwners();
-  }
-
-  private loadDdlPrograms() {
-    this.caseFacade.loadDdlPrograms();
-    this.ddlPrograms$.subscribe({
+  private setDefaultProgram() {   
+    this.ddlPrograms.subscribe({
       next: (programs: any) => {
         this.selectedProgram = programs.filter(
-          (data: any) => data.default === true
+          (data: any) => data.programCode == "CA"
         )[0];
-      },
-      error: (err: any) => {
-        console.log('Err', err);
-      },
-    });
+      }
+    });  
   }
-
-  private loadDdlCaseOrigins() {
-    this.caseFacade.loadDdlCaseOrigins();
+  private registerFormData()
+  {
+    this.parentForm = this.formBuilder.group({
+      applicationDate: [new Date(), Validators.required],
+      caseOriginCode: ['', Validators.required],
+      caseOwnerId: ['', Validators.required],
+      programId: [this.selectedProgram.programId, [Validators.required]]   
+      });
   }
 
   /** Internal event methods **/
   onOpenProgramSelectionClicked() {
     this.isProgramSelectionOpened = true;
+    this.formButtonDisabled = false;
     this.ref.markForCheck();
   }
 
-  onCreateCaseClicked() {
+  onSubmit() {     
     this.isSubmitted = true;
-    if (this.parentForm.valid) {
-      console.log('click');
-
-      //this.router.navigate(['case-management/case-detail'], {
-      //queryParams: {
-      //screenFlowType: ScreenFlowType.NewCase,
-      //programId: this.selectedProgram.key,
-      // },
-      //});
-      this.newcaseSaveEvent.emit(this.selectedProgram.key);
-    }
+    this.newcaseSaveEvent.emit(this.parentForm);
   }
 
   onCloseProgramSelectionClicked() {

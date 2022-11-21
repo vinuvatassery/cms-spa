@@ -79,6 +79,11 @@
     <case-management-new-case
       (isCreateNewCasePopupOpened)="handleNewCaseDialogClosed()"
       (newcaseSaveEvent) = "newcaseSaved($event)"
+      [caseSearchResults]="caseSearchResults$"
+      [caseOwners]="caseOwners$"
+      [ddlPrograms]="ddlPrograms$"
+      [ddlCaseOrigins]="ddlCaseOrigins$"
+      [formButtonDisabled] = "formButtonDisabled"
     ></case-management-new-case>
   </kendo-dialog>
 </div>

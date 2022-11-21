@@ -22,6 +22,12 @@ export class WorkflowDataService {
       );
   }
 
+  loadWorkflowSessionData(session_id?: string) {
+    return this.http.get<WorkflowSession>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions/${session_id}/session-data`
+    );
+}
+
   loadWorkflowMaster(entityId:string, entityTypeCode:string, workflowTypeCode: string, ){
     return this.http.get<WorkflowMaster[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/entityId=${entityId}&workflowTypeCode=${workflowTypeCode}&entityTypeCode=${entityTypeCode}`
