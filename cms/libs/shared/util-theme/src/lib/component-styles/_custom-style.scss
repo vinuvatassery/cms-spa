@@ -30,7 +30,8 @@
       width: calc(100% - 219px);
       max-width: 100%;
       @media (max-width: $breakpoint-xlg) {
-        max-width: 100%;
+        width: 100%;
+        max-width: 100% !important;
       }
     }
     .app-l-client-right {

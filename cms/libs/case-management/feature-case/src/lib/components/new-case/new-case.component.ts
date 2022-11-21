@@ -91,6 +91,7 @@ export class NewCaseComponent implements OnInit {
   }
 
   onCreateCaseClicked() {
+    this.parentForm.markAllAsTouched();
     this.isSubmitted = true;
     if (this.parentForm.valid) {
       console.log('click');

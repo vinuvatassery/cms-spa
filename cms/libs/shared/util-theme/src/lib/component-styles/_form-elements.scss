@@ -145,7 +145,16 @@
   .ng-invalid.ng-dirty .k-input-validation-icon {
     color: $error-color-1 !important;
   }
+
+  &.k-invalid + .k-label, 
+ .k-invalid + .k-label, 
+ .ng-invalid.ng-touched + .k-label, 
+ .ng-invalid.ng-dirty + .k-label{
+  color: $error-color-1 !important;
 }
+}
+
+
 
 .k-input-outline,
 .k-picker-outline {
@@ -193,8 +202,18 @@
     &.ng-invalid.ng-dirty {
       border-color: $error-color-1 !important;
     }
+
+
   }
+  &.k-invalid, 
+  &.ng-invalid.ng-touched, 
+  &.ng-invalid.ng-dirty{
+    border-color: $error-color-1 !important;
 }
+  
+}
+
+
 
 .input-icon-left {
   .k-input-prefix {
