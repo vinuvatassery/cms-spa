@@ -25,14 +25,14 @@
 <div class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel text="All Columns">
-      <kendo-dropdownlist fillMode="outline" [data]="ddlRolesAndPermissionsFilter$ | async"> </kendo-dropdownlist>
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRolesAndPermissionsFilter$ | async"> </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons">search</span>
     <kendo-floatinglabel text="Search">
       <!-- <input kendoTextBox /> -->
-      <kendo-textbox  fillMode="outline"> </kendo-textbox>
+      <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
     </kendo-floatinglabel>
   </span>
   <!-- <span>

@@ -470,7 +470,7 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Relationship to Client">
             <kendo-dropdownlist
-            fillMode="outline"
+            [fillMode]="formUiStyle.dropDownFillMode"
               [disabled]="isViewContentEditable"
               [data]="ddlMedicalHealthInsurancePlans$ | async"
             >

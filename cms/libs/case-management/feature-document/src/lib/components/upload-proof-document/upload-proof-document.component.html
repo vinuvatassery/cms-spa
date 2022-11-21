@@ -6,7 +6,7 @@
         </div>
         <div class="flex-col">
             <kendo-floatinglabel text="Attachment Type">
-                <kendo-dropdownlist fillMode="outline" [data]="listItems">
+                <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="listItems">
                 </kendo-dropdownlist>
             </kendo-floatinglabel>
         </div>
@@ -16,7 +16,7 @@
         </div>
         <div class="flex-col mt-2">
             <kendo-floatinglabel text="Attachment Note" class="pb-0">
-                <kendo-textarea fillMode="outline" name="Attachment Note" aria-label="Attachment Note" [rows]="2"
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Attachment Note" aria-label="Attachment Note" [rows]="2"
                     [cols]="40">
                     <kendo-textarea-suffix class="justify-content-end">
                         <kendo-formhint class="justify-content-end">0/750</kendo-formhint>

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CaseDetailPageComponent } from '@cms/case-management/feature-case';
+import { CaseDetailPageComponent, CaseSummaryComponent } from '@cms/case-management/feature-case';
+import { NewCaseComponent } from '@cms/case-management/feature-case';
 
 const routes: Routes = [ 
   {
@@ -18,6 +19,13 @@ const routes: Routes = [
     path: 'case-detail',
     component: CaseDetailPageComponent,    
     children: [
+      {
+        path: 'case-summary',
+        component:CaseSummaryComponent,
+          data: {
+            title: null,
+          }, 
+      },
       {
         path: 'client',
         loadChildren: () =>

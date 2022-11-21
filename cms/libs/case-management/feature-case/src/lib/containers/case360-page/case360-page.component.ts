@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -19,6 +19,7 @@ export class Case360PageComponent implements OnInit {
   private selectedCase = new BehaviorSubject<any>({});
 
   /** Public properties **/
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;
   ddlFamilyAndDependentEP$ = this.caseFacade.ddlFamilyAndDependentEP$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;

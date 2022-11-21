@@ -38,7 +38,7 @@
                   text="Search"
                   class="medium-input-form sms-variable-search_input"
                 >
-                <kendo-textbox aria-label="input a variable"  fillMode="outline">   </kendo-textbox>
+                <kendo-textbox aria-label="input a variable"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
                   <!-- <input kendoTextBox aria-label="input a variable" /> -->
                 </kendo-floatinglabel>
               </div>
@@ -92,7 +92,7 @@
     </div>
     <kendo-floatinglabel text="" class="pt-0">
       <kendo-textarea
-      fillMode="outline"
+      [fillMode]="formUiStyle.inputFillMode"
         name="Message Description"
         [rows]="2"
         [cols]="40"

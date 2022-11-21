@@ -33,7 +33,9 @@ export * from './lib/enums/case-screen-tab.enum';
 export * from './lib/enums/yes-no-flag.enum';
 export * from './lib/enums/navigation-type.enum';
 export * from './lib/enums/status-flag.enum';
-
+export * from './lib/enums/adjustment-operator.enum';
+export * from './lib/enums/data-point-type.enum';
+export * from './lib/enums/entity-type-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

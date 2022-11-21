@@ -32,14 +32,14 @@
         <div class="table-filter-section mat-form-no-b-space">
           <span class="filter-section_items filter--select">
             <kendo-floatinglabel text="All Columns">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlColumnFilters$ | async">
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlColumnFilters$ | async">
               </kendo-dropdownlist>
             </kendo-floatinglabel>
           </span>
           <span class="filter-section_items filter--search">
             <span class="material-icons">search</span>
             <kendo-floatinglabel text="Search">
-              <kendo-textbox fillMode="outline" >
+              <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
               </kendo-textbox>
             </kendo-floatinglabel>
           </span>
@@ -157,7 +157,7 @@
           <div class="d-flex align-items-center">
             <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
             <label class="mr-1">Rows Per Page</label> 
-            <kendo-dropdownlist fillMode="outline" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
               [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>

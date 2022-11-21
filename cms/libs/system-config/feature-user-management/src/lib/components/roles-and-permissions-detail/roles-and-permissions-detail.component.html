@@ -22,7 +22,7 @@
   <kendo-textbox     
   class="add-new-input"
   placeholder="New User Role"
-  aria-label="new user role" fillMode="outline"> </kendo-textbox>
+  aria-label="new user role" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
    
   <p>
     Select which modules this role will have access to for each program, then
@@ -63,7 +63,7 @@
           <div class="header-content small-dropdown-form">
             <h3>Clients</h3>
             <kendo-floatinglabel text="role permission">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRolePermission">
               </kendo-dropdownlist>
             </kendo-floatinglabel>
           </div>
@@ -477,7 +477,7 @@
           <div class="header-content small-dropdown-form">
             <h3>Financial Management</h3>
             <kendo-floatinglabel text="role permission">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"  [data]="ddlRolePermission">
               </kendo-dropdownlist>
             </kendo-floatinglabel>
           </div>
@@ -796,7 +796,7 @@
                       <!-- <span class="amount-prefix">$</span> -->
                       <kendo-textbox    kendoTextBox
                       aria-label="max approval amount"
-                        class="mw-100" fillMode="outline"> 
+                        class="mw-100" [fillMode]="formUiStyle.inputFillMode"> 
                         <ng-template kendoTextBoxPrefixTemplate>
                           <span class="amount-prefix">$</span>
                         </ng-template></kendo-textbox>
@@ -891,7 +891,7 @@
                       <!-- <span class="amount-prefix">$</span> -->
                       <kendo-textbox    kendoTextBox
                       aria-label="max approval amount"
-                        class="mw-100" fillMode="outline"> 
+                        class="mw-100" [fillMode]="formUiStyle.inputFillMode"> 
                         <ng-template kendoTextBoxPrefixTemplate>
                           <span class="amount-prefix">$</span>
                         </ng-template></kendo-textbox>
@@ -982,7 +982,7 @@
                     
                       <kendo-textbox    kendoTextBox
                       aria-label="max approval amount"
-                        class="mw-100" fillMode="outline">
+                        class="mw-100" [fillMode]="formUiStyle.inputFillMode">
                         <ng-template kendoTextBoxPrefixTemplate>
                           <span class="amount-prefix">$</span>
                         </ng-template>
@@ -1128,7 +1128,7 @@
           <div class="header-content small-dropdown-form">
             <h3>System Configuration</h3>
             <kendo-floatinglabel text="role permission">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRolePermission">
               </kendo-dropdownlist>
             </kendo-floatinglabel>
           </div>

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
- 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-service-provider-list',
   templateUrl: './service-provider-list.component.html',
@@ -23,7 +23,7 @@ export class ServiceProviderListComponent implements OnInit {
   clientProfilServiceProvider$ =
     this.userManagementFacade.clientProfilServiceProvider$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+    public formUiStyle : UIFormStyle = new UIFormStyle();
  
     public girdMoreActionsList = [
       {
