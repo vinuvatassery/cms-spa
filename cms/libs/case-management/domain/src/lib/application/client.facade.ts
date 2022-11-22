@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { ApplicantInfo } from '../entities/applicant-info';
 /** Data services **/
 import { ClientDataService } from '../infrastructure/client.data.service';
 
@@ -239,8 +240,7 @@ export class ClientFacade {
     });
   }
 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
-  }
+  save(applicantInfo:ApplicantInfo) {
+    return this.clientDataService.save(applicantInfo);
+}
 }

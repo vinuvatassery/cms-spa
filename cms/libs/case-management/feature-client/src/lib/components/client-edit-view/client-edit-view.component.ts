@@ -5,11 +5,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { groupBy } from '@progress/kendo-data-query';
 import { debounceTime, distinctUntilChanged, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
-import { ApplicationInfoFacade, ClientFacade, CompletionChecklist, WorkflowFacade } from '@cms/case-management/domain';
+import {  ClientFacade, CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 import { kMaxLength } from 'buffer';
 
  
@@ -94,7 +93,7 @@ export class ClientEditViewComponent implements OnInit {
   maxLengthSsn =9;
 
   /** Constructor**/
-  constructor(private readonly clientfacade: ClientFacade,private readonly applicationInfoFacade:ApplicationInfoFacade,
+  constructor(private readonly clientfacade: ClientFacade,
     private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade) { }
 
   /** Lifecycle hooks **/

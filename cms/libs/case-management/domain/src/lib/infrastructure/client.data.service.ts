@@ -5,11 +5,13 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { empty } from 'rxjs';
+import { ApplicantInfo } from '../entities/applicant-info';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ClientDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,private readonly configurationProvider:ConfigurationProvider) {}
 
   /** Public methods **/
   loadDdlCaseOrigin() {
@@ -341,4 +343,11 @@ export class ClientDataService {
   // saveApplicationInfo():Observable<Client>{
   //     return empty();
   // }
+  save(applicantInfo: ApplicantInfo) {  
+    return this.http.post<ApplicantInfo>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/smoking-cessation/test`,
+      applicantInfo,
+
+    )}
+    
 }

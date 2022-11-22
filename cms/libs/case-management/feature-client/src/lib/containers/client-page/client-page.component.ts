@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
-import { WorkflowFacade, ClientFacade, ApplicationInfoFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, ApplicantInfo } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -26,9 +26,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   isValid:boolean=true;
+  applicatInffo!:ApplicantInfo
   //validate$ = this.applicationInfoFacade.validate$;
   showErrorMessage:boolean=false;
-  constructor(private workflowFacade: WorkflowFacade,private applicationInfoFacade:ApplicationInfoFacade,
+  constructor(private workflowFacade: WorkflowFacade,
     private clientFacade: ClientFacade) {
 
   }
@@ -62,7 +63,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     // })
     debugger;
     if (this.isValid) { 
-      return this.clientFacade.save();
+      return this.clientFacade.save(this.applicatInffo);
     }
     else{
       this.showErrorMessage =true;
