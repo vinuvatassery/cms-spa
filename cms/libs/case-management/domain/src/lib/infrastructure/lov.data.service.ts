@@ -21,7 +21,7 @@ export class LovDataService {
       private configurationProvider : ConfigurationProvider) {}
 
 
-      loadCaseOrigins(lovType : string) {
+      getLovsbyType(lovType : string) {
         
         return this.http.get<Lov[]>(
             `${this.configurationProvider.appSettings.sysConfigApiUrl}`+

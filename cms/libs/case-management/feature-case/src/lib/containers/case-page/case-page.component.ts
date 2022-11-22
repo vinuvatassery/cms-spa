@@ -52,7 +52,7 @@ export class CasePageComponent implements OnInit {
       this.caseFacade.loadCaseBySearchText();
       this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);     
       this.caseFacade.loadDdlPrograms();
-      this.lovFacade.loadCaseOrigins(LovType.CaseOrigin);
+      this.lovFacade.getLovsbyType(LovType.CaseOrigin);
   }
 
   /** Getters **/

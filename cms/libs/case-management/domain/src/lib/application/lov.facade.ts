@@ -26,8 +26,8 @@ export class LovFacade {
     lovs$ = this.lovSubject.asObservable();
 
          /** Public methods **/
- loadCaseOrigins(lovType : string): void {
-    this.lovDataService.loadCaseOrigins(lovType).subscribe({
+ getLovsbyType(lovType : string): void {
+    this.lovDataService.getLovsbyType(lovType).subscribe({
       next: (lovResponse) => {
         this.lovSubject.next(lovResponse);
       },

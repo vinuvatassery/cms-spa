@@ -7,7 +7,7 @@ import {DateInputSize, DateInputRounded, DateInputFillMode,} from '@progress/ken
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType,CaseFacade, WorkflowFacade, WorkflowTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType,CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
@@ -209,7 +209,7 @@ export class CaseDetailPageComponent implements OnInit {
     if(object?.isReset ?? false){
         this.workflowFacade.resetWorkflowNavigation();
     }
-    else //if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) 
+    else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) 
     {
       this.workflowFacade.saveNonequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
         .subscribe(() => {

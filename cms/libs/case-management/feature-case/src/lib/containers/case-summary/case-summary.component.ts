@@ -66,7 +66,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     {      
       this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
       this.caseFacade.loadDdlPrograms();
-      this.lovFacade.loadCaseOrigins(LovType.CaseOrigin); 
+      this.lovFacade.getLovsbyType(LovType.CaseOrigin); 
       this.loadCase();
     }
 
