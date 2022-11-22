@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
 
 /** Internal Libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'case-management-new-case',
@@ -17,6 +18,7 @@ export class NewCaseComponent implements OnInit {
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
   @Output() newcaseSaveEvent = new EventEmitter<any>();
+  @Output() searchTextEvent = new EventEmitter<string>(); 
 
   /** input properties **/
   @Input() caseSearchResults! : any
@@ -30,13 +32,24 @@ export class NewCaseComponent implements OnInit {
   isProgramSelectionOpened = false;
   selectedProgram!: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  filterManager: Subject<string> = new Subject<string>();
+  showSearchresult! : false
  
   isSubmitted! : boolean ;
   /** Constructor**/
   constructor(   
     private readonly ref: ChangeDetectorRef, 
     private formBuilder: FormBuilder
-  ) { }
+  ) {
+
+    this.filterManager
+    .pipe(
+    debounceTime(500),
+    distinctUntilChanged()
+    )      
+    .subscribe((text) => this.searchTextEvent.emit(text));    
+
+   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -63,6 +76,7 @@ export class NewCaseComponent implements OnInit {
       });
   }
 
+
   /** Internal event methods **/
   onOpenProgramSelectionClicked() {
     this.isProgramSelectionOpened = true;
@@ -78,5 +92,10 @@ export class NewCaseComponent implements OnInit {
   onCloseProgramSelectionClicked() {
     this.isCreateNewCasePopupOpened.emit();
     this.isProgramSelectionOpened = false;
+  }
+
+  onsearchTextChange(text : string)
+  {       
+     this.filterManager.next(text);
   }
 }

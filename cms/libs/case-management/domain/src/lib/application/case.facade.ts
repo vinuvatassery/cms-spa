@@ -61,8 +61,8 @@ export class CaseFacade {
     });
   }
 
-  loadCaseBySearchText(): void {
-    this.caseDataService.loadCaseBySearchText().subscribe({
+  loadCaseBySearchText(fullaName : string): void {
+    this.caseDataService.loadCaseBySearchText(fullaName).subscribe({
       next: (caseBySearchTextResponse) => {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
@@ -206,16 +206,6 @@ export class CaseFacade {
       concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
     }
     return this.caseDataService.UpdateCase(caseData);
-      // .subscribe({
-      //   next: (sessionResp: any) => {
-      //     return sessionResp
-      //     this.updateCaseSubject.next(sessionResp);        
-      //   },
-      //   error: (err: any) => {
-      //     console.error('error', err);
-      //   },
-
-      // });
   }
 
 }

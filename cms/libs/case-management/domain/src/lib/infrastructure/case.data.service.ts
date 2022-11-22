@@ -128,32 +128,12 @@ export class CaseDataService {
     ]);
   }
 
-  loadCaseBySearchText() {
-    return of([
-      {
-        name: 'Donna Summer',
-        id: 'XXXX',
-        dob: '01-23-1997',
-        ssn: '294-95-7054',
-      },
-      {
-        name: 'David Miller',
-        id: 'XXXX',
-        dob: '02-24-1996',
-        ssn: '234-45-7654',
-      },
-      {
-        name: 'Philip David',
-        id: 'XXXX',
-        dob: '03-25-1995',
-        ssn: '304-09-7094',
-      },
-      { name: 'Mike Flex', id: 'XXXX', dob: '04-22-1994', ssn: '934-05-7494' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '05-21-1993', ssn: '275-40-7609' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '06-20-1992', ssn: '134-12-2554' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '07-19-1991', ssn: '964-24-7854' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '08-18-1998', ssn: '504-35-8454' },
-    ]);
+  loadCaseBySearchText(fullaName : string) {     
+      return this.http.get<ClientCase[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}`+
+        `/case-management/client-case/clientName=${fullaName}`
+      );   
+  
   }
 
   loadCasesForAuthuser(): Observable<Case[]> {

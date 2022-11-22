@@ -84,6 +84,7 @@
       [ddlPrograms]="ddlPrograms$"
       [ddlCaseOrigins]="ddlCaseOrigins$"
       [formButtonDisabled] = "formButtonDisabled"
+      (searchTextEvent)="handleSearchTextChange($event)"
     ></case-management-new-case>
   </kendo-dialog>
 </div>

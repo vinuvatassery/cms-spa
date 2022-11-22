@@ -13,22 +13,24 @@
             aria-hidden="true"
             >search</span
           >
-          <kendo-multicolumncombobox
+          <kendo-multicolumncombobox         
             [data]="caseSearchResults | async"
             textField="name"
             valueField="id"
             placeholder="Search Case Name, Member ID or SSN"
             [fillMode]="formUiStyle.dropDownFillMode"
-            [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }" 
+            [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }"
+            [filterable]="true"
+            (filterChange)="onsearchTextChange($event)" 
           >
             <kendo-combobox-column>
-              <ng-template
+              <ng-template 
                 kendoMultiColumnComboBoxColumnCellTemplate
                 let-dataItem
               >
-                <span class="pr-1">{{ dataItem.name }}</span>
-                <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
-                <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
+                <span class="pr-1">{{ dataItem.clientFullName }}</span>
+                <span class="pr-1 text-muted">ID XXXX</span>
+                <span class="pr-1 text-muted">DOB {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
                 <span class="text-muted">SSN {{ dataItem.ssn }}</span>
               </ng-template>
             </kendo-combobox-column>

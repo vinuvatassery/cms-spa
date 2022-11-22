@@ -49,7 +49,7 @@ export class CasePageComponent implements OnInit {
     this.caseFacade.loadCasesForAuthuser();
     this.caseFacade.loadRecentCases();    
       /** methods for case popup **/
-      this.caseFacade.loadCaseBySearchText();
+     
       this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);     
       this.caseFacade.loadDdlPrograms();
       this.lovFacade.getLovsbyType(LovType.CaseOrigin);
@@ -93,5 +93,10 @@ export class CasePageComponent implements OnInit {
       this.formButtonDisabled = true;
       this.workflowFacade.createNewSession(caseForm);  
    }    
+  }
+
+  handleSearchTextChange(text : string)
+  {
+    this.caseFacade.loadCaseBySearchText(text);
   }
 }

@@ -53,7 +53,6 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   ngOnInit(): void {   
     this.loadFormdata();
     this.addSaveSubscription();
-    this.caseFacade.loadCaseBySearchText();   
     /** methods for case child form **/
     this.registerFormData()
    
