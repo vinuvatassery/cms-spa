@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag  } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 
 @Component({
