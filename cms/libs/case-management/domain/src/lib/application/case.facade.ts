@@ -202,7 +202,8 @@ export class CaseFacade {
       clientCaseId  : clientCaseId,
       assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
       caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
-      caseStartDate: existingCaseFormData?.controls["applicationDate"].value  
+      caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
+      concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
     }
     return this.caseDataService.UpdateCase(caseData);
       // .subscribe({

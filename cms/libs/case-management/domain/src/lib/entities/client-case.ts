@@ -2,6 +2,7 @@ export interface ClientCase {
      programId :  string ,
      assignedCwUserId :  string ,
      caseOriginCode :  string ,
-     caseStartDate :  string 
+     caseStartDate :  string ,
+     concurrencyStamp : string
   }
   

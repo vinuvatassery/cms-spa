@@ -1,4 +1,5 @@
 <div class="flex-row" [formGroup]="parentForm">
+  <input type="hidden" formControlName="concurrencyStamp">
   <div class="flex-col">
     <kendo-floatinglabel text="Date Application Received">
       <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"

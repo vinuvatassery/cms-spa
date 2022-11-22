@@ -89,6 +89,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
       caseOriginCode: ['', Validators.required],
       caseOwnerId: ['', Validators.required],
       programId: ['', [Validators.required]],
+      concurrencyStamp : ['']
     });
    
   }

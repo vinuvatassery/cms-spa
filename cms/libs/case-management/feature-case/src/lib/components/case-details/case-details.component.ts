@@ -77,9 +77,10 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
             this.parentForm.setValue(
               {
                 applicationDate : new Date(caseData.caseStartDate),
-                caseOriginCode : caseData.caseOriginCode ,
-                caseOwnerId   : caseData.assignedCwUserId,
-                programId : caseData.programId
+                caseOriginCode : caseData?.caseOriginCode ,
+                caseOwnerId   : caseData?.assignedCwUserId,
+                programId : caseData?.programId,
+                concurrencyStamp : caseData?.concurrencyStamp
               }
             )
             
