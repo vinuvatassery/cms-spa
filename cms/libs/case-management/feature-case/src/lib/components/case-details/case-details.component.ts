@@ -59,8 +59,7 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
           this.GetCaseData();       
         });  
     
-    }
-    console.log(this.ddlCaseOrigins)
+    }  
  } 
 
 
