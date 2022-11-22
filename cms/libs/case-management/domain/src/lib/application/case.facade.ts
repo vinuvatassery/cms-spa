@@ -19,7 +19,6 @@ export class CaseFacade {
   private caseSearchedSubject = new BehaviorSubject<any>([]);
   private lastVisitedCasesSubject = new BehaviorSubject<any>([]);
   private ddlProgramsSubject = new BehaviorSubject<any>([]);
-  private ddlCaseOriginsSubject = new BehaviorSubject<any>([]);
   private ddlFamilyAndDependentEPSubject = new BehaviorSubject<any>([]);
   private ddlIncomeEPSubject = new BehaviorSubject<any>([]);
   private ddlEmploymentEPSubject = new BehaviorSubject<any>([]);
@@ -35,8 +34,7 @@ export class CaseFacade {
   recentCases$ = this.recentCaseSubject.asObservable();
   caseSearched$ = this.caseSearchedSubject.asObservable();
   lastVisitedCases$ = this.lastVisitedCasesSubject.asObservable();
-  ddlPrograms$ = this.ddlProgramsSubject.asObservable();
-  ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
+  ddlPrograms$ = this.ddlProgramsSubject.asObservable(); 
   ddlFamilyAndDependentEP$ = this.ddlFamilyAndDependentEPSubject.asObservable();
   ddlIncomeEP$ = this.ddlIncomeEPSubject.asObservable();
   ddlEmploymentEP$ = this.ddlEmploymentEPSubject.asObservable();
@@ -162,16 +160,6 @@ export class CaseFacade {
     });
   }
 
-  loadDdlCaseOrigins(): void {
-    this.caseDataService.loadDdlCaseOrigins().subscribe({
-      next: (ddlCaseOriginsResponse) => {
-        this.ddlCaseOriginsSubject.next(ddlCaseOriginsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
 
   loadDdlFamilyAndDependentEP(): void {
     this.caseDataService.loadDdlFamilyAndDependentEP().subscribe({
@@ -216,16 +204,17 @@ export class CaseFacade {
       caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: existingCaseFormData?.controls["applicationDate"].value  
     }
-    this.caseDataService.UpdateCase(caseData)
-      .subscribe({
-        next: (sessionResp: any) => {
-          this.updateCaseSubject.next(sessionResp);
-        },
-        error: (err: any) => {
-          console.error('error', err);
-        },
+    return this.caseDataService.UpdateCase(caseData);
+      // .subscribe({
+      //   next: (sessionResp: any) => {
+      //     return sessionResp
+      //     this.updateCaseSubject.next(sessionResp);        
+      //   },
+      //   error: (err: any) => {
+      //     console.error('error', err);
+      //   },
 
-      });
+      // });
   }
 
 }

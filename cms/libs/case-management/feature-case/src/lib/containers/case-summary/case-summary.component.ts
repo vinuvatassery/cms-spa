@@ -1,13 +1,14 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
+  Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
-import { CaseFacade, WorkflowFacade, LoginUserFacade, UserDefaultRoles } from '@cms/case-management/domain';
+import { CaseFacade, WorkflowFacade, LoginUserFacade,
+   UserDefaultRoles, NavigationType, LovFacade, LovType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 /**external libraries */
-import { first } from 'rxjs';
+import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -16,7 +17,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class CaseSummaryComponent implements OnInit {
+export class CaseSummaryComponent implements OnInit , OnDestroy {
   /** Public properties **/
   parentForm!: FormGroup;
   isProgramSelectionOpened = false;
@@ -29,10 +30,12 @@ export class CaseSummaryComponent implements OnInit {
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+  ddlCaseOrigins$ = this.lovFacade.lovs$;
   case$ = this.caseFacade.getCase$;
   clientCaseId! : string;
   sessionId! : string;
+
+  private saveClickSubscription !: Subscription;
 
   /** Constructor**/
   constructor(
@@ -42,19 +45,30 @@ export class CaseSummaryComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private readonly workFlowFacade : WorkflowFacade,
-    private readonly loginUserFacade : LoginUserFacade
+    private readonly loginUserFacade : LoginUserFacade,
+    private readonly lovFacade : LovFacade
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {   
-    this.loadCase();
+    this.loadFormdata();
+    this.addSaveSubscription();
+    this.caseFacade.loadCaseBySearchText();   
     /** methods for case child form **/
-    this.caseFacade.loadCaseBySearchText();
-    this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
-    this.caseFacade.loadDdlPrograms();
-    this.caseFacade.loadDdlCaseOrigins();   
     this.registerFormData()
+   
   } 
+  ngOnDestroy(): void {
+    this.saveClickSubscription.unsubscribe();
+  }
+
+    private loadFormdata()
+    {      
+      this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
+      this.caseFacade.loadDdlPrograms();
+      this.lovFacade.loadCaseOrigins(LovType.CaseOrigin); 
+      this.loadCase();
+    }
 
   private loadCase()
   {     
@@ -66,6 +80,8 @@ export class CaseSummaryComponent implements OnInit {
      this.caseFacade.loadCasesById(this.clientCaseId);      
     });        
   } 
+
+   /** Private methods **/
   private registerFormData() {
 
     this.parentForm = this.formBuilder.group({
@@ -76,4 +92,26 @@ export class CaseSummaryComponent implements OnInit {
     });
    
   }
+
+   
+    private addSaveSubscription(): void {
+      this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
+        mergeMap((navigationType: NavigationType) =>
+          forkJoin([of(navigationType), this.updateCase()])
+        ),
+      ).subscribe(([navigationType, isSaved]) => {
+        if (isSaved) {
+          this.workFlowFacade.navigate(navigationType);
+        }
+      });
+    }
+    private updateCase()
+    {      
+      this.parentForm.updateValueAndValidity()
+      if(this.parentForm.valid)
+      {
+      return this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId)
+      }
+      else return of(false)
+    }
 }

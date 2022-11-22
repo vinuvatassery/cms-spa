@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component,  Input, OnInit, 
-  ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+  ChangeDetectorRef, ChangeDetectionStrategy,  OnChanges, SimpleChanges } from '@angular/core';
   import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms'; 
 
@@ -17,7 +17,7 @@ import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
   styleUrls :  ['./case-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailsSummaryComponent   implements OnInit{   
+export class CaseDetailsSummaryComponent   implements OnChanges    {   
 
   /// filter autocomplete with startswith
   public caseOwnerfilterSettings: DropDownFilterSettings = {
@@ -38,43 +38,43 @@ export class CaseDetailsSummaryComponent   implements OnInit{
   @Input() ddlPrograms! : any
   @Input() ddlCaseOrigins! : any
   @Input() selectedProgram! : any
-  @Input() selectedCase! : any
-
- 
+  @Input() selectedCase! : any 
 
    /** Constructor**/
   constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef 
    
   ) {}
-  ngOnInit(): void {   
-    this.loadCaseWorkers() 
-  }
 
-  loadCaseWorkers()
-  {
-    /// the startswith functionality will
-    ///  work only if the observable is
-    /// subscribed synchronously
-    this.caseOwners.pipe(first(Owners => Owners != null))
-    .subscribe((Owners: any[]) => {     
-      this.caseOwnersObject = [...Owners];
-      if(this.selectedCase!=null)
-      {
-      this.GetCaseData();    
-      }
-    });   
-  }
+  ngOnChanges(changes: SimpleChanges): void {
+   
+    console.log(changes)
+    if(changes['caseOwners']?.currentValue?.source != null)
+    {
+        // /// the startswith functionality will
+        // ///  work only if the observable is
+        // /// subscribed synchronously
+        this.caseOwners.pipe()
+        .subscribe((Owners: any[]) => {             
+          this.caseOwnersObject = [...Owners];     
+          this.GetCaseData();       
+        });  
+    
+    }
+    console.log(this.ddlCaseOrigins)
+ } 
+
+
 
   ///get case details
   ///with session id
   GetCaseData()
-  {        
-    
-      this.selectedCase.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
+  {            
+      this.selectedCase?.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
       .subscribe((caseData: any) => {   
           
-          if(caseData.programId != null && caseData.caseStartDate != null)
-          {              
+          if(caseData.programId != null && caseData.caseStartDate != null
+            && caseData.assignedCwUserId != null)
+          {   this.parentForm.reset();
             this.parentForm.setValue(
               {
                 applicationDate : new Date(caseData.caseStartDate),
@@ -87,7 +87,6 @@ export class CaseDetailsSummaryComponent   implements OnInit{
           }
         })  
       
-  }
-
+  } 
 
 }

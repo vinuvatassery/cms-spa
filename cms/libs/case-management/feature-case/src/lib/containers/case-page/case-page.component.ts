@@ -4,7 +4,8 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab, WorkflowFacade,LoginUserFacade,UserDefaultRoles} from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab, WorkflowFacade,
+  LoginUserFacade,UserDefaultRoles , LovFacade, LovType} from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case-page',
@@ -27,14 +28,15 @@ export class CasePageComponent implements OnInit {
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+  ddlCaseOrigins$ = this.lovFacade.lovs$;
   
   /** Constructor**/
     
     constructor(private readonly router: Router,
       private readonly caseFacade: CaseFacade,
       private readonly workflowFacade :WorkflowFacade,
-      private readonly loginUserFacade : LoginUserFacade) {}
+      private readonly loginUserFacade : LoginUserFacade,
+      private readonly lovFacade : LovFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {    
@@ -45,13 +47,12 @@ export class CasePageComponent implements OnInit {
   private loadCases(): void {
     this.caseFacade.loadCases();
     this.caseFacade.loadCasesForAuthuser();
-    this.caseFacade.loadRecentCases();
-
+    this.caseFacade.loadRecentCases();    
       /** methods for case popup **/
       this.caseFacade.loadCaseBySearchText();
       this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);     
       this.caseFacade.loadDdlPrograms();
-      this.caseFacade.loadDdlCaseOrigins();
+      this.lovFacade.loadCaseOrigins(LovType.CaseOrigin);
   }
 
   /** Getters **/

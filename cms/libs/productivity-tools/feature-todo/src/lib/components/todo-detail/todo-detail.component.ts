@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade , LovFacade } from '@cms/case-management/domain';
 /** facades **/
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -19,13 +19,15 @@ export class TodoDetailComponent implements OnInit {
   search$ = this.todoFacade.search$;
   tareaCustomTodoMaxLength = 100;
   tareaCustomTodoCharactersCount!: number;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+  ddlCaseOrigins$ = this.lovFacade.lovs$;
   tareaCustomTodoCounter!: string;
   tareaCustomTodoDescription = '';
  
 
   /** Constructor **/
-  constructor(private readonly todoFacade: TodoFacade,private readonly caseFacade: CaseFacade,) {}
+  constructor(private readonly todoFacade: TodoFacade,
+    private readonly caseFacade: CaseFacade,
+    private readonly lovFacade: LovFacade) {}
   
   public date = new Date();
   public formUiStyle : UIFormStyle = new UIFormStyle();

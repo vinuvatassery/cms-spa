@@ -399,26 +399,7 @@ export class CaseDataService {
     );
 }
 
-  loadDdlCaseOrigins() {
-    return of([
-      {
-        "id" : "1",
-        "code" : "Client Portal"
-      },
-      {
-        "id" : "2",
-        "code" : "Email"
-      },
-      {
-        "id" : "3",
-        "code" : "Paper"
-      },
-      {
-        "id" : "4",
-        "code" : "Phone"
-      }     
-      ]);
-  }
+
 
   loadDdlFamilyAndDependentEP() {
     return of([

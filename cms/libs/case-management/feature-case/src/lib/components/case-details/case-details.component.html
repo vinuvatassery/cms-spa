@@ -14,7 +14,7 @@
       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
        required [data]="ddlCaseOrigins | async"
         formControlName="caseOriginCode" 
-        textField="code" valueField="id" [valuePrimitive]="true"
+        textField="displayValue" valueField="lovCode" [valuePrimitive]="true"
         >
       </kendo-dropdownlist>
     </kendo-floatinglabel>
@@ -31,7 +31,7 @@
       valueField="loginUserId"
       [valuePrimitive]="true"       
       [filterable]="true"     
-      [kendoDropDownFilter]="caseOwnerfilterSettings"    
+      [kendoDropDownFilter]="caseOwnerfilterSettings"      
     >
     </kendo-combobox>
     </kendo-floatinglabel>
