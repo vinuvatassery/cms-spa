@@ -37,7 +37,6 @@ export class ConfigurationProvider {
           ignoreNonceAfterRefresh: true,
           useRefreshToken: config.oidc.useRefreshToken,
           logLevel: this.logLevel(config.oidc.logLevel),
-          caseApiUrl:config.caseApiUrl,
           customParamsAuthRequest: {
             prompt: 'select_account', // login, consent, select_account, admin_consent
           },

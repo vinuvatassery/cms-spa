@@ -1,7 +1,7 @@
 {
   "environment": "Development",
   "version": "v0.1",
-  "caseApiUrl": "https://ca-cms-case-api-dev.azurewebsites.net/api",
+  "caseApiUrl": "https://localhost:5200/api",
   "signalrHubUrl": "https://localhost:5200/notification",
   "oidc": {
     "sendAccessToken": true,
