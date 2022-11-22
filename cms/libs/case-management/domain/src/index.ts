@@ -22,6 +22,12 @@ export * from './lib/entities/search';
 export * from './lib/entities/verification';
 export * from './lib/entities/workflow';
 export * from './lib/entities/workflow-stage-completion-status';
+export * from './lib/entities/client-sexual-identity';
+export * from './lib/entities/client-race';
+export * from './lib/entities/client-pronoun';
+export * from './lib/entities/client-gender';
+export * from './lib/entities/client-case-eligibility';
+export * from './lib/entities/applicant-info';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -51,7 +57,7 @@ export * from './lib/infrastructure/search.data.service';
 export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
 export * from './lib/infrastructure/status-period.data.service';
-export * from './lib/infrastructure/application-info.service';
+export * from './lib/infrastructure/applicant-info.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';

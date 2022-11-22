@@ -3,11 +3,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChi
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
 import { debounceTime, distinctUntilChanged, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
 import { ApplicationInfoFacade, ClientFacade, CompletionChecklist, WorkflowFacade } from '@cms/case-management/domain';
@@ -31,10 +26,9 @@ export class ClientEditViewComponent implements OnInit {
   isSelected = true;
 
   /** Output Properties **/
-  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
-  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
-  @Output() ValidateFields = new EventEmitter<boolean>();
- @Input() ShowErrorMessage = true;
+ @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
+ @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
+ @Output() ValidateFields = new EventEmitter<boolean>();
   
 
 
@@ -97,8 +91,7 @@ export class ClientEditViewComponent implements OnInit {
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
   lengthRestrictForty=40;
-  //validate$ = this.applicationInfoFacade.validate$;
- //private saveClickSubscription !: Subscription;
+  maxLengthSsn =9;
 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,private readonly applicationInfoFacade:ApplicationInfoFacade,
@@ -177,7 +170,7 @@ export class ClientEditViewComponent implements OnInit {
       officialIdFirstName: new FormControl('', { updateOn: 'blur' }),
       officialIdLastName: new FormControl('', { updateOn: 'blur' }),
       officialIdsNotApplicable: new FormControl(false),
-      dateOfBirth: new FormControl('', { updateOn: 'blur' }),
+      dateOfBirth: new FormControl(this.currentDate, { updateOn: 'blur' }),
       ssn: new FormControl('', { updateOn: 'blur' }),
       ssnNotApplicable: new FormControl(false),
       //TODO: other form controls 
@@ -209,7 +202,6 @@ export class ClientEditViewComponent implements OnInit {
     });
   }
   private validate(){
-    debugger;
     this.appInfoForm.controls["firstName"].setValidators([Validators.required]);
     this.appInfoForm.controls["firstName"].updateValueAndValidity();
     if(this.isMiddleNameChecked ){
@@ -219,6 +211,8 @@ export class ClientEditViewComponent implements OnInit {
     else{
       this.appInfoForm.controls["middleName"].setValidators([Validators.required]);
       this.appInfoForm.controls["middleName"].updateValueAndValidity();
+     
+      
     }
     this.appInfoForm.controls["lastName"].setValidators([Validators.required]);
     this.appInfoForm.controls["lastName"].updateValueAndValidity();
@@ -246,8 +240,15 @@ export class ClientEditViewComponent implements OnInit {
       this.appInfoForm.controls["officialIdLastName"].setValidators(Validators.required);;
       this.appInfoForm.controls["officialIdLastName"].updateValueAndValidity();    
     }
+    if(this.isSSNChecked){
+      this.appInfoForm.controls["ssn"].removeValidators(Validators.required);;
+      this.appInfoForm.controls["ssn"].updateValueAndValidity();      
+    }
+    else{
+      this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
+      this.appInfoForm.controls["ssn"].updateValueAndValidity();    
+    }
     this.ValidateFields.emit(this.appInfoForm.valid);
-    //this.applicationInfoFacade.validate(this.appInfoForm.valid);
   
   }
   
@@ -360,29 +361,19 @@ export class ClientEditViewComponent implements OnInit {
  
   /** Internal event methods **/
   onMiddleNameChecked(event: Event) {
-    debugger;
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.isMiddleNameChecked = true;
-      
-     
       this.appInfoForm.controls['middleName'].removeValidators(Validators.required);
-      this.appInfoForm.controls['middleName'].updateValueAndValidity();
-      // this.appInfoForm.controls['middleName'].reset();
-      // this.appInfoForm.controls['middleName'].enable();
-   
-     
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();      
     }
     else {
-      this.isMiddleNameChecked = false   
+      this.isMiddleNameChecked = false;
       this.appInfoForm.controls['middleName'].setValidators(Validators.required);
-      this.appInfoForm.controls['middleName'].updateValueAndValidity();
-      //this.appInfoForm.controls['middleName'].disable();
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();    
     }
   }
-  public disabledDates = (date: Date): boolean => {
-    return date.getDate() >= 0;
-  };
+
   onInsuranceCardChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
@@ -391,8 +382,6 @@ export class ClientEditViewComponent implements OnInit {
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsLastName'].removeValidators(Validators.required);
       this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
-      // this.appInfoForm.controls['prmInsLastName'].disable();
-      // this.appInfoForm.controls['prmInsFirstName'].disable();
     }
     else {
       this.isInsuranceCardChecked = false;
@@ -400,10 +389,6 @@ export class ClientEditViewComponent implements OnInit {
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsLastName'].setValidators(Validators.required);
       this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
-      // this.appInfoForm.controls['prmInsLastName'].reset();
-      // this.appInfoForm.controls['prmInsFirstName'].reset();
-      // this.appInfoForm.controls['prmInsLastName'].enable();
-      // this.appInfoForm.controls['prmInsFirstName'].enable();
     }
   }
 
@@ -415,31 +400,27 @@ export class ClientEditViewComponent implements OnInit {
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdLastName'].removeValidators(Validators.required);
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
-      // this.appInfoForm.controls['officialIdFirstName'].disable();
-      // this.appInfoForm.controls['officialIdLastName'].disable();
     }
     else {
       this.isOfficialIdChecked = false;
-      // this.appInfoForm.controls['officialIdFirstName'].setValidators(Validators.required);
-      // this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
-      // this.appInfoForm.controls['officialIdLastName'].setValidators(Validators.required);
-      // this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
-
-      // this.appInfoForm.controls['officialIdFirstName'].reset();
-      // this.appInfoForm.controls['officialIdLastName'].reset();
-      // this.appInfoForm.controls['officialIdFirstName'].enable();
-      // this.appInfoForm.controls['officialIdLastName'].enable();
+      this.appInfoForm.controls['officialIdFirstName'].setValidators(Validators.required);
+      this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['officialIdLastName'].setValidators(Validators.required);
+      this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
     }
   }
 
   onSsnNotApplicableChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.appInfoForm.controls['ssn'].disable();
+      this.isSSNChecked = true;
+      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
     }
     else {
-      this.appInfoForm.controls['ssn'].reset();
-      this.appInfoForm.controls['ssn'].enable();
+      this.isSSNChecked = false;
+      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
     }
   }
 
