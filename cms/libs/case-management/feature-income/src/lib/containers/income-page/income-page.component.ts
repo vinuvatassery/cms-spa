@@ -1,12 +1,12 @@
+ 
 /** Angular **/
-import { OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
+import {  Component,  ChangeDetectionStrategy,  Output,  EventEmitter,  Input,  OnDestroy,  OnInit,} from '@angular/core';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
-import { DateInputFillMode, DateInputRounded, DateInputSize } from '@progress/kendo-angular-dateinputs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {  Validators,  FormGroup,  FormControl,  FormBuilder, } from '@angular/forms';
 
 @Component({
   selector: 'case-management-income-page',
@@ -17,18 +17,15 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 export class IncomePageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
-  private saveClickSubscription !: Subscription;
-
-  /** Public Methods **/
+  private saveClickSubscription !: Subscription;  /** Public Methods **/
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
-
-
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  isNodateSignatureNoted = true;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() isEditValue!: boolean;
-  currentDate = new Date();
+  todaysDate = new Date();
   /** Public properties **/
   incomeTypes$ = this.incomeFacade.ddlIncomeTypes$;
   incomeSources$ = this.incomeFacade.ddlIncomeSources$;
@@ -39,7 +36,11 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   tareaJustification = '';
   tareaJustificationCharachtersCount!: number;
   tareaJustificationMaxLength = 300;
-
+  public noIncomeDetailsForm: FormGroup = new FormGroup({
+    dateClientSigned: new FormControl('', []),
+    dateSignatureNoted: new FormControl(this.todaysDate, []),
+    tareaJustifications: new FormControl('', []),
+  });
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
     private completionStatusFacade: CompletionStatusFacade,
@@ -57,8 +58,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-  }
-
+  } 
+  
   /** Private methods **/
   private tareaJustificationWordCount() {
     this.tareaJustificationCharachtersCount = this.tareaJustification
@@ -97,11 +98,13 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   private save() {
     let isValid = true;
-    // TODO: validate the form
-    if (isValid) {
-      return this.incomeFacade.save();
-    }
 
+    // TODO: validate the form
+    this.submitIncomeDetailsForm();
+    if (this.noIncomeDetailsForm.valid && isValid) { 
+        return this.incomeFacade.save(); 
+    } 
+ 
     return of(false)
   }
 
@@ -114,7 +117,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   onProofOfIncomeValueChanged() {
     this.hasNoProofOfIncome = !this.hasNoProofOfIncome;
   }
-
+ 
   /** Private Methods **/
   private loadIncomes(): void {
     this.incomeFacade.loadIncomes();
@@ -123,7 +126,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
-
+ 
   /** Internal Event Methods **/
   onChangeCounterClick() {
     this.updateCompletionStatus({
@@ -135,7 +138,39 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   onIncomeValueChanged(event: any) {
     this.hasNoIncome = !this.hasNoIncome;
+    if(!this.hasNoIncome){
+ this.noIncomeDetailsForm.reset();
+    }
+   
   }
 
+  public submitIncomeDetailsForm(): void {
+    this.noIncomeDetailsForm.markAllAsTouched();
+    if (this.hasNoIncome) {
+      console.log(this.noIncomeDetailsForm);
+      this.noIncomeDetailsForm.controls['dateClientSigned'].setValidators([
+        Validators.required,
+      ]);
+      this.noIncomeDetailsForm.controls['dateSignatureNoted'].setValidators([
+        Validators.required,
+      ]);
+      this.noIncomeDetailsForm.controls['tareaJustifications'].setValidators([
+        Validators.required,
+      ]);
+      this.noIncomeDetailsForm.controls[
+        'dateClientSigned'
+      ].updateValueAndValidity();
+      this.noIncomeDetailsForm.controls[
+        'dateSignatureNoted'
+      ].updateValueAndValidity();
+      this.noIncomeDetailsForm.controls[
+        'tareaJustifications'
+      ].updateValueAndValidity();
+      // this.onDoneClicked();
+      if (this.noIncomeDetailsForm.valid) {
+        console.log(this.noIncomeDetailsForm);
+      }
+    }
+  }
 
 }

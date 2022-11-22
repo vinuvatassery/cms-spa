@@ -662,7 +662,7 @@
     .k-input[disabled],
     .k-input.k-disabled {
       background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 50) !important;
+      border-color: material-color($hive-neutral-palette, 100) !important;
     }
   }
 }
@@ -762,11 +762,14 @@ kendo-timepicker {
       top: auto;  
     }
   }
-  .k-label {
-    display: none;
-  }
+  // .k-label {
+  //   display: none;
+  // }
   .k-input-inner{
     text-align: right;
+  }
+  &.k-floating-label-container.k-empty > .k-label{
+    left: 24px;
   }
 }
 
