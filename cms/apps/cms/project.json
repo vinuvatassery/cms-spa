@@ -22,6 +22,7 @@
           "apps/cms/src/web.config"
         ],
         "styles": [
+          "node_modules/@progress/kendo-theme-material/dist/all.scss",
           "libs/shared/util-theme/src/lib/styles.scss",
           "apps/cms/src/styles.scss"
         ],

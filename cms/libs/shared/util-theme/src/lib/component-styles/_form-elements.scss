@@ -152,6 +152,7 @@
  .ng-invalid.ng-dirty + .k-label{
   color: $error-color-1 !important;
 }
+ 
 }
 
 
@@ -213,8 +214,6 @@
   
 }
 
-
-
 .input-icon-left {
   .k-input-prefix {
     position: absolute;
@@ -224,6 +223,7 @@
     opacity: 0.5;
   }
 }
+
 .input-icon-right {
   .k-input-suffix {
     position: absolute;
@@ -233,6 +233,7 @@
     opacity: 0.5;
   }
 }
+
 .k-input-outline,
 .k-picker-outline {
   border-color: rgba(0, 0, 0, 0.12);
@@ -240,6 +241,8 @@
 
   }
 }
+
+
 .k-floating-label-container > .k-label {
   font-size: 14px;
 }
