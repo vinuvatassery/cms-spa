@@ -28,7 +28,8 @@
   <section class="app-l-client-wrapper " [ngClass]="{'due-notification-on': selectedTab !== caseScreenTab.CER_TRACKING}" kendoRippleContainer>
     <!-- Left Tab Section -->
     <div class="app-l-client-left">
-      <kendo-tabstrip class="app-c-tab" (tabSelect)="onTabSelected($event)">
+      <kendo-tabstrip class="app-c-tab" (tabSelect)="onTabSelected($event)"  
+     >
         <kendo-tabstrip-tab title="My Cases" [selected]="selectedTab === caseScreenTab.MY_CASES">
           <ng-template kendoTabContent>
             <case-management-case-list

@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade } from '@cms/case-management/domain';
+import {UITabStripScroll} from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'case-management-case-page',
@@ -18,6 +19,7 @@ export class CasePageComponent implements OnInit {
   allCases$ = this.caseFacade.cases$;
   myCases$ = this.caseFacade.myCases$;
   recentCases$ = this.caseFacade.lastVisitedCases$;
+  public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
 
   /** Constructor**/
     
