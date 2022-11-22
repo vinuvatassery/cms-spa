@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-slot-list',
   templateUrl: './slot-list.component.html',
@@ -22,7 +23,7 @@ export class SlotListComponent implements OnInit {
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
   clientProfileSlots$ = this.userManagementFacade.clientProfileSlots$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [
     {
       buttonType:"btn-h-primary",

@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -24,6 +25,7 @@ export class EventLogComponent implements OnInit {
   isShowEventLog = false;
   isOpenEventLogDetails = false;
   isShownSearch = false;
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [

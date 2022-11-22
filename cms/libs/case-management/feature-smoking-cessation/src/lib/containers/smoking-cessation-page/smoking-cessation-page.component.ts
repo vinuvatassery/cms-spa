@@ -23,7 +23,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationCounter!: string;
   tareaCessationNote = '';
   smokingCessationForm!: FormGroup;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   constructor(
     private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,

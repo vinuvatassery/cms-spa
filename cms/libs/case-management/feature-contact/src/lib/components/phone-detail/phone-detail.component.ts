@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 /** Facades  **/
 import { ContactFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-phone-detail',
   templateUrl: './phone-detail.component.html',
@@ -22,7 +22,7 @@ export class PhoneDetailComponent implements OnInit {
   ddlPhoneTypes$ = this.contactFacade.ddlPhoneTypes$;
   isDeactivateValue!: boolean;
   isDeactivatePhoneNumberPopup = true;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade) {}
 

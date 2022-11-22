@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { UserManagementFacade } from '@cms/system-config/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-language-list',
   templateUrl: './language-list.component.html',
@@ -22,7 +22,7 @@ export class LanguageListComponent implements OnInit {
  ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
  clientProfileLanguages$ = this.userManagementFacade.clientProfileLanguages$;
  popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+ public formUiStyle : UIFormStyle = new UIFormStyle();
  public moreactions = [
    {
      buttonType:"btn-h-primary",

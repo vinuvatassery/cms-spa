@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-case-availability-list',
   templateUrl: './case-availability-list.component.html',
@@ -28,7 +29,7 @@ export class CaseAvailabilityListComponent implements OnInit {
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
   clientProfileCaseAvailabilities$ =
     this.userManagementFacade.clientProfileCaseAvailabilities$;
-
+    public formUiStyle : UIFormStyle = new UIFormStyle();
 
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
 

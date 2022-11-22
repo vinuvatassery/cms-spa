@@ -6,12 +6,12 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Category">
-          <kendo-dropdownlist  fillMode="outline" [data]="ddlIdentityCategory"> </kendo-dropdownlist>
+          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlIdentityCategory"> </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Identity">
-          <kendo-textbox fillMode="outline" >
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
