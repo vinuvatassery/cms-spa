@@ -26,7 +26,8 @@ export class ClientFacade {
   private rdoDressedorBathedSubject = new BehaviorSubject<any[]>([]);
   private rdoConcentrationSubject = new BehaviorSubject<any[]>([]);
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
-  private specialHandlingsSubject = new BehaviorSubject<any>([]);
+  private specialHandlingsSubject = new BehaviorSubject<any>([]);  
+  appInfoFormSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -46,6 +47,7 @@ export class ClientFacade {
   rdoConcentration$ = this.rdoConcentrationSubject.asObservable();
   rdoErrands$ = this.rdoErrandsSubject.asObservable();
   specialHandlings$ = this.specialHandlingsSubject.asObservable();
+  appInfoForm$ = this.appInfoFormSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly clientDataService: ClientDataService) {}

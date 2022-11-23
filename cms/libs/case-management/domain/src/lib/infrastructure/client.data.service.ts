@@ -344,8 +344,9 @@ export class ClientDataService {
   //     return empty();
   // }
   save(applicantInfo: ApplicantInfo) {  
-    return this.http.post<ApplicantInfo>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/smoking-cessation/test`,
+    debugger;
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/applicant-info`,
       applicantInfo,
 
     )}

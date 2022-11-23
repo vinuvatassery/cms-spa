@@ -8,10 +8,10 @@ import { ClientSexualIdentity } from "./client-sexual-identity";
 
 export interface ApplicantInfo{
     client :Client
-    clientCase: ClientCase
-    clientCaseEligibility:ClientCaseEligibility
-    clientPronounList: ClientPronoun[]
-    clientSexualIdentityList:ClientSexualIdentity[]
-    clientRaceList:ClientRace[]
-    clientGenderList:ClientGender[]
+    // clientCase: ClientCase
+    // clientCaseEligibility:ClientCaseEligibility
+    // clientPronounList: ClientPronoun[]
+    // clientSexualIdentityList:ClientSexualIdentity[]
+    // clientRaceList:ClientRace[]
+    // clientGenderList:ClientGender[]
 }

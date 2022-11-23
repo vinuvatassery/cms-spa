@@ -1,9 +1,9 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
-import { debounceTime, distinctUntilChanged, pairwise, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
 import {  ClientFacade, CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
@@ -27,7 +27,7 @@ export class ClientEditViewComponent implements OnInit {
   /** Output Properties **/
  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
- @Output() ValidateFields = new EventEmitter<boolean>();
+ @Output() ValidateFields = new EventEmitter<FormGroup>();
   
 
 
@@ -87,6 +87,7 @@ export class ClientEditViewComponent implements OnInit {
   public racialName: any = [];
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
+  pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
   lengthRestrictForty=40;
@@ -94,7 +95,7 @@ export class ClientEditViewComponent implements OnInit {
 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
-    private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade) { }
+    private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade,private formBuilder:FormBuilder) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -116,7 +117,9 @@ export class ClientEditViewComponent implements OnInit {
     this.loadTareaRaceAndEthinicity();
     this.buildForm();
     this.addAppInfoFormChangeSubscription();
-    this.addSaveSubscriptionToValidate();
+    //this.addSaveSubscriptionToValidate();
+    //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
+    this.ValidateFields.emit(this.appInfoForm);
   }
 
   ngAfterViewInit(){
@@ -125,11 +128,12 @@ export class ClientEditViewComponent implements OnInit {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
   }
-  private addSaveSubscriptionToValidate(): void {
-   this.workflowFacade.saveAndContinueClicked$.subscribe(() => {
-      this.validate();
-    });
-  }
+  // private addSaveSubscriptionToValidate(): void {
+  //  this.workflowFacade.saveAndContinueClicked$.subscribe(() => {
+  //   var form = this.appInfoForm;
+  //   debugger;
+  //   });
+  // }
   ngAfterViewChecked() {
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
@@ -171,9 +175,12 @@ export class ClientEditViewComponent implements OnInit {
       officialIdsNotApplicable: new FormControl(false),
       dateOfBirth: new FormControl(this.currentDate, { updateOn: 'blur' }),
       ssn: new FormControl('', { updateOn: 'blur' }),
-      ssnNotApplicable: new FormControl(false),
+      ssnNotApplicable: new FormControl(false)
       //TODO: other form controls 
     })
+
+  
+    
   }
 
   private adjustAttributeChanged(event: Event) { 
@@ -195,62 +202,14 @@ export class ClientEditViewComponent implements OnInit {
       .subscribe(([prev, curr]: [any, any]) => {
         this.updateFormCompleteCount(prev, curr);
         //this.validate()
+        this.ValidateFields.emit(this.appInfoForm);
+        //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
       });
       this.appInfoForm.statusChanges.subscribe(a=>{        
-        this.ValidateFields.emit(this.appInfoForm.valid);
+        this.ValidateFields.emit(this.appInfoForm);
+        //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
     });
   }
-  private validate(){
-    this.appInfoForm.controls["firstName"].setValidators([Validators.required]);
-    this.appInfoForm.controls["firstName"].updateValueAndValidity();
-    if(this.isMiddleNameChecked ){
-      this.appInfoForm.controls["middleName"].removeValidators(Validators.required);;
-      this.appInfoForm.controls["middleName"].updateValueAndValidity();
-    }
-    else{
-      this.appInfoForm.controls["middleName"].setValidators([Validators.required]);
-      this.appInfoForm.controls["middleName"].updateValueAndValidity();
-     
-      
-    }
-    this.appInfoForm.controls["lastName"].setValidators([Validators.required]);
-    this.appInfoForm.controls["lastName"].updateValueAndValidity();
-    if(this.isInsuranceCardChecked){
-      this.appInfoForm.controls["prmInsFirstName"].removeValidators(Validators.required);;
-      this.appInfoForm.controls["prmInsFirstName"].updateValueAndValidity();    
-      this.appInfoForm.controls["prmInsLastName"].removeValidators(Validators.required);;
-      this.appInfoForm.controls["prmInsLastName"].updateValueAndValidity();    
-    }
-    else{
-      this.appInfoForm.controls["prmInsFirstName"].setValidators(Validators.required);;
-      this.appInfoForm.controls["prmInsFirstName"].updateValueAndValidity();  
-      this.appInfoForm.controls["prmInsLastName"].setValidators(Validators.required);;
-      this.appInfoForm.controls["prmInsLastName"].updateValueAndValidity();    
-    }
-    if(this.isOfficialIdChecked){
-      this.appInfoForm.controls["officialIdFirstName"].removeValidators(Validators.required);;
-      this.appInfoForm.controls["officialIdFirstName"].updateValueAndValidity();    
-      this.appInfoForm.controls["officialIdLastName"].removeValidators(Validators.required);;
-      this.appInfoForm.controls["officialIdLastName"].updateValueAndValidity();    
-    }
-    else{
-      this.appInfoForm.controls["officialIdFirstName"].setValidators(Validators.required);;
-      this.appInfoForm.controls["officialIdFirstName"].updateValueAndValidity();  
-      this.appInfoForm.controls["officialIdLastName"].setValidators(Validators.required);;
-      this.appInfoForm.controls["officialIdLastName"].updateValueAndValidity();    
-    }
-    if(this.isSSNChecked){
-      this.appInfoForm.controls["ssn"].removeValidators(Validators.required);;
-      this.appInfoForm.controls["ssn"].updateValueAndValidity();      
-    }
-    else{
-      this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
-      this.appInfoForm.controls["ssn"].updateValueAndValidity();    
-    }
-    this.ValidateFields.emit(this.appInfoForm.valid);
-  
-  }
-  
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.appInfoForm.controls).forEach(key => {
