@@ -2,11 +2,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, CaseFacade, WorkflowFacade, StatusFlag } from '@cms/case-management/domain';
@@ -24,10 +19,6 @@ export class CaseDetailPageComponent implements OnInit {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
-
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();

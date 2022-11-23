@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-gender-list',
   templateUrl: './gender-list.component.html',
@@ -14,7 +15,7 @@ export class GenderListComponent implements OnInit {
  isGenderDetailPopup = false;
  ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
  clientProfileGender$ = this.userManagementFacade.clientProfileGender$;
-
+ public formUiStyle : UIFormStyle = new UIFormStyle();
  popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
  public moreactions = [

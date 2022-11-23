@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
- 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-ps-mfr-zip-list',
   templateUrl: './ps-mfr-zip-list.component.html',
@@ -24,7 +24,7 @@ export class PsMfrZipListComponent implements OnInit {
   clientProfilPSMFRZIP$ =
     this.userManagementFacade.clientProfilPSMFRZIP$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
- 
+    public formUiStyle : UIFormStyle = new UIFormStyle();
 
     public girdMoreActionsList = [
       {

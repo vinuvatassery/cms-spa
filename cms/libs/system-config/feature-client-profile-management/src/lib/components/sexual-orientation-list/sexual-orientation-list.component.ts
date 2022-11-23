@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-sexual-orientation-list',
   templateUrl: './sexual-orientation-list.component.html',
@@ -15,7 +16,7 @@ export class SexualOrientationListComponent implements OnInit {
   clientProfileSexualOrientation$ = this.userManagementFacade.clientProfileSexualOrientation$;
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [
     {
       buttonType:"btn-h-primary",

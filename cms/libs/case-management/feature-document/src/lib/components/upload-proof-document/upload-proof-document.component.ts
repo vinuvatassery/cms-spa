@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-upload-proof-document',
@@ -8,6 +9,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadProofDocumentComponent {
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   public listItems: Array<string> = [
     "Baseball",
     "Basketball",

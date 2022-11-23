@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 /** facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'case-management-template-picker',
   templateUrl: './template-picker.component.html',
@@ -26,7 +26,7 @@ export class TemplatePickerComponent implements OnInit {
   /** Public properties **/
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
- 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-income-inclusions-exclusions-list',
   templateUrl: './income-inclusions-exclusions-list.component.html',
@@ -19,6 +19,7 @@ export class IncomeInclusionsExclusionsListComponent implements OnInit {
     {text: 'All', value: 100}
   ];
   isIncomeInclusionsExclusionsDetailPopup = false;
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
   clientProfilIncomeInclusionsExlusions$ =
     this.userManagementFacade.clientProfilIncomeInclusionsExlusions$;

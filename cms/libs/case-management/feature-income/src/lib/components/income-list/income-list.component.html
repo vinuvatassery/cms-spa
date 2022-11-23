@@ -231,15 +231,17 @@
 </div>
 
 <!-- Add Income  Modal -->
-<kendo-dialog
-  *ngIf="isOpenedIncome"
-  (close)="onIncomeClosed()"
-  class="app-c-modal app-c-modal-md app-c-modal-np"
->
+<kendo-dialog *ngIf="isOpenedIncome" (close)="onIncomeClosed()" class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>
-  <case-management-income-detail
-    [isEditValue]="isEdit"
-  ></case-management-income-detail>
+  <case-management-income-detail (sendDetailToIncomeList)="receiveDetailFromIcomeDetails($event)" [isEditValue]="isEdit"> </case-management-income-detail>
 </kendo-dialog>
+
+
+<div kendoDialogContainer>
+  <common-delete-confirmation
+    (sendBackInformation)="handleDeleteConfirmationClicked($event)"
+    [data$]="deleteRequest$"
+  ></common-delete-confirmation>
+</div>

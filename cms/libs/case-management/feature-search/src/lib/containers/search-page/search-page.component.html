@@ -9,7 +9,7 @@
     [data]="search$ | async"
     textField="name"
     valueField="id"
-    fillMode="outline"
+    [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Case Name, Member ID or SSN"
   >
  
