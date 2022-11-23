@@ -2,9 +2,11 @@
 import {  Component, OnInit,  ChangeDetectionStrategy,
    ChangeDetectorRef,  Output,  EventEmitter,  Input,} from '@angular/core';
 import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
+import { ProgramCode } from '@cms/case-management/domain';
 
 /** Internal Libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
@@ -41,13 +43,21 @@ export class NewCaseComponent implements OnInit {
     private readonly ref: ChangeDetectorRef, 
     private formBuilder: FormBuilder
   ) {
-
+   
     this.filterManager
-    .pipe(
+    .pipe(   
     debounceTime(500),
     distinctUntilChanged()
     )      
-    .subscribe((text) => this.searchTextEvent.emit(text));    
+    .subscribe(
+      (text) => 
+      {
+        if(text)
+        {
+        this.searchTextEvent.emit(text)
+        }
+      }
+      );    
 
    }
 
@@ -60,7 +70,7 @@ export class NewCaseComponent implements OnInit {
     this.ddlPrograms.subscribe({
       next: (programs: any) => {
         this.selectedProgram = programs.filter(
-          (data: any) => data.programCode == "CA"
+          (data: any) => data.programCode == ProgramCode.DefaultProgram
         )[0];
       }
     });  

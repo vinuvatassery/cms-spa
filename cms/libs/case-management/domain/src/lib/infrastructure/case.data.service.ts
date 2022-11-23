@@ -128,10 +128,10 @@ export class CaseDataService {
     ]);
   }
 
-  loadCaseBySearchText(fullaName : string) {     
+  loadCaseBySearchText(text : string) {     
       return this.http.get<ClientCase[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/client-case/clientName=${fullaName}`
+        `/case-management/client-case/SearchText=${text}`
       );   
   
   }

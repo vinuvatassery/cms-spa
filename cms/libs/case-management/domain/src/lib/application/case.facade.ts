@@ -61,8 +61,8 @@ export class CaseFacade {
     });
   }
 
-  loadCaseBySearchText(fullaName : string): void {
-    this.caseDataService.loadCaseBySearchText(fullaName).subscribe({
+  loadCaseBySearchText(text : string): void {
+    this.caseDataService.loadCaseBySearchText(text).subscribe({
       next: (caseBySearchTextResponse) => {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },

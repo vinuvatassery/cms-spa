@@ -18,7 +18,7 @@ export class LoginUserDataService {
     getUsersByRole(roleCode : string) {
         return this.http.get<LoginUser[]>(
           `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-          `/user-management/users/roleCode=${roleCode}`
+          `/system-config/users/roleCode=${roleCode}`
         );
       }  
 

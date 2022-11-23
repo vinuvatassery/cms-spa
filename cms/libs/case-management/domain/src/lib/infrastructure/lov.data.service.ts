@@ -25,7 +25,7 @@ export class LovDataService {
         
         return this.http.get<Lov[]>(
             `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-            `/lov-management/lovs/lovType=${lovType}`
+            `/system-config/lovs/lovType=${lovType}`
         );
       }
 
