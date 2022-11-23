@@ -60,43 +60,40 @@
     }
   }
 
-  .add-new-button{
+  .add-new-button {
     top: -5px !important;
   }
 
-
-  // Create Case details Sub leftmenu Navigation 
-  .createcase-mobile-menu-btn{
+  // Create Case details Sub leftmenu Navigation , System Config Left side nav and All role Left side nav
+  .createcase-mobile-menu-btn {
     display: inline-flex;
-    
   }
 
-  .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb
-  {
+  .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb {
     flex-direction: column;
   }
-  .add-client-wrapper .add-client_left, 
-  .add-client-wrapper .inner-split_left, 
-  .inner-split-wrapper .add-client_left, 
-  .inner-split-wrapper .inner-split_left{
+  .add-client-wrapper .add-client_left,
+  .add-client-wrapper .inner-split_left,
+  .inner-split-wrapper .add-client_left,
+  .inner-split-wrapper .inner-split_left {
     position: fixed;
     background: $white;
     left: -260px;
     z-index: 8;
   }
-  .innerleftmenu-opened{
-    &.add-client-wrapper .add-client_left, 
-    &.add-client-wrapper .inner-split_left, 
-    &.inner-split-wrapper .add-client_left, 
-    &.inner-split-wrapper .inner-split_left{
+  .innerleftmenu-opened {
+    &.add-client-wrapper .add-client_left,
+    &.add-client-wrapper .inner-split_left,
+    &.inner-split-wrapper .add-client_left,
+    &.inner-split-wrapper .inner-split_left {
       left: 0px;
       background: $white;
       z-index: 8;
       box-shadow: 1px 11px 8px $grey-d;
     }
 
-    .createcase-mobile-menu-btn{ 
-      &.createbtn-close{
+    .createcase-mobile-menu-btn {
+      &.createbtn-close {
         position: fixed;
         left: 250px;
         border-radius: 0px 16px 16px 0px;
@@ -104,42 +101,66 @@
         background: $grey-d;
       }
     }
+
+    // .roles-navigation-right
+    .roles-navigation {
+      top: $header-height;
+      height: calc(100% - $header-height);
+      max-height: calc(100% - $header-height) !important;
+      .createcase-mobile-menu-btn {
+        &.createbtn-close {
+          left: 260px;
+        }
+      }
+    }
   }
-.casetopsection-rightside{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-  .app-c-split-button{
-    max-width: 100%;
-    text-align: right;
-  }
-  case-management-client-page, 
-  .systemconfig-components{
-    display: block;
+
+  .inner-split_right.roles-navigation-right {
     padding: $size-xlg;
   }
-  .systemconfig-components{
-  .add-button-top{
-    position: relative;
-    left: auto;
-    right: auto;
-    top: auto;
+  .role-details-header {
+    .app-l-breadcrumb {
+      flex-direction: column;
+      align-items: flex-start !important;
+      .breadcrumb-right {
+        align-self: flex-end;
+      }
+    }
   }
-  .block-section{
+  .casetopsection-rightside {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    h2{
-      line-height: normal;
+  }
+  .app-c-split-button {
+    max-width: 100%;
+    text-align: right;
+  }
+  case-management-client-page,
+  .systemconfig-components {
+    display: block;
+    padding: $size-xlg;
+  }
+  .systemconfig-components {
+    .add-button-top {
+      position: relative;
+      left: auto;
+      right: auto;
+      top: auto;
+    }
+    .block-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      h2 {
+        line-height: normal;
+      }
     }
   }
 }
-}
 
 @media (max-width: $breakpoint-md) {
-  .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb
-  {
+  .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb {
     flex-direction: column;
   }
 }
