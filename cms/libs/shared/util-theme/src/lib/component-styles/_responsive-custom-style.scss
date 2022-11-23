@@ -1,0 +1,67 @@
+@media (max-width: $breakpoint-sm) {
+
+
+    .app-l-header {
+        padding: $size-xx;
+        .headermenu-leftmostsection{
+            .mobile-menu-icon{
+                display: inline-flex;
+            }
+        }
+   
+        .header-logo {
+            img {
+                max-height: 20px;
+            }
+        }
+    }
+    .global-search {
+        &.header-search{
+            display: none;
+            &.mobileheader-searchshow{
+                position: fixed;
+                display: inline-block;
+                width: 100%;
+                left: 0px;
+                background: #fff;
+                right: 0;
+                z-index: 99;
+                top:  $header-height;
+                max-width: 100%;
+                padding: 10px;
+                box-shadow: -6px 6px 7px rgb(0 0 0 / 19%);
+                .global-search-icon{
+                    left: 16px;
+                    top: 16px;
+                }
+            }
+        }
+    }
+    .header-mobilesearchbutton{
+        display: inline-block;
+      }
+
+
+      .app-l-sidebar{
+        position: fixed;
+        left: -270px;
+        z-index: 10;
+        height: 100%;
+        &.menuToggled{
+            position: fixed;
+            z-index: 10;
+            height: 100%;
+        }    
+      }
+
+      .mobilemenu-opened{
+        .app-l-sidebar{
+            right: auto;
+            left: 0px;
+        }
+      }
+}
+
+@media (max-width: $breakpoint-md) {
+
+}
