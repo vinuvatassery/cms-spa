@@ -1,40 +1,44 @@
-<div class="add-client-wrapper" kendoRippleContainer>
+<div class="add-client-wrapper" kendoRippleContainer [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}">
   <div class="add-client_left">
     <!-- Case Navigation -->
-        <!-- Case Navigation -->
-         
-    <case-management-case-navigation
-      [routes$]="routes$"
-      [completeStaus$]="completeStaus$"
-      [navigationEvent]="workflowNavigationEvent"
-      (workflowChange)="applyWorkflowChanges($event)"
-    ></case-management-case-navigation>
+    <!-- Case Navigation -->
+
+    <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$"
+      [navigationEvent]="workflowNavigationEvent" (workflowChange)="applyWorkflowChanges($event)">
+    </case-management-case-navigation>
+    <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
+      menu_open
+      </span>
+  </button>
     <!-- Send Letter Side profile -->
-    <case-management-send-letter-profile
-      hidden
-    ></case-management-send-letter-profile>
+    <case-management-send-letter-profile hidden></case-management-send-letter-profile>
   </div>
   <div class="add-client_right">
     <!-- Breadcrumb Section -->
     <section class="app-l-breadcrumb mb-3 py-0 fixed-top-breadcrumb">
+
+
       <common-bread-crumb></common-bread-crumb>
-      <div class="breadcrumb-right app-c-split-button">
-        <kendo-splitbutton
-          [data]="saveForLaterData"
-          class="app-c-split-button app-dropdown-action"
-          buttonClass="k-split-button"
-         
-          [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }"
-        >
-          <div class="btn-inner-block"  (click)="onSaveAndContinueClicked()">
-            <span  class="material-icons"  aria-label="save and continue"  aria-hidden="false" >save</span>
-            Save & Continue
-          </div>
-          <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem>
-            <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-                <label>   {{ dataItem.text }} </label>
-            </button>
+      <div class="casetopsection-rightside">
+        <button class="createcase-mobile-menu-btn" (click)="openInnerLeftMenu()"> <span class="material-icons">
+            list
+          </span>
+        </button>
+
+        <div class="breadcrumb-right app-c-split-button">
+          <kendo-splitbutton [data]="saveForLaterData" class="app-c-split-button app-dropdown-action"
+            buttonClass="k-split-button"
+            [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
+            <div class="btn-inner-block" (click)="onSaveAndContinueClicked()">
+              <span class="material-icons" aria-label="save and continue" aria-hidden="false">save</span>
+              Save & Continue
+            </div>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+              <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                aria-hidden="false" (click)="dataItem.click">
+                <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                <label> {{ dataItem.text }} </label>
+              </button>
               <!-- <button
                 kendoButton
                 look="flat"
@@ -65,9 +69,10 @@
                 >
                 <label>Delete Application</label>
               </button> -->
-        
-          </ng-template>
-        </kendo-splitbutton>
+
+            </ng-template>
+          </kendo-splitbutton>
+        </div>
       </div>
     </section>
     <router-outlet></router-outlet>
@@ -75,12 +80,8 @@
 </div>
 
 <!-- Finish the application later Modal -->
-<kendo-dialog
-  *ngIf="isShowSaveLaterPopup"
-  (close)="onCloseSaveLaterClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Finish the application later?"
->
+<kendo-dialog *ngIf="isShowSaveLaterPopup" (close)="onCloseSaveLaterClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Finish the application later?">
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
       The application status will be set to REJECT if not completed within 45
@@ -91,7 +92,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
           <!-- <input kendoTextBox /> -->
-          <kendo-textbox aria-label="Assigned Case Worker"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          <kendo-textbox aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
@@ -104,25 +105,11 @@
         <h5>Do you need to send the client a letter?</h5>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
-            <input
-              type="radio"
-              aria-labelledby="send Letter"
-              kendoRadioButton
-              name="sendLetter"
-            />
-            <kendo-label
-              class="k-radio-label"
-              id="yes"
-              text="Yes"
-            ></kendo-label>
+            <input type="radio" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
+            <kendo-label class="k-radio-label" id="yes" text="Yes"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
-            <input
-              type="radio"
-              aria-labelledby="send Letter"
-              kendoRadioButton
-              name="sendLetter"
-            />
+            <input type="radio" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
             <kendo-label class="k-radio-label" id="No" text="No"></kendo-label>
           </span>
         </div>
@@ -132,21 +119,11 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          (click)="onCloseSaveLaterClicked()"
-          aria-label="cancel new case"
-        >
+        <button kendoButton [primary]="true" look="outline" (click)="onCloseSaveLaterClicked()"
+          aria-label="cancel new case">
           Cancel
         </button>
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onSendNewLetterClicked()"
-          aria-label="save and exit new case"
-        >
+        <button kendoButton [primary]="true" (click)="onSendNewLetterClicked()" aria-label="save and exit new case">
           Save & Exit
         </button>
       </div>
@@ -155,12 +132,8 @@
 </kendo-dialog>
 
 <!-- Delete Application Modal -->
-<kendo-dialog
-  *ngIf="isShowDeleteConfirmPopup"
-  (close)="onCloseDeleteConfirmClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Delete application?"
->
+<kendo-dialog *ngIf="isShowDeleteConfirmPopup" (close)="onCloseDeleteConfirmClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete application?">
   <section class="k-dialog-body mb-2">
     <p>
       All progress will be lost and the client’s data will be permanently
@@ -170,19 +143,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          aria-label="cancel delete"
-        >
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel delete">
           Cancel
         </button>
-        <button
-          kendoButton
-          class="k-error-button"
-          aria-label="delete client’s data"
-        >
+        <button kendoButton class="k-error-button" aria-label="delete client’s data">
           Delete
         </button>
       </div>
@@ -191,12 +155,8 @@
 </kendo-dialog>
 
 <!-- Discard Application Modal -->
-<kendo-dialog
-  *ngIf="isShowDiscardConfirmPopup"
-  (close)="onCloseDiscardConfirmClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Discard changes?"
->
+<kendo-dialog *ngIf="isShowDiscardConfirmPopup" (close)="onCloseDiscardConfirmClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Discard changes?">
   <section class="k-dialog-body mb-2">
     <p>
       All unsaved changes will be permanently lost, and you’ll be navigated back
@@ -206,19 +166,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          aria-label="cancel permanent delete"
-        >
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel permanent delete">
           Cancel
         </button>
-        <button
-          kendoButton
-          class="k-error-button"
-          aria-label=" permanent delete"
-        >
+        <button kendoButton class="k-error-button" aria-label=" permanent delete">
           Discard
         </button>
       </div>
@@ -227,8 +178,5 @@
 </kendo-dialog>
 
 <!-- Send New Letter Modal -->
-<case-management-send-letter
-  *ngIf="isShowSendNewLetterPopup"
-  [data]="ScreenName"
-  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
-></case-management-send-letter>
+<case-management-send-letter *ngIf="isShowSendNewLetterPopup" [data]="ScreenName"
+  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"></case-management-send-letter>

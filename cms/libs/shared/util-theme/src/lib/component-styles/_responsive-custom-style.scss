@@ -1,67 +1,145 @@
 @media (max-width: $breakpoint-sm) {
-
-
-    .app-l-header {
-        padding: $size-xx;
-        .headermenu-leftmostsection{
-            .mobile-menu-icon{
-                display: inline-flex;
-            }
-        }
-   
-        .header-logo {
-            img {
-                max-height: 20px;
-            }
-        }
-    }
-    .global-search {
-        &.header-search{
-            display: none;
-            &.mobileheader-searchshow{
-                position: fixed;
-                display: inline-block;
-                width: 100%;
-                left: 0px;
-                background: #fff;
-                right: 0;
-                z-index: 99;
-                top:  $header-height;
-                max-width: 100%;
-                padding: 10px;
-                box-shadow: -6px 6px 7px rgb(0 0 0 / 19%);
-                .global-search-icon{
-                    left: 16px;
-                    top: 16px;
-                }
-            }
-        }
-    }
-    .header-mobilesearchbutton{
-        display: inline-block;
+  // Top Header responsive CSS
+  .app-l-header {
+    padding: $size-xx;
+    .headermenu-leftmostsection {
+      .mobile-menu-icon {
+        display: inline-flex;
       }
+    }
 
-
-      .app-l-sidebar{
+    .header-logo {
+      img {
+        max-height: 20px;
+      }
+    }
+  }
+  .global-search {
+    &.header-search {
+      display: none;
+      &.mobileheader-searchshow {
         position: fixed;
-        left: -270px;
-        z-index: 10;
-        height: 100%;
-        &.menuToggled{
-            position: fixed;
-            z-index: 10;
-            height: 100%;
-        }    
-      }
-
-      .mobilemenu-opened{
-        .app-l-sidebar{
-            right: auto;
-            left: 0px;
+        display: inline-block;
+        width: 100%;
+        left: 0px;
+        background: $white;
+        right: 0;
+        z-index: 99;
+        top: $header-height;
+        max-width: 100%;
+        padding: 10px;
+        box-shadow: -6px 6px 7px rgb(0 0 0 / 19%);
+        .global-search-icon {
+          left: 16px;
+          top: 16px;
         }
       }
+    }
+  }
+  .header-mobilesearchbutton {
+    display: inline-block;
+  }
+  // Left Menu responsive CSS
+
+  .app-l-sidebar {
+    position: fixed;
+    left: -270px;
+    z-index: 10;
+    height: 100%;
+    &.menuToggled {
+      position: fixed;
+      z-index: 10;
+      height: 100%;
+    }
+  }
+
+  .mobilemenu-opened {
+    .app-l-sidebar {
+      right: auto;
+      left: 0px;
+    }
+  }
+
+  .add-new-button{
+    top: -5px !important;
+  }
+
+
+  // Create Case details Sub leftmenu Navigation 
+  .createcase-mobile-menu-btn{
+    display: inline-flex;
+    
+  }
+
+  .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb
+  {
+    flex-direction: column;
+  }
+  .add-client-wrapper .add-client_left, 
+  .add-client-wrapper .inner-split_left, 
+  .inner-split-wrapper .add-client_left, 
+  .inner-split-wrapper .inner-split_left{
+    position: fixed;
+    background: $white;
+    left: -260px;
+    z-index: 8;
+  }
+  .innerleftmenu-opened{
+    &.add-client-wrapper .add-client_left, 
+    &.add-client-wrapper .inner-split_left, 
+    &.inner-split-wrapper .add-client_left, 
+    &.inner-split-wrapper .inner-split_left{
+      left: 0px;
+      background: $white;
+      z-index: 8;
+      box-shadow: 1px 11px 8px $grey-d;
+    }
+
+    .createcase-mobile-menu-btn{ 
+      &.createbtn-close{
+        position: fixed;
+        left: 250px;
+        border-radius: 0px 16px 16px 0px;
+        top: 70px;
+        background: $grey-d;
+      }
+    }
+  }
+.casetopsection-rightside{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+  .app-c-split-button{
+    max-width: 100%;
+    text-align: right;
+  }
+  case-management-client-page, 
+  .systemconfig-components{
+    display: block;
+    padding: $size-xlg;
+  }
+  .systemconfig-components{
+  .add-button-top{
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+  }
+  .block-section{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h2{
+      line-height: normal;
+    }
+  }
+}
 }
 
 @media (max-width: $breakpoint-md) {
-
+  .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb
+  {
+    flex-direction: column;
+  }
 }

@@ -51,7 +51,7 @@
       height: 20px;
       margin: 0 4px;
       width: 1px;
-      background: #dddddd;
+      background: $grey-d;
     }
   }
   .as_footer {
@@ -60,8 +60,8 @@
     align-items: center;
     gap: 10px;
     padding: 10px 14px;
-    box-shadow: 0px -4px 6px #ccc;
-    background: #fff;
+    box-shadow: 0px -4px 6px $grey-c;
+    background: $white;
     z-index: 10;
     position: fixed;
     bottom: 0;

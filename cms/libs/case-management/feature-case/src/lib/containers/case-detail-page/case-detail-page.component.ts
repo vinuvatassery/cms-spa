@@ -37,6 +37,7 @@ export class CaseDetailPageComponent implements OnInit {
   isShowDeleteConfirmPopup = false;
   isShowDiscardConfirmPopup = false;
   isShowSendNewLetterPopup = false;
+  isInnerLeftMenuOpen = false;
   sessionId!: string;
   data: Array<any> = [
     {
@@ -214,4 +215,7 @@ export class CaseDetailPageComponent implements OnInit {
     }
   }
 
+  openInnerLeftMenu(){
+    this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
+  }
 }
