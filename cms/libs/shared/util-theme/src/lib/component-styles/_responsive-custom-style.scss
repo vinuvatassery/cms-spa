@@ -89,7 +89,7 @@
       left: 0px;
       background: $white;
       z-index: 8;
-      box-shadow: 1px 11px 8px $grey-d;
+      box-shadow: $button-box-shadow;
     }
 
     .createcase-mobile-menu-btn {
@@ -136,7 +136,7 @@
     max-width: 100%;
     text-align: right;
   }
-  case-management-client-page,
+  .casenav-details-wrapper,
   .systemconfig-components {
     display: block;
     padding: $size-xlg;
@@ -157,10 +157,82 @@
       }
     }
   }
+case-management-case360-page{
+  case-management-case360-header{
+    .app-l-mainTittle {
+      h2{
+        &.title-md{
+          align-items: center;
+          flex-wrap: wrap;
+          width: 100%;
+          gap: 6px;
+          .pl-1{
+            padding-left: 0px !important;
+          }
+          span{
+            // margin: 4px 0px;
+            padding-left: 0px;
+          }
+        }
+        .title-star-icon .material-icons{
+          margin-left: 0px;
+        }
+      }
+      .title-client-info-block {
+        margin: 10px 0px;
+        display: grid;
+        grid-template-columns: 1.4fr .6fr;
+        grid-gap: 6px;
+        .title-client-info{
+          padding-left: 0px;
+          margin-right: 0px;
+        }
+    }
+    } 
+
+    .assigned-to-right {
+ 
+      top: -7px !important;
+  }
+  }
+  .client-tab-section {
+    .tab-over-icon-btn{
+      position: relative;
+      right: 14px; 
+      display: flex;
+      z-index: 4;
+      align-items: center; 
+      justify-content: flex-end;
+      .TableActionPopup{
+        margin: 0;
+      }
+    }
+  }
+  .k-tabstrip-items-wrapper{
+    position: sticky;
+    top: 0 ;
+    background: $white;
+  }
+.app-c-sub-tab{
+  .k-tabstrip-items-wrapper{
+    top: 36px;
+  }
+}
+}
+
+
+
+
+.app-c-modal-np {
+  .k-dialog {
+    top: 0;
+  }
+}
 }
 
 @media (max-width: $breakpoint-md) {
   .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb {
     flex-direction: column;
+    box-shadow: $button-box-shadow;
   }
 }

@@ -27,6 +27,7 @@
       <kendo-formerror  *ngIf="parentForm?.hasError('required','caseOwner') && isSubmitted">Case Owner is Required</kendo-formerror>
     </div>
     <div class="flex-col" *ngIf="isProgramVIsible==true">
+  
       <kendo-floatinglabel text="Program">
         <kendo-dropdownlist
         [fillMode]="formUiStyle.dropDownFillMode"
@@ -34,7 +35,7 @@
         textField="value"
         valueField="key"
         formControlName="selectedProgram"
-        [value]="1"
+        [value]="'3B8DD4FC-86FD-43E7-8493-0037A6F9160B'"
         [valuePrimitive]="true"
         [disabled]="true"
           
