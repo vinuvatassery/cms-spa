@@ -25,32 +25,18 @@ $success: #0f8552;
 $warning: #935c01;
 $error: $error-color-1;
 $dark: get-base-hue(gray, 800);
-
-/*Primary Colors */
 $anchor-link: $app-primary;
-$font-color: #2e384d;
-$white: #ffffff;
-$black: #000000;
-$black-3: #333333;
-$black-6: #666666;
-$black-9: #999999;
-$black-e: #eeeeee;
-$black-12: rgb(0 0 0 / 12%);
-$black-30: rgb(0 0 0 / 30%);
-$theme-border: $black-12;
-$table-header: #3f5773;
- 
 
 // Kendo Variable to customize colors
-$kendo-input-bg :$white;
-$kendo-input-text: #656565;
-$kendo-input-border : rgba(255, 0, 0, 0.08);
-$kendo-input-hover-bg :#ffffff;
-$kendo-input-hover-text : #656565;
-$kendo-input-hover-border: $primary;
-$kendo-input-focus-bg: $primary;
-$kendo-input-focus-text: $primary;
-$kendo-input-focus-border: $primary;
+// $kendo-input-bg :$white;
+// $kendo-input-text: #656565;
+// $kendo-input-border : rgba(255, 0, 0, 0.08);
+// $kendo-input-hover-bg :#ffffff;
+// $kendo-input-hover-text : #656565;
+// $kendo-input-hover-border: $primary;
+// $kendo-input-focus-bg: $primary;
+// $kendo-input-focus-text: $primary;
+// $kendo-input-focus-border: $primary;
 
 /* importing App Component Styles*/
 @import '../../component-styles/app-style.scss';
