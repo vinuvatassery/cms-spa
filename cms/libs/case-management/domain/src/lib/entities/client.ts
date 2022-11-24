@@ -1,12 +1,12 @@
 export class Client {
   clientId :number =0;
-  firstName :string='';
-  middleName :string='';
+  firstName !:string;
+  middleName :string|null=null;
   //noMiddleNameFlag :string='';
   lastName :string='';
   clientFullName :string='';
   dob? :Date= new Date;
-  ssn :string='';
+  ssn :string|null=null;
   ssnNotApplicableFlag :string='';
   genderAtBirthCode :string='';
   genderAtBirthDesc :string='';
@@ -41,15 +41,15 @@ export class Client {
   contactName :string='';
   contactRelationshipCode :string='';
   contactPhoneNbr :string='';
-  // creatorId :string='';
-  // creationTime? :Date=new Date;
-  // lastModifierId :string='';
-  // lastModificationTime? :Date;
-  // isDeleted :boolean=false;
-  // deleterId :string='';
-  // deletionTime? :Date=new Date;
-  // extraProperties :string='';
-  // concurrencyStamp :string='';
+  creatorId :string | null =null;
+  creationTime? :Date | null = null;
+  lastModifierId :string| null =null;
+  lastModificationTime? :Date | null=null;
+  isDeleted :boolean=false ;
+  deleterId :string | null =null;
+  deletionTime? :Date | null =null;
+  extraProperties :string | null =null;
+  concurrencyStamp :string | null =null;
   activeFlag :string='';
 }
 

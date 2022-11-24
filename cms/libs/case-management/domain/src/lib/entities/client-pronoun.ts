@@ -1,16 +1,16 @@
 export class ClientPronoun{
-        clientPronounId :string ='' ;
-        clientId :string ='';
+        clientPronounId :string |null=null ;
+        clientId :number =0;
         clientPronounCode :string='';
-        otherDesc :string = '';
-        creatorId :string ='';
-        creationTime? :Date;
-        lastModifierId :string='';
-        lastModificationTime? :Date;
-        isDeleted :string ='';
-        deleterId :string='';
-        deletionTime? :Date;
-        extraProperties :string='';
-        concurrencyStamp :string='';
+        otherDesc :string |null =null;
+        creatorId :string |null=null;
+        creationTime? :Date|null=null;
+        lastModifierId :string |null =null;
+        lastModificationTime? :Date |null =null;
+        isDeleted :boolean=false;
+        deleterId :string |null=null;
+        deletionTime? :Date | null=null;
+        extraProperties :string|null=null;
+        concurrencyStamp :string|null=null;
         activeFlag :string='';
 }

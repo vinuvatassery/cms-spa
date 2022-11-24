@@ -1,19 +1,19 @@
 export class ClientRace{
-clientRaceId :string='';
-clientId :string='';
-clientRaceCategoryCode :string='';
-clientEthnicIdentityCode :string='';
-isPrimaryFlag :string='';
-raceDesc :string='';
-creatorId :string='';
-creationTime? :Date;
-lastModifierId :string='';
-lastModificationTime? :Date;
-isDeleted :string='';
-deleterId :string='';
-deletionTime? :Date;
-extraProperties :string='';
-concurrencyStamp :string='';
+clientRaceId :string|null=null;
+clientId :number=0;
+clientRaceCategoryCode !:string;
+clientEthnicIdentityCode !:string;
+isPrimaryFlag !:string;
+raceDesc :string|null=null;
+creatorId :string|null=null;
+creationTime? :Date|null=null;
+lastModifierId :string|null=null;
+lastModificationTime? :Date|null=null;
+isDeleted :boolean=false;
+deleterId :string|null=null;
+deletionTime? :Date|null=null;
+extraProperties :string|null=null;
+concurrencyStamp :string|null=null;
 activeFlag :string='';
 
 }
