@@ -3,9 +3,12 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
+
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade,
-  LoginUserFacade,UserDefaultRoles , LovFacade, LovType} from '@cms/case-management/domain';
+  LoginUserFacade,UserDefaultRoles  } from '@cms/case-management/domain';
+
+  import {LovType , LovFacade} from '@cms/system-config/domain'
 
 @Component({
   selector: 'case-management-case-page',

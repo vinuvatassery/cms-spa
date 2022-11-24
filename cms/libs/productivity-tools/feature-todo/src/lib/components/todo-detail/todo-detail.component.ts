@@ -1,7 +1,9 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { CaseFacade , LovFacade } from '@cms/case-management/domain';
+import { CaseFacade  } from '@cms/case-management/domain';
+
+import {  LovFacade } from '@cms/system-config/domain';
 /** facades **/
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'

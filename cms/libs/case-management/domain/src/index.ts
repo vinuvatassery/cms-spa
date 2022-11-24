@@ -22,7 +22,6 @@ export * from './lib/entities/search';
 export * from './lib/entities/verification';
 export * from './lib/entities/workflow';
 export * from './lib/entities/workflow-stage-completion-status';
-export * from './lib/entities/lov';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -35,7 +34,6 @@ export * from './lib/enums/adjustment-operator.enum';
 export * from './lib/enums/data-point-type.enum';
 export * from './lib/enums/entity-type-code.enum';
 export * from './lib/enums/user-default-roles.enum';
-export * from './lib/enums/lov-types.enum';
 export * from './lib/enums/program.enum';
 
 /** Data services **/
@@ -60,7 +58,6 @@ export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
 export * from './lib/infrastructure/status-period.data.service';
 export * from './lib/infrastructure/login-user.data.service';
-export * from './lib/infrastructure/lov.data.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -90,4 +87,3 @@ export * from './lib/application/completion-status.facade';
 export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
 export * from './lib/application/login-user.facade';
-export * from './lib/application/lov.facade';

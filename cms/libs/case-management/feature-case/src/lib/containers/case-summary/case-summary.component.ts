@@ -4,8 +4,9 @@ import {
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, WorkflowFacade, LoginUserFacade,
-   UserDefaultRoles, NavigationType, LovFacade, LovType } from '@cms/case-management/domain';
+   UserDefaultRoles, NavigationType  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {LovType , LovFacade} from '@cms/system-config/domain'
 
 /**external libraries */
 import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
