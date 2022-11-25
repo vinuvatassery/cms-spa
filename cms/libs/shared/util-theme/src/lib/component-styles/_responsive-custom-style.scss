@@ -113,6 +113,8 @@
         }
       }
     }
+
+
   }
 
   .inner-split_right.roles-navigation-right {
@@ -207,6 +209,11 @@ case-management-case360-page{
         margin: 0;
       }
     }
+    .case-360-tab{
+      >.k-tabstrip-items-wrapper{
+        max-width: 100%;
+      }
+    }
   }
   .k-tabstrip-items-wrapper{
     position: sticky;
@@ -218,14 +225,48 @@ case-management-case360-page{
     top: 36px;
   }
 }
+
+.app-radiobtnwidtext-wrapper{
+  .small-input-form{
+    margin-top: 16px;
+  }
 }
-
-
-
+}
 
 .app-c-modal-np {
   .k-dialog {
     top: 0;
+  }
+}
+.app-c-editor{
+  .k-toolbar{
+    padding-right: 0;
+  }
+
+}
+.bigbtn-wrapper{ 
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 10px;
+}
+
+.header-menu {
+  .header-menu_notifications {
+    .k-animation-container{
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
+.app-l-header{
+  
+  .card-list{
+    min-width: 10px;
+  }
+}
+.reminder-list-modal{
+  .card-list-search{
+    flex-direction: column;
   }
 }
 }
@@ -234,5 +275,14 @@ case-management-case360-page{
   .add-client-wrapper .add-client_right .app-l-breadcrumb.fixed-top-breadcrumb {
     flex-direction: column;
     box-shadow: $button-box-shadow;
+  }
+
+  .client-tab-section {
+ 
+    .case-360-tab{
+      >.k-tabstrip-items-wrapper{
+        max-width: calc(100% - 160px);
+      }
+    }
   }
 }
