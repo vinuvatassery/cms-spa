@@ -1,7 +1,5 @@
- 
-<section kendoRippleContainer>
 <form [formGroup]="appInfoForm">
-
+<section kendoRippleContainer>
   <div class="flex-row" >
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Enter First Name" class="k-form">
@@ -16,7 +14,7 @@
       </kendo-textbox>
       
       <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
-      <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First Name is required</kendo-formerror>
+      <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First Name is required.</kendo-formerror>
    
       </kendo-floatinglabel>
     </div>
@@ -180,6 +178,7 @@
         class="adjust-attr"
         id="ssnNotApplicable"
         name="ssnNotApplicable"
+       
         aria-labelledby="ssnNotApplicable"
         kendoCheckBox
         formControlName="ssnNotApplicable"
@@ -191,7 +190,7 @@
     </span>
     </div>
   </div>
-</form> 
+
 </section>
  
 <section class="mb-3">
@@ -202,14 +201,13 @@
         <span class="app-radiobtnwidtext-wrapper">
           <input
             type="radio"
-            [value]="1" 
-            [(ngModel)]="isVisible"       
             kendoRadioButton
             name="register"
+            value="Yes"
             aria-labelledby="registerToVoteYes"
             id="register"
             tabindex="1"
-            [checked]="isSelected"
+            formControlName="registerToVote"            
           />
           <kendo-label class="k-radio-label" text="Yes"></kendo-label>
         </span>
@@ -217,13 +215,12 @@
           <input
             type="radio"
             kendoRadioButton
-            [value]="0" 
-            [(ngModel)]="isVisible" 
+            value="No"
             name="register"
             aria-labelledby="registerToVoteNo"
             id="register1"
             tabindex="2"
-            [checked]="isSelected"
+            formControlName="registerToVote"
           />
           <kendo-label
             class="k-radio-label"
@@ -238,6 +235,7 @@
     </div>
   </div>
 </section>
+
 <section>
   <h5>What pronouns do they use? (check all that apply)</h5>
   <div class="component-list-h">
@@ -310,11 +308,12 @@
         >No pronouns, use their name</label
       >
     </span>
+    <!-- [(ngModel)]="isPronounsChecked" -->
     <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
-        [(ngModel)]="isPronounsChecked"
+        
         id="notListedPleaseSpecify"
         aria-labelledby="notListedPleaseSpecify"
       />
@@ -361,12 +360,13 @@
         /> -->
       </kendo-floatinglabel>
     </div>
+    <!-- [(ngModel)]="isDescribeGenderChecked" -->
     <div class="flex-col flex-col-4 pt-3">
       <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
-        [(ngModel)]="isDescribeGenderChecked"
+       
         aria-labelledby="describeGenderNotApplicable"
         id="genderNotApplicable"
       />
@@ -377,6 +377,7 @@
     </div>
   </div>
 </section>
+</form>
 <section>
   <h5>What is their gender? Select all that apply</h5>
   <div class="component-list-h">
@@ -1212,3 +1213,4 @@
     </span>
   </div>
 </section>
+

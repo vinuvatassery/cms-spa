@@ -28,6 +28,7 @@ export class ClientFacade {
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
   private specialHandlingsSubject = new BehaviorSubject<any>([]);  
   appInfoFormSubject = new BehaviorSubject<any>([]);
+  applicationInfoSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -48,6 +49,7 @@ export class ClientFacade {
   rdoErrands$ = this.rdoErrandsSubject.asObservable();
   specialHandlings$ = this.specialHandlingsSubject.asObservable();
   appInfoForm$ = this.appInfoFormSubject.asObservable();
+  applicantInfo$ = this.applicationInfoSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly clientDataService: ClientDataService) {}
@@ -243,6 +245,9 @@ export class ClientFacade {
   }
 
   save(applicantInfo:ApplicantInfo) {
-    return this.clientDataService.save(applicantInfo);
-}
+      return this.clientDataService.save(applicantInfo);
+  }
+  load(clientCaseId:any,eligibilityId:any) {
+      return this.clientDataService.load(clientCaseId,eligibilityId);
+  }
 }

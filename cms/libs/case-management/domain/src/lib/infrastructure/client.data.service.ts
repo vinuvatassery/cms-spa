@@ -350,5 +350,9 @@ export class ClientDataService {
       applicantInfo,
 
     )}
+    load(clientCaseId:any,eligibilityId:any){
+      return this.http.get<ApplicantInfo>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/applicant-info?clientCaseEligibilityId=${eligibilityId}&caseId=${clientCaseId}`,);
+       }
     
 }

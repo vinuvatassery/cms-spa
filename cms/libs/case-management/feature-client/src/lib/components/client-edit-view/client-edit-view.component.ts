@@ -5,7 +5,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { groupBy } from '@progress/kendo-data-query';
 import { debounceTime, distinctUntilChanged, filter, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
-import { ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
+import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -94,6 +94,7 @@ export class ClientEditViewComponent implements OnInit {
   lengthRestrictThirty=30;
   lengthRestrictForty=40;
   maxLengthSsn =9;
+  applicantInfo$ = this.clientfacade.applicantInfo$;
 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -119,6 +120,8 @@ export class ClientEditViewComponent implements OnInit {
     this.loadTareaRaceAndEthinicity();
     this.buildForm();
     this.addAppInfoFormChangeSubscription();
+    this.loadApplicantInfoSubscription();
+    
     //this.addSaveSubscriptionToValidate();
     //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
     this.ValidateFields.emit(this.appInfoForm);
@@ -136,6 +139,43 @@ export class ClientEditViewComponent implements OnInit {
   //   debugger;
   //   });
   // }
+  private loadApplicantInfoSubscription(){
+    this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{
+      debugger;
+      if(applicantInfo.client !=undefined){
+      this.assignModelToForm(applicantInfo);
+      }
+      
+    }); 
+  }
+  private assignModelToForm(applicantInfo:ApplicantInfo){
+    this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName)
+    this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName)
+    //this.appInfoForm.controls["chkmiddleName"].setValue(applicantInfo.client?.)
+    this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
+    this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibility?.insuranceFirstName)
+    this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibility?.insuranceLastName)
+    //this.appInfoForm.controls["prmInsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.)
+    this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibility?.officialIdFirstName)
+    this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibility?.officialIdLastName)
+    //this.appInfoForm.controls["officialIdsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.offi)
+
+    this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));
+    this.appInfoForm.controls["ssn"].setValue(applicantInfo.client?.ssn)
+    if(applicantInfo.client?.ssnNotApplicableFlag =="Y"){
+      this.appInfoForm.controls["ssnNotApplicable"].setValue(true);
+    }
+    else{
+      this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
+    }
+    if(applicantInfo.clientCaseEligibility.registerToVoteFlag.toUpperCase() ==StatusFlag.Yes){
+      this.appInfoForm.controls["registerToVote"].setValue('Yes');
+    }
+    else{
+      this.appInfoForm.controls["registerToVote"].setValue('No');
+    }
+    
+  }
   ngAfterViewChecked() {
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
@@ -171,13 +211,14 @@ export class ClientEditViewComponent implements OnInit {
       lastName: new FormControl('', { updateOn: 'blur' }),
       prmInsFirstName: new FormControl('', { updateOn: 'blur' }),
       prmInsLastName: new FormControl('', { updateOn: 'blur' }),
-      prmInsNotApplicable: new FormControl(false),
+      prmInsNotApplicable: new FormControl(),
       officialIdFirstName: new FormControl('', { updateOn: 'blur' }),
       officialIdLastName: new FormControl('', { updateOn: 'blur' }),
       officialIdsNotApplicable: new FormControl(false),
       dateOfBirth: new FormControl(this.currentDate, { updateOn: 'blur' }),
       ssn: new FormControl('', { updateOn: 'blur' }),
-      ssnNotApplicable: new FormControl(false)
+      ssnNotApplicable: new FormControl(),
+      registerToVote:new FormControl()
       //TODO: other form controls 
     })
 
@@ -371,6 +412,7 @@ export class ClientEditViewComponent implements OnInit {
   }
 
   onSsnNotApplicableChecked(event: Event) {
+    debugger;
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.isSSNChecked = true;

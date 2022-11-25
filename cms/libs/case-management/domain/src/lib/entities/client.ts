@@ -1,11 +1,11 @@
 export class Client {
   clientId :number =0;
-  firstName !:string;
+  firstName :string|null=null;
   middleName :string|null=null;
   //noMiddleNameFlag :string='';
   lastName :string='';
   clientFullName :string='';
-  dob? :Date= new Date;
+  dob:Date= new Date;
   ssn :string|null=null;
   ssnNotApplicableFlag :string='';
   genderAtBirthCode :string='';
