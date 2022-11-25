@@ -1,7 +1,7 @@
 {
   "environment": "Development",
   "version": "v0.1",
-  "caseApiUrl": "https://localhost:44362/api",
+  "caseApiUrl": "https://localhost:5200/api",
   "signalrHubUrl": "https://localhost:5300/signalrhub",
   "oidc": {
     "sendAccessToken": true,
