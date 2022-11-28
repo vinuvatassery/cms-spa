@@ -207,7 +207,8 @@
             aria-labelledby="registerToVoteYes"
             id="register"
             tabindex="1"
-            formControlName="registerToVote"            
+            formControlName="registerToVote"  
+            (change)="registerToVoteSelected($event)"          
           />
           <kendo-label class="k-radio-label" text="Yes"></kendo-label>
         </span>
@@ -221,14 +222,16 @@
             id="register1"
             tabindex="2"
             formControlName="registerToVote"
+            (change)="registerToVoteSelected($event)"   
           />
           <kendo-label
             class="k-radio-label"
             text="No"
             for="register1"
           ></kendo-label>
+          <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register To Vote is required.</kendo-formerror>
         </span>
-        <div class="voterreg-info d-flex" *ngIf="isVisible === 1">
+        <div class="voterreg-info d-flex" *ngIf="isVisible">
           <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>This application will  send voter registeration collaterial via letter or email once the applicaiton is saved  with the necessary contact information</p>
         </div>
       </div>
@@ -238,7 +241,23 @@
 
 <section>
   <h5>What pronouns do they use? (check all that apply)</h5>
-  <div class="component-list-h">
+  <div class="component-list-h"  >
+    <span class="app-checkboxwidtext-wrapper" 
+    *ngFor="let pronoun of pronounList.first; let i = index;"  formArrayName="pronounsFirst">
+      <input 
+        type="checkbox"
+        kendoCheckBox
+        aria-labelledby="pronounsSheHerHers"
+        id="pronounsSheHerHers"
+        [formControlName]="i"
+        (change)="pronounChange($event,pronoun.code,i,'first')"
+      />
+      <label class="k-checkbox-label" for="pronounsSheHerHers" 
+        >{{pronoun.value}}</label
+      >
+    </span>
+ <!-- </div> -->
+  <!-- <div class="component-list-h">
     <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
@@ -307,9 +326,9 @@
       <label class="k-checkbox-label" for="noPronounsUseTheirName"
         >No pronouns, use their name</label
       >
-    </span>
+    </span> -->
     <!-- [(ngModel)]="isPronounsChecked" -->
-    <span class="app-checkboxwidtext-wrapper">
+    <!-- <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
@@ -319,24 +338,28 @@
       />
       <label class="k-checkbox-label" for="notListedPleaseSpecify"
         >Not listed, please specify:</label
-      >
+      > -->
+    <span>
       <kendo-floatinglabel text="Enter Pronouns" >
         <kendo-textbox aria-label="enter pronouns"  [disabled]="!isPronounsChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
     
       </kendo-floatinglabel>
     </span>
-    <span class="app-checkboxwidtext-wrapper">
+    <span class="app-checkboxwidtext-wrapper"
+    *ngFor="let pronoun of pronounList.second; let i = index" formArrayName="pronounsSecond">
       <input
         type="checkbox"
         kendoCheckBox
         aria-labelledby="dontKnowWhatTheQuestionIs"
         id="dontKnow1"
+        [formControlName]="i"
+        (change)="pronounChange($event,pronoun.code,i,'second')"
       />
       <label class="k-checkbox-label" for="dontKnow1"
-        >Don’t know what this question is asking</label
+        >{{pronoun.value}}</label
       >
     </span>
-    <span class="option-with-check app-checkboxwidtext-wrapper">
+    <!-- <span class="option-with-check app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
@@ -346,7 +369,7 @@
       <label class="k-checkbox-label" for="dontWantToAnswer"
         >Don’t want to answer</label
       >
-    </span>
+    </span> -->
   </div>
   <div class="flex-row mb-4">
     <div class="flex-col flex-col-8">

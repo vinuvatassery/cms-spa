@@ -29,6 +29,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
+  private pronounSubscription!:Subscription;
   //private valiateSubscriptiion !: Subscription;
   isValid:boolean=true;
   //applicatInfo!:ApplicantInfo
@@ -37,6 +38,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   caseOwnerName :string = 'Antony Hopkins';
   //appInfoForm$ = this.clientFacade.appInfoForm$;
   //validate$ = this.applicationInfoFacade.validate$;
+  pronounList$ = this.clientFacade.pronounList$;
   showErrorMessage:boolean=false;
   constructor(private workflowFacade: WorkflowFacade,
     private clientFacade: ClientFacade) {
@@ -51,6 +53,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.pronounSubscription.unsubscribe();
     //this.valiateSubscriptiion.unsubscribe();
   }
 
@@ -73,7 +76,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   private loadApplicantInfo(){
    debugger;
    //--------------------------------Need to remove------------------------
-        if(this.workflowFacade.currentSession== null)
+        if(this.workflowFacade.currentSession == null || undefined)
         {
            if(  this.applicatInfo.client == undefined){
                 this.applicatInfo.client = new Client;
@@ -90,7 +93,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicatInfo.clientCase.concurrencyStamp ="fb3d6a0d044d46d5885baa9caa9ae2b1"
           this.applicatInfo.clientCaseEligibility.clientCaseId ='a6d2e412-b0c8-4466-84df-bf0d9628a880';
         }
-       // else{
+       //else{
    //-----------------------------------------------------------------------------
         this.clientFacade.load( this.applicatInfo.clientCase.clientCaseId,"D2237F9D-068E-4DCD-AA6F-2FF396B4F851").subscribe({         
           next: response => {
@@ -115,7 +118,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           console.error(error);
         }
       });
-    //}
+   //}
 
   }
 
@@ -141,6 +144,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   //   }
   // }
   private save() {
+    debugger;
     this.validateForm();
         if(this.appInfoForm.valid){
           this.populateApplicantInfoModel();
@@ -295,13 +299,49 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     debugger;
         /*Mocking the other required fields need to change as per the UI story progress */
         /*-------------------------------------------------------------------------------- */
-        var clientPronoun = new ClientPronoun();
-        clientPronoun.clientPronounCode = 'He/Him/His';
-        clientPronoun.activeFlag="Y";
-        if(this.applicatInfo.clientPronounList == undefined){
-          this.applicatInfo.clientPronounList = [];
+        this.pronounSubscription = this.pronounList$.subscribe({
+          next: response => {
+            debugger;
+            if(response !=null){
+                if(response !=null){
+                  response.first.forEach((first: { selected: boolean;code:any }) => {
+                    var clientPronoun = new ClientPronoun();
+                   if(first.selected == true){                    
+                    clientPronoun.clientPronounCode = first.code;
+                    clientPronoun.activeFlag="Y";
+                    if(this.applicatInfo.clientPronounList == undefined){
+                      this.applicatInfo.clientPronounList = [];
+                    }
+                    this.applicatInfo.clientPronounList.push(clientPronoun)
+                   }                  
+                    
+                });
+                response.second.forEach((second: { selected: boolean;code:any }) => {
+                  var clientPronoun = new ClientPronoun();
+                 if(second.selected == true){                  
+                  clientPronoun.clientPronounCode = second.code;
+                  clientPronoun.activeFlag="Y";
+                  if(this.applicatInfo.clientPronounList == undefined){
+                    this.applicatInfo.clientPronounList = [];
+                  }
+                  this.applicatInfo.clientPronounList.push(clientPronoun)
+                 }               
+                 
+              });
+                // var clientPronoun = new ClientPronoun();
+                // clientPronoun.clientPronounCode = 'He/Him/His';
+                // clientPronoun.activeFlag="Y";
+            
+              }
+            }
+            
+          } ,
+        error: error => {         
+          console.error(error);
         }
-        this.applicatInfo.clientPronounList.push(clientPronoun)
+
+        })
+        
         /*-------------------------------------------------------------------------------- */
   }
   
@@ -403,6 +443,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
               this.appInfoForm.controls["ssn"].updateValueAndValidity();    
+        }
+        if(this.appInfoForm.controls["registerToVote"].value == null){
+              this.appInfoForm.controls["registerToVote"].setValidators(Validators.required);;
+              this.appInfoForm.controls["registerToVote"].updateValueAndValidity();    
+        }
+        else{
+              this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
+              this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
         }
     //this.ValidateFields.emit(this.appInfoForm.valid);
   

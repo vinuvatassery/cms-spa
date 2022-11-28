@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
@@ -20,11 +20,27 @@ import { kMaxLength } from 'buffer';
   styleUrls: ['./client-edit-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientEditViewComponent implements OnInit {
+export class ClientEditViewComponent implements OnInit,OnDestroy {
  
   public value = "";
   isVisible: any;
   isSelected = true;
+  pronounList ={first:[{value:'',selected:false,code:''}],second:[{value:'',selected:false,code:''}]};
+    // first: [   
+    //   {value: 'She/Her/Hers'  ,selected: false,code:"SHE_HER_HERS"},
+    //   {value: 'He/Him/His',selected: false,code:"HE_HIM_HIS"},
+    //   {value: 'They/Them/Theirs',selected: false,code:"THEY_THEM_THEIRS"},
+    //   {value: 'Ella',selected: false,code:"ELLA"},
+    //   {value: 'Él',selected: false,code:"EL"},
+    //   {value: 'Elles',selected: false,code:"ELLES"},
+    //   {value: 'No pronouns, use their name',selected: false,code:"NO_PRONOUN"},
+    //   {value: 'Not listed, please specify:',selected: false,code:"NOT_LISTED"}
+    // ],
+    // second:[
+    //   {value:'Don’t know what this question is asking',selected:false,code:"DONT_KNOW"},
+    //   {value:'Don’t want to answer',selected:false,code:"DONT WAIT"}]
+    // };
+  //pronouns=['He/Him/His','They/Them/Theirs','Ella','Él','Elles','No pronouns, use their name','Not listed, please specify:' ];
 
   /** Output Properties **/
  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
@@ -51,6 +67,7 @@ export class ClientEditViewComponent implements OnInit {
   ddlEnglishProficiencies$ = this.clientfacade.ddlEnglishProficiencies$;
   ddlWrittenLanguages$ = this.clientfacade.ddlWrittenLanguages$;
   ddlRacialIdentities$ = this.clientfacade.ddlRacialIdentities$;
+  pronounList$ = this.clientfacade.pronounList$;
   isMiddleNameChecked!: boolean;
   isInsuranceCardChecked!: boolean;
   isOfficialIdChecked!: boolean;
@@ -95,6 +112,10 @@ export class ClientEditViewComponent implements OnInit {
   lengthRestrictForty=40;
   maxLengthSsn =9;
   applicantInfo$ = this.clientfacade.applicantInfo$;
+  applicantInfoSubscription !:Subscription;
+  pronounListSubscription !:Subscription;
+  //pronounSubscription !:Subscription;
+  //selectedPronoun =['He/Him/His'];
 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -117,36 +138,110 @@ export class ClientEditViewComponent implements OnInit {
     this.loadRdoDressingorBathing();
     this.loadRdoConcentration();
     this.loadRdoErrands();
-    this.loadTareaRaceAndEthinicity();
+    this.loadTareaRaceAndEthinicity();   
+    this.clientfacade.setPronounList();
+    this.loadPronounList();
     this.buildForm();
     this.addAppInfoFormChangeSubscription();
     this.loadApplicantInfoSubscription();
+
+    //this.getSelectedPronoun();
     
     //this.addSaveSubscriptionToValidate();
     //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
     this.ValidateFields.emit(this.appInfoForm);
   }
-
+  ngOnDestroy(): void {
+    this.applicantInfoSubscription.unsubscribe();
+    this.pronounListSubscription.unsubscribe();
+  }
   ngAfterViewInit(){
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {   
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
   }
+loadPronounList(){
+  this.pronounListSubscription = this.pronounList$.subscribe({
+    next: response => {
+      debugger;
+      if(response !=null){
+       this.pronounList = response;
+      }
+      
+    } ,
+  error: error => {         
+    console.error(error);
+  }
+  });
+}
   // private addSaveSubscriptionToValidate(): void {
   //  this.workflowFacade.saveAndContinueClicked$.subscribe(() => {
   //   var form = this.appInfoForm;
   //   debugger;
   //   });
   // }
+  pronounChange(Event:any,code:any,index:any,listName:any){
+    debugger;
+    if(listName == 'first'){
+      this.pronounList.first[index].selected =Event.target.checked;
+    }
+    if(listName == 'second'){
+      this.pronounList.second[index].selected =Event.target.checked;
+    }
+    // var trueIndexes = this.getAllIndexes(this.appInfoForm.controls["pronounsFirst"].value,true);
+    // var falseIndexes = this.getAllIndexes(this.appInfoForm.controls["pronounsFirst"].value,false);
+    // trueIndexes.forEach(i => {
+    //   this.pronounList.first[i].selected =true;
+    //  });
+    //  falseIndexes.forEach(i => {
+    //   this.pronounList.first[i].selected =false;
+    //  });
+     if(this.pronounList.first.filter(x=>x.value=="Not listed, please specify:" && x.selected== true).length>0){
+       this.isPronounsChecked = true;
+     }
+     else{
+      this.isPronounsChecked = false;
+     }
+     this.clientfacade.pronounListSubject.next(this.pronounList);
+  }
+
+ 
+  getAllIndexes(arr:any, val:boolean) {   
+    var indexes = [], i = -1;
+    while ((i = arr.indexOf(val, i+1)) != -1){
+        indexes.push(i);
+    }
+    return indexes;
+  }
+
+
   private loadApplicantInfoSubscription(){
-    this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{
-      debugger;
+      this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{
+     debugger;
+     
+      // this.pronounList.first[0].selected = true
+      // this.pronounList.first[5].selected = true
+      // this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.first.map(x => x.selected == true));
+     
+      
       if(applicantInfo.client !=undefined){
       this.assignModelToForm(applicantInfo);
       }
-      
+     
     }); 
+  }
+  private getSelectedPronoun(){
+    //debugger;
+    //const control = this.appInfoForm.controls["selectedPronoun"];
+    // control.valueChanges.subscribe(value => {
+    //   debugger;
+      // this.selectedPronoun = Object.keys(this.pronouns)
+      // .map((contactNo, index) =>
+      //   control.value[index] ? this.selectedPronoun[contactNo] : null
+      // )
+      // .filter(contactNo => !!contactNo);
+    //});
   }
   private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName)
@@ -169,11 +264,15 @@ export class ClientEditViewComponent implements OnInit {
       this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
     }
     if(applicantInfo.clientCaseEligibility.registerToVoteFlag.toUpperCase() ==StatusFlag.Yes){
+      this.isVisible = true;
       this.appInfoForm.controls["registerToVote"].setValue('Yes');
     }
     else{
+      this.isVisible = false
       this.appInfoForm.controls["registerToVote"].setValue('No');
     }
+    //if(applicantInfo.clientPronounList.filter(x=>x.clientPronounCode))
+    
     
   }
   ngAfterViewChecked() {
@@ -192,7 +291,7 @@ export class ClientEditViewComponent implements OnInit {
     }
   }
  
-
+  
   public onClose(event: any) {
     
       event.preventDefault();
@@ -204,7 +303,7 @@ export class ClientEditViewComponent implements OnInit {
   /** Private methods **/ 
 
   private buildForm() {
-    this.appInfoForm = new FormGroup({
+    this.appInfoForm = this.formBuilder.group({
       firstName: new FormControl('', {updateOn: 'blur'}),
       middleName: new FormControl({ value: '', disabled: false }, {updateOn: 'blur'}),
       chkmiddleName: new FormControl(''),
@@ -218,12 +317,38 @@ export class ClientEditViewComponent implements OnInit {
       dateOfBirth: new FormControl(this.currentDate, { updateOn: 'blur' }),
       ssn: new FormControl('', { updateOn: 'blur' }),
       ssnNotApplicable: new FormControl(),
-      registerToVote:new FormControl()
-      //TODO: other form controls 
-    })
+      registerToVote:new FormControl(),
+      pronounsFirst:this.formBuilder.array(this.pronounList.first.map(x => x.selected == true)),
+      //this.formBuilder.array(Object.keys(this.selectedPronoun).map(key => true)),
+      pronounsSecond:this.formBuilder.array(this.pronounList.second.map(x => x.selected == true))
+      
+    });
 
-  
-    
+    // this.appInfoForm = new FormGroup({
+    //   firstName: new FormControl('', {updateOn: 'blur'}),
+    //   middleName: new FormControl({ value: '', disabled: false }, {updateOn: 'blur'}),
+    //   chkmiddleName: new FormControl(''),
+    //   lastName: new FormControl('', { updateOn: 'blur' }),
+    //   prmInsFirstName: new FormControl('', { updateOn: 'blur' }),
+    //   prmInsLastName: new FormControl('', { updateOn: 'blur' }),
+    //   prmInsNotApplicable: new FormControl(),
+    //   officialIdFirstName: new FormControl('', { updateOn: 'blur' }),
+    //   officialIdLastName: new FormControl('', { updateOn: 'blur' }),
+    //   officialIdsNotApplicable: new FormControl(false),
+    //   dateOfBirth: new FormControl(this.currentDate, { updateOn: 'blur' }),
+    //   ssn: new FormControl('', { updateOn: 'blur' }),
+    //   ssnNotApplicable: new FormControl(),
+    //   registerToVote:new FormControl(),
+    //  // selectedPronoun: this.formBuilder.array(Object.keys(this.pronouns).map(key => false))
+    //   //TODO: other form controls 
+    // })  
+  }
+
+  buildPronouns() {
+    const arr = this.pronounList.first.map(value => {
+      return this.formBuilder.control(value.selected);
+    });
+    return this.formBuilder.array(arr);
   }
 
   private adjustAttributeChanged(event: Event) { 
@@ -412,7 +537,6 @@ export class ClientEditViewComponent implements OnInit {
   }
 
   onSsnNotApplicableChecked(event: Event) {
-    debugger;
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.isSSNChecked = true;
@@ -424,6 +548,14 @@ export class ClientEditViewComponent implements OnInit {
       this.appInfoForm.controls['ssn'].setValidators(Validators.required);
       this.appInfoForm.controls['ssn'].updateValueAndValidity();
     }
+  }
+  registerToVoteSelected(event:Event){
+   if((event.target as HTMLInputElement).value.toUpperCase()=="YES"){
+    this.isVisible = true;
+   }
+   else{
+    this.isVisible = false;
+   }
   }
 
   onTransgenderRdoClicked(event: any) {

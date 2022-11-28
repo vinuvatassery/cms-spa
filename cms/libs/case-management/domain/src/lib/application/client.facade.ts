@@ -29,6 +29,7 @@ export class ClientFacade {
   private specialHandlingsSubject = new BehaviorSubject<any>([]);  
   appInfoFormSubject = new BehaviorSubject<any>([]);
   applicationInfoSubject = new BehaviorSubject<any>([]);
+  pronounListSubject = new  BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -50,6 +51,7 @@ export class ClientFacade {
   specialHandlings$ = this.specialHandlingsSubject.asObservable();
   appInfoForm$ = this.appInfoFormSubject.asObservable();
   applicantInfo$ = this.applicationInfoSubject.asObservable();
+  pronounList$ = this.pronounListSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly clientDataService: ClientDataService) {}
@@ -237,6 +239,17 @@ export class ClientFacade {
     this.clientDataService.loadSpecialHandlings().subscribe({
       next: (specialHandlingsResponse) => {
         this.specialHandlingsSubject.next(specialHandlingsResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+  setPronounList(): void {
+    this.clientDataService.setPronounList().subscribe({
+      next: (pronounresponse) => {
+        this.pronounListSubject.next(pronounresponse);
       },
       error: (err) => {
         console.error('err', err);
