@@ -20,7 +20,7 @@ export class CasePageComponent implements OnInit {
   myCases$ = this.caseFacade.myCases$;
   recentCases$ = this.caseFacade.lastVisitedCases$;
   public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
-
+  isShowLoader = false;
   /** Constructor**/
     
     constructor(private readonly router: Router,
