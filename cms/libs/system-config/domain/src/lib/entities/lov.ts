@@ -1,10 +1,10 @@
 export interface Lov 
 {
-     id :  string ,
-     parentCode :  string ,
-     lovCode :  string ,
-     lovDesc :  string ,
-     displayValue :  string ,
-     sequenceNbr : 0,
-     displayLanguageCode :  string 
+      id :  string ,
+      parentCode : string,
+      lovTypeCode :  string ,
+      lovCode :  string ,
+      lovDesc :  string ,
+      sequenceNbr : string,
+      displayLanguageCode : string
 }

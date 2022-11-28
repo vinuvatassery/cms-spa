@@ -17,8 +17,10 @@ export class LovFacade {
   
   /** Private properties **/
   private lovSubject = new BehaviorSubject<Lov[]>([]);
+  private lovcascadeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
+  ovcascade$ = this.lovcascadeSubject.asObservable();
 
         /** Public methods **/
 getLovsbyType(lovType : string): void {
@@ -31,4 +33,15 @@ getLovsbyType(lovType : string): void {
      },
    });
  }
+
+ getLovsbyParent(lovType : string,parentCode : string): void {
+  this.lovDataService.getLovsbyParent(lovType, parentCode).subscribe({
+    next: (lovResponse) => {
+      this.lovcascadeSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
 }
