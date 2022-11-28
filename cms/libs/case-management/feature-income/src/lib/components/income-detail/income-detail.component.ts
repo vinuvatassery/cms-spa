@@ -34,7 +34,8 @@ export class IncomeDetailComponent implements OnInit {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
-  @Output() public sendDetailToIncomeList = new EventEmitter<boolean>();
+  @Output() public sendDetailToIncomeList = new EventEmitter<any>();
+  @Output() public closePopup = new EventEmitter<any>();
   isIncomeDetailsPopupOpen = false;
 
   currentDate = new Date();
@@ -53,15 +54,16 @@ export class IncomeDetailComponent implements OnInit {
     incomeAmount: 0,
   };
   public IncomeDetailsForm: FormGroup = new FormGroup({
-    incomeSources: new FormControl('', []),
-    incomeTypes: new FormControl('', []),
-    incomeAmount: new FormControl('', []),
-    incomeFrequencies: new FormControl('', []),
+    incomeSourceCode: new FormControl('', []),
+    incomeTypeCode: new FormControl('', []),
+    incomeAmt: new FormControl('', []),
+    incomeFrequencyCode: new FormControl('', []),
     incomeStartDate: new FormControl('', []),
     incomeEndDate: new FormControl('', []),
+    noIncomeProofFlag: new FormControl('', []),
+    incomeNote: new FormControl('', []),
     incomeUploadedProof: new FormControl('', []),
     proofOfIncomeTypes: new FormControl('', []),
-    tareaJustifications: new FormControl('', []),
     otherProofOfIncome: new FormControl('', []),
   });
 
@@ -115,52 +117,48 @@ export class IncomeDetailComponent implements OnInit {
       this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([]);
       this.IncomeDetailsForm.controls['incomeUploadedProof'].updateValueAndValidity();
       this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity();
+      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("Y")
+    }
+    else{
+      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("N")
     }
   }
   selectProofOfIncome(): void{
     this.incomeTypesOther =  this.IncomeDetailsForm.controls['proofOfIncomeTypes'].value;
   }
   public submitIncomeDetailsForm(): void {
-    this.IncomeDetailsForm.markAllAsTouched();
-
-    console.log(this.IncomeDetailsForm);
-    this.IncomeDetailsForm.controls['incomeSources'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeTypes'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeAmount'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeFrequencies'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeEndDate'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['tareaJustifications'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeSources'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeTypes'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeAmount'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeFrequencies'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['tareaJustifications'].updateValueAndValidity();
-    if (!this.hasNoProofOfIncome) {
-      this.IncomeDetailsForm.controls['incomeUploadedProof'].setValidators([Validators.required,]);
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([Validators.required,]);
-      this.IncomeDetailsForm.controls['incomeUploadedProof'].updateValueAndValidity();
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity();   
-    
-    
-    
-    
-    }  
+  // this.setValidators();
     if (this.IncomeDetailsForm.valid) {
-      this.sendDetailToIncomeList.emit(this.isIncomeDetailsPopupOpen);
-      console.log(this.isIncomeDetailsPopupOpen, 'incomedetails');
-      const snackbarMessage: SnackBar = {
-        title: 'Success!',
-        subtitle: 'Income Successfully Added.',
-        type: 'success',
-      };
-      this.snackbarSubject.next(snackbarMessage);
+      this.sendDetailToIncomeList.emit({popupState:this.isIncomeDetailsPopupOpen,incomeDetails:this.IncomeDetailsForm.value});
+    
     }
   }
   closeIncomeDetailPoup(): void {
     this.IncomeDetailsForm.reset();
-    this.sendDetailToIncomeList.emit(this.isIncomeDetailsPopupOpen);
+    this.closePopup.emit(this.isIncomeDetailsPopupOpen);
+  }
+
+  setValidators(){
+    this.IncomeDetailsForm.markAllAsTouched();
+    this.IncomeDetailsForm.controls['incomeSourceCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeTypeCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeAmt'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeEndDate'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeSourcecode'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeTypecode'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeAmt'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeFrequencyCode'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
+    if (!this.hasNoProofOfIncome) {
+      this.IncomeDetailsForm.controls['incomeUploadedProof'].setValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls['incomeUploadedProof'].updateValueAndValidity();
+      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity(); 
+    }  
   }
 }

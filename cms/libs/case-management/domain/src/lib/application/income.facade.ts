@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Income } from '../entities/income';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 
@@ -100,6 +101,12 @@ export class IncomeFacade {
   save():Observable<boolean>{
     //TODO: save api call   
     return of(true);
+  }
+
+  saveClientIncome(clientIncome:Income){
+    clientIncome.clientCaseEligibilityId="86E16107-6F5B-4773-AD04-2EAE238EFDFE";
+    clientIncome.clientDependentId="a3eed39e-59eb-4c2a-bba5-8b4ff3202457";
+    return this.contactDataService.saveIncome(clientIncome);
   }
 
 }

@@ -4,7 +4,7 @@
     <div class="app-c-table" *ngIf="!hasNoIncome">
       <kendo-grid [data]="incomes$ | async">
         <kendo-grid-column
-          field="IncomeSource"
+          field="incomeSourceCode"
           title="Income Source"
           [width]="140"
         >
@@ -16,28 +16,36 @@
             Total Monthly Income
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="IncomeType" title="Income Type" [width]="130">
+        <kendo-grid-column field="incomeTypeCode" title="Income Type" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column
-          field="Amount"
+          field="incomeAmt"
           title="Amount"
           [width]="130"
         ></kendo-grid-column>
         <kendo-grid-column
-          field="Frequency"
+          field="incomeFrequencyCode"
           title="Frequency"
           [width]="110"
         ></kendo-grid-column>
         <kendo-grid-column
-          field="IncomeStart"
+          field="incomeStartDate"
           title="Income Start"
           [width]="110"
-        ></kendo-grid-column>
+        >
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.incomeStartDate| date: 'MM/dd/yyyy'}}
+        </ng-template>
+      </kendo-grid-column>
         <kendo-grid-column
-          field="IncomeEnd"
+          field="incomeEndDate"
           title="Income End"
           [width]="110"
-        ></kendo-grid-column>
+        >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.incomeEndDate| date: 'MM/dd/yyyy'}}
+      </ng-template>
+      </kendo-grid-column>
         <kendo-grid-column
           field="ProofofIncome"
           title="Proof of Income"
@@ -55,7 +63,7 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
-          field="FinancialJustification"
+          field="incomeNote"
           title="Financial Justification or Income note"
           [width]="150"
           [sticky]="true"
@@ -235,7 +243,7 @@
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>
-  <case-management-income-detail (sendDetailToIncomeList)="receiveDetailFromIcomeDetails($event)" [isEditValue]="isEdit"> </case-management-income-detail>
+  <case-management-income-detail (sendDetailToIncomeList)="receiveDetailFromIcomeDetails($event)" (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit"> </case-management-income-detail>
 </kendo-dialog>
 
 
@@ -245,3 +253,5 @@
     [data$]="deleteRequest$"
   ></common-delete-confirmation>
 </div>
+
+<common-notification-snack-bar [data$]="snackbar$"> </common-notification-snack-bar>

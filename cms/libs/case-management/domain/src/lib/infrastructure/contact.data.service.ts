@@ -1,14 +1,16 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { Income } from '../entities/income';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadEmployers() {
@@ -62,14 +64,14 @@ export class ContactDataService {
 
   loadDdlIncomeTypes() {
     return of(['Work', 'Self-employment', 'Unemployment Insurance', 'Supplemental Security Income (SSI)',
-    'Social Security Disability Insurance (SSDI)',
-   ' Pension/Retirement/Veterans Benefits',
-    'Short/Long-term Disability',
-    'Alimony/Child Support',
-    'Rental Income',
-    'Other Income',
-  
-  ]);
+      'Social Security Disability Insurance (SSDI)',
+      ' Pension/Retirement/Veterans Benefits',
+      'Short/Long-term Disability',
+      'Alimony/Child Support',
+      'Rental Income',
+      'Other Income',
+
+    ]);
   }
 
   loadDdlIncomeSources() {
@@ -81,14 +83,14 @@ export class ContactDataService {
 
   loadDdlFrequencies() {
     return of(['Once',
-    'Daily',
-    'Weekly',
-    'Bi-weekly',
-    'Semi-monthly',
-    'Monthly',
-    'Quarterly',
-    'Annually',
-    'YTD']);
+      'Daily',
+      'Weekly',
+      'Bi-weekly',
+      'Semi-monthly',
+      'Monthly',
+      'Quarterly',
+      'Annually',
+      'YTD']);
   }
 
   loadDdlProofOfIncomeTypes() {
@@ -96,63 +98,9 @@ export class ContactDataService {
   }
 
   loadIncomes() {
-    return of([
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-    ]);
+    let params = new HttpParams();
+    params = params.append('clientCaseEligibilityId', '86E16107-6F5B-4773-AD04-2EAE238EFDFE');
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-income`,{params: params});
   }
 
   loadDependentsProofofSchools() {
@@ -472,5 +420,9 @@ export class ContactDataService {
         serviceDescription: 'Lorem ipsum description',
       },
     ]);
+  }
+
+  saveIncome(clientIncome: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-income`, clientIncome);
   }
 }

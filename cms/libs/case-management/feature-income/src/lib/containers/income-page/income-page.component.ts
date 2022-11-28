@@ -172,5 +172,9 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       }
     }
   }
+  
+  saveIncomeDetails(clientIncomeDetails:any){
+    this.incomeFacade.saveClientIncome(clientIncomeDetails)
+  }
 
 }
