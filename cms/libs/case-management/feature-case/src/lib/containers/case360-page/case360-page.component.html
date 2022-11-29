@@ -85,10 +85,10 @@
   </div>
 
   <!-- Case Details Tab Sections -->
-  <kendo-tabstrip class="app-c-tab case-360-tab">
+  <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="true">
       <ng-template kendoTabContent>
-        <kendo-tabstrip class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Client Info" [selected]="true">
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
@@ -133,7 +133,7 @@
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist fillMode="outline" [data]="ddlFamilyAndDependentEP$ | async">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlFamilyAndDependentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -160,7 +160,7 @@
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist fillMode="outline" [data]="ddlIncomeEP$ | async">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlIncomeEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -181,7 +181,7 @@
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist fillMode="outline" [data]="ddlEmploymentEP$ | async">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -199,7 +199,7 @@
     <kendo-tabstrip-tab title="Health Insur.">
 
       <ng-template kendoTabContent>
-        <kendo-tabstrip class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Insurance Status" [selected]="true">
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
@@ -226,7 +226,7 @@
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Dental Insur.">
       <ng-template kendoTabContent>
-        <kendo-tabstrip class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Insurance Status" [selected]="true">
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
@@ -256,7 +256,7 @@
     <kendo-tabstrip-tab title="Drugs">
 
       <ng-template kendoTabContent>
-        <kendo-tabstrip class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Pharmacies" [selected]="true">
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
@@ -280,7 +280,7 @@
 
       <ng-template kendoTabContent>
 
-        <kendo-tabstrip class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip  [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Case Managers" [selected]="true">
             <ng-template kendoTabContent>
               <div class="block-section  ">

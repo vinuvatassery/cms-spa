@@ -1,15 +1,14 @@
-<div class="global-search header-search">
+<div class="global-search header-search" [ngClass]="{'mobileheader-searchshow': mobileHeaderSearchOpen}">
   <span
     class="material-icons global-search-icon"
     aria-label="search"
     aria-hidden="true"
-    >search</span
-  >
+    >search</span>
   <kendo-multicolumncombobox
     [data]="search$ | async"
     textField="name"
     valueField="id"
-    fillMode="outline"
+    [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Case Name, Member ID or SSN"
   >
  
@@ -26,3 +25,9 @@
     </kendo-combobox-column>
   </kendo-multicolumncombobox>
 </div>
+
+<button kendoButton (click)="clickMobileHeaderSearchOpen()" title="Global Case search" class="header-mobilesearchbutton">  <span
+  class="material-icons"
+  aria-label="search"
+  aria-hidden="true"
+  >search</span> </button>

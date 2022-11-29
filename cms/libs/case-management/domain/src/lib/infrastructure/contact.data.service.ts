@@ -65,19 +65,38 @@ export class ContactDataService {
   }
 
   loadDdlIncomeTypes() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['Work', 'Self-employment', 'Unemployment Insurance', 'Supplemental Security Income (SSI)',
+    'Social Security Disability Insurance (SSDI)',
+   ' Pension/Retirement/Veterans Benefits',
+    'Short/Long-term Disability',
+    'Alimony/Child Support',
+    'Rental Income',
+    'Other Income',
+  
+  ]);
   }
 
   loadDdlIncomeSources() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of([
+      'Client',
+      'Other Family member'
+    ]);
   }
 
   loadDdlFrequencies() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['Once',
+    'Daily',
+    'Weekly',
+    'Bi-weekly',
+    'Semi-monthly',
+    'Monthly',
+    'Quarterly',
+    'Annually',
+    'YTD']);
   }
 
   loadDdlProofOfIncomeTypes() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
   loadIncomes() {

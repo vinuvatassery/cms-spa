@@ -14,7 +14,7 @@
           >search</span
         >
         <kendo-autocomplete
-          fillMode="outline" 
+          [fillMode]="formUiStyle.dropDownFillMode" 
           [data]="dependentSearch"
           valueField="name"
           placeholder="Search Name, DOB or SSN"
@@ -72,7 +72,7 @@
     </div>
     <div class="flex-col mb-1">
       <kendo-floatinglabel text="Relationship to Client">
-        <kendo-dropdownlist  fillMode="outline"  [data]="ddlRelationships$ | async">
+        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"  [data]="ddlRelationships$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -118,24 +118,25 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
-          <kendo-dropdownlist  fillMode="outline" [data]="ddlRelationships$ | async">
+          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRelationships$ | async">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal First Name">
-          <kendo-textbox    aria-label="Legal First Name"  fillMode="outline">   </kendo-textbox>
+          <kendo-textbox    aria-label="Legal First Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
  
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal Last Name">
-          <kendo-textbox aria-label="legal last name"  fillMode="outline">   </kendo-textbox> 
+          <kendo-textbox aria-label="legal last name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox> 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker
+          [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-dd-yyyy"
             [(ngModel)]="currentDate"
             formatPlaceholder="formatPattern"
@@ -145,7 +146,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Social Security Number (optional)">
-          <kendo-textbox aria-label="social security number optional"  fillMode="outline">   </kendo-textbox> 
+          <kendo-textbox aria-label="social security number optional"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox> 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mb-3">

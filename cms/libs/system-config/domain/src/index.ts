@@ -15,3 +15,6 @@ export * from './lib/infrastructure/user.data.service';
 export * from './lib/application/lov.facade';
 export * from './lib/application/template-management.facade';
 export * from './lib/application/user-management.facade';
+
+/** Enums **/
+export * from './lib/enums/lov-types.enum';

@@ -1,0 +1,26 @@
+export interface LoginUser {
+     loginUserId :  string ,
+     adUserId : string,
+     departmentId : string,
+     firstName :  string ,
+     middleName : string,
+     lastName :  string ,
+     fullName :  string ,
+     userName : string,
+     mobileNbr : string,
+     email : string,
+     pOrNbr : string,
+     jobTitle : string,
+     phoneNbr : string,
+     faxNbr : string,
+     address1 : string,
+     address2 : string,
+     city : string,
+     state : string,
+     zip : string,
+     caseCapacity : number,
+     domainCode : string,
+     assistorGroupCode : string,
+     caseAvailability : number   
+  }
+  

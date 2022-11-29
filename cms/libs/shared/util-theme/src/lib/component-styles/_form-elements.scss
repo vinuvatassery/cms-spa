@@ -145,7 +145,17 @@
   .ng-invalid.ng-dirty .k-input-validation-icon {
     color: $error-color-1 !important;
   }
+
+  &.k-invalid + .k-label, 
+ .k-invalid + .k-label, 
+ .ng-invalid.ng-touched + .k-label, 
+ .ng-invalid.ng-dirty + .k-label{
+  color: $error-color-1 !important;
 }
+ 
+}
+
+
 
 .k-input-outline,
 .k-picker-outline {
@@ -193,7 +203,15 @@
     &.ng-invalid.ng-dirty {
       border-color: $error-color-1 !important;
     }
+
+
   }
+  &.k-invalid, 
+  &.ng-invalid.ng-touched, 
+  &.ng-invalid.ng-dirty{
+    border-color: $error-color-1 !important;
+}
+  
 }
 
 .input-icon-left {
@@ -205,6 +223,7 @@
     opacity: 0.5;
   }
 }
+
 .input-icon-right {
   .k-input-suffix {
     position: absolute;
@@ -214,6 +233,7 @@
     opacity: 0.5;
   }
 }
+
 .k-input-outline,
 .k-picker-outline {
   border-color: rgba(0, 0, 0, 0.12);
@@ -221,6 +241,8 @@
 
   }
 }
+
+
 .k-floating-label-container > .k-label {
   font-size: 14px;
 }
@@ -643,7 +665,7 @@
     .k-input[disabled],
     .k-input.k-disabled {
       background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 50) !important;
+      border-color: material-color($hive-neutral-palette, 100) !important;
     }
   }
 }
@@ -743,11 +765,14 @@ kendo-timepicker {
       top: auto;  
     }
   }
-  .k-label {
-    display: none;
-  }
+  // .k-label {
+  //   display: none;
+  // }
   .k-input-inner{
     text-align: right;
+  }
+  &.k-floating-label-container.k-empty > .k-label{
+    left: 24px;
   }
 }
 

@@ -11,7 +11,7 @@ import {
 import { CommunicationEvents } from '@cms/case-management/domain';
 /** Facades**/
 import { CommunicationFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-send-email',
   templateUrl: './send-email.component.html',
@@ -36,7 +36,7 @@ export class SendEmailComponent implements OnInit {
   isShowSaveForLaterPopupClicked = false;
   isShowPreviewEmailPopupClicked = false;
   isShowSendEmailConfirmationPopupClicked = false;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle()
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 

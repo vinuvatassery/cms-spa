@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'productivity-tools-notification-list',
   templateUrl: './notification-list.component.html',
@@ -9,6 +9,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class NotificationListComponent {
   // data: Array<any> = [{}];
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   public data = [
     {
