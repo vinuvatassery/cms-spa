@@ -55,8 +55,11 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
         // /// subscribed synchronously
         this.caseOwners.pipe()
         .subscribe((Owners: any[]) => {             
-          this.caseOwnersObject = [...Owners];     
+          this.caseOwnersObject = [...Owners];   
+          if(!this.isProgramVIsible)
+          {  
           this.GetCaseData();       
+          }
         });  
     
     }  

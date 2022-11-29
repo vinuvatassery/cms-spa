@@ -87,7 +87,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     this.parentForm = this.formBuilder.group({
       applicationDate: ['', Validators.required],
       caseOriginCode: ['', Validators.required],
-      caseOwnerId: ['', Validators.required],
+      caseOwnerId: [{ value: '', disabled: true }, Validators.required],
       programId: ['', [Validators.required]],
       concurrencyStamp : ['']
     });
