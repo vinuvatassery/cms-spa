@@ -1,6 +1,18 @@
+<div  >
+
+
 <div class="role-details-header">
   <section class="app-l-breadcrumb py-0 fixed-top-breadcrumb">
+    <div class="d-flex align-items-center">
+ 
+    <button class="createcase-mobile-menu-btn" (click)="openInnerLeftMenu()"> <span class="material-icons">
+      list
+    </span>
+  </button>
+
     <common-bread-crumb></common-bread-crumb>
+
+    </div>
     <div class="breadcrumb-right">
       <button
         kendoButton
@@ -30,7 +42,7 @@
     Productivity Tools module.
   </p>
 </div>
-<div class="inner-split-wrapper" kendoRippleContainer>
+<div class="inner-split-wrapper" [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}" kendoRippleContainer>
   <!-- Roles Navigation Menu Section -->
   <div class="inner-split_left roles-navigation">
     <ul class="kendo-list-base with-heading-label">
@@ -50,6 +62,10 @@
       </li>
       <li class="kendo-list-items">System Configuration</li>
     </ul>
+    <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
+      menu_open
+      </span>
+    </button>
   </div>
   <div class="inner-split_right roles-navigation-right pt-3">
     <!-- CAREAssist Modules Block -->
@@ -1861,4 +1877,7 @@
       <h2>Shared Sections Modules</h2>
     </section>
   </div>
+
+</div>
+
 </div>

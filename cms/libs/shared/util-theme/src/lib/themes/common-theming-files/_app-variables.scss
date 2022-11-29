@@ -1,6 +1,3 @@
-/* Importing Custom Font (Neue Helvetica Roman) */
-@import 'fonts';
-
 /* Font Family */
 $font-family: 'Neue Helvetica Roman' !important;
 $font-family-light: 'Neue Helvetica Light' !important;
@@ -26,10 +23,11 @@ $size-l: $size-m + 2; /*6px*/
 $size-xl: $size-l + 2; /*8px*/
 $size-xx: $size-xl + 2; /*10px*/
 $size-xlg: $size-xx + $size-m; /*14px*/
+$size-xlg1: $size-xx + $size-l; /*16px*/
 $size-xxx: $size-xx * 2; /*20px*/
 $size-xxxl: $size-xxx + $size-m; /*24px*/
 $size-xxxx: $size-xx * 3; /*30px*/
-$header-height: 70px;
+$header-height: 59px;
 $sidebar-width: 55px;
 $logo-width: 100px;
 $logo-height: 38px;
@@ -50,4 +48,6 @@ $breakpoint-sm: 600px;
 /* Box Shadow */
 $primary-box-shadow: rgb(34 41 47 / 10%);
 $secondary-box-shadow: $primary-box-shadow;
-$button-box-shadow : 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
+$box-shadow: rgba(168, 189, 201, 0.555);
+$button-box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%),
+  0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);

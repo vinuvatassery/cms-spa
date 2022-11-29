@@ -10,9 +10,12 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class RolesAndPermissionsDetailComponent implements OnInit {
   ddlRolePermission: Array<string> = ["No Access", "Access"];  
 public formUiStyle : UIFormStyle = new UIFormStyle();
+isInnerLeftMenuOpen = false;
   constructor() { }
 
   ngOnInit(): void {
   }
-
+  openInnerLeftMenu(){
+    this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
+  }
 }

@@ -25,7 +25,7 @@
        color: $white !important;
      }
 
-     &.k-state-disabled {
+     &.k-state-disabled, &.k-disabled {
        background: material-color($hive-neutral-palette, 50) !important;
        color: $black-30 !important;
      }
@@ -36,7 +36,7 @@
        border-width: 1px;
        background: $white;
 
-       &.k-state-disabled {
+       &.k-state-disabled, &.k-disabled  {
          background: $white !important;
          color: $black-30 !important;
          border-color: $black-12 !important;

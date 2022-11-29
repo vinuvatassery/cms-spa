@@ -13,7 +13,7 @@ cms-sidenav {
   .drawer-inner-container {
     transition: ease-in all 0.3s;
     background-color: $app-primary;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
     width: 220px;
@@ -273,7 +273,7 @@ cms-sidenav {
             top: $header-height;
             background: $app-primary;
             height: 100%;
-            max-height: calc(100% - 70px);
+            max-height: calc(100% - $header-height);
             overflow: auto;
             border-left: 1px solid material-color($hive-primary-palette, 100);
           }

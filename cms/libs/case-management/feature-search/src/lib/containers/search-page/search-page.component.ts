@@ -12,6 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class SearchPageComponent implements OnInit {
   /** Public properties **/
   search$ = this.searchFacade.search$;
+  mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade) {}
@@ -20,7 +21,9 @@ export class SearchPageComponent implements OnInit {
   ngOnInit() {
     this.loadSearch();
   }
-
+  clickMobileHeaderSearchOpen(){
+      this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
+  }
   /** Private methods **/
   private loadSearch(): void {
     this.searchFacade.loadSearch();
