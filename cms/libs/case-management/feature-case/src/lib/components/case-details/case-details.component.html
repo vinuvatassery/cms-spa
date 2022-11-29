@@ -22,9 +22,9 @@
     <kendo-formerror *ngIf="parentForm?.hasError('required','caseOriginCode') && isSubmitted">Case Origin is Required
     </kendo-formerror>
   </div>
-  <div class="flex-col">
+  <div class="flex-col hidedropicon">
     <kendo-floatinglabel text="Case Owner">    
-      <kendo-combobox          
+      <kendo-combobox       
       #caseOwnr
       formControlName="caseOwnerId"     
       [data]="caseOwnersObject"   
