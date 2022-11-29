@@ -14,7 +14,7 @@
             >search</span
           >
           <kendo-multicolumncombobox         
-            [data]="caseSearchResults | async"
+            [data]="caseSearchResults$ | async"
             textField="name"
             valueField="id"
             placeholder="Search Case Name, Member ID or SSN"
@@ -81,7 +81,7 @@
      [isProgramVIsible]="true" 
      [parentForm]="parentForm"
      [isSubmitted]="isSubmitted"
-     [caseSearchResults]="caseSearchResults"
+     [caseSearchResults$]="caseSearchResults$"
      [caseOwners]="caseOwners"
      [ddlPrograms]="ddlPrograms"
      [ddlCaseOrigins]="ddlCaseOrigins"   

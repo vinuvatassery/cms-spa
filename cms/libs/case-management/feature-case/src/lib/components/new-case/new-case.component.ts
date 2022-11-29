@@ -23,7 +23,7 @@ export class NewCaseComponent implements OnInit {
   @Output() searchTextEvent = new EventEmitter<string>(); 
 
   /** input properties **/
-  @Input() caseSearchResults! : any
+  @Input() caseSearchResults$! : any
   @Input() caseOwners ! : any
   @Input() ddlPrograms! : any
   @Input() ddlCaseOrigins! : any

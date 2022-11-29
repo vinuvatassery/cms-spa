@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade,
-  LoginUserFacade,UserDefaultRoles  } from '@cms/case-management/domain';
+  UserDefaultRoles  } from '@cms/case-management/domain';
 
-  import {LovType , LovFacade} from '@cms/system-config/domain'
+  import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 @Component({
   selector: 'case-management-case-page',
@@ -38,7 +38,7 @@ export class CasePageComponent implements OnInit {
     constructor(private readonly router: Router,
       private readonly caseFacade: CaseFacade,
       private readonly workflowFacade :WorkflowFacade,
-      private readonly loginUserFacade : LoginUserFacade,
+      private readonly loginUserFacade : UserManagementFacade,
       private readonly lovFacade : LovFacade) {}
 
   /** Lifecycle hooks **/

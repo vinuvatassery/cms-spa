@@ -33,7 +33,7 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
   @Input() isProgramVIsible!: any;
   @Input() parentForm!: FormGroup;
   @Input() isSubmitted: any;  
-  @Input() caseSearchResults! : any
+  @Input() caseSearchResults$! : any
   @Input() caseOwners ! : any
   @Input() ddlPrograms! : any
   @Input() ddlCaseOrigins! : any

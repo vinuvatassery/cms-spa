@@ -3,10 +3,10 @@ import {
   Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
-import { CaseFacade, WorkflowFacade, LoginUserFacade,
+import { CaseFacade, WorkflowFacade,
    UserDefaultRoles, NavigationType  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {LovType , LovFacade} from '@cms/system-config/domain'
+import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 /**external libraries */
 import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
@@ -46,7 +46,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private readonly workFlowFacade : WorkflowFacade,
-    private readonly loginUserFacade : LoginUserFacade,
+    private readonly loginUserFacade : UserManagementFacade,
     private readonly lovFacade : LovFacade
   ) {}
 
@@ -87,8 +87,8 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     this.parentForm = this.formBuilder.group({
       applicationDate: ['', Validators.required],
       caseOriginCode: ['', Validators.required],
-      caseOwnerId: [{ value: '', disabled: true }, Validators.required],
-      programId: ['', [Validators.required]],
+      caseOwnerId: ['', Validators.required],
+      programId: [{ value: '', disabled: true }, [Validators.required]],
       concurrencyStamp : ['']
     });
    
