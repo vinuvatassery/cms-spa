@@ -9,24 +9,39 @@ import { LovDataService } from '../infrastructure/lov.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class LovFacade {
+
+  constructor(
+    private readonly lovDataService: LovDataService,
+
+  ) { }
+  
   /** Private properties **/
   private lovSubject = new BehaviorSubject<Lov[]>([]);
-
-  /** Public properties **/
+  private lovcascadeSubject = new BehaviorSubject<Lov[]>([]);
+      /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
+  ovcascade$ = this.lovcascadeSubject.asObservable();
 
-  /** Constructor **/
-  constructor(private readonly lovDataService: LovDataService) {}
+        /** Public methods **/
+getLovsbyType(lovType : string): void {
+   this.lovDataService.getLovsbyType(lovType).subscribe({
+     next: (lovResponse) => {
+       this.lovSubject.next(lovResponse);
+     },
+     error: (err) => {
+       console.error('err', err);
+     },
+   });
+ }
 
-  /** Public methods **/
-  loadLovs(): void {
-    this.lovDataService.loadLovs().subscribe({
-      next: (lovList) => {
-        this.lovSubject.next(lovList);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
+ getLovsbyParent(lovType : string,parentCode : string): void {
+  this.lovDataService.getLovsbyParent(lovType, parentCode).subscribe({
+    next: (lovResponse) => {
+      this.lovcascadeSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
 }

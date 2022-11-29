@@ -1,16 +1,14 @@
 /** Angular **/
-import {
-  Component, OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {  Component, OnInit,  ChangeDetectionStrategy,
+   ChangeDetectorRef,  Output,  EventEmitter,  Input,} from '@angular/core';
+import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
+import { ProgramCode } from '@cms/case-management/domain';
+
 /** Internal Libraries **/
-import { CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
@@ -19,95 +17,96 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class NewCaseComponent implements OnInit {
 
-  currentDate = new Date();
-
-
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
   @Output() newcaseSaveEvent = new EventEmitter<any>();
+  @Output() searchTextEvent = new EventEmitter<string>(); 
 
+  /** input properties **/
+  @Input() caseSearchResults$! : any
+  @Input() caseOwners ! : any
+  @Input() ddlPrograms! : any
+  @Input() ddlCaseOrigins! : any
+  @Input() formButtonDisabled! : boolean
 
-  /** Public properties **/
-  caseSearchResults$ = this.caseFacade.caseSearched$;
-  caseOwners$ = this.caseFacade.caseOwners$;
-  ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+    /** Public properties **/
+  parentForm! : FormGroup;
   isProgramSelectionOpened = false;
   selectedProgram!: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  parentForm!: FormGroup;
-  isSubmitted: boolean = false;
+  filterManager: Subject<string> = new Subject<string>();
+  showSearchresult! : false
+ 
+  isSubmitted! : boolean ;
   /** Constructor**/
-  constructor(
-    private readonly caseFacade: CaseFacade,
-    private readonly ref: ChangeDetectorRef,
-    private fb: FormBuilder
-  ) { }
+  constructor(   
+    private readonly ref: ChangeDetectorRef, 
+    private formBuilder: FormBuilder
+  ) {
+   
+    this.filterManager
+    .pipe(   
+    debounceTime(500),
+    distinctUntilChanged()
+    )      
+    .subscribe(
+      (text) => 
+      {
+        if(text)
+        {
+        this.searchTextEvent.emit(text)
+        }
+      }
+      );    
+
+   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.parentForm = this.fb.group({
-      caseOrigin: ['', Validators.required],
-      caseOwner: ['', Validators.required],
-      dateApplicationReceived: [this.currentDate, Validators.required]
-    });
-    this.loadCaseBySearchText();
-    this.loadCaseOwners();
-    this.loadDdlPrograms();
-    this.loadDdlCaseOrigins();
+    this.setDefaultProgram();  
+    this.registerFormData();
   }
-
-  /** Private methods **/
-  private loadCaseBySearchText() {
-    this.caseFacade.loadCaseBySearchText();
-  }
-
-  private loadCaseOwners() {
-    this.caseFacade.loadCaseOwners();
-  }
-
-  private loadDdlPrograms() {
-    this.caseFacade.loadDdlPrograms();
-    this.ddlPrograms$.subscribe({
+  private setDefaultProgram() {   
+    this.ddlPrograms.subscribe({
       next: (programs: any) => {
         this.selectedProgram = programs.filter(
-          (data: any) => data.default === true
+          (data: any) => data.programCode == ProgramCode.DefaultProgram
         )[0];
-      },
-      error: (err: any) => {
-        console.log('Err', err);
-      },
-    });
+      }
+    });  
+  }
+  private registerFormData()
+  {
+    this.parentForm = this.formBuilder.group({
+      applicationDate: [new Date(), Validators.required],
+      caseOriginCode: ['', Validators.required],
+      caseOwnerId: ['', Validators.required],
+      programId: [{ value: this.selectedProgram.programId, disabled: true }, [Validators.required]] ,
+      concurrencyStamp : ['']  
+      });
   }
 
-  private loadDdlCaseOrigins() {
-    this.caseFacade.loadDdlCaseOrigins();
-  }
 
   /** Internal event methods **/
   onOpenProgramSelectionClicked() {
     this.isProgramSelectionOpened = true;
+    this.formButtonDisabled = false;
     this.ref.markForCheck();
   }
 
-  onCreateCaseClicked() {
+  onSubmit() {     
     this.parentForm.markAllAsTouched();
     this.isSubmitted = true;
-    if (this.parentForm.valid) {
-      console.log('click');
-
-      //this.router.navigate(['case-management/case-detail'], {
-      //queryParams: {
-      //screenFlowType: ScreenFlowType.NewCase,
-      //programId: this.selectedProgram.key,
-      // },
-      //});
-      this.newcaseSaveEvent.emit(this.selectedProgram.key);
-    }
+    this.newcaseSaveEvent.emit(this.parentForm);
   }
 
   onCloseProgramSelectionClicked() {
     this.isCreateNewCasePopupOpened.emit();
     this.isProgramSelectionOpened = false;
+  }
+
+  onsearchTextChange(text : string)
+  {       
+     this.filterManager.next(text);
   }
 }

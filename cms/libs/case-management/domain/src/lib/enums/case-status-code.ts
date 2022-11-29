@@ -1,0 +1,12 @@
+export enum CaseStatusCode {
+    NEW = "NEW",
+    INCOMPLETE = "INCOMPLETE",
+    REVIEW = "REVIEW",
+    ACCEPT = "ACCEPT",
+    INELIGIBLE = "INELIGIBLE" ,
+    PENDING = "PENDING" ,
+    REJECT = "REJECT" ,
+    RESTRICTED = "RESTRICTED",
+    DISENROLLED = "DISENROLLED" ,
+    WAITLIST = "WAITLIST"
+}
