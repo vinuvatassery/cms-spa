@@ -64,9 +64,9 @@
 </section>
 
 <!-- Program Selection Modal -->
-<form class="form-group" (ngSubmit)="onSubmit()" [formGroup]="parentForm" #formDir="ngForm" class="k-form">
+<form class="form-group" (ngSubmit)="onSubmit()" [formGroup]="parentForm" class="k-form">
 <kendo-dialog
-  *ngIf="isProgramSelectionOpened"
+  *ngIf="isProgramSelectionOpened && parentForm"
   (close)="onCloseProgramSelectionClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np"
   title="Create New Case"
