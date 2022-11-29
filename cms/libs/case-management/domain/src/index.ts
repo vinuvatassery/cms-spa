@@ -29,6 +29,8 @@ export * from './lib/enums/screen-type.enum';
 export * from './lib/enums/workflow-type.enum';
 export * from './lib/enums/case-screen-tab.enum';
 export * from './lib/enums/navigation-type.enum';
+export * from './lib/enums/address-type-code.enum';
+export * from './lib/enums/device-type-code.enum'
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

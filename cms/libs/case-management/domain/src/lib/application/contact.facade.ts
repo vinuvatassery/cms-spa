@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact } from '../entities/contact';
+import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 
@@ -40,7 +40,7 @@ export class ContactFacade {
   emailAddress$ = this.emailAddressesSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) {}
+  constructor(private readonly contactDataService: ContactDataService) { }
 
   /** Public methods **/
   loadDdlStates(): void {
@@ -168,8 +168,20 @@ export class ContactFacade {
     });
   }
 
-  save():Observable<boolean>{
+  save(): Observable<boolean> {
     //TODO: save api call   
     return of(true);
+  }
+
+  loadContactInfo(clientId: number) {
+    return this.contactDataService.loadContactInfo(clientId);
+  }
+
+  createContactInfo(clientId: number, contactInfo: ContactInfo) {
+    return this.contactDataService.createContactInfo(clientId,contactInfo);
+  }
+
+  updateContactInfo(clientId: number, contactInfo: ContactInfo) {
+    this.contactDataService.updateContactInfo(clientId,contactInfo);
   }
 }

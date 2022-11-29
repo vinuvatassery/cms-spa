@@ -4,11 +4,15 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ContactInfo } from '../entities/contact';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient, 
+    private configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
   loadEmployers() {
@@ -147,7 +151,7 @@ export class ContactDataService {
   }
 
   loadDdlStates() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['AL', 'AK', 'AZ', 'AR', 'NM']);
   }
 
   loadDdlCountries() {
@@ -453,5 +457,23 @@ export class ContactDataService {
         serviceDescription: 'Lorem ipsum description',
       },
     ]);
+  }
+
+  loadContactInfo(clientId:number){
+   return this.http.get<ContactInfo>(this.getUrl(clientId));
+  }
+
+  createContactInfo(clientId:number, contactInfo:ContactInfo){
+    return this.http.post(this.getUrl(clientId)
+    ,contactInfo);
+  }
+
+  updateContactInfo(clientId:number, contactInfo:ContactInfo){
+    return this.http.put(this.getUrl(clientId)
+    ,contactInfo);
+  }
+
+  getUrl(clientId:number){
+    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info`
   }
 }
