@@ -8,10 +8,15 @@ import { Component } from '@angular/core';
 })
 export class LayoutComponent {
   /** Public properties **/
-  isSideMenuToggled = false;
+  isSideMenuToggled = true;
+  isOpenMobileMenu = false;
 
   /** Internal event methods **/
   onSideMenuToggleClicked() {
     this.isSideMenuToggled = !this.isSideMenuToggled;
+  }
+
+  openMobileMenu(){
+      this.isOpenMobileMenu = !this.isOpenMobileMenu
   }
 }

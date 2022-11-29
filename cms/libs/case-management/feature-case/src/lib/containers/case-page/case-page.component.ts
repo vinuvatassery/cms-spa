@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade,
   UserDefaultRoles  } from '@cms/case-management/domain';
+  import {UITabStripScroll} from '@cms/shared/ui-tpa'
 
   import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
@@ -24,6 +25,7 @@ export class CasePageComponent implements OnInit {
   allCases$ = this.caseFacade.cases$;
   myCases$ = this.caseFacade.myCases$;
   recentCases$ = this.caseFacade.lastVisitedCases$;
+  public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
   savedcaseForm! : FormGroup ;
   formButtonDisabled! : boolean
 
@@ -33,6 +35,7 @@ export class CasePageComponent implements OnInit {
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
   ddlCaseOrigins$ = this.lovFacade.lovs$;
   
+  isShowLoader = false;
   /** Constructor**/
     
     constructor(private readonly router: Router,

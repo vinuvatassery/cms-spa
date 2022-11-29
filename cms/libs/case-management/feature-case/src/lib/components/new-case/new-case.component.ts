@@ -95,6 +95,7 @@ export class NewCaseComponent implements OnInit {
   }
 
   onSubmit() {     
+    this.parentForm.markAllAsTouched();
     this.isSubmitted = true;
     this.newcaseSaveEvent.emit(this.parentForm);
   }
