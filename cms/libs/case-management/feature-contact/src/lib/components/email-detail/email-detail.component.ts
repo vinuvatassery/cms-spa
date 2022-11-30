@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'case-management-email-detail',
   templateUrl: './email-detail.component.html',
@@ -14,6 +14,7 @@ export class EmailDetailComponent {
   /** Public properties **/
   isDeactivateValue!: boolean;
   isDeactivateEmailAddressPopup = true;
+  public formUiStyle : UIFormStyle = new UIFormStyle();
 
   /** Internal event methods **/
   onDeactivateClicked() {

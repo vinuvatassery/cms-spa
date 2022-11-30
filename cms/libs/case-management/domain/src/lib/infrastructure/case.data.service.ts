@@ -6,16 +6,24 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Case } from '../entities/case';
+import { Program } from '../entities/program';
+
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ClientCase } from '../entities/client-case';
 
 @Injectable({ providedIn: 'root' })
 export class CaseDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
   loadCases(): Observable<Case[]> {
     return of([
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'John Sakariya',
         Pronouns: 'She/Her/Hers',
         ID: 100,
@@ -27,6 +35,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 101,
@@ -38,6 +48,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Clara Stephen',
         Pronouns: 'She/Her/Hers',
         ID: 102,
@@ -49,6 +61,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 103,
@@ -60,6 +74,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Johny Slot',
         Pronouns: 'She/Her/Hers',
         ID: 104,
@@ -71,6 +87,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Chris Fedex',
         Pronouns: 'She/Her/Hers',
         ID: 105,
@@ -82,6 +100,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Amaze Judge',
         Pronouns: 'She/Her/Hers',
         ID: 106,
@@ -93,6 +113,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
+        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId:'2',
         ClientName: 'Dude Vills',
         Pronouns: 'She/Her/Hers',
         ID: 107,
@@ -106,32 +128,12 @@ export class CaseDataService {
     ]);
   }
 
-  loadCaseBySearchText() {
-    return of([
-      {
-        name: 'Donna Summer',
-        id: 'XXXX',
-        dob: '01-23-1997',
-        ssn: '294-95-7054',
-      },
-      {
-        name: 'David Miller',
-        id: 'XXXX',
-        dob: '02-24-1996',
-        ssn: '234-45-7654',
-      },
-      {
-        name: 'Philip David',
-        id: 'XXXX',
-        dob: '03-25-1995',
-        ssn: '304-09-7094',
-      },
-      { name: 'Mike Flex', id: 'XXXX', dob: '04-22-1994', ssn: '934-05-7494' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '05-21-1993', ssn: '275-40-7609' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '06-20-1992', ssn: '134-12-2554' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '07-19-1991', ssn: '964-24-7854' },
-      { name: 'Mike Flex', id: 'XXXX', dob: '08-18-1998', ssn: '504-35-8454' },
-    ]);
+  loadCaseBySearchText(text : string) {     
+      return this.http.get<ClientCase[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}`+
+        `/case-management/client-case/SearchText=${text}`
+      );   
+  
   }
 
   loadCasesForAuthuser(): Observable<Case[]> {
@@ -324,8 +326,8 @@ export class CaseDataService {
     return of([
       {
         name: 'Donna 1',
-        id: '1',
-        programId: '2',
+        id: 'ae578070-7a8b-4c5c-aa2e-00a241d4cb5a',
+        programId: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B',
         isApplicationComplete: false,
       },
       {
@@ -358,29 +360,26 @@ export class CaseDataService {
 
   loadDdlSendLetters() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  }
+  } 
+   
 
-  loadCaseOwners() {
-    return of([
-      'Albania Bose',
-      'Doll Stpephy',
-      'John Scena',
-      'Anony Hooks',
-      'David Miller',
-      'Bellary John',
-    ]);
-  }
+    loadCasesById(clientCaseId : string) {
+      return this.http.get<ClientCase[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}`+
+        `/case-management/client-case/${clientCaseId}`
+      );
+    }
+  
 
   loadDdlPrograms() {
-    return of([
-      { key: 1, value: 'CAREAssist', default: true },
-      { key: 2, value: 'OHOP', default: false },
-    ]);
-  }
+        
+    return this.http.get<Program[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-case/programs`
+    );
+}
 
-  loadDdlCaseOrigins() {
-    return of(['Client Portal', 'Email', 'Paper', 'Phone']);
-  }
+
 
   loadDdlFamilyAndDependentEP() {
     return of([
@@ -393,5 +392,12 @@ export class CaseDataService {
 
   loadDdlEPEmployments() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+  }
+
+  UpdateCase(caseData: any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case`,
+      caseData
+    );
   }
 }

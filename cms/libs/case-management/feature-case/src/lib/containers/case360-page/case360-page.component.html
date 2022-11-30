@@ -6,57 +6,26 @@
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
   <div class="tab-over-icon-btn">
-    <button
-      kendoButton
-      class="k-icon-button small-i-btn"
-      title="New To-Do Item"
-      aria-label="New To-Do Item"
-    >
-      <span
-        class="material-icons"
-        role="button"
-        aria-label="New To-Do Item"
-        aria-hidden="true"
-        (click)="onTodoDetailsClicked()"
-        >playlist_add</span
-      >
+    <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item">
+      <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"
+        (click)="onTodoDetailsClicked()">playlist_add</span>
     </button>
-    <button
-      kendoButton
-      class="k-icon-button small-i-btn"
-      title="New Reminder"
-      aria-label="New Reminder"
-    >
-      <span
-        class="material-icons"
-        role="button"
-        aria-label="New Reminder"
-        aria-hidden="true"
-        (click)="onNewReminderClicked()"
-        >add_alarm</span
-      >
+    <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder">
+      <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true"
+        (click)="onNewReminderClicked()">add_alarm</span>
     </button>
-    <kendo-dropdownbutton
-      [data]="SendActions"
-      class="TableActionPopup app-dropdown-action k-border-s-dropdown"
-      buttonClass="k-flat-button"
-      [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-    >
+    <kendo-dropdownbutton [data]="SendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
+      buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
       Send
-      <span
-        class="material-icons"
-        aria-label="expand"
-        aria-hidden="true"
-        role="menuitem"
-        >arrow_right</span
-      >
-      <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem >
-        
-        <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-          <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-          <label>   {{ dataItem.text }} </label>
-      </button>
-      
+      <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
+      <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
+
+        <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+          aria-hidden="false" (click)="dataItem.click">
+          <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+          <label> {{ dataItem.text }} </label>
+        </button>
+
         <!-- <button
           kendoButton
           look="flat"
@@ -110,21 +79,21 @@
           >
           New ID Card
         </button> -->
-      
+
       </ng-template>
     </kendo-dropdownbutton>
   </div>
 
   <!-- Case Details Tab Sections -->
-  <kendo-tabstrip class="app-c-tab case-360-tab">
+  <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="true">
       <ng-template kendoTabContent>
-        <kendo-tabstrip class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Client Info" [selected]="true">
             <ng-template kendoTabContent>
-              <div class="block-section mt-1"> 
-              <case-management-client-read-only-view></case-management-client-read-only-view>
-              <case-management-special-handling></case-management-special-handling>
+              <div class="block-section mt-1">
+                <case-management-client-read-only-view></case-management-client-read-only-view>
+                <case-management-special-handling></case-management-special-handling>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -161,22 +130,17 @@
                 <div class="flex-row">
                   <div class="flex-col flex-space-bw align-items-center mb-1">
                     <h2 class="title-md mb-0">Family & Dependents</h2>
-                    <div
-                      class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown"
-                    >
+                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist  fillMode="outline" 
-                          [data]="ddlFamilyAndDependentEP$ | async"
-                        >
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlFamilyAndDependentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
                   </div>
                   <div class="flex-col">
-                    <case-management-family-and-dependent-list
-                      [data]="screenName"
-                    ></case-management-family-and-dependent-list>
+                    <case-management-family-and-dependent-list [data]="screenName">
+                    </case-management-family-and-dependent-list>
                   </div>
                 </div>
               </div>
@@ -189,30 +153,20 @@
                   <div class="flex-col flex-space-bw align-items-center mb-1">
                     <h2 class="title-md mb-0">
                       Income
-                      <span class="app-c-badge badge-warn-light ml-1"
-                        ><span
-                          class="material-icons"
-                          aria-label="income Information"
-                          aria-hidden="true"
-                          >info</span
-                        >
-                        Viewing data from previous EP</span
-                      >
+                      <span class="app-c-badge badge-warn-light ml-1"><span class="material-icons"
+                          aria-label="income Information" aria-hidden="true">info</span>
+                        Viewing data from previous EP</span>
                     </h2>
-                    <div
-                      class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown"
-                    >
+                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist fillMode="outline" [data]="ddlIncomeEP$ | async">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlIncomeEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
                   </div>
                   <div class="flex-col">
-                    <case-management-income-list
-                      [data]="screenName"
-                    ></case-management-income-list>
+                    <case-management-income-list [data]="screenName"></case-management-income-list>
                   </div>
                 </div>
               </div>
@@ -224,20 +178,16 @@
                 <div class="flex-row">
                   <div class="flex-col flex-space-bw align-items-center mb-1">
                     <h2 class="title-md mb-0">Employment</h2>
-                    <div
-                      class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown"
-                    >
+                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist fillMode="outline" [data]="ddlEmploymentEP$ | async">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
                   </div>
                   <div class="flex-col">
-                    <case-management-employer-list
-                      [data]="screenName"
-                    ></case-management-employer-list>
+                    <case-management-employer-list [data]="screenName"></case-management-employer-list>
                   </div>
                 </div>
               </div>
@@ -247,27 +197,27 @@
       </ng-template>
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Health Insur.">
-      
+
       <ng-template kendoTabContent>
-        <kendo-tabstrip class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Insurance Status" [selected]="true">
             <ng-template kendoTabContent>
-              <div class="block-section mt-1"> 
-              <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
+              <div class="block-section mt-1">
+                <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Premium Payments">
             <ng-template kendoTabContent>
-              <div class="block-section mt-1"> 
-              <case-management-medical-payment-list></case-management-medical-payment-list>
+              <div class="block-section mt-1">
+                <case-management-medical-payment-list></case-management-medical-payment-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Co-Pays & Deductibles">
             <ng-template kendoTabContent>
-              <div class="block-section mt-1"> 
-              <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+              <div class="block-section mt-1">
+                <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -275,102 +225,193 @@
       </ng-template>
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Dental Insur.">
-      
-      <ng-template kendoTabContent>  <div class="block-section mt-1">  Dental Insurance</div> </ng-template>
-     
+      <ng-template kendoTabContent>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Insurance Status" [selected]="true">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Premium Payments">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <case-management-medical-payment-list></case-management-medical-payment-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Co-Pays & Deductibles">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </ng-template>
+
+
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Drugs">
-      
-      <ng-template kendoTabContent>  <div class="block-section mt-1">  Drugs </div> </ng-template>
-    
+
+      <ng-template kendoTabContent>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Pharmacies" [selected]="true">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <case-management-pharmacies-list></case-management-pharmacies-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Drugs Purchased">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <case-management-drugs-purchased-list></case-management-drugs-purchased-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+
+        </kendo-tabstrip>
+      </ng-template>
+
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Management">
-     
-      <ng-template kendoTabContent>  <div class="block-section mt-1">  Management </div></ng-template>
-      
+
+      <ng-template kendoTabContent>
+
+        <kendo-tabstrip  [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Case Managers" [selected]="true">
+            <ng-template kendoTabContent>
+              <div class="block-section  ">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                  <h5 class="title-md mb-0 text-capital">Case Manager</h5>
+                  <div>
+
+                  </div>
+
+                </div>
+                <case-management-case-manager-list></case-management-case-manager-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Healthcare Providers">
+            <ng-template kendoTabContent>
+              <div class="block-section ">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                  <h5 class="title-md mb-0 text-capital">HIV Healthcare Providers</h5>
+                  <div>
+
+                  </div>
+
+                </div>
+                <case-management-health-care-provider-list></case-management-health-care-provider-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="CD4 Count">
+            <ng-template kendoTabContent>
+              <div class="block-section  ">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                  <h5 class="title-md mb-0 text-capital">CD4 Count</h5>
+                  <div>
+
+                  </div>
+
+                </div>
+                <case-management-cd4-count-list> </case-management-cd4-count-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Viral Load">
+            <ng-template kendoTabContent>
+              <div class="block-section  ">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                  <h5 class="title-md mb-0 text-capital">Viral Load</h5>
+                  <div>
+
+                  </div>
+
+                </div>
+                <case-management-viral-load> </case-management-viral-load>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </ng-template>
+
+
+
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Statuses">
-     
-      <ng-template kendoTabContent>  <div class="block-section mt-1">  Statuses </div> </ng-template>
-      
+
+      <ng-template kendoTabContent>
+        <div class="block-section mt-1">
+          <div class="flex-col flex-space-bw align-items-center mb-1">
+            <h5 class="title-md mb-0 text-capital">Status Periods</h5>
+            <div>
+
+            </div>
+
+          </div>
+          <case-management-status-period> </case-management-status-period>
+        </div>
+      </ng-template>
+
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Attachments">
-    
-      <ng-template kendoTabContent>   <div class="block-section mt-1"> Attachments </div> </ng-template>
-     
+
+      <ng-template kendoTabContent>
+        <div class="block-section mt-1">
+          <div class="flex-col flex-space-bw align-items-center mb-1">
+            <h5 class="title-md mb-0 text-capital">Attachments</h5>
+            <div>
+
+            </div>
+
+          </div>
+          <case-management-document-list></case-management-document-list>
+        </div>
+      </ng-template>
+
     </kendo-tabstrip-tab>
   </kendo-tabstrip>
 
   <!-- Create New To Do Modal Html-->
-  <kendo-dialog
-    *ngIf="isTodoDetailsOpened"
-    (close)="onTodoDetailsClosed()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np"
-    title="Create To Do Item for Donna"
-    kendoTooltip
-  >
+  <kendo-dialog *ngIf="isTodoDetailsOpened" (close)="onTodoDetailsClosed()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np" title="Create To Do Item for Donna" kendoTooltip>
     <productivity-tools-todo-detail></productivity-tools-todo-detail>
   </kendo-dialog>
 
   <!-- Create New Reminder Popup -->
-  <kendo-dialog
-    kendoRippleContainer
-    *ngIf="isNewReminderOpened"
-    (close)="onNewReminderClosed()"
-    class="app-c-modal app-c-modal-md"
-    title="Create New Reminder for Donna"
-    kendoTooltip
-  >
+  <kendo-dialog kendoRippleContainer *ngIf="isNewReminderOpened" (close)="onNewReminderClosed()"
+    class="app-c-modal app-c-modal-md" title="Create New Reminder for Donna" kendoTooltip>
     <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
   </kendo-dialog>
 
   <!-- Send New Letter Modal -->
 
-  <case-management-send-letter
-    *ngIf="isSendNewLetterOpened"
-    [data]="screenName"
-    (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
-    kendoTooltip
-  ></case-management-send-letter>
+  <case-management-send-letter *ngIf="isSendNewLetterOpened" [data]="screenName"
+    (closeSendLetterEvent)="handleSendNewLetterClosed($event)" kendoTooltip></case-management-send-letter>
 
   <!-- Send New Email Modal -->
-  <case-management-send-email
-    *ngIf="isSendNewEmailOpened"
-    [data]="screenName"
-    (closeSendEmailEvent)="handleSendNewEmailClosed($event)"
-    kendoTooltip
-  ></case-management-send-email>
+  <case-management-send-email *ngIf="isSendNewEmailOpened" [data]="screenName"
+    (closeSendEmailEvent)="handleSendNewEmailClosed($event)" kendoTooltip></case-management-send-email>
 
   <!-- New ID Card Modal Html-->
-  <kendo-dialog
-    *ngIf="isIdCardOpened"
-    (close)="onIdCardClosed()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np"
-    title="Send New ID Card"
-    kendoTooltip
-  >
-    <case-management-send-id-card
-      (closeSendIdEvent)="handleIdCardClosed()"
-    ></case-management-send-id-card>
+  <kendo-dialog *ngIf="isIdCardOpened" (close)="onIdCardClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np"
+    title="Send New ID Card" kendoTooltip>
+    <case-management-send-id-card (closeSendIdEvent)="handleIdCardClosed()"></case-management-send-id-card>
   </kendo-dialog>
 
   <!-- New SMS Text Modal Html-->
 
-  <case-management-send-text-message
-    *ngIf="isNewSMSTextOpened"
-    [data]="screenName"
-    (closeSendMessageEvent)="handleNewSMSTextClosed($event)"
-    kendoTooltip
-  ></case-management-send-text-message>
+  <case-management-send-text-message *ngIf="isNewSMSTextOpened" [data]="screenName"
+    (closeSendMessageEvent)="handleNewSMSTextClosed($event)" kendoTooltip></case-management-send-text-message>
 </section>
 
 <!-- Review HIV Verification Html-->
-<kendo-dialog
-  *ngIf="isVerificationReviewPopupOpened"
-  (close)="onVerificationReviewClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Review HIV Verification"
-  kendoTooltip
->
+<kendo-dialog *ngIf="isVerificationReviewPopupOpened" (close)="onVerificationReviewClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Review HIV Verification" kendoTooltip>
   <case-management-hiv-verification-review></case-management-hiv-verification-review>
 </kendo-dialog>

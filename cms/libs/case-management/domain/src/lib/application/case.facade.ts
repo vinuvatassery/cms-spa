@@ -1,12 +1,14 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Case } from '../entities/case';
+
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
-import { ScreenRouteDataService } from '../infrastructure/screen-route.data.service';
+
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -16,16 +18,15 @@ export class CaseFacade {
   private recentCaseSubject = new BehaviorSubject<Case[]>([]);
   private caseSearchedSubject = new BehaviorSubject<any>([]);
   private lastVisitedCasesSubject = new BehaviorSubject<any>([]);
-  private caseOwnersSubject = new BehaviorSubject<any>([]);
   private ddlProgramsSubject = new BehaviorSubject<any>([]);
-  private ddlCaseOriginsSubject = new BehaviorSubject<any>([]);
   private ddlFamilyAndDependentEPSubject = new BehaviorSubject<any>([]);
   private ddlIncomeEPSubject = new BehaviorSubject<any>([]);
   private ddlEmploymentEPSubject = new BehaviorSubject<any>([]);
   private ddlGridColumnsSubject = new BehaviorSubject<any>([]);
   private ddlCommonActionsSubject = new BehaviorSubject<any>([]);
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
-  private routesSubject = new BehaviorSubject<any>([]);
+  private updateCaseSubject = new BehaviorSubject<any>([]);
+  private getCaseSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -33,21 +34,20 @@ export class CaseFacade {
   recentCases$ = this.recentCaseSubject.asObservable();
   caseSearched$ = this.caseSearchedSubject.asObservable();
   lastVisitedCases$ = this.lastVisitedCasesSubject.asObservable();
-  caseOwners$ = this.caseOwnersSubject.asObservable();
-  ddlPrograms$ = this.ddlProgramsSubject.asObservable();
-  ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
+  ddlPrograms$ = this.ddlProgramsSubject.asObservable(); 
   ddlFamilyAndDependentEP$ = this.ddlFamilyAndDependentEPSubject.asObservable();
   ddlIncomeEP$ = this.ddlIncomeEPSubject.asObservable();
   ddlEmploymentEP$ = this.ddlEmploymentEPSubject.asObservable();
   ddlGridColumns$ = this.ddlGridColumnsSubject.asObservable();
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
-  routes$ = this.routesSubject.asObservable();
+  updateCase$ = this.updateCaseSubject.asObservable();
+  getCase$ = this.getCaseSubject.asObservable();
 
   constructor(
     private readonly caseDataService: CaseDataService,
-    private readonly routeService: ScreenRouteDataService
-  ) {}
+
+  ) { }
 
   /** Public methods **/
   loadCases(): void {
@@ -61,8 +61,8 @@ export class CaseFacade {
     });
   }
 
-  loadCaseBySearchText(): void {
-    this.caseDataService.loadCaseBySearchText().subscribe({
+  loadCaseBySearchText(text : string): void {
+    this.caseDataService.loadCaseBySearchText(text).subscribe({
       next: (caseBySearchTextResponse) => {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
@@ -105,23 +105,6 @@ export class CaseFacade {
     });
   }
 
-  loadRoutes(
-    screen_flow_type_code: string,
-    program_id: number,
-    case_id?: number
-  ) {
-    this.routeService
-      .load(screen_flow_type_code, program_id, case_id)
-      .subscribe({
-        next: (data) => {
-          this.routesSubject.next(data);
-        },
-        error: (err) => {
-          console.log('Error', err);
-        },
-      });
-  }
-
   loadDdlGridColumns(): void {
     this.caseDataService.loadDdlGridColumns().subscribe({
       next: (ddlGridColumnsResponse) => {
@@ -143,22 +126,22 @@ export class CaseFacade {
       },
     });
   }
-
-  loadDdlSendLetters(): void {
-    this.caseDataService.loadDdlSendLetters().subscribe({
-      next: (ddlSendLettersResponse) => {
-        this.ddlSendLettersSubject.next(ddlSendLettersResponse);
+  loadCasesById(clientCaseId : string)
+  {
+    this.caseDataService.loadCasesById(clientCaseId).subscribe({
+      next: (ddlcaseGetResponse) => {
+        console.log(ddlcaseGetResponse)
+        this.getCaseSubject.next(ddlcaseGetResponse);
       },
       error: (err) => {
         console.error('err', err);
       },
     });
   }
-
-  loadCaseOwners(): void {
-    this.caseDataService.loadCaseOwners().subscribe({
-      next: (caseOwnersResponse) => {
-        this.caseOwnersSubject.next(caseOwnersResponse);
+  loadDdlSendLetters(): void {
+    this.caseDataService.loadDdlSendLetters().subscribe({
+      next: (ddlSendLettersResponse) => {
+        this.ddlSendLettersSubject.next(ddlSendLettersResponse);
       },
       error: (err) => {
         console.error('err', err);
@@ -177,16 +160,6 @@ export class CaseFacade {
     });
   }
 
-  loadDdlCaseOrigins(): void {
-    this.caseDataService.loadDdlCaseOrigins().subscribe({
-      next: (ddlCaseOriginsResponse) => {
-        this.ddlCaseOriginsSubject.next(ddlCaseOriginsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
 
   loadDdlFamilyAndDependentEP(): void {
     this.caseDataService.loadDdlFamilyAndDependentEP().subscribe({
@@ -221,6 +194,18 @@ export class CaseFacade {
         console.error('err', err);
       },
     });
+  }
+
+
+  UpdateCase(existingCaseFormData : FormGroup ,clientCaseId : string ) {   
+    const caseData = { 
+      clientCaseId  : clientCaseId,
+      assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
+      caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
+      caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
+      concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
+    }
+    return this.caseDataService.UpdateCase(caseData);
   }
 
 }

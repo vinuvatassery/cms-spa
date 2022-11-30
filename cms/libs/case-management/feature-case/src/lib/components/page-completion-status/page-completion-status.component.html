@@ -1,0 +1,9 @@
+<div *ngIf="completionStatus$ | async ">
+    <span *ngIf="completed !== total">
+        {{ completed }} of {{ total }}
+    </span>
+
+    <span *ngIf="completed === total" class="material-icons">
+        check_circle
+    </span>
+</div>

@@ -1,57 +1,62 @@
  
 <section kendoRippleContainer>
-  <form class="k-form" [formGroup]="form">
-  <div class="flex-row">
+<form [formGroup]="appInfoForm">
+
+  <div class="flex-row" >
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Enter First Name" class="k-form">
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
-        <kendo-textbox aria-label="enter first name"  
+        <kendo-textbox  aria-label="enter first name"  
           formControlName="firstname"
           showErrorIcon="initial"
           #firstname
           required  
-         [fillMode]="formUiStyle.inputFillMode">
+       formControlName="firstName"  [fillMode]="formUiStyle.inputFillMode">
       </kendo-textbox>
       <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
-      <kendo-formerror>Error: Full Name is required</kendo-formerror>
+      <kendo-formerror>Full Name is required</kendo-formerror>
    
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Middle Initial (Optional)">
-        <kendo-textbox    [disabled]="!isMiddleNameChecked" aria-label="middle initial" [fillMode]="formUiStyle.inputFillMode">
+        <kendo-textbox   aria-label="middle initial" [fillMode]="formUiStyle.inputFillMode" formControlName="middleName">
         </kendo-textbox>
         <!-- <input
           kendoTextBox
        
           aria-label="middle initial"
+             [(ngModel)]="isMiddleNameChecked"
         /> -->
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
       <span class="app-checkboxwidtext-wrapper">
       <input
+        class="adjust-attr"
         type="checkbox"
         aria-labelledby="middleInitial"
         id="middleInitial"
-        kendoCheckBox
-        [(ngModel)]="isMiddleNameChecked"
+        name="chkmiddleName"
+        formControlName="chkmiddleName"
+        kendoCheckBox     
+        (change)="onMiddleNameChecked($event)"    
       />
       <label class="k-checkbox-label" for="middleInitial">  Middle Initial</label>
       </span>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name">
-        <kendo-textbox aria-label="last name" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="last name" [fillMode]="formUiStyle.inputFillMode" formControlName="lastName">   </kendo-textbox>
         <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
       </kendo-floatinglabel>
     </div>
   </div>
-</form>
+
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Primary Insurance Card">
-        <kendo-textbox aria-label="first name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on primary insurance card"  [fillMode]="formUiStyle.inputFillMode" formControlName="prmInsFirstName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
@@ -61,7 +66,7 @@
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name on Primary Insurance Card">
-        <kendo-textbox aria-label="last name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on primary insurance card"  [fillMode]="formUiStyle.inputFillMode" formControlName="prmInsLastName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isInsuranceCardChecked"
@@ -73,10 +78,13 @@
       <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
+        class="adjust-attr"
+        name="prmInsNotApplicable"
         id="cardNotApplicable"
         aria-labelledby="insuranceCardNotApplicable"
         kendoCheckBox
-        [(ngModel)]="isInsuranceCardChecked"
+        formControlName="prmInsNotApplicable"
+        (change)="onInsuranceCardChecked($event)"
       />
       <label class="k-checkbox-label" for="cardNotApplicable"
         >Not Applicable</label
@@ -87,7 +95,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Official ID">
-        <kendo-textbox aria-label="first name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="first name on official id"  [fillMode]="formUiStyle.inputFillMode" formControlName="officialIdFirstName">   </kendo-textbox>
         <!-- <input
           kendoTextBox
           [disabled]="isOfficialIdChecked"
@@ -101,18 +109,22 @@
           kendoTextBox
           [disabled]="isOfficialIdChecked"
           aria-label="last name on official id"
+           [(ngModel)]="isOfficialIdChecked"
         /> -->
-        <kendo-textbox aria-label="last name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="last name on official id"  [fillMode]="formUiStyle.inputFillMode" formControlName="officialIdLastName">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
       <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
+        class="adjust-attr"
         id="idNotApplicable"
+        name="officialIdsNotApplicable"
         aria-labelledby="officialIdNotApplicable"
-        kendoCheckBox
-        [(ngModel)]="isOfficialIdChecked"
+        kendoCheckBox       
+        formControlName="officialIdsNotApplicable"
+        (change)="onOfficialIdChecked($event)"
       />
       <label class="k-checkbox-label" for="idNotApplicable"
         >Not Applicable</label
@@ -125,7 +137,8 @@
       <kendo-floatinglabel text="Date of Birth">
         <kendo-datepicker  
         [fillMode]="formUiStyle.dateInputFillMode"
-        [value]="currentDate"></kendo-datepicker>
+        [value]="currentDate"
+        formControlName="dateOfBirth"></kendo-datepicker>
         <!-- <kendo-datepicker    id="datepicker">
         </kendo-datepicker> -->
       </kendo-floatinglabel>
@@ -140,7 +153,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Social Security Number">
-        <kendo-textbox aria-label="social security number"  [disabled]="isSSNChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="social security number"  [fillMode]="formUiStyle.inputFillMode" formControlName="ssn">   </kendo-textbox>
 
         <!-- <input
           kendoTextBox
@@ -153,17 +166,21 @@
       <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
+        class="adjust-attr"
         id="ssnNotApplicable"
+        name="ssnNotApplicable"
         aria-labelledby="ssnNotApplicable"
         kendoCheckBox
-        [(ngModel)]="isSSNChecked"
+        formControlName="ssnNotApplicable"
+        (change)="onSsnNotApplicableChecked($event)"
       />
       <label class="k-checkbox-label" for="ssnNotApplicable"
-        >Not Applicable</label
+        >Not Applicable</label 
       >
     </span>
     </div>
   </div>
+</form> 
 </section>
  
 <section class="mb-3">

@@ -1,3 +1,5 @@
+$pagination-height : 48px;
+
 .app-c-table {
   overflow: auto;
   overflow-y: hidden;
@@ -392,11 +394,20 @@ table,
 }
 
 
+
+// Table bottom pagination 
+
 .grid-custom-paginationtemplates{
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  padding-left: 1rem;
+  max-height: $pagination-height;
+  color: $black-16;
+  > .d-flex{
+    align-items: center;
+  }
   .k-pager-info{
     order: initial;
     flex: initial;
@@ -411,8 +422,77 @@ table,
       order: 1;
     }
   }
+
+  kendo-dropdownlist{
+    .k-input-inner{
+      padding: 0px 6px;
+    }
+    &.k-picker-outline.k-dropdownlist, 
+    &.k-picker-outline.k-dropdownlist.k-focus{
+      border: 0px !important;
+      border-color: transparent;
+    }
+    .k-button.k-icon-button{
+      padding: 2px;
+    }
+  }
+
+  kendo-numerictextbox{
+    .k-input-inner{
+      padding: 0px 6px;
+    }
+
+   &.k-numerictextbox, &.k-focus {
+        margin: 0 0px;
+        width: 100%;
+        max-width: 30px;
+        /* display: inline-block; */
+        border-bottom: 0px;
+        background: transparent;
+    }
+    &.k-input-solid{
+      &:focus-within{
+        border-color: transparent;
+        &::after{
+          opacity: 0;
+        }
+    }
+  }
+    .k-pager-nav{
+      height: auto;
+      min-width: 0px;
+      font-size: $font-size;
+      padding: 0px;
+    }
+  }
+  .k-pager-nav{
+    width: $pagination-height;
+    height: $pagination-height;
+    /* height: 100%; */
+    border-radius: 0px;
+  }
+  .k-pager-info{
+    padding: 16px;
+    margin-left: 16px;
+    border-left: 1.5px solid rgba($black-9,0.3);
+  }
+  kendo-pager-input{
+    border-left: 1.5px solid rgba($black-9,0.3);
+    height: $pagination-height;
+    display: flex;
+    padding: 10px;
+
+  }
+  kendo-pager-prev-buttons{
+    border-left: 1.5px solid rgba($black-9,0.3);
+    border-right: 1.5px solid rgba($black-9,0.3);
+  }
+  .k-pager-last, .k-pager-first{
+    display: none;
+  }
 }
 
 .k-pager-wrap, .k-pager{
   background: $light-bgcolor;
+  padding: 0px;
 }

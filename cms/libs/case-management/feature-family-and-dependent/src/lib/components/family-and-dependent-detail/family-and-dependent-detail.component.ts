@@ -10,7 +10,7 @@ import {
 import { FamilyAndDependentFacade } from '@cms/case-management/domain';
 /** External libraries **/
 import { groupBy, GroupResult } from '@progress/kendo-data-query';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-family-and-dependent-detail',
   templateUrl: './family-and-dependent-detail.component.html',
@@ -28,7 +28,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   isOpenedNewFamilyMember = false;
   dependentSearch!: GroupResult[];
   popupClass = 'k-autocomplete-custom';
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(
     private readonly familyAndDependentFacade: FamilyAndDependentFacade,

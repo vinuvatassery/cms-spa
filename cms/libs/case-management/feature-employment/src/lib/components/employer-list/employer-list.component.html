@@ -32,15 +32,6 @@
                 >
                   Edit Employer
                 </button>
-                <button
-                  kendoButton
-                  icon="delete"
-                  look="flat"
-                  class="btn-h-danger"
-                  aria-label="delete employer"
-                >
-                  Delete Employer
-                </button> -->
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
@@ -53,11 +44,11 @@
           (click)="onEmployerClicked(true)">
           Employer
         </button>
+
       </div>
     </div>
   </div>
 </div>
-
 <!-- Add Income  Modal -->
 <kendo-dialog *ngIf="isEmployerOpened" (close)="onEmployerClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>

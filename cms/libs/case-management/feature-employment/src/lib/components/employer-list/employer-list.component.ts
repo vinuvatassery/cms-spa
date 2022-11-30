@@ -32,6 +32,7 @@ export class EmployerListComponent implements OnInit {
   selectedEmployer: ClientEmployer = new ClientEmployer();
 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+ 
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -55,6 +56,10 @@ export class EmployerListComponent implements OnInit {
     this.addEmployerButtonDisplay();
   }
 
+  receiveDetailFromEmpDetails($event: boolean) {
+    this.isEmployerOpened = $event;
+  }
+  
   /** Private methods **/
 
   private addEmployerButtonDisplay() {

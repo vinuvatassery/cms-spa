@@ -1,6 +1,6 @@
 /*Scrollbar  */
 $drawer-scrollbar-bg: #f8f8f8;
-$drawer-scrollbar-color: #cccccc;
+$drawer-scrollbar-color: $grey-c;
 $drawer-scrollbar-hovered-color: darken($drawer-scrollbar-color, 15%);
 $breadcrumb-size: $size-xl;
 ::-webkit-scrollbar {

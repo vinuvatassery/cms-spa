@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-email-editor',
   templateUrl: './email-editor.component.html',
@@ -34,7 +34,7 @@ export class EmailEditorComponent implements OnInit {
   emailEditorvalue!: any;
   isSearchOpened = true;
   isShowPopupClicked = false;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 

@@ -1,5 +1,5 @@
-/** Angular **/
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-sexual-orientation-detail',
   templateUrl: './sexual-orientation-detail.component.html',
@@ -8,10 +8,9 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SexualOrientationDetailComponent implements OnInit {
-  /** Constructor **/
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   constructor() { }
 
-  /** Lifecycle hooks **/
   ngOnInit(): void {
   }
 

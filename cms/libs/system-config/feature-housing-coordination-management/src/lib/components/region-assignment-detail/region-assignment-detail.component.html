@@ -1,0 +1,29 @@
+<section class="k-dialog-body">
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel text="Housing Coordinator / supervisior">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  >
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel text="Counties">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
+            </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="cancel" [primary]="true" look="outline">
+          Cancel
+        </button>
+        <button kendoButton aria-label="update" [primary]="true">Update</button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

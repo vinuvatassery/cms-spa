@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-client-eligibility',
   templateUrl: './client-eligibility.component.html',
@@ -12,7 +12,7 @@ export class ClientEligibilityComponent {
   isShowException = false;
   isOpenAcceptance = false;
   isOpenDeny = false;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Internal event methods **/
   onToggleExceptionClicked() {
     this.isShowException = !this.isShowException;

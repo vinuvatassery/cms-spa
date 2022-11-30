@@ -15,16 +15,32 @@ export class DocumentDataService {
   /** Public methods **/
   loadDocuments(): Observable<Document[]> {
     return of([
+      { id: 1, 
+        name: 'Lorem ipsum', 
+        description: 'Lorem ipsum dolor sit amet' ,
+        filesize: '12 MB' ,
+        attachmenttType: 'Proof of Income' , 
+        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem' ,
+        by: 'James' ,
+      },
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {
         id: 2,
         name: 'At vero eos',
         description: 'At vero eos et accusam et justo duo dolores',
+        filesize: '12 MB' ,
+        attachmenttType: 'Proof of Income' , 
+        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem' ,
+        by: 'James' ,
       },
       {
         id: 3,
         name: 'Duis autem',
         description: 'Duis autem vel eum iriure dolor in hendrerit',
+        filesize: '12 MB' ,
+        attachmenttType: 'Proof of Income' , 
+        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem' ,
+        by: 'James' ,
       },
     ]);
   }

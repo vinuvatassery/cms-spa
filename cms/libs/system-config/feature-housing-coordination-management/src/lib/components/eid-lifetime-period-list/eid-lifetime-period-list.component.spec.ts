@@ -11,9 +11,7 @@ describe('EidLifetimePeriodListComponent', () => {
       declarations: [ EidLifetimePeriodListComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(EidLifetimePeriodListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

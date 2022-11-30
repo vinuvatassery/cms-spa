@@ -1,12 +1,14 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { filter } from 'rxjs/internal/operators/filter';
-/** Facades **/
-import { CaseDetailsFacade, ScreenType } from '@cms/case-management/domain';
 import { Observable } from 'rxjs/internal/Observable';
+
+/** Internal Libraries **/
+import { ScreenType, StatusFlag, WorkFlowProgress } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case-navigation',
@@ -18,7 +20,10 @@ export class CaseNavigationComponent implements OnInit {
   /** Input Properties **/
   @Input() routes$!: Observable<any>;
   @Input() completeStaus$!: Observable<any>;
-  @Input() saveAndContinueClicked = new EventEmitter();
+  @Input() currentSession : any
+  @Input() navigationEvent = new EventEmitter<string>();
+  /** Output Properties **/
+  @Output() workflowChange = new EventEmitter<object>();
 
   /** Public Properties **/
   isSendLetterProfileOpenedSubject = new BehaviorSubject<boolean>(false);
@@ -26,29 +31,31 @@ export class CaseNavigationComponent implements OnInit {
     this.isSendLetterProfileOpenedSubject.asObservable();
   isApplicationReviewOpened = false;
   isCheckRouteExcecuted = false; // for checking  the if conditions in the loop has been excecuted or not
-  navigationIndex = 0;
+  navigationIndex = 1;
+  routes!: any[];
+  review!: WorkFlowProgress;
+  isNotReadyForReview  = true; 
 
-  /** Private Properties */
-
-  
   /** constructor **/
-  constructor(private router: Router,
-    private caseDetailFacade: CaseDetailsFacade
-  ) { }
+  constructor(private router: Router, private actRoute: ActivatedRoute) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
     this.loadCaseNavigationDeatils();
     this.navigationInitiated();
-  }
+    this.addNavigationSubscription();   
+  } 
 
-  /** Private Methods **/
   private loadCaseNavigationDeatils() {
     this.routes$.subscribe({
       next: (routes: any) => {
-        this.navigateByUrl(routes);
-        //this.saveAndContinueSubscribed(routes);
-        this.navigationSubscribed(routes);
+        if (routes.length > 0) {
+          this.routes = routes;
+          const maxSequenceNumber = this.routes.reduce((prev, curr) => prev = prev > curr.sequenceNbr ? prev : curr.sequenceNbr, 0);
+          this.review = this.routes.filter((route: WorkFlowProgress) => route.sequenceNbr === maxSequenceNumber)[0];
+          this.isNotReadyForReview = this.routes.findIndex((route: any) => route.visitedFlag == StatusFlag.No && route.sequenceNbr !== maxSequenceNumber) != -1;
+          this.navigate(routes)
+        }
       },
       error: (err: any) => {
         console.error('error', err);
@@ -56,24 +63,10 @@ export class CaseNavigationComponent implements OnInit {
     });
   }
 
-  private saveAndContinueSubscribed(routes: any) {
-    this.saveAndContinueClicked.subscribe({
+  private addNavigationSubscription() {
+    this.navigationEvent.subscribe({
       next: () => {
-        // TODO: Save Application Functionality.
-        this.caseDetailFacade.save();
-        this.nextNavigation(routes);
-      },
-      error: (err: any) => {
-        console.error('error', err);
-      },
-    });
-
-  }
-
-  private navigationSubscribed(routes:any){
-    this.caseDetailFacade.navigateToNextCaseScreen.subscribe({
-      next: () => {       
-        this.nextNavigation(routes);
+        this.navigate(this.routes);
       },
       error: (err: any) => {
         console.error('error', err);
@@ -81,22 +74,40 @@ export class CaseNavigationComponent implements OnInit {
     });
   }
 
-  private nextNavigation(routes: any) {
-    const CurrentRoute = this.router.url;
-    this.navigationIndex =
-      routes.findIndex((route: any) => CurrentRoute.includes(route.url)) +
-      1;
-    this.navigateByUrl(routes);
+  private navigate(routes: any) {
+    this.navigationIndex = routes.findIndex((route: WorkFlowProgress) =>
+      route?.currentFlag === StatusFlag.Yes
+    );
+
+    if (routes[this.navigationIndex]?.sequenceNbr === this.review?.sequenceNbr) {
+      this.isApplicationReviewOpened = true;
+    }   
+    const sessionId = this.actRoute.snapshot.queryParams['sid']; 
+    const entityId: string = this.actRoute.snapshot.queryParams['eid'];
+    if (this.navigationIndex > -1
+      && this.navigationIndex < routes.length 
+      && sessionId
+    ) {
+      this.router.navigate(
+        [routes[this.navigationIndex].url],
+        {
+          queryParams: {          
+            sid: sessionId,          
+            pid: routes[this.navigationIndex].processId   ,
+            eid: entityId,       
+          }
+        }
+      );
+    }
   }
 
   private navigateByUrl(routes: any) {
-    if (this.navigationIndex < routes.length) {
+    if (this.navigationIndex > -1 && this.navigationIndex < routes.length) {
       this.router.navigate([routes[this.navigationIndex].url], { queryParamsHandling: 'preserve' });
     }
     // TODO: In else case we can start the application review process.
   }
 
-  /** Private methods **/
   private navigationInitiated() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -150,10 +161,16 @@ export class CaseNavigationComponent implements OnInit {
 
   /** Internal event methods **/
   onApplicationReviewClicked() {
+    this.onRouteChange(this.review, true);
     this.isApplicationReviewOpened = true;
   }
 
   onApplicationReviewClosed() {
+    this.onRouteChange(this.review, false, true);
     this.isApplicationReviewOpened = false;
+  }
+
+  onRouteChange(route: WorkFlowProgress, isReview: boolean = false, isReset: boolean = false) {
+    this.workflowChange.emit({ route: route, isReview: isReview, isReset: isReset });
   }
 }

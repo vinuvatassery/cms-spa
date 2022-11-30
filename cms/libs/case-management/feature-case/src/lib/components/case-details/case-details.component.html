@@ -1,0 +1,52 @@
+<div class="flex-row" [formGroup]="parentForm">
+  <input type="hidden" formControlName="concurrencyStamp">
+  <div class="flex-col">
+    <kendo-floatinglabel text="Date Application Received">
+      <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+        formControlName="applicationDate" 
+        >
+      </kendo-datepicker>
+    </kendo-floatinglabel>
+    <kendo-formerror *ngIf="parentForm?.hasError('required','applicationDate') && isSubmitted">Date Application Received
+      is required</kendo-formerror>
+  </div>
+  <div class="flex-col">
+    <kendo-floatinglabel text="Case Origin">
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+       required [data]="ddlCaseOrigins | async"
+        formControlName="caseOriginCode" 
+        textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+        >
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+    <kendo-formerror *ngIf="parentForm?.hasError('required','caseOriginCode') && isSubmitted">Case Origin is Required
+    </kendo-formerror>
+  </div>
+  <div class="flex-col hidedropicon">
+    <kendo-floatinglabel text="Case Owner">    
+      <kendo-combobox       
+      #caseOwnr
+      formControlName="caseOwnerId"     
+      [data]="caseOwnersObject"   
+      textField="fullName" 
+      valueField="loginUserId"
+      [valuePrimitive]="true"       
+      [filterable]="true"     
+      [kendoDropDownFilter]="caseOwnerfilterSettings"      
+    >
+    </kendo-combobox>
+    </kendo-floatinglabel>
+    <kendo-formerror *ngIf="parentForm?.hasError('required','caseOwnerId') && isSubmitted">Case Owner is Required
+    </kendo-formerror>
+  </div>
+  <div class="flex-col" *ngIf="isProgramVIsible">
+    <kendo-floatinglabel text="Program">
+      <kendo-dropdownlist formControlName="programId"
+       [fillMode]="formUiStyle.dropDownFillMode"
+        [data]="ddlPrograms | async" textField="programName" valueField="programId" 
+         [valuePrimitive]="true"
+        >
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </div>
+</div>

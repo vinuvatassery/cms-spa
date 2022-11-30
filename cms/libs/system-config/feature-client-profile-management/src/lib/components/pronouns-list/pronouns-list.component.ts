@@ -1,6 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-pronouns-list',
   templateUrl: './pronouns-list.component.html',
@@ -9,13 +10,14 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PronounsListComponent implements OnInit {
+
   /** Public properties **/
   isPronounsDeactivatePopup = false;
   isPronounsDetailPopup = false;
   clientProfilePronouns$ = this.userManagementFacade.clientProfilePronouns$;
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [
     {
       buttonType:"btn-h-primary",

@@ -1,0 +1,81 @@
+<kendo-editor [(value)]="letterEditorValue">
+    <kendo-toolbar>
+      <kendo-toolbar-buttongroup>
+        <kendo-toolbar-button
+          kendoEditorUndoButton
+          aria-label="undo"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorRedoButton
+          aria-label="redo"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorBoldButton
+          aria-label="bold"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorItalicButton
+          aria-label="italic"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorUnderlineButton
+          aria-label="underline"
+        ></kendo-toolbar-button>
+      </kendo-toolbar-buttongroup>
+
+      <kendo-toolbar-dropdownlist
+        kendoEditorFontSize
+        aria-label="font size"
+      ></kendo-toolbar-dropdownlist>
+
+      <kendo-toolbar-buttongroup>
+        <kendo-toolbar-button
+          kendoEditorAlignLeftButton
+          aria-label="align left"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorAlignCenterButton
+          aria-label="align center"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorAlignRightButton
+          aria-label="align right"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorAlignJustifyButton
+          aria-label="align justify"
+        ></kendo-toolbar-button>
+      </kendo-toolbar-buttongroup>
+
+      <kendo-toolbar-buttongroup>
+        <kendo-toolbar-button
+          kendoEditorInsertUnorderedListButton
+          aria-label="insert unordered list"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorInsertOrderedListButton
+          aria-label="insert ordered list"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorIndentButton
+          aria-label="indent"
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button
+          kendoEditorOutdentButton
+          aria-label="outdent"
+        ></kendo-toolbar-button>
+      </kendo-toolbar-buttongroup>
+      <kendo-toolbar-button
+        kendoEditorInsertImageButton
+        aria-label="insert image"
+      ></kendo-toolbar-button>
+      <kendo-toolbar-dropdownbutton
+        icon="attachment"
+        [data]="ddlEditorVariables$ | async"
+      >
+        <ng-template kendoDropDownButtonItemTemplate let-dataItem>
+          <span>{{ dataItem.text }}</span>
+        </ng-template>
+      </kendo-toolbar-dropdownbutton>
+    </kendo-toolbar>
+  </kendo-editor>

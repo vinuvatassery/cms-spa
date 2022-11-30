@@ -1,7 +1,8 @@
 export interface Client {
-  id: number;
-  name: string;
-  description: string;
+   clientId : number,
+   clientFullName :  string ,
+   dob :  Date ,
+   ssn :  string 
 }
 
 export interface SpecialHandling {

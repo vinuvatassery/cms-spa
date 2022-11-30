@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { LoginUser } from '../entities/login-user';
 /** Entities **/
 import { User } from '../entities/user';
 /** Data services **/
@@ -27,7 +28,14 @@ export class UserManagementFacade {
   private clientProfileRacialOrEthnicIdentitySubject = new BehaviorSubject<any>([]);
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
-
+ 
+  private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
+  private clientProfileIncomeInclusionsExlusionsSubject = new BehaviorSubject<any>([]);
+  private clientProfileRegionAssignmentSubject = new BehaviorSubject<any>([]);
+  private clientProfilePSMFRZIPSubject = new BehaviorSubject<any>([]);
+  private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
+  private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
+ 
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -48,10 +56,30 @@ export class UserManagementFacade {
   clientProfilePronouns$ = this.clientProfilePronounsSubject.asObservable();
   clientProfileGender$ = this.clientProfileGenderSubject.asObservable();
  
+  clientProfileHousingAcuityLevel$ = this.clientProfileHousingAcuityLevelSubject.asObservable();
+  clientProfilIncomeInclusionsExlusions$ = this.clientProfileIncomeInclusionsExlusionsSubject.asObservable();
+  clientProfilRegionAssignment$ = this.clientProfileRegionAssignmentSubject.asObservable();
+  clientProfilPSMFRZIP$ = this.clientProfilePSMFRZIPSubject.asObservable();
+  clientProfilServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
+  usersByRole$ = this.usersByRoleSubject.asObservable();
+  
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService) {}
 
   /** Public methods **/
+  getUsersByRole(rolecode : string): void {
+    this.userDataService.getUsersByRole(rolecode).subscribe({
+      next: (usersByRoleResponse) => {
+        this.usersByRoleSubject.next(usersByRoleResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+
+
   loadUsers(): void {
     this.userDataService.loadUsers().subscribe({
       next: (userResponse) => {
@@ -221,6 +249,58 @@ export class UserManagementFacade {
       },
     });
   }
-  
+ 
+  loadHousingAcuityLevelList(){
+    this.userDataService.loadHousingAcuityLevelList().subscribe({
+      next: (clientProfileHousingAcuityLevel) => {
+        this.clientProfileHousingAcuityLevelSubject.next(clientProfileHousingAcuityLevel);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+  loadIncomeInclusionsExlusionsList(){
+    this.userDataService.loadIncomeInclusionsExlusionsList().subscribe({
+      next: (clientProfilIncomeInclusionsExlusions) => {
+        this.clientProfileIncomeInclusionsExlusionsSubject.next(clientProfilIncomeInclusionsExlusions);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+ 
+  loadRegionAssignmentList(){
+    this.userDataService.loadRegionAssignmentList().subscribe({
+      next: (clientProfilRegionAssignment) => {
+        this.clientProfileRegionAssignmentSubject.next(clientProfilRegionAssignment);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+  loadPSMFRZIPList(){
+    this.userDataService.loadPSMFRZIPList().subscribe({
+      next: (clientProfilPSMFRZIP) => {
+        this.clientProfilePSMFRZIPSubject.next(clientProfilPSMFRZIP);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+  loadServiceProviderList(){
+    this.userDataService.loadServiceProviderList().subscribe({
+      next: (clientProfilServiceProvider) => {
+        this.clientProfileServiceProviderSubject.next(clientProfilServiceProvider);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
  
 }

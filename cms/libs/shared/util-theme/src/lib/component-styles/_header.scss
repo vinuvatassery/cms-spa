@@ -27,6 +27,29 @@
       max-width: 300px;
     }
   }
+  .headermenu-leftmostsection{
+    display: flex;
+    gap: 10px;
+    .mobile-menu-icon{
+      background: transparent;
+      border: 0px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      align-items: center;
+      justify-content: center;
+      transition: .2s;
+      display: none;
+      .material-icons{
+        color: $app-primary;
+      }
+      &:hover{
+        background:material-color($hive-primary-palette, 50) ;
+      }
+    }
+  }
 }
 .k-dropdowngrid-popup {
   .k-grid-header {
@@ -124,7 +147,8 @@
   }
 }
 .notification-inner {
-  width: 400px;
+  width: 100%;
+  max-width: 100%;
 }
 .user-setting-dropdown {
   min-width: 250px;
@@ -222,7 +246,9 @@
 }
 /*Notifications*/
 .card-list {
-  min-width: 400px;
+width: 100%;
+min-width: 10px;
+max-width: 400px;
   padding: $size-xx 0;
   padding-bottom: $size-0;
   max-height: 65vh;

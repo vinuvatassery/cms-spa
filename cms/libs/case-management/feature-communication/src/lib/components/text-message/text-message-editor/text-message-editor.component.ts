@@ -6,7 +6,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-text-message-editor',
   templateUrl: './text-message-editor.component.html',
@@ -29,7 +29,7 @@ export class TextMessageEditorComponent {
     },
   ];
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Private methods **/
   private contains(target: any): boolean {
     return (

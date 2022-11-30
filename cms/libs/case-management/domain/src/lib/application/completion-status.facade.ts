@@ -16,6 +16,7 @@ export class CompletionStatusFacade {
   loadCompletionStatus(caseId?: number) {
     this.completionStatusDataService.loadCompletionStatus(caseId).subscribe({
       next: (status) => {
+        console.log(status);
         this.completionStatus = status;
         this.completionStatusSubject.next(status);
       },

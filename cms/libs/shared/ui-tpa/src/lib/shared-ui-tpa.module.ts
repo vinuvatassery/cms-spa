@@ -16,13 +16,16 @@ import { UploadsModule } from '@progress/kendo-angular-upload';
 import { LayoutModule } from '@progress/kendo-angular-layout';
 import { TooltipsModule } from '@progress/kendo-angular-tooltip';
 import { EditorModule } from '@progress/kendo-angular-editor';
+import { IndicatorsModule } from "@progress/kendo-angular-indicators";
 import {
   FloatingLabelModule,
   LabelModule,
 } from '@progress/kendo-angular-label';
 import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { NotificationModule } from '@progress/kendo-angular-notification';
+
 import {UIFormStyle} from './kendo-uiform-style-config';
+import {UploadFileRistrictionOptions,   CurrencyFromat} from './kendo-form-element-config';
  
 const MODULES = [
   InputsModule,
@@ -44,13 +47,17 @@ const MODULES = [
   EditorModule,
   NavigationModule,
   NotificationModule,
+  IndicatorsModule,
 ];
 
 @NgModule({
   imports: MODULES,
   exports: MODULES,
   providers: [
-    UIFormStyle
+    UIFormStyle,
+    UploadFileRistrictionOptions,
+    CurrencyFromat
+    
   ]
 })
 export class SharedUiTpaModule {}

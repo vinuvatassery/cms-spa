@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { ContactFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-deactivate-friend-or-family-confirmation',
   templateUrl: './deactivate-friend-or-family-confirmation.component.html',
@@ -12,7 +12,7 @@ import { ContactFacade } from '@cms/case-management/domain';
 export class DeactivateFriendOrFamilyConfirmationComponent implements OnInit {
   /** Public properties **/
   ddlRelationshipToClient$ = this.contactFacade.ddlRelationshipToClient$;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade) {}
 

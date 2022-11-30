@@ -1,14 +1,14 @@
 /** Angular **/
 import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
+  Component, OnInit, ChangeDetectionStrategy, Input
 } from '@angular/core';
+import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /**  Facades **/
 import { IncomeFacade } from '@cms/case-management/domain';
+/** Entities **/
+import { DeleteRequest } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-income-list',
@@ -28,6 +28,8 @@ export class IncomeListComponent implements OnInit {
   isOpenedIncome = false;
   isAddIncomeButtonAndFooterNoteDisplay!: boolean;
   isIncludeNote!: boolean;
+  deleteRequestSubject = new Subject<DeleteRequest>();
+  deleteRequest$ = this.deleteRequestSubject.asObservable();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -77,7 +79,7 @@ export class IncomeListComponent implements OnInit {
       text: "Delete Income",
       icon: "delete",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
+      this.onDeleteEmployerDetailsClicked('john')
       },
     },
    
@@ -120,4 +122,22 @@ export class IncomeListComponent implements OnInit {
     this.isOpenedIncome = true;
     this.isEdit = editValue;
   }
+
+  receiveDetailFromIcomeDetails($event: boolean) {
+    this.isOpenedIncome = $event;
+  }
+  onDeleteEmployerDetailsClicked(deleteDetails: any) {
+    const deleteConfirmation: DeleteRequest = {
+      title: ' Income',
+      content: 'The Income will be deleted from the application',
+      data: deleteDetails,
+    };
+    this.deleteRequestSubject.next(deleteConfirmation);
+  }
+
+  handleDeleteConfirmationClicked(event: any) {
+    console.log('Response Data :', event);
+  }
+
+ 
 }

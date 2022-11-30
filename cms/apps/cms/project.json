@@ -1,4 +1,5 @@
 {
+  "name": "cms",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/cms/src",
@@ -21,6 +22,7 @@
           "apps/cms/src/web.config"
         ],
         "styles": [
+          "node_modules/@progress/kendo-theme-material/dist/all.scss",
           "libs/shared/util-theme/src/lib/styles.scss",
           "apps/cms/src/styles.scss"
         ],
@@ -31,13 +33,13 @@
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "4mb",
-              "maximumError": "4mb"
+              "maximumWarning": "5mb",
+              "maximumError": "5mb"
             },
             {
               "type": "anyComponentStyle",
-              "maximumWarning": "4mb",
-              "maximumError": "4kb"
+              "maximumWarning": "5mb",
+              "maximumError": "5kb"
             }
           ],
           "fileReplacements": [

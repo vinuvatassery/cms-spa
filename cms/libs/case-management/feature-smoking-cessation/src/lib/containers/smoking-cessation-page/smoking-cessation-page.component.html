@@ -1,7 +1,7 @@
 <div class="client-data-block">
   <h3>Smoking Cessation</h3>
   <section>
-    <form [formGroup]="smokingCessationForm" (submit)="submit()" novalidate>
+    <form [formGroup]="smokingCessationForm">
     <div class="block-section pt-1">
       <div class="flex-row">
         <div class="flex-col mb-1">
@@ -66,7 +66,7 @@
           <kendo-floatinglabel text="Smoking Cessation Note">
             <kendo-textarea
               #tareaCessation
-              fillMode="outline"
+              [fillMode]="formUiStyle.inputFillMode"
               resizable="auto"
               [maxlength]="tareaCessationMaxLength"
               [value]="tareaCessationNote"

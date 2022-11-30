@@ -1,4 +1,5 @@
 /** Angular **/
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,11 +8,15 @@ import {
 } from '@angular/core';
 /** Internal Libraries **/
 import {
-  CaseDetailsFacade,
+  WorkflowFacade,
   CompletionStatusFacade,
   EmploymentFacade,
 } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
+/** External libraries **/
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+/** Facades **/
+/** Enums **/
+import { NavigationType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-employment-page',
@@ -24,6 +29,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   isEmploymentGridDisplay = true;
   employers$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
+
   clientCaseEligibilityId = 'C8EDF7EB-C301-4077-90FB-3739AB321ED0';
   isEmployed = 'Y';
   /** Private properties **/
@@ -33,13 +39,13 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   constructor(
     private employmentFacade: EmploymentFacade,
     private completionStatusFacade: CompletionStatusFacade,
-    private caseDetailsFacade: CaseDetailsFacade
+    private workflowFacade: WorkflowFacade
   ) {}
 
   /** Lifecycle Hooks */
   ngOnInit() {
     this.loadEmployers();
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
   }
 
   ngOnDestroy(): void {
@@ -56,35 +62,45 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods **/
-  private saveClickSubscribed(): void {
-    this.saveClickSubscription =
-      this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-        this.employmentFacade.save().subscribe((response: boolean) => {
-          if (response) {
-            this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-          }
-        });
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
+      .pipe(
+        mergeMap((navigationType: NavigationType) =>
+          forkJoin([of(navigationType), this.save()])
+        )
+      )
+      .subscribe(([navigationType, isSaved]) => {
+        if (isSaved) {
+          this.workflowFacade.navigate(navigationType);
+        }
       });
   }
 
-  unEmploymentChecked() {
-    if (!this.isEmploymentGridDisplay) { 
-      this.isEmployed = 'N';
-     }
-      this.employmentFacade
-        .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployed)
-        .subscribe({
-          next: (response) => {
-            console.log(response);
-          
-          },
-          error: (err) => {
-            console.error('err', err);
-          },
-        });
-  
+  private save() {
+    let isValid = true;
+    // TODO: validate the form
+    if (isValid) {
+      return this.employmentFacade.save();
+    }
+
+    return of(false);
   }
 
+  unEmploymentChecked() {
+    if (!this.isEmploymentGridDisplay) {
+      this.isEmployed = 'N';
+    }
+    this.employmentFacade
+      .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployed)
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (err) => {
+          console.error('err', err);
+        },
+      });
+  }
   /** Internal event methods **/
   onUnEmployedClicked() {
     this.isEmploymentGridDisplay = !this.isEmploymentGridDisplay;

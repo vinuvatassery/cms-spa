@@ -12,7 +12,9 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Event Description" class="pb-0">
         <kendo-textarea
+ 
         [fillMode]="formUiStyle.inputFillMode"
+ 
           name="Event Description"
           aria-label="event description"
           [rows]="2"
@@ -27,8 +29,9 @@
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Attachment Type (attachment upload optional)">
+      <kendo-floatinglabel text="Attachment Type (attachment upload optional)"> 
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEvents$"> </kendo-dropdownlist>
+ 
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-12 mt-2 c-pt-12">
@@ -38,7 +41,9 @@
     <div class="flex-col flex-col-12">
       <kendo-floatinglabel text="Attachment Note">
         <kendo-textarea
+ 
         [fillMode]="formUiStyle.inputFillMode"
+ 
           name="Attachment Note"
           aria-label="attachment note"
           [rows]="1"
