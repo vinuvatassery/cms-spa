@@ -1,7 +1,16 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 /** Internal Libraries **/
-import { CaseDetailsFacade, CompletionStatusFacade, EmploymentFacade } from '@cms/case-management/domain';
+import {
+  CaseDetailsFacade,
+  CompletionStatusFacade,
+  EmploymentFacade,
+} from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,17 +24,18 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   isEmploymentGridDisplay = true;
   employers$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
-  
-    /** Private properties **/
-    private saveClickSubscription !: Subscription;
-    
+  clientCaseEligibilityId = 'C8EDF7EB-C301-4077-90FB-3739AB321ED0';
+  isEmployed = 'Y';
+  /** Private properties **/
+  private saveClickSubscription!: Subscription;
+
   /** Constructor */
   constructor(
     private employmentFacade: EmploymentFacade,
     private completionStatusFacade: CompletionStatusFacade,
     private caseDetailsFacade: CaseDetailsFacade
-    ) {}
-    
+  ) {}
+
   /** Lifecycle Hooks */
   ngOnInit() {
     this.loadEmployers();
@@ -35,33 +45,52 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
   }
-  
+
   /** Private Methods */
   loadEmployers(): void {
-    this.employmentFacade.loadEmployers();
+    this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
   }
 
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
-  
   /** Private Methods **/
   private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.employmentFacade.save().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-    });
+    this.saveClickSubscription =
+      this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
+        this.employmentFacade.save().subscribe((response: boolean) => {
+          if (response) {
+            this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
+          }
+        });
+      });
   }
+
+  unEmploymentChecked() {
+    if (!this.isEmploymentGridDisplay) { 
+      this.isEmployed = 'N';
+     }
+      this.employmentFacade
+        .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployed)
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+          
+          },
+          error: (err) => {
+            console.error('err', err);
+          },
+        });
   
+  }
+
   /** Internal event methods **/
   onUnEmployedClicked() {
     this.isEmploymentGridDisplay = !this.isEmploymentGridDisplay;
+    this.unEmploymentChecked();
   }
-  
+
   onChangeCounterClick() {
     this.updateCompletionStatus({
       name: 'Employment',

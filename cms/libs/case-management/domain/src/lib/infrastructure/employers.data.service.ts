@@ -17,9 +17,9 @@ export class EmployersDataService {
   ) {}
 
   /** Public methods **/
-  loadEmployers() {
+  loadEmployers(clientCaseEligibilityId : string) {
     return this.http.get<ClientEmployer>(
-      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${this.clientCaseEligibilityId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}`
     );
   }
   loadEmployersDetails(
@@ -50,6 +50,16 @@ export class EmployersDataService {
   ) {
     return this.http.delete(
       `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
+    );
+  }
+
+
+  unEmploymentChecked(
+    clientCaseEligibilityId: string,
+    isEmployed: string
+  ) {
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}/${isEmployed}`, ''
     );
   }
 }

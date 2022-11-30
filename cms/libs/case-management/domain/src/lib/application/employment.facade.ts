@@ -21,8 +21,8 @@ export class EmploymentFacade {
   constructor(private readonly employersDataService: EmployersDataService) { }
 
   /** Public methods **/
-  loadEmployers(): void {
-    this.employersDataService.loadEmployers().subscribe({
+  loadEmployers(clientCaseEligibilityId: string) {
+    this.employersDataService.loadEmployers(clientCaseEligibilityId).subscribe({
       next: (employersResponse) => {
         this.employersSubject.next(employersResponse);
       },
@@ -58,5 +58,10 @@ export class EmploymentFacade {
 
   deleteEmployer(clientCaseEligibilityId : string, clientEmployerId : string) {
     return this.employersDataService.deleteClientEmployer(clientCaseEligibilityId, clientEmployerId)
+  }
+
+
+  unEmploymentUpdate(clientCaseEligibilityId : string, isEmployed  : string) {
+    return this.employersDataService.unEmploymentChecked(clientCaseEligibilityId, isEmployed)
   }
 }

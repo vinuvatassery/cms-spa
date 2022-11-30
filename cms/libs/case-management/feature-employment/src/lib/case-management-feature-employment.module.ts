@@ -18,7 +18,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     CaseManagementDomainModule,
     CaseManagementFeatureEmploymentRoutingModule,
     SharedUiTpaModule,
-    SharedUiCommonModule
+    SharedUiCommonModule,
   ],
   declarations: [
     EmployerListComponent,

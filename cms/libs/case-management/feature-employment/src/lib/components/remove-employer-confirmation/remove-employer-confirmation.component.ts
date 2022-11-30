@@ -17,6 +17,7 @@ export class RemoveEmployerConfirmationComponent {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
+  clientCaseEligibilityId = '2FC20F89-460B-4BED-8321-681A21DA912D';
   /** Constructor **/
   constructor(private readonly employmentFacade: EmploymentFacade) { }
 
@@ -30,12 +31,11 @@ export class RemoveEmployerConfirmationComponent {
   }
 
   removeEmployer() {
-    this.selectedEmployer.clientCaseEligibilityId =
-    '2FC20F89-460B-4BED-8321-681A21DA912D';
+    this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.selectedEmployer) {
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
-          this.employmentFacade.loadEmployers();
+          this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
           this.onRemoveEmployerConfirmationClosed();
           const snackbarMessage: SnackBar = {
             title: 'Sucess',
