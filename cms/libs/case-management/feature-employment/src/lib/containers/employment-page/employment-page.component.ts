@@ -14,9 +14,10 @@ import {
 } from '@cms/case-management/domain';
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+
 /** Facades **/
 /** Enums **/
-import { NavigationType } from '@cms/case-management/domain';
+import { NavigationType, StatusFlag } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-employment-page',
@@ -31,7 +32,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   completeStaus$ = this.completionStatusFacade.completionStatus$;
 
   clientCaseEligibilityId = 'C8EDF7EB-C301-4077-90FB-3739AB321ED0';
-  isEmployed = 'Y';
+  isEmployed = StatusFlag.Yes;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
 
@@ -88,7 +89,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
 
   unEmploymentChecked() {
     if (!this.isEmploymentGridDisplay) {
-      this.isEmployed = 'N';
+      this.isEmployed = StatusFlag.No;
     }
     this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployed)
