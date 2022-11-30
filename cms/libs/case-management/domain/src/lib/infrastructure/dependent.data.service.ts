@@ -3,11 +3,16 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { FamilyDependent } from '../entities/dependent';
+import { FamilyMember } from '../enums/family-member.enum';
+
 
 @Injectable({ providedIn: 'root' })
 export class DependentDataService {
+ 
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadDependentSearch() {
@@ -71,34 +76,17 @@ export class DependentDataService {
     ]);
   }
 
-  loadDependents() {
-    return of([
-      {
-        FullLegalName: 'Drill John',
-        RelationshipToClient: 'Spouse',
-        CAREAssistClient: 'Yes',
-        DateOfBirth: '10-10-1988 (Age 32)',
-        InsurancePlan: 'Yes',
-      },
-      {
-        FullLegalName: 'John Mill',
-        RelationshipToClient: 'Son',
-        CAREAssistClient: 'Yes',
-        DateOfBirth: '10-10-1994 (Age xx)',
-        InsurancePlan: 'Yes',
-      },
-      {
-        FullLegalName: 'John David',
-        RelationshipToClient: 'Son',
-        CAREAssistClient: 'Yes',
-        DateOfBirth: '10-10-1995 (Age xx)',
-        InsurancePlan: 'Yes',
-      },
-    ]);
+  loadDependents(clientId: Number) {
+  
+    return this.http.get<FamilyDependent[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependent/dependent-list/` + clientId
+    );
+
+
   }
 
   loadDdlRelationships() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+      return of(Object.values(FamilyMember));
   }
 
   loadFamilyDependents() {

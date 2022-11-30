@@ -1,22 +1,35 @@
 <div class="app-c-table">
   <kendo-grid [data]="dependents$ | async">
-    <kendo-grid-column field="FullLegalName" title="Full Legal Name">
+    <kendo-grid-column field="fullLegalName" title="Full Legal Name">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.careAssistClient==='Yes'">
+        <button aria-label="client name" kendoButton look="flat" class="card-link-button"
+        routerLink="case360/{{ dataItem.clientId }}">
+        {{ dataItem.fullLegalName }}
+      </button>
+    </div>
+    <div *ngIf="dataItem.careAssistClient==='No'">
+        {{ dataItem.fullLegalName }}
+     </div>
+       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
-      field="RelationshipToClient"
+      field="relationshipToClient"
       title="Relationship to Client"
     >
     </kendo-grid-column>
     <kendo-grid-column
-      field="CAREAssistClient"
-      title="CAREAssist client?"
-    ></kendo-grid-column>
+      field="careAssistClient"
+      title="CAREAssist client?" 
+    >
+   
+  </kendo-grid-column>
     <kendo-grid-column
-      field="DateOfBirth"
+      field="dateOfBirth"
       title="Date of Birth"
-    ></kendo-grid-column>
+    ></kendo-grid-column> 
     <kendo-grid-column
-      field="InsurancePlan"
+      field="insurancePlan"
       title="Currently on client’s health insurance plan?"
       [width]="175"
     >
@@ -28,12 +41,13 @@
       class="text-center"
     >
       <ng-template kendoGridCellTemplate let-dataItem>
+        <div *ngIf="dataItem.careAssistClient=='Yes'">
         <kendo-dropdownbutton
-          [data]="actions"
+          [data]=  "actions"
           icon="more-vertical"
           class="TableActionPopup app-dropdown-action"
           buttonClass="k-icon-button"
-          [id]="dataItem.FullLegalName"
+          [id]="dataItem.fullLegalName"
           aria-label="more actions"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }"
         >
@@ -41,32 +55,30 @@
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
           <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
             <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-            <label>   {{ dataItem.text }} </label>
+            <label> {{dataItem.text }} </label>
         </button>
-        
-            <!-- <button
-              *ngIf="isAddOrEditFamilyDependentDisplay"
-              kendoButton
-              icon="edit"
-              look="flat"
-              class="btn-h-primary"
-              (click)="onEditFamilyMemberClicked(false)"
-              aria-label="edit family member"
-            >
-              Edit Family Member
-            </button> -->
-            <!-- <button
-              kendoButton
-              icon="delete"
-              look="flat"
-              class="btn-h-danger"
-              aria-label="remove family member"
-              (click)="onDeleteFamilyMemberClicked(dataItem.FullLegalName)"
-            >
-              Remove Family Member
-            </button> -->
-          </ng-template>
+        </ng-template>
+      </kendo-dropdownbutton>
+      </div>
+      <div *ngIf="dataItem.careAssistClient=='No'">
+        <kendo-dropdownbutton
+          [data]= "familyMemberOptions"
+          icon="more-vertical"
+          class="TableActionPopup app-dropdown-action"
+          buttonClass="k-icon-button"
+          [id]="dataItem.fullLegalName"
+          aria-label="more actions"
+          [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+        >
+         
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+            <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+            <label>  {{dataItem.text }} </label>
+        </button>
+        </ng-template>
         </kendo-dropdownbutton>
+      </div>
       </ng-template>
     </kendo-grid-column>
   </kendo-grid>

@@ -35,6 +35,7 @@ export class FamilyAndDependentListComponent implements OnInit {
   // actions: Array<any> = [{ text: 'Action' }];
   deleteRequestSubject = new Subject<DeleteRequest>();
   deleteRequest$ = this.deleteRequestSubject.asObservable();
+  //dependentInfo$=this.dependentFacade.dependentInfo$;
 
   public actions = [
     {
@@ -53,8 +54,28 @@ export class FamilyAndDependentListComponent implements OnInit {
         
         // this.onDeleteFamilyMemberClicked();
       },
+    }, 
+ 
+  ];
+
+  public familyMemberOptions = [
+    {
+      buttonType:"btn-h-primary",
+      text: "Edit Family Member",
+      icon: "edit",
+      click: (): void => {
+        this.onEditFamilyMemberClicked(false);
+      },
     },
-   
+    {
+      buttonType:"btn-h-danger",
+      text: "Delete Family Member",
+      icon: "delete",
+      click: (): void => {
+        
+        // this.onDeleteFamilyMemberClicked();
+      },
+    }, 
  
   ];
 
