@@ -11,12 +11,12 @@ export class SmokingCessationDataService{
     
     updateSmokingCessation(smokingCessation: SmokingCessation) {  
         return this.http.put<SmokingCessation>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/smoking-cessation`,
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/smoking-cessation`,
            smokingCessation,
 
         )}
       loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any){
         return this.http.get<SmokingCessation>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientCaseId=${clientCaseId}/smoking-cessations/clientCaseEligibilityId=${clientCaseEligibilityId}`,);
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/smoking-cessations/clientCaseId=${clientCaseId}/clientCaseEligibilityId=${clientCaseEligibilityId}`,);
       }
 }

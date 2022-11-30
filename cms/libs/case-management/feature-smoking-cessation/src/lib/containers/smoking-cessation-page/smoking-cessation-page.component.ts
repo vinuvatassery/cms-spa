@@ -24,8 +24,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   tareaCessationNote = '';
   smokingCessationForm!: FormGroup;
   smokingCessation:SmokingCessation= {    
-    clientCaseEligibilityId: '68903d50-3aa9-41e6-b6eb-9558ab9d9bad',
-    clientCaseId:'c969e9a1-2309-4d02-b762-dd42c8fbe2c1',
+    clientCaseEligibilityId: '86E16107-6F5B-4773-AD04-2EAE238EFDFE',
+    clientCaseId:'1A256DF7-3AD4-4B34-941C-43F3F1962D4D',
     smokingCessationReferralFlag: '',
     smokingCessationNoteApplicableFlag: '',
     smokingCessationNote: ''
