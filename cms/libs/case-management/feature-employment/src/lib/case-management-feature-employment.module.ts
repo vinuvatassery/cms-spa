@@ -10,6 +10,7 @@ import { EmployerListComponent } from './components/employer-list/employer-list.
 import { EmployerDetailComponent } from './components/employer-detail/employer-detail.component';
 import { RemoveEmployerConfirmationComponent } from './components/remove-employer-confirmation/remove-employer-confirmation.component';
 import { EmploymentPageComponent } from './containers/employment-page/employment-page.component';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { EmploymentPageComponent } from './containers/employment-page/employment
     CaseManagementDomainModule,
     CaseManagementFeatureEmploymentRoutingModule,
     SharedUiTpaModule,
+    SharedUiCommonModule
   ],
   declarations: [
     EmployerListComponent,

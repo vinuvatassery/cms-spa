@@ -11,9 +11,11 @@ import { ContactDataService } from '../infrastructure/contact.data.service';
 export class EmploymentFacade {
   /** Private properties **/
   private employersSubject = new BehaviorSubject<any>([]);
+  private employersDetailsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   employers$ = this.employersSubject.asObservable();
+  employersDetails$ = this.employersDetailsSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly contactDataService: ContactDataService) { }
@@ -29,7 +31,18 @@ export class EmploymentFacade {
       },
     });
   }
+  loadEmployersDetails(clientCaseEligibilityId : string, clientEmployerId : string) {
+    return this.contactDataService.loadEmployersDetails(clientCaseEligibilityId, clientEmployerId)
 
+    // this.contactDataService.loadEmployersDetails(clientCaseEligibilityId, clientEmployerId).subscribe({
+    //   next: (employersDetailsResponse) => {
+    //     this.employersDetailsSubject.next(employersDetailsResponse);
+    //   },
+    //   error: (err) => {
+    //     console.error('err', err);
+    //   },
+    // });
+  }
   save(): Observable<boolean> {
     //TODO: save api call   
     return of(true)
@@ -43,7 +56,7 @@ export class EmploymentFacade {
     return this.contactDataService.updateClientEmployer(clientEmployer)
   }
 
-  deleteEmployer(clientEmployerId: string) {
-    return this.contactDataService.deleteClientEmployer(clientEmployerId)
+  deleteEmployer(clientCaseEligibilityId : string, clientEmployerId : string) {
+    return this.contactDataService.deleteClientEmployer(clientCaseEligibilityId, clientEmployerId)
   }
 }

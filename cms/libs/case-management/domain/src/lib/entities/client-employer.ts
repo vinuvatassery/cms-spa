@@ -1,6 +1,7 @@
 export class ClientEmployer {
-    id: any = null;
+    clientEmployerId: any | null;
     clientCaseEligibilityId: string = "";
-    employerName: string = "";
+    employerName: string | null = null;
     dateOfHire: Date = new Date();
+    concurrencyStamp: string | null = null;
 }

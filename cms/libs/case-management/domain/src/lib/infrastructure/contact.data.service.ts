@@ -9,29 +9,29 @@ import { ClientEmployer } from '../entities/client-employer';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
+
+  clientCaseEligibilityId  = '2FC20F89-460B-4BED-8321-681A21DA912D';
   /** Constructor**/
   constructor(private readonly http: HttpClient, private readonly configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadEmployers() {
-    return this.http.get<ClientEmployer>(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`);
+    return this.http.get<ClientEmployer>(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${this.clientCaseEligibilityId}`);
   }
-
+  loadEmployersDetails(clientCaseEligibilityId : string, clientEmployerId: string) {
+    return this.http.get<ClientEmployer>(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`);
+  }
   createClientEmployer(clientEmployer: ClientEmployer) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`, clientEmployer)
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers`, clientEmployer)
   }
 
   updateClientEmployer(clientEmployer: ClientEmployer) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`, clientEmployer)
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers`, clientEmployer)
   }
 
-  deleteClientEmployer(clientEmployerId: string) {
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append('client_employer_id', clientEmployerId);
-    const httpOptions = {
-      params: queryParams
-    };
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employer`, httpOptions)
+  deleteClientEmployer(clientCaseEligibilityId : string, clientEmployerId: string) {
+ 
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`)
   }
 
   loadMedicalHealthPlans() {
