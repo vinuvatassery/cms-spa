@@ -173,15 +173,15 @@ export class ContactFacade {
     return of(true);
   }
 
-  loadContactInfo(clientId: number) {
-    return this.contactDataService.loadContactInfo(clientId);
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
+    return this.contactDataService.loadContactInfo(clientId, clientCaseEligibilityId);
   }
 
-  createContactInfo(clientId: number, contactInfo: ContactInfo) {
-    return this.contactDataService.createContactInfo(clientId,contactInfo);
+  createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.contactDataService.createContactInfo(clientId, clientCaseEligibilityId, contactInfo);
   }
 
-  updateContactInfo(clientId: number, contactInfo: ContactInfo) {
-    this.contactDataService.updateContactInfo(clientId,contactInfo);
+  updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo);
   }
 }

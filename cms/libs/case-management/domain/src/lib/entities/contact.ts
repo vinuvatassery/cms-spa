@@ -6,7 +6,7 @@ export interface Contact {
 
 
 export interface ClientAddress {
-  id?: string;
+  clientAddressId?: string;
   clientId?: number;
   addressTypeCode?: string;
   sameAsMailingAddressFlag?: string;
@@ -16,6 +16,7 @@ export interface ClientAddress {
   state?: string;
   zip?: string;
   county?: string;
+  concurrencyStamp?: string;
   // startDate?: string;
   // endDate?: string;
   // createUser?: string;
@@ -26,7 +27,7 @@ export interface ClientAddress {
 }
 
 export interface ClientPhone {
-  id?: string;
+  clientPhoneId?: string;
   clientId?: number;
   deviceTypeCode?: string;
   phoneNbr?: string;
@@ -36,6 +37,7 @@ export interface ClientPhone {
   detailMsgConsentFlag?: string;
   smsTextConsentFlag?: string;
   otherPhoneNote?: string;
+  concurrencyStamp?: string;
   // createUser?: string;
   // createDate: Date;
   // lastUpdateUser?: string;
@@ -44,13 +46,14 @@ export interface ClientPhone {
 }
 
 export interface ClientEmail {
-  id?: string;
+  clientEmailId?: string;
   clientId?: number;
   email?: string;
   effectiveDate?: Date;
   preferredFlag?: string;
   applicableFlag?: string;
   detailMsgFlag?: string;
+  concurrencyStamp?: string;
   // createUser?: string;
   // createDate: string;
   // lastUpdateUser?: string;
@@ -59,10 +62,12 @@ export interface ClientEmail {
 }
 
 export interface FriedsOrFamilyContact {
+  clientDependentId?: string;
   contactName?: string;
   contactRelationshipCode?: string;
   contactPhoneNbr?: string;
   noFriendOrFamilyContactFlag?: string;
+  concurrencyStamp?: string;
 }
 
 export interface ContactInfo {
@@ -74,5 +79,5 @@ export interface ContactInfo {
   preferredContactCode?: string;
   papperlessFlag?: string;
   friedsOrFamilyContact?: FriedsOrFamilyContact;
-  clientCaseEligibilityFlag?: string;
+  elgbtyflagConcurrencyStamp?: string;
 }

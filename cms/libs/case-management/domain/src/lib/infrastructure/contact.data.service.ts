@@ -11,8 +11,8 @@ import { ContactInfo } from '../entities/contact';
 export class ContactDataService {
   /** Constructor**/
   constructor(
-    private readonly http: HttpClient, 
-    private configurationProvider: ConfigurationProvider) {}
+    private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadEmployers() {
@@ -66,14 +66,14 @@ export class ContactDataService {
 
   loadDdlIncomeTypes() {
     return of(['Work', 'Self-employment', 'Unemployment Insurance', 'Supplemental Security Income (SSI)',
-    'Social Security Disability Insurance (SSDI)',
-   ' Pension/Retirement/Veterans Benefits',
-    'Short/Long-term Disability',
-    'Alimony/Child Support',
-    'Rental Income',
-    'Other Income',
-  
-  ]);
+      'Social Security Disability Insurance (SSDI)',
+      ' Pension/Retirement/Veterans Benefits',
+      'Short/Long-term Disability',
+      'Alimony/Child Support',
+      'Rental Income',
+      'Other Income',
+
+    ]);
   }
 
   loadDdlIncomeSources() {
@@ -85,14 +85,14 @@ export class ContactDataService {
 
   loadDdlFrequencies() {
     return of(['Once',
-    'Daily',
-    'Weekly',
-    'Bi-weekly',
-    'Semi-monthly',
-    'Monthly',
-    'Quarterly',
-    'Annually',
-    'YTD']);
+      'Daily',
+      'Weekly',
+      'Bi-weekly',
+      'Semi-monthly',
+      'Monthly',
+      'Quarterly',
+      'Annually',
+      'YTD']);
   }
 
   loadDdlProofOfIncomeTypes() {
@@ -478,21 +478,25 @@ export class ContactDataService {
     ]);
   }
 
-  loadContactInfo(clientId:number){
-   return this.http.get<ContactInfo>(this.getUrl(clientId));
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
+    return this.http.get<ContactInfo>(this.getUrl(clientId, clientCaseEligibilityId));
   }
 
-  createContactInfo(clientId:number, contactInfo:ContactInfo){
-    return this.http.post(this.getUrl(clientId)
-    ,contactInfo);
+  createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.http.post(this.getUrl(clientId, clientCaseEligibilityId)
+      , contactInfo);
   }
 
-  updateContactInfo(clientId:number, contactInfo:ContactInfo){
-    return this.http.put(this.getUrl(clientId)
-    ,contactInfo);
+  updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.http.put(this.getUrl(clientId, clientCaseEligibilityId)
+      , contactInfo);
   }
 
-  getUrl(clientId:number){
-    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info`
+  validateAddress(){
+    
+  }
+
+  getUrl(clientId: number, clientCaseEligibilityId: string) {
+    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 }

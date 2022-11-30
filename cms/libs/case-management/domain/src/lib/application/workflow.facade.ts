@@ -36,6 +36,7 @@ export class WorkflowFacade {
   completionStatus$ = this.wfProcessCompletionStatusSubject.asObservable();
   sessionSubject$ = this.sessionSubject.asObservable();
   sessionDataSubject$ =  this.sessionDataSubject.asObservable();
+  clientCaseEligibilityId = '3D136AE7-CC83-4B7B-8C7B-FFB4F2C2294A';
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;

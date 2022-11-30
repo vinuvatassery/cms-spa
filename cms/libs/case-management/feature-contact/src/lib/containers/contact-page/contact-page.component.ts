@@ -35,6 +35,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   contactInfoForm!: FormGroup;
   contactInfo!: ContactInfo;
   preferredContactMethods: string[] = [];
+  isEdit = false;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -93,12 +94,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       )
       .subscribe(([prev, curr]: [any, any]) => {
         this.updateFormCompleteCount(prev, curr);
-        if (prev['homePhone']['phoneNbr'] !== curr['homePhone']['phoneNbr']
-          || prev['cellPhone']['phoneNbr'] !== curr['cellPhone']['phoneNbr']
-          || prev['workPhone']['phoneNbr'] !== curr['workPhone']['phoneNbr']
-          || prev['otherPhone']['phoneNbr'] !== curr['otherPhone']['phoneNbr']
-          || prev['email']['email'] !== curr['email']['email']) {
-          this.loadPreferredContactMethod();
+        if (prev) {
+          if (prev['homePhone']['phoneNbr'] !== curr['homePhone']['phoneNbr']
+            || prev['cellPhone']['phoneNbr'] !== curr['cellPhone']['phoneNbr']
+            || prev['workPhone']['phoneNbr'] !== curr['workPhone']['phoneNbr']
+            || prev['otherPhone']['phoneNbr'] !== curr['otherPhone']['phoneNbr']
+            || prev['email']['email'] !== curr['email']['email']) {
+            this.loadPreferredContactMethod();
+          }
         }
       });
   }
@@ -156,6 +159,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     if (this.preferredContactMethods.length > 0) {
       this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(Validators.required);
       this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
+      const selectPreferredCode = this.contactInfoForm?.get('email.preferredContactMethod')?.value;
+      if (!this.preferredContactMethods?.includes(selectPreferredCode)) {
+        this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
+      }
     }
   }
 
@@ -167,7 +174,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         city: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         state: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         zip: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        country: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
       }),
       homeAddress: new FormGroup({
         address1: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
@@ -256,7 +262,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       zip: homeAddressGroup?.controls['zip']?.value,
       addressTypeCode: AddressTypeCode.Home,
       sameAsMailingAddressFlag: this.getFlag(homeAddressGroup?.controls['sameAsMailingAddressFlag']?.value),
-      id: '',
       clientId: 1,
     }
     const maillingAddressGroup = this.contactInfoForm.get('maillingAddress') as FormGroup;
@@ -267,7 +272,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       state: maillingAddressGroup?.controls['state']?.value,
       zip: maillingAddressGroup?.controls['zip']?.value,
       addressTypeCode: AddressTypeCode.Mail,
-      id: '',
       clientId: 1,
     }
     const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
@@ -322,6 +326,41 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       contactRelationshipCode: ffContactGroup.controls['contactRelationshipCode']?.value,
     }
 
+    if (this.isEdit) {
+      const homeAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
+      const mailingAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
+      const homePhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
+      const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
+      const workPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
+      const otherPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+      maillingAddress.clientAddressId = mailingAddress1?.clientAddressId;
+      maillingAddress.concurrencyStamp = mailingAddress1?.concurrencyStamp;
+      homeAddress.clientAddressId = homeAddress1?.clientAddressId;
+      homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
+
+      homeAddress.clientAddressId = homeAddress1?.clientAddressId;
+      homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
+
+      homePhone.clientPhoneId = homePhone1?.clientPhoneId;
+      homePhone.concurrencyStamp = homePhone1?.concurrencyStamp;
+
+      cellPhone.clientPhoneId = cellPhone1?.clientPhoneId;
+      cellPhone.concurrencyStamp = cellPhone1?.concurrencyStamp;
+
+      workPhone.clientPhoneId = workPhone1?.clientPhoneId;
+      workPhone.concurrencyStamp = workPhone1?.concurrencyStamp;
+
+      otherPhone.clientPhoneId = otherPhone1?.clientPhoneId;
+      otherPhone.concurrencyStamp = otherPhone1?.concurrencyStamp;
+
+      email.clientEmailId = this.contactInfo?.email?.clientEmailId;
+      email.concurrencyStamp = this.contactInfo?.email?.concurrencyStamp;
+
+      friedsOrFamilyContact.clientDependentId = this.contactInfo?.friedsOrFamilyContact?.clientDependentId;
+      friedsOrFamilyContact.concurrencyStamp = this.contactInfo?.friedsOrFamilyContact?.concurrencyStamp;
+      contactInfoData.elgbtyflagConcurrencyStamp = this.contactInfo?.elgbtyflagConcurrencyStamp;
+    }
+
     contactInfoData.address = [maillingAddress, homeAddress];
     contactInfoData.phone = [homePhone, cellPhone, workPhone, otherPhone];
     contactInfoData.email = email;
@@ -330,11 +369,15 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     contactInfoData.papperlessFlag = this.getFlag(homeAddressGroup?.get('papperlessFlag')?.value);
     contactInfoData.noProofOfResidency = this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value);
     contactInfoData.preferredContactCode = emailGroup.controls['preferredContactCode']?.value;
-    return this.contactFacade.createContactInfo(100, contactInfoData);
+    contactInfoData.elgbtyflagConcurrencyStamp = this.contactInfo?.elgbtyflagConcurrencyStamp;
+    if (this.isEdit) {
+      return this.updateContactInfo(1918199376, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
+    }
+    return this.contactFacade.createContactInfo(1918199376, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
   }
 
-  private validate() {
-
+  private updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfoData: ContactInfo) {
+    return this.contactFacade.updateContactInfo(clientId, clientCaseEligibilityId, contactInfoData);
   }
 
   private getFlag(flag?: boolean) {
@@ -342,8 +385,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   private loadContactInfo() {
-    this.contactFacade.loadContactInfo(1).subscribe((data: ContactInfo) => {
-      if (data) {        
+    this.contactFacade.loadContactInfo(1918199376, this.workflowFacade.clientCaseEligibilityId).subscribe((data: ContactInfo) => {
+      if (data) {
+        this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
         this.contactInfo = data;
         this.setFormValues();
       }
@@ -512,12 +556,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       this.contactInfoForm.get('homeAddress')?.patchValue(maillingAddress);
     }
-    else{
+    else {
       this.contactInfoForm.get('homeAddress')?.reset();
     }
   }
 
-  onHomelessFlagChecked(event: Event){
+  onHomelessFlagChecked(event: Event) {
     if ((event.target as HTMLInputElement).checked) {
       this.contactInfoForm?.get('homeAddress.address1')?.disable();
       this.contactInfoForm?.get('homeAddress.address2')?.disable();
@@ -525,9 +569,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('homeAddress.address1')?.reset();
       this.contactInfoForm?.get('homeAddress.address2')?.reset();
       this.contactInfoForm?.get('homeAddress.zip')?.reset();
-      
+
     }
-    else{
+    else {
       this.contactInfoForm?.get('homeAddress.address1')?.enable();
       this.contactInfoForm?.get('homeAddress.address2')?.enable();
       this.contactInfoForm?.get('homeAddress.zip')?.enable();
