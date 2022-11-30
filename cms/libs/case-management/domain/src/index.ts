@@ -47,6 +47,7 @@ export * from './lib/infrastructure/provider.data.service';
 export * from './lib/infrastructure/search.data.service';
 export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
+export * from './lib/infrastructure/email.data.service';
 
 
 /** Facades **/

@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ClientEmployer } from '../entities/client-employer';
 /** Data services **/
-import { ContactDataService } from '../infrastructure/contact.data.service';
+import { EmployersDataService } from '../infrastructure/employers.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
@@ -18,11 +18,11 @@ export class EmploymentFacade {
   employersDetails$ = this.employersDetailsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) { }
+  constructor(private readonly employersDataService: EmployersDataService) { }
 
   /** Public methods **/
   loadEmployers(): void {
-    this.contactDataService.loadEmployers().subscribe({
+    this.employersDataService.loadEmployers().subscribe({
       next: (employersResponse) => {
         this.employersSubject.next(employersResponse);
       },
@@ -32,7 +32,7 @@ export class EmploymentFacade {
     });
   }
   loadEmployersDetails(clientCaseEligibilityId : string, clientEmployerId : string) {
-    return this.contactDataService.loadEmployersDetails(clientCaseEligibilityId, clientEmployerId)
+    return this.employersDataService.loadEmployersDetails(clientCaseEligibilityId, clientEmployerId)
 
     // this.contactDataService.loadEmployersDetails(clientCaseEligibilityId, clientEmployerId).subscribe({
     //   next: (employersDetailsResponse) => {
@@ -49,14 +49,14 @@ export class EmploymentFacade {
   }
 
   createEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.contactDataService.createClientEmployer(clientEmployer)
+    return this.employersDataService.createClientEmployer(clientEmployer)
   }
 
   updateEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.contactDataService.updateClientEmployer(clientEmployer)
+    return this.employersDataService.updateClientEmployer(clientEmployer)
   }
 
   deleteEmployer(clientCaseEligibilityId : string, clientEmployerId : string) {
-    return this.contactDataService.deleteClientEmployer(clientCaseEligibilityId, clientEmployerId)
+    return this.employersDataService.deleteClientEmployer(clientCaseEligibilityId, clientEmployerId)
   }
 }
