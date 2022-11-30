@@ -30,7 +30,7 @@ export class EmployerDetailComponent {
   employer: ClientEmployer = new ClientEmployer();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   empNameMaxValue = 100;
-  clientCaseEligibilityId = '2FC20F89-460B-4BED-8321-681A21DA912D'
+  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846'
   /** Input properties **/
   @Input() isAdd = true;
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();

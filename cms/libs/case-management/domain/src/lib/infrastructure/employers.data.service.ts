@@ -9,7 +9,6 @@ import { ClientEmployer } from '../entities/client-employer';
 
 @Injectable({ providedIn: 'root' })
 export class EmployersDataService {
-  clientCaseEligibilityId = '2FC20F89-460B-4BED-8321-681A21DA912D';
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
@@ -19,7 +18,8 @@ export class EmployersDataService {
   /** Public methods **/
   loadEmployers(clientCaseEligibilityId : string) {
     return this.http.get<ClientEmployer>(
-      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-employers/${clientCaseEligibilityId}`
     );
   }
   loadEmployersDetails(
@@ -27,19 +27,22 @@ export class EmployersDataService {
     clientEmployerId: string
   ) {
     return this.http.get<ClientEmployer>(
-      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
     );
   }
   createClientEmployer(clientEmployer: ClientEmployer) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers`,
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-employers`,
       clientEmployer
     );
   }
 
   updateClientEmployer(clientEmployer: ClientEmployer) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers`,
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-employers`,
       clientEmployer
     );
   }
@@ -49,7 +52,8 @@ export class EmployersDataService {
     clientEmployerId: string
   ) {
     return this.http.delete(
-      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
     );
   }
 
@@ -59,7 +63,8 @@ export class EmployersDataService {
     isEmployed: string
   ) {
     return this.http.patch(
-      `${this.configurationProvider.appSettings.caseApiUrl}case-management/client-employers/${clientCaseEligibilityId}/${isEmployed}`, ''
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-employers/${clientCaseEligibilityId}/${isEmployed}`, ''
     );
   }
 }

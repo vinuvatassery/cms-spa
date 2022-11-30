@@ -17,7 +17,7 @@ export class RemoveEmployerConfirmationComponent {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
-  clientCaseEligibilityId = '2FC20F89-460B-4BED-8321-681A21DA912D';
+  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
   /** Constructor **/
   constructor(private readonly employmentFacade: EmploymentFacade) { }
 

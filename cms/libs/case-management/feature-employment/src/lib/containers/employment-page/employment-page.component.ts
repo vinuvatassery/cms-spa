@@ -31,7 +31,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   employers$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
 
-  clientCaseEligibilityId = 'C8EDF7EB-C301-4077-90FB-3739AB321ED0';
+  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
   isEmployed = StatusFlag.Yes;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
@@ -90,6 +90,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   unEmploymentChecked() {
     if (!this.isEmploymentGridDisplay) {
       this.isEmployed = StatusFlag.No;
+    } else{
+      this.isEmployed = StatusFlag.Yes;
     }
     this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployed)

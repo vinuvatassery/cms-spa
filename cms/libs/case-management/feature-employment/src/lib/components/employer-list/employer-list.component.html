@@ -49,7 +49,24 @@
     </div>
   </div>
 </div>
-<!-- Add Income  Modal -->
+  Add Income  Modal -->
+  </ng-template>
+  </kendo-dropdownbutton>
+  </ng-template>
+  </kendo-grid-column>
+  </kendo-grid>
+  </div>
+  <div class="flex-row">
+    <div class="flex-col mt-1">
+      <button *ngIf="isAddEmployerButtonDisplayed" kendoButton [primary]="true" icon="add" aria-label="add employer"
+        (click)="onEmployerClicked(true)">
+        Employer
+      </button>
+
+    </div>
+  </div>
+  </div>
+  </div>
 <kendo-dialog *ngIf="isEmployerOpened" (close)="onEmployerClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>
     {{ isAdd ? 'Add Employer' : 'Edit Employer ' }}
