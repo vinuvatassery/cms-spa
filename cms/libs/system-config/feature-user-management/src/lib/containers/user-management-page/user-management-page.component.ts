@@ -12,7 +12,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 export class UserManagementPageComponent implements OnInit {
   /** Public properties **/
   users$ = this.userManagementFacade.users$;
-
+  isInnerLeftMenuOpen = false;
   /** Constructor **/
   constructor(private readonly userManagementFacade: UserManagementFacade) { }
 
@@ -24,5 +24,8 @@ export class UserManagementPageComponent implements OnInit {
   /** Public methods **/
   loadUsers(): void {
     this.userManagementFacade.loadUsers();
+  }
+  openInnerLeftMenu(){
+    this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
   }
 }

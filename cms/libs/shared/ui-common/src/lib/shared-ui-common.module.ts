@@ -13,6 +13,7 @@ import { DeleteConfirmationComponent } from './delete-confirmation/delete-confir
 import { NotificationSnackBarComponent } from './notification-snack-bar/notification-snack-bar.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { UserProfileCardComponent } from './user-profile-card/user-profile-card.component';
+import { LoaderComponent } from './loader-component';
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
@@ -29,6 +30,7 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
     DeleteConfirmationComponent,
     AccountSettingsComponent,
     UserProfileCardComponent,
+    LoaderComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -40,6 +42,7 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
     DeleteConfirmationComponent,
     AccountSettingsComponent,
     UserProfileCardComponent,
+    LoaderComponent
   ],
  
 })

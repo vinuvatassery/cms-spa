@@ -1,10 +1,13 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
+
 /** External libraries **/
+import {DateInputSize, DateInputRounded, DateInputFillMode,} from '@progress/kendo-angular-dateinputs';
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, WorkFlowProgress, CaseFacade, WorkflowFacade, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType,CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 
@@ -19,6 +22,9 @@ export class CaseDetailPageComponent implements OnInit {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
+  public size: DateInputSize = 'medium';
+  public rounded: DateInputRounded = 'full';
+  public fillMode: DateInputFillMode = 'outline';
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
@@ -36,6 +42,7 @@ export class CaseDetailPageComponent implements OnInit {
   isShowDeleteConfirmPopup = false;
   isShowDiscardConfirmPopup = false;
   isShowSendNewLetterPopup = false;
+  isInnerLeftMenuOpen = false;
   sessionId!: string;
   data: Array<any> = [
     {
@@ -72,7 +79,7 @@ export class CaseDetailPageComponent implements OnInit {
 
   routes$ = this.workflowFacade.routes$;
   completeStaus$ = this.workflowFacade.completionStatus$;
-
+  currentSession = this.workflowFacade.currentSession
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
@@ -92,9 +99,9 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   /** Private Methods */
-  private loadQueryParams() {
-    let workflowType: string = this.route.snapshot.queryParams['type'];
-    let entityId: string = this.route.snapshot.queryParams['eid'];
+  private loadQueryParams() {   
+    const workflowType: string = WorkflowTypeCode.NewCase;
+    const entityId: string = this.route.snapshot.queryParams['eid'];
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkflowSession(workflowType, entityId, this.sessionId);
   }
@@ -116,7 +123,7 @@ export class CaseDetailPageComponent implements OnInit {
       )
       .subscribe({
         next: ([navigationType, Object]) => {
-          let paramProcessId: string = this.route.snapshot.queryParams['pid'];
+          const paramProcessId: string = this.route.snapshot.queryParams['pid'];
           if (paramProcessId) {
             this.workflowFacade.updateSequenceNavigation(navigationType, paramProcessId);
           }
@@ -201,11 +208,12 @@ export class CaseDetailPageComponent implements OnInit {
     this.workflowFacade.save(NavigationType.Next);
   }
 
-  applyWorkflowChanges(object: any) {
+  applyWorkflowChanges(object: any) {    
     if(object?.isReset ?? false){
         this.workflowFacade.resetWorkflowNavigation();
     }
-    else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
+    else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) 
+    {
       this.workflowFacade.saveNonequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
         .subscribe(() => {
           this.workflowFacade.updateNonequenceNavigation(object?.route); 
@@ -213,4 +221,7 @@ export class CaseDetailPageComponent implements OnInit {
     }
   }
 
+  openInnerLeftMenu(){
+    this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
+  }
 }

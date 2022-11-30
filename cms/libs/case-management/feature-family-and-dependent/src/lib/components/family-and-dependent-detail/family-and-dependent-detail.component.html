@@ -136,6 +136,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker
+          [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-dd-yyyy"
             [(ngModel)]="currentDate"
             formatPlaceholder="formatPattern"

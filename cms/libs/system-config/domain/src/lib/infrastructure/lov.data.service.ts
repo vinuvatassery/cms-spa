@@ -2,30 +2,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
 /** Data services **/
 import { Lov } from '../entities/lov';
 
 @Injectable({ providedIn: 'root' })
 export class LovDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  loadLovs(): Observable<Lov[]> {
-    return of([
-      { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
-      {
-        id: 2,
-        name: 'At vero eos',
-        description: 'At vero eos et accusam et justo duo dolores',
-      },
-      {
-        id: 3,
-        name: 'Duis autem',
-        description: 'Duis autem vel eum iriure dolor in hendrerit',
-      },
-    ]);
+  getLovsbyType(lovType : string) {
+        
+    return this.http.get<Lov[]>(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+        `/system-config/lovs/${lovType}`
+    );
+  }
+
+  getLovsbyParent(lovType : string ,parentCode : string) {
+        
+    return this.http.get<Lov[]>(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+        `/system-config/lovs/${lovType}/${parentCode}`
+    );
   }
 }
