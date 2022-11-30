@@ -143,6 +143,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadPronounList();
     this.buildForm();
     this.addAppInfoFormChangeSubscription();
+    
     this.loadApplicantInfoSubscription();
 
     //this.getSelectedPronoun();
@@ -175,20 +176,24 @@ loadPronounList(){
   }
   });
 }
-  // private addSaveSubscriptionToValidate(): void {
-  //  this.workflowFacade.saveAndContinueClicked$.subscribe(() => {
-  //   var form = this.appInfoForm;
-  //   debugger;
-  //   });
-  // }
-  pronounChange(Event:any,code:any,index:any,listName:any){
+
+  pronounChange(Event:any,code:any,index:any){
     debugger;
-    if(listName == 'first'){
+    var item = this.pronounList.first.find(x =>x.code == code)
+    if(item != null){
       this.pronounList.first[index].selected =Event.target.checked;
     }
-    if(listName == 'second'){
+    else{
       this.pronounList.second[index].selected =Event.target.checked;
     }
+    // } 
+    // if(listName == 'first'){
+    //   this.pronounList.first[index].selected =Event.target.checked;
+    // }
+    // if(listName == 'second'){
+    //   this.pronounList.second[index].selected =Event.target.checked;
+    // }
+
     // var trueIndexes = this.getAllIndexes(this.appInfoForm.controls["pronounsFirst"].value,true);
     // var falseIndexes = this.getAllIndexes(this.appInfoForm.controls["pronounsFirst"].value,false);
     // trueIndexes.forEach(i => {
@@ -215,7 +220,7 @@ loadPronounList(){
     return indexes;
   }
 
-
+ 
   private loadApplicantInfoSubscription(){
       this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{
      debugger;
@@ -271,8 +276,25 @@ loadPronounList(){
       this.isVisible = false
       this.appInfoForm.controls["registerToVote"].setValue('No');
     }
-    //if(applicantInfo.clientPronounList.filter(x=>x.clientPronounCode))
-    
+    if(applicantInfo.clientPronounList != null || undefined){
+      debugger;
+      //let index = this.itemArray.items.indexOf(updateItem);
+      //this.itemArray.items[index] = newItem;
+      applicantInfo.clientPronounList.forEach(item => {
+        var indexFirst = this.pronounList.first.findIndex(x=>x.code == item.clientPronounCode)
+        if(indexFirst>-1){
+          this.pronounList.first[indexFirst].selected =true;
+        }
+        var indexSecond = this.pronounList.second.findIndex(x=>x.code == item.clientPronounCode)
+        if(indexSecond>-1){
+          this.pronounList.second[indexSecond].selected =true;
+        }
+      })
+      this.clientfacade.pronounListSubject.next(this.pronounList);
+       this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.first.map(x => x.selected == true));
+       this.appInfoForm.controls['pronounsSecond'].setValue(this.pronounList.second.map(x => x.selected == true));
+    }
+
     
   }
   ngAfterViewChecked() {
@@ -320,7 +342,8 @@ loadPronounList(){
       registerToVote:new FormControl(),
       pronounsFirst:this.formBuilder.array(this.pronounList.first.map(x => x.selected == true)),
       //this.formBuilder.array(Object.keys(this.selectedPronoun).map(key => true)),
-      pronounsSecond:this.formBuilder.array(this.pronounList.second.map(x => x.selected == true))
+      pronounsSecond:this.formBuilder.array(this.pronounList.second.map(x => x.selected == true)),
+      notListedPronoun:new FormControl('', { updateOn: 'blur' }),
       
     });
 

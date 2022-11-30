@@ -87,15 +87,20 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           if(  this.applicatInfo.clientCaseEligibility == undefined){
             this.applicatInfo.clientCaseEligibility = new ClientCaseEligibility;
           }
-          this.applicatInfo.client.clientId=2256
-          this.applicatInfo.clientCase.clientId=2256
-          this.applicatInfo.clientCase.clientCaseId = 'a6d2e412-b0c8-4466-84df-bf0d9628a880';
-          this.applicatInfo.clientCase.concurrencyStamp ="fb3d6a0d044d46d5885baa9caa9ae2b1"
-          this.applicatInfo.clientCaseEligibility.clientCaseId ='a6d2e412-b0c8-4466-84df-bf0d9628a880';
+          // this.applicatInfo.client.clientId=2256
+          // this.applicatInfo.clientCase.clientId=2256
+          // this.applicatInfo.clientCase.clientCaseId = 'a6d2e412-b0c8-4466-84df-bf0d9628a880';
+          // this.applicatInfo.clientCase.concurrencyStamp ="fb3d6a0d044d46d5885baa9caa9ae2b1"
+          // this.applicatInfo.clientCaseEligibility.clientCaseId ='a6d2e412-b0c8-4466-84df-bf0d9628a880';
+          this.applicatInfo.client.clientId=1212121212
+          this.applicatInfo.clientCase.clientId=1212121212
+          this.applicatInfo.clientCase.clientCaseId = '1A256DF7-3AD4-4B34-941C-43F3F1962D4D';
+          this.applicatInfo.clientCase.concurrencyStamp ="e09f72c5797f4b64a1a99430bef53db9"
+          this.applicatInfo.clientCaseEligibility.clientCaseId ='1A256DF7-3AD4-4B34-941C-43F3F1962D4D';
         }
        //else{
    //-----------------------------------------------------------------------------
-        this.clientFacade.load( this.applicatInfo.clientCase.clientCaseId,"D2237F9D-068E-4DCD-AA6F-2FF396B4F851").subscribe({         
+        this.clientFacade.load( this.applicatInfo.clientCase.clientCaseId,"86E16107-6F5B-4773-AD04-2EAE238EFDFE").subscribe({         
           next: response => {
             debugger;
             if(response !=null){
@@ -312,7 +317,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                     if(this.applicatInfo.clientPronounList == undefined){
                       this.applicatInfo.clientPronounList = [];
                     }
+                    var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == first.code)              
+                    if(item == null)  {    
                     this.applicatInfo.clientPronounList.push(clientPronoun)
+                    }
                    }                  
                     
                 });
@@ -445,14 +453,26 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["ssn"].updateValueAndValidity();    
         }
         if(this.appInfoForm.controls["registerToVote"].value == null){
-              this.appInfoForm.controls["registerToVote"].setValidators(Validators.required);;
+              this.appInfoForm.controls["registerToVote"].setValidators(Validators.required);
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();    
         }
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
         }
-    //this.ValidateFields.emit(this.appInfoForm.valid);
+        debugger;
+             var pronounsFirst = this.appInfoForm.controls['pronounsFirst'].value.filter((x: boolean)=>x == true);
+             var pronounsSecond = this.appInfoForm.controls['pronounsSecond'].value.filter((x: boolean)=>x == true);
+        if(pronounsFirst.length >0 || pronounsSecond.length>0)
+        {                    
+            this.appInfoForm.controls['pronounsSecond'].setErrors(null);
+         }
+        else{
+      
+             this.appInfoForm.controls['pronounsSecond'].setErrors({'incorrect': true});
+                 
+          }
+          var notLitedPronounIsExist = this.appInfoForm.controls['pronounsFirst'].value.filter((x:any)=>x.code =='NOT_LISTED');
   
   }
   setAppInfoForm(appInfoForm:FormGroup)

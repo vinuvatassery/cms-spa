@@ -246,11 +246,12 @@
     *ngFor="let pronoun of pronounList.first; let i = index;"  formArrayName="pronounsFirst">
       <input 
         type="checkbox"
+        value="pronoun.code"
         kendoCheckBox
         aria-labelledby="pronounsSheHerHers"
         id="pronounsSheHerHers"
         [formControlName]="i"
-        (change)="pronounChange($event,pronoun.code,i,'first')"
+        (change)="pronounChange($event,pronoun.code,i)"
       />
       <label class="k-checkbox-label" for="pronounsSheHerHers" 
         >{{pronoun.value}}</label
@@ -341,24 +342,32 @@
       > -->
     <span>
       <kendo-floatinglabel text="Enter Pronouns" >
-        <kendo-textbox aria-label="enter pronouns"  [disabled]="!isPronounsChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="enter pronouns"  
+          [disabled]="!isPronounsChecked" 
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="notListedPronoun"> 
+          
+        </kendo-textbox>
     
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!appInfoForm.controls['notListedPronoun'].valid">Pronoun is required.</kendo-formerror>
     </span>
     <span class="app-checkboxwidtext-wrapper"
     *ngFor="let pronoun of pronounList.second; let i = index" formArrayName="pronounsSecond">
       <input
         type="checkbox"
         kendoCheckBox
+        value="pronoun.code"
         aria-labelledby="dontKnowWhatTheQuestionIs"
         id="dontKnow1"
         [formControlName]="i"
-        (change)="pronounChange($event,pronoun.code,i,'second')"
+        (change)="pronounChange($event,pronoun.code,i)"
       />
       <label class="k-checkbox-label" for="dontKnow1"
         >{{pronoun.value}}</label
       >
     </span>
+    <kendo-formerror *ngIf="!appInfoForm.controls['pronounsSecond'].valid">Atleast one option is required.</kendo-formerror>
     <!-- <span class="option-with-check app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
