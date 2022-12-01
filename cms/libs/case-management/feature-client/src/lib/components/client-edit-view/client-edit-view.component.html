@@ -238,25 +238,42 @@
     </div>
   </div>
 </section>
-
-<section>
+<div></div>
+<section  >
   <h5>What pronouns do they use? (check all that apply)</h5>
   <div class="component-list-h"  >
-    <span class="app-checkboxwidtext-wrapper" 
-    *ngFor="let pronoun of pronounList.first; let i = index;"  formArrayName="pronounsFirst">
+    <!-- <span class="app-checkboxwidtext-wrapper" 
+    *ngFor="let pronoun of pronounList.first; let i = index" >
       <input 
         type="checkbox"
-        value="pronoun.code"
-        kendoCheckBox
+         kendoCheckBox
         aria-labelledby="pronounsSheHerHers"
         id="pronounsSheHerHers"
-        [formControlName]="i"
+        [value] ="pronoun.code"
+        [checked] ="pronoun.selected"
         (change)="pronounChange($event,pronoun.code,i)"
       />
       <label class="k-checkbox-label" for="pronounsSheHerHers" 
         >{{pronoun.value}}</label
       >
+      
+    </span> -->
+    <span class="app-checkboxwidtext-wrapper" 
+    *ngFor="let pronoun of pronounList.first; let i = index;"   formArrayName="pronounsFirst">
+      <input 
+        type="checkbox"
+         kendoCheckBox
+        aria-labelledby="pronounsSheHerHers"
+        id="pronounsSheHerHers"
+        [formControlName]="i"
+        [value] ="pronoun.code"
+        (change)="pronounChange($event,pronoun.code,i)"
+      />
+      <label class="k-checkbox-label" for="pronounsSheHerHers" 
+        >{{pronoun.value}}</label
+      >      
     </span>
+    
  <!-- </div> -->
   <!-- <div class="component-list-h">
     <span class="app-checkboxwidtext-wrapper">
@@ -352,12 +369,15 @@
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!appInfoForm.controls['notListedPronoun'].valid">Pronoun is required.</kendo-formerror>
     </span>
+    <span>
+    
+    </span>
     <span class="app-checkboxwidtext-wrapper"
     *ngFor="let pronoun of pronounList.second; let i = index" formArrayName="pronounsSecond">
       <input
         type="checkbox"
         kendoCheckBox
-        value="pronoun.code"
+        value="true"
         aria-labelledby="dontKnowWhatTheQuestionIs"
         id="dontKnow1"
         [formControlName]="i"

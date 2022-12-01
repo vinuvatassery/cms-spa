@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChi
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
-import { debounceTime, distinctUntilChanged, filter, pairwise, startWith, Subscription } from 'rxjs';
+import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
 /** Facades **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
@@ -11,6 +11,8 @@ import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowF
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 import { kMaxLength } from 'buffer';
+import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
+import { first } from '@progress/kendo-angular-editor/util';
 
 
  
@@ -25,6 +27,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public value = "";
   isVisible: any;
   isSelected = true;
+  applicantInfo!:any;
   pronounList ={first:[{value:'',selected:false,code:''}],second:[{value:'',selected:false,code:''}]};
     // first: [   
     //   {value: 'She/Her/Hers'  ,selected: false,code:"SHE_HER_HERS"},
@@ -46,6 +49,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() ValidateFields = new EventEmitter<FormGroup>();
+ @Output() PronounChanges = new EventEmitter<any>();
   
 
 
@@ -114,14 +118,17 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   applicantInfo$ = this.clientfacade.applicantInfo$;
   applicantInfoSubscription !:Subscription;
   pronounListSubscription !:Subscription;
+  lovs$ = this.lovFacade.lovs$;
   //pronounSubscription !:Subscription;
   //selectedPronoun =['He/Him/His'];
 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
-    private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade,private formBuilder:FormBuilder) { }
+    private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade,
+    private formBuilder:FormBuilder,private readonly lovFacade : LovFacade) { }
 
   /** Lifecycle hooks **/
+  
   ngOnInit(): void {
     this.loadDdlRacialIdentities();
     this.loadDdlPrimaryIdentities();
@@ -139,19 +146,17 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();   
-    this.clientfacade.setPronounList();
-    this.loadPronounList();
+    //this.clientfacade.setPronounList();
+    this.lovFacade.getLovsbyType(LovType.Pronouns);
+    //this.loadPronounList();
+    this.loadLovs();
     this.buildForm();
-    this.addAppInfoFormChangeSubscription();
-    
-    this.loadApplicantInfoSubscription();
-
-    //this.getSelectedPronoun();
-    
-    //this.addSaveSubscriptionToValidate();
-    //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
+    this.addAppInfoFormChangeSubscription();    
+    this.loadApplicantInfoSubscription();   
     this.ValidateFields.emit(this.appInfoForm);
+    this.PronounChanges.emit(this.pronounList);
   }
+ 
   ngOnDestroy(): void {
     this.applicantInfoSubscription.unsubscribe();
     this.pronounListSubscription.unsubscribe();
@@ -162,23 +167,117 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
   }
-loadPronounList(){
-  this.pronounListSubscription = this.pronounList$.subscribe({
+loadLovs(){
+  debugger;
+  this.pronounListSubscription = this.lovs$.subscribe({
     next: response => {
-      debugger;
       if(response !=null){
-       this.pronounList = response;
+        this.pronounList.first=[];
+        this.pronounList.second=[];
+       response.forEach(x=>{
+         if(x.lovCode.toUpperCase() =='DONT_KNOW'){
+          this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
+         }
+         else if( x.lovCode.toUpperCase() =='DONT_WANT'){
+          this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
+         }
+         else{
+          this.pronounList.first.push({code:x.lovCode,selected:false,value:x.lovDesc});
+         }
+       });
       }
-      
-    } ,
-  error: error => {         
-    console.error(error);
-  }
+      //this.assignModelToForm(this.applicantInfo);
+      // this.buildForm();
+      // this.addAppInfoFormChangeSubscription();    
+      // this.loadApplicantInfoSubscription();   
+      // this.ValidateFields.emit(this.appInfoForm);
+      // this.PronounChanges.emit(this.pronounList);
+    } 
+
   });
+
+  // forkJoin(
+  //   [{lovs:this.lovs$,lovs1:this.lovs$}].map(n =>
+  //     timer(10000).pipe(
+  //       map(() => n)
+  //       // ,
+  //       // finalize(() => console.log(`Finalized ${n}`))
+  //     )
+  //     .subscribe({
+  //       next:response=>{
+  //           response.lovs.subscribe({
+  //            next:response=>{
+  //             if(response !=null){
+  //               this.pronounList.first=[];
+  //               this.pronounList.second=[];
+  //              response.forEach(x=>{
+  //                if(x.lovCode.toUpperCase() =='DONT_KNOW'){
+  //                 this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
+  //                }
+  //                else if( x.lovCode.toUpperCase() =='DONT_WANT'){
+  //                 this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
+  //                }
+  //                else{
+  //                 this.pronounList.first.push({code:x.lovCode,selected:false,value:x.lovDesc});
+  //                }
+  //              });
+  //             }
+  //            }
+  //         });
+  //         response.lovs1.subscribe({
+  //           next:response=>{
+  //             console.log(response)
+  //            }
+  //         })
+  //         this.buildForm();
+  //         this.addAppInfoFormChangeSubscription();    
+  //         this.loadApplicantInfoSubscription();   
+  //         this.ValidateFields.emit(this.appInfoForm);
+  //         this.PronounChanges.emit(this.pronounList);
+  //         console.log('Anoop');
+  //       }
+       
+  //     })
+      
+  //   )
+    
+  // );
+    
+ }
+
+loadPronounList():any{
+
+  //return this.lovs$.
+    //next: response => {
+     
+      //if(response !=null){
+      //   this.pronounList.first=[];
+      //   this.pronounList.second=[];
+      //  response.forEach(x=>{
+      //    if(x.lovCode.toUpperCase() =='DONT_KNOW'){
+      //     this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
+      //    }
+      //    else if( x.lovCode.toUpperCase() =='DONT_WANT'){
+      //     this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
+      //    }
+      //    else{
+      //     this.pronounList.first.push({code:x.lovCode,selected:false,value:x.lovDesc});
+         // }
+       //});
+      //}
+      // this.buildForm();
+      // this.addAppInfoFormChangeSubscription();    
+      // this.loadApplicantInfoSubscription();   
+      // this.ValidateFields.emit(this.appInfoForm);
+      // this.PronounChanges.emit(this.pronounList);
+    //} 
+
+  //}//);
+  
 }
 
   pronounChange(Event:any,code:any,index:any){
-    debugger;
+debugger;
     var item = this.pronounList.first.find(x =>x.code == code)
     if(item != null){
       this.pronounList.first[index].selected =Event.target.checked;
@@ -208,7 +307,8 @@ loadPronounList(){
      else{
       this.isPronounsChecked = false;
      }
-     this.clientfacade.pronounListSubject.next(this.pronounList);
+     this.PronounChanges.emit(this.pronounList);
+     //this.clientfacade.pronounListSubject.next(this.pronounList);
   }
 
  
@@ -222,16 +322,17 @@ loadPronounList(){
 
  
   private loadApplicantInfoSubscription(){
+    debugger
       this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{
-     debugger;
-     
+
       // this.pronounList.first[0].selected = true
       // this.pronounList.first[5].selected = true
       // this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.first.map(x => x.selected == true));
      
       
       if(applicantInfo.client !=undefined){
-      this.assignModelToForm(applicantInfo);
+        this.applicantInfo = applicantInfo;
+        this.assignModelToForm(applicantInfo);
       }
      
     }); 
@@ -249,15 +350,23 @@ loadPronounList(){
     //});
   }
   private assignModelToForm(applicantInfo:ApplicantInfo){
-    this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName)
+    debugger;
+    this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
+    this.appInfoForm.controls["firstName"].updateValueAndValidity();
     this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName)
+    if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
+      this.appInfoForm.controls["chkmiddleName"].setValue(true);
+    }
+    else{
+      this.appInfoForm.controls["chkmiddleName"].setValue(false);
+    }
     //this.appInfoForm.controls["chkmiddleName"].setValue(applicantInfo.client?.)
     this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
-    this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibility?.insuranceFirstName)
-    this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibility?.insuranceLastName)
+    this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceFirstName)
+    this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceLastName)
     //this.appInfoForm.controls["prmInsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.)
-    this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibility?.officialIdFirstName)
-    this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibility?.officialIdLastName)
+    this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdFirstName)
+    this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdLastName)
     //this.appInfoForm.controls["officialIdsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.offi)
 
     this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));
@@ -268,7 +377,8 @@ loadPronounList(){
     else{
       this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
     }
-    if(applicantInfo.clientCaseEligibility.registerToVoteFlag.toUpperCase() ==StatusFlag.Yes){
+    debugger;
+    if(applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibilityFlag?.registerToVoteFlag?.toUpperCase() ==StatusFlag.Yes){
       this.isVisible = true;
       this.appInfoForm.controls["registerToVote"].setValue('Yes');
     }
@@ -277,7 +387,6 @@ loadPronounList(){
       this.appInfoForm.controls["registerToVote"].setValue('No');
     }
     if(applicantInfo.clientPronounList != null || undefined){
-      debugger;
       //let index = this.itemArray.items.indexOf(updateItem);
       //this.itemArray.items[index] = newItem;
       applicantInfo.clientPronounList.forEach(item => {
@@ -293,6 +402,7 @@ loadPronounList(){
       this.clientfacade.pronounListSubject.next(this.pronounList);
        this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.first.map(x => x.selected == true));
        this.appInfoForm.controls['pronounsSecond'].setValue(this.pronounList.second.map(x => x.selected == true));
+       
     }
 
     

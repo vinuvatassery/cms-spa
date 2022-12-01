@@ -28,6 +28,8 @@ export * from './lib/entities/client-pronoun';
 export * from './lib/entities/client-gender';
 export * from './lib/entities/client-case-eligibility';
 export * from './lib/entities/applicant-info';
+export * from './lib/entities/client-case-eligibility-and-flag';
+export * from './lib/entities/client-case-eligibility-flag';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';

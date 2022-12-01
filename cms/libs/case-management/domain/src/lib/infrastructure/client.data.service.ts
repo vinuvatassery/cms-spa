@@ -353,7 +353,7 @@ setPronounList(){
     ],
     second:[
       {value:'Don’t know what this question is asking',selected:false,code:"DONT_KNOW"},
-      {value:'Don’t want to answer',selected:false,code:"DONT WANT"}
+      {value:'Don’t want to answer',selected:false,code:"DONT_WANT"}
     ]
     },);
 }
@@ -363,13 +363,13 @@ setPronounList(){
   save(applicantInfo: ApplicantInfo) {  
     debugger;
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/applicant-info`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
       applicantInfo,
 
     )}
     load(clientCaseId:any,eligibilityId:any){
       return this.http.get<ApplicantInfo>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/applicant-info/${clientCaseId}/${eligibilityId}`,);
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client/${clientCaseId}/${eligibilityId}`,);
        }
     
 }
