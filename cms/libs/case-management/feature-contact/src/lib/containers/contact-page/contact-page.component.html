@@ -80,6 +80,16 @@
           </kendo-formfield>
           </div>
         </div>
+        <div class="flex-row" *ngIf="mailingAddressIsNotValid">
+          <div class="flex-col flex-col-6">
+          <span class="app-c-badge badge-warn-light mt-3">
+            <span class="material-icons" aria-label="income Information" aria-hidden="true">
+              info
+            </span>
+                USPS can't validate this address.
+          </span>   
+        </div>       
+        </div>
       </div>
       <div class="block-section"  formGroupName="homeAddress">
         <div class="flex-row">
@@ -693,3 +703,85 @@
     </form>
   </section>
 </div>
+
+<!-- Address Validation Modal -->
+<kendo-dialog *ngIf="isAddressValidationPopup" (close)="onAddressValidationOkClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Address Validation">
+  <section class="k-dialog-body mb-2">
+    <div *ngIf="mailingAddressIsNotValid">
+      <p >
+        We cannot validate the address below. Please review and make edits if needed.
+      </p>
+        <p class="mt-2 ml-3">
+          {{addressEntered?.address1 | uppercase }} <br>
+          {{addressEntered?.address2 | uppercase }} <br>
+          {{addressEntered?.city | uppercase }}, {{addressEntered?.state}} {{addressEntered?.zip5}}
+        </p> 
+    </div>
+   <div *ngIf="!mailingAddressIsNotValid">
+    <p >
+      We found the address similar to the one entered. Please select which one to use.
+    </p>
+    <form [formGroup]="selectedAddressForm">
+    <div class="flex-row mt-4">
+      <div class="flex-col flex-col-6">
+        <kendo-formfield>
+          <span>
+          <input
+          type="radio"
+          id="choosenAddress" 
+          name="choosenAddress" 
+          aria-labelledby="address entered"
+          value="addressEntered" 
+          formControlName="choosenAddress"             
+          kendoRadioButton
+          />
+          <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
+        </span>
+        </kendo-formfield>     
+        <p class="mt-2 ml-3">
+        {{addressEntered?.address1 | uppercase }} <br>
+        {{addressEntered?.address2 | uppercase }} <br>
+        {{addressEntered?.city | uppercase }}, {{addressEntered?.state}} {{addressEntered?.zip5}}
+        </p>
+      </div>
+      <div class="flex-col flex-col-6">
+        <kendo-formfield>
+          <span>
+          <input
+          type="radio"
+          id="choosenAddress"
+          name="choosenAddress"
+          aria-labelledby="address suggested"
+          value="addressSuggested"
+          formControlName="choosenAddress"
+          kendoRadioButton
+          />
+          <kendo-label for="choosenAddress" text="Suggested Address"></kendo-label>  
+        </span>
+      </kendo-formfield>    
+      <p class="mt-2 ml-3">
+          {{addressSuggested?.address1}} <br>
+          {{addressSuggested?.address2}} <br>
+          {{addressSuggested?.city}}, {{addressSuggested?.state}} {{addressSuggested?.zip5}}-{{addressSuggested?.zip4}}
+      </p>
+      </div>
+    </div> 
+</form>
+
+   </div>
+
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" (click)="onAddressValidationOkClicked()" aria-label="OKAY" *ngIf="mailingAddressIsNotValid">
+          OKAY
+        </button>
+        <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked()"  aria-label="USE SELECTED ADDRESS" *ngIf="!mailingAddressIsNotValid">
+          USE SELECTED ADDRESS
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

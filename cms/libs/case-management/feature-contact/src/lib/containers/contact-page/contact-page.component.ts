@@ -9,6 +9,8 @@ import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, 
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+import { AddressValidationFacade, MailAddress, AddressValidation } from '@cms/system-config/domain';
+import { Address } from 'cluster';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -36,6 +38,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   contactInfo!: ContactInfo;
   preferredContactMethods: string[] = [];
   isEdit = false;
+  mailingAddressIsNotValid: boolean = false;
+  isAddressValidationPopup: boolean = false;
+  addressEntered: MailAddress | undefined;
+  addressSuggested: MailAddress | undefined;
+  selectedAddressForm!: FormGroup;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -43,7 +50,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly contactFacade: ContactFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
-    private workflowFacade: WorkflowFacade
+    private workflowFacade: WorkflowFacade,
+    private readonly addressValidation: AddressValidationFacade
   ) { }
 
   /** Lifecycle hooks **/
@@ -55,6 +63,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.addContactInfoFormChangeSubscription();
     this.addSaveSubscription();
     this.loadContactInfo();
+    this.addMailingAddressChangeEvent();
+    this.selectedAddressForm = new FormGroup({
+      choosenAddress: new FormControl('', Validators.required),
+    });
   }
 
   ngOnDestroy(): void {
@@ -240,14 +252,53 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   private save() {
-    let isValid = true;
     // TODO: validate the form
     this.contactInfoForm.markAllAsTouched();
     if (this.contactInfoForm.valid) {
-      return this.createContactInfo();  //this.contactFacade.save();
+      return this.createContactInfo();
     }
 
     return of(false)
+  }
+
+  addMailingAddressChangeEvent() {
+    (this.contactInfoForm.get('maillingAddress') as FormGroup).valueChanges
+      .pipe(
+        mergeMap(() => this.validateMailAddress())
+      ).subscribe((response: AddressValidation | null) => {
+        if (response) {
+          if (response?.isValid ?? false) {
+            //this.addressSuggested = (`${response?.address?.address1} ${response?.address?.address2} ${response?.address?.city}, ${response?.address?.state} ${response?.address?.zip5}-${response?.address?.zip4}`).toUpperCase();
+            this.addressSuggested = response?.address;
+            this.mailingAddressIsNotValid = false;
+            this.isAddressValidationPopup = true;
+          }
+          else {
+            this.mailingAddressIsNotValid = true;
+            this.isAddressValidationPopup = true;
+          }
+        }
+      });
+  }
+
+  validateMailAddress() {
+    const maillingAddressGroup = this.contactInfoForm.get('maillingAddress') as FormGroup;
+    const address: MailAddress = {
+      address1: maillingAddressGroup?.controls['address1']?.value,
+      address2: maillingAddressGroup?.controls['address2']?.value,
+      city: maillingAddressGroup?.controls['city']?.value,
+      state: maillingAddressGroup?.controls['state']?.value,
+      zip5: maillingAddressGroup?.controls['zip']?.value,
+    };
+
+    if (address?.address1 && address?.address2 && address?.city && address?.state && address?.zip5) {
+      // this.addressEntered = (`${address?.address1} ${address?.address2} ${address?.city}, ${address?.state} ${address?.zip5}`).toUpperCase();
+      this.addressEntered = address;
+      return this.addressValidation.validate(address);
+    }
+
+    return of(null);
+
   }
 
   private createContactInfo() {
@@ -576,5 +627,34 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('homeAddress.address2')?.enable();
       this.contactInfoForm?.get('homeAddress.zip')?.enable();
     }
+  }
+
+  onAddressValidationOkClicked() {
+    this.isAddressValidationPopup = false;
+  }
+
+  onUseSelectedAddressClicked() {
+    this.selectedAddressForm.markAllAsTouched();
+    if (this.selectedAddressForm.valid) {
+      if (this.selectedAddressForm.controls['choosenAddress']?.value === 'addressSuggested') {
+        this.setAddress(this.addressSuggested);
+      }
+      this.selectedAddressForm.reset();
+      this.isAddressValidationPopup = false;
+
+    }
+  }
+
+  private setAddress(address: MailAddress | undefined) {
+    if (!address) return;
+    var mailAddress: ClientAddress = {
+      address1: address?.address1 == '' ? address?.address2 : address?.address1,
+      address2: address?.address1 == '' ? '' : address?.address2,
+      city: address?.city,
+      state: address?.state,
+      zip: address?.zip5,
+    }
+
+    this.contactInfoForm.get('maillingAddress')?.patchValue(mailAddress);
   }
 }
