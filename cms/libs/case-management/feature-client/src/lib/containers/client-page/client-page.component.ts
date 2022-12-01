@@ -13,7 +13,6 @@ import { NavigationType } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ClientEditViewComponent } from '../../components/client-edit-view/client-edit-view.component';
 import { timeStamp } from 'console';
-import { ClientCase } from 'libs/case-management/domain/src/lib/entities/clien-case';
 
 
 
