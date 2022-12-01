@@ -3,9 +3,9 @@ import { Input, OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
-import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -13,6 +13,7 @@ import { NavigationType } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ClientEditViewComponent } from '../../components/client-edit-view/client-edit-view.component';
 import { timeStamp } from 'console';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -40,14 +41,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   pronounList$ = this.clientFacade.pronounList$;
   pronounList !:any;
   showErrorMessage:boolean=false;
-  constructor(private workflowFacade: WorkflowFacade,
-    private clientFacade: ClientFacade) {
-
-  }
+  clientCaseId! : string;
+  sessionId! : string;
+ 
+  constructor(private workFlowFacade: WorkflowFacade,
+              private clientFacade: ClientFacade, 
+              private route: ActivatedRoute,
+              private readonly caseFacade: CaseFacade,
+              ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadApplicantInfo();
+    debugger;
+    this.loadCase();
     this.addSaveSubscription();
     //this.populateClientPronoun()
     
@@ -61,22 +67,34 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Private methods **/
   private addSaveSubscription(): void {
-    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
-        this.workflowFacade.navigate(navigationType);
+        this.workFlowFacade.navigate(navigationType);
       }
     });
     
   }
+  private loadCase()
+  {     
+   this.sessionId = this.route.snapshot.queryParams['sid'];    
+   this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+    .subscribe((session: any) => {      
+     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId     
+     this.caseFacade.loadCasesById(this.clientCaseId);
+      
+     this.loadApplicantInfo();     
+    });        
+  } 
 
   private loadApplicantInfo(){
- debugger;
+
    //--------------------------------Need to remove------------------------
-        if(this.workflowFacade.currentSession == null || undefined)
+        if(this.workFlowFacade.currentSession == null || undefined)
         {
            if(  this.applicatInfo.client == undefined){
                 this.applicatInfo.client = new Client;
@@ -434,13 +452,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   /** Public  methods **/
   updatePageCount(completedDataPoints: CompletionChecklist[]) {
     if (completedDataPoints?.length > 0) {
-      this.workflowFacade.updateChecklist(completedDataPoints);
+      this.workFlowFacade.updateChecklist(completedDataPoints);
     }
   }
 
   updateAdjustmentAttrCount(ajustData: CompletionChecklist[]) {
    if(ajustData){
-    this.workflowFacade.updateBasedOnDtAttrChecklist(ajustData);
+    this.workFlowFacade.updateBasedOnDtAttrChecklist(ajustData);
    }
   }
 
