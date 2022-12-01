@@ -15,6 +15,7 @@ import { WorkflowTypeCode } from '../enums/workflow-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +27,16 @@ export class WorkflowFacade {
   private navigationTriggerSubject = new Subject<NavigationType>();
   private wfProcessCompletionStatusSubject = new BehaviorSubject<WorkflowProcessCompletionStatus[]>([]);
   private routesSubject = new BehaviorSubject<any>([]);
-
+  private sessionSubject = new BehaviorSubject<any>([]);
+  private sessionDataSubject = new BehaviorSubject<any>([]);
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
   routes$ = this.routesSubject.asObservable();
   completionStatus$ = this.wfProcessCompletionStatusSubject.asObservable();
+  sessionSubject$ = this.sessionSubject.asObservable();
+  sessionDataSubject$ =  this.sessionDataSubject.asObservable();
+
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
   currentWorkflowMaster!: WorkflowMaster[];
@@ -54,15 +59,14 @@ export class WorkflowFacade {
     }
   }
 
-  createNewSession(entityId: string) {
-    //TODO: remove hardcoded values for clientCaseEligibilityId
-    let sessionData = {
-      entityId: entityId,
+  createNewSession(newCaseFormData : FormGroup) {   
+    const sessionData = {
+      entityId: newCaseFormData?.controls["programId"].value,
       EntityTypeCode: EntityTypeCode.Program,
       workflowTypeCode: WorkflowTypeCode.NewCase,
-      sessiondata: {
-        clientCaseEligibilityId: '8600D14F-FB9E-4353-A73B-0336D79418E5'
-      }
+      assignedCwUserId : newCaseFormData?.controls["caseOwnerId"].value ,
+      caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
+      caseStartDate: newCaseFormData?.controls["applicationDate"].value  
     }
 
     this.workflowService.createNewSession(sessionData)
@@ -70,10 +74,9 @@ export class WorkflowFacade {
         next: (sessionResp: any) => {
           if (sessionResp && sessionResp?.workflowSessionId) {
             this.router.navigate(['case-management/case-detail'], {
-              queryParams: {
-                type: WorkflowTypeCode.NewCase,
-                sid: sessionResp?.workflowSessionId,
-                eid: entityId
+              queryParams: {               
+                sid: sessionResp?.workflowSessionId ,
+                eid: sessionData?.entityId                             
               },
             });
           }
@@ -100,7 +103,8 @@ export class WorkflowFacade {
           this.currentSession = wfSession;
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
-          this.routesSubject.next(wfSession?.workFlowProgress);
+          this.routesSubject.next(wfSession?.workFlowProgress);     
+          this.sessionSubject.next(this.currentSession);          
         },
         error: (err: any) => {
           console.error('error', err);
@@ -325,5 +329,17 @@ export class WorkflowFacade {
 
   deepCopy(data: any): any {
     return JSON.parse(JSON.stringify(data === undefined ? null : data));
+  }
+
+
+  loadWorkFlowSessionData(sessionId : string): void {
+    this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
+      next: (ddlsessionDataResponse) => {
+        this.sessionDataSubject.next(ddlsessionDataResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
   }
 } 

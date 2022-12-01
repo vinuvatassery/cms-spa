@@ -1,10 +1,12 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { filter } from 'rxjs/internal/operators/filter';
 import { Observable } from 'rxjs/internal/Observable';
+
 /** Internal Libraries **/
 import { ScreenType, StatusFlag, WorkFlowProgress } from '@cms/case-management/domain';
 
@@ -18,6 +20,7 @@ export class CaseNavigationComponent implements OnInit {
   /** Input Properties **/
   @Input() routes$!: Observable<any>;
   @Input() completeStaus$!: Observable<any>;
+  @Input() currentSession : any
   @Input() navigationEvent = new EventEmitter<string>();
   /** Output Properties **/
   @Output() workflowChange = new EventEmitter<object>();
@@ -31,7 +34,7 @@ export class CaseNavigationComponent implements OnInit {
   navigationIndex = 1;
   routes!: any[];
   review!: WorkFlowProgress;
-  isNotReadyForReview: boolean = true;
+  isNotReadyForReview  = true; 
 
   /** constructor **/
   constructor(private router: Router, private actRoute: ActivatedRoute) { }
@@ -40,10 +43,9 @@ export class CaseNavigationComponent implements OnInit {
   ngOnInit(): void {
     this.loadCaseNavigationDeatils();
     this.navigationInitiated();
-    this.addNavigationSubscription();
-  }
+    this.addNavigationSubscription();   
+  } 
 
-  /** Private Methods **/
   private loadCaseNavigationDeatils() {
     this.routes$.subscribe({
       next: (routes: any) => {
@@ -79,25 +81,20 @@ export class CaseNavigationComponent implements OnInit {
 
     if (routes[this.navigationIndex]?.sequenceNbr === this.review?.sequenceNbr) {
       this.isApplicationReviewOpened = true;
-    }
-
-    let workflowType: string = this.actRoute.snapshot.queryParams['type'];
-    let entityId: string = this.actRoute.snapshot.queryParams['eid'];
-    let sessionId = this.actRoute.snapshot.queryParams['sid'];
-
+    }   
+    const sessionId = this.actRoute.snapshot.queryParams['sid']; 
+    const entityId: string = this.actRoute.snapshot.queryParams['eid'];
     if (this.navigationIndex > -1
-      && this.navigationIndex < routes.length
-      && workflowType
-      && entityId
-      && sessionId) {
+      && this.navigationIndex < routes.length 
+      && sessionId
+    ) {
       this.router.navigate(
         [routes[this.navigationIndex].url],
         {
-          queryParams: {
-            type: workflowType,
-            sid: sessionId,
-            eid: entityId,
-            pid: routes[this.navigationIndex].processId
+          queryParams: {          
+            sid: sessionId,          
+            pid: routes[this.navigationIndex].processId   ,
+            eid: entityId,       
           }
         }
       );

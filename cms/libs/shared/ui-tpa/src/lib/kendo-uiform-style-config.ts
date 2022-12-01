@@ -3,7 +3,7 @@ import { DateInputSize, DateInputRounded, DateInputFillMode} from '@progress/ken
 import { ButtonSize, ButtonRounded, ButtonFillMode, ButtonThemeColor, ChipFillMode,  ChipThemeColor} from "@progress/kendo-angular-buttons";
 import { InputSize,InputRounded, InputFillMode} from "@progress/kendo-angular-inputs";
 import { DropDownSize, DropDownRounded, DropDownFillMode} from "@progress/kendo-angular-dropdowns";
- 
+import { TabStripScrollButtonsVisibility } from "@progress/kendo-angular-layout";
 export class UIFormStyle {
   dateInputFillMode : DateInputFillMode = 'outline';
   buttonFillMode :ButtonFillMode ="outline";
@@ -11,3 +11,7 @@ export class UIFormStyle {
   dropDownFillMode :DropDownFillMode ="outline";
 }
  
+
+export class UITabStripScroll {
+  tabStripScroll : TabStripScrollButtonsVisibility = 'auto';
+}

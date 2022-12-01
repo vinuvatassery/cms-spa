@@ -1,16 +1,27 @@
-<div class="client-data-block">
-
-    <h3>Case Details</h3>
-
-    <div class="flex-row">
-
-        <div class="flex-col flex-col-5">
-            <div class="block-section">
-
-              <section>
-<case-management-case-detailed-summary [isProgramVIsible]="false" [parentForm]="caseDetailSummary" [isSubmitted]="isSubmitted" ></case-management-case-detailed-summary>
+<!-- Main Title Section -->
+<section class="app-l-mainTittle">
+    <h2>Update Case</h2>
+    <p class="mt-2 mb-2">
+        All fields are required unless otherwise stated. </p>
 </section>
-</div>
-</div>
-</div>
+
+<div class="client-data-block">
+    <div class="block-section">
+
+        <section>
+            <case-management-case-detailed-summary 
+                [isProgramVIsible]="false"
+                [isSubmitted]="isSubmitted"
+                [parentForm]="parentForm" 
+                [caseSearchResults$]="caseSearchResults$"
+                [caseOwners]="caseOwners$"
+                [ddlPrograms]="ddlPrograms$" 
+                [ddlCaseOrigins]="ddlCaseOrigins$" 
+                [selectedProgram]="selectedProgram"
+                [selectedCase]="case$">               
+            </case-management-case-detailed-summary>
+        </section>
+    </div>
+
+
 </div>
