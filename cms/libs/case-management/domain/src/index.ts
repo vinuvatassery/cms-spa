@@ -20,14 +20,17 @@ export * from './lib/entities/healthcare-provider';
 export * from './lib/entities/provider';
 export * from './lib/entities/search';
 export * from './lib/entities/verification';
+export * from './lib/entities/smoking-cessation';
 export * from './lib/entities/workflow';
 export * from './lib/entities/workflow-stage-completion-status';
+
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
 export * from './lib/enums/screen-type.enum';
 export * from './lib/enums/workflow-type.enum';
 export * from './lib/enums/case-screen-tab.enum';
+export * from './lib/enums/yes-no-flag.enum';
 export * from './lib/enums/navigation-type.enum';
 export * from './lib/enums/status-flag.enum';
 export * from './lib/enums/adjustment-operator.enum';
