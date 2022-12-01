@@ -88,15 +88,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicatInfo.clientCaseEligibilityAndFlag = new ClientCaseEligibilityAndFlag;
             this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
           }
-          // this.applicatInfo.client.clientId=2256
-          // this.applicatInfo.clientCase.clientId=2256
-          // this.applicatInfo.clientCase.clientCaseId = 'a6d2e412-b0c8-4466-84df-bf0d9628a880';
-          // this.applicatInfo.clientCase.concurrencyStamp ="fb3d6a0d044d46d5885baa9caa9ae2b1"
-          // this.applicatInfo.clientCaseEligibility.clientCaseId ='a6d2e412-b0c8-4466-84df-bf0d9628a880';
-          this.applicatInfo.client.clientId=2256
-          // this.applicatInfo.clientCase.clientId=2256
-          // this.applicatInfo.clientCase.clientCaseId = 'A6D2E412-B0C8-4466-84DF-BF0D9628A880';
-          // this.applicatInfo.clientCase.concurrencyStamp ="e09f72c5797f4b64a1a99430bef53db9"
+        
+          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId ='a6d2e412-b0c8-4466-84df-bf0d9628a880';
+          this.applicatInfo.client.clientId=2256        
           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId ='A6D2E412-B0C8-4466-84DF-BF0D9628A880';
         }
        //else{
@@ -195,15 +189,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 this.applicatInfo.clientSexualIdentityList.push(clientSexualIdentity);
               })
               this.clientFacade.applicationInfoSubject.next(this.applicatInfo);
-              // if(  this.applicatInfo.client == undefined){
-              //   this.applicatInfo.client = new Client;
-              // }
-              // if(this.applicatInfo.clientCase == undefined){
-              //   this.applicatInfo.clientCase= new ClientCase;
-              // }
-              //this.applicatInfo.client.clientId=18
-              // this.applicatInfo.clientCase.clientCaseId ='34D7E1C3-7721-4821-9450-01C8F58A72CC';
-              // this.applicatInfo.clientCase.concurrencyStamp ="487509dd8c5a44379742a5cbf3b487b9"
+             
               
             }
             //this.assignModelToForm(response);
@@ -216,27 +202,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   }
 
-  // private assignModelToForm(applicantInfo:ApplicantInfo){
-  //   this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName)
-  //   this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName)
-  //   //this.appInfoForm.controls["chkmiddleName"].setValue(applicantInfo.client?.)
-  //   this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
-  //   this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibility?.insuranceFirstName)
-  //   this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibility?.insuranceLastName)
-  //   //this.appInfoForm.controls["prmInsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.)
-  //   this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibility?.officialIdFirstName)
-  //   this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibility?.officialIdLastName)
-  //   //this.appInfoForm.controls["officialIdsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.offi)
-  //   this.appInfoForm.controls["dateOfBirth"].setValue(applicantInfo.client?.dob)
-  //   this.appInfoForm.controls["ssn"].setValue(applicantInfo.client?.ssn)
-  //   if(applicantInfo.client?.ssnNotApplicableFlag =="Y"){
-  //     //this.appInfoForm.get("ssnNotApplicable").setValue(true);
-  //     //this.appInfoForm.controls["ssnNotApplicable"].setValue(true);
-  //   }
-  //   else{
-  //     this.appInfoForm.controls["ssnNotApplicable"].setValue(true);
-  //   }
-  // }
   private save() {
 
     this.validateForm();
@@ -298,17 +263,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       this.applicatInfo.client.ssnNotApplicableFlag =
       this.applicatInfo.client.activeFlag = 'Y';  
   }
-  // private populateClientCase(){
-  //       if(this.applicatInfo.clientCase == undefined){
-  //         this.applicatInfo.clientCase = new ClientCase;
-  //       }
-  //       // this.applicatInfo.clientCase.clientCaseId = "34d7e1c3-7721-4821-9450-01c8f58a72cc";
-  //       // this.applicatInfo.clientCase.programId ="3b8dd4fc-86fd-43e7-8493-0037a6f9160b";
-  //       this.applicatInfo.clientCase.caseOriginCode = "COC26";
-  //       this.applicatInfo.clientCase.caseStartDate = new Date("2021-03-01 00:00:00.000")
-  //       this.applicatInfo.clientCase.caseStatusCode="N"
-  //       this.applicatInfo.clientCase.activeFlag="Y"
-  // }
+ 
   private populateClientCaseEligibility(){
         if(this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility == undefined){
           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
@@ -345,54 +300,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       else{
         this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.registerToVoteFlag = StatusFlag.No;
       }
-      // this.applicatInfo.clientCaseEligibility.currentInsuranceFlag ="Y";
-      // this.applicatInfo.clientCaseEligibility.emailNotApplicableFlag ="Y";
-      // this.applicatInfo.clientCaseEligibility.groupPolicyEligibleFlag="Y";
-      // this.applicatInfo.clientCaseEligibility.smokingCessationReferralFlag= "N";
-      // this.applicatInfo.clientCaseEligibility.smokingCessationNoteApplicableFlag = "Y";
-      // this.applicatInfo.clientCaseEligibility.smokingCessationNote="N";
-      // this.applicatInfo.clientCaseEligibility.hivPrescriptionFlag = "N";
-      // this.applicatInfo.clientCaseEligibility.nonPreferredPharmacyFlag= "N";
-      // this.applicatInfo.clientCaseEligibility.eligibilityStatusCode= "a";
-      // this.applicatInfo.clientCaseEligibility.waitlistStatusCode= "a";
-      // this.applicatInfo.clientCaseEligibility.serviceCoordinationRegionCode="A";
-      // this.applicatInfo.clientCaseEligibility.clientTransgenderCode="A";
-      // this.applicatInfo.clientCaseEligibility.clientTransgenderDesc="No";
-      // this.applicatInfo.clientCaseEligibility.materialInAlternateFormatCode="aa";
-      // this.applicatInfo.clientCaseEligibility.materialInAlternateFormatDesc="aa";
-      // this.applicatInfo.clientCaseEligibility.spokenLanguageCode="aa";
-      // this.applicatInfo.clientCaseEligibility.writtenLanguageCode="aa";
-      // this.applicatInfo.clientCaseEligibility.englishProficiencyCode="aa";
-      // this.applicatInfo.clientCaseEligibility.interpreterCode="aa";
-      // this.applicatInfo.clientCaseEligibility.interpreterType="aa";
-      // this.applicatInfo.clientCaseEligibility.deafOrHearingCode="aa";
-      // this.applicatInfo.clientCaseEligibility.startAgeDeafOrHearing =1;
-      // this.applicatInfo.clientCaseEligibility.blindSeeingCode="aa";
-      // this.applicatInfo.clientCaseEligibility.startAgeBlindSeeing= 1;
-      // this.applicatInfo.clientCaseEligibility.limitingConditionCode="aa";
-      // this.applicatInfo.clientCaseEligibility.startAgeLimitingCondition =1;
-      // this.applicatInfo.clientCaseEligibility.walkingClimbingDifficultyCode="aa";
-      // this.applicatInfo.clientCaseEligibility.startAgeWalkingClimbingDifficulty= 1;
-      // this.applicatInfo.clientCaseEligibility.dressingBathingDifficultyCode="";
-      // this.applicatInfo.clientCaseEligibility.startAgeDressingBathingDifficulty= 1;
-      // this.applicatInfo.clientCaseEligibility.concentratingDifficultyCode="aa";
-      // this.applicatInfo.clientCaseEligibility.startAgeConcentratingDifficulty= 1;
-      // this.applicatInfo.clientCaseEligibility.errandsDifficultyCode="aa";
-      // this.applicatInfo.clientCaseEligibility.startAgeErrandsDifficulty= 1;
-      // this.applicatInfo.clientCaseEligibility.preferredContactCode="a";
-      // this.applicatInfo.clientCaseEligibility.contactName="aa";
-      // this.applicatInfo.clientCaseEligibility.contactRelationshipCode="a";
-      // this.applicatInfo.clientCaseEligibility.contactPhoneNbr="aa";
-      // this.applicatInfo.clientCaseEligibility.homelessFlag="N";
-      // this.applicatInfo.clientCaseEligibility.homeAddressProofFlag="N";
-      // this.applicatInfo.clientCaseEligibility.emailNotApplicableFlag="N";
-      // this.applicatInfo.clientCaseEligibility.noDependentFlag="N";
-      // this.applicatInfo.clientCaseEligibility.paperlessFlag="N";
-      // this.applicatInfo.clientCaseEligibility.noIncomeFlag="N";
-      // this.applicatInfo.clientCaseEligibility.noIncomeNote="aa";
-      // this.applicatInfo.clientCaseEligibility.unemployedFlag="N";
-        
-      /*-------------------------------------------------------------------------------- */
+      
   }
   private populateClientPronoun(){
     this.pronounList.first.forEach((first: { selected: boolean;code:any }) => {

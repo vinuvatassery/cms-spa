@@ -242,7 +242,7 @@
 <section  >
   <h5>What pronouns do they use? (check all that apply)</h5>
   <div class="component-list-h"  >
-    <!-- <span class="app-checkboxwidtext-wrapper" 
+    <span class="app-checkboxwidtext-wrapper" 
     *ngFor="let pronoun of pronounList.first; let i = index" >
       <input 
         type="checkbox"
@@ -257,8 +257,8 @@
         >{{pronoun.value}}</label
       >
       
-    </span> -->
-    <span class="app-checkboxwidtext-wrapper" 
+    </span>
+    <!-- <span class="app-checkboxwidtext-wrapper" 
     *ngFor="let pronoun of pronounList.first; let i = index;"   formArrayName="pronounsFirst">
       <input 
         type="checkbox"
@@ -272,7 +272,7 @@
       <label class="k-checkbox-label" for="pronounsSheHerHers" 
         >{{pronoun.value}}</label
       >      
-    </span>
+    </span> -->
     
  <!-- </div> -->
   <!-- <div class="component-list-h">
@@ -372,7 +372,7 @@
     <span>
     
     </span>
-    <span class="app-checkboxwidtext-wrapper"
+    <!-- <span class="app-checkboxwidtext-wrapper"
     *ngFor="let pronoun of pronounList.second; let i = index" formArrayName="pronounsSecond">
       <input
         type="checkbox"
@@ -386,7 +386,7 @@
       <label class="k-checkbox-label" for="dontKnow1"
         >{{pronoun.value}}</label
       >
-    </span>
+    </span> -->
     <kendo-formerror *ngIf="!appInfoForm.controls['pronounsSecond'].valid">Atleast one option is required.</kendo-formerror>
     <!-- <span class="option-with-check app-checkboxwidtext-wrapper">
       <input
