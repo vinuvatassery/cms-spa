@@ -27,12 +27,14 @@ import { NavigationType, StatusFlag } from '@cms/case-management/domain';
 })
 export class EmploymentPageComponent implements OnInit, OnDestroy {
   /** Public Properties */
-  isEmploymentGridDisplay = true;
+
   employers$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
 
+  isEmployed = true;
+  isEmployedFlag = StatusFlag.Yes;
   clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
-  isEmployed = StatusFlag.Yes;
+
   /** Private properties **/
   private saveClickSubscription!: Subscription;
 
@@ -54,12 +56,12 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods */
-  loadEmployers(): void {
-    this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
-  }
-
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
+  }
+
+  loadEmployers(): void {
+    this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
   }
 
   /** Private Methods **/
@@ -81,33 +83,29 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     let isValid = true;
     // TODO: validate the form
     if (isValid) {
+      if (this.isEmployed) {
+        this.isEmployedFlag = StatusFlag.Yes;
+      } else {
+        this.isEmployedFlag = StatusFlag.No;
+      }
+      this.employmentFacade
+        .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+          },
+          error: (err) => {
+            console.error('err', err);
+          },
+        });
       return this.employmentFacade.save();
     }
-
     return of(false);
   }
 
-  unEmploymentChecked() {
-    if (!this.isEmploymentGridDisplay) {
-      this.isEmployed = StatusFlag.No;
-    } else{
-      this.isEmployed = StatusFlag.Yes;
-    }
-    this.employmentFacade
-      .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployed)
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (err) => {
-          console.error('err', err);
-        },
-      });
-  }
   /** Internal event methods **/
   onUnEmployedClicked() {
-    this.isEmploymentGridDisplay = !this.isEmploymentGridDisplay;
-    this.unEmploymentChecked();
+    this.isEmployed = !this.isEmployed;
   }
 
   onChangeCounterClick() {
