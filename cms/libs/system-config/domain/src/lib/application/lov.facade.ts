@@ -20,22 +20,14 @@ export class LovFacade {
   private lovSubject = new BehaviorSubject<Lov[]>([]);
   private lovcascadeSubject = new BehaviorSubject<Lov[]>([]);
   private lovRelationShipSubject = new BehaviorSubject<Lov[]>([]);
+  private lovcaseoriginSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
   lovRelationShip$ = this.lovRelationShipSubject.asObservable();
+  caseoriginlov$ = this.lovcaseoriginSubject.asObservable();
 
         /** Public methods **/
-getLovsbyType(lovType : string): void {
-   this.lovDataService.getLovsbyType(lovType).subscribe({
-     next: (lovResponse) => {
-       this.lovSubject.next(lovResponse);
-     },
-     error: (err) => {
-       console.error('err', err);
-     },
-   });
- }
 
  getLovsbyParent(lovType : string,parentCode : string): void {
   this.lovDataService.getLovsbyParent(lovType, parentCode).subscribe({
@@ -59,4 +51,15 @@ getRelationShipsLovs(): void {
   });
 }
 
+
+getCaseOriginLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.CaseOrigin).subscribe({
+    next: (lovcaseoriginResponse) => {
+      this.lovcaseoriginSubject.next(lovcaseoriginResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
 }

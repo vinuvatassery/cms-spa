@@ -81,7 +81,7 @@ export class NewCaseComponent implements OnInit {
       applicationDate: [new Date(), Validators.required],
       caseOriginCode: ['', Validators.required],
       caseOwnerId: ['', Validators.required],
-      programId: [{ value: this.selectedProgram.programId, disabled: true }, [Validators.required]] ,
+      programId: [{ value: this.selectedProgram?.programId, disabled: true }, [Validators.required]] ,
       concurrencyStamp : ['']  
       });
   }
