@@ -14,6 +14,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { ClientEditViewComponent } from '../../components/client-edit-view/client-edit-view.component';
 import { timeStamp } from 'console';
 import { ActivatedRoute } from '@angular/router';
+import { THRESHOLD_DIFF } from '@progress/kendo-angular-popup/services/scrollable.service';
 
 
 
@@ -515,19 +516,18 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
         }
-             var pronounsFirst =this.appInfoForm.controls['pronounsFirst'].value.filter((x:boolean)=>x===true)// this.appInfoForm.controls['pronounsFirst'].value.filter((x: boolean)=>x == true);
-             var pronounsSecond = this.appInfoForm.controls['pronounsSecond'].value.filter((x:boolean)=>x=== true);
-        if(pronounsFirst.length >0 || pronounsSecond.length>0)
+        //var pronounsFirst =this.appInfoForm.controls['pronounsFirst'].value.filter((x:boolean)=>x===true)// this.appInfoForm.controls['pronounsFirst'].value.filter((x: boolean)=>x == true);
+        var pronounValid =this.pronounList.first.filter((x:any)=>x.selected ===true)
+        if(pronounValid.length >0 )
         {                    
-            this.appInfoForm.controls['pronounsSecond'].setErrors(null);
+            this.appInfoForm.controls['pronounsFirst'].setErrors(null);
          }
         else{
       
-             this.appInfoForm.controls['pronounsSecond'].setErrors({'incorrect': true});
+             this.appInfoForm.controls['pronounsFirst'].setErrors({'incorrect': true});
                  
           }
           var notLitedPronounIsExist =this.pronounList.first.filter((x:any)=>x.code == 'NOT_LISTED' && x.selected == true)
-          //var notLitedPronounIsExist = this.appInfoForm.controls['pronounsFirst'].value.filter((x:any)=>x.code =='NOT_LISTED');
           if(notLitedPronounIsExist.length >0){
             this.appInfoForm.controls["notListedPronoun"].setValidators(Validators.required);
             this.appInfoForm.controls["notListedPronoun"].updateValueAndValidity();    

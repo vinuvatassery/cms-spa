@@ -28,7 +28,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   isVisible: any;
   isSelected = true;
   applicantInfo!:any;
-  pronounList ={first:[{value:'',selected:false,code:''}],second:[{value:'',selected:false,code:''}]};
+  pronounList ={first:[{value:'',selected:false,code:''}]};
     // first: [   
     //   {value: 'She/Her/Hers'  ,selected: false,code:"SHE_HER_HERS"},
     //   {value: 'He/Him/His',selected: false,code:"HE_HIM_HIS"},
@@ -149,12 +149,12 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     //this.clientfacade.setPronounList();
     this.lovFacade.getLovsbyType(LovType.Pronouns);
     //this.loadPronounList();
-    this.loadLovs();
-    // this.buildForm();
-    // this.addAppInfoFormChangeSubscription();    
-    // this.loadApplicantInfoSubscription();   
-    // this.ValidateFields.emit(this.appInfoForm);
-    // this.PronounChanges.emit(this.pronounList);
+     this.loadLovs();
+     this.buildForm();
+     this.addAppInfoFormChangeSubscription();    
+     this.loadApplicantInfoSubscription();   
+     this.ValidateFields.emit(this.appInfoForm);
+     this.PronounChanges.emit(this.pronounList);
   }
  
   ngOnDestroy(): void {
@@ -173,25 +173,24 @@ loadLovs(){
     next: response => {
       if(response !=null){
         this.pronounList.first=[];
-        this.pronounList.second=[];
        response.forEach(x=>{
-         if(x.lovCode.toUpperCase() =='DONT_KNOW'){
-          this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
-         }
-         else if( x.lovCode.toUpperCase() =='DONT_WANT'){
-          this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
-         }
-         else{
+        //  if(x.lovCode.toUpperCase() =='DONT_KNOW'){
+        //   this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
+        //  }
+        //  else if( x.lovCode.toUpperCase() =='DONT_WANT'){
+        //   this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
+        //  }
+        //  else{
           this.pronounList.first.push({code:x.lovCode,selected:false,value:x.lovDesc});
-         }
+         //}
        });
       }
       //this.assignModelToForm(this.applicantInfo);
-      this.buildForm();
-      this.addAppInfoFormChangeSubscription();    
-      this.loadApplicantInfoSubscription();   
-      this.ValidateFields.emit(this.appInfoForm);
-      this.PronounChanges.emit(this.pronounList);
+      //this.buildForm();
+      //this.addAppInfoFormChangeSubscription();    
+      //this.loadApplicantInfoSubscription();   
+      //this.ValidateFields.emit(this.appInfoForm);
+      //this.PronounChanges.emit(this.pronounList);
     } 
 
   });
@@ -248,10 +247,7 @@ loadLovs(){
     var item = this.pronounList.first.find(x =>x.code == code)
     if(item != null){
       this.pronounList.first[index].selected =Event.target.checked;
-    }
-    else{
-      this.pronounList.second[index].selected =Event.target.checked;
-    }
+    }  
     
      if(this.pronounList.first.filter(x=>x.value=="Not listed, please specify:" && x.selected== true).length>0){
        this.isPronounsChecked = true;
@@ -328,15 +324,11 @@ loadLovs(){
         if(indexFirst>-1){
           this.pronounList.first[indexFirst].selected =true;
         }
-        var indexSecond = this.pronounList.second.findIndex(x=>x.code == item.clientPronounCode)
-        if(indexSecond>-1){
-          this.pronounList.second[indexSecond].selected =true;
-        }
+       
       })
       this.clientfacade.pronounListSubject.next(this.pronounList);
        this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.first.map(x => x.selected == true));
-       this.appInfoForm.controls['pronounsSecond'].setValue(this.pronounList.second.map(x => x.selected == true));
-       
+    
     }
 
     
@@ -386,7 +378,6 @@ loadLovs(){
       registerToVote:new FormControl(),
       pronounsFirst:this.formBuilder.array(this.pronounList.first.map(x => x.selected == true)),
       //this.formBuilder.array(Object.keys(this.selectedPronoun).map(key => true)),
-      pronounsSecond:this.formBuilder.array(this.pronounList.second.map(x => x.selected == true)),
       notListedPronoun:new FormControl('', { updateOn: 'blur' }),
       
     });
@@ -419,7 +410,7 @@ loadLovs(){
       .subscribe(([prev, curr]: [any, any]) => {
         this.updateFormCompleteCount(prev, curr);
         //this.validate()
-        this.ValidateFields.emit(this.appInfoForm);
+        //this.ValidateFields.emit(this.appInfoForm);
         //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
       });
       this.appInfoForm.statusChanges.subscribe(a=>{        
