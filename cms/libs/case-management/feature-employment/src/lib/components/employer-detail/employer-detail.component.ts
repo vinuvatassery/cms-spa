@@ -6,9 +6,9 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { EmploymentFacade } from '@cms/case-management/domain';
+import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ClientEmployer } from 'libs/case-management/domain/src/lib/entities/client-employer';
+ 
 import {
   Validators,
   FormGroup,

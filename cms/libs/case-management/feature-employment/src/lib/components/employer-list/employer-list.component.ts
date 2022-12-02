@@ -9,8 +9,8 @@ import {
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /** Facades **/
-import { EmploymentFacade } from '@cms/case-management/domain';
-import { ClientEmployer } from 'libs/case-management/domain/src/lib/entities/client-employer';
+import {ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
+ 
 import { RemoveEmployerConfirmationComponent } from '../remove-employer-confirmation/remove-employer-confirmation.component';
 
 @Component({

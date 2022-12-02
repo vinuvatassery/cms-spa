@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { EmploymentFacade } from '@cms/case-management/domain';
-import { ClientEmployer } from 'libs/case-management/domain/src/lib/entities/client-employer';
+import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
+ 
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 @Component({
