@@ -4,15 +4,14 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
-  ViewChild,
+ 
 } from '@angular/core';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import {ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
  
-import { RemoveEmployerConfirmationComponent } from '../remove-employer-confirmation/remove-employer-confirmation.component';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
@@ -30,7 +29,15 @@ export class EmployerListComponent implements OnInit {
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
   selectedEmployer: ClientEmployer = new ClientEmployer();
-
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  public pageSize = 5;
+  public skip = 0;
+  public pageSizes = [
+    {text: '5', value: 5}, 
+    {text: '10', value: 10},
+    {text: '20', value: 20},
+    {text: 'All', value: 100}
+  ];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
  
   public actions = [

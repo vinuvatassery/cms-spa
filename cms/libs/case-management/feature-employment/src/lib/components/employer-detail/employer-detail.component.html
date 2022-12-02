@@ -38,7 +38,7 @@
         Cancel
       </button>
       <button kendoButton [primary]="true" aria-label="add new employer" (click)="saveEmployer()">
-        Add
+           {{ isAdd ? 'Add' : 'Update ' }}
       </button>
     </div>
   </div>
