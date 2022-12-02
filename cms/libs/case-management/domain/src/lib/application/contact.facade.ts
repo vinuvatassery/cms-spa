@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
+import { LovType, LovFacade, ZipCodeFacade } from '@cms/system-config/domain'
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -40,11 +41,15 @@ export class ContactFacade {
   emailAddress$ = this.emailAddressesSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) { }
+  constructor(
+    private readonly contactDataService: ContactDataService,
+    private readonly lovFacade: LovFacade,
+    private readonly zipCodeFacade: ZipCodeFacade
+  ) { }
 
   /** Public methods **/
   loadDdlStates(): void {
-    this.contactDataService.loadDdlStates().subscribe({
+    this.zipCodeFacade.getStates().subscribe({
       next: (ddlStatesResponse) => {
         this.ddlStatesSubject.next(ddlStatesResponse);
       },
@@ -54,8 +59,8 @@ export class ContactFacade {
     });
   }
 
-  loadDdlCountries(): void {
-    this.contactDataService.loadDdlCountries().subscribe({
+  loadDdlCountries(stateCode: string): void {
+    this.zipCodeFacade.getCounties(stateCode).subscribe({
       next: (ddlCountriesResponse) => {
         this.ddlCountriesSubject.next(ddlCountriesResponse);
       },
@@ -66,14 +71,24 @@ export class ContactFacade {
   }
 
   loadDdlRelationships(): void {
-    this.contactDataService.loadDdlRelationships().subscribe({
-      next: (ddlRelationshipsResponse) => {
-        this.ddlRelationshipsSubject.next(ddlRelationshipsResponse);
+    // this.contactDataService.loadDdlRelationships().subscribe({
+    //   next: (ddlRelationshipsResponse) => {
+    //     this.ddlRelationshipsSubject.next(ddlRelationshipsResponse);
+    //   },
+    //   error: (err) => {
+    //     console.error('err', err);
+    //   },
+    // });
+
+    this.lovFacade.getLov(LovType.RelationshipCode).subscribe({
+      next: (lovResp) => {
+        console.log(lovResp);
+        this.ddlRelationshipsSubject.next(lovResp);
       },
       error: (err) => {
         console.error('err', err);
       },
-    });
+    })
   }
 
   loadDdlPreferredContactMethods(): void {

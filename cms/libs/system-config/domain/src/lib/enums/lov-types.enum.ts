@@ -1,3 +1,4 @@
 export enum LovType {
-    CaseOrigin = 'CaseOrigin'
+    CaseOrigin = 'CaseOrigin',
+    RelationshipCode= 'RELATIONSHIP_CODE'
   }

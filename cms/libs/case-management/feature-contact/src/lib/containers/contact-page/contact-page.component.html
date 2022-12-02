@@ -60,7 +60,11 @@
               aria-label="State" 
               [fillMode]="formUiStyle.dropDownFillMode"
               formControlName="state"
-              [data]="ddlStates$ | async">
+              [data]="ddlStates$ | async"
+              textField="stateName"
+              valueField="stateCode"
+              [valuePrimitive]="true"
+              >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
             <kendo-formerror>Error: State is required</kendo-formerror>
@@ -165,7 +169,11 @@
               aria-label="State" 
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlStates$ | async"
-              formControlName="state"
+              formControlName="state"              
+              textField="stateName"
+              valueField="stateCode"
+              [valuePrimitive]="true"
+              (valueChange)="onStateChange($event)"
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -194,7 +202,11 @@
               aria-label="County" 
               [fillMode]="formUiStyle.dropDownFillMode"
               formControlName="county"
-              [data]="ddlCountries$ | async">
+              [data]="ddlCountries$ | async"
+              textField="countyName"
+              valueField="countyCode"
+              [valuePrimitive]="true"
+              >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
             <kendo-formerror>Error: County is required</kendo-formerror>
@@ -671,6 +683,9 @@
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="ddlRelationships$ | async"
               [disabled]="isNoFriendsOrFamilyChecked"
+              textField="lovDesc"
+              valueField="lovCode"
+              [valuePrimitive]="true"
               formControlName="contactRelationshipCode"
               >
               </kendo-dropdownlist>

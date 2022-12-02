@@ -1,7 +1,7 @@
 /** Angular **/
 import { OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries **/
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise } from 'rxjs';
 
@@ -9,8 +9,7 @@ import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, 
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
-import { AddressValidationFacade, MailAddress, AddressValidation } from '@cms/system-config/domain';
-import { Address } from 'cluster';
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, ZipCodeFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -51,14 +50,13 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly contactFacade: ContactFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
     private workflowFacade: WorkflowFacade,
-    private readonly addressValidation: AddressValidationFacade
+    private readonly addressValidationFacade: AddressValidationFacade
   ) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadDdlRelationships();
     this.loadDdlStates();
-    this.loadDdlCountries();
     this.buildForm();
     this.addContactInfoFormChangeSubscription();
     this.addSaveSubscription();
@@ -94,8 +92,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.contactFacade.loadDdlStates();
   }
 
-  private loadDdlCountries() {
-    this.contactFacade.loadDdlCountries();
+  private loadDdlCountries(stateCode: string) {
+    this.contactFacade.loadDdlCountries(stateCode);
   }
 
   private addContactInfoFormChangeSubscription() {
@@ -294,7 +292,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     if (address?.address1 && address?.address2 && address?.city && address?.state && address?.zip5) {
       // this.addressEntered = (`${address?.address1} ${address?.address2} ${address?.city}, ${address?.state} ${address?.zip5}`).toUpperCase();
       this.addressEntered = address;
-      return this.addressValidation.validate(address);
+      return this.addressValidationFacade.validate(address);
     }
 
     return of(null);
@@ -419,8 +417,26 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     contactInfoData.houseLessFlag = this.getFlag(homeAddressGroup?.get('houseLessFlag')?.value);
     contactInfoData.papperlessFlag = this.getFlag(homeAddressGroup?.get('papperlessFlag')?.value);
     contactInfoData.noProofOfResidency = this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value);
-    contactInfoData.preferredContactCode = emailGroup.controls['preferredContactCode']?.value;
     contactInfoData.elgbtyflagConcurrencyStamp = this.contactInfo?.elgbtyflagConcurrencyStamp;
+    const preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
+
+    if (preferredContactCode === homePhone?.phoneNbr) {
+      homePhone.preferredFlag = StatusFlag.Yes;
+    }
+    else if (preferredContactCode === cellPhone?.phoneNbr) {
+      cellPhone.preferredFlag = StatusFlag.Yes;
+    }
+    else if (preferredContactCode === workPhone?.phoneNbr) {
+      workPhone.preferredFlag = StatusFlag.Yes;
+    }
+    else if (preferredContactCode === otherPhone?.phoneNbr) {
+      otherPhone.preferredFlag = StatusFlag.Yes;
+    }
+    else if (preferredContactCode === email?.email) {
+      email.preferredFlag = StatusFlag.Yes;
+    }
+
+
     if (this.isEdit) {
       return this.updateContactInfo(1918199376, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
     }
@@ -485,8 +501,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('email.detailMsgConsentFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('email.papperlessFlag')?.patchValue(this.contactInfo?.papperlessFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('email.preferredContactMethod')?.patchValue(this.contactInfo?.preferredContactCode);
-      //this.contactInfoForm?.get('email.noFmlyAndFrndsContactFlag')?.patchValue(this.contactInfo?.friedsOrFamilyContact?.noFmlyAndFrndsContactFlag === StatusFlag.Yes);
-
+      this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
+        homePhone,
+        cellPhone,
+        workPhone,
+        otherPhone,
+        this.contactInfo?.email);
       this.contactInfoForm.get('familyAndFriendsContact')?.patchValue(this.contactInfo?.friedsOrFamilyContact);
     }
   }
@@ -645,6 +665,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  onStateChange(value:any) {
+    this.loadDdlCountries(value);
+    this.contactInfoForm?.get('homeAddress.county')?.reset();
+  }
+
   private setAddress(address: MailAddress | undefined) {
     if (!address) return;
     var mailAddress: ClientAddress = {
@@ -656,5 +681,29 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
 
     this.contactInfoForm.get('maillingAddress')?.patchValue(mailAddress);
+  }
+
+  private setPreferredContact(control: AbstractControl | null,
+    homePhone: ClientPhone | undefined, cellPhone: ClientPhone | undefined,
+    workPhone: ClientPhone | undefined, otherPhone: ClientPhone | undefined,
+    email: ClientEmail | undefined) {
+    if (!control) return;
+    if (homePhone?.preferredFlag ?? false) {
+      control?.patchValue(homePhone?.phoneNbr);
+    }
+    else if (cellPhone?.preferredFlag ?? false) {
+      control?.patchValue(cellPhone?.phoneNbr);
+    }
+    else if (workPhone?.preferredFlag ?? false) {
+      control?.patchValue(workPhone?.phoneNbr);
+    }
+    else if (otherPhone?.preferredFlag ?? false) {
+      control?.patchValue(otherPhone?.phoneNbr);
+    }
+    else if (email?.preferredFlag ?? false) {
+      control?.patchValue(email?.email);
+    }
+
+    return '';
   }
 }
