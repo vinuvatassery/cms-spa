@@ -29,7 +29,6 @@ const COMPONENTS = [AppComponent, LayoutComponent, SideNavigationComponent];
     SharedUiCommonModule,
     AppRoutingModule,
     SharedUtilOidcModule,
-    SharedUiCommonModule,
     ProductivityToolsFeatureNotificationModule,
     CaseManagementFeatureCaseModule,
     SystemConfigFeatureTemplateManagementModule,
