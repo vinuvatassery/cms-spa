@@ -117,8 +117,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   maxLengthSsn =9;
   applicantInfo$ = this.clientfacade.applicantInfo$;
   applicantInfoSubscription !:Subscription;
-  pronounListSubscription !:Subscription;
-  lovs$ = this.lovFacade.lovs$;
+  //pronounListSubscription !:Subscription;
+  //lovs$ = this.lovFacade.lovs$;
   //pronounSubscription !:Subscription;
   //selectedPronoun =['He/Him/His'];
 
@@ -146,43 +146,24 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();   
-    //this.clientfacade.setPronounList();
-    //this.lovFacade.getLovsbyType(LovType.Pronouns);
-    //this.loadPronounList();
-     //this.loadLovs();
+    
      this.buildForm();
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
      this.ValidateFields.emit(this.appInfoForm);
-     //this.PronounChanges.emit(this.pronounList);
   }
  
   ngOnDestroy(): void {
     this.applicantInfoSubscription.unsubscribe();
-    this.pronounListSubscription.unsubscribe();
+    ///this.pronounListSubscription.unsubscribe();
   }
   ngAfterViewInit(){
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {   
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
-  }
-  // pronounChange(Event:any,code:any,index:any){
-  //   var item = this.pronounList.find(x =>x.code == code)
-  //   if(item != null){
-  //     this.pronounList[index].selected =Event.target.checked;
-  //   }  
-    
-  //    if(this.pronounList.filter(x=>x.value=="Not listed, please specify:" && x.selected== true).length>0){
-  //      this.isPronounsChecked = true;
-  //    }
-  //    else{
-  //     this.isPronounsChecked = false;
-  //    }
-  //    this.PronounChanges.emit(this.pronounList);
-  // } 
+  } 
   setChangedPronoun(pronoun:any){
-    debugger;
     this.pronounList = pronoun;
     this.PronounChanges.emit(this.pronounList);
   }
@@ -196,9 +177,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
      
     }); 
   }
-
   private assignModelToForm(applicantInfo:ApplicantInfo){
-    debugger;
     this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
     this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName)
     if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
@@ -221,7 +200,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     else{
       this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
     }
-    debugger;
     if(applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibilityFlag?.registerToVoteFlag?.toUpperCase() ==StatusFlag.Yes){
       this.isVisible = true;
       this.appInfoForm.controls["registerToVote"].setValue('Yes');
@@ -258,10 +236,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
  
   
-  public onClose(event: any) {
-    
-      event.preventDefault();
-   
+  public onClose(event: any) {    
+      event.preventDefault();   
   }
   public clearForm(): void {
     //this.form.reset();
@@ -285,7 +261,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssnNotApplicable: new FormControl(),
       registerToVote:new FormControl(),
       pronouns:this.formBuilder.array([]),
-      notListedPronoun:new FormControl('', { updateOn: 'blur' }),
       
     });
 

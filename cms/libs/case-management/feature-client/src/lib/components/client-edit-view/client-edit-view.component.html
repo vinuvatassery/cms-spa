@@ -6,7 +6,6 @@
         <!-- <input kendoTextBox aria-label="enter first name" /> -->
         <kendo-textbox  aria-label="enter first name"  
           showErrorIcon="initial"
-          #firstname
           formControlName="firstName"  
           [maxlength]="lengthRestrictForty"
           [fillMode]="formUiStyle.inputFillMode" >
@@ -245,11 +244,9 @@
 
 
     <case-management-client-edit-view-pronoun 
-            [Form]="appInfoForm"
+            [appInfoForm]="appInfoForm"
             (PronounChanges)="setChangedPronoun($event)">
-    </case-management-client-edit-view-pronoun>
-
-  
+    </case-management-client-edit-view-pronoun>  
     <hr />
 
     <!-- <span class="app-checkboxwidtext-wrapper" 

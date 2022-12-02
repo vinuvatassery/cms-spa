@@ -39,7 +39,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   caseOwnerName :string = 'Antony Hopkins';
   //appInfoForm$ = this.clientFacade.appInfoForm$;
   //validate$ = this.applicationInfoFacade.validate$;
-  pronounList$ = this.clientFacade.pronounList$;
+  //pronounList$ = this.clientFacade.pronounList$;
   pronounList !:any;
   showErrorMessage:boolean=false;
   clientCaseId! : string;
@@ -53,7 +53,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    debugger;
     this.loadCase();
     this.addSaveSubscription();
     //this.populateClientPronoun()

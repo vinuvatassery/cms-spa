@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LovDataService, LovType } from '@cms/system-config/domain';
-import { DropTargetDirective } from '@progress/kendo-angular-grid/dragdrop/drop-target.directive';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { LovDataService, LovFacade, LovType } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-client-edit-view-pronoun',
@@ -9,15 +8,16 @@ import { DropTargetDirective } from '@progress/kendo-angular-grid/dragdrop/drop-
   styleUrls: ['./client-edit-view-pronoun.component.scss'],
 })
 export class ClientEditViewPronounComponent implements OnInit {
-  @Input() Form: FormGroup;
+  @Input() appInfoForm: FormGroup;
    pronounList: any = [];
    @Output() PronounChanges = new EventEmitter<any>();  
+   pronounLovs$= this.lovFacade.lovs$;
    showNotListedRequired:boolean=false;
    constructor(
     private formBuilder: FormBuilder,
-     private readonly lovDataService: LovDataService
+     private readonly lovFacade : LovFacade
    ) {
-    this.Form = this.formBuilder.group({
+    this.appInfoForm = this.formBuilder.group({
 
       Gender: [''],
 
@@ -25,25 +25,29 @@ export class ClientEditViewPronounComponent implements OnInit {
    }
  
    ngOnInit(): void {
-     this.lovDataService.getLovsbyType(LovType.Pronouns).subscribe((data) => {
-       this.pronounList = data;
-       this.PronounChanges.emit(this.pronounList);
-       console.log(data);
-       data.forEach((element) => {
-           this.Form.addControl(element.lovCode, new FormControl(''));
-        
-       });
-     });
+    this.lovFacade.getLovsbyType(LovType.Pronouns);
+    this.loadPronouns();
+    
    }
-
+ loadPronouns(){
+  this.pronounLovs$.subscribe((data) => {
+    this.pronounList = data;
+    this.PronounChanges.emit(this.pronounList);
+    console.log(data);
+    data.forEach((element) => {
+        this.appInfoForm.addControl(element.lovCode, new FormControl(''));
+     
+    });
+  });
+ }
    onCheckChange(event:any,lovCode:any) {
     if(event.target.checked && lovCode ==='NOT_LISTED'){
-      this.Form.controls['NOT_LISTED'].setErrors({'incorrect': true});
+      this.appInfoForm.controls['NOT_LISTED'].setErrors({'incorrect': true});
     }else {
-      this.Form.controls['NOT_LISTED'].setErrors(null);
+      this.appInfoForm.controls['NOT_LISTED'].setErrors(null);
     } 
     if(event.target.checked===true){ 
-    this.Form.controls['pronouns'].setErrors(null);
+    this.appInfoForm.controls['pronouns'].setErrors(null);
     }
    }
 }
