@@ -4,12 +4,71 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
+/**Models */
+import { Dependent } from '../entities/dependent';
+
 @Injectable({ providedIn: 'root' })
 export class DependentDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
+
+  loadDependents(clientId : number) {     
+    return this.http.get<Dependent[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-dependents/${clientId}`
+    );
+    
+  }
+
+  loadDependentsStatus(clientCaseEligibilityId : string) {     
+    return this.http.get<Dependent[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-dependents/${clientCaseEligibilityId}/dependent-status`
+    );
+    
+  }
+
+  updateDependentStatus(clientCaseEligibilityId : string ,hasDependentsStatus : string)
+  {
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-dependents/${clientCaseEligibilityId}/${hasDependentsStatus}`
+      ,null);
+  }
+
+  AddExistngDependent(dependentId: string , dependentType: string) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents?dependentId=${dependentId}&dependentType=${dependentType}`,
+      null
+    );
+  }
+
+  UpdateNewDependent(dependent: Dependent) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
+      dependent
+    );
+  }
+
+  AddNewDependent(dependent: Dependent) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
+      dependent
+    );
+  }
+
+  GetNewDependent(dependentId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents?dependentId=${dependentId}`      
+    );
+  }
+
   loadDependentSearch() {
     return of([
       {
@@ -71,31 +130,7 @@ export class DependentDataService {
     ]);
   }
 
-  loadDependents() {
-    return of([
-      {
-        FullLegalName: 'Drill John',
-        RelationshipToClient: 'Spouse',
-        CAREAssistClient: 'Yes',
-        DateOfBirth: '10-10-1988 (Age 32)',
-        InsurancePlan: 'Yes',
-      },
-      {
-        FullLegalName: 'John Mill',
-        RelationshipToClient: 'Son',
-        CAREAssistClient: 'Yes',
-        DateOfBirth: '10-10-1994 (Age xx)',
-        InsurancePlan: 'Yes',
-      },
-      {
-        FullLegalName: 'John David',
-        RelationshipToClient: 'Son',
-        CAREAssistClient: 'Yes',
-        DateOfBirth: '10-10-1995 (Age xx)',
-        InsurancePlan: 'Yes',
-      },
-    ]);
-  }
+
 
   loadDdlRelationships() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);

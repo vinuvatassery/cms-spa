@@ -5,12 +5,15 @@ import {
   ChangeDetectionStrategy,
   Input,
   ChangeDetectorRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
-/** Facades **/
-import { FamilyAndDependentFacade } from '@cms/case-management/domain';
+
 /** External libraries **/
 import { groupBy, GroupResult } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Dependent, DependentTypeCode } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-family-and-dependent-detail',
   templateUrl: './family-and-dependent-detail.component.html',
@@ -21,49 +24,71 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   /** Input properties **/
   @Input() isOpenedEditFamilyMember = true;
   @Input() isAddFamilyMember = true;
- currentDate = new Date();
+  @Input() dependentSearch$ : any;
+  @Input() ddlRelationships$ : any;
+  @Input() dependentTypeCodeSelected: any;
+  @Output() addUpdateDependentEvent = new EventEmitter<any>();
+  @Output() closeFamilyMemberFormEvent = new EventEmitter<any>();
+  currentDate = new Date();
   /** Public properties **/
-  dependentSearch$ = this.familyAndDependentFacade.dependentSearch$;
-  ddlRelationships$ = this.familyAndDependentFacade.ddlRelationships$;
+  familyMemberForm!: FormGroup;
   isOpenedNewFamilyMember = false;
   dependentSearch!: GroupResult[];
   popupClass = 'k-autocomplete-custom';
+  isSubmitted = false;
+  isExistDependent =false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
-  constructor(
-    private readonly familyAndDependentFacade: FamilyAndDependentFacade,
-    private readonly ref: ChangeDetectorRef
+  constructor(  
+    private readonly ref: ChangeDetectorRef,
+    private formBuilder: FormBuilder,
   ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
-    this.loadDependentSearch();
+  ngOnInit(): void { 
     this.loadFamilyDependents();
-    this.loadDdlRelationships();
+    this.composeFamilyMemberForm();
+    this.loadNewFamilyMemberData();  
   }
 
   /** Private methods **/
-  private loadFamilyDependents() {
-    this.familyAndDependentFacade.loadFamilyDependents();
+  private loadNewFamilyMemberData()
+  {    
+    this.isExistDependent =false;
+    this.isOpenedNewFamilyMember =false;   
+    if(this.dependentTypeCodeSelected== DependentTypeCode.Dependent)
+    {
+    this.onNewFamilyMemberClicked()
+    }
+    else
+    {
+      this.onExistingFamilyMemberLoad()
+    }
+  }
+  private composeFamilyMemberForm()
+  {
+    this.familyMemberForm = this.formBuilder.group({
+      concurrencyStamp: [''],
+      relationshipCode: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      dob: ['', Validators.required],
+      ssn: [''],
+      enrolledInInsuranceFlag: ['', Validators.required],
+      clientId: ['', ],
+      clientDependentId: ['', ]
+  });
+  }
+  private loadFamilyDependents() {   
     this.dependentSearch$.subscribe({
-      next: (dependentSearch) => {
+      next: (dependentSearch : any) => {
         this.dependentSearch = groupBy(dependentSearch, [
           { field: 'memberType' },
         ]);
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
+      }
     });
   }
 
-  private loadDependentSearch() {
-    this.familyAndDependentFacade.loadDependentSearch();
-  }
-
-  private loadDdlRelationships() {
-    this.familyAndDependentFacade.loadDdlRelationships();
-  }
 
   /** Internal event methods **/
   onNewFamilyMemberClosed() {
@@ -73,5 +98,49 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   onNewFamilyMemberClicked() {
     this.isOpenedNewFamilyMember = true;
     this.ref.markForCheck();
+  }
+  onExistingFamilyMemberLoad() {
+    this.isExistDependent = true;
+    this.ref.markForCheck();
+  }
+
+  onDependentSubmit()
+  {
+    this.isSubmitted = true;
+   if(this.familyMemberForm.valid)
+   {
+      const dependent : Dependent = {
+        concurrencyStamp: this.familyMemberForm?.controls["concurrencyStamp"].value,
+        clientDependentId: this.familyMemberForm?.controls["clientDependentId"].value,
+        clientId:  this.familyMemberForm?.controls["clientId"].value,
+        dependentTypeCode: '',
+        relationshipCode: this.familyMemberForm?.controls["relationshipCode"].value,
+        relationship: '',
+        firstName:  this.familyMemberForm?.controls["firstName"].value,
+        lastName:  this.familyMemberForm?.controls["lastName"].value,
+        fullName: '',
+        ssn:  this.familyMemberForm?.controls["ssn"].value,
+        dob: this.familyMemberForm?.controls["dob"].value,
+        age: '',
+        phoneNbr: '',
+        effectiveDate: '',
+        hivPositiveFlag: '',
+        enrolledInInsuranceFlag: this.familyMemberForm?.controls["enrolledInInsuranceFlag"].value,
+        justMemo: '',
+        finMemo: '',
+        proContactFlag: '',
+        activeFlag: '',
+        isCareAssistFlag: ''
+      }
+
+    this.addUpdateDependentEvent.next(dependent);   
+   }
+  }
+
+  onFamilyMemberClosed()
+  {
+    this.isExistDependent =false;
+    this.isOpenedNewFamilyMember =false;
+    this.closeFamilyMemberFormEvent.next(true);
   }
 }

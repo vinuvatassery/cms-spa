@@ -1,3 +1,7 @@
+<div *ngIf="isExistDependent">
+  <kendo-dialog-titlebar>
+    {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }}
+  </kendo-dialog-titlebar>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
     Adding a new email address will deactivate the email address.Search to see
@@ -96,6 +100,7 @@
         [primary]="true"
         look="outline"
         aria-label="cancel editing family member"
+        (click)="onFamilyMemberClosed()"
       >
         Cancel
       </button>
@@ -105,48 +110,69 @@
     </div>
   </div>
 </kendo-dialog-actions>
-
+</div>
 <!-- Add Family Member Modal -->
 <kendo-dialog
   *ngIf="isOpenedNewFamilyMember"
-  (close)="onNewFamilyMemberClosed()"
+  (close)="onFamilyMemberClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
+<form [formGroup]="familyMemberForm" (ngSubmit)="onDependentSubmit()">
+  <input type="hidden" formControlName="concurrencyStamp">
+  <input type="hidden" formControlName="clientId">  
+  <input type="hidden" formControlName="clientDependentId">  
   <kendo-dialog-titlebar> Add Family Member </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-2">Enter the family member’s information.</p>
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
-          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRelationships$ | async">
+          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" 
+          [data]="ddlRelationships$ | async"
+          formControlName="relationshipCode"
+          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','relationshipCode') && isSubmitted">Relationship
+          is required</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal First Name">
-          <kendo-textbox    aria-label="Legal First Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          <kendo-textbox    aria-label="Legal First Name" 
+           [fillMode]="formUiStyle.inputFillMode"
+           formControlName="firstName">   </kendo-textbox>
  
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','firstName') && isSubmitted">First Name
+          is required</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal Last Name">
-          <kendo-textbox aria-label="legal last name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox> 
+          <kendo-textbox aria-label="legal last name"  
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="lastName">   </kendo-textbox> 
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','lastName') && isSubmitted">Last Name
+          is required</kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker
           [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-dd-yyyy"
-            [(ngModel)]="currentDate"
+            format="MM-dd-yyyy"          
             formatPlaceholder="formatPattern"
+            formControlName="dob"
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','dob') && isSubmitted">Date of Birth
+          is required</kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Social Security Number (optional)">
-          <kendo-textbox aria-label="social security number optional"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox> 
+          <kendo-textbox aria-label="social security number optional" 
+           [fillMode]="formUiStyle.inputFillMode"
+           formControlName="ssn">   </kendo-textbox> 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mb-3">
@@ -155,34 +181,35 @@
           <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"
-              #terms
+              #enrolledInHealthInsurancePlanYes
               kendoRadioButton
-              name="enrolled"
-              aria-labelledby="currentlyEnrolledInClient’sHealthInsurancePlanYes"
+              name="enrolledInInsuranceFlag"             
               id="enrolledInHealthInsurancePlanYes"
+              formControlName="enrolledInInsuranceFlag"
+              value="Y"
             />
             <label
               class="k-radio-label"
-              [for]="terms"
-              text="Yes"
-              for="enrolledInHealthInsurancePlanYes"
+              [for]="enrolledInHealthInsurancePlanYes"
+              text="Yes"             
             ></label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"
-              #terms
+              #enrolledInHealthInsurancePlanNo
               kendoRadioButton
-              name="enrolled"
-              aria-labelledby="currentlyEnrolledInClient’sHealthInsurancePlanNo"
+              name="enrolledInInsuranceFlag"            
               id="enrolledInHealthInsurancePlanNo"
+              formControlName="enrolledInInsuranceFlag"
+              value="N"
             />
             <label
               class="k-radio-label"
-              [for]="terms"
-              text="No"
-              for="enrolledInHealthInsurancePlanNo">
+              [for]="enrolledInHealthInsurancePlanNo"
+              text="No"            >
           </label>
+          <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">required</kendo-formerror>
           </span>
         </div>
       </div>
@@ -194,10 +221,10 @@
       <div></div>
       <div class="justify-content-end">
         <button
-          kendoButton
-          [primary]="true"
+          kendoButton         
           look="outline"
           aria-label="cancel adding family member"
+          (click)="onFamilyMemberClosed()"
         >
           Cancel
         </button>
@@ -207,4 +234,5 @@
       </div>
     </div>
   </kendo-dialog-actions>
+  </form>
 </kendo-dialog>

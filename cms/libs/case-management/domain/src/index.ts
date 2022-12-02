@@ -35,6 +35,7 @@ export * from './lib/enums/data-point-type.enum';
 export * from './lib/enums/entity-type-code.enum';
 export * from './lib/enums/user-default-roles.enum';
 export * from './lib/enums/program.enum';
+export * from './lib/enums/dependent-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
