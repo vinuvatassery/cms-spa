@@ -168,7 +168,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }); 
   }
 loadLovs(){
-  debugger;
+  
   this.pronounListSubscription = this.lovs$.subscribe({
     next: response => {
       if(response !=null){
@@ -280,7 +280,7 @@ loadLovs(){
   }
 
   private assignModelToForm(applicantInfo:ApplicantInfo){
-    debugger;
+    
     this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
     this.appInfoForm.controls["firstName"].updateValueAndValidity();
     this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName)
@@ -307,7 +307,7 @@ loadLovs(){
     else{
       this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
     }
-    debugger;
+    
     if(applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibilityFlag?.registerToVoteFlag?.toUpperCase() ==StatusFlag.Yes){
       this.isVisible = true;
       this.appInfoForm.controls["registerToVote"].setValue('Yes');
@@ -319,7 +319,7 @@ loadLovs(){
     if(applicantInfo.clientPronounList != null || undefined){
       //let index = this.itemArray.items.indexOf(updateItem);
       //this.itemArray.items[index] = newItem;
-      debugger;
+      
       applicantInfo.clientPronounList.forEach(item => {
         // var indexFirst = this.pronounList.findIndex(x=>x.code == item.clientPronounCode)
         // if(indexFirst>-1){

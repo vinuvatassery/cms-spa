@@ -15,6 +15,7 @@ import { DuplicateClientFoundComponent } from './components/duplicate-client-fou
 import { CaseDetailsComponent } from './components/case-details/case-details.component';
 import { SpecialHandlingDetailComponent } from './components/special-handling-detail/special-handling-detail.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { ClientEditViewGenderComponent } from './components/client-edit-view-gender/client-edit-view-gender.component';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     DuplicateClientFoundComponent,
     CaseDetailsComponent,
     SpecialHandlingDetailComponent,
+    ClientEditViewGenderComponent,
   ],
   exports: [
     ClientPageComponent,

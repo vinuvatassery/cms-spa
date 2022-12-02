@@ -53,7 +53,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    debugger;
     this.loadCase();
     this.addSaveSubscription();
     //this.populateClientPronoun()

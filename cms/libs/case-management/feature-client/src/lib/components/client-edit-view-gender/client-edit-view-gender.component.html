@@ -1,0 +1,17 @@
+<div class="component-list-h" [formGroup]="Form">
+    <span class="app-checkboxwidtext-wrapper" *ngFor="let gender of GenderList; let i = index">
+      <input
+        type="checkbox"
+        kendoCheckBox
+        [formControlName]="gender.lovCode"
+        aria-labelledby="womanOrGirl"
+        id="womanOrGirl"
+        (change)="onCheckChange($event)"
+      />
+      {{Form.controls[gender.lovCode].value}}
+      <label class="k-checkbox-label" for="{{gender.lovCode}}">{{gender.lovDesc}}</label>
+    </span>
+    <hr />
+  
+  
+  </div>

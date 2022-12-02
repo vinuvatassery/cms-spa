@@ -1,4 +1,5 @@
 export enum LovType {
     CaseOrigin = 'CaseOrigin',
-    Pronouns ='Pronouns'
+    Pronouns ='Pronouns',
+    Gender ='GENDER'
   }
