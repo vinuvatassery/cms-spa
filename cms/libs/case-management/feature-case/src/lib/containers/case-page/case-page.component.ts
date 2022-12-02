@@ -35,7 +35,7 @@ export class CasePageComponent implements OnInit {
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
   ddlCaseOrigins$ = this.lovFacade.lovs$;
   
-  isShowLoader = false;
+ 
   /** Constructor**/
     
     constructor(private readonly router: Router,
