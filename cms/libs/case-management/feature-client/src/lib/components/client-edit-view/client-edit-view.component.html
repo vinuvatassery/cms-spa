@@ -242,7 +242,14 @@
 <section  >
   <h5>What pronouns do they use? (check all that apply)</h5>
   <div class="component-list-h"  >
-    <span class="app-checkboxwidtext-wrapper" 
+
+
+    <case-management-client-edit-view-pronoun [Form]="appInfoForm"></case-management-client-edit-view-pronoun>
+
+    {{appInfoForm.controls['SHE_HER_HERS'].value}}
+    <hr />
+
+    <!-- <span class="app-checkboxwidtext-wrapper" 
     *ngFor="let pronoun of pronounList; let i = index" >
   
       <input 
@@ -271,7 +278,7 @@
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!appInfoForm.controls['notListedPronoun'].valid">Pronoun is required.</kendo-formerror>
         </span> </div>
-    </span>
+    </span> -->
     <!-- <span class="app-checkboxwidtext-wrapper" 
     *ngFor="let pronoun of pronounList.first; let i = index;"   formArrayName="pronounsFirst">
       <input 
