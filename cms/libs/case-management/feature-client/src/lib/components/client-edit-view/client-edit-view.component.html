@@ -244,9 +244,12 @@
   <div class="component-list-h"  >
 
 
-    <case-management-client-edit-view-pronoun [Form]="appInfoForm"></case-management-client-edit-view-pronoun>
+    <case-management-client-edit-view-pronoun 
+            [Form]="appInfoForm"
+            (PronounChanges)="setChangedPronoun($event)">
+    </case-management-client-edit-view-pronoun>
 
-    {{appInfoForm.controls['SHE_HER_HERS'].value}}
+  
     <hr />
 
     <!-- <span class="app-checkboxwidtext-wrapper" 
@@ -410,7 +413,9 @@
         >{{pronoun.value}}</label
       >
     </span> -->
-    <kendo-formerror *ngIf="!appInfoForm.controls['pronounsFirst'].valid">Atleast one option is required.</kendo-formerror>
+
+    <!-- <kendo-formerror *ngIf="!appInfoForm.controls['pronounsFirst'].valid">Atleast one option is required.</kendo-formerror> -->
+
     <!-- <span class="option-with-check app-checkboxwidtext-wrapper">
       <input
         type="checkbox"

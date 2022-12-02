@@ -322,91 +322,42 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       
   }
   private populateClientPronoun(){
-    this.pronounList.forEach((pronoun: { selected: boolean; code: string; }) => {
-         var clientPronoun = new ClientPronoun();
-         if(pronoun.selected == true){   
-          if(pronoun.code=='NOT_LISTED') {
-            clientPronoun.otherDesc = this.appInfoForm.controls["notListedPronoun"].value;
-          }                
-         clientPronoun.clientPronounCode = pronoun.code;
-         clientPronoun.activeFlag="Y";
-         if(this.applicatInfo.clientPronounList == undefined){
-         this.applicatInfo.clientPronounList = [];
+    this.pronounList.forEach((pronoun:any) => {      
+      if(this.appInfoForm.controls[pronoun.lovCode].value != ''){
+        var existingPronoun = this.applicatInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)     
+      if(existingPronoun === null || existingPronoun === undefined){
+          var clientPronoun = new ClientPronoun();
+          if(pronoun.lovCode=='NOT_LISTED') {
+                    clientPronoun.otherDesc = this.appInfoForm.controls["NOT_LISTED"].value;
+                    clientPronoun.clientPronounCode =pronoun.lovCode;
+            }
+            else{
+              clientPronoun.clientPronounCode =pronoun.lovCode;
+            } 
+            this.applicatInfo.clientPronounList.push(clientPronoun);
+        }
+        else{
+          if(pronoun.lovCode=='NOT_LISTED') {
+            var clientPronoun = new ClientPronoun();
+            clientPronoun.otherDesc = this.appInfoForm.controls["NOT_LISTED"].value;
+            clientPronoun.clientPronounCode =pronoun.lovCode;   
+            this.applicatInfo.clientPronounList.push(clientPronoun);
+           }
+        }
+      }
+     else{
+      var existingPronoun = this.applicatInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)
+      if(existingPronoun != null){
+           const index = this.applicatInfo.clientPronounList.indexOf(existingPronoun, 0);
+          if (index > -1) {
+            this.applicatInfo.clientPronounList.splice(index, 1);
           }
-          var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == pronoun.code)              
-          if(item == null)  {    
-            this.applicatInfo.clientPronounList.push(clientPronoun)
-          }
-        }});
-          // this.pronounList.second.forEach((first: { selected: boolean;code:any }) => {
-          //   var clientPronoun = new ClientPronoun();
-          //   if(first.selected == true){                    
-          //   clientPronoun.clientPronounCode = first.code;
-          //   clientPronoun.activeFlag="Y";
-           
-          //   if(this.applicatInfo.clientPronounList == undefined){
-          //   this.applicatInfo.clientPronounList = [];
-          //    }
-          //    var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == first.code)              
-          //    if(item == null)  {    
-          //      this.applicatInfo.clientPronounList.push(clientPronoun)
-          //    }
-          //   }});
-        
-
+      }
+     }   
+      
+  });      
+  
   }
-  // private populateClientPronoun(){
-
-  //       /*Mocking the other required fields need to change as per the UI story progress */
-  //       /*-------------------------------------------------------------------------------- */
-  //       this.pronounSubscription = this.pronounList$.subscribe({
-  //         next: response => {
-
-  //           if(this.applicatInfo.clientPronounList == undefined){
-  //             this.applicatInfo.clientPronounList = [];
-  //           }
-  //           if(response !=null){
-  //               if(response !=null){
-  //                 response.first.forEach((first: { selected: boolean;code:any }) => {
-  //                   var clientPronoun = new ClientPronoun();
-  //                  if(first.selected == true){                    
-  //                   clientPronoun.clientPronounCode = first.code;
-  //                   clientPronoun.activeFlag="Y";
-  //                   if(this.applicatInfo.clientPronounList == undefined){
-  //                     this.applicatInfo.clientPronounList = [];
-  //                   }
-  //                   var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == first.code)              
-  //                   if(item == null)  {    
-  //                   this.applicatInfo.clientPronounList.push(clientPronoun)
-  //                   }
-  //                  }                  
-                    
-  //               });
-  //               response.second.forEach((second: { selected: boolean;code:any }) => {
-  //                 var clientPronoun = new ClientPronoun();
-  //                if(second.selected == true){                  
-  //                 clientPronoun.clientPronounCode = second.code;
-  //                 clientPronoun.activeFlag="Y";
-  //                 if(this.applicatInfo.clientPronounList == undefined){
-  //                   this.applicatInfo.clientPronounList = [];
-  //                 }
-  //                 this.applicatInfo.clientPronounList.push(clientPronoun)
-  //                }               
-                 
-  //             });
-                
-  //             }
-  //           }
-            
-  //         } ,
-  //       error: error => {         
-  //         console.error(error);
-  //       }
-
-  //       })
-        
-  //       /*-------------------------------------------------------------------------------- */
-  // }
   
   private populateClientGender(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
@@ -516,26 +467,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
         }
-        //var pronounsFirst =this.appInfoForm.controls['pronounsFirst'].value.filter((x:boolean)=>x===true)// this.appInfoForm.controls['pronounsFirst'].value.filter((x: boolean)=>x == true);
-        var pronounValid =this.pronounList.filter((x:any)=>x.selected ===true)
-        if(pronounValid.length >0 )
-        {                    
-            this.appInfoForm.controls['pronounsFirst'].setErrors(null);
-         }
-        else{
-      
-             this.appInfoForm.controls['pronounsFirst'].setErrors({'incorrect': true});
-                 
-          }
-          var notLitedPronounIsExist =this.pronounList.filter((x:any)=>x.code == 'NOT_LISTED' && x.selected == true)
-          if(notLitedPronounIsExist.length >0){
-            this.appInfoForm.controls["notListedPronoun"].setValidators(Validators.required);
-            this.appInfoForm.controls["notListedPronoun"].updateValueAndValidity();    
-          }
-          else{
-            this.appInfoForm.controls["notListedPronoun"].removeValidators(Validators.required);;
-            this.appInfoForm.controls["notListedPronoun"].updateValueAndValidity();   
-          }
+       
+          this.appInfoForm.controls['pronouns'].setErrors({'incorrect': true});
+          this.pronounList.forEach((pronoun:any) => {
+            if(this.appInfoForm.controls[pronoun.lovCode].value ===true){
+              this.appInfoForm.controls['pronouns'].setErrors(null);
+            }
+            
+          });
+         
   
   }
   setAppInfoForm(appInfoForm:FormGroup)

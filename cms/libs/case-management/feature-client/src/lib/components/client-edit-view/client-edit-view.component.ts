@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChi
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
-import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
+import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, isEmpty, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
 /** Facades **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
@@ -28,7 +28,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   isVisible: any;
   isSelected = true;
   applicantInfo!:any;
-  pronounList =[{value:'',selected:false,code:''}];
+  pronounList =[];
     // first: [   
     //   {value: 'She/Her/Hers'  ,selected: false,code:"SHE_HER_HERS"},
     //   {value: 'He/Him/His',selected: false,code:"HE_HIM_HIS"},
@@ -147,14 +147,14 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();   
     //this.clientfacade.setPronounList();
-    this.lovFacade.getLovsbyType(LovType.Pronouns);
+    //this.lovFacade.getLovsbyType(LovType.Pronouns);
     //this.loadPronounList();
-     this.loadLovs();
+     //this.loadLovs();
      this.buildForm();
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
      this.ValidateFields.emit(this.appInfoForm);
-     this.PronounChanges.emit(this.pronounList);
+     //this.PronounChanges.emit(this.pronounList);
   }
  
   ngOnDestroy(): void {
@@ -167,107 +167,25 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
   }
-loadLovs(){
-  debugger;
-  this.pronounListSubscription = this.lovs$.subscribe({
-    next: response => {
-      if(response !=null){
-        this.pronounList=[];
-       response.forEach(x=>{
-        //  if(x.lovCode.toUpperCase() =='DONT_KNOW'){
-        //   this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
-        //  }
-        //  else if( x.lovCode.toUpperCase() =='DONT_WANT'){
-        //   this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
-        //  }
-        //  else{
-          this.pronounList.push({code:x.lovCode,selected:false,value:x.lovDesc});
-         //}
-       });
-      }
-      //this.assignModelToForm(this.applicantInfo);
-      //this.buildForm();
-      //this.addAppInfoFormChangeSubscription();    
-      //this.loadApplicantInfoSubscription();   
-      //this.ValidateFields.emit(this.appInfoForm);
-      //this.PronounChanges.emit(this.pronounList);
-    } 
-
-  });
-
-  // forkJoin(
-  //   [{lovs:this.lovs$,lovs1:this.lovs$}].map(n =>
-  //     timer(10000).pipe(
-  //       map(() => n)
-  //       // ,
-  //       // finalize(() => console.log(`Finalized ${n}`))
-  //     )
-  //     .subscribe({
-  //       next:response=>{
-  //           response.lovs.subscribe({
-  //            next:response=>{
-  //             if(response !=null){
-  //               this.pronounList.first=[];
-  //               this.pronounList.second=[];
-  //              response.forEach(x=>{
-  //                if(x.lovCode.toUpperCase() =='DONT_KNOW'){
-  //                 this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
-  //                }
-  //                else if( x.lovCode.toUpperCase() =='DONT_WANT'){
-  //                 this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
-  //                }
-  //                else{
-  //                 this.pronounList.first.push({code:x.lovCode,selected:false,value:x.lovDesc});
-  //                }
-  //              });
-  //             }
-  //            }
-  //         });
-  //         response.lovs1.subscribe({
-  //           next:response=>{
-  //             console.log(response)
-  //            }
-  //         })
-  //         this.buildForm();
-  //         this.addAppInfoFormChangeSubscription();    
-  //         this.loadApplicantInfoSubscription();   
-  //         this.ValidateFields.emit(this.appInfoForm);
-  //         this.PronounChanges.emit(this.pronounList);
-  //         console.log('Anoop');
-  //       }
-       
-  //     })
-      
-  //   )
+  // pronounChange(Event:any,code:any,index:any){
+  //   var item = this.pronounList.find(x =>x.code == code)
+  //   if(item != null){
+  //     this.pronounList[index].selected =Event.target.checked;
+  //   }  
     
-  // );
-    
- }
-  pronounChange(Event:any,code:any,index:any){
-    var item = this.pronounList.find(x =>x.code == code)
-    if(item != null){
-      this.pronounList[index].selected =Event.target.checked;
-    }  
-    
-     if(this.pronounList.filter(x=>x.value=="Not listed, please specify:" && x.selected== true).length>0){
-       this.isPronounsChecked = true;
-     }
-     else{
-      this.isPronounsChecked = false;
-     }
-     this.PronounChanges.emit(this.pronounList);
+  //    if(this.pronounList.filter(x=>x.value=="Not listed, please specify:" && x.selected== true).length>0){
+  //      this.isPronounsChecked = true;
+  //    }
+  //    else{
+  //     this.isPronounsChecked = false;
+  //    }
+  //    this.PronounChanges.emit(this.pronounList);
+  // } 
+  setChangedPronoun(pronoun:any){
+    debugger;
+    this.pronounList = pronoun;
+    this.PronounChanges.emit(this.pronounList);
   }
-
- 
-  getAllIndexes(arr:any, val:boolean) {   
-    var indexes = [], i = -1;
-    while ((i = arr.indexOf(val, i+1)) != -1){
-        indexes.push(i);
-    }
-    return indexes;
-  }
-
- 
   private loadApplicantInfoSubscription(){
       this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{
   
@@ -282,7 +200,6 @@ loadLovs(){
   private assignModelToForm(applicantInfo:ApplicantInfo){
     debugger;
     this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
-    this.appInfoForm.controls["firstName"].updateValueAndValidity();
     this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName)
     if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
       this.appInfoForm.controls["chkmiddleName"].setValue(true);
@@ -290,14 +207,11 @@ loadLovs(){
     else{
       this.appInfoForm.controls["chkmiddleName"].setValue(false);
     }
-    //this.appInfoForm.controls["chkmiddleName"].setValue(applicantInfo.client?.)
     this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
     this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceFirstName)
     this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceLastName)
-    //this.appInfoForm.controls["prmInsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.)
     this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdFirstName)
     this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdLastName)
-    //this.appInfoForm.controls["officialIdsNotApplicable"].setValue(applicantInfo.clientCaseEligibility?.offi)
 
     this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));
     this.appInfoForm.controls["ssn"].setValue(applicantInfo.client?.ssn)
@@ -317,22 +231,12 @@ loadLovs(){
       this.appInfoForm.controls["registerToVote"].setValue('No');
     }
     if(applicantInfo.clientPronounList != null || undefined){
-      //let index = this.itemArray.items.indexOf(updateItem);
-      //this.itemArray.items[index] = newItem;
-      debugger;
-      applicantInfo.clientPronounList.forEach(item => {
-        // var indexFirst = this.pronounList.findIndex(x=>x.code == item.clientPronounCode)
-        // if(indexFirst>-1){
-          //this.pronounList.push[indexFirst].selected =true;
-        //}
-        var item1 = this.pronounList.filter((x:any)=>x?.code === item?.clientPronounCode)[0].selected=true;
-        //item1["selected"] = true;
-
-       
+     
+      applicantInfo.clientPronounList.forEach(pronoun => {      
+        this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);       
       })
       this.clientfacade.pronounListSubject.next(this.pronounList);
-       this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.map(x => x.selected == true));
-    
+     
     }
 
     
@@ -380,20 +284,14 @@ loadLovs(){
       ssn: new FormControl('', { updateOn: 'blur' }),
       ssnNotApplicable: new FormControl(),
       registerToVote:new FormControl(),
-      pronounsFirst:this.formBuilder.array(this.pronounList.map(x => x.selected == true)),
-      //this.formBuilder.array(Object.keys(this.selectedPronoun).map(key => true)),
+      pronouns:this.formBuilder.array([]),
       notListedPronoun:new FormControl('', { updateOn: 'blur' }),
       
     });
 
   }
 
-  buildPronouns() {
-    const arr = this.pronounList.map(value => {
-      return this.formBuilder.control(value.selected);
-    });
-    return this.formBuilder.array(arr);
-  }
+  
 
   private adjustAttributeChanged(event: Event) { 
     const data: CompletionChecklist = {
@@ -412,14 +310,10 @@ loadLovs(){
         startWith(null), pairwise()
       )
       .subscribe(([prev, curr]: [any, any]) => {
-        this.updateFormCompleteCount(prev, curr);
-        //this.validate()
-        //this.ValidateFields.emit(this.appInfoForm);
-        //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
+        this.updateFormCompleteCount(prev, curr);      
       });
       this.appInfoForm.statusChanges.subscribe(a=>{        
-        this.ValidateFields.emit(this.appInfoForm);
-        //this.clientfacade.appInfoFormSubject.next( this.appInfoForm);
+      
     });
   }
   private updateFormCompleteCount(prev: any, curr: any) {

@@ -5,7 +5,7 @@
 -->
     <span class="app-checkboxwidtext-wrapper" 
     
-    *ngFor="let pronoun of GenderList; let i = index" >
+    *ngFor="let pronoun of pronounList; let i = index" >
   
       <input 
         type="checkbox"
@@ -13,7 +13,7 @@
         aria-labelledby="pronounsSheHerHers"
         id="pronounsSheHerHers"
         [formControlName]="pronoun.lovCode"
-        
+        (change)="onCheckChange($event,pronoun.lovCode)"
         
       />
       <label class="k-checkbox-label" for="pronounsSheHerHers" 
@@ -31,11 +31,12 @@
             </kendo-textbox>
         
           </kendo-floatinglabel>
-          <!-- <kendo-formerror *ngIf="!appInfoForm.controls['notListedPronoun'].valid">Pronoun is required.</kendo-formerror> -->
+                  <kendo-formerror *ngIf="!Form.controls[pronoun.lovCode].valid">Pronoun is required.</kendo-formerror>
         </span> 
     
     </div>
     </span>
+    <kendo-formerror *ngIf="!Form.controls['pronouns'].valid">Atleast one option is required.</kendo-formerror>
 
 
     
