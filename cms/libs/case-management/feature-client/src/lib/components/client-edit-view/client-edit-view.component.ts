@@ -28,7 +28,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   isVisible: any;
   isSelected = true;
   applicantInfo!:any;
-  pronounList ={first:[{value:'',selected:false,code:''}]};
+  pronounList =[{value:'',selected:false,code:''}];
     // first: [   
     //   {value: 'She/Her/Hers'  ,selected: false,code:"SHE_HER_HERS"},
     //   {value: 'He/Him/His',selected: false,code:"HE_HIM_HIS"},
@@ -172,7 +172,7 @@ loadLovs(){
   this.pronounListSubscription = this.lovs$.subscribe({
     next: response => {
       if(response !=null){
-        this.pronounList.first=[];
+        this.pronounList=[];
        response.forEach(x=>{
         //  if(x.lovCode.toUpperCase() =='DONT_KNOW'){
         //   this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});          
@@ -181,7 +181,7 @@ loadLovs(){
         //   this.pronounList.second.push({code:x.lovCode,selected:false,value:x.lovDesc});
         //  }
         //  else{
-          this.pronounList.first.push({code:x.lovCode,selected:false,value:x.lovDesc});
+          this.pronounList.push({code:x.lovCode,selected:false,value:x.lovDesc});
          //}
        });
       }
@@ -244,12 +244,12 @@ loadLovs(){
     
  }
   pronounChange(Event:any,code:any,index:any){
-    var item = this.pronounList.first.find(x =>x.code == code)
+    var item = this.pronounList.find(x =>x.code == code)
     if(item != null){
-      this.pronounList.first[index].selected =Event.target.checked;
+      this.pronounList[index].selected =Event.target.checked;
     }  
     
-     if(this.pronounList.first.filter(x=>x.value=="Not listed, please specify:" && x.selected== true).length>0){
+     if(this.pronounList.filter(x=>x.value=="Not listed, please specify:" && x.selected== true).length>0){
        this.isPronounsChecked = true;
      }
      else{
@@ -319,15 +319,19 @@ loadLovs(){
     if(applicantInfo.clientPronounList != null || undefined){
       //let index = this.itemArray.items.indexOf(updateItem);
       //this.itemArray.items[index] = newItem;
+      debugger;
       applicantInfo.clientPronounList.forEach(item => {
-        var indexFirst = this.pronounList.first.findIndex(x=>x.code == item.clientPronounCode)
-        if(indexFirst>-1){
-          this.pronounList.first[indexFirst].selected =true;
-        }
+        // var indexFirst = this.pronounList.findIndex(x=>x.code == item.clientPronounCode)
+        // if(indexFirst>-1){
+          //this.pronounList.push[indexFirst].selected =true;
+        //}
+        var item1 = this.pronounList.filter((x:any)=>x?.code === item?.clientPronounCode)[0].selected=true;
+        //item1["selected"] = true;
+
        
       })
       this.clientfacade.pronounListSubject.next(this.pronounList);
-       this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.first.map(x => x.selected == true));
+       this.appInfoForm.controls['pronounsFirst'].setValue(this.pronounList.map(x => x.selected == true));
     
     }
 
@@ -376,7 +380,7 @@ loadLovs(){
       ssn: new FormControl('', { updateOn: 'blur' }),
       ssnNotApplicable: new FormControl(),
       registerToVote:new FormControl(),
-      pronounsFirst:this.formBuilder.array(this.pronounList.first.map(x => x.selected == true)),
+      pronounsFirst:this.formBuilder.array(this.pronounList.map(x => x.selected == true)),
       //this.formBuilder.array(Object.keys(this.selectedPronoun).map(key => true)),
       notListedPronoun:new FormControl('', { updateOn: 'blur' }),
       
@@ -385,7 +389,7 @@ loadLovs(){
   }
 
   buildPronouns() {
-    const arr = this.pronounList.first.map(value => {
+    const arr = this.pronounList.map(value => {
       return this.formBuilder.control(value.selected);
     });
     return this.formBuilder.array(arr);

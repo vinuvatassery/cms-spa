@@ -322,36 +322,36 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       
   }
   private populateClientPronoun(){
-    this.pronounList.first.forEach((first: { selected: boolean;code:any }) => {
+    this.pronounList.forEach((pronoun: { selected: boolean; code: string; }) => {
          var clientPronoun = new ClientPronoun();
-         if(first.selected == true){   
-          if(first.code=='NOT_LISTED') {
+         if(pronoun.selected == true){   
+          if(pronoun.code=='NOT_LISTED') {
             clientPronoun.otherDesc = this.appInfoForm.controls["notListedPronoun"].value;
           }                
-         clientPronoun.clientPronounCode = first.code;
+         clientPronoun.clientPronounCode = pronoun.code;
          clientPronoun.activeFlag="Y";
          if(this.applicatInfo.clientPronounList == undefined){
          this.applicatInfo.clientPronounList = [];
           }
-          var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == first.code)              
+          var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == pronoun.code)              
           if(item == null)  {    
             this.applicatInfo.clientPronounList.push(clientPronoun)
           }
         }});
-          this.pronounList.second.forEach((first: { selected: boolean;code:any }) => {
-            var clientPronoun = new ClientPronoun();
-            if(first.selected == true){                    
-            clientPronoun.clientPronounCode = first.code;
-            clientPronoun.activeFlag="Y";
+          // this.pronounList.second.forEach((first: { selected: boolean;code:any }) => {
+          //   var clientPronoun = new ClientPronoun();
+          //   if(first.selected == true){                    
+          //   clientPronoun.clientPronounCode = first.code;
+          //   clientPronoun.activeFlag="Y";
            
-            if(this.applicatInfo.clientPronounList == undefined){
-            this.applicatInfo.clientPronounList = [];
-             }
-             var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == first.code)              
-             if(item == null)  {    
-               this.applicatInfo.clientPronounList.push(clientPronoun)
-             }
-            }});
+          //   if(this.applicatInfo.clientPronounList == undefined){
+          //   this.applicatInfo.clientPronounList = [];
+          //    }
+          //    var item = this.applicatInfo.clientPronounList.find(x =>x.clientPronounCode == first.code)              
+          //    if(item == null)  {    
+          //      this.applicatInfo.clientPronounList.push(clientPronoun)
+          //    }
+          //   }});
         
 
   }
@@ -517,7 +517,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
         }
         //var pronounsFirst =this.appInfoForm.controls['pronounsFirst'].value.filter((x:boolean)=>x===true)// this.appInfoForm.controls['pronounsFirst'].value.filter((x: boolean)=>x == true);
-        var pronounValid =this.pronounList.first.filter((x:any)=>x.selected ===true)
+        var pronounValid =this.pronounList.filter((x:any)=>x.selected ===true)
         if(pronounValid.length >0 )
         {                    
             this.appInfoForm.controls['pronounsFirst'].setErrors(null);
@@ -527,7 +527,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
              this.appInfoForm.controls['pronounsFirst'].setErrors({'incorrect': true});
                  
           }
-          var notLitedPronounIsExist =this.pronounList.first.filter((x:any)=>x.code == 'NOT_LISTED' && x.selected == true)
+          var notLitedPronounIsExist =this.pronounList.filter((x:any)=>x.code == 'NOT_LISTED' && x.selected == true)
           if(notLitedPronounIsExist.length >0){
             this.appInfoForm.controls["notListedPronoun"].setValidators(Validators.required);
             this.appInfoForm.controls["notListedPronoun"].updateValueAndValidity();    
