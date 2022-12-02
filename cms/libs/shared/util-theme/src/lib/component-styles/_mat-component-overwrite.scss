@@ -154,7 +154,12 @@
   kendo-multicolumncombobox > .k-button {
     display: none;
   }
+  
 }
+.hidedropicon  kendo-combobox > .k-button {
+  display: none ;
+}
+
 
 // New case search
 .search-case {

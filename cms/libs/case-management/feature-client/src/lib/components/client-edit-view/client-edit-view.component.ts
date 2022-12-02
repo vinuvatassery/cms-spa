@@ -15,7 +15,6 @@ import { ClientFacade, CompletionChecklist, StatusFlag } from '@cms/case-managem
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-
  
 @Component({
   selector: 'case-management-client-edit-view',
