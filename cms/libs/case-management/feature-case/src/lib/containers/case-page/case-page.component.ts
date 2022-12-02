@@ -33,7 +33,7 @@ export class CasePageComponent implements OnInit {
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.lovFacade.lovs$;
+  ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
   
   isShowLoader = false;
   /** Constructor**/
@@ -58,7 +58,7 @@ export class CasePageComponent implements OnInit {
      
       this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);     
       this.caseFacade.loadDdlPrograms();
-      this.lovFacade.getLovsbyType(LovType.CaseOrigin);
+      this.lovFacade.getCaseOriginLovs();
   }
 
   /** Getters **/
