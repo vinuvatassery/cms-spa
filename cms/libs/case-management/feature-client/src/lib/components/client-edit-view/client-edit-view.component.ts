@@ -29,33 +29,18 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   isSelected = true;
   applicantInfo!:any;
   pronounList =[];
-    // first: [   
-    //   {value: 'She/Her/Hers'  ,selected: false,code:"SHE_HER_HERS"},
-    //   {value: 'He/Him/His',selected: false,code:"HE_HIM_HIS"},
-    //   {value: 'They/Them/Theirs',selected: false,code:"THEY_THEM_THEIRS"},
-    //   {value: 'Ella',selected: false,code:"ELLA"},
-    //   {value: 'Él',selected: false,code:"EL"},
-    //   {value: 'Elles',selected: false,code:"ELLES"},
-    //   {value: 'No pronouns, use their name',selected: false,code:"NO_PRONOUN"},
-    //   {value: 'Not listed, please specify:',selected: false,code:"NOT_LISTED"}
-    // ],
-    // second:[
-    //   {value:'Don’t know what this question is asking',selected:false,code:"DONT_KNOW"},
-    //   {value:'Don’t want to answer',selected:false,code:"DONT WAIT"}]
-    // };
-  //pronouns=['He/Him/His','They/Them/Theirs','Ella','Él','Elles','No pronouns, use their name','Not listed, please specify:' ];
-
+      
   /** Output Properties **/
  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() ValidateFields = new EventEmitter<FormGroup>();
  @Output() PronounChanges = new EventEmitter<any>();
+ @Output() ApplicantNameChange = new EventEmitter<any>();
   
 
 
   /** Public properties **/
-  public currentDate = new Date();
- 
+  public currentDate = new Date(); 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
   rdoMaterials$ = this.clientfacade.rdoMaterials$;
@@ -110,6 +95,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public racialName: any = [];
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
+  checkBoxValid!:boolean;
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
@@ -117,11 +103,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   maxLengthSsn =9;
   applicantInfo$ = this.clientfacade.applicantInfo$;
   applicantInfoSubscription !:Subscription;
-  //pronounListSubscription !:Subscription;
-  //lovs$ = this.lovFacade.lovs$;
-  //pronounSubscription !:Subscription;
-  //selectedPronoun =['He/Him/His'];
-
+ 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
     private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade,
@@ -163,6 +145,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
   } 
+
   setChangedPronoun(pronoun:any){
     this.pronounList = pronoun;
     this.PronounChanges.emit(this.pronounList);
@@ -179,7 +162,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
   private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
-    this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName)
+    this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName);
     if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
       this.appInfoForm.controls["chkmiddleName"].setValue(true);
     }
@@ -211,7 +194,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     if(applicantInfo.clientPronounList != null || undefined){
      
       applicantInfo.clientPronounList.forEach(pronoun => {      
-        this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);       
+        this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);    
+         
       })
       this.clientfacade.pronounListSubject.next(this.pronounList);
      
@@ -220,6 +204,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     
   }
   ngAfterViewChecked() {
+    this.ApplicantNameChange.emit(this.appInfoForm.controls["firstName"].value+'  '+
+    this.appInfoForm.controls["middleName"].value)
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -246,27 +232,25 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
   private buildForm() {
     this.appInfoForm = this.formBuilder.group({
-      firstName: new FormControl('', {updateOn: 'blur'}),
-      middleName: new FormControl({ value: '', disabled: false }, {updateOn: 'blur'}),
-      chkmiddleName: new FormControl(''),
-      lastName: new FormControl('', { updateOn: 'blur' }),
-      prmInsFirstName: new FormControl('', { updateOn: 'blur' }),
-      prmInsLastName: new FormControl('', { updateOn: 'blur' }),
-      prmInsNotApplicable: new FormControl(),
-      officialIdFirstName: new FormControl('', { updateOn: 'blur' }),
-      officialIdLastName: new FormControl('', { updateOn: 'blur' }),
-      officialIdsNotApplicable: new FormControl(false),
-      dateOfBirth: new FormControl(this.currentDate, { updateOn: 'blur' }),
-      ssn: new FormControl('', { updateOn: 'blur' }),
-      ssnNotApplicable: new FormControl(),
-      registerToVote:new FormControl(),
-      pronouns:this.formBuilder.array([]),
+      firstName: [''],
+      middleName: [{ value: '', disabled: false }],
+      chkmiddleName:  [''],
+      lastName:  [''],
+      prmInsFirstName:  [''],
+      prmInsLastName:  [''],
+      prmInsNotApplicable:  [''],
+      officialIdFirstName:  [''],
+      officialIdLastName:  [''],
+      officialIdsNotApplicable:  [''],
+      dateOfBirth:  [this.currentDate],
+      ssn:  [''],
+      ssnNotApplicable:  [''],
+      registerToVote: [''],
+      pronouns: [''],
       
-    });
+    });  
 
-  }
-
-  
+  } 
 
   private adjustAttributeChanged(event: Event) { 
     const data: CompletionChecklist = {
@@ -287,8 +271,14 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       .subscribe(([prev, curr]: [any, any]) => {
         this.updateFormCompleteCount(prev, curr);      
       });
-      this.appInfoForm.statusChanges.subscribe(a=>{        
-      
+      this.appInfoForm.statusChanges.subscribe(a=>{   
+       if(this.appInfoForm.controls["pronouns"].valid){
+        this.checkBoxValid = true;
+       }
+       else{
+        this.checkBoxValid = false;
+       }
+     
     });
   }
   private updateFormCompleteCount(prev: any, curr: any) {

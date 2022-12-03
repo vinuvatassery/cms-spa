@@ -30,19 +30,22 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
-  private pronounSubscription!:Subscription;
+  //private pronounSubscription!:Subscription;
   //private valiateSubscriptiion !: Subscription;
   isValid:boolean=true;
   //applicatInfo!:ApplicantInfo
   applicatInfo = {} as ApplicantInfo;
   appInfoForm!:FormGroup;  
-  caseOwnerName :string = 'Antony Hopkins';
+  applicantName :string = '';
+  case$ = this.caseFacade.getCase$;
   //appInfoForm$ = this.clientFacade.appInfoForm$;
   //validate$ = this.applicationInfoFacade.validate$;
   //pronounList$ = this.clientFacade.pronounList$;
   pronounList !:any;
   showErrorMessage:boolean=false;
   clientCaseId! : string;
+  clientId!:number;
+  clientCaseEligibilityId!:string;
   sessionId! : string;
  
   constructor(private workFlowFacade: WorkflowFacade,
@@ -53,14 +56,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCase();
+    this.loadSessionData();
     this.addSaveSubscription();
     //this.populateClientPronoun()
     
   }
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-    this.pronounSubscription.unsubscribe();
+    //this.pronounSubscription.unsubscribe();
 
     //this.valiateSubscriptiion.unsubscribe();
   }
@@ -72,55 +75,98 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved]) => {
+      debugger;
       if (isSaved) {
+        debugger;
         this.workFlowFacade.navigate(navigationType);
       }
     });
     
   }
-  private loadCase()
-  {     
+  private loadSessionData()
+  {   
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
     this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
     .subscribe((session: any) => {      
-     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId     
+     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId    
+     this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
+     this.clientId = JSON.parse(session.sessionData).clientId    
      this.caseFacade.loadCasesById(this.clientCaseId);
-      
-     this.loadApplicantInfo();     
-    });        
-  } 
 
+      if(this.clientCaseId  !=null || this.clientCaseId != undefined){
+        this.applicatInfo.clientCaseId = this.clientCaseId
+        this.applicatInfo.workFlowSessionId = this.sessionId;
+        //---------------------remove
+        //this.applicatInfo.caseConcurrencyStamp ="3f32aa2b24934cafbf347017e587155e"
+        if(  this.applicatInfo.client == undefined){
+        this.applicatInfo.client = new Client;
+        this.applicatInfo.client.clientId = 19938228478
+        
+        
+       }
+       //----------------------------------------
+        if(this.clientCaseEligibilityId != null || this.clientCaseEligibilityId !=undefined){
+          if(  this.applicatInfo.client == undefined){
+            this.applicatInfo.client = new Client;
+          }
+          if(  this.applicatInfo.clientCaseEligibilityAndFlag == undefined){
+            this.applicatInfo.clientCaseEligibilityAndFlag = new ClientCaseEligibilityAndFlag;
+            this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
+          }
+          this.applicatInfo.client.clientId =this.clientId;
+          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseEligibilityId = this.clientCaseEligibilityId;
+          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;
+          this.loadApplicantInfo();
+        }
+        else{
+          this.getCaseData();
+        }
+      }
+     
+    }); 
+    //this.loadApplicantInfo();       
+  } 
+  getCaseData()
+  {            
+      this. case$?.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
+      .subscribe((caseData: any) => {   
+          
+          if(caseData.programId != null && caseData.caseStartDate != null
+            && caseData.assignedCwUserId != null)
+          {            
+            this.applicatInfo.caseConcurrencyStamp =  caseData?.concurrencyStamp;            
+          }
+          
+        })  
+      
+  } 
   private loadApplicantInfo(){
 
    //--------------------------------Need to remove------------------------
-        if(this.workFlowFacade.currentSession == null || undefined)
-        {
+        // if(this.workFlowFacade.currentSession == null || undefined)
+        // {
            if(  this.applicatInfo.client == undefined){
                 this.applicatInfo.client = new Client;
               }
-          // if(  this.applicatInfo.clientCase == undefined){
-          //   this.applicatInfo.clientCase = new ClientCase;
-          // }
+        
           if(  this.applicatInfo.clientCaseEligibilityAndFlag == undefined){
             this.applicatInfo.clientCaseEligibilityAndFlag = new ClientCaseEligibilityAndFlag;
             this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
           }
         
-          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId ='a6d2e412-b0c8-4466-84df-bf0d9628a880';
-          this.applicatInfo.client.clientId=2256        
-          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId ='A6D2E412-B0C8-4466-84DF-BF0D9628A880';
-        }
-       //else{
+          //this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId ='a6d2e412-b0c8-4466-84df-bf0d9628a880';
+          //this.applicatInfo.client.clientId=2256        
+          //this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId ='A6D2E412-B0C8-4466-84DF-BF0D9628A880';
+        //}
+       //else{  
    //-----------------------------------------------------------------------------
-        this.clientFacade.load( 'A6D2E412-B0C8-4466-84DF-BF0D9628A880',"D2237F9D-068E-4DCD-AA6F-2FF396B4F851").subscribe({         
+        //this.clientFacade.load( this.clientCaseId,this.clientCaseEligibilityId).subscribe({       
+          this.clientFacade.load( '4a01d23f-8f4d-4b7d-bbb3-9fb9553a37b6','25008614-e9f7-4501-9183-89819198425f').subscribe({   
           next: response => {
       
             if(response !=null){
-              //this.applicatInfo = response
               this.applicatInfo.client= response.client;
-              //this.applicatInfo.clientCase = response.clientCase;
-              // clientCaseEligibilityAndFlag
               this.applicatInfo.clientCaseEligibilityAndFlag = response.clientCaseEligibilityAndFlag;
               response.clientGenderList.forEach(x=>{
                 var clientGender = new ClientGender()
@@ -221,13 +267,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private save() {
-
+debugger;
     this.validateForm();
         if(this.appInfoForm.valid){
-          this.populateApplicantInfoModel();
-            //return this.clientFacade.save(this.applicatInfo);    
+          this.populateApplicantInfoModel();  
             this.clientFacade.save(this.applicatInfo).subscribe({         
               next: response => {
+                debugger;
               return true;
               } ,
             error: error => {    
@@ -262,13 +308,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       this.applicatInfo.client = new Client;
     }
       this.applicatInfo.client.firstName = this.appInfoForm.controls["firstName"].value;
-      if(this.appInfoForm.controls["chkmiddleName"].value){
+      if(this.appInfoForm.controls["chkmiddleName"].value == true){
         this.applicatInfo.client.middleName =null;
-        //client.noMiddleNameFlag = StatusFlag.Yes;
+        this.applicatInfo.client.noMiddleInitialFlag = StatusFlag.Yes;
       }
       else{
         this.applicatInfo.client.middleName = this.appInfoForm.controls["middleName"].value;
-        //client.noMiddleNameFlag = StatusFlag.No;
+        this.applicatInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
       this.applicatInfo.client.lastName = this.appInfoForm.controls["lastName"].value;   
       this.applicatInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value
@@ -283,8 +329,21 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
  
   private populateClientCaseEligibility(){
-        if(this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility == undefined){
-          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
+        if(this.applicatInfo.clientCaseEligibilityAndFlag == undefined){
+          this.applicatInfo.clientCaseEligibilityAndFlag = new ClientCaseEligibilityAndFlag
+          if(this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility == undefined){
+            this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
+            this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
+          }
+          
+          //--------------------------Remove---
+        
+           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode="A";
+           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.activeFlag = StatusFlag.Yes;
+           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.isDeleted = false;
+
+          //------------------------------------
+
         }
         if(this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = new clientCaseEligibilityFlag;
@@ -321,6 +380,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       
   }
   private populateClientPronoun(){
+    if(this.applicatInfo.clientPronounList == undefined){
+      this.applicatInfo.clientPronounList = [];
+    }
     this.pronounList.forEach((pronoun:any) => {      
       if(this.appInfoForm.controls[pronoun.lovCode].value != ''){
         var existingPronoun = this.applicatInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)     
@@ -329,9 +391,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           if(pronoun.lovCode=='NOT_LISTED') {
                     clientPronoun.otherDesc = this.appInfoForm.controls["NOT_LISTED"].value;
                     clientPronoun.clientPronounCode =pronoun.lovCode;
+                    clientPronoun.activeFlag = StatusFlag.Yes;
+                    clientPronoun.isDeleted = false;
             }
             else{
               clientPronoun.clientPronounCode =pronoun.lovCode;
+              clientPronoun.activeFlag = StatusFlag.Yes;
+              clientPronoun.isDeleted = false;
             } 
             this.applicatInfo.clientPronounList.push(clientPronoun);
         }
@@ -339,7 +405,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           if(pronoun.lovCode=='NOT_LISTED') {
             var clientPronoun = new ClientPronoun();
             clientPronoun.otherDesc = this.appInfoForm.controls["NOT_LISTED"].value;
-            clientPronoun.clientPronounCode =pronoun.lovCode;   
+            clientPronoun.clientPronounCode =pronoun.lovCode; 
+            clientPronoun.activeFlag = StatusFlag.Yes;
+            clientPronoun.isDeleted = false;  
             this.applicatInfo.clientPronounList.push(clientPronoun);
            }
         }
@@ -458,7 +526,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
               this.appInfoForm.controls["ssn"].updateValueAndValidity();    
         }
-        if(this.appInfoForm.controls["registerToVote"].value == null){
+        debugger;
+        if(this.appInfoForm.controls["registerToVote"].value == null ||
+               this.appInfoForm.controls["registerToVote"].value ==''){
               this.appInfoForm.controls["registerToVote"].setValidators(Validators.required);
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();    
         }
@@ -466,7 +536,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
         }
-       
           this.appInfoForm.controls['pronouns'].setErrors({'incorrect': true});
           this.pronounList.forEach((pronoun:any) => {
             if(this.appInfoForm.controls[pronoun.lovCode].value ===true){
@@ -483,5 +552,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   setChangedPronoun(pronoun:any){
     this.pronounList = pronoun;
+  }
+  setApplicantName(name:any){
+    this.applicantName =name;
   }
 }

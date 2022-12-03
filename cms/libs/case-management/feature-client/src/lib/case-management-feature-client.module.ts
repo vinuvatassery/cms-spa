@@ -25,6 +25,7 @@ import { ClientEditViewPronounComponent } from './components/client-edit-view-pr
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
+    
   ],
   declarations: [
     ClientPageComponent,
@@ -35,6 +36,7 @@ import { ClientEditViewPronounComponent } from './components/client-edit-view-pr
     CaseDetailsComponent,
     SpecialHandlingDetailComponent,
     ClientEditViewPronounComponent,
+    
   ],
   exports: [
     ClientPageComponent,

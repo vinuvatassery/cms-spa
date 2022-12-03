@@ -1,6 +1,8 @@
 <!-- Main Title Section -->
+
 <section class="app-l-mainTittle">
-  <h2>New Application - {{caseOwnerName}}</h2>
+
+  <h2>New Application - {{applicantName}}</h2>
   <p class="mt-2 mb-2">
     Please complete all fields for this application, then click “Start” to go
     through the eligibility checklist. All items must be addressed before
@@ -16,7 +18,9 @@
     (AdjustAttrChanged)="updateAdjustmentAttrCount($event)"
     (ValidateFields)="setAppInfoForm($event)"
     (PronounChanges)="setChangedPronoun($event)"
+    (ApplicantNameChange)="setApplicantName($event)"
     ></case-management-client-edit-view>
   </div>
 
 </div>
+
