@@ -1,6 +1,6 @@
 <div class="app-c-table">
-  <kendo-grid [data]="gridView"  #dependentsGrid
-  [pageSize]="5" 
+  <kendo-grid [data]="dependents$ | async"  #dependentsGrid
+  [pageSize]="pageSize" 
   [pageable]="true" 
   [sortable]="true" 
   [groupable]="false"
@@ -8,9 +8,8 @@
   [resizable]="true" 
   [columnMenu]="{ filter: true }"
   [sort]="sort"
-  (sortChange)="sortChange($event)"
-  (pageChange)="pageChange($event)">
-  <!-- <ng-template kendoGridColumnMenuTemplate let-service="service">
+  (dataStateChange)="dataStateChange($event)">
+  <ng-template kendoGridColumnMenuTemplate let-service="service">
     <span class="k-icon k-i-x" (click)="service.close()"
       style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
     <kendo-grid-columnmenu-sort [service]="service">
@@ -18,17 +17,17 @@
     <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>   
     <kendo-grid-columnmenu-lock [service]="service">
     </kendo-grid-columnmenu-lock>
-  </ng-template> -->
+  </ng-template>
 
     <kendo-grid-column  [width]="100"
     field="fullName"     title="Full Legal Name">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button aria-label="client name" kendoButton look="flat"   class="card-link-button" 
-      *ngIf="dataItem.isCareAssistFlag==='C'"
+      *ngIf="dataItem.dependentTypeCode===CAClient"
         routerLink="case360/{{ dataItem.clientId }}">
         {{ dataItem.fullName }}
       </button>
-    <div *ngIf="dataItem.isCareAssistFlag==='D'">  {{ dataItem.fullName }}</div>
+    <div *ngIf="dataItem.dependentTypeCode===Dependent">  {{ dataItem.fullName }}</div>
     </ng-template>   
     </kendo-grid-column>
     <kendo-grid-column  [width]="100"    
@@ -37,25 +36,30 @@
       
     </kendo-grid-column>
     <kendo-grid-column [width]="100"
-      field="isCareAssistFlag"
+      field="dependentTypeCode"
       title="CAREAssist client?"
+      [width]="45"
     >
     <ng-template kendoGridCellTemplate let-dataItem>
-      {{ dataItem.isCareAssistFlag === 'C' ? 'YES' : 'NO'}}
+      {{ dataItem.dependentTypeCode === CAClient ? 'YES' : 'NO'}}
     </ng-template>   
   </kendo-grid-column>
     <kendo-grid-column  [width]="100"
       field="dob"
       title="Date of Birth"
+      [sortable]="false"    
+      [columnMenu]="false" 
+       [width]="70"
     >
     <ng-template kendoGridCellTemplate let-dataItem>
-      {{ dataItem.dob }}  ({{dataItem.age}})
+      {{ dataItem.dob | date: 'MM/dd/yyyy' }}  ({{dataItem.age}})
     </ng-template>   
   </kendo-grid-column>
     <kendo-grid-column [width]="100"
       field="enrolledInInsuranceFlag"
       title="Currently on client’s health insurance plan?"
-      [width]="175"
+      [width]="100"
+     
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.enrolledInInsuranceFlag === 'Y' ? 'YES' : 'NO'}}
@@ -64,8 +68,10 @@
     <kendo-grid-column
       field="ClientDependentId"
       title="Options"
-      [width]="75"
+      [width]="30"
       class="text-center"
+      [sortable]="false" 
+      [columnMenu]="false"
     >
       <ng-template kendoGridCellTemplate let-dependent let-ClientDependentId="field">
         <kendo-dropdownbutton
@@ -78,7 +84,7 @@
         >
          
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-ClientDependentId="ClientDependentId">
-          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(dependent.clientDependentId,dependent.isCareAssistFlag)">
+          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(dependent.clientDependentId,dependent.dependentTypeCode)">
             <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
             <label>   {{ dataItem.text }} </label>
         </button>        
@@ -86,7 +92,7 @@
         </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
-    <!-- <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
     let-currentPage="currentPage">
     <div class="grid-custom-paginationtemplates d-flex"> 
       <div class="d-flex align-items-center">    
@@ -103,7 +109,7 @@
         <kendo-pager-next-buttons></kendo-pager-next-buttons>
       </div> 
     </div>
-  </ng-template> -->
+  </ng-template>
   </kendo-grid>
 </div>
 <div class="flex-row">

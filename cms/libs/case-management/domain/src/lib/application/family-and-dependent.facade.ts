@@ -69,8 +69,8 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  loadDependents(clientId : number): void {
-    this.dependentDataService.loadDependents(clientId).subscribe({
+  loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+    this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({ 
       next: (dependentsResponse) => {
         this.dependentsSubject.next(dependentsResponse);
       },

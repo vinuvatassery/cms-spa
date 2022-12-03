@@ -21,6 +21,7 @@ import { Dependent, DependentTypeCode } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FamilyAndDependentDetailComponent implements OnInit {
+
   /** Input properties **/
   @Input() isOpenedEditFamilyMember = true;
   @Input() isAddFamilyMember = true;

@@ -1,26 +1,16 @@
 /** Angular **/
 import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  SimpleChanges,
-  OnChanges,
-  ViewChild,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+  Component,  OnInit,  ChangeDetectionStrategy,  Input,
+   OnChanges,  ViewChild,  EventEmitter,  Output,} from '@angular/core';
 /** External libraries **/
 import { Subject } from 'rxjs/internal/Subject';
 import { UIFormStyle } from '@cms/shared/ui-tpa' 
 /** Enums **/
-import { Dependent, DependentTypeCode, ScreenType } from '@cms/case-management/domain';
+import { DependentTypeCode, ScreenType } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
-import { orderBy, SortDescriptor } from '@progress/kendo-data-query';
+import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { DataBindingDirective, GridDataResult, PageChangeEvent } from '@progress/kendo-angular-grid';
-import { first } from 'rxjs';
-import { debug } from 'console';
 import { Lov } from '@cms/system-config/domain';
 
 
@@ -31,6 +21,11 @@ import { Lov } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
+/******enumeration Alias *****/
+Dependent = DependentTypeCode.Dependent;
+CAClient = DependentTypeCode.CAClient;
+
+
   @ViewChild('dependentsGrid') dependentsGrid!: DataBindingDirective;
   /** Input properties **/
   @Input() data: any;
@@ -39,18 +34,21 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
   @Input() ddlRelationships$ : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
+  @Output()  loadDependentsEvent = new EventEmitter<any>();
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  public pageSize = 10;
+  public pageSize = 5;
   public skip = 0;
+  public sortValue = 'fullName'
+  public sortType = 'asc'
   public pageSizes = [
-    {text: '5', value: 5}, 
+    {text: this.pageSize, value: this.pageSize}, 
     {text: '10', value: 10},
     {text: '20', value: 20},
     {text: 'All', value: 100} 
   ];
 
   public sort: SortDescriptor[] = [{
-    field: 'fullName',
+    field: this.sortValue,
     dir: 'asc'
   }];
 
@@ -63,7 +61,6 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
   relationshipsObject! : any 
   dependentTypeCodeSelected! : DependentTypeCode
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  // actions: Array<any> = [{ text: 'Action' }];
   deleteRequestSubject = new Subject<DeleteRequest>();
   deleteRequest$ = this.deleteRequestSubject.asObservable();
   public gridView!: GridDataResult;
@@ -72,8 +69,8 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
       buttonType:"btn-h-primary",
       text: "Edit Family Member",
       icon: "edit",
-      click: (clientDependentId: string, isCareAssistFlag : string): void => {        
-        this.onEditFamilyMemberClicked(clientDependentId,isCareAssistFlag,false);
+      click: (clientDependentId: string, dependentTypeCode : string): void => {        
+        this.onEditFamilyMemberClicked(clientDependentId,dependentTypeCode,false);
       },
     },
     {
@@ -89,15 +86,13 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
   ]; 
 
   /** Lifecycle hooks **/
-  ngOnChanges(): void {      
-              
-      this.mapRelationshipstoLov()     
+  ngOnChanges(): void {            
+        this.loadFamilyDependents()
  } 
 
 
   ngOnInit(): void {   
-
-    this.addOrEditFamilyDependentDisplay();
+    this.addOrEditFamilyDependentDisplay();   
     
     }
 
@@ -120,7 +115,7 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
          item.lovCode === this.dependentsObject[key].relationshipCode)?.lovDesc         
       });
 
-      this.loadFamilyDependents()
+      //this.loadFamilyDependents()
     }); 
   
   }
@@ -143,6 +138,7 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
   onFamilyMemberClicked(isFamilyAdd: boolean) {
     this.isOpenedFamilyMember = true;
     this.isAddFamilyMember = isFamilyAdd;
+    this.dependentTypeCodeSelected  = DependentTypeCode.Dependent
   }
 
   onEditFamilyMemberClicked(dependentId : string ,dependentTypeCode : string, isFamilyAdd: boolean) {
@@ -173,24 +169,6 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
     console.log('Response Data :', event);
   }
 
-  public sortChange(sort: SortDescriptor[]): void {       
-    this.sort = sort;
-    this.loadFamilyDependents();
-  }
-
-  private loadFamilyDependents(): void {
-    this.gridView = {
-        data: orderBy(this.dependentsObject.slice(0, 100), this.sort),
-        total: this.dependentsObject.length
-    };  
-  }
-
-  public pageChange(event: PageChangeEvent): void {
-    this.skip = event.skip;
-    this.loadFamilyDependents();
-  }
-  
-
   /** child event methods **/
   addUpdateDependentHandle(dependent : any) {
     this.addUpdateDependentEvent.next(dependent);
@@ -200,5 +178,47 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
   {
     this.onFamilyMemberClosed()
   }
+  
+  loadDependents(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
+  {
+    const gridDataRefinerValue = 
+    {
+      skipCount: skipcountValue,
+      pagesize : maxResultCountValue,
+      sortColumn : sortValue,
+      sortType : sortTypeValue,
+    }
+    this.loadDependentsEvent.next(gridDataRefinerValue)
+  }
+   /** grid event methods **/
+
+   public dataStateChange(state: any): void {  
+
+    /**
+     * The number of records to be skipped by the pager.
+     */
+     this.skip = state?.skip;
+     /**
+      * The number of records to take.
+      */
+      this.pageSize = state?.take;
+     /**
+      * The descriptors used for sorting.
+      *  */
+     
+      this.sort = state.sort;
+      this.loadFamilyDependents();   
+  }
+
+  private loadFamilyDependents(): void {    
+    this.loadDependents(this.pageSize,this.skip ,this.sortValue , this.sortType)
+    this.mapRelationshipstoLov()     
+    // this.gridView = {
+    //     data: this.dependentsObject.slice(0, 100),
+    //     total: this.dependentsObject.length
+    // };  
+  }
+
+
   
 }

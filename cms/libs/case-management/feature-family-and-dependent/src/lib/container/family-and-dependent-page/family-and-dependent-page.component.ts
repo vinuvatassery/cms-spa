@@ -34,6 +34,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   clientId = 1
   clientCaseEligibilityId! : string
   familyStatus! : StatusFlag
+  
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -69,12 +70,21 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
      this.clientId = 1//JSON.parse(session.sessionData).clientId   
-     this.loadDependents();
+    
     });        
   } 
 
-  private loadDependents(): void {
-    this.familyAndDependentFacade.loadDependents(this.clientId);
+  loadDependentsHandle( gridDataRefinerValue : any ): void {
+    
+    const gridDataRefiner = 
+    {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount : gridDataRefinerValue.pagesize,
+      sort : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
+    }
+    this.familyAndDependentFacade.loadDependents(this.clientId
+      , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
   }
 
   private loadDependentsStatus() : void {

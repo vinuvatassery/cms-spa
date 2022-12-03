@@ -18,10 +18,10 @@ export class DependentDataService {
 
   /** Public methods **/
 
-  loadDependents(clientId : number) {     
+  loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-dependents/${clientId}`
+      `/case-management/client-dependents/${clientId}`//&skipcount=${skipcount}&maxResultCount=${maxResultCount}&sort=${sort}&sortType=${sortType}`
     );
     
   }

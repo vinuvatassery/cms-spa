@@ -41,7 +41,7 @@ export class LovFacade {
 }
 
 getRelationShipsLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.RelationShips).subscribe({
+  this.lovDataService.getLovsbyType(LovType.RelationshipCode).subscribe({
     next: (relationsResponse) => {
       this.lovRelationShipSubject.next(relationsResponse);
     },
