@@ -12,9 +12,12 @@ import { Subscription } from 'rxjs';
 })
 export class ClientEditViewPronounComponent implements OnInit {
 
-    /** Output Properties **/
+    /** InPut Properties **/
   @Input() appInfoForm: FormGroup;
   @Input() checkBoxValid!:boolean;
+  @Input() textboxDisable!:boolean;
+
+    /** Output Properties **/
   @Output() PronounChanges = new EventEmitter<any>();  
 
     /** Public properties **/
@@ -22,12 +25,12 @@ export class ClientEditViewPronounComponent implements OnInit {
    saveClickSubscription!:Subscription;
    pronounLovs$= this.lovFacade.lovs$;
    showNotListedRequired:boolean=false;
-   textboxDisable:boolean=true;
+   //textboxDisable:boolean=true;
 
+     /** Construtor **/
    constructor(
     private formBuilder: FormBuilder,
-     private readonly lovFacade : LovFacade,
-     private workFlowFacade: WorkflowFacade
+     private readonly lovFacade : LovFacade
    ) {
     this.appInfoForm = this.formBuilder.group({Pronoun: [''],});
    }
@@ -35,9 +38,10 @@ export class ClientEditViewPronounComponent implements OnInit {
    ngOnInit(): void {
     this.lovFacade.getLovsbyType(LovType.Pronouns);
     this.loadPronouns();
+   
     
    }
- loadPronouns(){
+ private loadPronouns(){
   this.pronounLovs$.subscribe((data) => {
     this.pronounList = data;
     this.PronounChanges.emit(this.pronounList);
@@ -50,17 +54,22 @@ export class ClientEditViewPronounComponent implements OnInit {
       
  });
  }
-   onCheckChange(event:any,lovCode:any) {
-   
-
+   onCheckChange(event:any,lovCode:any) {  
+ debugger;
     if(event.target.checked && lovCode ==='NOT_LISTED'){
       this.appInfoForm.controls['NOT_LISTED'].setErrors({'incorrect': true});
       this.textboxDisable = false;
-    } if(!event.target.checked && lovCode ==='NOT_LISTED') {
+    } 
+    if(!event.target.checked && lovCode ==='NOT_LISTED') {
       this.appInfoForm.controls['NOT_LISTED'].setErrors(null);
       this.textboxDisable = true;
     } 
    
+   }
+   ngAfterViewChecked() {
+    if(this.appInfoForm.controls['NOT_LISTED'] !== undefined && this.appInfoForm.controls['NOT_LISTED'].value !==""){
+      this.textboxDisable = false;
+    }
    }
  
 }

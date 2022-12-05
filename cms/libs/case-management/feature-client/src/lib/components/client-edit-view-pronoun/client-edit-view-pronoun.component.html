@@ -23,11 +23,11 @@
               [disabled]="textboxDisable">               
             </kendo-textbox>        
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!appInfoForm.controls[pronoun.lovCode].valid">Pronoun is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls[pronoun.lovCode].valid ">Pronoun is required.</kendo-formerror>
         </span>     
     </div>
     </span>
-    <kendo-formerror *ngIf="!checkBoxValid">Atleast one option is required.</kendo-formerror>
+    <kendo-formerror *ngIf="!appInfoForm.controls['pronouns'].valid">Atleast one option is required.</kendo-formerror>
     <hr />
   
   </div>

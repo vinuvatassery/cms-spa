@@ -24,12 +24,7 @@ import { first } from '@progress/kendo-angular-editor/util';
 })
 export class ClientEditViewComponent implements OnInit,OnDestroy {
  
-  public value = "";
-  isVisible: any;
-  isSelected = true;
-  applicantInfo!:any;
-  pronounList =[];
-      
+     
   /** Output Properties **/
  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
@@ -60,7 +55,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   isMiddleNameChecked!: boolean;
   isInsuranceCardChecked!: boolean;
   isOfficialIdChecked!: boolean;
-  isSSNChecked!: boolean;
+  isSSNChecked!: boolean ;
   isDescribeGenderChecked!: boolean;
   isPronounsChecked!: boolean;
   isGenderChecked!: boolean;
@@ -96,12 +91,18 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
+  textboxDisable!:boolean;
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
   lengthRestrictForty=40;
   maxLengthSsn =9;
   applicantInfo$ = this.clientfacade.applicantInfo$;
+  public value = "";
+  isVisible: any;
+  isSelected = true;
+  applicantInfo!:any;
+  pronounList =[];
   applicantInfoSubscription !:Subscription;
  
   /** Constructor**/
@@ -136,9 +137,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
  
   ngOnDestroy(): void {
-    this.applicantInfoSubscription.unsubscribe();
-    ///this.pronounListSubscription.unsubscribe();
+    this.applicantInfoSubscription.unsubscribe();    
   }
+
   ngAfterViewInit(){
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {   
@@ -150,62 +151,29 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.pronounList = pronoun;
     this.PronounChanges.emit(this.pronounList);
   }
-  private loadApplicantInfoSubscription(){
-      this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{
-  
-      if(applicantInfo.client !=undefined){
-        this.applicantInfo = applicantInfo;
-        this.assignModelToForm(applicantInfo);
-      }
-     
-    }); 
-  }
-  private assignModelToForm(applicantInfo:ApplicantInfo){
-    this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
-    this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName);
-    if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
-      this.appInfoForm.controls["chkmiddleName"].setValue(true);
-    }
-    else{
-      this.appInfoForm.controls["chkmiddleName"].setValue(false);
-    }
-    this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
-    this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceFirstName)
-    this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceLastName)
-    this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdFirstName)
-    this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdLastName)
 
-    this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));
-    this.appInfoForm.controls["ssn"].setValue(applicantInfo.client?.ssn)
-    if(applicantInfo.client?.ssnNotApplicableFlag =="Y"){
-      this.appInfoForm.controls["ssnNotApplicable"].setValue(true);
-    }
-    else{
-      this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
-    }
-    if(applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibilityFlag?.registerToVoteFlag?.toUpperCase() ==StatusFlag.Yes){
-      this.isVisible = true;
-      this.appInfoForm.controls["registerToVote"].setValue('Yes');
-    }
-    else{
-      this.isVisible = false
-      this.appInfoForm.controls["registerToVote"].setValue('No');
-    }
-    if(applicantInfo.clientPronounList != null || undefined){
-     
-      applicantInfo.clientPronounList.forEach(pronoun => {      
-        this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);    
-         
-      })
-      this.clientfacade.pronounListSubject.next(this.pronounList);
-     
-    }
 
-    
-  }
+ 
   ngAfterViewChecked() {
-    this.ApplicantNameChange.emit(this.appInfoForm.controls["firstName"].value+'  '+
-    this.appInfoForm.controls["middleName"].value)
+    // this.ApplicantNameChange.emit(this.appInfoForm.controls["firstName"].value === null?'':this.appInfoForm.controls["firstName"].value+'  '+
+    // this.appInfoForm.controls["middleName"].value === null?'':this.appInfoForm.controls["middleName"].value)
+    var firstName = '';
+    var middleName ='';
+    if(this.appInfoForm.controls["firstName"].value === null){
+      firstName = ''
+    }
+    else{
+      firstName = this.appInfoForm.controls["firstName"].value
+    }
+    if(this.appInfoForm.controls["middleName"].value === null){
+      middleName = ''
+    }
+    else{
+      middleName = this.appInfoForm.controls["middleName"].value
+    }
+    
+
+    this.ApplicantNameChange.emit(firstName+'  '+middleName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -233,7 +201,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   private buildForm() {
     this.appInfoForm = this.formBuilder.group({
       firstName: [''],
-      middleName: [{ value: '', disabled: false }],
+      middleName: [''],
       chkmiddleName:  [''],
       lastName:  [''],
       prmInsFirstName:  [''],
@@ -246,11 +214,97 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssn:  [''],
       ssnNotApplicable:  [''],
       registerToVote: [''],
-      pronouns: [''],
-      
+      pronouns: [''],      
     });  
 
   } 
+
+  private loadApplicantInfoSubscription(){
+    this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
+      this.textboxDisable  = true; 
+    if(applicantInfo.client !=undefined){
+      this.applicantInfo = applicantInfo;
+      this.assignModelToForm(applicantInfo);
+    }
+   
+  }); 
+}
+
+private assignModelToForm(applicantInfo:ApplicantInfo){
+ 
+  this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
+  if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
+    this.appInfoForm.controls["chkmiddleName"].setValue(true);
+    this.appInfoForm.controls["middleName"].setValue(null);
+    this.isMiddleNameChecked = true;
+  }
+  else{
+    this.appInfoForm.controls["chkmiddleName"].setValue(false);
+    this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName);
+    this.isMiddleNameChecked = false;
+  }
+  this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
+  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag ==StatusFlag.Yes){
+    this.appInfoForm.controls['officialIdsNotApplicable'].setValue(true);
+    this.appInfoForm.controls["officialIdFirstName"].setValue(null);
+    this.appInfoForm.controls["officialIdLastName"].setValue(null);
+    this.isOfficialIdChecked = true;
+  }
+ else{
+  this.appInfoForm.controls['officialIdsNotApplicable'].setValue(false);
+  this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdFirstName)
+  this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdLastName)
+  this.isOfficialIdChecked = false;
+ }
+ if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag ==StatusFlag.Yes){
+  this.appInfoForm.controls['prmInsNotApplicable'].setValue(true);
+  this.appInfoForm.controls["prmInsFirstName"].setValue(null);
+  this.appInfoForm.controls["prmInsLastName"].setValue(null);
+  this.isInsuranceCardChecked = true;
+ }
+ else{
+    this.appInfoForm.controls['prmInsNotApplicable'].setValue(false);
+    this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceFirstName);
+    this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceLastName);
+    this.isInsuranceCardChecked =false;
+ }
+  this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));   
+  if(applicantInfo.client?.ssnNotApplicableFlag ==StatusFlag.Yes){
+    this.appInfoForm.controls["ssnNotApplicable"].setValue(true);
+    this.appInfoForm.controls["ssn"].setValue(null);
+    this.isSSNChecked = true;
+  }
+  else{
+    this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
+    this.appInfoForm.controls["ssn"].setValue(applicantInfo.client?.ssn)
+    this.isSSNChecked = false;
+  }
+  if(applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibilityFlag?.registerToVoteFlag?.toUpperCase() ==StatusFlag.Yes){
+    this.isVisible = true;
+    this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.Yes);
+  }
+  else{
+    this.isVisible = false
+    this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
+  }
+  if(applicantInfo.clientPronounList != null || undefined){
+   
+    applicantInfo.clientPronounList.forEach(pronoun => {  
+      if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
+      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+    if(pronoun.clientPronounCode ==='NOT_LISTED'){
+      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
+      this.textboxDisable = false;
+     }
+    //  else{
+       
+    //  }  
+    }
+    })
+    this.clientfacade.pronounListSubject.next(this.pronounList);     
+  }
+  
+}
 
   private adjustAttributeChanged(event: Event) { 
     const data: CompletionChecklist = {
@@ -453,7 +507,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }
   }
   registerToVoteSelected(event:Event){
-   if((event.target as HTMLInputElement).value.toUpperCase()=="YES"){
+   if((event.target as HTMLInputElement).value.toUpperCase()==StatusFlag.Yes){
     this.isVisible = true;
    }
    else{

@@ -175,8 +175,7 @@
         type="checkbox"
         class="adjust-attr"
         id="ssnNotApplicable"
-        name="ssnNotApplicable"
-       
+        name="ssnNotApplicable"       
         aria-labelledby="ssnNotApplicable"
         kendoCheckBox
         formControlName="ssnNotApplicable"
@@ -201,7 +200,7 @@
             type="radio"
             kendoRadioButton
             name="registerToVote"
-            value="Yes"
+            value="Y"
             aria-labelledby="registerToVoteYes"
             id="register"
             tabindex="1"
@@ -214,7 +213,7 @@
           <input
             type="radio"
             kendoRadioButton
-            value="No"
+            value="N"
             name="registerToVote"
             aria-labelledby="registerToVoteNo"
             id="register1"
@@ -244,7 +243,8 @@
     <case-management-client-edit-view-pronoun 
             [appInfoForm]="appInfoForm"
             (PronounChanges)="setChangedPronoun($event)"
-            [checkBoxValid] ="checkBoxValid">
+            [checkBoxValid] ="checkBoxValid"
+            [textboxDisable]="textboxDisable">
     </case-management-client-edit-view-pronoun>  
     <hr />
 

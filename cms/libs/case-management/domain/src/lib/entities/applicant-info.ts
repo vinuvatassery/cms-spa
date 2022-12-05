@@ -12,9 +12,6 @@ export class ApplicantInfo{
     workFlowSessionId:string|null=null ;
     client :Client = new Client;
     clientCaseId:string|null=null;
-    caseConcurrencyStamp:string|null=null;
-   // clientCase: ClientCase
-    //clientCaseEligibility:ClientCaseEligibility
     clientCaseEligibilityAndFlag:ClientCaseEligibilityAndFlag  = new ClientCaseEligibilityAndFlag
     clientPronounList: ClientPronoun[]=[]
     clientSexualIdentityList:ClientSexualIdentity[]=[]
