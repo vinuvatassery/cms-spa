@@ -9,7 +9,7 @@ import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, 
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, ZipCodeFacade } from '@cms/system-config/domain';
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -24,7 +24,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   ddlPreferredContactMethods$ = this.contactFacade.ddlPreferredContactMethods$;
   ddlStates$ = this.contactFacade.ddlStates$;
   ddlCountries$ = this.contactFacade.ddlCountries$;
-  ddlRelationships$ = this.contactFacade.ddlRelationships$;
+  ddlRelationships$ = this.lovFacade.lovRelationShip$;
   isNoHomePhoneChecked!: boolean;
   isNoCellPhoneChecked!: boolean;
   isNoWorkPhoneChecked!: boolean;
@@ -50,7 +50,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly contactFacade: ContactFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
     private workflowFacade: WorkflowFacade,
-    private readonly addressValidationFacade: AddressValidationFacade
+    private readonly addressValidationFacade: AddressValidationFacade,
+    private readonly lovFacade: LovFacade,
   ) { }
 
   /** Lifecycle hooks **/
@@ -62,6 +63,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.addSaveSubscription();
     this.loadContactInfo();
     this.addMailingAddressChangeEvent();
+    this.onStateChange('OR');
     this.selectedAddressForm = new FormGroup({
       choosenAddress: new FormControl('', Validators.required),
     });
@@ -73,7 +75,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   /** Private methods **/
   private loadDdlRelationships() {
-    this.contactFacade.loadDdlRelationships();
+    this.lovFacade.getRelationShipsLovs();
   }
 
   private updateCompletionStatus(status: any) {
@@ -148,20 +150,26 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     const workPhone = (this.contactInfoForm.get('workPhone') as FormGroup)?.controls['phoneNbr'];
     const otherPhone = (this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['phoneNbr'];
     const email = (this.contactInfoForm.get('email') as FormGroup)?.controls['email'];
+    const homePhoneIsNotApplicable = (this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false;
+    const cellPhoneIsNotApplicable = (this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false;
+    const workPhoneIsNotApplicable = (this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false
+    const otherPhoneIsNotApplicable = (this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false;
+    const emailIsNotApplicable = (this.contactInfoForm.get('email') as FormGroup)?.controls['applicableFlag']?.value ?? false;
 
-    if (homePhone?.value && homePhone.valid) {
+
+    if (homePhone?.value && homePhone.valid && !homePhoneIsNotApplicable) {
       preferredContact.push(homePhone?.value);
     }
-    if (cellPhone?.value && cellPhone.valid) {
+    if (cellPhone?.value && cellPhone.valid && !cellPhoneIsNotApplicable) {
       preferredContact.push(cellPhone?.value);
     }
-    if (workPhone?.value && workPhone.valid) {
+    if (workPhone?.value && workPhone.valid && !workPhoneIsNotApplicable) {
       preferredContact.push(workPhone?.value);
     }
-    if (otherPhone?.value && otherPhone.valid) {
+    if (otherPhone?.value && otherPhone.valid && !otherPhoneIsNotApplicable) {
       preferredContact.push(otherPhone?.value);
     }
-    if (email?.value && email.valid) {
+    if (email?.value && email.valid && !emailIsNotApplicable) {
       preferredContact.push(email?.value);
     }
     this.preferredContactMethods = preferredContact;
@@ -174,6 +182,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
       }
     }
+    else {
+      this.contactInfoForm?.get('email.preferredContactMethod')?.removeValidators(Validators.required);
+      this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
+    }
   }
 
   private buildForm() {
@@ -182,19 +194,20 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         address1: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         address2: new FormControl('', { updateOn: 'blur' }),
         city: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        state: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        state: new FormControl('OR', { validators: Validators.required, updateOn: 'blur' }),
         zip: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
       }),
       homeAddress: new FormGroup({
         address1: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         address2: new FormControl('', { updateOn: 'blur' }),
         city: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        state: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        state: new FormControl('OR', { validators: Validators.required, updateOn: 'blur' }),
         zip: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         county: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        houselessFlag: new FormControl(false, { validators: Validators.required, updateOn: 'blur' }),
+        homelessFlag: new FormControl(false, { validators: Validators.required, updateOn: 'blur' }),
         noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required, updateOn: 'blur' }),
         sameAsMailingAddressFlag: new FormControl(false, { validators: Validators.required, updateOn: 'blur' }),
+        housingStability: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
       }),
       homePhone: new FormGroup({
         phoneNbr: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
@@ -204,7 +217,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }),
       cellPhone: new FormGroup({
         phoneNbr: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        applicableFlag: new FormControl('N', { updateOn: 'blur' }),
+        applicableFlag: new FormControl('', { updateOn: 'blur' }),
         detailMsgConsentFlag: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         smsTextConsentFlag: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
       }),
@@ -217,19 +230,19 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       otherPhone: new FormGroup({
         phoneNbr: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         otherPhoneNote: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        applicableFlag: new FormControl('N', { updateOn: 'blur' }),
+        applicableFlag: new FormControl('', { updateOn: 'blur' }),
         detailMsgConsentFlag: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         smsTextConsentFlag: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
       }),
       email: new FormGroup({
         email: new FormControl('', { validators: [Validators.email, Validators.pattern('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[A-Za-z]{2,20}')], updateOn: 'blur' }),
-        applicableFlag: new FormControl('N', { updateOn: 'blur' }),
+        applicableFlag: new FormControl('', { updateOn: 'blur' }),
         detailMsgFlag: new FormControl('', { updateOn: 'blur' }),
-        goPapperlessFlag: new FormControl('N', { validators: Validators.required, updateOn: 'blur' }),
+        goPapperlessFlag: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         preferredContactMethod: new FormControl('', { updateOn: 'blur' }),
       }),
       familyAndFriendsContact: new FormGroup({
-        noFriendOrFamilyContactFlag: new FormControl('N', { updateOn: 'blur' }),
+        noFriendOrFamilyContactFlag: new FormControl('', { updateOn: 'blur' }),
         contactName: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         contactRelationshipCode: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         contactPhoneNbr: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
@@ -262,41 +275,46 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   addMailingAddressChangeEvent() {
     (this.contactInfoForm.get('maillingAddress') as FormGroup).valueChanges
       .pipe(
-        mergeMap(() => this.validateMailAddress())
+        startWith(null),
+        pairwise(),
+        mergeMap(([prev, curr]: [any, any]) => this.validateMailAddress(prev, curr))
       ).subscribe((response: AddressValidation | null) => {
         if (response) {
+          this.selectedAddressForm.markAllAsTouched();
           if (response?.isValid ?? false) {
             //this.addressSuggested = (`${response?.address?.address1} ${response?.address?.address2} ${response?.address?.city}, ${response?.address?.state} ${response?.address?.zip5}-${response?.address?.zip4}`).toUpperCase();
+            this.isAddressValidationPopup = true;
             this.addressSuggested = response?.address;
             this.mailingAddressIsNotValid = false;
-            this.isAddressValidationPopup = true;
           }
           else {
-            this.mailingAddressIsNotValid = true;
             this.isAddressValidationPopup = true;
+            this.mailingAddressIsNotValid = true;
           }
         }
       });
   }
 
-  validateMailAddress() {
-    const maillingAddressGroup = this.contactInfoForm.get('maillingAddress') as FormGroup;
-    const address: MailAddress = {
-      address1: maillingAddressGroup?.controls['address1']?.value,
-      address2: maillingAddressGroup?.controls['address2']?.value,
-      city: maillingAddressGroup?.controls['city']?.value,
-      state: maillingAddressGroup?.controls['state']?.value,
-      zip5: maillingAddressGroup?.controls['zip']?.value,
-    };
+  validateMailAddress(prev: any, curr: any) {
+    if (prev != null
+      && curr['address1'] && curr['address2'] && curr['city'] && curr['state'] && curr['zip']
+      && (prev['address1'] !== curr['address1'] || prev['address2'] !== curr['address2']
+        || prev['city'] !== curr['city'] || prev['state'] !== curr['state']
+        || prev['zip'] !== curr['zip']
+      )) {
+      const address: MailAddress = {
+        address1: curr['address1'],
+        address2: curr['address2'],
+        city: curr['city'],
+        state: curr['state'],
+        zip5: curr['zip']
+      };
 
-    if (address?.address1 && address?.address2 && address?.city && address?.state && address?.zip5) {
-      // this.addressEntered = (`${address?.address1} ${address?.address2} ${address?.city}, ${address?.state} ${address?.zip5}`).toUpperCase();
       this.addressEntered = address;
       return this.addressValidationFacade.validate(address);
     }
 
     return of(null);
-
   }
 
   private createContactInfo() {
@@ -414,9 +432,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     contactInfoData.phone = [homePhone, cellPhone, workPhone, otherPhone];
     contactInfoData.email = email;
     contactInfoData.friedsOrFamilyContact = friedsOrFamilyContact;
-    contactInfoData.houseLessFlag = this.getFlag(homeAddressGroup?.get('houseLessFlag')?.value);
-    contactInfoData.papperlessFlag = this.getFlag(homeAddressGroup?.get('papperlessFlag')?.value);
-    contactInfoData.noProofOfResidency = this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value);
+    contactInfoData.homelessFlag = this.getFlag(homeAddressGroup?.get('homelessFlag')?.value);
+    contactInfoData.papperlessFlag = this.getFlag(emailGroup?.get('papperlessFlag')?.value);
+    contactInfoData.homeAddressProofFlag = this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value);
     contactInfoData.elgbtyflagConcurrencyStamp = this.contactInfo?.elgbtyflagConcurrencyStamp;
     const preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
 
@@ -469,10 +487,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       const cellPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
       const workPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
       const otherPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+
       this.contactInfoForm.get('homeAddress')?.patchValue(homeAddress,);
       this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('homeAddress.houselessFlag')?.patchValue(this.contactInfo?.houseLessFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.noProofOfResidency === StatusFlag.Yes);
+      this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(this.contactInfo?.homelessFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.homeAddressProofFlag === StatusFlag.Yes);
 
       this.contactInfoForm.get('maillingAddress')?.patchValue(mailingAddress);
 
@@ -500,7 +519,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('email.detailMsgConsentFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('email.papperlessFlag')?.patchValue(this.contactInfo?.papperlessFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('email.preferredContactMethod')?.patchValue(this.contactInfo?.preferredContactCode);
+      //this.contactInfoForm?.get('email.preferredContactMethod')?.patchValue(this.contactInfo?.preferredContactCode);
       this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
         homePhone,
         cellPhone,
@@ -508,31 +527,43 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         otherPhone,
         this.contactInfo?.email);
       this.contactInfoForm.get('familyAndFriendsContact')?.patchValue(this.contactInfo?.friedsOrFamilyContact);
+      this.contactInfoForm.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.patchValue(this.contactInfo?.friedsOrFamilyContact?.noFriendOrFamilyContactFlag === StatusFlag.Yes);
+
+      if (homeAddress?.state) {
+        this.loadDdlCountries(homeAddress?.state);
+      }
+      this.setVisibilityByHomelessFlag(this.contactInfo?.homelessFlag === StatusFlag.Yes)
+      this.setVisibilityByNoHomeAddressProofFlag(this.contactInfo?.homeAddressProofFlag === StatusFlag.Yes)
+      this.setVisibilityByHomePhoneNotApplicable(homePhone?.applicableFlag === StatusFlag.Yes)
+      this.setVisibilityByCellPhoneNotApplicable(cellPhone?.applicableFlag === StatusFlag.Yes)
+      this.setVisibilityByWorkPhoneNotApplicable(workPhone?.applicableFlag === StatusFlag.Yes)
+      this.setVisibilityByOtherPhoneNotApplicable(otherPhone?.applicableFlag === StatusFlag.Yes)
+      this.setVisibilityByNoFriendsOrFamily(this.contactInfo?.friedsOrFamilyContact?.noFriendOrFamilyContactFlag === StatusFlag.Yes)
+      this.setVisibilityByNoEmailCheckbox(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes)
+
     }
   }
 
-  /** Internal event methods **/
-  onNoEmailCheckboxClicked(event: Event) {
-    //this.isNoEmailChecked = !this.isNoEmailChecked;
-    if ((event.target as HTMLInputElement).checked) {
+  private setVisibilityByNoEmailCheckbox(isChecked: boolean) {
+    if (isChecked) {
       this.contactInfoForm?.get('email.email')?.disable();
-      this.contactInfoForm?.get('email.detailMsgConsentFlag')?.disable();
-      this.contactInfoForm?.get('email.detailMsgConsentFlag')?.reset();
+      this.contactInfoForm?.get('email.detailMsgFlag')?.disable();
+      this.contactInfoForm?.get('email.detailMsgFlag')?.reset();
       this.contactInfoForm?.get('email.email')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('email.email')?.enable();
-      this.contactInfoForm?.get('email.detailMsgConsentFlag')?.enable();
+      this.contactInfoForm?.get('email.detailMsgFlag')?.enable();
     }
   }
 
-  onNoHomeAddressProofFlagChecked(event: Event) {
-    this.isNoProofOfHomeChecked = (event.target as HTMLInputElement).checked;
+  private setVisibilityByNoHomeAddressProofFlag(isChecked: boolean) {
+    this.isNoProofOfHomeChecked = isChecked;
   }
 
-  onHomePhoneNotApplicableChecked(event: Event) {
-    if ((event.target as HTMLInputElement).checked) {
+  private setVisibilityByHomePhoneNotApplicable(isChecked: boolean) {
+    if (isChecked) {
       this.contactInfoForm?.get('homePhone.phoneNbr')?.disable();
       this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.disable();
       this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.disable();
@@ -548,8 +579,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCellPhoneNotApplicableChecked(event: Event) {
-    if ((event.target as HTMLInputElement).checked) {
+  private setVisibilityByCellPhoneNotApplicable(isChecked: boolean) {
+    if (isChecked) {
       this.contactInfoForm?.get('cellPhone.phoneNbr')?.disable();
       this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.disable();
       this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.disable();
@@ -564,8 +595,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.enable();
     }
   }
-  onWorkPhoneNotApplicableChecked(event: Event) {
-    if ((event.target as HTMLInputElement).checked) {
+
+  private setVisibilityByWorkPhoneNotApplicable(isChecked: boolean) {
+    if (isChecked) {
       this.contactInfoForm?.get('workPhone.phoneNbr')?.disable();
       this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.disable();
       this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.disable();
@@ -580,8 +612,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.enable();
     }
   }
-  onOtherPhoneNotApplicableChecked(event: Event) {
-    if ((event.target as HTMLInputElement).checked) {
+
+  private setVisibilityByOtherPhoneNotApplicable(isChecked: boolean) {
+    if (isChecked) {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.disable();
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
@@ -599,8 +632,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.enable();
     }
   }
-  onNoFriendsOrFamilyChecked(event: Event) {
-    if ((event.target as HTMLInputElement).checked) {
+
+  private setVisibilityByNoFriendsOrFamily(isChecked: boolean) {
+    if (isChecked) {
       this.contactInfoForm?.get('familyAndFriendsContact.contactName')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.disable();
@@ -614,26 +648,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.enable();
     }
   }
-  onsameAsMailingAddressFlagChecked(event: Event) {
-    if ((event.target as HTMLInputElement).checked) {
-      const maillingAddressGroup = this.contactInfoForm.get('maillingAddress') as FormGroup;
-      const maillingAddress: ClientAddress = {
-        address1: maillingAddressGroup?.controls['address1']?.value,
-        address2: maillingAddressGroup?.controls['address2']?.value,
-        city: maillingAddressGroup?.controls['city']?.value,
-        state: maillingAddressGroup?.controls['state']?.value,
-        zip: maillingAddressGroup?.controls['zip']?.value,
-      }
 
-      this.contactInfoForm.get('homeAddress')?.patchValue(maillingAddress);
-    }
-    else {
-      this.contactInfoForm.get('homeAddress')?.reset();
-    }
-  }
-
-  onHomelessFlagChecked(event: Event) {
-    if ((event.target as HTMLInputElement).checked) {
+  private setVisibilityByHomelessFlag(isChecked: boolean) {
+    if (isChecked) {
       this.contactInfoForm?.get('homeAddress.address1')?.disable();
       this.contactInfoForm?.get('homeAddress.address2')?.disable();
       this.contactInfoForm?.get('homeAddress.zip')?.disable();
@@ -647,27 +664,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('homeAddress.address2')?.enable();
       this.contactInfoForm?.get('homeAddress.zip')?.enable();
     }
-  }
-
-  onAddressValidationOkClicked() {
-    this.isAddressValidationPopup = false;
-  }
-
-  onUseSelectedAddressClicked() {
-    this.selectedAddressForm.markAllAsTouched();
-    if (this.selectedAddressForm.valid) {
-      if (this.selectedAddressForm.controls['choosenAddress']?.value === 'addressSuggested') {
-        this.setAddress(this.addressSuggested);
-      }
-      this.selectedAddressForm.reset();
-      this.isAddressValidationPopup = false;
-
-    }
-  }
-
-  onStateChange(value:any) {
-    this.loadDdlCountries(value);
-    this.contactInfoForm?.get('homeAddress.county')?.reset();
   }
 
   private setAddress(address: MailAddress | undefined) {
@@ -705,5 +701,81 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
 
     return '';
+  }
+
+  /** Internal event methods **/
+  onNoEmailCheckboxClicked(event: Event) {
+    this.setVisibilityByNoEmailCheckbox((event.target as HTMLInputElement).checked);
+  }
+
+  onNoHomeAddressProofFlagChecked(event: Event) {
+    this.setVisibilityByNoHomeAddressProofFlag((event.target as HTMLInputElement).checked);
+  }
+
+  onHomePhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByHomePhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onCellPhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByCellPhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onWorkPhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByWorkPhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onOtherPhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByOtherPhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onNoFriendsOrFamilyChecked(event: Event) {
+    this.setVisibilityByNoFriendsOrFamily((event.target as HTMLInputElement).checked)
+  }
+
+  onsameAsMailingAddressFlagChecked(event: Event) {
+    const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
+    if ((event.target as HTMLInputElement).checked) {
+      const maillingAddressGroup = this.contactInfoForm.get('maillingAddress') as FormGroup;
+      homeAddressGroup?.controls['city']?.patchValue(maillingAddressGroup?.controls['city']?.value);
+      homeAddressGroup?.controls['state']?.patchValue(maillingAddressGroup?.controls['state']?.value);
+
+      if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
+        homeAddressGroup?.controls['address1']?.patchValue(maillingAddressGroup?.controls['address1']?.value);
+        homeAddressGroup?.controls['address2']?.patchValue(maillingAddressGroup?.controls['address2']?.value);
+        homeAddressGroup?.controls['zip']?.patchValue(maillingAddressGroup?.controls['zip']?.value);
+      }
+    }
+    else {
+      homeAddressGroup?.controls['address1']?.reset();
+      homeAddressGroup?.controls['address2']?.reset();
+      homeAddressGroup?.controls['city']?.reset();
+      homeAddressGroup?.controls['state']?.reset();
+      homeAddressGroup?.controls['zip']?.reset();
+    }
+  }
+
+  onHomelessFlagChecked(event: Event) {
+    this.setVisibilityByHomelessFlag((event.target as HTMLInputElement).checked);
+  }
+
+  onAddressValidationOkClicked() {
+    this.isAddressValidationPopup = false;
+  }
+
+  onUseSelectedAddressClicked() {
+    this.selectedAddressForm.markAllAsTouched();
+    if (this.selectedAddressForm.valid) {
+      if (this.selectedAddressForm.controls['choosenAddress']?.value === 'addressSuggested') {
+        this.setAddress(this.addressSuggested);
+      }
+      this.selectedAddressForm.reset();
+      this.isAddressValidationPopup = false;
+
+    }
+  }
+
+  onStateChange(value: any) {
+    this.loadDdlCountries(value);
+    this.contactInfoForm?.get('homeAddress.county')?.reset();
   }
 }

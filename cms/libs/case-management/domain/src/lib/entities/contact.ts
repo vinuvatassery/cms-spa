@@ -72,8 +72,8 @@ export interface FriedsOrFamilyContact {
 
 export interface ContactInfo {
   address?: ClientAddress[];
-  houseLessFlag?: string;
-  noProofOfResidency?: any;
+  homelessFlag?: string;
+  homeAddressProofFlag?: any;
   phone?: ClientPhone[];
   email?: ClientEmail;
   preferredContactCode?: string;

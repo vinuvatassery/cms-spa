@@ -7,14 +7,13 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
-import { LovType, LovFacade, ZipCodeFacade } from '@cms/system-config/domain'
+import { LovFacade, ZipCodeFacade } from '@cms/system-config/domain'
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
   /** Private properties **/
   private ddlStatesSubject = new BehaviorSubject<any>([]);
   private ddlCountriesSubject = new BehaviorSubject<any>([]);
-  private ddlRelationshipsSubject = new BehaviorSubject<any>([]);
   private ddlPreferredContactMethodsSubject = new BehaviorSubject<any>([]);
   private ddlAddressTypesSubject = new BehaviorSubject<any>([]);
   private ddlPhoneTypesSubject = new BehaviorSubject<any>([]);
@@ -28,7 +27,6 @@ export class ContactFacade {
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   ddlCountries$ = this.ddlCountriesSubject.asObservable();
-  ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   ddlPreferredContactMethods$ =
     this.ddlPreferredContactMethodsSubject.asObservable();
   ddlAddressTypes$ = this.ddlAddressTypesSubject.asObservable();
@@ -68,28 +66,7 @@ export class ContactFacade {
         console.error('err', err);
       },
     });
-  }
-
-  loadDdlRelationships(): void {
-    // this.contactDataService.loadDdlRelationships().subscribe({
-    //   next: (ddlRelationshipsResponse) => {
-    //     this.ddlRelationshipsSubject.next(ddlRelationshipsResponse);
-    //   },
-    //   error: (err) => {
-    //     console.error('err', err);
-    //   },
-    // });
-
-    this.lovFacade.getLov(LovType.RelationshipCode).subscribe({
-      next: (lovResp) => {
-        console.log(lovResp);
-        this.ddlRelationshipsSubject.next(lovResp);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    })
-  }
+  }  
 
   loadDdlPreferredContactMethods(): void {
     this.contactDataService.loadDdlPreferredContactMethods().subscribe({

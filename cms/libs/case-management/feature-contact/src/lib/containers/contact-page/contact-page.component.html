@@ -16,6 +16,7 @@
               <kendo-textbox 
               aria-label="address line 1" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="100"
               formControlName="address1"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -31,6 +32,7 @@
               <kendo-textbox 
               aria-label="address line 2" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="100"
               formControlName="address2"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -45,6 +47,7 @@
               <kendo-textbox 
               aria-label="city" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="20"
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -77,6 +80,7 @@
               <kendo-textbox 
               aria-label="Zip" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="10"
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -113,7 +117,6 @@
               <label class="k-checkbox-label" for="check1">Same as Mailing Address</label>
 
             </span>
-            <kendo-formerror>Error: Address line 1 is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -125,6 +128,7 @@
               <kendo-textbox 
               aria-label="address line 1" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="100"
               formControlName="address1"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -140,6 +144,7 @@
               <kendo-textbox 
               aria-label="address line 2" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="100"
               formControlName="address2"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -154,6 +159,7 @@
               <kendo-textbox 
               aria-label="city" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="20"
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -187,6 +193,7 @@
               <kendo-textbox 
               aria-label="zip optional" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="10"
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -222,7 +229,7 @@
               id="check2" 
               kendoCheckBox 
               aria-labelledby="houseless"
-              formControlName="houselessFlag"
+              formControlName="homelessFlag"
               (click)="onHomelessFlagChecked($event)"
                />
               <label class="k-checkbox-label" for="check2">Houseless</label>
@@ -246,14 +253,76 @@
               <label class="k-checkbox-label" for="check3">No proof of home address or residency</label>
             </span>
           </kendo-formfield>
-
           </div>
-        </div>
+        </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
             <kendo-upload [disabled]="isNoProofOfHomeChecked"> </kendo-upload>
           </div>
         </div>
+        <div class="flex-row mt-2">
+          <div class="flex-col mat-split-list mt-2">
+            <h5 class="text-capital">How stable is your housing?</h5>
+          </div>
+        </div>
+          <div class="flex-row ml-1">
+            <kendo-formfield>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  name="housingStability"
+                  aria-labelledby="stable or permanent"
+                  id="StableOrPermanent"
+                  tabindex="1"
+                  class="form-control" 
+                  formControlName="housingStability"
+                  value="stableOrPermanent"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="Stable/Permanent"
+                  for="StableOrPermanent"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  name="housingStability"
+                  aria-labelledby="temporary"
+                  id="temporary"
+                  tabindex="1"
+                  class="form-control" 
+                  formControlName="housingStability"
+                  value="temporary"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="Temporary"
+                  for="temporary"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  name="housingStability"
+                  aria-labelledby="unstable"
+                  id="unstable"
+                  tabindex="1"
+                  class="form-control" 
+                  formControlName="housingStability"
+                  value="unstable"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  text="Unstable"
+                  for="unstable"
+                ></kendo-label>
+              </span>
+          </kendo-formfield>
+        </div>   
       </div>
       <!-- Contact Phone Details-->
       <div class="block-section" formGroupName="homePhone">
