@@ -31,7 +31,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.lovFacade.lovs$;
+  ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
   case$ = this.caseFacade.getCase$;
   clientCaseId! : string;
   sessionId! : string;
@@ -66,7 +66,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     {      
       this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
       this.caseFacade.loadDdlPrograms();
-      this.lovFacade.getLovsbyType(LovType.CaseOrigin); 
+      this.lovFacade.getCaseOriginLovs(); 
       this.loadCase();
     }
 
