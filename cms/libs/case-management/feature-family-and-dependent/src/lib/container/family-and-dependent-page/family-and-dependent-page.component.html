@@ -17,6 +17,7 @@
             (click)="onNoFamilyMemberClicked()"
             aria-labelledby="clientDoesNotHaveFamilyOrDependents"
             id="clientsDoesNotHaveFamilyOrDependents"
+           [checked]="dependentStatus$ | async"           
           />
           <label
             class="k-checkbox-label"
@@ -25,14 +26,16 @@
           >
           </span>
         </div>
-        <div class="flex-col" *ngIf="isFamilyGridDisplay">
+        <div class="flex-col" *ngIf="!isFamilyGridDisplay">
           <case-management-family-and-dependent-list
           [dependents$]="dependentList$"
           [dependentSearch$]="dependentSearch$"
           [ddlRelationships$]="ddlRelationships$"
+          [dependentGet$]="dependentGet$"
           (addUpdateDependentEvent)="addUpdateDependentHandle($event)"
           (GetNewDependentHandleEvent)="GetNewDependentHandle($event)"        
-          (loadDependentsEvent)="loadDependentsHandle($event)"         
+          (loadDependentsEvent)="loadDependentsHandle($event)"     
+          (deleteDependentsEvent)="deleteDependentParamHandle($event)"           
           >         
           </case-management-family-and-dependent-list>
         </div>

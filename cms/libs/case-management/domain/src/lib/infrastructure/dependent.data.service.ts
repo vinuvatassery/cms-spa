@@ -21,7 +21,7 @@ export class DependentDataService {
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-dependents/${clientId}`//&skipcount=${skipcount}&maxResultCount=${maxResultCount}&sort=${sort}&sortType=${sortType}`
+      `/case-management/client-dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
     
   }
@@ -50,14 +50,14 @@ export class DependentDataService {
   }
 
   UpdateNewDependent(dependent: Dependent) {
-    return this.http.post(
+    return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
       dependent
     );
   }
 
-  AddNewDependent(dependent: Dependent) {
-    return this.http.put(
+  AddNewDependent(dependent: Dependent) {    
+    return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
       dependent
     );
@@ -66,6 +66,12 @@ export class DependentDataService {
   GetNewDependent(dependentId: string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents?dependentId=${dependentId}`      
+    );
+  }
+
+  DeleteDependent(dependentId: string) {
+    return this.http.delete(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${dependentId}`      
     );
   }
 
