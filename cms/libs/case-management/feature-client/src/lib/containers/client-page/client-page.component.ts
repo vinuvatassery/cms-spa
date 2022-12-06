@@ -149,6 +149,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientGender.extraProperties= x.extraProperties;
                 clientGender.isDeleted = x.isDeleted;
                 clientGender.lastModificationTime = x.lastModificationTime;
+                clientGender.otherDesc = x.otherDesc;
                 if(this.applicatInfo.clientGenderList == undefined || null ){
                   this.applicatInfo.clientGenderList = []
                 }
@@ -392,31 +393,33 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   
   private populateClientGender(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*-------------------------------------------------------------------------------- */
         
-        this.applicatInfo.clientGenderList = [];
+       let clientGenderListSaved = this.applicatInfo.clientGenderList;// this is in case of update record
+       this.applicatInfo.clientGenderList=[];
         Object.keys( this.appInfoForm.controls).filter(m=>m.includes('Gender')).forEach(control => {
           if (this.appInfoForm.controls[control].value===true) {
+            control= control.replace('Gender','');
             let clientGender = new ClientGender();
-            clientGender.clientGenderCode =control.replace('Gender','');
+            clientGender.clientGenderCode =control;
             clientGender.activeFlag =StatusFlag.Yes;
-            clientGender.isDeleted =false;
             if(clientGender.clientGenderCode==='NOT_LISTED'){
               clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
             }
+            let Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
+            if (Existing!==undefined) {
+              clientGender=Existing;
+            }
+            clientGender.isDeleted =false;
             this.applicatInfo.clientGenderList.push(clientGender);
+          }else{
+            let clientGenderCode =control;
+            let Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGenderCode);
+            if (Existing!==undefined) {
+              Existing.isDeleted=true;
+              this.applicatInfo.clientGenderList.push(Existing);
+            }
           }
         });
-        // var clientGender = new ClientGender();
-        // clientGender.clientGenderCode = 'Woman or Girl';
-        // clientGender.activeFlag ="Y";
-        // if(this.applicatInfo.clientGenderList == undefined){
-        //   this.applicatInfo.clientGenderList = [];
-        // }
-        // this.applicatInfo.clientGenderList.push(clientGender)
-        
-        /*-------------------------------------------------------------------------------- */
   }
   private populateClientRace(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
