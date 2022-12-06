@@ -87,8 +87,12 @@ export class FamilyAndDependentFacade {
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
     
     this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({ 
-      next: (dependentsResponse) => {
-        this.dependentsSubject.next(dependentsResponse);
+      next: (dependentsResponse : any) => {
+        const gridView = {
+          data : dependentsResponse["items"],        
+          total: dependentsResponse["totalCount"]
+      };
+        this.dependentsSubject.next(gridView);
       },
       error: (err) => {
         console.error('err', err);

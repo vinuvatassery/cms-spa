@@ -3,7 +3,7 @@ export interface Dependent {
     clientId  : number,
     dependentTypeCode  :  string  ,
     relationshipCode  :    string  ,
-    relationship    : string
+    relationshipDescription    : string
     firstName  :    string  ,
     lastName  :   string  ,
     fullName  :   string  ,

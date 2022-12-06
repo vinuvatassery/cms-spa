@@ -1,5 +1,5 @@
 <div class="app-c-table">
-  <kendo-grid [data]="gridView"  #dependentsGrid
+  <kendo-grid [data]="dependents$ | async"  #dependentsGrid
   [pageSize]="state.take" 
   [pageable]="true" 
   [sortable]="true" 
@@ -27,13 +27,14 @@
       *ngIf="dataItem.dependentTypeCode===CAClient"
       (click)="onClientUrlClick(dataItem.clientId)"
       >
-        {{ dataItem.fullName }}
+        {{ dataItem.firstName + ''+  dataItem.lastName}}
       </button>
-    <div *ngIf="dataItem.dependentTypeCode===Dependent">  {{ dataItem.fullName }}</div>
+    <div *ngIf="dataItem.dependentTypeCode===Dependent"> 
+       {{ dataItem.firstName + ''+  dataItem.lastName }}</div>
     </ng-template>   
     </kendo-grid-column>
     <kendo-grid-column  [width]="100"    
-     field="relationshipCode"    
+     field="relationshipDescription"    
       title="Relationship to Client">
       
     </kendo-grid-column>

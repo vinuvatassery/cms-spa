@@ -24,8 +24,7 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
 /******enumeration Alias *****/
 Dependent = DependentTypeCode.Dependent;
 CAClient = DependentTypeCode.CAClient;
-
-  @ViewChild('dependentsGrid') dependentsGrid!: DataBindingDirective;
+ 
   /** Input properties **/
   @Input() data: any;
   @Input() dependents$: any;
@@ -48,8 +47,7 @@ CAClient = DependentTypeCode.CAClient;
   public pageSizes = [
     {text: "5", value: 5}, 
     {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100} 
+    {text: '20', value: 20}   
   ];
 
   public sort: SortDescriptor[] = [{
@@ -72,7 +70,7 @@ CAClient = DependentTypeCode.CAClient;
   deletebuttonEmitted = false
   editbuttonEmitted = false
   deleteRequest$ = this.deleteRequestSubject.asObservable();
-  public gridView!: GridDataResult;
+
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -120,29 +118,6 @@ CAClient = DependentTypeCode.CAClient;
     }
 
   /** Private methods **/
-
-  private mapRelationshipstoLov()
-  {
-    this.ddlRelationships$.pipe()
-    .subscribe((relations: any[]) => {             
-      this.relationshipsObject = [...relations]; 
-       
-      });
-    // this.dependents$.pipe()
-    // .subscribe((dependents: any[]) => {     
-    //   debugger        
-    //   this.dependentsObject = [...dependents];     
-      
-    //   Object.keys(this.dependentsObject).forEach(key => {      
-    //     this.dependentsObject[key].relationship =
-    //      this.relationshipsObject.find((item : Lov) => 
-    //      item.lovCode === this.dependentsObject[key].relationshipCode)?.lovDesc         
-    //   });
-
-    //   //this.loadFamilyDependents()
-    // }); 
-  
-  }
 
   private addOrEditFamilyDependentDisplay() {
     if (this.data === ScreenType.Case360Page) {
@@ -217,7 +192,7 @@ CAClient = DependentTypeCode.CAClient;
   {
     this.onDeleteFamilyMemberClicked(event?.clientDependentId, event?.dependentTypeCode)
   }
-  
+
   addUpdateDependentHandle(dependent : any) {
     this.addUpdateDependentEvent.next(dependent);
   }
@@ -242,46 +217,19 @@ CAClient = DependentTypeCode.CAClient;
    /** grid event methods **/
    public onClientUrlClick(client_id : number)
    {  
-    this.router.navigate([`/case-management/case-detail/cases/case360/`+{client_id}], { relativeTo: this.activatedRoute });
+    this.router.navigate([`/case-management/case-detail/cases/case360/`+{client_id}], {replaceUrl:true});
    }
 
-   public dataStateChange(stateData: any): void {       
-    /**
-     * The number of records to be skipped by the pager.
-     */
-     //this.skip = stateData?.skip;
-     /**
-      * The number of records to take.
-      */
-      //this.pageSize = stateData?.take;
-     /**
-      * The descriptors used for sorting.
-      *  */
-     
+   public dataStateChange(stateData: any): void {         
       this.sort = stateData.sort;
       this.sortValue = stateData.sort[0]?.field
       this.sortType = stateData.sort[0]?.dir ?? 'asc'
-
       this.state=stateData;
-
       this.loadFamilyDependents();   
   }
 
-  private loadFamilyDependents(): void { 
-  
-    this.loadDependents(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)
-    
-       this.dependents$.pipe()
-    .subscribe((dependents: any) => {     
-
-      this.gridView = {
-        data: process(dependents["items"], this.state).data, //dependents["items"].slice(0,100),
-        total: dependents["totalCount"]
-    };  
-    }); 
-  
+  private loadFamilyDependents(): void {   
+    this.loadDependents(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)    
   }
-
-
   
 }
