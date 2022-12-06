@@ -88,12 +88,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     .subscribe((session: any) => {  
       debugger; 
       this.applicatInfo = new ApplicantInfo();
+      this.clientFacade.applicationInfoSubject.next(this.applicatInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
-     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId    
-    // this.caseFacade.loadCasesById(this.clientCaseId);
+     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-     //this.clientId = JSON.parse(session.sessionData).clientId    
-     //this.caseFacade.loadCasesById(this.clientCaseId);
       if(this.clientCaseId  !==null || this.clientCaseId !== undefined){
         this.applicatInfo.clientCaseId = this.clientCaseId
         this.applicatInfo.workFlowSessionId = this.sessionId;      
@@ -113,12 +111,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;
           this.loadApplicantInfo();
         }
-        else{          
-          //this.getCaseData();         
+        else{        
+      
           if(this.appInfoForm != undefined){
            this.appInfoForm.reset();
            this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
            this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
+           this.appInfoForm.controls["ssn"].enable();
+           this.appInfoForm.controls['middleName'].enable();
+           this.appInfoForm.controls["officialIdLastName"].enable();
+           this.appInfoForm.controls["officialIdFirstName"].enable();
+           this.appInfoForm.controls["prmInsFirstName"].enable();
+           this.appInfoForm.controls["prmInsLastName"].enable();
+           this.appInfoForm.controls["ssn"].enable();
           }
         }
       }

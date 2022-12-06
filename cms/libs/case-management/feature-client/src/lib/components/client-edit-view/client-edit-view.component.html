@@ -16,16 +16,17 @@
    
       </kendo-floatinglabel>
     </div>
+      <!-- [disabled]="isMiddleNameChecked" -->
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Middle Initial (Optional)">
         <kendo-textbox   aria-label="middle initial" 
             [fillMode]="formUiStyle.inputFillMode" 
             formControlName="middleName"
-            [maxlength]="lengthRestrictThirty" 
-            [disabled]="isMiddleNameChecked">
+            [maxlength]="lengthRestrictThirty"           
+            >
         </kendo-textbox>
       
-        <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid">Middle Initial/Checkbox is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle Initial/Checkbox is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
@@ -56,7 +57,7 @@
       </kendo-floatinglabel>
     </div>
   </div>
-
+ <!-- [disabled]="isInsuranceCardChecked" -->
   <div class="flex-row">
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Primary Insurance Card">
@@ -64,22 +65,23 @@
             [fillMode]="formUiStyle.inputFillMode"
             formControlName="prmInsFirstName"
             [maxlength]="lengthRestrictForty"
-            [disabled]="isInsuranceCardChecked">
+            >
         </kendo-textbox>
       
-        <kendo-formerror *ngIf="!appInfoForm.controls['prmInsFirstName'].valid">First Name on Primary Insurance Card/Checkbox is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['prmInsFirstName'].valid && !this.appInfoForm.controls['prmInsFirstName'].disabled">First Name on Primary Insurance Card/Checkbox is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
+    <!-- [disabled]="isInsuranceCardChecked" -->
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name on Primary Insurance Card">
         <kendo-textbox aria-label="last name on primary insurance card"  
             [fillMode]="formUiStyle.inputFillMode" 
             formControlName="prmInsLastName"
             [maxlength]="lengthRestrictForty"
-            [disabled]="isInsuranceCardChecked">   
+            >   
         </kendo-textbox>
       
-        <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid">Last Name on Primary Insurance Card/Checkbox is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled" >Last Name on Primary Insurance Card/Checkbox is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-4 mt-3">
@@ -101,29 +103,30 @@
     </div>
   </div>
   <div class="flex-row">
+    <!-- [disabled]="isOfficialIdChecked" -->
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="First Name on Official ID">
         <kendo-textbox aria-label="first name on official id"  
           [fillMode]="formUiStyle.inputFillMode" 
           formControlName="officialIdFirstName"
           [maxlength]="lengthRestrictForty"
-          [disabled]="isOfficialIdChecked">   
+          >   
         </kendo-textbox>
     
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid">First Name on Official ID/Checkbox is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First Name on Official ID/Checkbox is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-4">
       <kendo-floatinglabel text="Last Name on Official ID">
-      
+        <!-- [disabled]="isOfficialIdChecked" -->
         <kendo-textbox aria-label="last name on official id"  
           [fillMode]="formUiStyle.inputFillMode" 
           formControlName="officialIdLastName"
           [maxlength]="lengthRestrictForty"
-          [disabled]="isOfficialIdChecked">   
+          >   
         </kendo-textbox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid">Last Name on Official ID/Checkbox is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last Name on Official ID/Checkbox is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-4 mt-3">
       <span class="app-checkboxwidtext-wrapper">
@@ -159,15 +162,16 @@
  
   <div class="flex-row">
     <div class="flex-col flex-col-4">
+      <!-- [disabled]="isSSNChecked" -->
       <kendo-floatinglabel text="Social Security Number">
         <kendo-textbox aria-label="social security number"  
           [fillMode]="formUiStyle.inputFillMode" 
           formControlName="ssn"
           [maxlength]="maxLengthSsn"
-          [disabled]="isSSNChecked">   </kendo-textbox>
+          >   </kendo-textbox>
 
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid">Social Security Number/Checkbox is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social Security Number/Checkbox is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-4 mt-3">
       <span class="app-checkboxwidtext-wrapper">
