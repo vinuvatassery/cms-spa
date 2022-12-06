@@ -54,8 +54,7 @@ export class ClientEditViewPronounComponent implements OnInit {
       
  });
  }
-   onCheckChange(event:any,lovCode:any) {  
- debugger;
+   onCheckChange(event:any,lovCode:any) { 
     if(event.target.checked && lovCode ==='NOT_LISTED'){
       this.appInfoForm.controls['NOT_LISTED'].setErrors({'incorrect': true});
       this.textboxDisable = false;

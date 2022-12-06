@@ -71,9 +71,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved]) => {
-  debugger;
       if (isSaved) {
-        debugger;
         this.workFlowFacade.navigate(navigationType);
       }
     });
@@ -337,7 +335,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       
   }
   private populateClientPronoun(){
-    debugger;
     if(this.applicatInfo.clientPronounList == undefined){
       this.applicatInfo.clientPronounList = [];
     }
@@ -493,7 +490,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
               this.appInfoForm.controls["ssn"].updateValueAndValidity();    
         }
-        debugger;
         if(this.appInfoForm.controls["registerToVote"].value == null ||
                this.appInfoForm.controls["registerToVote"].value ==''){
               this.appInfoForm.controls["registerToVote"].setValidators(Validators.required);

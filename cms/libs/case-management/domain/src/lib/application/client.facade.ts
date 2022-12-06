@@ -245,18 +245,6 @@ export class ClientFacade {
       },
     });
   }
-
-  setPronounList(): void {
-    this.clientDataService.setPronounList().subscribe({
-      next: (pronounresponse) => {
-        this.pronounListSubject.next(pronounresponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
   save(applicantInfo:ApplicantInfo) {
       return this.clientDataService.save(applicantInfo);
   }

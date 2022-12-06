@@ -153,22 +153,22 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  
   ngAfterViewChecked() {  
     var firstName = '';
-    var middleName ='';
+    var lastName ='';
     if(this.appInfoForm.controls["firstName"].value === null){
       firstName = ''
     }
     else{
       firstName = this.appInfoForm.controls["firstName"].value
     }
-    if(this.appInfoForm.controls["middleName"].value === null){
-      middleName = ''
+    if(this.appInfoForm.controls["lastName"].value === null){
+      lastName = ''
     }
     else{
-      middleName = this.appInfoForm.controls["middleName"].value
+      lastName = this.appInfoForm.controls["lastName"].value
     }
     
 
-    this.ApplicantNameChange.emit(firstName+'  '+middleName);
+    this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -239,7 +239,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 }
 
 private assignModelToForm(applicantInfo:ApplicantInfo){
- debugger;
   this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
   if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
     this.appInfoForm.controls["chkmiddleName"].setValue(true);

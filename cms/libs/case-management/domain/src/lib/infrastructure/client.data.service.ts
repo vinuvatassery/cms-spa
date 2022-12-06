@@ -339,29 +339,7 @@ export class ClientDataService {
       ]);
     }
   }
-setPronounList(){
-  return of({
-    first: [   
-      {value: 'She/Her/Hers'  ,selected: false,code:"SHE_HER_HERS"},
-      {value: 'He/Him/His',selected: false,code:"HE_HIM_HIS"},
-      {value: 'They/Them/Theirs',selected: false,code:"THEY_THEM_THEIRS"},
-      {value: 'Ella',selected: false,code:"ELLA"},
-      {value: 'Él',selected: false,code:"EL"},
-      {value: 'Elles',selected: false,code:"ELLES"},
-      {value: 'No pronouns, use their name',selected: false,code:"NO_PRONOUN"},
-      {value: 'Not listed, please specify:',selected: false,code:"NOT_LISTED"}
-    ],
-    second:[
-      {value:'Don’t know what this question is asking',selected:false,code:"DONT_KNOW"},
-      {value:'Don’t want to answer',selected:false,code:"DONT_WANT"}
-    ]
-    },);
-}
-  // saveApplicationInfo():Observable<Client>{
-  //     return empty();
-  // }
   save(applicantInfo: ApplicantInfo) {  
-    debugger;
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
       applicantInfo,
