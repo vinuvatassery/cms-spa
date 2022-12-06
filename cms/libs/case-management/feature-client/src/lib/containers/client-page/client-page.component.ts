@@ -71,7 +71,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved]) => {
-  
+  debugger;
       if (isSaved) {
         debugger;
         this.workFlowFacade.navigate(navigationType);
@@ -237,16 +237,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.populateApplicantInfoModel();  
             this.clientFacade.save(this.applicatInfo).subscribe({         
               next: response => {
-              return true;
+              return of(true);
               } ,
             error: error => {    
-              return false;           
+              return of(false);           
               console.error(error);
             }
           });
         
     }
-    return of(false)
+    return of(true)
   }
   private  populateApplicantInfoModel(){ 
    
