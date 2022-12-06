@@ -56,10 +56,9 @@ public showInputLoader = false;
       {
         if(text)
         {
-            // this.loaderService.show();
         this.searchTextEvent.emit(text)
         this.showInputLoader = false;  
-      // this.loaderService.hide();
+ 
         } 
       }
       
@@ -102,6 +101,7 @@ public showInputLoader = false;
 
   onSubmit() {     
     this.parentForm.markAllAsTouched();
+         this.loaderService.show();
     this.isSubmitted = true;
     this.newcaseSaveEvent.emit(this.parentForm);
   }
