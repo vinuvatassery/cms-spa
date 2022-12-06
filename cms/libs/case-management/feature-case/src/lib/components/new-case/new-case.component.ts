@@ -56,8 +56,10 @@ public showInputLoader = false;
       {
         if(text)
         {
+            // this.loaderService.show();
         this.searchTextEvent.emit(text)
         this.showInputLoader = false;  
+      // this.loaderService.hide();
         } 
       }
       
@@ -112,14 +114,9 @@ public showInputLoader = false;
   onsearchTextChange(text : string)
   {    
 
-    if(text){
-    
+    if(text){ 
       this.showInputLoader = true;  
-      this.filterManager.next(text);
-      
-    }
-   
- 
-
+      this.filterManager.next(text); 
+    } 
   }
 }

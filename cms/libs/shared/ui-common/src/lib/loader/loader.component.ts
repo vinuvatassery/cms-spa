@@ -12,6 +12,7 @@ export class LoaderComponent {
  
   isLoading: Subject<boolean> = this.loaderService.isLoading;
 
-  constructor(private loaderService: LoaderService) {
+  constructor(public loaderService: LoaderService) {
   }
+
 }
