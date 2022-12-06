@@ -199,14 +199,14 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       middleName: ['',{disabled:false}],
       chkmiddleName:  [''],
       lastName:  [''],
-      prmInsFirstName:  [''],
-      prmInsLastName:  [''],
+      prmInsFirstName:  ['',{disabled:false}],
+      prmInsLastName:  ['',{disabled:false}],
       prmInsNotApplicable:  [''],
-      officialIdFirstName:  [''],
-      officialIdLastName:  [''],
+      officialIdFirstName:  ['',{disabled:false}],
+      officialIdLastName:  ['',{disabled:false}],
       officialIdsNotApplicable:  [''],
       dateOfBirth:  [this.currentDate],
-      ssn:  [''],
+      ssn:  ['',{disabled:false}],
       ssnNotApplicable:  [''],
       registerToVote: [''],
       pronouns: [''],      
@@ -215,12 +215,23 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   } 
 
   private loadApplicantInfoSubscription(){
-    debugger;
     
     this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
       this.textboxDisable  = true; 
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
+      if(this.appInfoForm !== undefined){
+      this.appInfoForm.reset();
+      this.appInfoForm.updateValueAndValidity()
+      this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
+      this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
+      this.appInfoForm.controls['middleName'].enable();
+      this.appInfoForm.controls["officialIdLastName"].enable();
+      this.appInfoForm.controls["officialIdFirstName"].enable();
+      this.appInfoForm.controls["prmInsFirstName"].enable();
+      this.appInfoForm.controls["prmInsLastName"].enable();
+      this.appInfoForm.controls["ssn"].enable();
+      }
       this.applicantInfo = applicantInfo;
       this.assignModelToForm(applicantInfo);
     }

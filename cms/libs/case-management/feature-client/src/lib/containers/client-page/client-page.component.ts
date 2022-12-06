@@ -85,8 +85,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
    this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {  
-      debugger; 
+    .subscribe((session: any) => {
       this.applicatInfo = new ApplicantInfo();
       this.clientFacade.applicationInfoSubject.next(this.applicatInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
@@ -111,21 +110,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;
           this.loadApplicantInfo();
         }
-        else{        
       
-          if(this.appInfoForm != undefined){
-           this.appInfoForm.reset();
-           this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
-           this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
-           this.appInfoForm.controls["ssn"].enable();
-           this.appInfoForm.controls['middleName'].enable();
-           this.appInfoForm.controls["officialIdLastName"].enable();
-           this.appInfoForm.controls["officialIdFirstName"].enable();
-           this.appInfoForm.controls["prmInsFirstName"].enable();
-           this.appInfoForm.controls["prmInsLastName"].enable();
-           this.appInfoForm.controls["ssn"].enable();
-          }
-        }
       }
     }
      
@@ -522,8 +507,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-        }
-          //this.appInfoForm.controls['pronouns'].setErrors({'incorrect': true});
+        }          
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           this.pronounList.forEach((pronoun:any) => {
