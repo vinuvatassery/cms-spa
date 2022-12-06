@@ -196,10 +196,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   private buildForm() {
     this.appInfoForm = this.formBuilder.group({
       firstName: [''],
-      middleName: ['',{disabled:false}],
+      middleName: [''],
       chkmiddleName:  [''],
       lastName:  [''],
-      prmInsFirstName:  ['',{disabled:false}],
+      prmInsFirstName:  [''],
       prmInsLastName:  ['',{disabled:false}],
       prmInsNotApplicable:  [''],
       officialIdFirstName:  ['',{disabled:false}],
@@ -221,8 +221,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
       if(this.appInfoForm !== undefined){
-      this.appInfoForm.reset();
-      this.appInfoForm.updateValueAndValidity()
+      this.appInfoForm.reset();    
       this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
       this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
       this.appInfoForm.controls['middleName'].enable();

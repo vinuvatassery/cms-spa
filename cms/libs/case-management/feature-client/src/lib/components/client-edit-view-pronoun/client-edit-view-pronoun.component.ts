@@ -23,7 +23,7 @@ export class ClientEditViewPronounComponent implements OnInit {
     /** Public properties **/
    pronounList: any = []; 
    saveClickSubscription!:Subscription;
-   pronounLovs$= this.lovFacade.lovs$;
+   pronounLovs$= this.lovFacade.pronounslov$;
    showNotListedRequired:boolean=false;
    //textboxDisable:boolean=true;
 
@@ -36,7 +36,7 @@ export class ClientEditViewPronounComponent implements OnInit {
    }
  
    ngOnInit(): void {
-    this.lovFacade.getLovsbyType(LovType.Pronouns);
+    this.lovFacade.getPronounLovs();
     this.loadPronouns();
    
     
