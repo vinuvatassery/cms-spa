@@ -235,18 +235,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.validateForm();
         if(this.appInfoForm.valid){
           this.populateApplicantInfoModel();  
-            this.clientFacade.save(this.applicatInfo).subscribe({         
-              next: response => {
-              return of(true);
-              } ,
-            error: error => {    
-              return of(false);           
-              console.error(error);
-            }
-          });
-        
-    }
-    return of(true)
+          return this.clientFacade.save(this.applicatInfo);
+        }
+        else{
+          return of(false);
+        }       
+  
+  
   }
   private  populateApplicantInfoModel(){ 
    
