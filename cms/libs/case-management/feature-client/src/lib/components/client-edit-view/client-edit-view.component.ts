@@ -239,7 +239,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 }
 
 private assignModelToForm(applicantInfo:ApplicantInfo){
- debugger;
   this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
   if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
     this.appInfoForm.controls["chkmiddleName"].setValue(true);
@@ -305,6 +304,14 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   else{
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
+  }
+  if (Array.isArray(applicantInfo.clientGenderList) ) {
+    applicantInfo.clientGenderList.forEach(gender => {  
+      this.appInfoForm.controls['Gender'+gender.clientGenderCode].setValue(true);
+      if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
+        this.appInfoForm.controls['GenderDescription'].setValue(gender.otherDesc);
+      }
+    })
   }
   if(applicantInfo.clientPronounList != null || undefined){   
     applicantInfo.clientPronounList.forEach(pronoun => {  

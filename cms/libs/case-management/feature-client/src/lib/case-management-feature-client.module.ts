@@ -16,6 +16,7 @@ import { CaseDetailsComponent } from './components/case-details/case-details.com
 import { SpecialHandlingDetailComponent } from './components/special-handling-detail/special-handling-detail.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { ClientEditViewPronounComponent } from './components/client-edit-view-pronoun/client-edit-view-pronoun.component';
+import { ClientEditViewGenderComponent } from './components/client-edit-view-gender/client-edit-view-gender.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,6 @@ import { ClientEditViewPronounComponent } from './components/client-edit-view-pr
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
-    
   ],
   declarations: [
     ClientPageComponent,
@@ -36,7 +36,7 @@ import { ClientEditViewPronounComponent } from './components/client-edit-view-pr
     CaseDetailsComponent,
     SpecialHandlingDetailComponent,
     ClientEditViewPronounComponent,
-    
+    ClientEditViewGenderComponent,
   ],
   exports: [
     ClientPageComponent,

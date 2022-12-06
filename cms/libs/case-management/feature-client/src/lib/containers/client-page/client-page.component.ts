@@ -71,9 +71,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved]) => {
-  debugger;
+  
       if (isSaved) {
-        debugger;
+        
         this.workFlowFacade.navigate(navigationType);
       }
     });
@@ -337,7 +337,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       
   }
   private populateClientPronoun(){
-    debugger;
+    
     if(this.applicatInfo.clientPronounList == undefined){
       this.applicatInfo.clientPronounList = [];
     }
@@ -394,13 +394,27 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   private populateClientGender(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
         /*-------------------------------------------------------------------------------- */
-        var clientGender = new ClientGender();
-        clientGender.clientGenderCode = 'Woman or Girl';
-        clientGender.activeFlag ="Y";
-        if(this.applicatInfo.clientGenderList == undefined){
-          this.applicatInfo.clientGenderList = [];
-        }
-        this.applicatInfo.clientGenderList.push(clientGender)
+        
+        this.applicatInfo.clientGenderList = [];
+        Object.keys( this.appInfoForm.controls).filter(m=>m.includes('Gender')).forEach(control => {
+          if (this.appInfoForm.controls[control].value===true) {
+            let clientGender = new ClientGender();
+            clientGender.clientGenderCode =control.replace('Gender','');
+            clientGender.activeFlag =StatusFlag.Yes;
+            clientGender.isDeleted =false;
+            if(clientGender.clientGenderCode==='NOT_LISTED'){
+              clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
+            }
+            this.applicatInfo.clientGenderList.push(clientGender);
+          }
+        });
+        // var clientGender = new ClientGender();
+        // clientGender.clientGenderCode = 'Woman or Girl';
+        // clientGender.activeFlag ="Y";
+        // if(this.applicatInfo.clientGenderList == undefined){
+        //   this.applicatInfo.clientGenderList = [];
+        // }
+        // this.applicatInfo.clientGenderList.push(clientGender)
         
         /*-------------------------------------------------------------------------------- */
   }
@@ -493,7 +507,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
               this.appInfoForm.controls["ssn"].updateValueAndValidity();    
         }
-        debugger;
+        
         if(this.appInfoForm.controls["registerToVote"].value == null ||
                this.appInfoForm.controls["registerToVote"].value ==''){
               this.appInfoForm.controls["registerToVote"].setValidators(Validators.required);

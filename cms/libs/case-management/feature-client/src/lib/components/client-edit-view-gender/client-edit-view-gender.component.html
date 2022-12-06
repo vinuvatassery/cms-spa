@@ -1,0 +1,34 @@
+<section [formGroup]="appInfoForm">
+  <h5>What is their gender? Select all that apply</h5>
+  <div class="component-list-h">
+    <span
+      class="app-checkboxwidtext-wrapper"
+      *ngFor="let gender of Genders; let i = index"
+    >
+      <input
+        type="checkbox"
+        kendoCheckBox
+        [formControlName]="ControlPrefix+gender.lovCode"
+        id="{{gender.lovCode}}"
+        (change)="onCheckChange($event,gender.lovCode)"
+      />
+      <label class="k-checkbox-label" for="{{gender.lovCode}}"
+        >{{ gender.lovDesc }}
+      </label>
+
+      <div *ngIf="gender.lovCode === 'NOT_LISTED'">
+        <span>
+          <kendo-floatinglabel text="Enter Gender">
+            <kendo-textbox
+              aria-label="enter gender"
+              [formControlName]="DescriptionField"
+              [disabled]="!appInfoForm.controls[ControlPrefix+gender.lovCode].value"
+            >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!appInfoForm.controls[DescriptionField].valid">Gender is required.</kendo-formerror>
+        </span>
+      </div>
+    </span>
+  </div>
+</section>
