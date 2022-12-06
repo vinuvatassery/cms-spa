@@ -14,7 +14,6 @@ import { NotificationSnackBarComponent } from './notification-snack-bar/notifica
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { UserProfileCardComponent } from './user-profile-card/user-profile-card.component';
 import { LoaderComponent } from './loader-component';
-import { CheckboxListComponent } from './checkbox-list/checkbox-list.component';
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
@@ -31,7 +30,6 @@ import { CheckboxListComponent } from './checkbox-list/checkbox-list.component';
     AccountSettingsComponent,
     UserProfileCardComponent,
     LoaderComponent,
-    CheckboxListComponent,
   ],
   exports: [
     LoginStatusComponent,
