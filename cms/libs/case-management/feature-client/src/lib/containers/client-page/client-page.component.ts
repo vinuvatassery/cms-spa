@@ -1,5 +1,5 @@
 /** Angular **/
-import { Input, OnInit } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
@@ -11,10 +11,7 @@ import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
-import { ClientEditViewComponent } from '../../components/client-edit-view/client-edit-view.component';
-import { timeStamp } from 'console';
 import { ActivatedRoute } from '@angular/router';
-import { THRESHOLD_DIFF } from '@progress/kendo-angular-popup/services/scrollable.service';
 
 
 
@@ -25,8 +22,6 @@ import { THRESHOLD_DIFF } from '@progress/kendo-angular-popup/services/scrollabl
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientPageComponent implements OnInit, OnDestroy {
-
-  /** Public properties **/
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -68,9 +63,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
-        forkJoin([of(navigationType), this.save()])
+        forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
-    ).subscribe(([navigationType, isSaved]) => {
+    ).subscribe(([navigationType, isSaved]) => {      
       if (isSaved) {
         this.workFlowFacade.navigate(navigationType);
       }
@@ -88,6 +83,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       this.clientFacade.applicationInfoSubject.next(this.applicatInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
+     this.clientId = JSON.parse(session.sessionData).clientId; 
      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
       if(this.clientCaseId  !==null || this.clientCaseId !== undefined){
         this.applicatInfo.clientCaseId = this.clientCaseId
@@ -112,27 +108,37 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       }
     }
      
-    }); 
-  
+    });   
     
   } 
 
-  private loadApplicantInfo(){
-   
+  private loadApplicantInfo(){   
     if(  this.applicatInfo.client == undefined){
       this.applicatInfo.client = new Client;
     }
 
-    if(  this.applicatInfo.clientCaseEligibilityAndFlag == undefined){
-      this.applicatInfo.clientCaseEligibilityAndFlag = new ClientCaseEligibilityAndFlag;
-      this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
+    if(  this.applicatInfo.clientCaseEligibilityAndFlag === undefined){
+      this.applicatInfo.clientCaseEligibilityAndFlag = new ClientCaseEligibilityAndFlag;        
     }  
         this.clientFacade.load( this.clientCaseId,this.clientCaseEligibilityId).subscribe({       
           next: response => {           
-            if(response !=null){
-              this.applicatInfo.client= response.client;
-              this.applicatInfo.clientCaseEligibilityAndFlag = response.clientCaseEligibilityAndFlag;
-              this.applicatInfo.clientCaseId = response.clientCaseId;
+            if(response !=null){  
+                /**Populating Client */   
+                this.applicatInfo.client = response.client; 
+
+                /* Populate Client Case Eligibility */
+                if(this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility ===undefined ){
+                  this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;   
+                }
+                this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = response.clientCaseEligibilityAndFlag.clientCaseEligibility;
+              
+              /* Populate Client Case Eligibility Flag */
+                if( this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag === undefined){
+                  this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = new clientCaseEligibilityFlag;
+                }
+                this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = response.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag;
+
+              /*Populate Client Gender */
               response.clientGenderList.forEach(x=>{
                 var clientGender = new ClientGender()
                 clientGender.activeFlag = x.activeFlag;
@@ -144,7 +150,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientGender.creatorId = x.creatorId;
                 clientGender.deleterId = x.deleterId;
                 clientGender.deletionTime = x.deletionTime;
-                clientGender.extraProperties= x.extraProperties;
                 clientGender.isDeleted = x.isDeleted;
                 clientGender.lastModificationTime = x.lastModificationTime;
                 if(this.applicatInfo.clientGenderList == undefined || null ){
@@ -152,6 +157,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 }
                 this.applicatInfo.clientGenderList.push(clientGender);
               })
+
+              /*Populate Client Pronoun */
               response.clientPronounList.forEach(x=>{
                 var pronoun = new ClientPronoun()
                 pronoun.activeFlag =x.activeFlag;
@@ -163,7 +170,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 pronoun.creatorId = x.creatorId;
                 pronoun.deleterId = x.deleterId;
                 pronoun.deletionTime = x.deletionTime;
-                pronoun.extraProperties = x.extraProperties;
                 pronoun.isDeleted = x.isDeleted;
                 pronoun.lastModificationTime = x.lastModificationTime;
                 pronoun.lastModifierId = x.lastModifierId;
@@ -173,6 +179,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 }
                 this.applicatInfo.clientPronounList.push(pronoun);
               })
+
+              /*Populate Client Race */
               response.clientRaceList.forEach(x=>{
                 var clientRace = new ClientRace();
                 clientRace.activeFlag = x.activeFlag;
@@ -185,7 +193,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientRace.creatorId = x.creatorId;
                 clientRace.deleterId= x.deleterId;
                 clientRace.deletionTime = x.deletionTime;
-                clientRace.extraProperties= x.extraProperties;
                 clientRace.isDeleted = x.isDeleted;
                 clientRace.isPrimaryFlag = x.isPrimaryFlag;
                 clientRace.lastModificationTime = x.lastModificationTime;
@@ -196,6 +203,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 }
                 this.applicatInfo.clientRaceList.push(clientRace);
               })
+
+              /*Populate Clien Sexual Identity */
               response.clientSexualIdentityList.forEach(x=>{
                 var clientSexualIdentity = new ClientSexualIdentity();
                 clientSexualIdentity.activeFlag = x.activeFlag;
@@ -207,7 +216,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientSexualIdentity.creatorId = x.creatorId;
                 clientSexualIdentity.deleterId = x.deleterId;
                 clientSexualIdentity.deletionTime = x.deletionTime;
-                clientSexualIdentity.extraProperties = x.extraProperties;
                 clientSexualIdentity.isDeleted = x.isDeleted;
                 clientSexualIdentity.lastModificationTime = x.lastModificationTime;
                 clientSexualIdentity.lastModifierId = x.lastModifierId;
@@ -229,18 +237,46 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   }
 
-  private save() {
+  private saveAndUpdate(){
     this.validateForm();
         if(this.appInfoForm.valid){
-          this.populateApplicantInfoModel();  
-          return this.clientFacade.save(this.applicatInfo);
+          this.populateApplicantInfoModel();
+          var isSaved;
+          if(this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined)  {
+            return this.clientFacade.update(this.applicatInfo)
+            //  .subscribe({
+            //   next:(response)=>{
+            //    return true;
+            //   },
+            //   error:(err)=>{
+            //     return false;
+            //   }
+
+            //  })
+            //  return of(isSaved);
+          }
+          else{
+
+            return this.clientFacade.save(this.applicatInfo)
+            // .subscribe({
+            //   next:(response)=>{
+            //    return true;
+            //   },
+            //   error:(err)=>{
+            //   return false;
+            //   }
+
+            //  })
+            //  return of(isSaved);
+          }
+          
         }
         else{
           return of(false);
-        }       
-  
-  
+        } 
+ 
   }
+ 
   private  populateApplicantInfoModel(){ 
    
     this.populateClient();
@@ -258,6 +294,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private populateClient(){
+    debugger;
     if(this.applicatInfo.client == undefined){
       this.applicatInfo.client = new Client;
     }
@@ -338,26 +375,20 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     if(this.applicatInfo.clientPronounList == undefined){
       this.applicatInfo.clientPronounList = [];
     }
-    //(this.appInfoForm.controls[pronoun.lovCode]  === undefined )
     this.pronounList.forEach((pronoun:any) => {      
       if( this.appInfoForm.controls[pronoun.lovCode].value ===""
-         ||this.appInfoForm.controls[pronoun.lovCode].value === null){
+         ||this.appInfoForm.controls[pronoun.lovCode].value === null
+         ||this.appInfoForm.controls[pronoun.lovCode].value ===false){
           var existingPronoun = this.applicatInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)
         if(existingPronoun != null){
            const index = this.applicatInfo.clientPronounList.indexOf(existingPronoun, 0);
           if (index > -1) {
             this.applicatInfo.clientPronounList.splice(index, 1);
           }
-      }
+        }
 
       }
      else{
-      
-
-
-
-
-
       var existingPronoun = this.applicatInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)     
       if(existingPronoun === null || existingPronoun === undefined){
           var clientPronoun = new ClientPronoun();
@@ -365,11 +396,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                     clientPronoun.otherDesc = this.appInfoForm.controls["NOT_LISTED"].value;
                     clientPronoun.clientPronounCode =pronoun.lovCode;
                     clientPronoun.activeFlag = StatusFlag.Yes;
+                    clientPronoun.clientId = this.clientId;
                     clientPronoun.isDeleted = false;
             }
             else{
               clientPronoun.clientPronounCode =pronoun.lovCode;
               clientPronoun.activeFlag = StatusFlag.Yes;
+              clientPronoun.clientId = this.clientId;
               clientPronoun.isDeleted = false;
             } 
             this.applicatInfo.clientPronounList.push(clientPronoun);
@@ -390,41 +423,51 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   
   private populateClientGender(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*-------------------------------------------------------------------------------- */
-        var clientGender = new ClientGender();
-        clientGender.clientGenderCode = 'Woman or Girl';
-        clientGender.activeFlag ="Y";
-        if(this.applicatInfo.clientGenderList == undefined){
-          this.applicatInfo.clientGenderList = [];
-        }
-        this.applicatInfo.clientGenderList.push(clientGender)
+        /*---------------------------------remove if----------------------------------------------- */
+        //this.applicatInfo.clientGenderList =[];
+        if(this.applicatInfo.clientGenderList.length ===0 ){
+          var clientGender = new ClientGender();
+          clientGender.clientGenderCode = 'Woman or Girl';
+          clientGender.activeFlag ="Y";
+          if(this.applicatInfo.clientGenderList == undefined){
+            this.applicatInfo.clientGenderList = [];
+          }
+          clientGender.clientId = this.clientId;
+          this.applicatInfo.clientGenderList.push(clientGender)
+      }
         
         /*-------------------------------------------------------------------------------- */
   }
   private populateClientRace(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*-------------------------------------------------------------------------------- */
-        var clientRace = new ClientRace();
-        clientRace.clientEthnicIdentityCode = 'American Indian or Alaska Native';
-        clientRace.clientRaceCategoryCode = 'American Indian or Alaska Native';
-        clientRace.activeFlag = "Y";
-        if(this.applicatInfo.clientRaceList == undefined){
-          this.applicatInfo.clientRaceList =[];
-        }
-        this.applicatInfo.clientRaceList.push(clientRace)
+        /*--------------------------remove if------------------------------------------------------ */
+        if(this.applicatInfo.clientRaceList.length ===0) {
+            var clientRace = new ClientRace();
+            clientRace.clientEthnicIdentityCode = 'American Indian or Alaska Native';
+            clientRace.clientRaceCategoryCode = 'American Indian or Alaska Native';
+            clientRace.activeFlag = "Y";
+            if(this.applicatInfo.clientRaceList == undefined){
+              this.applicatInfo.clientRaceList =[];
+            }
+            clientRace.clientId = this.clientId;
+            this.applicatInfo.clientRaceList.push(clientRace)
+      }
         
         /*-------------------------------------------------------------------------------- */
   }
   private populateClientSexualIdentity(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*-------------------------------------------------------------------------------- */
-        var clientSexualIdentity = new ClientSexualIdentity();
-        clientSexualIdentity.clientSexualIdentityCode = 'Straight';
-        clientSexualIdentity.activeFlag ="Y";
-        if(this.applicatInfo.clientSexualIdentityList == undefined){
-          this.applicatInfo.clientSexualIdentityList =[];
-        }
-        this.applicatInfo.clientSexualIdentityList.push(clientSexualIdentity)
+        /*--------------------------remove if------------------------------------------------------ */
+        if(this.applicatInfo.clientSexualIdentityList.length ===0 ){
+            var clientSexualIdentity = new ClientSexualIdentity();
+            clientSexualIdentity.clientSexualIdentityCode = 'Straight';
+            clientSexualIdentity.activeFlag ="Y";
+            if(this.applicatInfo.clientSexualIdentityList == undefined){
+              this.applicatInfo.clientSexualIdentityList =[];
+            }
+            clientSexualIdentity.clientId = this.clientId;
+            this.applicatInfo.clientSexualIdentityList.push(clientSexualIdentity)
+      }
         /*-------------------------------------------------------------------------------- */
   }
 

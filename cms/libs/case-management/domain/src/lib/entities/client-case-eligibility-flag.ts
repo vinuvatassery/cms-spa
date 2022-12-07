@@ -31,7 +31,7 @@ export class clientCaseEligibilityFlag{
         isDeleted :boolean = false;
         deleterId :string|null=null;
         deletionTime? :Date|null=null;
-        extraProperties :string|null=null;
+        //extraProperties :string|null=null;
         concurrencyStamp :string|null=null;
         activeFlag :string|null=null;
 }

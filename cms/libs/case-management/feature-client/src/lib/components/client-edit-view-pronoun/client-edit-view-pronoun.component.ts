@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { WorkflowFacade } from '@cms/case-management/domain';
-import { LovFacade, LovType } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -58,17 +57,19 @@ export class ClientEditViewPronounComponent implements OnInit {
     if(event.target.checked && lovCode ==='NOT_LISTED'){
       this.appInfoForm.controls['NOT_LISTED'].setErrors({'incorrect': true});
       this.textboxDisable = false;
-    } 
+    }
+   
     if(!event.target.checked && lovCode ==='NOT_LISTED') {
       this.appInfoForm.controls['NOT_LISTED'].setErrors(null);
       this.textboxDisable = true;
     } 
    
    }
-   ngAfterViewChecked() {
-    if(this.appInfoForm.controls['NOT_LISTED'] !== undefined && this.appInfoForm.controls['NOT_LISTED'].value !==""){
-      this.textboxDisable = false;
+   onChange(event:any){
+    if(event ===""){
+      this.appInfoForm.controls['NOT_LISTED'].setErrors({'incorrect': true});
     }
+
    }
  
 }

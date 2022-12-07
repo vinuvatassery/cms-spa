@@ -15,13 +15,13 @@ export class Client {
   medicareEligibleDate :Date=new Date;
   genderType :string='';  
   creatorId :string | null =null;
-  creationTime? :Date | null = null;
+  creationTime :Date = new Date;
   lastModifierId :string| null =null;
-  lastModificationTime? :Date | null=null;
+  lastModificationTime :Date =new Date;
   isDeleted :boolean=false ;
   deleterId :string | null =null;
-  deletionTime? :Date | null =null;
-  extraProperties :string | null =null;
+  deletionTime :Date =new Date;
+  //extraProperties :string | null =null;
   concurrencyStamp :string | null =null;
   activeFlag :string='';
 }

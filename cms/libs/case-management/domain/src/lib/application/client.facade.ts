@@ -251,4 +251,7 @@ export class ClientFacade {
   load(clientCaseId:any,eligibilityId:any) {
       return this.clientDataService.load(clientCaseId,eligibilityId);
   }
+  update(applicantInfo:ApplicantInfo) {
+    return this.clientDataService.update(applicantInfo);
+  }
 }

@@ -48,7 +48,7 @@ export class ClientCaseEligibility{
         isDeleted :boolean=false;
         deleterId :string | null = null;
         deletionTime? :Date | null = null;
-        extraProperties :string | null = null;
+        //extraProperties :string | null = null;
         concurrencyStamp :string='';
         activeFlag:string|null=null;
 }

@@ -11,7 +11,7 @@
         (change)="onCheckChange($event,pronoun.lovCode)"
         
       />
-      <label class="k-checkbox-label" for="pronounsSheHerHers" 
+      <label class="k-checkbox-label"
         >{{pronoun.lovDesc}}</label
       >
    
@@ -20,7 +20,8 @@
           <kendo-floatinglabel text="Enter Pronouns" >
             <kendo-textbox aria-label="enter pronouns"              
               [formControlName]="pronoun.lovCode"
-              [disabled]="textboxDisable">               
+              [disabled]="textboxDisable"
+              (valueChange)="onChange($event)">               
             </kendo-textbox>        
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!appInfoForm.controls[pronoun.lovCode].valid ">Pronoun is required.</kendo-formerror>

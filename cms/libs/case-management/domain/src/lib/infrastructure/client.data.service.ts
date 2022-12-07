@@ -349,5 +349,11 @@ export class ClientDataService {
       return this.http.get<ApplicantInfo>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client/${clientCaseId}/${eligibilityId}`,);
        }
+    update(applicantInfo: ApplicantInfo) {  
+      return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
+        applicantInfo,
+    
+    )}
     
 }

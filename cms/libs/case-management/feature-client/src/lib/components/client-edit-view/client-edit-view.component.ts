@@ -232,7 +232,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls["ssn"].enable();
       }
       this.applicantInfo = applicantInfo;
+      if(this.applicantInfo.clientCaseId !== null){
       this.assignModelToForm(applicantInfo);
+      }
     }
    
   }); 
@@ -253,7 +255,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
 
   }
   this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
-  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag ==StatusFlag.Yes){
+  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined && 
+    applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag === StatusFlag.Yes){
     this.appInfoForm.controls['officialIdsNotApplicable'].setValue(true);
     this.appInfoForm.controls["officialIdFirstName"].setValue(null);
     this.appInfoForm.controls["officialIdLastName"].setValue(null);
@@ -269,7 +272,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   this.appInfoForm.controls["officialIdFirstName"].enable();
 
  }
- if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag ==StatusFlag.Yes){
+ if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined &&
+  applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag ==StatusFlag.Yes){
   this.appInfoForm.controls['prmInsNotApplicable'].setValue(true);
   this.appInfoForm.controls["prmInsFirstName"].setValue(null);
   this.appInfoForm.controls["prmInsLastName"].setValue(null);
@@ -494,7 +498,6 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   onOfficialIdChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-
       this.appInfoForm.controls['officialIdFirstName'].removeValidators(Validators.required);
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdLastName'].removeValidators(Validators.required);
