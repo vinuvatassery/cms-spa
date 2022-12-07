@@ -13,10 +13,12 @@
             aria-hidden="true"
             >search</span
           >
+          <span *ngIf="showInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
           <kendo-multicolumncombobox         
             [data]="caseSearchResults$ | async"
             textField="name"
             valueField="id"
+            [loading] = "showInputLoader"
             placeholder="Search Case Name, Member ID or SSN"
             [fillMode]="formUiStyle.dropDownFillMode"
             [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }"
@@ -24,6 +26,7 @@
             (filterChange)="onsearchTextChange($event)" 
           >
             <kendo-combobox-column>
+              
               <ng-template 
                 kendoMultiColumnComboBoxColumnCellTemplate
                 let-dataItem
