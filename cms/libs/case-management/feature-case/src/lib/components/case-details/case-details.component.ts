@@ -8,8 +8,8 @@ import { FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'  
 
 /** external Libraries **/
-import { first } from 'rxjs';
-import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
+import { first, tap } from 'rxjs';
+import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
@@ -20,6 +20,7 @@ import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 export class CaseDetailsSummaryComponent   implements OnChanges    {   
 
   /// filter autocomplete with startswith
+  public showInputLoader = false;
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
     operator: "startsWith",
@@ -39,6 +40,7 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
   @Input() ddlCaseOrigins! : any
   @Input() selectedProgram! : any
   @Input() selectedCase! : any 
+ 
 
    /** Constructor**/
   constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef 
@@ -53,13 +55,18 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
         // /// the startswith functionality will
         // ///  work only if the observable is
         // /// subscribed synchronously
-        this.caseOwners.pipe()
+        this.caseOwners.pipe(
+      
+        )
         .subscribe((Owners: any[]) => {             
           this.caseOwnersObject = [...Owners];   
+      
           if(!this.isProgramVIsible)
           {  
-          this.GetCaseData();       
+          this.GetCaseData();   
+             
           }
+        
         });  
     
     }  
@@ -70,7 +77,9 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
   ///get case details
   ///with session id
   GetCaseData()
-  {            
+  { 
+    
+    this.showInputLoader = true
       this.selectedCase?.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
       .subscribe((caseData: any) => {   
           
@@ -86,10 +95,13 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
                 concurrencyStamp : caseData?.concurrencyStamp
               }
             )
-            
+       
           }
-        })  
-      
+        }
+        
+        ) 
+        this.showInputLoader = true 
+       
   } 
 
 }
