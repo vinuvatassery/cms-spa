@@ -112,7 +112,6 @@
               aria-labelledby="sameAsMailingAddressFlag" 
               id="check1"
               formControlName="sameAsMailingAddressFlag"
-              (click)="onsameAsMailingAddressFlagChecked($event)"
                />
               <label class="k-checkbox-label" for="check1">Same as Mailing Address</label>
 
@@ -179,7 +178,6 @@
               textField="stateName"
               valueField="stateCode"
               [valuePrimitive]="true"
-              (valueChange)="onStateChange($event)"
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -219,6 +217,16 @@
             <kendo-formerror>Error: County is required</kendo-formerror>
           </kendo-formfield>
           </div>
+        </div>
+        <div class="flex-row" *ngIf="homeAddressIsNotValid">
+          <div class="flex-col flex-col-6">
+          <span class="app-c-badge badge-warn-light mt-3">
+            <span class="material-icons" aria-label="income Information" aria-hidden="true">
+              info
+            </span>
+                USPS can't validate this address.
+          </span>   
+        </div>       
         </div>
         <div class="flex-row">
           <div class="flex-col p-2">
@@ -271,13 +279,13 @@
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="housingStability"
+                  name="housingStabilityCode"
                   aria-labelledby="stable or permanent"
                   id="StableOrPermanent"
                   tabindex="1"
                   class="form-control" 
-                  formControlName="housingStability"
-                  value="stableOrPermanent"
+                  formControlName="housingStabilityCode"
+                  value="STABLE_PERMANENT"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -289,13 +297,13 @@
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="housingStability"
+                  name="housingStabilityCode"
                   aria-labelledby="temporary"
                   id="temporary"
                   tabindex="1"
                   class="form-control" 
-                  formControlName="housingStability"
-                  value="temporary"
+                  formControlName="housingStabilityCode"
+                  value="TEMP"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -307,13 +315,13 @@
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="housingStability"
+                  name="housingStabilityCode"
                   aria-labelledby="unstable"
                   id="unstable"
                   tabindex="1"
                   class="form-control" 
-                  formControlName="housingStability"
-                  value="unstable"
+                  formControlName="housingStabilityCode"
+                  value="UNSTABLE"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -321,6 +329,7 @@
                   for="unstable"
                 ></kendo-label>
               </span>
+              <kendo-formerror>Error: How stable is your housing is required</kendo-formerror>
           </kendo-formfield>
         </div>   
       </div>
@@ -339,10 +348,11 @@
               <kendo-textbox 
               aria-label="home phone" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="10"
               formControlName="phoneNbr"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Home Phone is required</kendo-formerror>
+            <kendo-formerror>Error: Home phone is required</kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-6 mt-3">
@@ -407,11 +417,12 @@
               aria-labelledby="noCellPhoneCheck" 
               aria-label="Cell Phone"
               [disabled]="isNoCellPhoneChecked" 
+              [maxlength]="10"
               [fillMode]="formUiStyle.inputFillMode"
               formControlName="phoneNbr"
               > </kendo-textbox>        
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Cell Phone is required</kendo-formerror>
+            <kendo-formerror>Error: Cell phone is required</kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-6 mt-3">
@@ -476,10 +487,11 @@
                 aria-label="work phone" 
                 [disabled]="isNoWorkPhoneChecked"
                 [fillMode]="formUiStyle.inputFillMode"
+                [maxlength]="10"
                 formControlName="phoneNbr"
                 > </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Work Phone is required</kendo-formerror>
+              <kendo-formerror>Error: Work phone is required</kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-6 mt-3">
@@ -545,10 +557,11 @@
                 [disabled]="isNoOtherPhoneChecked" 
                 aria-label="other phone"
                 [fillMode]="formUiStyle.inputFillMode"
+                [maxlength]="10"
                 formControlName="phoneNbr"
                 > </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Other Phone is required</kendo-formerror>
+              <kendo-formerror>Error: Other phone is required</kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-3">
@@ -563,6 +576,7 @@
                 [disabled]="isNoOtherPhoneChecked" 
                 aria-label="note"
                 [fillMode]="formUiStyle.inputFillMode"
+                [maxlength]="100"
                 formControlName="otherPhoneNote"
                   > </kendo-textbox>
               </kendo-floatinglabel>
@@ -626,6 +640,7 @@
                 <kendo-textbox 
                 aria-label="email address optional"
                 [fillMode]="formUiStyle.inputFillMode"
+                [maxlength]="100"
                 formControlName="email"
                 > </kendo-textbox>
               </kendo-floatinglabel>
@@ -694,7 +709,7 @@
                 >
                 </kendo-dropdownlist>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Preferred Contact Method is required</kendo-formerror>
+              <kendo-formerror>Error: Preferred contact method is required</kendo-formerror>
             </kendo-formfield>
             </div>
           </div>
@@ -737,10 +752,11 @@
               <kendo-textbox 
               aria-label="contacts name" 
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="40"
               formControlName="contactName"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Contacts Name is required</kendo-formerror>
+            <kendo-formerror>Error: Contacts name is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -756,10 +772,27 @@
               valueField="lovCode"
               [valuePrimitive]="true"
               formControlName="contactRelationshipCode"
+              (valueChange)="onContactRelationshipChanged($event)"
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Contact's Relationship to Client is required</kendo-formerror>
+            <kendo-formerror>Error: Contact's relationship to client is required</kendo-formerror>
+          </kendo-formfield>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div class="flex-col flex-col-6">
+            <kendo-formfield>
+            <kendo-floatinglabel text="Description">
+              <kendo-textbox 
+              [disabled]="true" 
+              aria-label="other description"
+              [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="50"
+              formControlName="otherDesc"
+              > </kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-formerror>Error: Description is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -776,10 +809,11 @@
               [disabled]="isNoFriendsOrFamilyChecked" 
               aria-label="contacts phone number"
               [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="10"
               formControlName="contactPhoneNbr"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Contact's Phone Number is required</kendo-formerror>
+            <kendo-formerror>Error: Contact's phone number is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -788,18 +822,18 @@
   </section>
 </div>
 
-<!-- Address Validation Modal -->
-<kendo-dialog *ngIf="isAddressValidationPopup" (close)="onAddressValidationOkClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Address Validation">
+<!-- Mail Address Validation Modal -->
+<kendo-dialog *ngIf="mailAddressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked('M')"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Mailing Address Validation">
   <section class="k-dialog-body mb-2">
     <div *ngIf="mailingAddressIsNotValid">
       <p >
         We cannot validate the address below. Please review and make edits if needed.
       </p>
         <p class="mt-2 ml-3">
-          {{addressEntered?.address1 | uppercase }} <br>
-          {{addressEntered?.address2 | uppercase }} <br>
-          {{addressEntered?.city | uppercase }}, {{addressEntered?.state}} {{addressEntered?.zip5}}
+          {{mailAddressEntered?.address1 | uppercase }} <br>
+          {{mailAddressEntered?.address2 | uppercase }} <br>
+          {{mailAddressEntered?.city | uppercase }}, {{mailAddressEntered?.state}} {{mailAddressEntered?.zip5}}
         </p> 
     </div>
    <div *ngIf="!mailingAddressIsNotValid">
@@ -807,9 +841,10 @@
       We found the address similar to the one entered. Please select which one to use.
     </p>
     <form [formGroup]="selectedAddressForm">
+    <kendo-formfield>
     <div class="flex-row mt-4">
+      <!-- <kendo-formerror>Error: Required to choose one of the address</kendo-formerror> -->
       <div class="flex-col flex-col-6">
-        <kendo-formfield>
           <span>
           <input
           type="radio"
@@ -822,15 +857,15 @@
           />
           <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
         </span>
-        </kendo-formfield>     
+        <!-- </kendo-formfield>      -->
         <p class="mt-2 ml-3">
-        {{addressEntered?.address1 | uppercase }} <br>
-        {{addressEntered?.address2 | uppercase }} <br>
-        {{addressEntered?.city | uppercase }}, {{addressEntered?.state}} {{addressEntered?.zip5}}
+        {{mailAddressEntered?.address1 | uppercase }} <br>
+        {{mailAddressEntered?.address2 | uppercase }} <br>
+        {{mailAddressEntered?.city | uppercase }}, {{mailAddressEntered?.state}} {{mailAddressEntered?.zip5}}
         </p>
       </div>
       <div class="flex-col flex-col-6">
-        <kendo-formfield>
+        <!-- <kendo-formfield> -->
           <span>
           <input
           type="radio"
@@ -843,26 +878,105 @@
           />
           <kendo-label for="choosenAddress" text="Suggested Address"></kendo-label>  
         </span>
-      </kendo-formfield>    
       <p class="mt-2 ml-3">
-          {{addressSuggested?.address1}} <br>
-          {{addressSuggested?.address2}} <br>
-          {{addressSuggested?.city}}, {{addressSuggested?.state}} {{addressSuggested?.zip5}}-{{addressSuggested?.zip4}}
+          {{mailAddressSuggested?.address1}} <br>
+          {{mailAddressSuggested?.address2}} <br>
+          {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}-{{mailAddressSuggested?.zip4}}
       </p>
       </div>
     </div> 
+  </kendo-formfield>    
 </form>
-
    </div>
-
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" (click)="onAddressValidationOkClicked()" aria-label="OKAY" *ngIf="mailingAddressIsNotValid">
+        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked('M')" aria-label="OKAY" *ngIf="mailingAddressIsNotValid">
           OKAY
         </button>
-        <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked()"  aria-label="USE SELECTED ADDRESS" *ngIf="!mailingAddressIsNotValid">
+        <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked('M')"  aria-label="USE SELECTED ADDRESS" *ngIf="!mailingAddressIsNotValid">
+          USE SELECTED ADDRESS
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<!-- Home Address Validation Modal -->
+<kendo-dialog *ngIf="homeAddressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked('H')"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Home Address Validation">
+  <section class="k-dialog-body mb-2">
+    <div *ngIf="homeAddressIsNotValid">
+      <p >
+        We cannot validate the address below. Please review and make edits if needed.
+      </p>
+        <p class="mt-2 ml-3">
+          {{homeAddressEntered?.address1 | uppercase }} <br>
+          {{homeAddressEntered?.address2 | uppercase }} <br>
+          {{homeAddressEntered?.city | uppercase }}, {{homeAddressEntered?.state}} {{homeAddressEntered?.zip5}}
+        </p> 
+    </div>
+   <div *ngIf="!homeAddressIsNotValid">
+    <p >
+      We found the address similar to the one entered. Please select which one to use.
+    </p>
+    <form [formGroup]="selectedAddressForm">
+    <kendo-formfield>
+    <div class="flex-row mt-4">
+      <!-- <kendo-formerror>Error: Required to choose one of the address</kendo-formerror> -->
+      <div class="flex-col flex-col-6">
+          <span>
+          <input
+          type="radio"
+          id="choosenAddress" 
+          name="choosenAddress" 
+          aria-labelledby="address entered"
+          value="addressEntered" 
+          formControlName="choosenAddress"             
+          kendoRadioButton
+          />
+          <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
+        </span>
+        <!-- </kendo-formfield>      -->
+        <p class="mt-2 ml-3">
+        {{homeAddressEntered?.address1 | uppercase }} <br>
+        {{homeAddressEntered?.address2 | uppercase }} <br>
+        {{homeAddressEntered?.city | uppercase }}, {{homeAddressEntered?.state}} {{homeAddressEntered?.zip5}}
+        </p>
+      </div>
+      <div class="flex-col flex-col-6">
+        <!-- <kendo-formfield> -->
+          <span>
+          <input
+          type="radio"
+          id="choosenAddress"
+          name="choosenAddress"
+          aria-labelledby="address suggested"
+          value="addressSuggested"
+          formControlName="choosenAddress"
+          kendoRadioButton
+          />
+          <kendo-label for="choosenAddress" text="Suggested Address"></kendo-label>  
+        </span>
+      <p class="mt-2 ml-3">
+          {{homeAddressSuggested?.address1}} <br>
+          {{homeAddressSuggested?.address2}} <br>
+          {{homeAddressSuggested?.city}}, {{homeAddressSuggested?.state}} {{homeAddressSuggested?.zip5}}-{{homeAddressSuggested?.zip4}}
+      </p>
+      </div>
+    </div> 
+  </kendo-formfield>    
+</form>
+   </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked('H')" aria-label="OKAY" *ngIf="homeAddressIsNotValid">
+          OKAY
+        </button>
+        <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked('H')"  aria-label="USE SELECTED ADDRESS" *ngIf="!homeAddressIsNotValid">
           USE SELECTED ADDRESS
         </button>
       </div>

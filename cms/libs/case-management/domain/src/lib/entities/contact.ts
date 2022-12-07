@@ -65,6 +65,7 @@ export interface FriedsOrFamilyContact {
   clientDependentId?: string;
   contactName?: string;
   contactRelationshipCode?: string;
+  otherDesc?: string;
   contactPhoneNbr?: string;
   noFriendOrFamilyContactFlag?: string;
   concurrencyStamp?: string;
@@ -74,10 +75,12 @@ export interface ContactInfo {
   address?: ClientAddress[];
   homelessFlag?: string;
   homeAddressProofFlag?: any;
+  housingStabilityCode?:string;
   phone?: ClientPhone[];
   email?: ClientEmail;
   preferredContactCode?: string;
   papperlessFlag?: string;
   friedsOrFamilyContact?: FriedsOrFamilyContact;
   elgbtyflagConcurrencyStamp?: string;
+  elgbtyConcurrencyStamp?: string;
 }
