@@ -16,7 +16,7 @@ export class FamilyAndDependentFacade {
   private ddlRelationshipsSubject = new Subject<any>();
   private dependentsSubject = new Subject<any>();
   private productsSubject = new Subject<any>();
-  private dependentStatusSubject = new Subject<any>();
+  private dependentStatusSubject =  new BehaviorSubject<any>([]);
   private dependentStatusGetSubject = new Subject<any>();
   private dependentAddNewSubject = new Subject<any>();
   private dependentUpdateNewSubject = new Subject<any>();
@@ -59,7 +59,15 @@ export class FamilyAndDependentFacade {
   /** Public methods **/
   DeleteDependent(dependentId: string): void {
     this.dependentDataService.DeleteDependent(dependentId).subscribe({
-      next: (dependentdeleteResponse) => {
+      next: (dependentdeleteResponse) => {      
+       if(dependentdeleteResponse == true)
+       {
+        this.handleSnackBar('Success' ,'Dependent Removed','success')     
+       }
+       else
+       {
+        this.handleSnackBar('Error' ,'Error','error') 
+       }        
         this.dependentdeleteSubject.next(dependentdeleteResponse);
       },
       error: (err) => {        
@@ -133,11 +141,20 @@ export class FamilyAndDependentFacade {
 
   updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string): void {
     this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents).subscribe({
-      next: (dependentStatusResponse) => {
+      next: (dependentStatusResponse) => {        
+        if(dependentStatusResponse == true)
+        {
+         this.handleSnackBar('Success' ,'Dependent Status Updated','success')     
+        }
+        else
+        {
+         this.handleSnackBar('Error' ,'Error','error') 
+        }       
         this.dependentStatusSubject.next(dependentStatusResponse);
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        
       },
     });
   }

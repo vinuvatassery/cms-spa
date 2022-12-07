@@ -9,6 +9,8 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 
 /**Models */
 import { Dependent } from '../entities/dependent';
+import { DependentTypeCode } from '../enums/dependent-type.enum';
+import { LovType } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class DependentDataService {
@@ -22,7 +24,7 @@ export class DependentDataService {
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/client-dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&LovTypeCode=${LovType.RelationshipCode}`
     );
     
   }

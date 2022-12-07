@@ -12,6 +12,8 @@ import { DependentTypeCode, ScreenType } from '@cms/case-management/domain';
 import { DeleteRequest } from '@cms/shared/ui-common';
 import { SortDescriptor, State ,process} from '@progress/kendo-data-query';
 import { DataBindingDirective, GridDataResult } from '@progress/kendo-angular-grid';
+import { inputRules } from '@progress/kendo-angular-editor';
+import { first } from 'rxjs';
 
 
 @Component({
@@ -32,6 +34,7 @@ CAClient = DependentTypeCode.CAClient;
   @Input() ddlRelationships$ : any;
   @Input() dependentGet$ : any;
   @Input() dependentGetExisting$ :any;
+  @Input() dependentdelete$ : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
@@ -149,7 +152,7 @@ CAClient = DependentTypeCode.CAClient;
 
   onEditFamilyMemberClicked(dependentId : string ,dependentTypeCode : string) {
     this.isOpenedEditFamilyMember = true;  
-    this.editbuttonEmitted =false;
+   
     
     if(dependentTypeCode == DependentTypeCode.CAClient)
     {     
@@ -165,7 +168,7 @@ CAClient = DependentTypeCode.CAClient;
       //load newly adde dependent
       this.GetNewDependentHandleEvent.next(dependentId);
     } 
-   
+    
   }
 
  
@@ -192,8 +195,18 @@ CAClient = DependentTypeCode.CAClient;
       if(event?.clientDependentId)
       {
         this.deleteDependentsEvent.next(event?.clientDependentId)
+        this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((dependentData: any) =>
+        {  
+          if(dependentData == true)
+          {
+            this.loadFamilyDependents()
+          }
+          
+        })
       }
     }
+
   }
 
   /** child event methods **/
@@ -208,7 +221,7 @@ CAClient = DependentTypeCode.CAClient;
 
   closeFamilyMemberForm(e : any)
   {
-    
+    this.editbuttonEmitted =false;
     this.onFamilyMemberClosed()
   }
   

@@ -30,6 +30,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
   dependentGet$= this.familyAndDependentFacade.dependentGetNew$;
   dependentGetExisting$ =this.familyAndDependentFacade.dependentGetExisting$;
   familyfacadesnackbar$ = this.familyAndDependentFacade.familyfacadesnackbar$;
+  dependentdelete$  = this.familyAndDependentFacade.dependentdelete$;
   isFamilyGridDisplay! : boolean;
   clientCaseId! : string;
   sessionId! : string;
@@ -70,7 +71,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-    //this.checkBoxSubscription.unsubscribe();
+    //this.familyfacadesnackbar$.unsubscribe();
   }
 
   /** Private Methods **/
@@ -125,8 +126,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved]) => {      
-      if (isSaved) {
-        this.checkBoxSubscription.unsubscribe();
+      if (isSaved) {        
+      this.checkBoxSubscription.unsubscribe();
         this.workflowFacade.navigate(navigationType);
       }
     });
@@ -136,7 +137,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
     this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
        this.familyAndDependentFacade.updateDependentStatus
       (this.clientCaseEligibilityId,this.familyStatus);      
-      return this.familyAndDependentFacade.dependentStatus$.pipe(first(x=>x?.noDependentFlag));
+      return of(this.familyAndDependentFacade.dependentStatus$)//this.familyAndDependentFacade.dependentStatus$//.pipe(first(x=>x?.noDependentFlag == true));
      }
 
   /** Internal event methods **/

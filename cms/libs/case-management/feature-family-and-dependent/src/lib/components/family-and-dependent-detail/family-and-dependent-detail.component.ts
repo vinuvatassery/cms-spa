@@ -199,12 +199,16 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
     onFamilyFormLoad()
-    {
+    {          
+      this.isExistDependent =false;
       this.dependentGet$?.pipe(first((dependentData: any ) => dependentData?.clientDependentId != null))
       .subscribe((dependentData: any) =>
       {  
+        
           if(dependentData?.clientDependentId)
-          {
+          { 
+            
+            this.isOpenedNewFamilyMember =true;
             this.isAddFamilyMember =false;
               this.familyMemberForm.setValue(
                 {
@@ -223,6 +227,10 @@ export class FamilyAndDependentDetailComponent implements OnInit {
               
               this.clientDependentId = dependentData?.clientDependentId;
               this.dependentTypeCode = dependentData?.dependentTypeCode;
+          }
+          else
+          {
+            this.isOpenedNewFamilyMember =false;
           }
       })
    }
