@@ -18,6 +18,7 @@ export class DependentDataService {
 
   /** Public methods **/
 
+   ///1load dependents for grid
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
@@ -26,6 +27,7 @@ export class DependentDataService {
     
   }
 
+     ///2load dependent status  for checkbox
   loadDependentsStatus(clientCaseEligibilityId : string) {     
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
@@ -33,136 +35,126 @@ export class DependentDataService {
     );
     
   }
-
+ 
+     ///3update dependent status  for checkbox
   updateDependentStatus(clientCaseEligibilityId : string ,hasDependentsStatus : string)
   {
     return this.http.patch(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/client-dependents/${clientCaseEligibilityId}/${hasDependentsStatus}`
       ,null);
-  }
+  }  
 
-  AddExistngDependent(dependentId: string , dependentType: string) {
-    return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents?dependentId=${dependentId}&dependentType=${dependentType}`,
-      null
+
+     ///4add new dependent
+     AddNewDependent(dependent: Dependent) {    
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
+        dependent
+      );
+    }
+     
+  //5get new dependent for edit 
+  GetNewDependent(clientDependentId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents?dependentId=${clientDependentId}`      
     );
   }
 
+  ///6update new dependent
   UpdateNewDependent(dependent: Dependent) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
       dependent
     );
-  }
+  } 
 
-  AddNewDependent(dependent: Dependent) {    
-    return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
-      dependent
-    );
-  }
-
-  GetNewDependent(dependentId: string) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents?dependentId=${dependentId}`      
-    );
-  }
-
-  DeleteDependent(dependentId: string) {
+ 
+    //7 mark dependent as inactive
+  DeleteDependent(clientDependentId: string) {
     return this.http.delete(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${dependentId}`      
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${clientDependentId}`      
     );
   }
+
+     ///8update client as dependent
+     AddExistngDependent(clientId: string ,clientDependentId : string , dependentType: string) {
+      return this.http.patch(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${clientId}`,
+        null
+      );
+    }
+
+  //9get client dependent for edit (client)
+  GetExistingClientDependent(clientId: string , dependentType :  string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${clientId}`  
+    );
+  }
+   
+  //12search for autocomplete
+  SearchDependents(text :  string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search?text=${text}`  
+    );
+  }
+   
+   
 
   loadDependentSearch() {
     return of([
       {
-        name: 'Donna Summer',
-        id: 'XXXX',
+        firstName: 'Donna',
+        lastName: 'Summer',       
         dob: '08-11-1995',
         ssn: '956-08-9876',
-        memberType: 'CA/OHOP Family/Household Members',
+        dependentTypeCode: 'D',      
+        clientId: 0,
+        memberType: '',
+        fullName:'',fullCustomName : ''
       },
       {
-        name: 'David Miller',
-        id: 'XXXX',
-        dob: '06-18-1992',
-        ssn: '406-90-3456',
-        memberType: 'CA/OHOP Family/Household Members',
-      },
-      {
-        name: 'Philip David',
-        id: 'XXXX',
-        dob: '08-21-1991',
-        ssn: '136-63-8736',
-        memberType: 'CA/OHOP Family/Household Members',
-      },
-      {
-        name: 'Mike Flex',
-        id: 'XXXX',
-        dob: '02-24-1990',
-        ssn: '890-75-9876',
-        memberType: 'CA/OHOP Family/Household Members',
-      },
-      {
-        name: 'Donna Summer',
-        id: 'XXXX',
+        firstName: 'Donna',
+        lastName: 'Summer',       
         dob: '08-11-1995',
         ssn: '956-08-9876',
-        memberType: 'Clients',
+        dependentTypeCode: 'C',       
+        clientId: 3,
+        memberType: '',
+        fullName:'',fullCustomName : ''
       },
       {
-        name: 'David Miller',
-        id: 'XXXX',
-        dob: '06-18-1992',
-        ssn: '406-90-3456',
-        memberType: 'Clients',
-      },
+        firstName: 'Donna',
+        lastName: 'Summer',       
+        dob: '08-11-1995',
+        ssn: '956-08-9876',
+        dependentTypeCode: 'C',        
+        clientId: 5
+        ,
+        memberType: '',
+        fullName:'',fullCustomName : ''
+      }
+      ,
       {
-        name: 'Philip David',
-        id: 'XXXX',
-        dob: '08-21-1991',
-        ssn: '136-63-8736',
-        memberType: 'Clients',
-      },
+        firstName: 'Donna',
+        lastName: 'Summer',       
+        dob: '08-11-1995',
+        ssn: '956-08-9876',
+        dependentTypeCode: 'D',        
+        clientId: 0,
+        memberType: '',  fullName:'',fullCustomName : ''
+      }
+      ,
       {
-        name: 'Mike Flex',
-        id: 'XXXX',
-        dob: '02-24-1990',
-        ssn: '890-75-9876',
-        memberType: 'Clients',
-      },
+        firstName: 'Donna',
+        lastName: 'Summer',       
+        dob: '08-11-1995',
+        ssn: '956-08-9876',
+        dependentTypeCode: 'D',       
+        clientId: 0,
+        memberType: '',  fullName:'',fullCustomName : ''
+      }
     ]);
   }
 
-
-
-  loadDdlRelationships() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  }
-
-  loadFamilyDependents() {
-    return of([
-      {
-        name: 'Donna Summer',
-        id: 'XXXX',
-        dob: '10-10-1995',
-        ssn: '001-01-0001',
-      },
-      {
-        name: 'David Miller',
-        id: 'XXXX',
-        dob: '10-10-1995',
-        ssn: '002-02-0002',
-      },
-      {
-        name: 'Philip David',
-        id: 'XXXX',
-        dob: '10-10-1995',
-        ssn: '003-03-0003',
-      },
-      { name: 'Mike Flex', id: 'XXXX', dob: '10-10-1995', ssn: '004-04-0004' },
-    ]);
-  }
 }

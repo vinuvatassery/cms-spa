@@ -31,10 +31,13 @@ CAClient = DependentTypeCode.CAClient;
   @Input() dependentSearch$ : any;
   @Input() ddlRelationships$ : any;
   @Input() dependentGet$ : any;
+  @Input() dependentGetExisting$ :any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
+  @Output() GetExistclientDependentEvent = new EventEmitter<any>();
   @Output() loadDependentsEvent = new EventEmitter<any>(); 
   @Output() deleteDependentsEvent = new EventEmitter<any>(); 
+  @Output() searchTextHandleEvent = new EventEmitter<any>(); 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
     /**Constructor */
@@ -69,7 +72,7 @@ CAClient = DependentTypeCode.CAClient;
   openDeleteConfirmation! : boolean
   deletebuttonEmitted = false
   editbuttonEmitted = false
-  deleteRequest$ = this.deleteRequestSubject.asObservable();
+  deleteRequest$ = this.deleteRequestSubject.asObservable();  
 
   public actions = [
     {
@@ -149,14 +152,20 @@ CAClient = DependentTypeCode.CAClient;
     this.editbuttonEmitted =false;
     
     if(dependentTypeCode == DependentTypeCode.CAClient)
-    {
+    {     
       this.dependentTypeCodeSelected  = DependentTypeCode.CAClient
+     
+       //load client dependent already on system 
+      this.GetExistclientDependentEvent.next(dependentId)
     }
     else
     {
       this.dependentTypeCodeSelected  = DependentTypeCode.Dependent
+
+      //load newly adde dependent
+      this.GetNewDependentHandleEvent.next(dependentId);
     } 
-    this.GetNewDependentHandleEvent.next(dependentId);
+   
   }
 
  
@@ -215,11 +224,7 @@ CAClient = DependentTypeCode.CAClient;
     this.loadDependentsEvent.next(gridDataRefinerValue)
   }
    /** grid event methods **/
-   public onClientUrlClick(client_id : number)
-   {  
-    this.router.navigate([`/case-management/case-detail/cases/case360/`+{client_id}], {replaceUrl:true});
-   }
-
+ 
    public dataStateChange(stateData: any): void {         
       this.sort = stateData.sort;
       this.sortValue = stateData.sort[0]?.field
@@ -231,5 +236,8 @@ CAClient = DependentTypeCode.CAClient;
   private loadFamilyDependents(): void {   
     this.loadDependents(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)    
   }
-  
+  searchTextEventHandle($event : any)
+  {    
+   this.searchTextHandleEvent.emit($event)
+  }
 }

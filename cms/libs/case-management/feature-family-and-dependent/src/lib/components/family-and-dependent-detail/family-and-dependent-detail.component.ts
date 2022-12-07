@@ -14,7 +14,8 @@ import { groupBy, GroupResult } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Dependent, DependentTypeCode } from '@cms/case-management/domain';
-import { first } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
+import { debug } from 'console';
 @Component({
   selector: 'case-management-family-and-dependent-detail',
   templateUrl: './family-and-dependent-detail.component.html',
@@ -29,34 +30,59 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   @Input() ddlRelationships$ : any;
   @Input() dependentTypeCodeSelected: any;
   @Input() dependentGet$: any;
+  @Input() dependentGetExisting$ : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() closeFamilyMemberFormEvent = new EventEmitter<any>();
   @Output() getNewFamilyMemberFormEvent = new EventEmitter<any>();
   @Output() formDeleteclickEvent = new EventEmitter<any>();
+  @Output() searchTextEvent = new EventEmitter<string>(); 
+
+  filterManager: Subject<string> = new Subject<string>();
   currentDate = new Date();
   /** Public properties **/
   familyMemberForm!: FormGroup;
+  existFamilyMemberForm!: FormGroup;
   isOpenedNewFamilyMember = false;
   dependentSearch!: GroupResult[];
   popupClass = 'k-autocomplete-custom';
   isSubmitted = false;
+  isExistSubmitted = false;
   isExistDependent =false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   isAddFamilyMember =true;
   clientDependentId! : string
   dependentTypeCode! : string
+  fullClientName! : string
 
   /** Constructor **/
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
-  ) {}
+  ) {
+
+    this.filterManager
+    .pipe(   
+    debounceTime(500),
+    distinctUntilChanged()
+    )      
+    .subscribe(
+      (text) => 
+      {
+        if(text)
+        {
+        this.searchTextEvent.emit(text)
+        }
+      }
+      ); 
+
+  }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void { 
-    this.loadFamilyDependents();
+  ngOnInit(): void {   
     this.composeFamilyMemberForm();
+    this.loadFamilyDependents();   
     this.loadNewFamilyMemberData();  
+    this.composeExistFamilyMemberForm()
   }
 
   /** Private methods **/
@@ -66,10 +92,12 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     this.isOpenedNewFamilyMember =false;   
     if(this.dependentTypeCodeSelected== DependentTypeCode.Dependent)
     {
+      
     this.onNewFamilyMemberClicked()
     }
     else
     {
+     
       this.onExistingFamilyMemberLoad()
     }
   }
@@ -91,6 +119,22 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   });
   this.onFamilyFormLoad()
   }
+
+  private composeExistFamilyMemberForm()
+  {
+        this.existFamilyMemberForm = this.formBuilder.group({    
+          existRelationshipCode: ['', Validators.required],
+          dependentClientId: ['', Validators.required],   
+          clientId: [0, ],
+          clientDependentId: ['', ],
+          dependentTypeCode: ['', ]
+      });
+      this.onExitFamilyFormLoad()
+
+  }
+
+
+
   private loadFamilyDependents() {   
     this.dependentSearch$.subscribe({
       next: (dependentSearch : any) => {
@@ -123,7 +167,10 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     }
     this.formDeleteclickEvent.next(deleteParams);
   }
-
+  onExistDependentSubmit()
+  {
+    this.isExistSubmitted =true;
+  }
   onDependentSubmit()
   {
     this.isSubmitted = true;    
@@ -173,10 +220,48 @@ export class FamilyAndDependentDetailComponent implements OnInit {
                   dependentTypeCode : dependentData?.dependentTypeCode
                 }
               )
-
+              
               this.clientDependentId = dependentData?.clientDependentId;
               this.dependentTypeCode = dependentData?.dependentTypeCode;
           }
       })
+   }
+
+
+   onExitFamilyFormLoad()
+   {
+    this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
+    .subscribe((existDependentData: any) =>
+    {  
+        if(existDependentData?.clientDependentId)
+        {
+          this.isAddFamilyMember =false;
+            this.existFamilyMemberForm.setValue(
+              {     
+                clientId:  existDependentData?.clientDependentId,     
+                relationshipCode: existDependentData?.relationshipCode, 
+              }
+            )
+            const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
+            this.fullClientName = fullName + ' DOB '+existDependentData?.dob.toString()+' SSN '+existDependentData?.ssn  
+
+            this.clientDependentId = existDependentData?.clientDependentId;
+            this.dependentTypeCode = existDependentData?.dependentTypeCode;
+        }
+    })
+   }
+
+   onsearchTextChange(text : string)      
+   {    
+    this.filterManager.next(text); 
+   }
+
+   onSearchTemplateClick(dataItem : any)
+   {    
+    this.existFamilyMemberForm.patchValue(
+      {
+        clientId: dataItem?.clientId      
+      })    
+  
    }
 }

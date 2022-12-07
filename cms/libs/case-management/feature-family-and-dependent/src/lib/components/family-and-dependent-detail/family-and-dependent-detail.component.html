@@ -1,85 +1,99 @@
 <div *ngIf="isExistDependent">
-  <kendo-dialog-titlebar>
-    {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }}
-  </kendo-dialog-titlebar>
-<section class="k-dialog-body">
-  <p class="text-muted mb-2">
-    Adding a new email address will deactivate the email address.Search to see
-    if the family member is already in the system. If they aren’t in the system,
-    manually add a new family member.
-  </p>
-  <div class="flex-row">
-    <div class="flex-col">
-      <div class="k-auto-complete-box">
-        <span
-          class="material-icons global-search-icon"
-          aria-label="search member"
-          aria-hidden="true"
-          >search</span
-        >
-        <kendo-autocomplete
-          [fillMode]="formUiStyle.dropDownFillMode" 
-          [data]="dependentSearch"
-          valueField="name"
-          placeholder="Search Name, DOB or SSN"
-          [popupSettings]="{ popupClass: popupClass, animate: true }"
-        >
-          <ng-template kendoAutoCompleteItemTemplate let-dataItem>
-            <span class="pr-1">{{ dataItem.name }}</span>
-            <span class="pr-1">DOB {{ dataItem.dob }}</span>
-            <span class="pr-1">SSN {{ dataItem.ssn }}</span>
-          </ng-template>
-          <ng-template kendoAutoCompleteFooterTemplate>
-            <button
-              kendoButton
-              [primary]="true"
-              class="btn-full-no-radius"
-              (click)="onNewFamilyMemberClicked()"
-              aria-label="add new family member"
-            >
-              ADD NEW FAMILY MEMBER
-            </button>
-          </ng-template>
-        </kendo-autocomplete>        
+  <form [formGroup]="existFamilyMemberForm" (ngSubmit)="onExistDependentSubmit()">   
+    <input type="hidden" formControlName="clientId">     
+      <kendo-dialog-titlebar>
+        {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }}
+      </kendo-dialog-titlebar>
+    <section class="k-dialog-body">
+      <p class="text-muted mb-2">
+        Search to see if the family member is already in the system. If they aren't in the system, manually add a new family member.
+      </p>
+      <div class="flex-row">
+        <div class="flex-col">
+          <div class="k-auto-complete-box">
+            <span
+              class="material-icons global-search-icon"
+              aria-label="search member"
+              aria-hidden="true"
+              >search</span >
+              <kendo-formerror *ngIf="existFamilyMemberForm?.hasError('required','clientId') && isExistSubmitted">Dependent
+                is required</kendo-formerror>
+            <kendo-autocomplete
+              [fillMode]="formUiStyle.dropDownFillMode" 
+              [data]="dependentSearch"           
+              [value]="fullClientName"
+              valueField ="fullCustomName"
+              textField="clientId"
+              placeholder="     Search Name, DOB or SSN"
+              [popupSettings]="{ popupClass: popupClass, animate: true }"                 
+              [filterable]="true"   
+              (filterChange)="onsearchTextChange($event)"          
+            >          
+              <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
+                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
+                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
+              </ng-template>
+              <ng-template kendoAutoCompleteFooterTemplate>
+                <button
+                  kendoButton
+                  [primary]="true"
+                  class="btn-full-no-radius"
+                  (click)="onNewFamilyMemberClicked()"
+                  aria-label="add new family member"
+                >
+                  ADD NEW FAMILY MEMBER
+                </button>
+              </ng-template>
+            </kendo-autocomplete>        
+          </div>
+        </div>
+        <div class="flex-col mb-1">
+          <kendo-floatinglabel text="Relationship to Client">
+            <kendo-dropdownlist  
+            [fillMode]="formUiStyle.dropDownFillMode" 
+            [data]="ddlRelationships$ | async"
+            textField="lovDesc"
+            valueField="lovCode" 
+            [valuePrimitive]="true"
+            formControlName="existRelationshipCode">
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="existFamilyMemberForm?.hasError('required','existRelationshipCode') && isExistSubmitted">Relationship
+            is required</kendo-formerror>
+        </div>
       </div>
-    </div>
-    <div class="flex-col mb-1">
-      <kendo-floatinglabel text="Relationship to Client">
-        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"  [data]="ddlRelationships$ | async">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-  </div>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div>
-      <button
-        kendoButton
-        class="k-danger-link"
-        *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
-        aria-label="remove family member"
-        (click)="onFormDeleteclick()"
-      >
-        Remove
-      </button>
-    </div>
-    <div class="justify-content-end">
-      <button
-        kendoButton
-        [primary]="true"
-        look="outline"
-        aria-label="cancel editing family member"
-        (click)="onFamilyMemberClosed()"
-      >
-        Cancel
-      </button>
-      <button kendoButton [primary]="true" aria-label="add family member">
-        Add
-      </button>
-    </div>
-  </div>
-</kendo-dialog-actions>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div>
+          <button
+            kendoButton
+            class="k-danger-link"
+            *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
+            aria-label="remove family member"
+            (click)="onFormDeleteclick()"
+          >
+            Remove
+          </button>
+        </div>
+        <div class="justify-content-end">
+          <button
+            kendoButton
+            [primary]="false"
+            look="outline"
+            aria-label="cancel editing family member"
+            (click)="onFamilyMemberClosed()"
+          >
+            Cancel
+          </button>
+          <button kendoButton [primary]="true" aria-label="add family member">
+            Add
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+</form>
 </div>
 <!-- Add Family Member Modal -->
 <kendo-dialog

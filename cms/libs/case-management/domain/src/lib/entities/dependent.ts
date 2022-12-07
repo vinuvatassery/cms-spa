@@ -19,5 +19,7 @@ export interface Dependent {
     proContactFlag  :    string  ,    
     concurrencyStamp  :  string  ,
     activeFlag  :    string    ,
-    isCareAssistFlag : string  
+    isCareAssistFlag : string  ,
+    memberType : string,
+    fullCustomName :string
 }

@@ -1,9 +1,11 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { SnackBar } from '@cms/shared/ui-common';
 import { Observable, of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Dependent } from '../entities/dependent';
+import { DependentTypeCode, DependentTypeDesc } from '../enums/dependent-type.enum';
 /** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
 
@@ -20,6 +22,7 @@ export class FamilyAndDependentFacade {
   private dependentUpdateNewSubject = new Subject<any>();
   private dependentGetNewSubject = new Subject<any>();
   private dependentdeleteSubject = new Subject<any>();
+  private dependentGetExistingSubject = new Subject<any>();
 
   /** Public properties **/
   products$ = this.productsSubject.asObservable();
@@ -32,6 +35,22 @@ export class FamilyAndDependentFacade {
   dependentUpdateNew$ = this.dependentUpdateNewSubject.asObservable();
   dependentGetNew$ = this.dependentGetNewSubject.asObservable();
   dependentdelete$ = this.dependentdeleteSubject.asObservable();
+  dependentGetExisting$ = this.dependentGetExistingSubject.asObservable();
+
+
+  snackbarMessage!: SnackBar;
+  snackbarSubject = new Subject<SnackBar>();
+  familyfacadesnackbar$ = this.snackbarSubject.asObservable();
+
+  handleSnackBar(title : string , subtitle : string ,type : string )
+  {    
+    const snackbarMessage: SnackBar = {
+      title: title,
+      subtitle: subtitle,
+      type: type,
+    };
+    this.snackbarSubject.next(snackbarMessage);
+  }
 
 
   /** Constructor**/
@@ -43,8 +62,8 @@ export class FamilyAndDependentFacade {
       next: (dependentdeleteResponse) => {
         this.dependentdeleteSubject.next(dependentdeleteResponse);
       },
-      error: (err) => {
-        console.error('err', err);
+      error: (err) => {        
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )       
       },
     });
   }
@@ -57,7 +76,7 @@ export class FamilyAndDependentFacade {
         this.dependentAddNewSubject.next(addNewdependentsResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });
   }
@@ -68,7 +87,7 @@ export class FamilyAndDependentFacade {
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });
   }
@@ -79,7 +98,19 @@ export class FamilyAndDependentFacade {
         this.dependentGetNewSubject.next(getNewdependentsResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+      },
+    });
+  }
+
+
+  GetExistingClientDependent(dependentId: string) : void {
+    this.dependentDataService.GetExistingClientDependent(dependentId , DependentTypeCode.CAClient).subscribe({
+      next: (dependentGetExistingResponse) => {
+        this.dependentGetExistingSubject.next(dependentGetExistingResponse);
+      },
+      error: (err) => {
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });
   }
@@ -95,7 +126,7 @@ export class FamilyAndDependentFacade {
         this.dependentsSubject.next(gridView);
       },
       error: (err) => {
-        console.error('err', err);
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });
   }
@@ -106,7 +137,7 @@ export class FamilyAndDependentFacade {
         this.dependentStatusSubject.next(dependentStatusResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });
   }
@@ -116,8 +147,8 @@ export class FamilyAndDependentFacade {
       next: (dependentStatusGetResponse) => {
         this.dependentStatusGetSubject.next(dependentStatusGetResponse);
       },
-      error: (err) => {
-        console.error('err', err);
+      error: (err) => {  
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });
   }
@@ -125,29 +156,26 @@ export class FamilyAndDependentFacade {
   loadDependentSearch(): void {
     this.dependentDataService.loadDependentSearch().subscribe({
       next: (dependentSearchResponse) => {
+
+        Object.values(dependentSearchResponse).forEach((key) => {   
+          key.fullName = key.firstName + ' ' + key.lastName
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob.toString()+' SSN '+key?.ssn
+
+          if(key?.dependentTypeCode === DependentTypeCode.Dependent)   
+          {
+              key.memberType = DependentTypeDesc.Dependent            
+          }
+          else
+          {
+              key.memberType = DependentTypeDesc.CAClient
+          }
+        });
         this.dependentSearchSubject.next(dependentSearchResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });
   }
-
-
-
-  loadFamilyDependents(): void {
-    this.dependentDataService.loadFamilyDependents().subscribe({
-      next: (productsResponse) => {
-        this.productsSubject.next(productsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
-  }
+  
 }

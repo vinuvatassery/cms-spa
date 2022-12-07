@@ -25,7 +25,7 @@
     <ng-template kendoGridCellTemplate let-dataItem>
       <button aria-label="client name" kendoButton look="flat"   class="card-link-button" 
       *ngIf="dataItem.dependentTypeCode===CAClient"
-      (click)="onClientUrlClick(dataItem.clientId)"
+      routerLink="../../cases/case360/{{ dataItem.clientId }}"     
       >
         {{ dataItem.firstName + ''+  dataItem.lastName}}
       </button>
@@ -142,9 +142,11 @@
     [dependentSearch$]="dependentSearch$"
     [ddlRelationships$]="ddlRelationships$"
     [dependentGet$]="dependentGet$"
+    [dependentGetExisting$]="dependentGetExisting$"
     (addUpdateDependentEvent)="addUpdateDependentHandle($event)"
     (closeFamilyMemberFormEvent)="closeFamilyMemberForm($event)"
     [dependentTypeCodeSelected]="dependentTypeCodeSelected"
+    (searchTextEvent)="searchTextEventHandle($event)"
   ></case-management-family-and-dependent-detail>
 </kendo-dialog>
 
@@ -155,7 +157,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
     <case-management-remove-family-and-dependent-confirmation
-      (deleteConfimEvent)="handleDeleteConfirmationClicked($event)"
+      (deleteConfimEvent)="handleDeleteConfirmationClicked($event)"     
       [deleteRqclientDependentId]="deleteRqclientDependentId"    
       [deleteRqdependentTypeCode]="deleteRqdependentTypeCode"   
       (formDeleteclickEvent)="onFormDeleteclickEvent($event)"

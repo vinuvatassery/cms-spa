@@ -32,10 +32,13 @@
           [dependentSearch$]="dependentSearch$"
           [ddlRelationships$]="ddlRelationships$"
           [dependentGet$]="dependentGet$"
+          [dependentGetExisting$]="dependentGetExisting$"
           (addUpdateDependentEvent)="addUpdateDependentHandle($event)"
           (GetNewDependentHandleEvent)="GetNewDependentHandle($event)"        
           (loadDependentsEvent)="loadDependentsHandle($event)"     
-          (deleteDependentsEvent)="deleteDependentParamHandle($event)"           
+          (deleteDependentsEvent)="deleteDependentParamHandle($event)"    
+          (searchTextHandleEvent)="searchTextHandleEventHandle($event)"
+          (GetExistclientDependentEvent)="GetExistclientDependentEventHandle($event)"       
           >         
           </case-management-family-and-dependent-list>
         </div>
@@ -43,3 +46,6 @@
     </div>
   </section>
 </div>
+
+
+<common-notification-snack-bar [data$]="familyfacadesnackbar$"> </common-notification-snack-bar>
