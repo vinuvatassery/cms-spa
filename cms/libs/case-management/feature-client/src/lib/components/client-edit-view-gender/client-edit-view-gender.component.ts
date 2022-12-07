@@ -47,6 +47,7 @@ export class ClientEditViewGenderComponent implements OnInit {
       this.appInfoForm.controls[this.DescriptionField].setErrors(
         null
       );
+      this.appInfoForm.controls[this.DescriptionField].setValue('');
     }
   }
 }

@@ -306,11 +306,14 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
   }
   if (Array.isArray(applicantInfo.clientGenderList) ) {
-    applicantInfo.clientGenderList.forEach(gender => {  
-      this.appInfoForm.controls['Gender'+gender.clientGenderCode].setValue(true);
+    applicantInfo.clientGenderList.forEach(gender => { 
+      if (gender.isDeleted===false) {
+        this.appInfoForm.controls['Gender'+gender.clientGenderCode].setValue(true);
       if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
         this.appInfoForm.controls['GenderDescription'].setValue(gender.otherDesc);
       }
+      } 
+      
     })
   }
   if(applicantInfo.clientPronounList != null || undefined){   
