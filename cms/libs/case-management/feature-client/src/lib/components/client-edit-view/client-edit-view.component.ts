@@ -330,6 +330,13 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   if (Transgender==='NOT_LISTED') {
     this.appInfoForm.controls['TransgenderDescription'].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
   }
+
+  const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
+  this.appInfoForm.controls['BirthGender'].setValue(BirthGender);
+  if (BirthGender==='NOT_LISTED') {
+    this.appInfoForm.controls['BirthGenderDescription'].setValue(applicantInfo.client.genderAtBirthDesc);
+  }
+
   if(applicantInfo.clientPronounList != null || undefined){   
     applicantInfo.clientPronounList.forEach(pronoun => {  
       if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){

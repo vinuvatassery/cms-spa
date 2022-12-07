@@ -18,6 +18,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { ClientEditViewPronounComponent } from './components/client-edit-view-pronoun/client-edit-view-pronoun.component';
 import { ClientEditViewGenderComponent } from './components/client-edit-view-gender/client-edit-view-gender.component';
 import { ClientEditViewTransgenderComponent } from './components/client-edit-view-transgender/client-edit-view-transgender.component';
+import { ClientEditViewSexAtBirthComponent } from './components/client-edit-view-sex-at-birth/client-edit-view-sex-at-birth.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { ClientEditViewTransgenderComponent } from './components/client-edit-vie
     ClientEditViewPronounComponent,
     ClientEditViewGenderComponent,
     ClientEditViewTransgenderComponent,
+    ClientEditViewSexAtBirthComponent,
   ],
   exports: [
     ClientPageComponent,

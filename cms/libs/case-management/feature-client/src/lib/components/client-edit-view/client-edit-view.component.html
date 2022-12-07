@@ -442,74 +442,8 @@
     </span>
   </div>
 </section>
-<section>
-  <h5 class="mt-3">What is their sex assigned at birth? Optional</h5>
-  <div
-    class="component-list-h"
-    *ngFor="let sexAssigned of rdoSexAssigned$ | async"
-  >
-    <span>
-      <div class="flex-row">
-        <div class="flex-col flex-col-8">
-          <span class="app-radiobtnwidtext-wrapper">
-          <input
-            type="radio"
-            kendoRadioButton
-            id="{{ sexAssigned.id }}"
-            value="{{ sexAssigned.value }}"
-            name="transgender"
-            (click)="onSexAssignedRdoClicked($event)"
-            aria-labelledby="sexAssignedAtBirth"
-            tabindex="4"
-          />
 
-          <kendo-label
-            class="k-radio-label"
-            text="{{ sexAssigned.value }}"
-          ></kendo-label>
-
-          <kendo-floatinglabel
-            *ngIf="sexAssigned.id === 4"
-            text="Enter sex assigned at birth"
-            
-          >
-            <!-- <input
-              kendoTextBox
-              [disabled]="isSexAssignedTextBoxDisabled"
-              aria-label="sex assigned at birth"
-            /> -->
-        <kendo-textbox aria-label="sex assigned at birth"  [disabled]="isSexAssignedTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-          </kendo-floatinglabel>
-          </span>
-        </div>
-      </div>
-    </span>
-  </div>
-  <div class="flex-row mt-1">
-    <div class="flex-col flex-col-10">
-      <kendo-floatinglabel
-        text="Race, ethnicity, tribal affiliation, country of origin, or ancestry"
-      >
-        <kendo-textarea
-        [fillMode]="formUiStyle.inputFillMode"
-          #tareaRaceAndEthinicities
-          resizable="auto"
-          [maxlength]="tareaRaceAndEthinicityMaxLength"
-          [value]="tareaRaceAndEthinicity"
-          (valueChange)="onTareaRaceAndEthinicityChanged($event)"
-          aria-label="describe race and ethnicity"
-        >
-          <kendo-textarea-suffix class="justify-content-end" >
-            <span class="tareacounter">{{
-              tareaRaceAndEthinicityCounter
-            }}</span>
-          </kendo-textarea-suffix>
-        </kendo-textarea>
-      </kendo-floatinglabel>
-    </div>
-  </div>
-</section>
+<case-management-client-edit-view-sex-at-birth [appInfoForm]="appInfoForm"></case-management-client-edit-view-sex-at-birth>
 
 <section>
   <h5 class="mt-3 mb-0">

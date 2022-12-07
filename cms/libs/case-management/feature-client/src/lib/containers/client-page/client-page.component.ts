@@ -274,7 +274,12 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicatInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
       this.applicatInfo.client.lastName = this.appInfoForm.controls["lastName"].value;   
-      this.applicatInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value
+      this.applicatInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
+      this.applicatInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
+      if (this.applicatInfo.client.genderAtBirthCode==='NOT_LISTED') {
+        this.applicatInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;
+      }
+
    
       if(this.appInfoForm.controls["ssnNotApplicable"].value){
         this.applicatInfo.client.ssn = null;
