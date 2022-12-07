@@ -11,6 +11,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class SearchPageComponent implements OnInit {
   /** Public properties **/
+ showHeaderSearchInputLoader = false;
   search$ = this.searchFacade.search$;
   mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -26,6 +27,9 @@ export class SearchPageComponent implements OnInit {
   }
   /** Private methods **/
   private loadSearch(): void {
+    this.showHeaderSearchInputLoader = true;
     this.searchFacade.loadSearch();
+    this.showHeaderSearchInputLoader = false;
+
   }
 }
