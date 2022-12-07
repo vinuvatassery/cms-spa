@@ -101,9 +101,11 @@ public showInputLoader = false;
 
   onSubmit() {     
     this.parentForm.markAllAsTouched();
-         this.loaderService.show();
+    // this.loaderService.show();
     this.isSubmitted = true;
     this.newcaseSaveEvent.emit(this.parentForm);
+    // this.loaderService.hide();
+
   }
 
   onCloseProgramSelectionClicked() {
