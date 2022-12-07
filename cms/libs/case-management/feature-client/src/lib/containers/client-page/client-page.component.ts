@@ -241,33 +241,11 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.validateForm();
         if(this.appInfoForm.valid){
           this.populateApplicantInfoModel();
-          var isSaved;
           if(this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined)  {
-            return this.clientFacade.update(this.applicatInfo)
-            //  .subscribe({
-            //   next:(response)=>{
-            //    return true;
-            //   },
-            //   error:(err)=>{
-            //     return false;
-            //   }
-
-            //  })
-            //  return of(isSaved);
+            return this.clientFacade.update(this.applicatInfo)            
           }
           else{
-
-            return this.clientFacade.save(this.applicatInfo)
-            // .subscribe({
-            //   next:(response)=>{
-            //    return true;
-            //   },
-            //   error:(err)=>{
-            //   return false;
-            //   }
-
-            //  })
-            //  return of(isSaved);
+            return this.clientFacade.save(this.applicatInfo)        
           }
           
         }
