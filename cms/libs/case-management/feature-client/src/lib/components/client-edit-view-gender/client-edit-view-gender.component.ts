@@ -1,5 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovDataService, LovType } from '@cms/system-config/domain';
 
 @Component({
@@ -9,6 +15,7 @@ import { LovDataService, LovType } from '@cms/system-config/domain';
 })
 export class ClientEditViewGenderComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
+  public formUiStyle : UIFormStyle = new UIFormStyle(); 
   ControlPrefix = 'Gender';
   DescriptionField = 'GenderDescription';
   constructor(
@@ -27,27 +34,41 @@ export class ClientEditViewGenderComponent implements OnInit {
           new FormControl('')
         );
       });
+      this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
       this.appInfoForm.addControl(
-       this.DescriptionField,
-        new FormControl('')
+        'GenderGroup',
+        new FormControl('', [Validators.required])
       );
       this.Genders = data;
     });
   }
 
-  onCheckChange(event: any, lovCode: any) {
-    if (event.target.checked && lovCode === 'NOT_LISTED') {
-      //this.appInfoForm.controls[this.DescriptionField].setValidators([Validators.required]);
-      this.appInfoForm.controls[this.DescriptionField].setErrors({
-        incorrect: true,
-      });
+  onCheckChange(event: any, lovCode: string) {
+    if (event.target.checked) {
+      this.appInfoForm.controls['GenderGroup'].setValue(lovCode);
+      if (lovCode === 'NOT_LISTED') {
+        this.appInfoForm.controls[this.DescriptionField].setErrors({
+          incorrect: true,
+        });
+      }
+    } else {
+      this.appInfoForm.controls['GenderGroup'].setValue('');
+
+      if (lovCode === 'NOT_LISTED') {
+        this.appInfoForm.controls[this.DescriptionField].setErrors(null);
+        this.appInfoForm.controls[this.DescriptionField].setValue('');
+      }
     }
-    if (!event.target.checked && lovCode === 'NOT_LISTED') {
-     //this.appInfoForm.controls[this.DescriptionField].clearValidators();
-      this.appInfoForm.controls[this.DescriptionField].setErrors(
-        null
-      );
-      this.appInfoForm.controls[this.DescriptionField].setValue('');
-    }
+    // if (event.target.checked && lovCode === 'NOT_LISTED') {
+    //   //this.appInfoForm.controls[this.DescriptionField].setValidators([Validators.required]);
+    //   this.appInfoForm.controls[this.DescriptionField].setErrors({
+    //     incorrect: true,
+    //   });
+    // }
+    // if (!event.target.checked && lovCode === 'NOT_LISTED') {
+    //   //this.appInfoForm.controls[this.DescriptionField].clearValidators();
+    //   this.appInfoForm.controls[this.DescriptionField].setErrors(null);
+    //   this.appInfoForm.controls[this.DescriptionField].setValue('');
+    // }
   }
 }

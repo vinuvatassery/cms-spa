@@ -8,11 +8,11 @@
       <input
         type="checkbox"
         kendoCheckBox
-        [formControlName]="ControlPrefix+gender.lovCode"
-        id="{{gender.lovCode}}"
-        (change)="onCheckChange($event,gender.lovCode)"
+        [formControlName]="ControlPrefix + gender.lovCode"
+        id="{{ gender.lovCode }}"
+        (change)="onCheckChange($event, gender.lovCode)"
       />
-      <label class="k-checkbox-label" for="{{gender.lovCode}}"
+      <label class="k-checkbox-label" for="{{ gender.lovCode }}"
         >{{ gender.lovDesc }}
       </label>
 
@@ -22,13 +22,21 @@
             <kendo-textbox
               aria-label="enter gender"
               [formControlName]="DescriptionField"
-              [disabled]="!appInfoForm.controls[ControlPrefix+gender.lovCode].value"
+              [fillMode]="formUiStyle.inputFillMode"
+              [disabled]="
+                !appInfoForm.controls[ControlPrefix + gender.lovCode].value
+              "
             >
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!appInfoForm.controls[DescriptionField].valid">Gender is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls[DescriptionField].valid"
+            >Gender is required.</kendo-formerror
+          >
         </span>
       </div>
     </span>
+    <kendo-formerror *ngIf="!appInfoForm.controls['GenderGroup']?.valid"
+      >Atleast one option is required.</kendo-formerror
+    >
   </div>
 </section>

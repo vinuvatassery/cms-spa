@@ -186,7 +186,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  
   
   public onClose(event: any) {    
-      event.preventDefault();   
+      //event.preventDefault();   
   }
   public clearForm(): void {
     //this.form.reset();
@@ -210,6 +210,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssnNotApplicable:  [''],
       registerToVote: [''],
       pronouns: [''],      
+      genderDesc:new FormControl('',[Validators.required]),      
+      GenderDescFlag:new FormControl(''),      
     });  
 
   } 
@@ -305,6 +307,12 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
   }
+  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.genderDescFlag===StatusFlag.Yes){
+    this.appInfoForm.controls["GenderDescFlag"].setValue(true);
+    this.OnGenderDescFlagChecked(true);
+  }else{
+    this.appInfoForm.controls["genderDesc"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.genderDesc); 
+  }
   if (Array.isArray(applicantInfo.clientGenderList) ) {
     applicantInfo.clientGenderList.forEach(gender => { 
       if (gender.isDeleted===false) {
@@ -312,9 +320,15 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
         this.appInfoForm.controls['GenderDescription'].setValue(gender.otherDesc);
       }
+      this.appInfoForm.controls['GenderGroup'].setValue(gender.clientGenderCode);
       } 
       
     })
+  }
+  const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
+  this.appInfoForm.controls['Transgender'].setValue(Transgender);
+  if (Transgender==='NOT_LISTED') {
+    this.appInfoForm.controls['TransgenderDescription'].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
   }
   if(applicantInfo.clientPronounList != null || undefined){   
     applicantInfo.clientPronounList.forEach(pronoun => {  
@@ -537,6 +551,17 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       this.appInfoForm.controls['ssn'].setValidators(Validators.required);
       this.appInfoForm.controls['ssn'].updateValueAndValidity();
       this.appInfoForm.controls['ssn'].enable();
+    }
+  }
+  OnGenderDescFlagChecked(isChecked: boolean) {
+    //const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['genderDesc'].removeValidators(Validators.required);
+      this.appInfoForm.controls['genderDesc'].updateValueAndValidity();
+    }
+    else {
+      this.appInfoForm.controls['genderDesc'].setValidators(Validators.required);
+      this.appInfoForm.controls['genderDesc'].updateValueAndValidity();
     }
   }
   registerToVoteSelected(event:Event){

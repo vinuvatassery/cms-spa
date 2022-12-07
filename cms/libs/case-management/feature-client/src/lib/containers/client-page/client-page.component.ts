@@ -296,16 +296,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.activeFlag = StatusFlag.Yes;
             this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.isDeleted = false;
             this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
-        }          
-       /*Mocking the other required fields need to change as per the UI story progress */        
+        }    
         
-           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode="NO";          
-
-      //------------------------------------
-
-        
+           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+           if (this.appInfoForm.controls["Transgender"].value==='NOT_LISTED') {
+            this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
+           }
         if(this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
           this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = new clientCaseEligibilityFlag;
+        }
+        if(this.appInfoForm.controls["GenderDescFlag"].value===true){
+          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.genderDescFlag=StatusFlag.Yes;
+        }else{
+          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.genderDesc=this.appInfoForm.controls["genderDesc"].value;
         }
         this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.activeFlag = StatusFlag.Yes;
         if(this.appInfoForm.controls["prmInsNotApplicable"].value){
@@ -393,8 +396,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   
   private populateClientGender(){
-        
-       let clientGenderListSaved = this.applicatInfo.clientGenderList;// this is in case of update record
+       const clientGenderListSaved = this.applicatInfo.clientGenderList;// this is in case of update record
        this.applicatInfo.clientGenderList=[];
         Object.keys( this.appInfoForm.controls).filter(m=>m.includes('Gender')).forEach(control => {
           if (this.appInfoForm.controls[control].value===true) {
@@ -405,15 +407,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             if(clientGender.clientGenderCode==='NOT_LISTED'){
               clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
             }
-            let Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
+            const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
             if (Existing!==undefined) {
               clientGender=Existing;
             }
             clientGender.isDeleted =false;
             this.applicatInfo.clientGenderList.push(clientGender);
           }else{
-            let clientGenderCode =control;
-            let Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGenderCode);
+            const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===control);
             if (Existing!==undefined) {
               Existing.isDeleted=true;
               this.applicatInfo.clientGenderList.push(Existing);
@@ -528,6 +529,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             }
             
           });
+
+          
          
           this.appInfoForm.updateValueAndValidity();
   }
