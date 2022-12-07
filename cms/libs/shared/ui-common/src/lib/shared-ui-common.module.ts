@@ -44,6 +44,7 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
     AccountSettingsComponent,
     UserProfileCardComponent,
     LoaderComponent,
+    GridLoaderComponent,
   ],
 })
 export class SharedUiCommonModule {}
