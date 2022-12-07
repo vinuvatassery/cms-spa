@@ -272,7 +272,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private populateClient(){
-    debugger;
     if(this.applicatInfo.client == undefined){
       this.applicatInfo.client = new Client;
     }
