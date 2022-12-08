@@ -38,7 +38,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public currentDate = new Date(); 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
-  rdoMaterials$ = this.clientfacade.rdoMaterials$;
+  rdoMaterials$ = this.lovFacade.materialslov$;
+  materialsyeslov$ = this.lovFacade.materialsyeslov$;
   rdoInterpreters$ = this.clientfacade.rdoInterpreters$;
   rdoDeafs$ = this.clientfacade.rdoDeaf$;
   rdoBlinds$ = this.clientfacade.rdoBlind$;
@@ -117,7 +118,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadDdlEnglishProficiencies();
     this.loadRdoTransGender();
     this.loadRdoSexAssigned();
-    this.loadRdoMaterials();
+    //this.loadRdoMaterials();
     this.loadRdoInterpreter();
     this.loadRdoDeaf();
     this.loadRdoBlind();
@@ -125,9 +126,11 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoDressingorBathing();
     this.loadRdoConcentration();
     this.loadRdoErrands();
-    this.loadTareaRaceAndEthinicity();   
-    
-     this.buildForm();     
+    this.loadTareaRaceAndEthinicity();  
+
+    this.LoadLovs() 
+     this.buildForm(); 
+
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
      this.ValidateFields.emit(this.appInfoForm);
@@ -148,8 +151,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.pronounList = pronoun;
     this.PronounChanges.emit(this.pronounList);
   }
-
-
  
   ngAfterViewChecked() {  
     var firstName = '';
@@ -209,11 +210,15 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssn:  ['',{disabled:false}],
       ssnNotApplicable:  [''],
       registerToVote: [''],
-      pronouns: [''],      
+      pronouns: [''] ,
     });  
 
   } 
+  private LoadLovs(){
+    // this.lovFacade.getMaterialLovs();
+    // this.lovFacade.getMaterialYesLovs();
 
+  }
   private loadApplicantInfoSubscription(){
     
     this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
@@ -396,9 +401,9 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.clientfacade.loadRdoSexAssigned();
   }
 
-  private loadRdoMaterials() {
-    this.clientfacade.loadRdoMaterials();
-  }
+  // private loadRdoMaterials() {
+  //   this.clientfacade.loadRdoMaterials();
+  // }
 
   private loadRdoInterpreter() {
     this.clientfacade.loadRdoInterpreter();

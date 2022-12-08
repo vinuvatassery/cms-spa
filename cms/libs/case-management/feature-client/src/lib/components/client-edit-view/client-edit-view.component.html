@@ -766,7 +766,14 @@
   </h5>
   <div class="component-list-h">
     
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let materials of rdoMaterials$ | async">
+    <!-- <case-management-client-edit-view-disability
+      [rdoMaterials$]="rdoMaterials$"
+      [materialsyeslov$]="materialsyeslov$"
+      [appInfoForm]="appInfoForm">
+
+    </case-management-client-edit-view-disability> -->
+
+    <!-- <span class="app-radiobtnwidtext-wrapper" *ngFor="let materials of rdoMaterials$ | async">
       <input
         type="radio"
         kendoRadioButton
@@ -785,15 +792,10 @@
         *ngIf="materials.id === 1"
         text="Enter formats"
         
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isMaterialsTextBoxDisabled"
-          aria-label="enter formats"
-        /> -->
+      >     
         <kendo-textbox aria-label="enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
-    </span>
+    </span> -->
     <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
