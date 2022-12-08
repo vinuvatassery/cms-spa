@@ -19,6 +19,7 @@ import { ClientEditViewPronounComponent } from './components/client-edit-view-pr
 import { ClientEditViewGenderComponent } from './components/client-edit-view-gender/client-edit-view-gender.component';
 import { ClientEditViewTransgenderComponent } from './components/client-edit-view-transgender/client-edit-view-transgender.component';
 import { ClientEditViewSexAtBirthComponent } from './components/client-edit-view-sex-at-birth/client-edit-view-sex-at-birth.component';
+import { ClientEditViewSexualIdentityComponent } from './components/client-edit-view-sexual-identity/client-edit-view-sexual-identity.component';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { ClientEditViewSexAtBirthComponent } from './components/client-edit-view
     ClientEditViewGenderComponent,
     ClientEditViewTransgenderComponent,
     ClientEditViewSexAtBirthComponent,
+    ClientEditViewSexualIdentityComponent,
   ],
   exports: [
     ClientPageComponent,

@@ -226,13 +226,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.populateClient();
     this.populateClientCaseEligibility();
     this.populateClientPronoun();
+    this.populateClientGender();
+    this.populateClientSexualIdentity();
 
     /*Modify when the get is ready */
     /*-------------------------------------------------------------------------------- */
      //this.populateClientCase();
-    this.populateClientGender();
+    
      this.populateClientRace();
-     this.populateClientSexualIdentity();
+     
     /*-------------------------------------------------------------------------------- */
 
   }
@@ -396,21 +398,22 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         
         /*-------------------------------------------------------------------------------- */
   }
-  private populateClientSexualIdentity(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*--------------------------remove if------------------------------------------------------ */
-        if(this.applicantInfo.clientSexualIdentityList.length ===0 ){
-            var clientSexualIdentity = new ClientSexualIdentity();
-            clientSexualIdentity.clientSexualIdentityCode = 'Straight';
-            //clientSexualIdentity.activeFlag ="Y";
-            if(this.applicantInfo.clientSexualIdentityList == undefined){
-              this.applicantInfo.clientSexualIdentityList =[];
-            }
-            clientSexualIdentity.clientId = this.clientId;
-            this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity)
+  private populateClientSexualIdentity() {
+    this.applicantInfo.clientSexualIdentityList = [];
+    Object.keys(this.appInfoForm.controls).filter(m => m.includes('SexulaIdentity')).forEach(control => {
+      if (this.appInfoForm.controls[control].value === true) {
+        control = control.replace('SexulaIdentity', '');
+        const clientSexualIdentity = new ClientSexualIdentity();
+        clientSexualIdentity.clientSexualIdentityCode = control;
+        if (clientSexualIdentity.clientSexualIdentityCode === 'NOT_LISTED') {
+          clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexulaIdentityDescription'].value;
+        }
+
+        this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity);
       }
-        /*-------------------------------------------------------------------------------- */
+    });
   }
+
 
 
 

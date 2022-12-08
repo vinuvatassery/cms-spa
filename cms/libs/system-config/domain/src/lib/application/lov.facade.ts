@@ -62,4 +62,15 @@ getPronounLovs(): void {
   });
   
 }
+getLovs(lovType:string): void {
+  this.lovDataService.getLovsbyType(lovType).subscribe({
+    next: (lovResponse) => {
+      this.lovSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+  
+}
 }

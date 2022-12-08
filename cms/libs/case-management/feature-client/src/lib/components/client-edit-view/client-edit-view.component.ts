@@ -314,20 +314,30 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     applicantInfo.clientGenderList.forEach(gender => { 
       this.appInfoForm.controls['Gender'+gender.clientGenderCode]?.setValue(true);
       if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
-        this.appInfoForm.controls['GenderDescription'].setValue(gender.otherDesc);
+        this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
       }
       this.appInfoForm.controls['GenderGroup'].setValue(gender.clientGenderCode);
       
     })
   }
+  if (Array.isArray(applicantInfo.clientSexualIdentityList) ) {
+    applicantInfo.clientSexualIdentityList.forEach(identity => { 
+      this.appInfoForm.controls['SexulaIdentity'+identity.clientSexualIdentityCode]?.setValue(true);
+      if(identity.clientSexualIdentityCode==="NOT_LISTED" && identity.otherDesc!==null){
+        this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
+      }
+      this.appInfoForm.controls['SexulaIdentityGroup'].setValue(identity.clientSexualIdentityCode);
+      
+    })
+  }
   const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
-  this.appInfoForm.controls['Transgender'].setValue(Transgender);
+  this.appInfoForm.controls['Transgender']?.setValue(Transgender);
   if (Transgender==='NOT_LISTED') {
     this.appInfoForm.controls['TransgenderDescription'].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
   }
 
   const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
-  this.appInfoForm.controls['BirthGender'].setValue(BirthGender);
+  this.appInfoForm.controls['BirthGender']?.setValue(BirthGender);
   if (BirthGender==='NOT_LISTED') {
     this.appInfoForm.controls['BirthGenderDescription'].setValue(applicantInfo.client.genderAtBirthDesc);
   }

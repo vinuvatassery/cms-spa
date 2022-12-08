@@ -59,16 +59,5 @@ export class ClientEditViewGenderComponent implements OnInit {
         this.appInfoForm.controls[this.DescriptionField].setValue('');
       }
     }
-    // if (event.target.checked && lovCode === 'NOT_LISTED') {
-    //   //this.appInfoForm.controls[this.DescriptionField].setValidators([Validators.required]);
-    //   this.appInfoForm.controls[this.DescriptionField].setErrors({
-    //     incorrect: true,
-    //   });
-    // }
-    // if (!event.target.checked && lovCode === 'NOT_LISTED') {
-    //   //this.appInfoForm.controls[this.DescriptionField].clearValidators();
-    //   this.appInfoForm.controls[this.DescriptionField].setErrors(null);
-    //   this.appInfoForm.controls[this.DescriptionField].setValue('');
-    // }
   }
 }
