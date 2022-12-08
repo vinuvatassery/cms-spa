@@ -8,10 +8,12 @@ import { LovFacade } from '@cms/system-config/domain';
   styleUrls: ['./client-edit-view-disability.component.scss'],
 })
 export class ClientEditViewDisabilityComponent implements OnInit {
+
   @Input() appInfoForm: FormGroup;
   rdoMaterials$ = this.lovFacade.materialslov$;
   materialsyeslov$ = this.lovFacade.materialsyeslov$;
   pronounList: any = []; 
+  
   constructor(private formBuilder: FormBuilder,
     private readonly lovFacade : LovFacade) {
       this.appInfoForm = this.formBuilder.group({Material: [''],});
