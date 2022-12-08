@@ -19,7 +19,6 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
- 
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
     LoginStatusComponent,
@@ -45,8 +44,7 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
     AccountSettingsComponent,
     UserProfileCardComponent,
     LoaderComponent,
-    GridLoaderComponent
+    GridLoaderComponent,
   ],
- 
 })
-export class SharedUiCommonModule { }
+export class SharedUiCommonModule {}

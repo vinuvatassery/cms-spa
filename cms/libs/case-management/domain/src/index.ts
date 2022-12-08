@@ -23,6 +23,14 @@ export * from './lib/entities/verification';
 export * from './lib/entities/smoking-cessation';
 export * from './lib/entities/workflow';
 export * from './lib/entities/workflow-stage-completion-status';
+export * from './lib/entities/client-sexual-identity';
+export * from './lib/entities/client-race';
+export * from './lib/entities/client-pronoun';
+export * from './lib/entities/client-gender';
+export * from './lib/entities/client-case-eligibility';
+export * from './lib/entities/applicant-info';
+export * from './lib/entities/client-case-eligibility-and-flag';
+export * from './lib/entities/client-case-eligibility-flag';
 
 
 /** Enums **/
