@@ -233,12 +233,13 @@
             <kendo-formfield>
             <span class="app-checkboxwidtext-wrapper">
               <input 
+              class="adjust-attr"
               type="checkbox" 
               id="check2" 
+              name="homeAddress_homelessFlag"
               kendoCheckBox 
               aria-labelledby="houseless"
               formControlName="homelessFlag"
-              (click)="onHomelessFlagChecked($event)"
                />
               <label class="k-checkbox-label" for="check2">Houseless</label>
             </span>
@@ -265,7 +266,10 @@
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
-            <kendo-upload [disabled]="isNoProofOfHomeChecked"> </kendo-upload>
+            <kendo-upload 
+            [disabled]="isNoProofOfHomeChecked"
+            
+            > </kendo-upload>
           </div>
         </div>
         <div class="flex-row mt-2">
@@ -359,10 +363,12 @@
             <kendo-formfield>
             <span class="app-checkboxwidtext-wrapper">
               <input 
+              class="adjust-attr"
               type="checkbox" 
-              id="check4"              
+              id="check4"   
+              name="homePhone_applicableFlag"           
               kendoCheckBox
-              aria-labelledby="noProofOfHome"
+              aria-labelledby="homePhone applicableFlag"
               formControlName="applicableFlag" 
               (click)="onHomePhoneNotApplicableChecked($event)"
                 />
@@ -429,8 +435,10 @@
             <kendo-formfield>
             <span class="app-checkboxwidtext-wrapper">
               <input 
+              class="adjust-attr"
               type="checkbox" 
               id="check7" 
+              name="cellPhone_applicableFlag"              
               kendoCheckBox              
               aria-labelledby="cellPhone"
               formControlName="applicableFlag"
@@ -498,8 +506,10 @@
               <kendo-formfield>
               <span class="app-checkboxwidtext-wrapper">
                 <input 
+                class="adjust-attr"
                 type="checkbox" 
                 id="check10" 
+                name="workPhone_applicableFlag"
                 kendoCheckBox                
                 aria-labelledby="noWorkPhone" 
                 formControlName="applicableFlag"
@@ -567,11 +577,6 @@
             <div class="flex-col flex-col-3">
               <kendo-formfield>
               <kendo-floatinglabel text="Note">
-                <!-- <input
-                kendoTextBox
-                [disabled]="isNoOtherPhoneChecked"
-                aria-label="note"
-              /> -->
                 <kendo-textbox 
                 [disabled]="isNoOtherPhoneChecked" 
                 aria-label="note"
@@ -587,8 +592,10 @@
               <kendo-formfield>
               <span class="app-checkboxwidtext-wrapper">
                 <input 
+                class="adjust-attr"
                 type="checkbox" 
                 id="check13" 
+                name="otherPhone_applicableFlag"
                 kendoCheckBox                
                 aria-labelledby="otherPhoneCheck" 
                 formControlName="applicableFlag"
@@ -651,8 +658,10 @@
               <kendo-formfield>
               <span class="app-checkboxwidtext-wrapper">
                 <input 
+                class="adjust-attr"
                 type="checkbox" 
                 id="check16" 
+                name="email_applicableFlag"
                 kendoCheckBox 
                 (click)="onNoEmailCheckboxClicked($event)"              
                 aria-label="emailNotApplicable" 
@@ -724,8 +733,10 @@
             <kendo-formfield>
             <span class="app-checkboxwidtext-wrapper">
               <input 
+              class="adjust-attr"
               type="checkbox" 
               id="check19" 
+              name="familyAndFriendsContact_noFriendOrFamilyContactFlag"
               kendoCheckBox              
               aria-labelledby="noFriendsOrFamily" 
               formControlName="noFriendOrFamilyContactFlag"

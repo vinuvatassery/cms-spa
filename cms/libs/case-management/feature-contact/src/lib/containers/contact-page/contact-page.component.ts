@@ -1,5 +1,5 @@
 /** Angular **/
-import { OnDestroy } from '@angular/core';
+import { ElementRef, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries **/
@@ -59,6 +59,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private workflowFacade: WorkflowFacade,
     private readonly addressValidationFacade: AddressValidationFacade,
     private readonly lovFacade: LovFacade,
+    private readonly elementRef: ElementRef
   ) { }
 
   /** Lifecycle hooks **/
@@ -70,8 +71,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.addSaveSubscription();
     this.loadContactInfo();
     this.addMailingAddressChangeSubscription();
-    //this.addHomeAddressChangeSubscription();
+    this.addHomeAddressChangeSubscription();
     this.sameAsMailingAddressChangeSubscription()
+    this.homelessFlagChangeSubscription()
     this.addStateChangesubscription()
     this.selectedAddressForm = new FormGroup({
       choosenAddress: new FormControl('', Validators.required),
@@ -82,7 +84,52 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
   }
 
+  ngAfterViewInit() {
+    const initialAjustment: CompletionChecklist[] = [];
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
+      const data: CompletionChecklist = {
+        dataPointName: control.name,
+        status: control.checked ? StatusFlag.Yes : StatusFlag.No
+      };
+      initialAjustment.push(data);
+    });
+
+    if (initialAjustment.length > 0) {
+      console.log(initialAjustment);
+      this.workflowFacade.updateBasedOnDtAttrChecklist(initialAjustment);
+    }
+  }
+
+  // ngAfterViewChecked() {
+  //   const initialAjustment: CompletionChecklist[] = [];
+  //   const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+  //   adjustControls.forEach((control: any) => {
+  //     const data: CompletionChecklist = {
+  //       dataPointName: control.name,
+  //       status: control.checked ? StatusFlag.Yes : StatusFlag.No
+  //     };
+  //     initialAjustment.push(data);
+  //   });
+
+  //   if (initialAjustment.length > 0) {
+  //     console.log(initialAjustment);
+  //     this.workflowFacade.updateBasedOnDtAttrChecklist(initialAjustment);
+  //   }
+  // }
+
   /** Private methods **/
+
+  private adjustAttributeChanged(event: Event) {
+    const data: CompletionChecklist = {
+      dataPointName: (event.target as HTMLInputElement).name,
+      status: (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+  }
+
   private loadDdlRelationships() {
     this.lovFacade.getContactRelationShipsLovs();
   }
@@ -129,27 +176,36 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
-    Object.keys(this.contactInfoForm.controls).forEach(key => {
+    Object.keys(this.contactInfoForm.controls).forEach(groupkey => {
       if (prev && curr) {
-        if (prev[key] !== curr[key]) {
-          let item: CompletionChecklist = {
-            dataPointName: key,
-            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
-          };
-          completedDataPoints.push(item);
+        if (prev[groupkey] !== curr[groupkey]) {
+          Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
+            if (prev[groupkey][key] !== curr[groupkey][key]) {
+              let item: CompletionChecklist = {
+                dataPointName: `${groupkey}_${key}`,
+                status: curr[groupkey][key] ? StatusFlag.Yes : StatusFlag.No
+              };
+              completedDataPoints.push(item);
+            }
+          });
         }
       }
       else {
-        if (this.contactInfoForm?.get(key)?.value && this.contactInfoForm?.get(key)?.valid) {
-          let item: CompletionChecklist = {
-            dataPointName: key,
-            status: StatusFlag.Yes
-          };
-
-          completedDataPoints.push(item);
-        }
+        Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
+          if (this.contactInfoForm?.get(`${groupkey}.${key}`)?.value && this.contactInfoForm?.get(`${groupkey}.${key}`)?.valid) {
+            let item: CompletionChecklist = {
+              dataPointName: `${groupkey}_${key}`,
+              status: StatusFlag.Yes
+            };
+            completedDataPoints.push(item);
+          }
+        });
       }
     });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
   }
 
   private loadPreferredContactMethod() {
@@ -213,7 +269,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         state: new FormControl('OR', { validators: Validators.required, updateOn: 'blur' }),
         zip: new FormControl('', { validators: [Validators.required, Validators.pattern('^[0-9]{5}(-[0-9]{4})?$')], updateOn: 'blur' }),
         county: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        homelessFlag: new FormControl(false, { validators: Validators.required, updateOn: 'blur' }),
+        homelessFlag: new FormControl(false, { validators: Validators.required }),
         noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required, updateOn: 'blur' }),
         sameAsMailingAddressFlag: new FormControl(false, { validators: Validators.required }),
         housingStabilityCode: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
@@ -309,33 +365,38 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  // addHomeAddressChangeSubscription() {
-  //   (this.contactInfoForm.get('homeAddress') as FormGroup).valueChanges
-  //     .pipe(
-  //       startWith(null),
-  //       pairwise(),
-  //       filter(([prev, curr]: [any, any]) =>
-  //          curr['homelessFlag'] !== true 
-  //          && curr['address1'] && curr['city'] && curr['state'] && curr['zip']
-  //       ),
-  //       mergeMap(([prev, curr]: [any, any]) =>
-  //         forkJoin([of(prev), of(curr), this.validateMailAddress(prev, curr, AddressTypeCode.Home)]))
-  //     ).subscribe(([prev, curr, response]: [any, any, AddressValidation | null]) => {
-  //       this.isSkipHomeAddressValidation = false;
-  //       if (response) {
-  //         if (prev != null) {
-  //           this.homeAddressValidationPopupVisibility$.next(true);
-  //         }
-  //         if (response?.isValid ?? false) {
-  //           this.homeAddressSuggested = response?.address;
-  //           this.homeAddressIsNotValid = false;
-  //         }
-  //         else {
-  //           this.homeAddressIsNotValid = true;
-  //         }
-  //       }
-  //     });
-  // }
+  addHomeAddressChangeSubscription() {
+    (this.contactInfoForm.get('homeAddress') as FormGroup).valueChanges
+      .pipe(
+        startWith(null),
+        pairwise(),
+        filter(([prev, curr]: [any, any]) =>
+          curr['homelessFlag'] !== true
+          && curr['sameAsMailingAddressFlag'] !== true
+          && curr['address1'] && curr['city'] && curr['state'] && curr['zip']
+          && (prev == null
+            || (prev['address1'] !== curr['address1'] || prev['address2'] !== curr['address2']
+              || prev['city'] !== curr['city'] || prev['state'] !== curr['state']
+              || prev['zip'] !== curr['zip']))
+        ),
+        mergeMap(([prev, curr]: [any, any]) =>
+          forkJoin([of(prev), of(curr), this.validateMailAddress(prev, curr, AddressTypeCode.Home)]))
+      ).subscribe(([prev, curr, response]: [any, any, AddressValidation | null]) => {
+        this.isSkipHomeAddressValidation = false;
+        if (response) {
+          if (prev != null) {
+            this.homeAddressValidationPopupVisibility$.next(true);
+          }
+          if (response?.isValid ?? false) {
+            this.homeAddressSuggested = response?.address;
+            this.homeAddressIsNotValid = false;
+          }
+          else {
+            this.homeAddressIsNotValid = true;
+          }
+        }
+      });
+  }
 
   validateMailAddress(prev: any, curr: any, type: AddressTypeCode) {
     if (curr['address1'] && curr['city'] && curr['state'] && curr['zip']
@@ -712,6 +773,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm?.get('homeAddress.address1')?.enable();
       this.contactInfoForm?.get('homeAddress.address2')?.enable();
       this.contactInfoForm?.get('homeAddress.zip')?.enable();
+      if (this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false) {
+        this.setSameAsMailingAddressFlagChanges(true);
+      }
     }
   }
 
@@ -740,7 +804,16 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
     else if (type === AddressTypeCode.Home) {
       this.isSkipHomeAddressValidation = true;
-      this.setHomeAddress(mailAddress);
+      //this.setHomeAddress(mailAddress);
+      var sameAsFlag = this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value;
+      var homelessFlag = this.contactInfoForm?.get('homeAddress.homelessFlag')?.value;
+      var noHomeAddressProofFlag = this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value;
+      var housingStabilityCode = this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.value;
+      this.contactInfoForm.get('homeAddress')?.patchValue(mailAddress,);
+      this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(sameAsFlag);
+      this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(homelessFlag);
+      this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(noHomeAddressProofFlag);
+      this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.patchValue(housingStabilityCode);
     }
   }
 
@@ -806,7 +879,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private setSameAsMailingAddressFlagChanges(value: boolean) {
     const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
-    this.isSkipHomeAddressValidation = true;
     if (value) {
       const maillingAddressGroup = this.contactInfoForm.get('maillingAddress') as FormGroup;
       const address: ClientAddress = {
@@ -820,8 +892,22 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
         this.homeAddressIsNotValid = this.mailingAddressIsNotValid;
       }
+      homeAddressGroup?.controls['address1']?.disable();
+      homeAddressGroup?.controls['address2']?.disable();
+      homeAddressGroup?.controls['city']?.disable();
+      homeAddressGroup?.controls['state']?.disable();
+      homeAddressGroup?.controls['zip']?.disable();
+      this.isSkipHomeAddressValidation = true;
     }
     else {
+      if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
+        homeAddressGroup?.controls['address1']?.enable();
+        homeAddressGroup?.controls['address2']?.enable();
+        homeAddressGroup?.controls['zip']?.enable();
+      }
+
+      homeAddressGroup?.controls['city']?.enable();
+      homeAddressGroup?.controls['state']?.enable();
       homeAddressGroup?.controls['address1']?.reset();
       homeAddressGroup?.controls['address2']?.reset();
       homeAddressGroup?.controls['city']?.reset();
@@ -835,15 +921,18 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     homeAddressGroup?.controls['city']?.patchValue(address?.city);
     homeAddressGroup?.controls['state']?.patchValue(address?.state);
 
-   if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
+    if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
       homeAddressGroup?.controls['address1']?.patchValue(address?.address1);
       homeAddressGroup?.controls['address2']?.patchValue(address?.address2);
       homeAddressGroup?.controls['zip']?.patchValue(address?.zip);
     }
   }
 
-  onHomelessFlagChecked(event: Event) {
-    this.setVisibilityByHomelessFlag((event.target as HTMLInputElement).checked);
+  homelessFlagChangeSubscription() {
+    this.contactInfoForm?.get('homeAddress.homelessFlag')?.valueChanges
+      .subscribe((value: boolean) => {
+        this.setVisibilityByHomelessFlag(value);
+      });
   }
 
   onContactRelationshipChanged(value: any) {
