@@ -1,0 +1,9 @@
+<div>
+    {{pronounList | json}}
+  <span
+    class="app-radiobtnwidtext-wrapper"
+    *ngFor="let pronoun of pronounList"
+  >
+   {{pronoun.lovCode}}
+  </span>
+</div>
