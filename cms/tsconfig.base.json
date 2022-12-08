@@ -125,7 +125,6 @@
       "@cms/shared/ui-tpa": ["libs/shared/ui-tpa/src/index.ts"],
       "@cms/shared/util-common": ["libs/shared/util-common/src/index.ts"],
       "@cms/shared/util-core": ["libs/shared/util-core/src/index.ts"],
-      "@cms/shared/util-logging": ["libs/shared/util-logging/src/index.ts"],
       "@cms/shared/util-oidc": ["libs/shared/util-oidc/src/index.ts"],
       "@cms/shared/util-signalr": ["libs/shared/util-signalr/src/index.ts"],
       "@cms/shared/util-theme": ["libs/shared/util-theme/src/index.ts"],

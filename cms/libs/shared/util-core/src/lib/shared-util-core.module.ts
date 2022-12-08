@@ -11,9 +11,10 @@ import {
 import { AppErrorHandler } from './application/services/app-error-handler.service';
 import { LocalStorageService } from './infrastructure/local-storage.service';
 import { NotificationService } from './api/services/notification.service';
+import { LoggingService } from './api/services/logging.service';
 import { ConfigurationProvider } from './api/providers/configuration.provider';
 
-export { ConfigurationProvider, LocalStorageService, NotificationService };
+export { ConfigurationProvider, LocalStorageService, NotificationService,LoggingService };
 
 @NgModule({
   imports: [CommonModule],

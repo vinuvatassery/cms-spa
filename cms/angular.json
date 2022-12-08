@@ -46,7 +46,6 @@
     "shared-ui-tpa": "libs/shared/ui-tpa",
     "shared-util-common": "libs/shared/util-common",
     "shared-util-core": "libs/shared/util-core",
-    "shared-util-logging": "libs/shared/util-logging",
     "shared-util-oidc": "libs/shared/util-oidc",
     "shared-util-signalr": "libs/shared/util-signalr",
     "shared-util-theme": "libs/shared/util-theme",
