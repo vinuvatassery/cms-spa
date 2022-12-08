@@ -1,4 +1,3 @@
-import { ClientCase } from "./clien-case";
 import { Client } from "./client";
 import { ClientCaseEligibilityAndFlag } from "./client-case-eligibility-and-flag";
 import { ClientGender } from "./client-gender";
