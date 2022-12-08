@@ -13,7 +13,8 @@ import { DeleteConfirmationComponent } from './delete-confirmation/delete-confir
 import { NotificationSnackBarComponent } from './notification-snack-bar/notification-snack-bar.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { UserProfileCardComponent } from './user-profile-card/user-profile-card.component';
-import { LoaderComponent } from './loader-component';
+import { LoaderComponent } from './loader/loader.component';
+import { GridLoaderComponent } from './loader/grid-loader.component';
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
@@ -31,6 +32,7 @@ import { LoaderComponent } from './loader-component';
     AccountSettingsComponent,
     UserProfileCardComponent,
     LoaderComponent,
+    GridLoaderComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -42,7 +44,8 @@ import { LoaderComponent } from './loader-component';
     DeleteConfirmationComponent,
     AccountSettingsComponent,
     UserProfileCardComponent,
-    LoaderComponent
+    LoaderComponent,
+    GridLoaderComponent
   ],
  
 })
