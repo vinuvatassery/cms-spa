@@ -22,6 +22,7 @@ export class LovFacade {
   private lovRelationShipSubject = new BehaviorSubject<Lov[]>([]);
   private lovcaseoriginSubject = new BehaviorSubject<Lov[]>([]);
   private lovCntRelationshipCodeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovPronounSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -29,6 +30,7 @@ export class LovFacade {
   caseoriginlov$ = this.lovcaseoriginSubject.asObservable();
   lovCntRelationship$ = this.lovCntRelationshipCodeSubject.asObservable();
 
+  pronounslov$ = this.lovPronounSubject.asObservable();
 
         /** Public methods **/
 
@@ -64,6 +66,18 @@ getCaseOriginLovs(): void {
       console.error('err', err);
     },
   });
+  
+}
+getPronounLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Pronouns).subscribe({
+    next: (lovPronounResponse) => {
+      this.lovPronounSubject.next(lovPronounResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+  
 }
 
 getContactRelationShipsLovs(): void {

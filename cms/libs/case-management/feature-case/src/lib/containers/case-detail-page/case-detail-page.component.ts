@@ -10,6 +10,8 @@ import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { CommunicationEvents, ScreenType, NavigationType,CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
+
+
 @Component({
   selector: 'case-management-case-detail-page',
   templateUrl: './case-detail-page.component.html',
