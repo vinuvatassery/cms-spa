@@ -154,13 +154,32 @@
   kendo-multicolumncombobox > .k-button {
     display: none;
   }
+
+
   
 }
 .hidedropicon  kendo-combobox > .k-button {
   display: none ;
 }
 
+.input-inline-loader{
+  position: absolute;
+  right: 8px;
+  background: #fff;
+  top: 8px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  z-index: 2;
+}
 
+.inline-search-loader{
+  position: relative;
+  .input-inline-loader{
+    top: 28px;
+  }
+}
 // New case search
 .search-case {
   kendo-multicolumncombobox > kendo-popup {

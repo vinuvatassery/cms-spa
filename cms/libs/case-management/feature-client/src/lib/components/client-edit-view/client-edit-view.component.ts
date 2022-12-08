@@ -153,22 +153,22 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  
   ngAfterViewChecked() {  
     var firstName = '';
-    var middleName ='';
+    var lastName ='';
     if(this.appInfoForm.controls["firstName"].value === null){
       firstName = ''
     }
     else{
       firstName = this.appInfoForm.controls["firstName"].value
     }
-    if(this.appInfoForm.controls["middleName"].value === null){
-      middleName = ''
+    if(this.appInfoForm.controls["lastName"].value === null){
+      lastName = ''
     }
     else{
-      middleName = this.appInfoForm.controls["middleName"].value
+      lastName = this.appInfoForm.controls["lastName"].value
     }
     
 
-    this.ApplicantNameChange.emit(firstName+'  '+middleName);
+    this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -234,7 +234,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls["ssn"].enable();
       }
       this.applicantInfo = applicantInfo;
+      if(this.applicantInfo.clientCaseId !== null){
       this.assignModelToForm(applicantInfo);
+      }
     }
    
   }); 
@@ -255,7 +257,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
 
   }
   this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
-  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag ==StatusFlag.Yes){
+  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined && 
+    applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag === StatusFlag.Yes){
     this.appInfoForm.controls['officialIdsNotApplicable'].setValue(true);
     this.appInfoForm.controls["officialIdFirstName"].setValue(null);
     this.appInfoForm.controls["officialIdLastName"].setValue(null);
@@ -271,7 +274,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   this.appInfoForm.controls["officialIdFirstName"].enable();
 
  }
- if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag ==StatusFlag.Yes){
+ if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined &&
+  applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag ==StatusFlag.Yes){
   this.appInfoForm.controls['prmInsNotApplicable'].setValue(true);
   this.appInfoForm.controls["prmInsFirstName"].setValue(null);
   this.appInfoForm.controls["prmInsLastName"].setValue(null);
@@ -526,7 +530,6 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   onOfficialIdChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-
       this.appInfoForm.controls['officialIdFirstName'].removeValidators(Validators.required);
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdLastName'].removeValidators(Validators.required);

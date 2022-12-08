@@ -245,22 +245,13 @@ export class ClientFacade {
       },
     });
   }
-
-  setPronounList(): void {
-    this.clientDataService.setPronounList().subscribe({
-      next: (pronounresponse) => {
-        this.pronounListSubject.next(pronounresponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
   save(applicantInfo:ApplicantInfo) {
       return this.clientDataService.save(applicantInfo);
   }
   load(clientCaseId:any,eligibilityId:any) {
       return this.clientDataService.load(clientCaseId,eligibilityId);
+  }
+  update(applicantInfo:ApplicantInfo) {
+    return this.clientDataService.update(applicantInfo);
   }
 }
