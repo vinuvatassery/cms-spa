@@ -274,8 +274,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility == undefined){
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.activeFlag = StatusFlag.Yes;
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.isDeleted = false;
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
         }    
         
@@ -286,12 +284,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = new clientCaseEligibilityFlag;
         }
-        if(this.appInfoForm.controls["GenderDescFlag"].value===true){
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.genderDescFlag=StatusFlag.Yes;
-        }else{
-          this.applicatInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.genderDesc=this.appInfoForm.controls["genderDesc"].value;
-        }
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.activeFlag = StatusFlag.Yes;
+        
         if(this.appInfoForm.controls["prmInsNotApplicable"].value){
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = '';
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = '';
@@ -368,18 +361,24 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   
   private populateClientGender(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*-------------------------------------------------------------------------------- */
-        var clientGender = new ClientGender();
-        clientGender.clientGenderCode = 'Woman or Girl';
-        clientGender.activeFlag ="Y";
-        if(this.applicantInfo.clientGenderList == undefined){
-          this.applicantInfo.clientGenderList = [];
-        }
-        this.applicantInfo.clientGenderList.push(clientGender)
-        
-        /*-------------------------------------------------------------------------------- */
-  }
+    const clientGenderListSaved = this.applicantInfo.clientGenderList;// this is in case of update record
+    this.applicantInfo.clientGenderList=[];
+     Object.keys( this.appInfoForm.controls).filter(m=>m.includes('Gender')).forEach(control => {
+       if (this.appInfoForm.controls[control].value===true) {
+         control= control.replace('Gender','');
+         let clientGender = new ClientGender();
+         clientGender.clientGenderCode =control;
+         if(clientGender.clientGenderCode==='NOT_LISTED'){
+           clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
+         }
+         const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
+         if (Existing!==undefined) {
+           clientGender=Existing;
+         }
+         this.applicantInfo.clientGenderList.push(clientGender);
+       }
+     });
+}
   private populateClientRace(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
         /*--------------------------remove if------------------------------------------------------ */

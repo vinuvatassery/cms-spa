@@ -209,9 +209,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssn:  ['',{disabled:false}],
       ssnNotApplicable:  [''],
       registerToVote: [''],
-      pronouns: [''],      
-      genderDesc:new FormControl('',[Validators.required]),      
-      GenderDescFlag:new FormControl(''),      
+      pronouns: ['']     
     });  
 
   } 
@@ -311,21 +309,14 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
   }
-  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.genderDescFlag===StatusFlag.Yes){
-    this.appInfoForm.controls["GenderDescFlag"].setValue(true);
-    this.OnGenderDescFlagChecked(true);
-  }else{
-    this.appInfoForm.controls["genderDesc"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.genderDesc); 
-  }
+  
   if (Array.isArray(applicantInfo.clientGenderList) ) {
     applicantInfo.clientGenderList.forEach(gender => { 
-      if (gender.isDeleted===false) {
-        this.appInfoForm.controls['Gender'+gender.clientGenderCode].setValue(true);
+      this.appInfoForm.controls['Gender'+gender.clientGenderCode]?.setValue(true);
       if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
         this.appInfoForm.controls['GenderDescription'].setValue(gender.otherDesc);
       }
       this.appInfoForm.controls['GenderGroup'].setValue(gender.clientGenderCode);
-      } 
       
     })
   }
@@ -563,17 +554,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       this.appInfoForm.controls['ssn'].enable();
     }
   }
-  OnGenderDescFlagChecked(isChecked: boolean) {
-    //const isChecked = (event.target as HTMLInputElement).checked;
-    if (isChecked) {
-      this.appInfoForm.controls['genderDesc'].removeValidators(Validators.required);
-      this.appInfoForm.controls['genderDesc'].updateValueAndValidity();
-    }
-    else {
-      this.appInfoForm.controls['genderDesc'].setValidators(Validators.required);
-      this.appInfoForm.controls['genderDesc'].updateValueAndValidity();
-    }
-  }
+
   registerToVoteSelected(event:Event){
    if((event.target as HTMLInputElement).value.toUpperCase()==StatusFlag.Yes){
     this.isVisible = true;

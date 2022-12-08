@@ -256,30 +256,7 @@
 
     </common-checkbox-list> -->   
     
-  </div>
-  <div class="flex-row mb-4">
-    <div class="flex-col flex-col-8">
-      <kendo-floatinglabel text="How do they describe their gender? Optional">
-        <kendo-textbox aria-label="how do they describe their gender" formControlName="genderDesc" name="genderDesc"    [disabled]="appInfoForm.controls['GenderDescFlag'].value===true" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!appInfoForm.controls['genderDesc'].valid">Describe their gender is required.</kendo-formerror>
-    </div>
-    <div class="flex-col flex-col-4 pt-3">
-      <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        formControlName="GenderDescFlag"
-        aria-labelledby="describeGenderNotApplicable"
-        id="genderNotApplicable"
-        (change)="OnGenderDescFlagChecked(appInfoForm.controls['GenderDescFlag'].value)"
-      />
-      <label class="k-checkbox-label" for="genderNotApplicable"
-        >Not Applicable</label
-      >
-      </span>
-    </div>
-  </div>
+  </div>  
 </section>
 </form>
 
