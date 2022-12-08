@@ -1,6 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LovDataService, LovType } from '@cms/system-config/domain';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {  LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-client-edit-view-transgender',
@@ -12,18 +17,26 @@ export class ClientEditViewTransgenderComponent implements OnInit {
   ControlPrefix = 'Transgender';
   DescriptionField = 'TransgenderDescription';
   Transgenders: any = [];
+  TransgenderLovs$ = this.lovFacade.transgenderlov$;
   constructor(
-    private readonly lovDataService: LovDataService,
+    private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder
   ) {
     this.appInfoForm = this.formBuilder.group({ TransgenderInit: [''] });
   }
 
   ngOnInit(): void {
-    this.lovDataService.getLovsbyType(LovType.Transgender).subscribe((data) => {
+    this.lovFacade.getTransgenderLovs();
+    this.loadTransgenders();
+  }
+  private loadTransgenders() {
+    this.TransgenderLovs$.subscribe((data) => {
       if (!Array.isArray(data)) return;
 
-      this.appInfoForm.addControl('Transgender', new FormControl('',[Validators.required]));
+      this.appInfoForm.addControl(
+        'Transgender',
+        new FormControl('', [Validators.required])
+      );
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
       this.Transgenders = data;
     });

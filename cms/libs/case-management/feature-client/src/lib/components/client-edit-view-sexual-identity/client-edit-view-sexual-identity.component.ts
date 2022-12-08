@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovDataService, LovType, LovFacade } from '@cms/system-config/domain';
+import {  LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-client-edit-view-sexual-identity',
@@ -16,12 +16,11 @@ import { LovDataService, LovType, LovFacade } from '@cms/system-config/domain';
 export class ClientEditViewSexualIdentityComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
 
-  SexulaIdentityLovs$ = this.lovFacade.lovs$;
+  SexulaIdentityLovs$ = this.lovFacade.sexulaIdentitylov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   ControlPrefix = 'SexulaIdentity';
   DescriptionField = 'SexulaIdentityDescription';
   constructor(
-    private readonly lovDataService: LovDataService,
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder
   ) {
@@ -30,25 +29,8 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
   SexulaIdentities: any = [];
 
   ngOnInit(): void {
-    this.lovFacade.getLovs(LovType.SexulaIdentity);
+    this.lovFacade.getSexulaIdentityLovs();
     this.loadSexulaIdentities();
-    // this.lovDataService
-    //   .getLovsbyType(LovType.SexulaIdentity)
-    //   .subscribe((data) => {
-    //     if (!Array.isArray(data)) return;
-    //     data.forEach((element) => {
-    //       this.appInfoForm.addControl(
-    //         this.ControlPrefix + element.lovCode,
-    //         new FormControl('')
-    //       );
-    //     });
-    //     this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
-    //     this.appInfoForm.addControl(
-    //       'SexulaIdentityGroup',
-    //       new FormControl('', [Validators.required])
-    //     );
-    //     this.SexulaIdentities = data;
-    //   });
   }
   private loadSexulaIdentities() {
     this.SexulaIdentityLovs$.subscribe((data) => {

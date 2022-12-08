@@ -21,11 +21,21 @@ export class LovFacade {
   private lovcascadeSubject = new BehaviorSubject<Lov[]>([]);
   private lovcaseoriginSubject = new BehaviorSubject<Lov[]>([]);
   private lovPronounSubject = new BehaviorSubject<Lov[]>([]);
+  private lovTransgenderSubject = new BehaviorSubject<Lov[]>([]);
+  private lovSexAtBirthSubject = new BehaviorSubject<Lov[]>([]);
+  private lovSexulaIdentitySubject = new BehaviorSubject<Lov[]>([]);
+  private lovGenderSubject = new BehaviorSubject<Lov[]>([]);
+  
+  
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
   caseoriginlov$ = this.lovcaseoriginSubject.asObservable();
   pronounslov$ = this.lovPronounSubject.asObservable();
+  transgenderlov$ = this.lovTransgenderSubject.asObservable();
+  sexAtBirthlov$ = this.lovSexAtBirthSubject.asObservable();
+  sexulaIdentitylov$ = this.lovSexulaIdentitySubject.asObservable();
+  genderlov$ = this.lovGenderSubject.asObservable();
 
         /** Public methods **/
 
@@ -62,15 +72,44 @@ getPronounLovs(): void {
   });
   
 }
-getLovs(lovType:string): void {
-  this.lovDataService.getLovsbyType(lovType).subscribe({
+getTransgenderLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Transgender).subscribe({
     next: (lovResponse) => {
-      this.lovSubject.next(lovResponse);
+      this.lovTransgenderSubject.next(lovResponse);
     },
     error: (err) => {
       console.error('err', err);
     },
   });
-  
+}
+getSexAtBirthLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.SexAtBirth).subscribe({
+    next: (lovResponse) => {
+      this.lovSexAtBirthSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+getSexulaIdentityLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.SexulaIdentity).subscribe({
+    next: (lovResponse) => {
+      this.lovSexulaIdentitySubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+getGenderLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Gender).subscribe({
+    next: (lovResponse) => {
+      this.lovGenderSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
 }
 }

@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovDataService, LovType } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-client-edit-view-gender',
@@ -15,18 +15,23 @@ import { LovDataService, LovType } from '@cms/system-config/domain';
 })
 export class ClientEditViewGenderComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  GenderLovs$ = this.lovFacade.genderlov$;
   ControlPrefix = 'Gender';
   DescriptionField = 'GenderDescription';
   constructor(
-    private readonly lovDataService: LovDataService,
+    private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder
   ) {
     this.appInfoForm = this.formBuilder.group({ Gender: [''] });
   }
   Genders: any = [];
   ngOnInit(): void {
-    this.lovDataService.getLovsbyType(LovType.Gender).subscribe((data) => {
+    this.lovFacade.getGenderLovs();
+    this.loadGendersLov();
+  }
+  private loadGendersLov() {
+    this.GenderLovs$.subscribe((data) => {
       if (!Array.isArray(data)) return;
       data.forEach((element) => {
         this.appInfoForm.addControl(
