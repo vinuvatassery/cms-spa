@@ -1,7 +1,10 @@
 <div *ngIf="isExistDependent">
   <form [formGroup]="existFamilyMemberForm" (ngSubmit)="onExistDependentSubmit()">   
-    <input type="hidden" formControlName="clientId">     
-      <kendo-dialog-titlebar>
+    <input type="hidden" formControlName="clientId"> 
+    <input type="hidden" formControlName="clientDependentId">     
+    <input type="hidden" formControlName="dependentType">  
+    <input type="hidden" formControlName="dependentClientId">  
+      <kendo-dialog-titlebar (close)="onFamilyMemberClosed()">
         {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }}
       </kendo-dialog-titlebar>
     <section class="k-dialog-body">
@@ -16,18 +19,18 @@
               aria-label="search member"
               aria-hidden="true"
               >search</span >
-              <kendo-formerror *ngIf="existFamilyMemberForm?.hasError('required','clientId') && isExistSubmitted">Dependent
+              <kendo-formerror *ngIf="existFamilyMemberForm?.hasError('required','dependentClientId') && isExistSubmitted">Dependent
                 is required</kendo-formerror>
             <kendo-autocomplete
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="dependentSearch"           
               [value]="fullClientName"
-              valueField ="fullCustomName"
-              textField="clientId"
+              valueField ="fullCustomName"              
               placeholder="     Search Name, DOB or SSN"
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
               [filterable]="true"   
-              (filterChange)="onsearchTextChange($event)"          
+              (filterChange)="onsearchTextChange($event)"    
+                    
             >          
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
                 <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
@@ -98,15 +101,15 @@
 <!-- Add Family Member Modal -->
 <kendo-dialog
   *ngIf="isOpenedNewFamilyMember"
-  (close)="onFamilyMemberClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  
+  class="app-c-modal app-c-modal-md app-c-modal-np"
 >
 <form [formGroup]="familyMemberForm" (ngSubmit)="onDependentSubmit()">
   <input type="hidden" formControlName="concurrencyStamp">
   <input type="hidden" formControlName="clientId">  
   <input type="hidden" formControlName="clientDependentId">  
   <input type="hidden" formControlName="dependentTypeCode">  
-  <kendo-dialog-titlebar>  {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onFamilyMemberClosed()">  {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-2">Enter the family member’s information.</p>
     <div class="flex-row">

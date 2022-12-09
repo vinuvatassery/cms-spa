@@ -49,25 +49,53 @@ export class DependentDataService {
 
 
      ///4add new dependent
-     AddNewDependent(dependent: Dependent) {    
+     AddNewDependent(dependent: Dependent) {   
+      const data =
+      {
+        clientDependentId:"00000000-0000-0000-0000-000000000000",
+        clientId: dependent.clientId,
+        dependentTypeCode: DependentTypeCode.Dependent,
+        relationshipCode:  dependent?.relationshipCode,
+        firstName:  dependent?.firstName,
+        lastName:  dependent?.lastName,
+        ssn:  dependent?.ssn,
+        dob:  dependent?.dob,
+        enrolledInInsuranceFlag:  dependent?.enrolledInInsuranceFlag,
+        concurrencyStamp: ""
+      }
+      
       return this.http.post(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
-        dependent
+        data
       );
     }
      
   //5get new dependent for edit 
   GetNewDependent(clientDependentId: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents?dependentId=${clientDependentId}`      
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${clientDependentId}`      
     );
   }
 
   ///6update new dependent
   UpdateNewDependent(dependent: Dependent) {
+
+    const data =
+    {
+      clientDependentId:dependent?.clientDependentId,
+      clientId: dependent.clientId,
+      dependentTypeCode: DependentTypeCode.Dependent,
+      relationshipCode:  dependent?.relationshipCode,
+      firstName:  dependent?.firstName,
+      lastName:  dependent?.lastName,
+      ssn:  dependent?.ssn,
+      dob:  dependent?.dob,
+      enrolledInInsuranceFlag:  dependent?.enrolledInInsuranceFlag,
+      concurrencyStamp: dependent?.concurrencyStamp
+    }
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents`,
-      dependent
+      data
     );
   } 
 
@@ -80,21 +108,21 @@ export class DependentDataService {
   }
 
      ///8update client as dependent
-     AddExistngDependent(clientId: string ,clientDependentId : string , dependentType: string) {
-      return this.http.patch(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${clientId}`,
+     AddExistingDependent(data : any) {
+      return this.http.put(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${data?.clientId}&dependentClientId=${data?.dependentClientId}&dependentType=${data?.dependentType}&relationshipCode=${data?.relationshipCode}&clientDependentId=${data?.clientDependentId}`,
         null
       );
     }
 
   //9get client dependent for edit (client)
-  GetExistingClientDependent(clientId: string , dependentType :  string) {
+  GetExistingClientDependent(clientDependentId: string , dependentType :  string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${clientId}`  
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientDependentId=${clientDependentId}&dependentType=${dependentType}`  
     );
   }
    
-  //12search for autocomplete
+  //10search for autocomplete
   SearchDependents(text :  string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search?text=${text}`  
@@ -109,9 +137,9 @@ export class DependentDataService {
         firstName: 'Donna',
         lastName: 'Summer',       
         dob: '08-11-1995',
-        ssn: '956-08-9876',
-        dependentTypeCode: 'D',      
-        clientId: 0,
+        ssn: '956-08-9876',  
+        clientDependentId:'',
+        clientId : 1,
         memberType: '',
         fullName:'',fullCustomName : ''
       },
@@ -119,9 +147,9 @@ export class DependentDataService {
         firstName: 'Donna',
         lastName: 'Summer',       
         dob: '08-11-1995',
-        ssn: '956-08-9876',
-        dependentTypeCode: 'C',       
-        clientId: 3,
+        ssn: '956-08-9876',        
+        clientDependentId:'',
+        clientId :2,
         memberType: '',
         fullName:'',fullCustomName : ''
       },
@@ -129,10 +157,9 @@ export class DependentDataService {
         firstName: 'Donna',
         lastName: 'Summer',       
         dob: '08-11-1995',
-        ssn: '956-08-9876',
-        dependentTypeCode: 'C',        
-        clientId: 5
-        ,
+        ssn: '956-08-9876',    
+        clientDependentId:'',
+        clientId : 3,
         memberType: '',
         fullName:'',fullCustomName : ''
       }
@@ -141,9 +168,9 @@ export class DependentDataService {
         firstName: 'Donna',
         lastName: 'Summer',       
         dob: '08-11-1995',
-        ssn: '956-08-9876',
-        dependentTypeCode: 'D',        
-        clientId: 0,
+        ssn: '956-08-9876',       
+        clientDependentId:'a702f4b2-9032-4544-8998-029643760fad',
+        clientId : 0,
         memberType: '',  fullName:'',fullCustomName : ''
       }
       ,
@@ -151,9 +178,9 @@ export class DependentDataService {
         firstName: 'Donna',
         lastName: 'Summer',       
         dob: '08-11-1995',
-        ssn: '956-08-9876',
-        dependentTypeCode: 'D',       
-        clientId: 0,
+        ssn: '956-08-9876',   
+        clientDependentId:'f523d0e1-6229-4d86-b50a-01d6675ac337',
+        clientId : 0,
         memberType: '',  fullName:'',fullCustomName : ''
       }
     ]);

@@ -1,7 +1,7 @@
 /** Angular **/
 import {
   Component,  OnInit,  ChangeDetectionStrategy,  Input,
-   OnChanges,  ViewChild,  EventEmitter,  Output,} from '@angular/core';
+   OnChanges, EventEmitter,  Output,} from '@angular/core';
 import {  Router ,ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -10,9 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { DependentTypeCode, ScreenType } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
-import { SortDescriptor, State ,process} from '@progress/kendo-data-query';
-import { DataBindingDirective, GridDataResult } from '@progress/kendo-angular-grid';
-import { inputRules } from '@progress/kendo-angular-editor';
+import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
 
 
@@ -41,6 +39,7 @@ CAClient = DependentTypeCode.CAClient;
   @Output() loadDependentsEvent = new EventEmitter<any>(); 
   @Output() deleteDependentsEvent = new EventEmitter<any>(); 
   @Output() searchTextHandleEvent = new EventEmitter<any>(); 
+  @Output() addExistingClientEvent = new EventEmitter<any>(); 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
     /**Constructor */
@@ -140,7 +139,7 @@ CAClient = DependentTypeCode.CAClient;
     this.onFamilyMemberClosed()
   }
 
-  onFamilyMemberClosed() {    
+  onFamilyMemberClosed() {        
     this.isOpenedFamilyMember = false;
     this.isOpenedEditFamilyMember = false;
   }
@@ -185,6 +184,7 @@ CAClient = DependentTypeCode.CAClient;
   }
   onDeleteConfirmCloseClicked()
   {
+    this.deletebuttonEmitted = false;
     this.openDeleteConfirmation =false;
   }
   handleDeleteConfirmationClicked(event: any) {
@@ -252,5 +252,10 @@ CAClient = DependentTypeCode.CAClient;
   searchTextEventHandle($event : any)
   {    
    this.searchTextHandleEvent.emit($event)
+  }
+
+  addExistingClientEventHandle($event : any)
+  {
+    this.addExistingClientEvent.emit($event)
   }
 }

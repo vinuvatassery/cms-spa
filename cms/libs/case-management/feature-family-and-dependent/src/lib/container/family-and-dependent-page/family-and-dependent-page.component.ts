@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { filter, first, forkJoin, mergeMap, of, Subject, Subscription, take } from 'rxjs';
 /** Facades **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
 import {  NavigationType } from '@cms/case-management/domain';
 
@@ -160,8 +160,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
 /** child event methods **/
 
   addUpdateDependentHandle(dependent : any) {    
-   const dependentData : Dependent = dependent;
-   
+   const dependentData : Dependent = dependent;   
+   dependent.clientId =this.clientId ;
     if(dependentData.clientDependentId && dependentData.clientDependentId !='')
     {
       this.familyAndDependentFacade.UpdateNewDependent(dependentData);
@@ -194,6 +194,11 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
   searchTextHandleEventHandle($event : any)
   {    
     this.loadDependentSearch()
+  }
+
+  AddUpdateExistingDependentHandle(data : any)
+  {
+    this.familyAndDependentFacade.AddExistingDependent(data);
   }
 
 

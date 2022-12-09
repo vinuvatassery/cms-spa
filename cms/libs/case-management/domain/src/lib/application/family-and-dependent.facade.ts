@@ -1,13 +1,17 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
-import { Observable, of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Dependent } from '../entities/dependent';
-import { DependentTypeCode, DependentTypeDesc } from '../enums/dependent-type.enum';
+import { ClientDependentGroupDesc ,ClientDependentGroup } from '../enums/client-dependent-group.enum';
+import { DependentTypeCode } from '../enums/dependent-type.enum';
 /** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
+
+/** Facade **/
+import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -54,7 +58,7 @@ export class FamilyAndDependentFacade {
 
 
   /** Constructor**/
-  constructor(private readonly dependentDataService: DependentDataService) {}
+  constructor(private readonly dependentDataService: DependentDataService,private workflowFacade: WorkflowFacade) {}
 
   /** Public methods **/
   DeleteDependent(dependentId: string): void {
@@ -81,6 +85,14 @@ export class FamilyAndDependentFacade {
   AddNewDependent(dependent: Dependent): void {
     this.dependentDataService.AddNewDependent(dependent).subscribe({
       next: (addNewdependentsResponse) => {
+        if(addNewdependentsResponse == true)
+        {
+         this.handleSnackBar('Success' ,'Added New Dependent','success')     
+        }
+        else
+        {
+         this.handleSnackBar('Error' ,'Error','error') 
+        }   
         this.dependentAddNewSubject.next(addNewdependentsResponse);
       },
       error: (err) => {
@@ -92,6 +104,14 @@ export class FamilyAndDependentFacade {
   UpdateNewDependent(dependent: Dependent): void {
     this.dependentDataService.UpdateNewDependent(dependent).subscribe({
       next: (updateNewdependentsResponse) => {
+        if(updateNewdependentsResponse == true)
+        {
+         this.handleSnackBar('Success' ,'Dependent data Updated','success')     
+        }
+        else
+        {
+         this.handleSnackBar('Error' ,'Error','error') 
+        }   
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
       },
       error: (err) => {
@@ -112,8 +132,8 @@ export class FamilyAndDependentFacade {
   }
 
 
-  GetExistingClientDependent(dependentId: string) : void {
-    this.dependentDataService.GetExistingClientDependent(dependentId , DependentTypeCode.CAClient).subscribe({
+  GetExistingClientDependent(clientDependentId: string) : void {
+    this.dependentDataService.GetExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
       next: (dependentGetExistingResponse) => {
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
       },
@@ -129,8 +149,14 @@ export class FamilyAndDependentFacade {
       next: (dependentsResponse : any) => {
         const gridView = {
           data : dependentsResponse["items"],        
-          total: dependentsResponse["totalCount"]
+          total: dependentsResponse["totalCount"]   
       };
+      const workFlowdata: CompletionChecklist[] = [{
+        dataPointName: 'family_dependents',
+        status: (parseInt(dependentsResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
+      }];
+
+      this.workflowFacade.updateChecklist(workFlowdata);
         this.dependentsSubject.next(gridView);
       },
       error: (err) => {
@@ -174,23 +200,46 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.loadDependentSearch().subscribe({
       next: (dependentSearchResponse) => {
 
-        Object.values(dependentSearchResponse).forEach((key) => {   
+        Object.values(dependentSearchResponse).forEach((key) => {            
           key.fullName = key.firstName + ' ' + key.lastName
-          key.fullCustomName =key?.fullName + ' DOB '+key?.dob.toString()+' SSN '+key?.ssn
-
-          if(key?.dependentTypeCode === DependentTypeCode.Dependent)   
+          key.ssn=  'xxx-xx-' +key.ssn.slice(-4);;
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob.toString()+' SSN '+key?.ssn      
+        
+          if(key?.clientId > 0)   
           {
-              key.memberType = DependentTypeDesc.Dependent            
+              key.memberType = ClientDependentGroupDesc.Inactive            
           }
           else
           {
-              key.memberType = DependentTypeDesc.CAClient
+              key.memberType = ClientDependentGroupDesc.Active
           }
         });
         this.dependentSearchSubject.next(dependentSearchResponse);
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+      },
+    });
+  }
+
+
+
+  AddExistingDependent(data : any) : void {
+    this.dependentDataService.AddExistingDependent(data ).subscribe({
+      next: (dependentStatusResponse) => {        
+        if(dependentStatusResponse == true)
+        {
+         this.handleSnackBar('Success' ,'Client Added as Dependent','success')     
+        }
+        else
+        {
+         this.handleSnackBar('Error' ,'Error','error') 
+        }       
+        this.dependentStatusSubject.next(dependentStatusResponse);
+      },
+      error: (err) => {
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        
       },
     });
   }

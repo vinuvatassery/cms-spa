@@ -36,6 +36,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   @Output() getNewFamilyMemberFormEvent = new EventEmitter<any>();
   @Output() formDeleteclickEvent = new EventEmitter<any>();
   @Output() searchTextEvent = new EventEmitter<string>(); 
+  @Output() addExistingClientEvent = new EventEmitter<any>(); 
 
   filterManager: Subject<string> = new Subject<string>();
   currentDate = new Date();
@@ -113,25 +114,13 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       dob: ['', Validators.required],
       ssn: ['',Validators.pattern(new RegExp(/^(?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4}$/))],
       enrolledInInsuranceFlag: ['', Validators.required],
-      clientId: ['', ],
+      clientId: [0, ],
       clientDependentId: ['', ],
       dependentTypeCode: ['', ]
   });
   this.onFamilyFormLoad()
   }
 
-  private composeExistFamilyMemberForm()
-  {
-        this.existFamilyMemberForm = this.formBuilder.group({    
-          existRelationshipCode: ['', Validators.required],
-          dependentClientId: ['', Validators.required],   
-          clientId: [0, ],
-          clientDependentId: ['', ],
-          dependentTypeCode: ['', ]
-      });
-      this.onExitFamilyFormLoad()
-
-  }
 
 
 
@@ -167,13 +156,74 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     }
     this.formDeleteclickEvent.next(deleteParams);
   }
+
+  private composeExistFamilyMemberForm()
+  {
+        this.existFamilyMemberForm = this.formBuilder.group({    
+          existRelationshipCode: ['', Validators.required],
+          clientId: [0],           
+          dependentClientId: [0]  ,
+          clientDependentId: ['']  ,              
+          dependentType   : ['', Validators.required]  
+      });
+      this.onExitFamilyFormLoad()
+  }
+
+  onSearchTemplateClick(dataItem : any)
+  {    
+   this.existFamilyMemberForm.patchValue(
+     {
+       clientId: dataItem?.clientId  ,    
+       dependentType : dataItem?.clientId > 0 ? DependentTypeCode.CAClient : DependentTypeCode.Dependent,
+       clientDependentId :  dataItem?.clientDependentId 
+     })    
+ 
+  }
+  onExitFamilyFormLoad()
+  {
+   this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
+   .subscribe((existDependentData: any) =>
+   {  
+       if(existDependentData?.dependentClientId)
+       {
+         this.isAddFamilyMember =false;
+           this.existFamilyMemberForm.setValue(
+             {     
+               clientId:  existDependentData?.clientId,  
+               dependentClientId:  existDependentData?.dependentClientId,     
+               relationshipCode: existDependentData?.relationshipCode, 
+               clientDependentId: existDependentData?.clientDependentId,
+               dependentType: existDependentData?.dependentTypeCode
+             }
+           )
+           const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
+           this.fullClientName = fullName + ' DOB '+existDependentData?.dob.toString()+' SSN '+existDependentData?.ssn  
+
+           this.clientDependentId = existDependentData?.clientDependentId;
+           this.dependentTypeCode = existDependentData?.dependentTypeCode;
+       }
+   })
+  }
+
   onExistDependentSubmit()
   {
     this.isExistSubmitted =true;
+    const existDepData =
+    {
+      clientId : this.existFamilyMemberForm?.controls["clientId"].value,
+      dependentClientId  : this.existFamilyMemberForm?.controls["dependentClientId"].value ,
+      dependentType :this.existFamilyMemberForm?.controls["dependentType"].value ,
+      relationshipCode : this.existFamilyMemberForm?.controls["existRelationshipCode"].value ,
+      clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value 
+    }
+    this.addExistingClientEvent.emit(existDepData)
   }
+
+
   onDependentSubmit()
   {
     this.isSubmitted = true;    
+    
    if(this.familyMemberForm.valid)
    {
       const dependent  = {
@@ -199,7 +249,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
     onFamilyFormLoad()
-    {          
+    {         
+      
       this.isExistDependent =false;
       this.dependentGet$?.pipe(first((dependentData: any ) => dependentData?.clientDependentId != null))
       .subscribe((dependentData: any) =>
@@ -236,40 +287,15 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    }
 
 
-   onExitFamilyFormLoad()
-   {
-    this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
-    .subscribe((existDependentData: any) =>
-    {  
-        if(existDependentData?.clientDependentId)
-        {
-          this.isAddFamilyMember =false;
-            this.existFamilyMemberForm.setValue(
-              {     
-                clientId:  existDependentData?.clientDependentId,     
-                relationshipCode: existDependentData?.relationshipCode, 
-              }
-            )
-            const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-            this.fullClientName = fullName + ' DOB '+existDependentData?.dob.toString()+' SSN '+existDependentData?.ssn  
 
-            this.clientDependentId = existDependentData?.clientDependentId;
-            this.dependentTypeCode = existDependentData?.dependentTypeCode;
-        }
-    })
-   }
 
    onsearchTextChange(text : string)      
    {    
+    if(text.length > 3)
+    {
     this.filterManager.next(text); 
-   }
+    }
+   } 
+   
 
-   onSearchTemplateClick(dataItem : any)
-   {    
-    this.existFamilyMemberForm.patchValue(
-      {
-        clientId: dataItem?.clientId      
-      })    
-  
-   }
 }

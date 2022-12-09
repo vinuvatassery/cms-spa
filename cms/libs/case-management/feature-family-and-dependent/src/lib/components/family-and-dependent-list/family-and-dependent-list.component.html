@@ -134,8 +134,8 @@
 <!-- Add Family Member Modal -->
 <kendo-dialog
   *ngIf="isOpenedFamilyMember || isOpenedEditFamilyMember"
-  (close)="onExistFamilyMemberClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  (close)="onExistFamilyMemberClosed()" 
+  class="app-c-modal app-c-modal-md app-c-modal-np"
 >
 
   <case-management-family-and-dependent-detail  
@@ -147,13 +147,13 @@
     (closeFamilyMemberFormEvent)="closeFamilyMemberForm($event)"
     [dependentTypeCodeSelected]="dependentTypeCodeSelected"
     (searchTextEvent)="searchTextEventHandle($event)"
+    (addExistingClientEvent)="addExistingClientEventHandle($event)"
   ></case-management-family-and-dependent-detail>
 </kendo-dialog>
 
 <!-- Delete Modal -->
 <kendo-dialog
-  *ngIf="openDeleteConfirmation"
-  (close)="onDeleteConfirmCloseClicked()"
+  *ngIf="openDeleteConfirmation"  
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
     <case-management-remove-family-and-dependent-confirmation
@@ -164,3 +164,9 @@
     ></case-management-remove-family-and-dependent-confirmation>
  
 </kendo-dialog>
+
+
+  <div *ngIf="dependents$.totalCount===0" class="loader-align">
+  <common-grid-loader-component></common-grid-loader-component>
+</div>
+
