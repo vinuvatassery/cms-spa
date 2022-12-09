@@ -20,7 +20,7 @@ export class CaseListComponent implements OnInit {
 
 public isGridLoaderShow = false;
   public pageSize = 10;
-  public skip = 0;
+  public skip = 5;
   public pageSizes = [
     {text: '5', value: 5}, 
     {text: '10', value: 10},
@@ -32,9 +32,7 @@ public isGridLoaderShow = false;
  
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  public buttonCount = 2;
-  public sizes = [10, 20, 50];
+  public formUiStyle : UIFormStyle = new UIFormStyle(); 
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade) {}
 

@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-drugs-purchased-list',
   templateUrl: './drugs-purchased-list.component.html',
@@ -19,6 +19,15 @@ export class DrugsPurchasedListComponent implements OnInit {
   isOpenPharmacyClicked = false;
   isEditPharmacyListClicked = false;
   selectedPharmacy!: any;
+  public pageSize = 10;
+  public skip = 5;
+  public pageSizes = [
+    {text: '5', value: 5}, 
+    {text: '10', value: 10},
+    {text: '20', value: 20},
+    {text: 'All', value: 100}
+  ];
+  public formUiStyle : UIFormStyle = new UIFormStyle(); 
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
