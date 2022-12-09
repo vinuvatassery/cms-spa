@@ -44,6 +44,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   familyMemberForm!: FormGroup;
   existFamilyMemberForm!: FormGroup;
   isOpenedNewFamilyMember = false;
+  showDependentSearchInputLoader = false;
   dependentSearch!: GroupResult[];
   popupClass = 'k-autocomplete-custom';
   isSubmitted = false;
@@ -72,6 +73,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         if(text)
         {
         this.searchTextEvent.emit(text)
+        this.showDependentSearchInputLoader = false;
         }
       }
       ); 
@@ -125,6 +127,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
 
   private loadFamilyDependents() {   
+  
     this.dependentSearch$.subscribe({
       next: (dependentSearch : any) => {
         this.dependentSearch = groupBy(dependentSearch, [
@@ -132,6 +135,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         ]);
       }
     });
+  
+
   }
 
 
@@ -293,7 +298,10 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    {    
     if(text.length > 3)
     {
+      this.showDependentSearchInputLoader = true;
     this.filterManager.next(text); 
+
+
     }
    } 
    

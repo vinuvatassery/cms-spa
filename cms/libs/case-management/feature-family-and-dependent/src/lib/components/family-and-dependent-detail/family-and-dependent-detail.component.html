@@ -19,8 +19,7 @@
               aria-label="search member"
               aria-hidden="true"
               >search</span >
-              <kendo-formerror *ngIf="existFamilyMemberForm?.hasError('required','dependentClientId') && isExistSubmitted">Dependent
-                is required</kendo-formerror>
+              <span *ngIf="showDependentSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
             <kendo-autocomplete
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="dependentSearch"           
@@ -48,7 +47,10 @@
                   ADD NEW FAMILY MEMBER
                 </button>
               </ng-template>
-            </kendo-autocomplete>        
+            </kendo-autocomplete>      
+            
+            <kendo-formerror *ngIf="existFamilyMemberForm?.hasError('required','dependentClientId') && isExistSubmitted">Dependent
+              is required</kendo-formerror>
           </div>
         </div>
         <div class="flex-col mb-1">
