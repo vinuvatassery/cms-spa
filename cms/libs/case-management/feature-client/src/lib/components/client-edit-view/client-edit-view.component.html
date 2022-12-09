@@ -286,7 +286,7 @@
     </div>
   </div>
 </section>
-</form>
+
 <section>
   <h5>What is their gender? Select all that apply</h5>
   <div class="component-list-h">
@@ -363,7 +363,6 @@
       <input
         type="checkbox"
         kendoCheckBox
-        [(ngModel)]="isGenderChecked"
         aria-labelledby="genderNotListedPleaseSpecify"
         id="genderNotListedPleaseSpecify"
       />
@@ -371,11 +370,7 @@
         >Not listed, please specify:</label
       >
       <kendo-floatinglabel text="Enter Gender" >
-        <!-- <input
-          kendoTextBox
-          [disabled]="!isGenderChecked"
-          aria-label="enter gender"
-        /> -->
+       
         <kendo-textbox aria-label="enter gender"  [disabled]="!isGenderChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
@@ -444,11 +439,7 @@
             text="Enter Answer"
             
           >
-            <!-- <input
-              kendoTextBox
-              [disabled]="isTransTextBoxDisabled"
-              aria-label="transgender"
-            /> -->
+           
         <kendo-textbox aria-label="transgender"  [disabled]="isTransTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
           </kendo-floatinglabel>
@@ -462,11 +453,7 @@
       <kendo-floatinglabel
         text="How do they describe their sexual orientation or sexual identity?"
       >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isDescribeOrientaionChecked"
-          aria-label="how do they describe their sexual orientation or sexual identity"
-        /> -->
+      
         <kendo-textbox aria-label="how do they describe their sexual orientation or sexual identity"  [disabled]="isDescribeOrientaionChecked" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
@@ -478,7 +465,6 @@
         aria-labelledby="sexualOrientationNotApplicable"
         id="notApplicable"
         kendoCheckBox
-        [(ngModel)]="isDescribeOrientaionChecked"
       />
       <label class="k-checkbox-label" for="notApplicable">Not Applicable</label>
       </span>
@@ -558,7 +544,6 @@
       <input
         type="checkbox"
         kendoCheckBox
-        [(ngModel)]="isOrientationChecked"
         aria-labelledby="notListedPleaseSpecify1"
         id="notListedPleaseSpecify1"
       />
@@ -693,13 +678,7 @@
       >
       <span unselectable="on" class="k-button-icon k-icon k-i-arrow-s multi-dropdown-icon"   aria-label="dropdown arrow"
       aria-hidden="true"></span>
-        <!-- <span
-          class="material-icons multi-dropdown-icon"
-          aria-label="dropdown arrow"
-          aria-hidden="true"
-        >
-          arrow_drop_down
-        </span> -->
+     
         <kendo-multiselect
         [checkboxes]="{ checkOnClick: true, enabled: true }"
        
@@ -708,7 +687,6 @@
           (close)="onClose($event)"
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="racialIdentityOptions"
-          [(ngModel)]="racialName"
           [textField]="'racialName'"
           [valueField]="'racialName'"
           [popupSettings]="{ popupClass: popupClassMultiSelect, animate: true }"
@@ -765,48 +743,14 @@
     etc.)?
   </h5>
   <div class="component-list-h">
-    <case-management-client-edit-view-disability></case-management-client-edit-view-disability>
-    <!-- <case-management-client-edit-view-disability
-      [rdoMaterials$]="rdoMaterials$"
-      [materialsyeslov$]="materialsyeslov$"
-      [appInfoForm]="appInfoForm">
-
-    </case-management-client-edit-view-disability> -->
-
-    <!-- <span class="app-radiobtnwidtext-wrapper" *ngFor="let materials of rdoMaterials$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ materials.id }}"
-        value="{{ materials.value }}"
-        name="rdoMaterialFormat"
-        (click)="onMaterialsRdoClicked($event)"
-        aria-labelledby="needsMaterials"
-        tabindex="5"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ materials.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="materials.id === 1"
-        text="Enter formats"
-        
-      >     
-        <kendo-textbox aria-label="enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </span> -->
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="needsPrintedMaterialInLargerFont"
-        id="needsPrintedMaterial"
-      />
-      <label class="k-checkbox-label" for="needsPrintedMaterial"
-        >Client needs printed material in larger font</label
-      >
-    </span>
+    <case-management-client-edit-view-disability
+    [appInfoForm]="appInfoForm"
+    [materialsyeslov]="materialsyeslov$"
+    [materialOptionButtonValid]="materialOptionButtonValid"
+    [yesMaterialDisable] ="yesMaterialDisable"
+    ></case-management-client-edit-view-disability>
+    
+   
   </div>
 
   <div class="flex-row">
@@ -834,6 +778,8 @@
     </div>
   </div>
 </section>
+
+</form>
 <section>
   <h5>Needs interpreter?</h5>
   <div class="component-list-h">

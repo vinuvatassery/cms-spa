@@ -11,6 +11,7 @@ export class ClientCaseEligibility{
         groupCode :string|null=null;
         clientTransgenderCode !:string;
         materialInAlternateFormatCode !:string;
+        materialInAlternateFormatDesc !:string;
         spokenLanguageCode :string|null=null;
         writtenLanguageCode :string|null=null;
         englishProficiencyCode :string|null=null;

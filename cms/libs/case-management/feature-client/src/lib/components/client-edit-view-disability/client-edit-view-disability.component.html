@@ -1,75 +1,52 @@
-<!-- <div>
-    {{pronounList | json}}
-  <span
-    class="app-radiobtnwidtext-wrapper"
-    *ngFor="let pronoun of pronounList"
-  >
-   {{pronoun.lovCode}}
-  </span>
-</div> -->
-
-  <!-- <span class="app-radiobtnwidtext-wrapper" *ngFor="let materials of rdoMaterials$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ materials.id }}"
-        value="{{ materials.value }}"
-        name="rdoMaterialFormat"
-        (click)="onMaterialsRdoClicked($event)"
-        aria-labelledby="needsMaterials"
-        tabindex="5"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ materials.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="materials.id === 1"
-        text="Enter formats"
-        
-      >     
-        <kendo-textbox aria-label="enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </span> -->
-
-
     <div class="component-list-h" [formGroup]="appInfoForm">
     
       <span class="app-checkboxwidtext-wrapper"     
-      *ngFor="let pronoun of pronounList; let i = index" >        
+      *ngFor="let material of materialList; let i = index" >          
+              <input
+              type="radio"
+              kendoRadioButton
+              id="material.lovCode"
+              [value]="material.lovCode"
+              name="selectedMaterial"             
+              aria-labelledby="needsMaterials"
+              tabindex="5"
+              formControlName="selectedMaterial"
+              (change)="onMaterialsRdoClicked($event)"
+            />
 
-      
-      <!-- (click)="onMaterialsRdoClicked($event)" -->
-        <input
-        type="radio"
-        kendoRadioButton
-        id="{{ pronoun.lovCode }}"
-        value="{{ pronoun.lovCode }}"
-        name="rdoMaterialFormat"
-        aria-labelledby="needsMaterials"
-        [formControlName]="pronoun.lovCode"
-      />
-
-        <!-- <label class="k-checkbox-label"
-          >{{pronoun.lovDesc}}</label> -->
-          <kendo-label
-        class="k-radio-label"
-        text="{{pronoun.lovDesc}}"
-      ></kendo-label>
+        
+            <kendo-label
+              class="k-radio-label"
+              for="{{ material.lovCode }}"
+              text="{{ material.lovDesc }}" 
+            ></kendo-label>
+           
+          
      
-        <div *ngIf = "pronoun.lovCode ==='YES'">
-          <span>
-            <kendo-floatinglabel text="Enter Pronouns" >
-              <kendo-textbox aria-label="enter pronouns"              
-                [formControlName]="pronoun.lovCode"
-                >               
-              </kendo-textbox>        
-            </kendo-floatinglabel>
-            <kendo-formerror *ngIf="!appInfoForm.controls[pronoun.lovCode].valid ">Pronoun is required.</kendo-formerror>
-          </span>     
-      </div>
+        <div *ngIf = "material.lovCode ==='YES'">       
+           
+            <div class="flex-row">
+              <div class="flex-col flex-col-4">
+                <kendo-floatinglabel text="Select Material">
+                  <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+                   [data]="yesMaterialList"
+                  textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+                  formControlName="yesMaterial"               
+                  [disabled]="yesMaterialDisable">
+               </kendo-dropdownlist>  
+                </kendo-floatinglabel>
+              </div>
+            </div>
+            <kendo-formerror *ngIf="((!appInfoForm.controls['yesMaterial'].valid) && (appInfoForm.controls['selectedMaterial'].valid)) ">Material is required.</kendo-formerror>        
+         
+      </div>     
       </span>
-      <!-- <kendo-formerror *ngIf="!appInfoForm.controls['pronouns'].valid">Atleast one option is required.</kendo-formerror> -->
+      
       <hr />
-    
+      <kendo-formerror *ngIf="!appInfoForm.controls['selectedMaterial'].valid">Atleast one option is required.</kendo-formerror>
     </div>
+
+
+
+
+    

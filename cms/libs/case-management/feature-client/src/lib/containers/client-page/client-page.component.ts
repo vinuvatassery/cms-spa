@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
-import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -104,6 +104,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;
           this.loadApplicantInfo();
         }
+       
       
       }
     }
@@ -210,8 +211,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           }
           else{
             return this.clientFacade.save(this.applicantInfo)        
-          }
-          
+          }          
         }
         else{
           return of(false);
@@ -300,12 +300,21 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag = StatusFlag.No;
         }    
     
-      if(this.appInfoForm.controls["registerToVote"].value.toUpperCase() === StatusFlag.Yes){
+        if(this.appInfoForm.controls["registerToVote"].value.toUpperCase() === StatusFlag.Yes){
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.registerToVoteFlag = StatusFlag.Yes;
-      }
-      else{
+        }
+        else{
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.registerToVoteFlag = StatusFlag.No;
-      }
+        }
+        debugger;
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode = this.appInfoForm.controls["selectedMaterial"].value
+        if(this.appInfoForm.controls["selectedMaterial"].value !== null && 
+        this.appInfoForm.controls["selectedMaterial"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = this.appInfoForm.controls["yesMaterial"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = '';
+        }
       
   }
   private populateClientPronoun(){
@@ -474,7 +483,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-        }          
+          }          
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           this.pronounList.forEach((pronoun:any) => {
@@ -483,7 +492,22 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             }
             
           });
-         
+          debugger;
+          this.appInfoForm.controls['selectedMaterial'].setValidators(Validators.required);
+          this.appInfoForm.controls['selectedMaterial'].updateValueAndValidity();
+           if( this.appInfoForm.controls['selectedMaterial'].value  !=='' ||
+           this.appInfoForm.controls['selectedMaterial'].value !== null){
+            this.appInfoForm.controls['selectedMaterial'].setErrors(null);
+            this.appInfoForm.controls['selectedMaterial'].updateValueAndValidity();
+           }            
+          
+          // if(this.appInfoForm.controls['selectedMaterial'].value.toUpperCase()  ==='YES' 
+          // && this.appInfoForm.controls['yesMaterial'].value !== null){
+          //   this.appInfoForm.controls['yesMaterial'].setErrors({'incorrect': true});
+          // }
+          // else{
+          //   this.appInfoForm.controls['yesMaterial'].setErrors(null);
+          // }         
           this.appInfoForm.updateValueAndValidity();
   }
   setAppInfoForm(appInfoForm:FormGroup)

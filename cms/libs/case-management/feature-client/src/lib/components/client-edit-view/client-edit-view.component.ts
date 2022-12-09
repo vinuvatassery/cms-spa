@@ -89,7 +89,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
+  materialOptionButtonValid!:boolean;
   textboxDisable!:boolean;
+  optionButtonValid!:boolean;
+  yesMaterialDisable!:boolean;
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
@@ -211,18 +214,21 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssnNotApplicable:  [''],
       registerToVote: [''],
       pronouns: [''] ,
+      selectedMaterial:[''],
+      yesMaterial:[''],
     });  
 
   } 
   private LoadLovs(){
     // this.lovFacade.getMaterialLovs();
-    // this.lovFacade.getMaterialYesLovs();
+     this.lovFacade.getMaterialYesLovs();
 
   }
   private loadApplicantInfoSubscription(){
     
     this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
       this.textboxDisable  = true; 
+      this.yesMaterialDisable = true;
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
       if(this.appInfoForm !== undefined){
@@ -235,7 +241,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls["prmInsFirstName"].enable();
       this.appInfoForm.controls["prmInsLastName"].enable();
       this.appInfoForm.controls["ssn"].enable();
-      }
+      }      
+
       this.applicantInfo = applicantInfo;
       if(this.applicantInfo.clientCaseId !== null){
       this.assignModelToForm(applicantInfo);
@@ -326,6 +333,13 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     })
     this.clientfacade.pronounListSubject.next(this.pronounList);     
   }
+  this.appInfoForm.controls["selectedMaterial"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
+  this.appInfoForm.controls["yesMaterial"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode ==='YES'){
+      this.yesMaterialDisable = false;
+    }
+
   
 }
 
@@ -350,9 +364,17 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       this.appInfoForm.statusChanges.subscribe(a=>{   
        if(this.appInfoForm.controls["pronouns"].valid){
         this.checkBoxValid = true;
+
        }
        else{
         this.checkBoxValid = false;
+       }
+       if(this.appInfoForm.controls["selectedMaterial"].valid){
+        this.materialOptionButtonValid = true;
+
+       }
+       else{
+        this.materialOptionButtonValid = false;
        }
      
     });
@@ -563,14 +585,14 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     }
   }
 
-  onMaterialsRdoClicked(event: any) {
-    this.materialsSelectedValue = event.target.id;
-    if (this.materialsSelectedValue == 1) {
-      this.isMaterialsTextBoxDisabled = false;
-    } else {
-      this.isMaterialsTextBoxDisabled = true;
-    }
-  }
+  // onMaterialsRdoClicked(event: any) {
+  //   this.materialsSelectedValue = event.target.id;
+  //   if (this.materialsSelectedValue == 1) {
+  //     this.isMaterialsTextBoxDisabled = false;
+  //   } else {
+  //     this.isMaterialsTextBoxDisabled = true;
+  //   }
+  // }
 
   onInterpreterRdoClicked(event: any) {
     this.interpreterSelectedValue = event.target.id;
