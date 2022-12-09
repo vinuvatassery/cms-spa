@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { ApplicantInfo } from '../entities/applicant-info';
 /** Data services **/
 import { ClientDataService } from '../infrastructure/client.data.service';
 
@@ -25,7 +26,10 @@ export class ClientFacade {
   private rdoDressedorBathedSubject = new BehaviorSubject<any[]>([]);
   private rdoConcentrationSubject = new BehaviorSubject<any[]>([]);
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
-  private specialHandlingsSubject = new BehaviorSubject<any>([]);
+  private specialHandlingsSubject = new BehaviorSubject<any>([]);  
+  appInfoFormSubject = new BehaviorSubject<any>([]);
+  applicationInfoSubject = new BehaviorSubject<any>([]);
+  pronounListSubject = new  BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -45,6 +49,9 @@ export class ClientFacade {
   rdoConcentration$ = this.rdoConcentrationSubject.asObservable();
   rdoErrands$ = this.rdoErrandsSubject.asObservable();
   specialHandlings$ = this.specialHandlingsSubject.asObservable();
+  appInfoForm$ = this.appInfoFormSubject.asObservable();
+  applicantInfo$ = this.applicationInfoSubject.asObservable();
+  pronounList$ = this.pronounListSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly clientDataService: ClientDataService) {}
@@ -238,9 +245,13 @@ export class ClientFacade {
       },
     });
   }
-
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  save(applicantInfo:ApplicantInfo) {
+      return this.clientDataService.save(applicantInfo);
+  }
+  load(clientCaseId:any,eligibilityId:any) {
+      return this.clientDataService.load(clientCaseId,eligibilityId);
+  }
+  update(applicantInfo:ApplicantInfo) {
+    return this.clientDataService.update(applicantInfo);
   }
 }

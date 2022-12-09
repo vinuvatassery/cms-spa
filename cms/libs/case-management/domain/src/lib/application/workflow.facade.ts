@@ -28,7 +28,7 @@ export class WorkflowFacade {
   private wfProcessCompletionStatusSubject = new BehaviorSubject<WorkflowProcessCompletionStatus[]>([]);
   private routesSubject = new BehaviorSubject<any>([]);
   private sessionSubject = new BehaviorSubject<any>([]);
-  private sessionDataSubject = new BehaviorSubject<any>([]);
+  private sessionDataSubject = new Subject<any>();
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
