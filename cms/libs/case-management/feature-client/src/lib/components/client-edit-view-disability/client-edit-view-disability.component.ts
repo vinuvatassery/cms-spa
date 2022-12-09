@@ -2,7 +2,6 @@ import { Component, OnInit,Input , ChangeDetectorRef, ChangeDetectionStrategy,  
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { first, tap } from 'rxjs';
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
 
 
@@ -45,11 +44,7 @@ export class ClientEditViewDisabilityComponent implements OnInit {
   }
   private loadMaterials(){
     this.rdoMaterials$.subscribe((data) => {
-      this.materialList = data;    
-      // data.forEach((element) => {
-      //     this.appInfoForm.addControl(element.lovCode, new FormControl(''));
-       
-      // });
+      this.materialList = data;   
     });
    
    }
@@ -77,9 +72,7 @@ export class ClientEditViewDisabilityComponent implements OnInit {
       }
       else{
         this.appInfoForm.controls['yesMaterial'].removeValidators(Validators.required);
-        this.appInfoForm.controls['yesMaterial'].updateValueAndValidity();
-        // this.appInfoForm.controls['selectedMaterial'].removeValidators(Validators.required);
-        // this.appInfoForm.controls['selectedMaterial'].updateValueAndValidity();
+        this.appInfoForm.controls['yesMaterial'].updateValueAndValidity();       
       }
   }
 }
