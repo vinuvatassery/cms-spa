@@ -42,8 +42,9 @@ export class NotificationSnackBarComponent implements OnInit {
             content: this.alertTemplate,
             position: { horizontal: 'center', vertical: 'top' },
             animation: { type: 'fade', duration: 500 },
-            closable: true,
+            closable: false,
             type: { style: res.type, icon: true },
+            hideAfter: 800,
           });
         }
       },
