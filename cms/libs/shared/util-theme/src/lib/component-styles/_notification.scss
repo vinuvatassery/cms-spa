@@ -33,7 +33,7 @@
   }
 }
 .k-notification-group {
-  z-index: 9;
+  z-index: 999999;  
   padding-top: $size-xxxx;
   .k-notification-wrap > .k-icon {
     margin-top: $size-0;
