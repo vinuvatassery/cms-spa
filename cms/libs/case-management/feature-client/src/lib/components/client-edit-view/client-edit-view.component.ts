@@ -38,9 +38,11 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public currentDate = new Date(); 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
-  rdoMaterials$ = this.lovFacade.materialslov$;
-  materialsyeslov$ = this.lovFacade.materialsyeslov$;
-  rdoInterpreters$ = this.clientfacade.rdoInterpreters$;
+
+  rdoMaterials$ = this.lovFacade.materialslov$;  
+  materialsyeslov$ = this.lovFacade.materialsyeslov$; 
+  rdoInterpreters$ = this.lovFacade.interpreterlov$; //this.clientfacade.rdoInterpreters$;
+
   rdoDeafs$ = this.clientfacade.rdoDeaf$;
   rdoBlinds$ = this.clientfacade.rdoBlind$;
   rdoWalked$ = this.clientfacade.rdoWalked$;
@@ -90,9 +92,27 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
   materialOptionButtonValid!:boolean;
+  interpreterOptionButtonValid!:boolean;
+  deafOrHearingOptionButtonValid!:boolean;
+  blindOrSeriousDiffOptionButtonValid!:boolean;
+  physicalMentaDiffOptionButtonValid!:boolean;
+  walkingOrClimbingOptionButtonValid!:boolean;
+  dressingOrBathOptionButtonValid!:boolean;
+  concentrateAndRememberDiffOptionButtonValid!:boolean;
+  seriesDiffOptionButtonValid!:boolean;
+
   textboxDisable!:boolean;
   optionButtonValid!:boolean;
   yesMaterialDisable!:boolean;
+  interpreterTextDisable!:boolean;
+  deafOrHearingTextDisable!:boolean;
+  blindOrSeriousDiffTextDisable!:boolean;
+  physicalMentaDiffTextDisable!:boolean;
+  walkingOrClimbingTextDisable!:boolean;
+  dressingOrBathTextDisable!:boolean;
+  concentrateAndRememberDiffTextDisable!:boolean;
+  seriesDiffTextDisable!:boolean;
+
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
@@ -132,7 +152,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadTareaRaceAndEthinicity();  
 
     this.LoadLovs() 
-     this.buildForm(); 
+    this.buildForm(); 
 
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
@@ -216,12 +236,30 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       pronouns: [''] ,
       selectedMaterial:[''],
       yesMaterial:[''],
+      selectedInterpreter:[''],
+      yesInterpreter:[''],
+      selecteddeafOrHearing:[''],
+      yesdeafOrHearing:[''],
+      selectedBlindOrSeriousDiff:[''],
+      yesblindOrSeriousDiff:[''],
+      selectedPhysicalMentaDiff:[''],
+      yesPhysicalMentaDiff:[''],
+      selectedWalkingOrClimbing:[''],
+      yesWalkingOrClimbing:[''],
+      selectedDressingOrBath:[''],
+      yesDressingOrBath:[''],
+      selectedConcentrateAndRememberDiff:[''],
+      yesConcentrateAndRememberDiff:[''],
+      selectedSeriesDiff:[''],
+      yesSeriesDiff:['']
+
     });  
 
   } 
   private LoadLovs(){
-    // this.lovFacade.getMaterialLovs();
-     this.lovFacade.getMaterialYesLovs();
+    this.lovFacade.getMaterialLovs();
+    this.lovFacade.getMaterialYesLovs();
+    this.lovFacade.getInterpreterLovs();
 
   }
   private loadApplicantInfoSubscription(){
@@ -229,6 +267,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
       this.textboxDisable  = true; 
       this.yesMaterialDisable = true;
+      this.interpreterTextDisable = true;
+      this.deafOrHearingTextDisable = true;
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
       if(this.appInfoForm !== undefined){
@@ -409,6 +449,69 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
        else{
         this.materialOptionButtonValid = false;
        }
+       if(this.appInfoForm.controls["selectedInterpreter"].valid){
+        this.interpreterOptionButtonValid = true;
+
+       }
+       else{
+        this.interpreterOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["selecteddeafOrHearing"].valid){
+        this.deafOrHearingOptionButtonValid = true;
+
+       }
+       else{
+        this.deafOrHearingOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["selectedBlindOrSeriousDiff"].valid){
+        this.blindOrSeriousDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.blindOrSeriousDiffOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["selectedPhysicalMentaDiff"].valid){
+        this.physicalMentaDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.physicalMentaDiffOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["selectedWalkingOrClimbing"].valid){
+        this.walkingOrClimbingOptionButtonValid = true;
+
+       }
+       else{
+        this.walkingOrClimbingOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["selectedDressingOrBath"].valid){
+        this.dressingOrBathOptionButtonValid = true;
+
+       }
+       else{
+        this.dressingOrBathOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["selectedConcentrateAndRememberDiff"].valid){
+        this.concentrateAndRememberDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.concentrateAndRememberDiffOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["selectedConcentrateAndRememberDiff"].valid){
+        this.seriesDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.seriesDiffOptionButtonValid = false;
+       }
+       
+       
+       
+       
+       
+       
+       
      
     });
   }

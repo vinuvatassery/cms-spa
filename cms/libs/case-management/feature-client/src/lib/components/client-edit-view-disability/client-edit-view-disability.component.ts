@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
+import { YesNoFlag } from '@cms/case-management/domain';
 
 
 
@@ -16,11 +17,16 @@ import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
 export class ClientEditViewDisabilityComponent implements OnInit {
 
   @Input() appInfoForm: FormGroup;
-  @Input() materialsyeslov! : any;
-  @Input() materialOptionButtonValid!:boolean;
-  @Input() yesMaterialDisable!:boolean;
-  rdoMaterials$ = this.lovFacade.materialslov$;
-  materialsyeslov$ = this.lovFacade.materialsyeslov$;
+
+  @Input() optionButtonValid!:boolean;
+  @Input() textFieldDisable!:boolean;
+
+  @Input() OptionControlerName:any;
+  @Input() textControlerName:any;
+  @Input() textFieldType:any;
+
+  @Input() rdoInputlov :any;
+  @Input() dropdownInutLov :any;
   materialList: any = [];
   yesMaterialList: any =[]; 
  
@@ -36,43 +42,47 @@ export class ClientEditViewDisabilityComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.lovFacade.getMaterialLovs();
-    this.lovFacade.getMaterialYesLovs();
-    this.loadYesMaterial();
-    this.yesMaterialDisable = true;
+    // this.lovFacade.getMaterialLovs();
+    // this.lovFacade.getMaterialYesLovs();
+    //this.loadYesMaterial();
+        this.textFieldDisable = true;
    
   }
-  private loadMaterials(){
-    this.rdoMaterials$.subscribe((data) => {
-      this.materialList = data;   
-    });
+  // private loadMaterials(){
+  //   this.rdoMaterials$.subscribe((data) => {
+  //     this.materialList = data;   
+  //   });
    
-   }
-   private loadYesMaterial(){
-    this.materialsyeslov$.subscribe((data) => {
-      this.yesMaterialList = data;   
-      this.loadMaterials();
-      });   
-   }
+  //  }
+  //  private loadYesMaterial(){
+  //   this.materialsyeslov$.subscribe((data) => {
+  //     this.yesMaterialList = data;   
+  //     this.loadMaterials();
+  //     });   
+  //  }
     onMaterialsRdoClicked(event: any) {
       debugger;
-      if( this.appInfoForm.controls['selectedMaterial'].value.toUpperCase() ==='YES'){
-        this.yesMaterialDisable = false;
+      if( this.appInfoForm.controls[this.OptionControlerName].value.toUpperCase() ===YesNoFlag.Yes.toUpperCase()){
+        this.textFieldDisable = false;
       }
       else{
-        this.yesMaterialDisable = true;
+        this.textFieldDisable = true;
       } 
 
-      if(this.appInfoForm.controls['selectedMaterial'].value.toUpperCase()  ==='YES' && (this.appInfoForm.controls['yesMaterial'].value === ''
-      || this.appInfoForm.controls['yesMaterial'].value === null)){
-        this.appInfoForm.controls['yesMaterial'].setValidators(Validators.required);
-        this.appInfoForm.controls['yesMaterial'].updateValueAndValidity();
-        this.appInfoForm.controls['selectedMaterial'].removeValidators(Validators.required);
-        this.appInfoForm.controls['selectedMaterial'].updateValueAndValidity();
+      if(this.appInfoForm.controls[this.OptionControlerName].value.toUpperCase()  ===YesNoFlag.Yes.toUpperCase() && 
+      (this.appInfoForm.controls[this.textControlerName].value === ''
+      || this.appInfoForm.controls[this.textControlerName].value === null)){
+        this.appInfoForm.controls[this.textControlerName].setValidators(Validators.required);
+        this.appInfoForm.controls[this.textControlerName].updateValueAndValidity();
+        this.appInfoForm.controls[this.OptionControlerName].removeValidators(Validators.required);
+        this.appInfoForm.controls[this.OptionControlerName].updateValueAndValidity();
       }
       else{
-        this.appInfoForm.controls['yesMaterial'].removeValidators(Validators.required);
-        this.appInfoForm.controls['yesMaterial'].updateValueAndValidity();       
+        this.appInfoForm.controls[this.textControlerName].removeValidators(Validators.required);
+        this.appInfoForm.controls[this.textControlerName].updateValueAndValidity();       
       }
   }
+ 
+
+
 }

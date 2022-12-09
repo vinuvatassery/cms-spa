@@ -314,7 +314,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.registerToVoteFlag = StatusFlag.No;
         }
-        debugger;
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode = this.appInfoForm.controls["selectedMaterial"].value
         if(this.appInfoForm.controls["selectedMaterial"].value !== null && 
         this.appInfoForm.controls["selectedMaterial"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
@@ -323,6 +322,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = '';
         }
+        if(this.appInfoForm.controls["selectedMaterial"].value !== null && 
+        this.appInfoForm.controls["selectedMaterial"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = this.appInfoForm.controls["yesMaterial"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = '';
+        }
+
       
   }
   private populateClientPronoun(){
@@ -503,22 +510,70 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             }
             
           });
-          debugger;
           this.appInfoForm.controls['selectedMaterial'].setValidators(Validators.required);
           this.appInfoForm.controls['selectedMaterial'].updateValueAndValidity();
            if( this.appInfoForm.controls['selectedMaterial'].value  !=='' ||
            this.appInfoForm.controls['selectedMaterial'].value !== null){
             this.appInfoForm.controls['selectedMaterial'].setErrors(null);
             this.appInfoForm.controls['selectedMaterial'].updateValueAndValidity();
-           }            
-          
-          // if(this.appInfoForm.controls['selectedMaterial'].value.toUpperCase()  ==='YES' 
-          // && this.appInfoForm.controls['yesMaterial'].value !== null){
-          //   this.appInfoForm.controls['yesMaterial'].setErrors({'incorrect': true});
-          // }
-          // else{
-          //   this.appInfoForm.controls['yesMaterial'].setErrors(null);
-          // }         
+           }     
+          this.appInfoForm.controls['selectedInterpreter'].setValidators(Validators.required);
+          this.appInfoForm.controls['selectedInterpreter'].updateValueAndValidity();
+           if( this.appInfoForm.controls['selectedInterpreter'].value  !=='' ||
+           this.appInfoForm.controls['selectedInterpreter'].value !== null){
+            this.appInfoForm.controls['selectedInterpreter'].setErrors(null);
+            this.appInfoForm.controls['selectedInterpreter'].updateValueAndValidity();
+           } 
+           this.appInfoForm.controls['selecteddeafOrHearing'].setValidators(Validators.required);
+          this.appInfoForm.controls['selecteddeafOrHearing'].updateValueAndValidity();
+           if( this.appInfoForm.controls['selecteddeafOrHearing'].value  !=='' ||
+           this.appInfoForm.controls['selecteddeafOrHearing'].value !== null){
+            this.appInfoForm.controls['selecteddeafOrHearing'].setErrors(null);
+            this.appInfoForm.controls['selecteddeafOrHearing'].updateValueAndValidity();
+           } 
+           this.appInfoForm.controls['selectedBlindOrSeriousDiff'].setValidators(Validators.required);
+           this.appInfoForm.controls['selectedBlindOrSeriousDiff'].updateValueAndValidity();
+            if( this.appInfoForm.controls['selectedBlindOrSeriousDiff'].value  !=='' ||
+            this.appInfoForm.controls['selectedBlindOrSeriousDiff'].value !== null){
+             this.appInfoForm.controls['selectedBlindOrSeriousDiff'].setErrors(null);
+             this.appInfoForm.controls['selectedBlindOrSeriousDiff'].updateValueAndValidity();
+            } 
+            this.appInfoForm.controls['selectedPhysicalMentaDiff'].setValidators(Validators.required);
+            this.appInfoForm.controls['selectedPhysicalMentaDiff'].updateValueAndValidity();
+             if( this.appInfoForm.controls['selectedPhysicalMentaDiff'].value  !=='' ||
+             this.appInfoForm.controls['selectedPhysicalMentaDiff'].value !== null){
+              this.appInfoForm.controls['selectedPhysicalMentaDiff'].setErrors(null);
+              this.appInfoForm.controls['selectedPhysicalMentaDiff'].updateValueAndValidity();
+             } 
+             this.appInfoForm.controls['selectedWalkingOrClimbing'].setValidators(Validators.required);
+             this.appInfoForm.controls['selectedWalkingOrClimbing'].updateValueAndValidity();
+              if( this.appInfoForm.controls['selectedWalkingOrClimbing'].value  !=='' ||
+              this.appInfoForm.controls['selectedWalkingOrClimbing'].value !== null){
+               this.appInfoForm.controls['selectedWalkingOrClimbing'].setErrors(null);
+               this.appInfoForm.controls['selectedWalkingOrClimbing'].updateValueAndValidity();
+              } 
+              this.appInfoForm.controls['selectedDressingOrBath'].setValidators(Validators.required);
+             this.appInfoForm.controls['selectedDressingOrBath'].updateValueAndValidity();
+              if( this.appInfoForm.controls['selectedDressingOrBath'].value  !=='' ||
+              this.appInfoForm.controls['selectedDressingOrBath'].value !== null){
+               this.appInfoForm.controls['selectedDressingOrBath'].setErrors(null);
+               this.appInfoForm.controls['selectedDressingOrBath'].updateValueAndValidity();
+              } 
+              this.appInfoForm.controls['selectedConcentrateAndRememberDiff'].setValidators(Validators.required);
+             this.appInfoForm.controls['selectedConcentrateAndRememberDiff'].updateValueAndValidity();
+              if( this.appInfoForm.controls['selectedConcentrateAndRememberDiff'].value  !=='' ||
+              this.appInfoForm.controls['selectedConcentrateAndRememberDiff'].value !== null){
+               this.appInfoForm.controls['selectedConcentrateAndRememberDiff'].setErrors(null);
+               this.appInfoForm.controls['selectedConcentrateAndRememberDiff'].updateValueAndValidity();
+              } 
+              this.appInfoForm.controls['selectedSeriesDiff'].setValidators(Validators.required);
+             this.appInfoForm.controls['selectedSeriesDiff'].updateValueAndValidity();
+              if( this.appInfoForm.controls['selectedSeriesDiff'].value  !=='' ||
+              this.appInfoForm.controls['selectedSeriesDiff'].value !== null){
+               this.appInfoForm.controls['selectedSeriesDiff'].setErrors(null);
+               this.appInfoForm.controls['selectedSeriesDiff'].updateValueAndValidity();
+              } 
+           
           this.appInfoForm.updateValueAndValidity();
   }
   setAppInfoForm(appInfoForm:FormGroup)
