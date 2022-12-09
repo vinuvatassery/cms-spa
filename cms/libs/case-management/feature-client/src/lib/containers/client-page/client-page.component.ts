@@ -67,6 +67,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]) => {      
       if (isSaved) {
+        debugger;
         this.workFlowFacade.navigate(navigationType);
       }
     });
@@ -145,6 +146,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientGender.clientGenderCode = x.clientGenderCode;
                 clientGender.clientGenderId = x.clientGenderId;
                 clientGender.clientId = x.clientId;
+                clientGender.otherDesc = x.otherDesc;
                 if(this.applicantInfo.clientGenderList == undefined || null ){
                   this.applicantInfo.clientGenderList = []
                 }
@@ -224,13 +226,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.populateClient();
     this.populateClientCaseEligibility();
     this.populateClientPronoun();
+    this.populateClientGender();
+    this.populateClientSexualIdentity();
 
     /*Modify when the get is ready */
     /*-------------------------------------------------------------------------------- */
      //this.populateClientCase();
-    this.populateClientGender();
+    
      this.populateClientRace();
-     this.populateClientSexualIdentity();
+     
     /*-------------------------------------------------------------------------------- */
 
   }
@@ -249,7 +253,12 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
       this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value;   
-      this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value
+      this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
+      this.applicantInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
+      if (this.applicantInfo.client.genderAtBirthCode==='NOT_LISTED') {
+        this.applicantInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;
+      }
+
    
       if(this.appInfoForm.controls["ssnNotApplicable"].value){
         this.applicantInfo.client.ssn = null;
@@ -268,17 +277,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility == undefined){
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
-        }          
-       /*Mocking the other required fields need to change as per the UI story progress */        
+        }    
         
-           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode="NO";          
-
-      //------------------------------------
-
-        
+           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+           if (this.appInfoForm.controls["Transgender"].value==='NOT_LISTED') {
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
+           }
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = new clientCaseEligibilityFlag;
         }
+        
         if(this.appInfoForm.controls["prmInsNotApplicable"].value){
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = '';
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = '';
@@ -364,22 +372,24 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   
   private populateClientGender(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*---------------------------------remove if----------------------------------------------- */
-        //this.applicantInfo.clientGenderList =[];
-        if(this.applicantInfo.clientGenderList.length ===0 ){
-          var clientGender = new ClientGender();
-          clientGender.clientGenderCode = 'Woman or Girl';
-          //clientGender.activeFlag ="Y";
-          if(this.applicantInfo.clientGenderList == undefined){
-            this.applicantInfo.clientGenderList = [];
-          }
-          clientGender.clientId = this.clientId;
-          this.applicantInfo.clientGenderList.push(clientGender)
-      }
-        
-        /*-------------------------------------------------------------------------------- */
-  }
+    const clientGenderListSaved = this.applicantInfo.clientGenderList;// this is in case of update record
+    this.applicantInfo.clientGenderList=[];
+     Object.keys( this.appInfoForm.controls).filter(m=>m.includes('Gender')).forEach(control => {
+       if (this.appInfoForm.controls[control].value===true) {
+         control= control.replace('Gender','');
+         let clientGender = new ClientGender();
+         clientGender.clientGenderCode =control;
+         if(clientGender.clientGenderCode==='NOT_LISTED'){
+           clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
+         }
+         const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
+         if (Existing!==undefined) {
+           clientGender=Existing;
+         }
+         this.applicantInfo.clientGenderList.push(clientGender);
+       }
+     });
+}
   private populateClientRace(){
         /*Mocking the other required fields need to change as per the UI story progress/Get */
         /*--------------------------remove if------------------------------------------------------ */
@@ -397,21 +407,22 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         
         /*-------------------------------------------------------------------------------- */
   }
-  private populateClientSexualIdentity(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*--------------------------remove if------------------------------------------------------ */
-        if(this.applicantInfo.clientSexualIdentityList.length ===0 ){
-            var clientSexualIdentity = new ClientSexualIdentity();
-            clientSexualIdentity.clientSexualIdentityCode = 'Straight';
-            //clientSexualIdentity.activeFlag ="Y";
-            if(this.applicantInfo.clientSexualIdentityList == undefined){
-              this.applicantInfo.clientSexualIdentityList =[];
-            }
-            clientSexualIdentity.clientId = this.clientId;
-            this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity)
+  private populateClientSexualIdentity() {
+    this.applicantInfo.clientSexualIdentityList = [];
+    Object.keys(this.appInfoForm.controls).filter(m => m.includes('SexulaIdentity')).forEach(control => {
+      if (this.appInfoForm.controls[control].value === true) {
+        control = control.replace('SexulaIdentity', '');
+        const clientSexualIdentity = new ClientSexualIdentity();
+        clientSexualIdentity.clientSexualIdentityCode = control;
+        if (clientSexualIdentity.clientSexualIdentityCode === 'NOT_LISTED') {
+          clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexulaIdentityDescription'].value;
+        }
+
+        this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity);
       }
-        /*-------------------------------------------------------------------------------- */
+    });
   }
+
 
 
 

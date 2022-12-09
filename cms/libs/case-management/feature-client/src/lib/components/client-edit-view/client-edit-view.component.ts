@@ -190,7 +190,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  
   
   public onClose(event: any) {    
-      event.preventDefault();   
+      //event.preventDefault();   
   }
   public clearForm(): void {
     //this.form.reset();
@@ -321,6 +321,39 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
   }
+  
+  if (Array.isArray(applicantInfo.clientGenderList) ) {
+    applicantInfo.clientGenderList.forEach(gender => { 
+      this.appInfoForm.controls['Gender'+gender.clientGenderCode]?.setValue(true);
+      if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
+        this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
+      }
+      this.appInfoForm.controls['GenderGroup'].setValue(gender.clientGenderCode);
+      
+    })
+  }
+  if (Array.isArray(applicantInfo.clientSexualIdentityList) ) {
+    applicantInfo.clientSexualIdentityList.forEach(identity => { 
+      this.appInfoForm.controls['SexulaIdentity'+identity.clientSexualIdentityCode]?.setValue(true);
+      if(identity.clientSexualIdentityCode==="NOT_LISTED" && identity.otherDesc!==null){
+        this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
+      }
+      this.appInfoForm.controls['SexulaIdentityGroup'].setValue(identity.clientSexualIdentityCode);
+      
+    })
+  }
+  const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
+  this.appInfoForm.controls['Transgender']?.setValue(Transgender);
+  if (Transgender==='NOT_LISTED') {
+    this.appInfoForm.controls['TransgenderDescription'].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
+  }
+
+  const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
+  this.appInfoForm.controls['BirthGender']?.setValue(BirthGender);
+  if (BirthGender==='NOT_LISTED') {
+    this.appInfoForm.controls['BirthGenderDescription'].setValue(applicantInfo.client.genderAtBirthDesc);
+  }
+
   if(applicantInfo.clientPronounList != null || undefined){   
     applicantInfo.clientPronounList.forEach(pronoun => {  
       if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
@@ -558,6 +591,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       this.appInfoForm.controls['ssn'].enable();
     }
   }
+
   registerToVoteSelected(event:Event){
    if((event.target as HTMLInputElement).value.toUpperCase()==StatusFlag.Yes){
     this.isVisible = true;

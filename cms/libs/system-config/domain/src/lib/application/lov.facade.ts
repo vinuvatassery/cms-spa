@@ -23,6 +23,10 @@ export class LovFacade {
   private lovPronounSubject = new BehaviorSubject<Lov[]>([]);
   private lovMaterialSubject = new BehaviorSubject<Lov[]>([]);
   private lovMaterialYesSubject = new BehaviorSubject<Lov[]>([]);
+  private lovTransgenderSubject = new BehaviorSubject<Lov[]>([]);
+  private lovSexAtBirthSubject = new BehaviorSubject<Lov[]>([]);
+  private lovSexulaIdentitySubject = new BehaviorSubject<Lov[]>([]);
+  private lovGenderSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -30,6 +34,10 @@ export class LovFacade {
   pronounslov$ = this.lovPronounSubject.asObservable();
   materialslov$ = this.lovMaterialSubject.asObservable();
   materialsyeslov$ = this.lovMaterialYesSubject.asObservable();
+  transgenderlov$ = this.lovTransgenderSubject.asObservable();
+  sexAtBirthlov$ = this.lovSexAtBirthSubject.asObservable();
+  sexulaIdentitylov$ = this.lovSexulaIdentitySubject.asObservable();
+  genderlov$ = this.lovGenderSubject.asObservable();
 
         /** Public methods **/
 
@@ -77,6 +85,46 @@ getMaterialLovs(): void {
     },
   });
   
+}
+getTransgenderLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Transgender).subscribe({
+    next: (lovResponse) => {
+      this.lovTransgenderSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+getSexAtBirthLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.SexAtBirth).subscribe({
+    next: (lovResponse) => {
+      this.lovSexAtBirthSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+getSexulaIdentityLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.SexulaIdentity).subscribe({
+    next: (lovResponse) => {
+      this.lovSexulaIdentitySubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+getGenderLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Gender).subscribe({
+    next: (lovResponse) => {
+      this.lovGenderSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
 }
 getMaterialYesLovs(): void {
   this.lovDataService.getLovsbyParent('Yes',LovType.Materials).subscribe({
