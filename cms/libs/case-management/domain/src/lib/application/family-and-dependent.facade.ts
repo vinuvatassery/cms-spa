@@ -146,18 +146,23 @@ export class FamilyAndDependentFacade {
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
     
     this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({ 
-      next: (dependentsResponse : any) => {
-        const gridView = {
-          data : dependentsResponse["items"],        
-          total: dependentsResponse["totalCount"]   
-      };
-      const workFlowdata: CompletionChecklist[] = [{
-        dataPointName: 'family_dependents',
-        status: (parseInt(dependentsResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
-      }];
+      next: (dependentsResponse : any) => {  
+       
+              if(dependentsResponse)
+              {      
+                  const gridView = {
+                    data : dependentsResponse["items"] ,        
+                    total:  dependentsResponse["totalCount"]  
+                    };       
+                const workFlowdata: CompletionChecklist[] = [{
+                  dataPointName: 'family_dependents',
+                  status: (parseInt(dependentsResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
+                }];
 
-      this.workflowFacade.updateChecklist(workFlowdata);
-        this.dependentsSubject.next(gridView);
+                this.workflowFacade.updateChecklist(workFlowdata);
+                this.dependentsSubject.next(gridView);
+               }
+       
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    

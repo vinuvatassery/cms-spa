@@ -169,7 +169,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
           clientId: [0],           
           dependentClientId: [0]  ,
           clientDependentId: ['']  ,              
-          dependentType   : ['', Validators.required]  
+          dependentType   : ['', Validators.required]  ,
+          selectedClientDependentId: ['']  
       });
       this.onExitFamilyFormLoad()
   }
@@ -180,7 +181,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
      {
        clientId: dataItem?.clientId  ,    
        dependentType : dataItem?.clientId > 0 ? DependentTypeCode.CAClient : DependentTypeCode.Dependent,
-       clientDependentId :  dataItem?.clientDependentId 
+       clientDependentId :  dataItem?.clientDependentId      
      })    
  
   }
@@ -198,7 +199,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
                dependentClientId:  existDependentData?.dependentClientId,     
                relationshipCode: existDependentData?.relationshipCode, 
                clientDependentId: existDependentData?.clientDependentId,
-               dependentType: existDependentData?.dependentTypeCode
+               dependentType: existDependentData?.dependentTypeCode,
+               selectedClientDependentId :  existDependentData?.clientDependentId
              }
            )
            const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
@@ -219,7 +221,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       dependentClientId  : this.existFamilyMemberForm?.controls["dependentClientId"].value ,
       dependentType :this.existFamilyMemberForm?.controls["dependentType"].value ,
       relationshipCode : this.existFamilyMemberForm?.controls["existRelationshipCode"].value ,
-      clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value 
+      clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value ,
+      selectedClientDependentId: this.existFamilyMemberForm?.controls["clientDependentId"].value 
     }
     this.addExistingClientEvent.emit(existDepData)
   }
