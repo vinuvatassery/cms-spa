@@ -98,25 +98,16 @@ export class WorkflowFacade {
           forkJoin(
             [
               of(wfMaster),
-              this.workflowService.loadWorkflow(sessionId),
-              this.workflowService.loadWorkflowSessionData(sessionId)
+              this.workflowService.loadWorkflow(sessionId)             
             ])
         ),
       ).subscribe({
-        next: ([wfMaster, wfSession, sData]: [WorkflowMaster[], WorkflowSession, any]) => {
+        next: ([wfMaster, wfSession]: [WorkflowMaster[], WorkflowSession]) => {
           this.currentSession = wfSession;
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
           this.sessionSubject.next(this.currentSession);
-          if (sData) {
-            const sessionData = JSON.parse(sData?.sessionData);
-            if (sData) {
-              this.clientId = sessionData?.clientId;
-              this.clientCaseId = sessionData?.ClientCaseId;
-              this.clientCaseEligibilityId = sessionData?.clientCaseEligibilityId;
-            }
-          }
         },
         error: (err: any) => {
           console.error('error', err);
@@ -347,6 +338,14 @@ export class WorkflowFacade {
   loadWorkFlowSessionData(sessionId: string): void {
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
+        if (ddlsessionDataResponse) {
+          const sessionData = JSON.parse(ddlsessionDataResponse?.sessionData);
+          if (ddlsessionDataResponse) {
+            this.clientId = sessionData?.clientId;
+            this.clientCaseId = sessionData?.ClientCaseId;
+            this.clientCaseEligibilityId = sessionData?.clientCaseEligibilityId;
+          }
+        }
         this.sessionDataSubject.next(ddlsessionDataResponse);
       },
       error: (err) => {

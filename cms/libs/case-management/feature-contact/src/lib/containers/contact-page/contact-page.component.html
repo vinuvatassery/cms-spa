@@ -178,6 +178,7 @@
               textField="stateName"
               valueField="stateCode"
               [valuePrimitive]="true"
+              (valueChange)="onStateChange($event)"
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -202,7 +203,8 @@
         <div class="flex-row">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
-            <kendo-floatinglabel text="County">
+            <kendo-floatinglabel text="County" class="inline-search-loader">
+              <!-- <span *ngIf="showCountyLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span> -->
               <kendo-dropdownlist 
               aria-label="County" 
               [fillMode]="formUiStyle.dropDownFillMode"
@@ -347,12 +349,13 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Home Phone">
-              <kendo-textbox 
+              <kendo-maskedtextbox 
               aria-label="home phone" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="phoneNbr"
-              > </kendo-textbox>
+              mask="(999) 000-0000"
+              > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror>Error: Home phone is required</kendo-formerror>
           </kendo-formfield>
@@ -368,7 +371,6 @@
               kendoCheckBox
               aria-labelledby="homePhone applicableFlag"
               formControlName="applicableFlag" 
-              (click)="onHomePhoneNotApplicableChecked($event)"
                 />
               <label class="k-checkbox-label" for="check4">Not Applicable</label>
             </span>
@@ -412,14 +414,15 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Cell Phone">
-              <kendo-textbox 
+              <kendo-maskedtextbox 
               aria-labelledby="noCellPhoneCheck" 
               aria-label="Cell Phone"
               [disabled]="isNoCellPhoneChecked" 
               [maxlength]="10"
               [fillMode]="formUiStyle.inputFillMode"
               formControlName="phoneNbr"
-              > </kendo-textbox>        
+              mask="(999) 000-0000"
+              > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror>Error: Cell phone is required</kendo-formerror>
           </kendo-formfield>
@@ -435,7 +438,6 @@
               kendoCheckBox              
               aria-labelledby="cellPhone"
               formControlName="applicableFlag"
-              (click)="onCellPhoneNotApplicableChecked($event)"
                 />
               <label class="k-checkbox-label" for="check7">Not Applicable</label>
             </span>
@@ -479,13 +481,14 @@
             <div class="flex-col flex-col-6">
               <kendo-formfield>
               <kendo-floatinglabel text="Work Phone">
-                <kendo-textbox 
+                <kendo-maskedtextbox 
                 aria-label="work phone" 
                 [disabled]="isNoWorkPhoneChecked"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="10"
                 formControlName="phoneNbr"
-                > </kendo-textbox>
+                mask="(999) 000-0000"
+                > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror>Error: Work phone is required</kendo-formerror>
             </kendo-formfield>
@@ -501,7 +504,6 @@
                 kendoCheckBox                
                 aria-labelledby="noWorkPhone" 
                 formControlName="applicableFlag"
-                (click)="onWorkPhoneNotApplicableChecked($event)"
                 />
                 <label class="k-checkbox-label" for="check10">Not Applicable</label>
               </span>
@@ -546,13 +548,14 @@
             <div class="flex-col flex-col-6">
               <kendo-formfield>
               <kendo-floatinglabel text="Other Phone">
-                <kendo-textbox 
+                <kendo-maskedtextbox 
                 [disabled]="isNoOtherPhoneChecked" 
                 aria-label="other phone"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="10"
                 formControlName="phoneNbr"
-                > </kendo-textbox>
+                mask="(999) 000-0000"
+                > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror>Error: Other phone is required</kendo-formerror>
             </kendo-formfield>
@@ -582,7 +585,6 @@
                 kendoCheckBox                
                 aria-labelledby="otherPhoneCheck" 
                 formControlName="applicableFlag"
-                (click)="onOtherPhoneNotApplicableChecked($event)"
                 />
                 <label class="k-checkbox-label" for="check13">Not Applicable</label>
               </span>
@@ -646,7 +648,6 @@
                 id="check16" 
                 name="email_applicableFlag"
                 kendoCheckBox 
-                (click)="onNoEmailCheckboxClicked($event)"              
                 aria-label="emailNotApplicable" 
                 formControlName="applicableFlag" 
 
@@ -723,7 +724,6 @@
               kendoCheckBox              
               aria-labelledby="noFriendsOrFamily" 
               formControlName="noFriendOrFamilyContactFlag"
-              (click)="onNoFriendsOrFamilyChecked($event)"
               />
               <label class="k-checkbox-label" for="check19">No friend or family contact</label>
             </span>
@@ -757,7 +757,6 @@
               valueField="lovCode"
               [valuePrimitive]="true"
               formControlName="contactRelationshipCode"
-              (valueChange)="onContactRelationshipChanged($event)"
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -785,13 +784,14 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Contact's Phone Number">
-              <kendo-textbox 
+              <kendo-maskedtextbox 
               [disabled]="isNoFriendsOrFamilyChecked" 
               aria-label="contacts phone number"
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="contactPhoneNbr"
-              > </kendo-textbox>
+              mask="(999) 000-0000"
+              > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror>Error: Contact's phone number is required</kendo-formerror>
           </kendo-formfield>

@@ -67,8 +67,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]:[NavigationType, any]) => {      
       if (isSaved) {
-        this.workFlowFacade.clientId = isSaved?.clientId;
-        this.workFlowFacade.clientCaseEligibilityId = isSaved?.clientCaseEligibilityId;
         this.workFlowFacade.navigate(navigationType);
       }
     });
