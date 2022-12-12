@@ -66,7 +66,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
     this.lovFacade.getRelationShipsLovs(); 
     this.loadCase()   
     this.addSaveSubscription();  
-    this.loadDependentSearch();
+   // this.loadDependentSearch();
   }
 
   ngOnDestroy(): void {
@@ -153,8 +153,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;    
   }
 
-  private loadDependentSearch() {
-    this.familyAndDependentFacade.loadDependentSearch();
+  private loadDependentSearch(text : string) {
+    this.familyAndDependentFacade.loadDependentSearch(text);
   }
 
 /** child event methods **/
@@ -193,7 +193,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
 
   searchTextHandleEventHandle($event : any)
   {    
-    this.loadDependentSearch()
+    this.loadDependentSearch($event )
   }
 
   AddUpdateExistingDependentHandle(data : any)
