@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /**  Facades **/
-import { IncomeFacade } from '@cms/case-management/domain';
+import { IncomeFacade,ClientIncomeFacade  } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
 
@@ -30,6 +30,7 @@ export class IncomeListComponent implements OnInit {
   isIncludeNote!: boolean;
   deleteRequestSubject = new Subject<DeleteRequest>();
   deleteRequest$ = this.deleteRequestSubject.asObservable();
+  clientInomeId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -87,7 +88,7 @@ export class IncomeListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly incomeFacade: IncomeFacade) {}
+  constructor(private readonly incomeFacade: IncomeFacade, private readonly ClientIncomeFacade: ClientIncomeFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -136,8 +137,11 @@ export class IncomeListComponent implements OnInit {
   }
 
   handleDeleteConfirmationClicked(event: any) {
-    console.log('Response Data :', event);
+    this.ClientIncomeFacade.deleteIncome(this.clientInomeId).subscribe((data) => {
+      console.log(data)
+   // console.log('Response Data :', event);
   }
+    )
+}
 
- 
 }
