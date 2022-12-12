@@ -94,6 +94,23 @@
   }
 }
 /*Global Search*/
+
+.header-mobilesearchbutton{
+  display: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  text-align: center;
+  padding: 7px;
+  color: $app-primary;
+  position: absolute;
+  right: 152px;
+  top: 13px;
+  .material-icons{
+    font-size: 24px;
+  }
+}
+
 .global-search {
   position: relative;
   .global-search-icon {
@@ -131,10 +148,36 @@
     @media (max-width: $breakpoint-xlg) {
       min-width: 300px;
       max-width: 300px;
+      
     }
   }
   kendo-multicolumncombobox > .k-button {
     display: none;
+  }
+
+
+  
+}
+.hidedropicon  kendo-combobox > .k-button {
+  display: none ;
+}
+
+.input-inline-loader{
+  position: absolute;
+  right: 8px;
+  background: #fff;
+  top: 8px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  z-index: 2;
+}
+
+.inline-search-loader{
+  position: relative;
+  .input-inline-loader{
+    top: 28px;
   }
 }
 // New case search
@@ -251,4 +294,8 @@
       bottom: 2px;
     }
   }
+ }
+
+ .k-menu-popup{
+  margin-right: 15px;
  }

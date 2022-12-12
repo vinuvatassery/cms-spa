@@ -1,9 +1,16 @@
+<common-loader-component> </common-loader-component>
 <h1 hidden>CMS</h1>
 <section class="app-l-header" role="header">
-  <div class="header-logo" [routerLink]="['/']">
-   
-    <img src="./../../../assets/images/care-assist.png"  alt="Logo of company"  class="branding-logo" />
+  <div class="headermenu-leftmostsection">
+    <button class="mobile-menu-icon" (click)="openMobileMenu()"> <span class="material-icons">
+      menu
+      </span></button>
+    <div class="header-logo" [routerLink]="['/']">
+     
+      <img src="./../../../assets/images/care-assist.png"  alt="Logo of company"  class="branding-logo" />
+    </div>
   </div>
+
   <ng-content select="[search]" kendoRippleContainer></ng-content>
   <div class="header-menu">
     <!-- <common-signalr-status></common-signalr-status> -->
@@ -13,7 +20,7 @@
   </div>
 </section>
 
-<section class="app-l-container" kendoRippleContainer role="main">
+<section class="app-l-container" [ngClass]="{'mobilemenu-opened': isOpenMobileMenu}"  kendoRippleContainer role="main">
   <section
     mode="side"
     #sidenav

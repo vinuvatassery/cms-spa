@@ -1,10 +1,10 @@
-<div class="global-search header-search">
+<div class="global-search header-search" [ngClass]="{'mobileheader-searchshow': mobileHeaderSearchOpen}">
   <span
     class="material-icons global-search-icon"
     aria-label="search"
     aria-hidden="true"
-    >search</span
-  >
+    >search</span>
+    <span *ngIf="showHeaderSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
   <kendo-multicolumncombobox
     [data]="search$ | async"
     textField="name"
@@ -14,7 +14,7 @@
   >
  
     <button kendoButton fillMode="clear" icon="image"></button>
- 
+   
  
     <kendo-combobox-column [width]="250" >
       <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
@@ -26,3 +26,9 @@
     </kendo-combobox-column>
   </kendo-multicolumncombobox>
 </div>
+
+<button kendoButton (click)="clickMobileHeaderSearchOpen()" title="Global Case search" class="header-mobilesearchbutton">  <span
+  class="material-icons"
+  aria-label="search"
+  aria-hidden="true"
+  >search</span> </button>

@@ -27,7 +27,8 @@
                 "sourceTag": "domain:case-management",
                 "onlyDependOnLibsWithTags": [
                   "domain:case-management",
-                  "domain:shared"
+                  "domain:shared",
+                  "domain:system-config"
                 ]
               },
               {

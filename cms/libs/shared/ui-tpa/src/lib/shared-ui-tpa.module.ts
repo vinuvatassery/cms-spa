@@ -16,6 +16,7 @@ import { UploadsModule } from '@progress/kendo-angular-upload';
 import { LayoutModule } from '@progress/kendo-angular-layout';
 import { TooltipsModule } from '@progress/kendo-angular-tooltip';
 import { EditorModule } from '@progress/kendo-angular-editor';
+import { IndicatorsModule } from "@progress/kendo-angular-indicators";
 import {
   FloatingLabelModule,
   LabelModule,
@@ -46,6 +47,7 @@ const MODULES = [
   EditorModule,
   NavigationModule,
   NotificationModule,
+  IndicatorsModule,
 ];
 
 @NgModule({

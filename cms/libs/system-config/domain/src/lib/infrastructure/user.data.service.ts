@@ -6,13 +6,25 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { User } from '../entities/user';
+import { LoginUser } from '../entities/login-user';
+
+/** Providers **/
+import { ConfigurationProvider } from "@cms/shared/util-core";
 
 @Injectable({ providedIn: 'root' })
 export class UserDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
+  getUsersByRole(roleCode : string) {
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/users/roleCode=${roleCode}`
+    );  
+  }  
+  
   loadUsers(): Observable<User[]> {
     return of([
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },

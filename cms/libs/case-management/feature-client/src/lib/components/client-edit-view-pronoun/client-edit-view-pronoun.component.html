@@ -1,0 +1,34 @@
+<div class="component-list-h" [formGroup]="appInfoForm">
+    
+    <span class="app-checkboxwidtext-wrapper"     
+    *ngFor="let pronoun of pronounList; let i = index" >  
+      <input 
+        type="checkbox"
+         kendoCheckBox
+        aria-labelledby="pronounsSheHerHers"
+        id="pronounsSheHerHers"
+        [formControlName]="pronoun.lovCode"
+        (change)="onCheckChange($event,pronoun.lovCode)"
+        
+      />
+      <label class="k-checkbox-label"
+        >{{pronoun.lovDesc}}</label
+      >
+   
+      <div *ngIf = "pronoun.lovCode ==='NOT_LISTED'">
+        <span>
+          <kendo-floatinglabel text="Enter Pronouns" >
+            <kendo-textbox aria-label="enter pronouns"              
+              [formControlName]="pronoun.lovCode"
+              [disabled]="textboxDisable"
+              (valueChange)="onChange($event)">               
+            </kendo-textbox>        
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!appInfoForm.controls[pronoun.lovCode].valid ">Pronoun is required.</kendo-formerror>
+        </span>     
+    </div>
+    </span>
+    <kendo-formerror *ngIf="!appInfoForm.controls['pronouns'].valid">Atleast one option is required.</kendo-formerror>
+    <hr />
+  
+  </div>
