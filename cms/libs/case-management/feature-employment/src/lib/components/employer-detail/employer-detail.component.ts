@@ -16,7 +16,7 @@ import {
 } from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
- 
+import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-employer-detail',
@@ -53,7 +53,8 @@ export class EmployerDetailComponent {
     };
     this.snackbarSubject.next(snackbarMessage);
   }
-  constructor(private readonly employmentFacade: EmploymentFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade, 
+    private loaderService: LoaderService) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -109,15 +110,18 @@ export class EmployerDetailComponent {
         this.empDetailsForm.controls['empHireDate'].value;
       if (this.employer) {
         this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
+        this.loaderService.show();
         if (this.isAdd) {
           this.employmentFacade.createEmployer(this.employer).subscribe({
             next: (response) => { 
               this.addUpdateEmploymentEvent.next(response);  
               this.closeModal.emit(true);
+              this.loaderService.hide();
               this.handleSnackBar('Success' ,'Employer Successfully added','success');    
             },
             error: (err) => { 
-              this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
+              this.loaderService.hide();
+              this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
             },
           });
         } else {
@@ -125,13 +129,18 @@ export class EmployerDetailComponent {
             next: (response) => { 
               this.addUpdateEmploymentEvent.next(response);  
               this.closeModal.emit(true);
+              this.loaderService.hide();
+
               this.handleSnackBar('Success' ,'Employer Successfully added','success') ; 
             },
             error: (err) => {
+              this.loaderService.hide(); 
               this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
             },
           });
         }
+   
+
       }
     }
   }
@@ -143,7 +152,9 @@ export class EmployerDetailComponent {
   onRemoveEmployerConfirmationClicked() {
     this.isRemoveEmployerConfirmationPopupOpened = true;
   }
-
+  updateEmploymentHandle(response : any){
+    this.addUpdateEmploymentEvent.next(response);  
+  }
   onRemoveEmployerConfirmationClosed() {
     this.closeModal.emit(true);
     this.isRemoveEmployerConfirmationPopupOpened = false;

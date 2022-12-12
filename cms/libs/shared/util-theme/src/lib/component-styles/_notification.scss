@@ -33,7 +33,7 @@
   }
 }
 .k-notification-group {
-  z-index: 999999;
+  z-index: 9;
   padding-top: $size-xxxx;
   .k-notification-wrap > .k-icon {
     margin-top: $size-0;
@@ -72,7 +72,6 @@
     }
     &.k-notification-error {
       border-color: material-color($hive-error-palette, 400);
-      color: $white;
       background-color: material-color($hive-error-palette, 400);
       .k-i-error {
         &:before {

@@ -4,6 +4,7 @@ import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
  
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
+import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-employer-confirmation',
   templateUrl: './remove-employer-confirmation.component.html',
@@ -29,7 +30,9 @@ export class RemoveEmployerConfirmationComponent {
   }
   clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade) { }
+  constructor(
+    private readonly employmentFacade: EmploymentFacade, 
+    private loaderService: LoaderService) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -41,16 +44,20 @@ export class RemoveEmployerConfirmationComponent {
   }
 
   removeEmployer() {
+    this.loaderService.show()
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.selectedEmployer) {
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
-          this.deleteUpdateEmploymentEvent.next(response);  
           this.onRemoveEmployerConfirmationClosed();
           this.handleSnackBar('Success' ,'Employer Successfully Removed','info');
+          this.deleteUpdateEmploymentEvent.next(response);  
+          this.loaderService.hide() 
         },
         error: (err) => {
           this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
+          this.loaderService.hide()
+
         },
       }
       );
