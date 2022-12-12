@@ -83,7 +83,8 @@ CAClient = DependentTypeCode.CAClient;
       buttonType:"btn-h-primary",
       text: "Edit Family Member",
       icon: "edit" ,   
-      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {     
+      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {  
+        debugger   
         if(!this.editbuttonEmitted)
         {   
           this.editbuttonEmitted =true;
@@ -98,7 +99,7 @@ CAClient = DependentTypeCode.CAClient;
       click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {           
           
         if(!this.deletebuttonEmitted)
-        {   
+        {             
           this.deletebuttonEmitted = true;  
         this.onDeleteFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
         }
@@ -213,23 +214,38 @@ CAClient = DependentTypeCode.CAClient;
 
   /** child event methods **/
   onFormDeleteclickEvent(event: any)
-  {
+  {    
     this.onDeleteFamilyMemberClicked(event?.clientDependentId, event?.dependentTypeCode)
   }
 
   addUpdateDependentHandle(dependent : any) {
     this.addUpdateDependentEvent.next(dependent);
+    this.editbuttonEmitted =false;
 
     this.dependentAddNewGet$.pipe(first((addResponse: any ) => addResponse != null))
     .subscribe((addResponse: any) =>
     {  
       if(addResponse?.clientDependentId)
-      {
+      {        
         this.loadFamilyDependents()
         this.onFamilyMemberClosed()
       }
       
     })
+
+    if(dependent?.clientDependentId)
+      {
+        this.dependentUpdateNew$.pipe(first((updateResponse: any ) => updateResponse != null))
+        .subscribe((updateResponse: any) =>
+        {  
+          if(updateResponse?.clientDependentId)
+          {
+            this.loadFamilyDependents()
+            this.onFamilyMemberClosed()
+          }
+          
+        })
+      }
 
   }
 

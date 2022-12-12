@@ -147,15 +147,11 @@
           is required</kendo-formerror>
       </div>
       <div class="flex-col">
-        <kendo-floatinglabel text="Date of Birth">
-          <kendo-datepicker
-          [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-dd-yyyy"          
-            formatPlaceholder="formatPattern"
-            formControlName="dob"
-          >
-          </kendo-datepicker>
-        </kendo-floatinglabel>
+        <kendo-floatinglabel text="Date of Birth">         
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+          formControlName="dob"           >
+        </kendo-datepicker>
+              </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','dob') && isSubmitted">Date of Birth
           is required</kendo-formerror>
       </div>
@@ -213,11 +209,11 @@
     <div class="justify-content-between">
       <div>
         <button
-          kendoButton [primary]="false"
+          kendoButton 
           class="k-danger-link"
           *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
           aria-label="remove family member"
-          (click)="onFormDeleteclick()"
+          (click)="onFormDeleteclick()" type="button"
         >
           DELETE
         </button>
@@ -232,7 +228,7 @@
           Cancel
         </button>
         <button kendoButton [primary]="true" aria-label="add family member">
-          Add
+          {{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'UPDATE' : 'ADD' }}
         </button>
       </div>
     </div>

@@ -153,13 +153,14 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
   onFormDeleteclick()
-  {
+  {    
     const deleteParams =
     {
       clientDependentId : this.clientDependentId ,
       dependentTypeCode : this.dependentTypeCode
     }
     this.formDeleteclickEvent.next(deleteParams);
+    this.onFamilyMemberClosed();
   }
 
   private composeExistFamilyMemberForm()
@@ -186,28 +187,29 @@ export class FamilyAndDependentDetailComponent implements OnInit {
  
   }
   onExitFamilyFormLoad()
-  {
+  {    
    this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
    .subscribe((existDependentData: any) =>
    {  
        if(existDependentData?.dependentClientId)
        {
-         this.isAddFamilyMember =false;
+        const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
+        this.fullClientName = fullName + ' DOB '+ new Date(existDependentData?.dob).toLocaleDateString().toString()+' SSN '+existDependentData?.ssn  
+
+        this.clientDependentId = existDependentData?.clientDependentId;
+        this.dependentTypeCode = existDependentData?.dependentTypeCode;
+         this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
              {     
                clientId:  existDependentData?.clientId,  
                dependentClientId:  existDependentData?.dependentClientId,     
-               relationshipCode: existDependentData?.relationshipCode, 
+               existRelationshipCode: existDependentData?.relationshipCode, 
                clientDependentId: existDependentData?.clientDependentId,
                dependentType: existDependentData?.dependentTypeCode,
                selectedClientDependentId :  existDependentData?.clientDependentId
              }
            )
-           const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-           this.fullClientName = fullName + ' DOB '+existDependentData?.dob.toString()+' SSN '+existDependentData?.ssn  
-
-           this.clientDependentId = existDependentData?.clientDependentId;
-           this.dependentTypeCode = existDependentData?.dependentTypeCode;
+         
        }
    })
   }
@@ -264,10 +266,11 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       {  
         
           if(dependentData?.clientDependentId)
-          { 
-            
+          {             
             this.isOpenedNewFamilyMember =true;
             this.isAddFamilyMember =false;
+            this.clientDependentId = dependentData?.clientDependentId;
+              this.dependentTypeCode = dependentData?.dependentTypeCode;
               this.familyMemberForm.setValue(
                 {
                   concurrencyStamp: dependentData?.concurrencyStamp,
@@ -277,14 +280,12 @@ export class FamilyAndDependentDetailComponent implements OnInit {
                   firstName:  dependentData?.firstName,
                   lastName:  dependentData?.lastName,       
                   ssn:  dependentData?.ssn,
-                  dob: dependentData?.dob,       
+                  dob: new Date(dependentData?.dob),       
                   enrolledInInsuranceFlag: dependentData?.enrolledInInsuranceFlag,
                   dependentTypeCode : dependentData?.dependentTypeCode
                 }
-              )
+              )            
               
-              this.clientDependentId = dependentData?.clientDependentId;
-              this.dependentTypeCode = dependentData?.dependentTypeCode;
           }
           else
           {

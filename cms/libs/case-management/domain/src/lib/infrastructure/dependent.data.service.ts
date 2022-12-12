@@ -72,7 +72,7 @@ export class DependentDataService {
      
   //5get new dependent for edit 
   GetNewDependent(clientDependentId: string) {
-    return this.http.get(
+    return this.http.get<Dependent>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${clientDependentId}`      
     );
   }
@@ -108,9 +108,9 @@ export class DependentDataService {
   }
 
      ///8update client as dependent
-     AddExistingDependent(data : any) {
+     AddExistingDependent(data : any) {      
       return this.http.put(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${data?.clientId}
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client/${data?.clientId}
         &dependentClientId=${data?.dependentClientId}&dependentType=${data?.dependentType}&relationshipCode=${data?.relationshipCode}&
         clientDependentId=${data?.clientDependentId}&deletedClientDependentId=${data.selectedClientDependentId}`,
         null
@@ -119,15 +119,15 @@ export class DependentDataService {
 
   //9get client dependent for edit (client)
   GetExistingClientDependent(clientDependentId: string , dependentType :  string) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientDependentId=${clientDependentId}&dependentType=${dependentType}`  
+    return this.http.get<Dependent>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client/clientDependentId=${clientDependentId}&dependentType=${dependentType}`  
     );
   }
    
   //10search for autocomplete
   SearchDependents(text :  string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search?text=${text}`  
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search/text=${text}`  
     );
   }
    

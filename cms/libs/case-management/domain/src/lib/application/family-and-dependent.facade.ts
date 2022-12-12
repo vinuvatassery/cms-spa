@@ -104,7 +104,7 @@ export class FamilyAndDependentFacade {
   UpdateNewDependent(dependent: Dependent): void {
     this.dependentDataService.UpdateNewDependent(dependent).subscribe({
       next: (updateNewdependentsResponse) => {
-        if(updateNewdependentsResponse == true)
+        if(updateNewdependentsResponse)
         {
          this.handleSnackBar('Success' ,'Dependent data Updated','success')     
         }
@@ -123,6 +123,7 @@ export class FamilyAndDependentFacade {
   GetNewDependent(dependentId: string) : void {
     this.dependentDataService.GetNewDependent(dependentId).subscribe({
       next: (getNewdependentsResponse) => {
+        getNewdependentsResponse.ssn = this.FormatSSN(getNewdependentsResponse?.ssn)
         this.dependentGetNewSubject.next(getNewdependentsResponse);
       },
       error: (err) => {
@@ -132,9 +133,10 @@ export class FamilyAndDependentFacade {
   }
 
 
-  GetExistingClientDependent(clientDependentId: string) : void {
+  GetExistingClientDependent(clientDependentId: string) : void {    
     this.dependentDataService.GetExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
       next: (dependentGetExistingResponse) => {
+        dependentGetExistingResponse.ssn=  'xxx-xx-' +dependentGetExistingResponse.ssn.slice(-4);
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
       },
       error: (err) => {
@@ -207,7 +209,7 @@ export class FamilyAndDependentFacade {
 
         Object.values(dependentSearchResponse).forEach((key) => {            
           key.fullName = key.firstName + ' ' + key.lastName
-          key.ssn=  'xxx-xx-' +key.ssn.slice(-4);;
+          key.ssn=  'xxx-xx-' +key.ssn.slice(-4);
           key.fullCustomName =key?.fullName + ' DOB '+key?.dob.toString()+' SSN '+key?.ssn      
         
           if(key?.clientId > 0)   
@@ -247,6 +249,19 @@ export class FamilyAndDependentFacade {
         
       },
     });
+  }
+
+  FormatSSN(x: string) : string
+  {  
+    if(x.length >  0)
+    {
+      let fSSN = '';
+      fSSN += x.substr(0, 3);
+      fSSN += '-' + x.substr(3, 2);
+      fSSN += '-' + x.substr(5, 4);
+      return fSSN;    
+    }
+    return '';
   }
   
 }
