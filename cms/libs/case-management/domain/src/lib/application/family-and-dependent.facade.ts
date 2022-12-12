@@ -9,6 +9,9 @@ import { ClientDependentGroupDesc ,ClientDependentGroup } from '../enums/client-
 import { DependentTypeCode } from '../enums/dependent-type.enum';
 /** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
+import { DatePipe } from '@angular/common';
+import { FamilyMember, FamilyMember2LabelMapping } from '../enums/family-member.enum';
+
 
 /** Facade **/
 import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
@@ -30,6 +33,7 @@ export class FamilyAndDependentFacade {
 
   /** Public properties **/
   products$ = this.productsSubject.asObservable();
+  
   dependentSearch$ = this.dependentSearchSubject.asObservable();
   ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   dependents$ = this.dependentsSubject.asObservable();
@@ -79,8 +83,6 @@ export class FamilyAndDependentFacade {
       },
     });
   }
-
-
 
   AddNewDependent(dependent: Dependent): void {
     this.dependentDataService.AddNewDependent(dependent).subscribe({

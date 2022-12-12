@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { FamilyDependent } from '../entities/dependent';
+import { FamilyMember } from '../enums/family-member.enum';
+
 
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -14,6 +18,7 @@ import { LovType } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class DependentDataService {
+ 
   /** Constructor**/
   constructor(private readonly http: HttpClient,
     private configurationProvider : ConfigurationProvider) {}

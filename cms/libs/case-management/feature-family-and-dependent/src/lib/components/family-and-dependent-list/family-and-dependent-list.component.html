@@ -78,7 +78,7 @@
     >
       <ng-template kendoGridCellTemplate let-dependent let-ClientDependentId="field">
         <kendo-dropdownbutton
-          [data]="actions"
+          [data]=  "actions"
           icon="more-vertical"
           class="TableActionPopup app-dropdown-action"
           buttonClass="k-icon-button"          
@@ -94,6 +94,7 @@
         </button>        
           </ng-template>
         </kendo-dropdownbutton>
+      </div>
       </ng-template>
     </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
