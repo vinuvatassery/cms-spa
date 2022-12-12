@@ -119,7 +119,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadDdlSpokenLanguages();
     this.loadDdlWrittenLanguages();
     this.loadDdlEnglishProficiencies();
-    this.loadRdoTransGender();
     this.loadRdoSexAssigned();
     //this.loadRdoMaterials();
     this.loadRdoInterpreter();
@@ -216,6 +215,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       pronouns: [''] ,
       selectedMaterial:[''],
       yesMaterial:[''],
+      RaceAndEthnicity: [''] 
     });  
 
   } 
@@ -448,9 +448,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.tareaRaceAndEthinicityCounter = `${this.tareaRaceAndEthinicityCharachtersCount}/${this.tareaRaceAndEthinicityMaxLength}`;
   }
 
-  private loadRdoTransGender() {
-    this.clientfacade.loadRdoTransGenders();
-  }
+ 
 
   private loadRdoSexAssigned() {
     this.clientfacade.loadRdoSexAssigned();

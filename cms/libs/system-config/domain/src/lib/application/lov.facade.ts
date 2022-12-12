@@ -27,6 +27,8 @@ export class LovFacade {
   private lovSexAtBirthSubject = new BehaviorSubject<Lov[]>([]);
   private lovSexulaIdentitySubject = new BehaviorSubject<Lov[]>([]);
   private lovGenderSubject = new BehaviorSubject<Lov[]>([]);
+  private lovRaceAndEthnicitySubject = new BehaviorSubject<Lov[]>([]);
+  
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -38,6 +40,7 @@ export class LovFacade {
   sexAtBirthlov$ = this.lovSexAtBirthSubject.asObservable();
   sexulaIdentitylov$ = this.lovSexulaIdentitySubject.asObservable();
   genderlov$ = this.lovGenderSubject.asObservable();
+  raceAndEthnicitylov$ = this.lovRaceAndEthnicitySubject.asObservable();
 
         /** Public methods **/
 
@@ -130,6 +133,17 @@ getMaterialYesLovs(): void {
   this.lovDataService.getLovsbyParent('Yes',LovType.Materials).subscribe({
     next: (lovMaterialYesResponse) => {
       this.lovMaterialYesSubject.next(lovMaterialYesResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+  
+}
+getRaceAndEthnicityLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.RaceAndEthnicity).subscribe({
+    next: (lovResponse) => {
+      this.lovRaceAndEthnicitySubject.next(lovResponse);
     },
     error: (err) => {
       console.error('err', err);

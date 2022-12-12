@@ -5,5 +5,6 @@ export enum LovType {
     Gender ='Gender',
     Transgender ='Transgender',
     SexAtBirth ='SEX_AT_BIRTH',
-    SexulaIdentity ='SEXUAL_IDENTITY'
+    SexulaIdentity ='SEXUAL_IDENTITY',
+    RaceAndEthnicity ='RACE_AND_ETHNICITY'
   }
