@@ -68,7 +68,7 @@ export class OptionbuttonListComponent implements OnInit {
     }
     else{
           if(this.appInfoForm.controls[this.textControlerName] !== undefined){
-            this.appInfoForm.controls[this.textControlerName].setErrors(null);
+            this.appInfoForm.controls[this.textControlerName].removeValidators(Validators.required);
             this.appInfoForm.controls[this.textControlerName].updateValueAndValidity();  
           }     
     }

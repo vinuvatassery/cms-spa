@@ -80,21 +80,21 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   private loadSessionData()
   {  
+    this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
    this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {
-      this.applicantInfo = new ApplicantInfo();
+    .subscribe((session: any) => {     
       this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
-     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
-     this.clientId = JSON.parse(session.sessionData).clientId; 
-     this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-      if(this.clientCaseId  !==null || this.clientCaseId !== undefined){
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
+      this.clientId = JSON.parse(session.sessionData).clientId; 
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
+      if(this.clientCaseId !== undefined && this.clientCaseId  !==null){
         this.applicantInfo.clientCaseId = this.clientCaseId
         this.applicantInfo.workFlowSessionId = this.sessionId;      
-        if(this.clientCaseEligibilityId != null || this.clientCaseEligibilityId !=undefined){
+        if(this.clientCaseEligibilityId !=undefined && this.clientCaseEligibilityId != null){
           if(  this.applicantInfo.client === undefined){
             this.applicantInfo.client = new Client;
           }
@@ -344,7 +344,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = this.appInfoForm.controls["startAgeDeafOrHearing"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = 0;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = null;
         }
 
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode = this.appInfoForm.controls["blindSeeingCode"].value
@@ -353,7 +353,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing = this.appInfoForm.controls["startAgeBlindSeeing"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing = 0;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing = null;
         }
 
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.limitingConditionCode = this.appInfoForm.controls["limitingConditionCode"].value
@@ -365,7 +365,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty = this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty = 0;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty = null;
         }
 
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode = this.appInfoForm.controls["dressingBathingDifficultyCode"].value
@@ -374,7 +374,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty = this.appInfoForm.controls["startAgeDressingBathingDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty = 0;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty = null;
         }
 
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode = this.appInfoForm.controls["concentratingDifficultyCode"].value
@@ -383,7 +383,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty = this.appInfoForm.controls["startAgeConcentratingDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty = 0;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty = null;
         }
 
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode = this.appInfoForm.controls["errandsDifficultyCode"].value
@@ -392,7 +392,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty = this.appInfoForm.controls["startAgeErrandsDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty = 0;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty = null;
         }
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.spokenLanguageCode =  this.appInfoForm.controls["spokenLanguage"].value;
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.writtenLanguageCode =  this.appInfoForm.controls["writtenLanguage"].value;

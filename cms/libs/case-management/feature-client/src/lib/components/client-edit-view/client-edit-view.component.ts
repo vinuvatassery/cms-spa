@@ -114,14 +114,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   startAgeDressingBathingDifficultyInputDisable!:boolean;
   startAgeConcentratingDifficultyInputDisable!:boolean;
   startAgeErrandsDifficultyInputDisable!:boolean;
-  // interpreterTextDisable!:boolean;
-  // deafOrHearingTextDisable!:boolean;
-  // blindOrSeriousDiffTextDisable!:boolean;
-  // physicalMentaDiffTextDisable!:boolean;
-  // walkingOrClimbingTextDisable!:boolean;
-  // dressingOrBathTextDisable!:boolean;
-  // concentrateAndRememberDiffTextDisable!:boolean;
-  // seriesDiffTextDisable!:boolean;
+ 
 
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
@@ -574,21 +567,14 @@ private assignPronounModelToForm(){
        else{
         this.concentrateAndRememberDiffOptionButtonValid = false;
        }
-      //  if(this.appInfoForm.controls["selectedConcentrateAndRememberDiff"].valid){
-      //   this.seriesDiffOptionButtonValid = true;
+       if(this.appInfoForm.controls["errandsDifficultyCode"].valid){
+        this.seriesDiffOptionButtonValid = true;
 
-      //  }
-      //  else{
-      //   this.seriesDiffOptionButtonValid = false;
-      //  }
-       
-       
-       
-       
-       
-       
-       
-     
+       }
+       else{
+        this.seriesDiffOptionButtonValid = false;
+       }    
+ 
     });
   }
   private updateFormCompleteCount(prev: any, curr: any) {
