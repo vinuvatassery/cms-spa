@@ -26,7 +26,7 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
+  <kendo-grid [pageSize]="5" [pageable]="true"  [loading]="isGridLoaderShow" [sortable]="true" [groupable]="false" [reorderable]="true"
     [resizable]="true" [columnMenu]="{ filter: true }" [data]="cases">
     <ng-template kendoGridColumnMenuTemplate let-service="service">
       <span class="k-icon k-i-x" (click)="service.close()"
@@ -67,11 +67,13 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex"> 
         <div class="d-flex align-items-center">
+          <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
           <label class="mr-1">Rows Per Page</label> 
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
             [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+
         </div>
         <div class="d-flex"> 
           <kendo-pager-input></kendo-pager-input> 
@@ -80,5 +82,17 @@
         </div> 
       </div>
     </ng-template>
+
+     <ng-template kendoGridLoadingTemplate>
+       <common-grid-loader-component></common-grid-loader-component>
+      </ng-template>
+    <!-- <ng-template kendoPagerTemplate   let-totalPages="totalPages" let-currentPage="currentPage">
+      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+      <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
+      <kendo-pager-next-buttons></kendo-pager-next-buttons>
+      <kendo-pager-info></kendo-pager-info>
+      Current page: {{currentPage}} - {{totalPages}}
+    
+   </ng-template> -->
   </kendo-grid>
 </div>

@@ -18,7 +18,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class CaseListComponent implements OnInit {
 
-
+public isGridLoaderShow = false;
   public pageSize = 10;
   public skip = 0;
   public pageSizes = [
@@ -45,6 +45,9 @@ export class CaseListComponent implements OnInit {
 
   /** Private methods **/
   private loadDdlGridColumns() {
+    this.isGridLoaderShow = true;
     this.caseFacade.loadDdlGridColumns();
+    this.isGridLoaderShow = false;
+
   }
 }

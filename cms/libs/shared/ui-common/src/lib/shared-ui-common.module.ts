@@ -14,11 +14,12 @@ import { NotificationSnackBarComponent } from './notification-snack-bar/notifica
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { UserProfileCardComponent } from './user-profile-card/user-profile-card.component';
 import { LoaderComponent } from './loader/loader.component';
+import { GridLoaderComponent } from './loader/grid-loader.component';
+ 
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
- 
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
     LoginStatusComponent,
@@ -31,6 +32,7 @@ import { LoaderComponent } from './loader/loader.component';
     AccountSettingsComponent,
     UserProfileCardComponent,
     LoaderComponent,
+    GridLoaderComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -42,8 +44,8 @@ import { LoaderComponent } from './loader/loader.component';
     DeleteConfirmationComponent,
     AccountSettingsComponent,
     UserProfileCardComponent,
-    LoaderComponent
+    LoaderComponent,
+    GridLoaderComponent,
   ],
- 
 })
-export class SharedUiCommonModule { }
+export class SharedUiCommonModule {}

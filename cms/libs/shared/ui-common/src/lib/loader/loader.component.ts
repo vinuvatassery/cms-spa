@@ -1,9 +1,9 @@
 /** Angular **/
 import { Component } from '@angular/core';
-import { LoaderService } from '../../../../util-core/src/lib/application/services/app-loader.service';
+ 
+import { LoaderService } from '@cms/shared/util-core';
 import { Subject } from 'rxjs';
  
-
 
 @Component({
   selector: 'common-loader-component',
@@ -14,6 +14,9 @@ export class LoaderComponent {
  
   isLoading: Subject<boolean> = this.loaderService.isLoading;
 
-  constructor(private loaderService: LoaderService) {
+ 
+  constructor(public loaderService: LoaderService) {
   }
+
+ 
 }
