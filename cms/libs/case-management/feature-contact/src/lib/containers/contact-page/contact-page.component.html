@@ -266,10 +266,13 @@
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
-            <kendo-upload 
-            [disabled]="isNoProofOfHomeChecked"
-            
-            > </kendo-upload>
+            <kendo-fileselect  
+            [disabled]="isNoProofOfHomeChecked"          
+            [restrictions]="fileUploadRestrictions"
+            [multiple]="false"
+            (select)="onFileSelected($event)"
+            (remove)="onFileRemoved($event)"
+            ></kendo-fileselect >
           </div>
         </div>
         <div class="flex-row mt-2">
@@ -344,11 +347,6 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Home Phone">
-              <!-- <input
-              kendoTextBox
-              [disabled]="isNoHomePhoneChecked"
-              aria-label="home phone"
-            /> -->
               <kendo-textbox 
               aria-label="home phone" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -414,11 +412,6 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Cell Phone">
-              <!-- <input
-              kendoTextBox
-              [disabled]="isNoCellPhoneChecked"
-              aria-labelledby="noCellPhoneCheck"
-            /> -->
               <kendo-textbox 
               aria-labelledby="noCellPhoneCheck" 
               aria-label="Cell Phone"
@@ -486,11 +479,6 @@
             <div class="flex-col flex-col-6">
               <kendo-formfield>
               <kendo-floatinglabel text="Work Phone">
-                <!-- <input
-                kendoTextBox
-                [disabled]="isNoWorkPhoneChecked"
-                aria-label="work phone"
-              /> -->
                 <kendo-textbox 
                 aria-label="work phone" 
                 [disabled]="isNoWorkPhoneChecked"
@@ -558,11 +546,6 @@
             <div class="flex-col flex-col-6">
               <kendo-formfield>
               <kendo-floatinglabel text="Other Phone">
-                <!-- <input
-                kendoTextBox
-                [disabled]="isNoOtherPhoneChecked"
-                aria-label="other phone"
-              /> -->
                 <kendo-textbox 
                 [disabled]="isNoOtherPhoneChecked" 
                 aria-label="other phone"
@@ -750,15 +733,6 @@
         <div class="flex-row">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
-            <!-- <kendo-floatinglabel text="Contacts Name">       
-              <kendo-textbox 
-              [disabled]="isNoFriendsOrFamilyChecked" 
-              aria-label="contacts name"
-              [fillMode]="formUiStyle.inputFillMode"
-              formControlName="name"
-              > 
-              </kendo-textbox>
-            </kendo-floatinglabel> -->
             <kendo-floatinglabel text="Contacts Name">
               <kendo-textbox 
               aria-label="contacts name" 
@@ -811,11 +785,6 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Contact's Phone Number">
-              <!-- <input
-              kendoTextBox
-              [disabled]="isNoFriendsOrFamilyChecked"
-              aria-label="contacts phone number"
-            /> -->
               <kendo-textbox 
               [disabled]="isNoFriendsOrFamilyChecked" 
               aria-label="contacts phone number"

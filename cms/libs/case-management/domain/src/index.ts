@@ -31,6 +31,7 @@ export * from './lib/entities/client-case-eligibility';
 export * from './lib/entities/applicant-info';
 export * from './lib/entities/client-case-eligibility-and-flag';
 export * from './lib/entities/client-case-eligibility-flag';
+export * from './lib/entities/client-document';
 
 
 /** Enums **/
@@ -47,7 +48,8 @@ export * from './lib/enums/entity-type-code.enum';
 export * from './lib/enums/user-default-roles.enum';
 export * from './lib/enums/program.enum';
 export * from './lib/enums/address-type-code.enum';
-export * from './lib/enums/device-type-code.enum'
+export * from './lib/enums/device-type-code.enum';
+export * from './lib/enums/status-flag.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -70,6 +72,7 @@ export * from './lib/infrastructure/search.data.service';
 export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
 export * from './lib/infrastructure/status-period.data.service';
+export * from './lib/infrastructure/client-document.data.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -98,3 +101,4 @@ export * from './lib/application/verification.facade';
 export * from './lib/application/completion-status.facade';
 export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
+

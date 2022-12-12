@@ -36,8 +36,9 @@ export class WorkflowFacade {
   completionStatus$ = this.wfProcessCompletionStatusSubject.asObservable();
   sessionSubject$ = this.sessionSubject.asObservable();
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
-  clientId = 19938228478;
-  clientCaseEligibilityId = '25008614-E9F7-4501-9183-89819198425F';
+  clientId: number | undefined;
+  clientCaseId: string | undefined;
+  clientCaseEligibilityId: string | undefined;
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
@@ -97,16 +98,25 @@ export class WorkflowFacade {
           forkJoin(
             [
               of(wfMaster),
-              this.workflowService.loadWorkflow(sessionId)
+              this.workflowService.loadWorkflow(sessionId),
+              this.workflowService.loadWorkflowSessionData(sessionId)
             ])
         ),
       ).subscribe({
-        next: ([wfMaster, wfSession]: [WorkflowMaster[], WorkflowSession]) => {
+        next: ([wfMaster, wfSession, sData]: [WorkflowMaster[], WorkflowSession, any]) => {
           this.currentSession = wfSession;
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
           this.sessionSubject.next(this.currentSession);
+          if (sData) {
+            const sessionData = JSON.parse(sData?.sessionData);
+            if (sData) {
+              this.clientId = sessionData?.clientId;
+              this.clientCaseId = sessionData?.ClientCaseId;
+              this.clientCaseEligibilityId = sessionData?.clientCaseEligibilityId;
+            }
+          }
         },
         error: (err: any) => {
           console.error('error', err);

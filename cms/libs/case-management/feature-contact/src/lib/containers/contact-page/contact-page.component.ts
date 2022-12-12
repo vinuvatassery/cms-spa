@@ -6,10 +6,11 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, filter } from 'rxjs';
 
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
+import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -20,8 +21,8 @@ import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } fr
 export class ContactPageComponent implements OnInit, OnDestroy {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
+
   /** Public properties **/
-  ddlPreferredContactMethods$ = this.contactFacade.ddlPreferredContactMethods$;
   ddlStates$ = this.contactFacade.ddlStates$;
   ddlCountries$ = this.contactFacade.ddlCountries$;
   ddlRelationships$ = this.lovFacade.lovCntRelationship$;
@@ -48,7 +49,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   selectedAddressForm!: FormGroup;
   isSkipMailAddressValidation: boolean = false;
   isSkipHomeAddressValidation: boolean = false;
-  //currentAddressValidationType!: AddressTypeCode;
+  uploadedHomeAddressProof!: File | undefined;
+  fileUploadRestrictions: FileRestrictions = {
+    maxFileSize: 25000000,
+  };
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -132,18 +136,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private loadDdlRelationships() {
     this.lovFacade.getContactRelationShipsLovs();
-  }
-
-  private updateCompletionStatus(status: any) {
-    this.completionStatusFacade.updateCompletionStatus(status);
-  }
-
-  onChangeCounterButtonClick() {
-    this.updateCompletionStatus({
-      name: 'Contact Info',
-      completed: 31,
-      total: 31,
-    });
   }
 
   private loadDdlStates() {
@@ -565,9 +557,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
 
     if (this.isEdit) {
-      return this.updateContactInfo(this.workflowFacade.clientId, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
+      return this.updateContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', contactInfoData);
     }
-    return this.contactFacade.createContactInfo(this.workflowFacade.clientId, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
+    return this.contactFacade.createContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', contactInfoData);
   }
 
   private updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfoData: ContactInfo) {
@@ -579,7 +571,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   private loadContactInfo() {
-    this.contactFacade.loadContactInfo(this.workflowFacade.clientId, this.workflowFacade.clientCaseEligibilityId).subscribe((data: ContactInfo) => {
+    this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '').subscribe((data: ContactInfo) => {
       if (data) {
         this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
         this.contactInfo = data;
@@ -841,42 +833,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  /** Internal event methods **/
-  onNoEmailCheckboxClicked(event: Event) {
-    this.setVisibilityByNoEmailCheckbox((event.target as HTMLInputElement).checked);
-  }
-
-  onNoHomeAddressProofFlagChecked(event: Event) {
-    this.setVisibilityByNoHomeAddressProofFlag((event.target as HTMLInputElement).checked);
-  }
-
-  onHomePhoneNotApplicableChecked(event: Event) {
-    this.setVisibilityByHomePhoneNotApplicable((event.target as HTMLInputElement).checked);
-  }
-
-  onCellPhoneNotApplicableChecked(event: Event) {
-    this.setVisibilityByCellPhoneNotApplicable((event.target as HTMLInputElement).checked);
-  }
-
-  onWorkPhoneNotApplicableChecked(event: Event) {
-    this.setVisibilityByWorkPhoneNotApplicable((event.target as HTMLInputElement).checked);
-  }
-
-  onOtherPhoneNotApplicableChecked(event: Event) {
-    this.setVisibilityByOtherPhoneNotApplicable((event.target as HTMLInputElement).checked);
-  }
-
-  onNoFriendsOrFamilyChecked(event: Event) {
-    this.setVisibilityByNoFriendsOrFamily((event.target as HTMLInputElement).checked)
-  }
-
-  sameAsMailingAddressChangeSubscription() {
-    this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.valueChanges
-      .subscribe((value: boolean) => {
-        this.setSameAsMailingAddressFlagChanges(value);
-      });
-  }
-
+  
   private setSameAsMailingAddressFlagChanges(value: boolean) {
     const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
     if (value) {
@@ -928,6 +885,78 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  private uploadAddressProof() {
+
+    const document: ClientDocument = {
+      document: this.uploadedHomeAddressProof,
+      clientId: this.workflowFacade.clientId,
+      clientCaseId: this.workflowFacade.clientCaseId,
+      clientCaseEligibilityId: this.workflowFacade.clientCaseEligibilityId,
+      entityId: '',
+      entityTypeCode: 'HomeAddress',
+      documentTypeCode: 'PDF',
+      documentTemplateId: '',
+    }
+
+  }
+
+  private closeValidationPopup(type: string) {
+    if (type === AddressTypeCode.Home) {
+      this.homeAddressValidationPopupVisibility$.next(false);
+      this.homeAddressEntered = undefined;
+      this.homeAddressSuggested = undefined;
+    }
+    else if (type === AddressTypeCode.Mail) {
+      this.mailAddressValidationPopupVisibility$.next(false);
+      this.mailAddressEntered = undefined;
+      this.mailAddressSuggested = undefined;
+    }
+    this.selectedAddressForm.reset();
+  }
+
+  /** Internal event methods **/
+  onNoEmailCheckboxClicked(event: Event) {
+    this.setVisibilityByNoEmailCheckbox((event.target as HTMLInputElement).checked);
+  }
+
+  onNoHomeAddressProofFlagChecked(event: Event) {
+    this.setVisibilityByNoHomeAddressProofFlag((event.target as HTMLInputElement).checked);
+  }
+
+  onHomePhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByHomePhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onCellPhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByCellPhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onWorkPhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByWorkPhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onOtherPhoneNotApplicableChecked(event: Event) {
+    this.setVisibilityByOtherPhoneNotApplicable((event.target as HTMLInputElement).checked);
+  }
+
+  onNoFriendsOrFamilyChecked(event: Event) {
+    this.setVisibilityByNoFriendsOrFamily((event.target as HTMLInputElement).checked)
+  }
+
+  sameAsMailingAddressChangeSubscription() {
+    this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.valueChanges
+      .subscribe((value: boolean) => {
+        this.setSameAsMailingAddressFlagChanges(value);
+      });
+  }
+
+  addStateChangesubscription() {
+    (this.contactInfoForm.get('homeAddress') as FormGroup)?.controls['state']?.valueChanges.subscribe(value => {
+      this.loadDdlCountries(value);
+      this.contactInfoForm?.get('homeAddress.county')?.reset();
+    })
+  }
+
   homelessFlagChangeSubscription() {
     this.contactInfoForm?.get('homeAddress.homelessFlag')?.valueChanges
       .subscribe((value: boolean) => {
@@ -952,25 +981,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.closeValidationPopup(type);
     }
   }
-
-  addStateChangesubscription() {
-    (this.contactInfoForm.get('homeAddress') as FormGroup)?.controls['state']?.valueChanges.subscribe(value => {
-      this.loadDdlCountries(value);
-      this.contactInfoForm?.get('homeAddress.county')?.reset();
-    })
+  onFileSelected(e: SelectEvent) {
+    this.uploadedHomeAddressProof = e.files[0].rawFile;
+    console.log(e.files[0].rawFile);
   }
 
-  private closeValidationPopup(type: string) {
-    if (type === AddressTypeCode.Home) {
-      this.homeAddressValidationPopupVisibility$.next(false);
-      this.homeAddressEntered = undefined;
-      this.homeAddressSuggested = undefined;
-    }
-    else if (type === AddressTypeCode.Mail) {
-      this.mailAddressValidationPopupVisibility$.next(false);
-      this.mailAddressEntered = undefined;
-      this.mailAddressSuggested = undefined;
-    }
-    this.selectedAddressForm.reset();
+  onFileRemoved(e: SelectEvent) {
+    console.log('removed');
   }
 }

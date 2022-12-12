@@ -65,8 +65,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
-    ).subscribe(([navigationType, isSaved]) => {      
+    ).subscribe(([navigationType, isSaved]:[NavigationType, any]) => {      
       if (isSaved) {
+        this.workFlowFacade.clientId = isSaved?.clientId;
+        this.workFlowFacade.clientCaseEligibilityId = isSaved?.clientCaseEligibilityId;
         this.workFlowFacade.navigate(navigationType);
       }
     });

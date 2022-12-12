@@ -1,6 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
@@ -492,11 +493,8 @@ export class ContactDataService {
       , contactInfo);
   }
 
-  validateAddress(){
-    
-  }
-
-  getUrl(clientId: number, clientCaseEligibilityId: string) {
+    /** Private methods **/
+  private getUrl(clientId: number, clientCaseEligibilityId: string) {
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 }
