@@ -18,6 +18,15 @@ export class RemoveEmployerConfirmationComponent {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
+  handleSnackBar(title : string , subtitle : string ,type : string )
+  {    
+    const snackbarMessage: SnackBar = {
+      title: title,
+      subtitle: subtitle,
+      type: type,
+    };
+    this.snackbarSubject.next(snackbarMessage);
+  }
   clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
   /** Constructor **/
   constructor(private readonly employmentFacade: EmploymentFacade) { }
@@ -36,24 +45,12 @@ export class RemoveEmployerConfirmationComponent {
     if (this.selectedEmployer) {
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
-          // this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
           this.deleteUpdateEmploymentEvent.next(response);  
           this.onRemoveEmployerConfirmationClosed();
-          const snackbarMessage: SnackBar = {
-            title: 'Sucess',
-            subtitle: 'Employer Successfully Removed',
-            type: 'info',
-          };
-          this.snackbarSubject.next(snackbarMessage);
+          this.handleSnackBar('Success' ,'Employer Successfully Removed','info');
         },
         error: (err) => {
-          console.error('err', err);
-          const snackbarMessage: SnackBar = {
-            title: err.code + ' / ' + err.name,
-            subtitle: err.message,
-            type: 'error',
-          };
-          this.snackbarSubject.next(snackbarMessage);
+          this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
         },
       }
       );

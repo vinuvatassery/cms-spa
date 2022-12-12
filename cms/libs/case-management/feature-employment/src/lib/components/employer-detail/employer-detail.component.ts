@@ -7,9 +7,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { EmploymentPageComponent } from '../../containers/employment-page/employment-page.component';
- 
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {
   Validators,
   FormGroup,
@@ -46,6 +44,15 @@ export class EmployerDetailComponent {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
+  handleSnackBar(title : string , subtitle : string ,type : string )
+  {    
+    const snackbarMessage: SnackBar = {
+      title: title,
+      subtitle: subtitle,
+      type: type,
+    };
+    this.snackbarSubject.next(snackbarMessage);
+  }
   constructor(private readonly employmentFacade: EmploymentFacade) {}
 
   /** Lifecycle hooks **/
@@ -78,7 +85,7 @@ export class EmployerDetailComponent {
         }
       },
       error: (err) => {
-        console.error('err', err);
+      
       },
     }
     );
@@ -104,49 +111,24 @@ export class EmployerDetailComponent {
         this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
         if (this.isAdd) {
           this.employmentFacade.createEmployer(this.employer).subscribe({
-            next: (response) => {
-              console.log(response);
-
+            next: (response) => { 
               this.addUpdateEmploymentEvent.next(response);  
               this.closeModal.emit(true);
-              const snackbarMessage: SnackBar = {
-                title: 'Sucess',
-                subtitle: 'Employer Successfully added',
-                type: 'success',
-              };
-              this.snackbarSubject.next(snackbarMessage);
+              this.handleSnackBar('Success' ,'Employer Successfully added','success');    
             },
-            error: (err) => {
-              console.error('err', err);
-              const snackbarMessage: SnackBar = {
-                title: err.code + ' / ' + err.name,
-                subtitle: err.message,
-                type: 'error',
-              };
-              this.snackbarSubject.next(snackbarMessage);
+            error: (err) => { 
+              this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
             },
           });
         } else {
           this.employmentFacade.updateEmployer(this.employer).subscribe({
-            next: (response) => {
-              console.log(response);
+            next: (response) => { 
               this.addUpdateEmploymentEvent.next(response);  
               this.closeModal.emit(true);
-              const snackbarMessage: SnackBar = {
-                title: 'Sucess',
-                subtitle: 'Employer Successfully added',
-                type: 'success',
-              };
-              this.snackbarSubject.next(snackbarMessage);
+              this.handleSnackBar('Success' ,'Employer Successfully added','success') ; 
             },
             error: (err) => {
-              console.error('err', err);
-              const snackbarMessage: SnackBar = {
-                title: err.code + ' / ' + err.name,
-                subtitle: err.message,
-                type: 'error',
-              };
-              this.snackbarSubject.next(snackbarMessage);
+              this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
             },
           });
         }

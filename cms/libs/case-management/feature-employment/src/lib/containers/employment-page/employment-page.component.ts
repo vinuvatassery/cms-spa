@@ -114,12 +114,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
       .subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (err) => {
-          console.error('err', err);
-        },
+        next: (response) => {   },
+        error: (err) => {  },
       });
     return this.employmentFacade.save();
   }
