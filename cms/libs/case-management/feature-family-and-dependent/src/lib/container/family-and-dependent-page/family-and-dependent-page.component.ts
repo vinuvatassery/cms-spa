@@ -4,9 +4,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
-import { filter, first, forkJoin, mergeMap, of, Subject, Subscription, take } from 'rxjs';
+import { filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent } from '@cms/case-management/domain';
 /** Enums **/
 import {  NavigationType } from '@cms/case-management/domain';
 
@@ -31,6 +31,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
   dependentGetExisting$ =this.familyAndDependentFacade.dependentGetExisting$;
   familyfacadesnackbar$ = this.familyAndDependentFacade.familyfacadesnackbar$;
   dependentdelete$  = this.familyAndDependentFacade.dependentdelete$;
+  dependentAddNewGet$= this.familyAndDependentFacade.dependentAddNewGet$
+  dependentUpdateNew$=this.familyAndDependentFacade.dependentUpdateNew$
   isFamilyGridDisplay! : boolean;
   clientCaseId! : string;
   sessionId! : string;

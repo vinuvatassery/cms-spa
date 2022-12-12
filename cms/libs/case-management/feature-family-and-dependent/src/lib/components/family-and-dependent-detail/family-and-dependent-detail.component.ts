@@ -241,11 +241,10 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         relationshipCode: this.familyMemberForm?.controls["relationshipCode"].value,       
         firstName:  this.familyMemberForm?.controls["firstName"].value,
         lastName:  this.familyMemberForm?.controls["lastName"].value,       
-        ssn:  this.familyMemberForm?.controls["ssn"].value,
+        ssn:  this.familyMemberForm?.controls["ssn"].value?.replace('-', '').replace('-', ''),
         dob: this.familyMemberForm?.controls["dob"].value,       
         enrolledInInsuranceFlag: this.familyMemberForm?.controls["enrolledInInsuranceFlag"].value      
-      }
-    
+      }    
     this.addUpdateDependentEvent.next(dependent);   
    }
   }

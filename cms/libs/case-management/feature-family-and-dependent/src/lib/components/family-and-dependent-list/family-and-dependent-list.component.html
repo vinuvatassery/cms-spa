@@ -27,10 +27,10 @@
       *ngIf="dataItem.dependentTypeCode===CAClient"
       routerLink="../../cases/case360/{{ dataItem.dependentClientId }}"     
       >
-        {{ dataItem.firstName + ''+  dataItem.lastName}}
+        {{ dataItem.firstName + ' '+  dataItem.lastName}}
       </button>
     <div *ngIf="dataItem.dependentTypeCode===Dependent"> 
-       {{ dataItem.firstName + ''+  dataItem.lastName }}</div>
+       {{ dataItem.firstName + ' '+  dataItem.lastName }}</div>
     </ng-template>   
     </kendo-grid-column>
     <kendo-grid-column  [width]="100"    
