@@ -87,7 +87,7 @@ export class FamilyAndDependentFacade {
   AddNewDependent(dependent: Dependent): void {
     this.dependentDataService.AddNewDependent(dependent).subscribe({
       next: (addNewdependentsResponse) => {
-        if(addNewdependentsResponse == true)
+        if(addNewdependentsResponse)
         {
          this.handleSnackBar('Success' ,'Added New Dependent','success')     
         }
@@ -203,8 +203,8 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  loadDependentSearch(): void {
-    this.dependentDataService.loadDependentSearch().subscribe({
+  loadDependentSearch(text : string): void {
+    this.dependentDataService.SearchDependents(text).subscribe({
       next: (dependentSearchResponse) => {
 
         Object.values(dependentSearchResponse).forEach((key) => {            

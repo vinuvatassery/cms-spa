@@ -115,7 +115,9 @@ export class DependentDataService {
      ///8update client as dependent
      AddExistingDependent(data : any) {
       return this.http.put(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${data?.clientId}&dependentClientId=${data?.dependentClientId}&dependentType=${data?.dependentType}&relationshipCode=${data?.relationshipCode}&clientDependentId=${data?.clientDependentId}`,
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client?clientId=${data?.clientId}
+        &dependentClientId=${data?.dependentClientId}&dependentType=${data?.dependentType}&relationshipCode=${data?.relationshipCode}&
+        clientDependentId=${data?.clientDependentId}&deletedClientDependentId=${data.selectedClientDependentId}`,
         null
       );
     }

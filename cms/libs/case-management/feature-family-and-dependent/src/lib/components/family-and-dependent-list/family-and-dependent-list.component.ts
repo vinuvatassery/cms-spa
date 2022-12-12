@@ -33,6 +33,8 @@ CAClient = DependentTypeCode.CAClient;
   @Input() dependentGet$ : any;
   @Input() dependentGetExisting$ :any;
   @Input() dependentdelete$ : any;
+  @Input() dependentAddNewGet$ : any;
+  @Input() dependentUpdateNew$ : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
@@ -217,6 +219,18 @@ CAClient = DependentTypeCode.CAClient;
 
   addUpdateDependentHandle(dependent : any) {
     this.addUpdateDependentEvent.next(dependent);
+
+    this.dependentAddNewGet$.pipe(first((addResponse: any ) => addResponse != null))
+    .subscribe((addResponse: any) =>
+    {  
+      if(addResponse?.clientDependentId)
+      {
+        this.loadFamilyDependents()
+        this.onFamilyMemberClosed()
+      }
+      
+    })
+
   }
 
   closeFamilyMemberForm(e : any)
