@@ -103,7 +103,7 @@ export class EmployerDetailComponent {
           this.employmentFacade.createEmployer(this.employer).subscribe({
             next: (response) => {
               console.log(response);
-              this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
+              // this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
               this.closeModal.emit(true);
               const snackbarMessage: SnackBar = {
                 title: 'Sucess',
@@ -126,7 +126,7 @@ export class EmployerDetailComponent {
           this.employmentFacade.updateEmployer(this.employer).subscribe({
             next: (response) => {
               console.log(response);
-              this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
+              // this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
               this.closeModal.emit(true);
               const snackbarMessage: SnackBar = {
                 title: 'Sucess',

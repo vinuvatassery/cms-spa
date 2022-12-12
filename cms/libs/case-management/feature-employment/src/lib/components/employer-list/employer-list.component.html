@@ -1,8 +1,27 @@
 <div class="flex-row">
   <div class="flex-col">
     <div class="app-c-table">
-      <kendo-grid  [pageSize]="pageSize" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
-      [resizable]="true" [columnMenu]="{ filter: true }" [kendoGridBinding]="employers$ | async">
+      <kendo-grid  [data]="employment$ | async"  #employersGrid
+      [pageSize]="state.take" 
+      [pageable]="true" 
+      [sortable]="true" 
+      [skip]="state.skip"
+      [groupable]="false"
+      [reorderable]="true"
+      [resizable]="true" 
+      [columnMenu]="{ filter: true }"
+      [sort]="state.sort"
+      (dataStateChange)="dataStateChange($event)"
+      >
+      <ng-template kendoGridColumnMenuTemplate let-service="service">
+        <span class="k-icon k-i-x" (click)="service.close()"
+          style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
+        <kendo-grid-columnmenu-sort [service]="service">
+        </kendo-grid-columnmenu-sort>
+        <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>   
+        <kendo-grid-columnmenu-lock [service]="service">
+        </kendo-grid-columnmenu-lock>
+      </ng-template>
         <kendo-grid-column field="employerName" title="Name of Employer">
         </kendo-grid-column>
         <kendo-grid-column field="dateOfHire" title="Date of Hire">
@@ -61,11 +80,10 @@
             <div class="d-flex align-items-center">
               <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
               <label class="mr-1">Rows Per Page</label>
-              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-                [valueField]="'value'" [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
-              <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
-
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
+              [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
+            <kendo-pager-info> </kendo-pager-info>
+            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
             <div class="d-flex">
               <kendo-pager-input></kendo-pager-input>

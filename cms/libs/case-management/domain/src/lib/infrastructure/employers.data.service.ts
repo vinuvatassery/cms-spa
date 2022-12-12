@@ -16,10 +16,11 @@ export class EmployersDataService {
   ) {}
 
   /** Public methods **/
-  loadEmployers(clientCaseEligibilityId : string) {
+  loadEmployers(clientCaseEligibilityId : string, skipcount : number,maxResultCount : number ,sort : string, sortType : string) {
     return this.http.get<ClientEmployer>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-employers/${clientCaseEligibilityId}`
+      // `/case-management/client-employers/${clientCaseEligibilityId}`
+      `/case-management/client-employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
   }
   loadEmployersDetails(

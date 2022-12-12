@@ -35,7 +35,7 @@ export class RemoveEmployerConfirmationComponent {
     if (this.selectedEmployer) {
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
-          this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
+          // this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
           this.onRemoveEmployerConfirmationClosed();
           const snackbarMessage: SnackBar = {
             title: 'Sucess',

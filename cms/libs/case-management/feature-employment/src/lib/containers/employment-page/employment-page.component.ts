@@ -28,10 +28,10 @@ import { NavigationType, StatusFlag } from '@cms/case-management/domain';
 export class EmploymentPageComponent implements OnInit, OnDestroy {
   /** Public Properties */
 
-  employers$ = this.employmentFacade.employers$;
+  employmentList$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
 
-  isEmployed = true;
+  isEmployedGridDisplay = true;
   isEmployedFlag = StatusFlag.Yes;
   clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
 
@@ -47,7 +47,10 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle Hooks */
   ngOnInit() {
-    this.loadEmployers();
+    this.employmentFacade.employers$.subscribe((data: any) => {
+      debugger;
+      console.log();
+    });
     this.addSaveSubscription();
   }
 
@@ -60,8 +63,23 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
-  loadEmployers(): void {
-    this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
+  loadEmploymentsHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+    // if((this.isEmployedGridDisplay ?? false) == false)
+    // {
+    this.employmentFacade.loadEmployers(
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType
+    );
+    // }
   }
 
   /** Private Methods **/
@@ -83,7 +101,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     let isValid = true;
     // TODO: validate the form
     if (isValid) {
-      if (this.isEmployed) {
+      if (this.isEmployedGridDisplay) {
         this.isEmployedFlag = StatusFlag.Yes;
       } else {
         this.isEmployedFlag = StatusFlag.No;
@@ -105,7 +123,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
 
   /** Internal event methods **/
   onUnEmployedClicked() {
-    this.isEmployed = !this.isEmployed;
+    this.isEmployedGridDisplay = !this.isEmployedGridDisplay;
   }
 
   onChangeCounterClick() {
