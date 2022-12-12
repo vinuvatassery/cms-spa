@@ -7,6 +7,7 @@ import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Validators,  FormGroup,  FormControl,  FormBuilder, } from '@angular/forms';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-income-page',
@@ -44,7 +45,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
     private completionStatusFacade: CompletionStatusFacade,
-    private workflowFacade: WorkflowFacade) { }
+    private workflowFacade: WorkflowFacade,
+    private lov:LovFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -69,15 +71,15 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
 
   private loadIncomeTypes() {
-    this.incomeFacade.loadDdlIncomeTypes();
+    this.lov.getIncomeTypeLovs();
   }
 
   private loadIncomeSources() {
-    this.incomeFacade.loadDdlIncomeSources();
+    this.lov.getIncomeSourceLovs();
   }
 
   private loadFrequencies() {
-    this.incomeFacade.loadDdlFrequencies();
+    this.lov.getIncomeFrequencyLovs();
   }
 
   private loadProofOfIncomeTypes() {
@@ -174,7 +176,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
   
   saveIncomeDetails(clientIncomeDetails:any){
-    this.incomeFacade.saveClientIncome(clientIncomeDetails)
+    //this.incomeFacade.saveClientIncome(clientIncomeDetails)
   }
 
 }

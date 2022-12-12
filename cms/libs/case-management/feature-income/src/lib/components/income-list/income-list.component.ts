@@ -96,7 +96,6 @@ export class IncomeListComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadIncomes();
-    this.loadDependentsProofofSchools();
     this.includeAddIncomeButtonAndFooterNote();
   }
 
@@ -125,32 +124,6 @@ export class IncomeListComponent implements OnInit {
   onIncomeClicked(editValue: boolean) {
     this.isOpenedIncome = true;
     this.isEdit = editValue;
-  }
-
-  receiveDetailFromIcomeDetails($event:any) {
-    if($event.incomeDetails){
-      this.incomeFacade.saveClientIncome($event.incomeDetails).subscribe({
-        next: (incomeResponse) => {
-          this.isOpenedIncome = $event.popupState;
-          const snackbarMessage: SnackBar = {
-            title: 'Success!',
-            subtitle: 'Income Successfully Added.',
-            type: 'success',
-          };
-          this.snackbarSubject.next(snackbarMessage);
-        },
-        error: (err) => {
-          debugger;
-          console.log(err)
-          const snackbarMessage: SnackBar = {
-            title: 'Error!',
-            subtitle: err.error.error.message,
-            type: 'error',
-          };
-          this.snackbarSubject.next(snackbarMessage);
-        },
-      });
-    }
   }
 
   closeIncomePopup($event:any){

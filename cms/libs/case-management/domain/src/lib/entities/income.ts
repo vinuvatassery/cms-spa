@@ -1,5 +1,6 @@
 export interface Income {
     clientIncomeId: string;
+    clientId:number;
     clientCaseEligibilityId: string;
     clientDependentId: string;
     clientSubsidyId: string;

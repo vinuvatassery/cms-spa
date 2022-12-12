@@ -76,8 +76,9 @@ export class IncomeFacade {
 
   loadIncomes(): void {
     this.contactDataService.loadIncomes().subscribe({
-      next: (incomesResponse) => {
-        this.incomesSubject.next(incomesResponse);
+      next: (incomesResponse:any) => {
+        this.incomesSubject.next(incomesResponse.clientIncomes);
+        this.dependentsProofofSchoolsSubject.next(incomesResponse.dependets);
       },
       error: (err) => {
         console.error('err', err);
@@ -103,10 +104,15 @@ export class IncomeFacade {
     return of(true);
   }
 
-  saveClientIncome(clientIncome:Income){
-    clientIncome.clientCaseEligibilityId="86E16107-6F5B-4773-AD04-2EAE238EFDFE";
-    clientIncome.clientDependentId="a3eed39e-59eb-4c2a-bba5-8b4ff3202457";
-    return this.contactDataService.saveIncome(clientIncome);
+  saveClientIncome(clientIncome:any,proofOfIncomeFile:any){
+    debugger
+    clientIncome.clientCaseEligibilityId="D323838C-80F3-4BB6-8FD4-EF6A9FE37335";
+    clientIncome.clientDependentId="00640C15-B796-4D12-9F3F-BD5A2B2DB2FD";
+    clientIncome.clientId=2;
+    const formData = new FormData();
+    Object.keys(clientIncome).forEach((key:any) => formData.append(key, clientIncome[key]));
+    formData.append('proofOfIncomeFile',proofOfIncomeFile[0])
+    return this.contactDataService.saveIncome(formData);
   }
 
 }

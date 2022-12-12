@@ -21,11 +21,19 @@ export class LovFacade {
   private lovcascadeSubject = new BehaviorSubject<Lov[]>([]);
   private lovcaseoriginSubject = new BehaviorSubject<Lov[]>([]);
   private lovPronounSubject = new BehaviorSubject<Lov[]>([]);
+  private lovIncomeSourceSubject = new BehaviorSubject<Lov[]>([]);
+  private lovIncomeTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovIncomeFrequencySubject = new BehaviorSubject<Lov[]>([]);
+  private lovProofOfIncomeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
   caseoriginlov$ = this.lovcaseoriginSubject.asObservable();
   pronounslov$ = this.lovPronounSubject.asObservable();
+  incomeSourcelov$ = this.lovIncomeSourceSubject.asObservable();
+  incomeTypelov$ = this.lovIncomeTypeSubject.asObservable();
+  incomeFrequencylov$ = this.lovIncomeFrequencySubject.asObservable();
+  proofOfIncomelov$ = this.lovProofOfIncomeSubject.asObservable();
 
         /** Public methods **/
 
@@ -61,5 +69,42 @@ getPronounLovs(): void {
     },
   });
   
+}
+
+getIncomeSourceLovs():void{
+  this.lovDataService.getLovsbyType(LovType.IncomeSource).subscribe({
+    next: (lovIncomeSourceResponse) => {
+      this.lovIncomeSourceSubject.next(lovIncomeSourceResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+
+getIncomeTypeLovs():void{
+  this.lovDataService.getLovsbyType(LovType.IncomeType).subscribe({
+    next: (lovIncomeTypeResponse) => {
+      this.lovIncomeTypeSubject.next(lovIncomeTypeResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+
+getIncomeFrequencyLovs():void{
+  this.lovDataService.getLovsbyType(LovType.Frequency).subscribe({
+    next: (lovIncomeFrequencyResponse) => {
+      this.lovIncomeFrequencySubject.next(lovIncomeFrequencyResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+
+getProofOfIncomeTypesLov(parentCode : string) {
+  return this.lovDataService.getLovsbyParent(LovType.ProofOfIncomeType, parentCode)
 }
 }

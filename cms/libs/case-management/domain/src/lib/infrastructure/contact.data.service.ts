@@ -98,9 +98,9 @@ export class ContactDataService {
   }
 
   loadIncomes() {
-    let params = new HttpParams();
-    params = params.append('clientCaseEligibilityId', '86E16107-6F5B-4773-AD04-2EAE238EFDFE');
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-income`,{params: params});
+    let clientId=2;
+    let clientCaseEligibilityId='D323838C-80F3-4BB6-8FD4-EF6A9FE37335'
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}`);
   }
 
   loadDependentsProofofSchools() {
@@ -423,6 +423,6 @@ export class ContactDataService {
   }
 
   saveIncome(clientIncome: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-income`, clientIncome);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
   }
 }

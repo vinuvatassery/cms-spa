@@ -166,12 +166,12 @@
     <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
     <div class="app-c-table">
       <kendo-grid [data]="dependentsProofofSchools$ | async">
-        <kendo-grid-column field="Name" title="Name" [width]="130">
+        <kendo-grid-column field="name" title="Name" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column field="Age" title="Age" [width]="130">
+        <kendo-grid-column field="age" title="Age" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column
-          field="Relationship"
+          field="relationship"
           title="Relationship"
           [width]="130"
         ></kendo-grid-column>
@@ -243,7 +243,7 @@
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>
-  <case-management-income-detail (sendDetailToIncomeList)="receiveDetailFromIcomeDetails($event)" (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit"> </case-management-income-detail>
+  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit"> </case-management-income-detail>
 </kendo-dialog>
 
 
@@ -254,4 +254,3 @@
   ></common-delete-confirmation>
 </div>
 
-<common-notification-snack-bar [data$]="snackbar$"> </common-notification-snack-bar>

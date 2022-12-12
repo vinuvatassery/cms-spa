@@ -7,8 +7,8 @@
       <div class="flex-row">
         <div class="flex-col">
           <kendo-floatinglabel text="Income Source">
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeSources$ | async"
-              aria-label="income sources" name="income sources" formControlName="incomeSourceCode" #incomeSources>
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeSources$" textField="lovDesc"
+            valueField="lovCode" [valuePrimitive]="true" aria-label="income sources" name="income sources" formControlName="incomeSourceCode" #incomeSources>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeSourceCode'].valid"> income sources is required
@@ -16,8 +16,8 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Income Type">
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeTypes$ | async"
-              aria-label="income types" name="income types" formControlName="incomeTypeCode" #incomeTypes>
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeTypes$" textField="lovDesc"
+            valueField="lovCode" [valuePrimitive]="true" (valueChange)="loadProofOfIncomeTypes()" aria-label="income types" name="income types" formControlName="incomeTypeCode" #incomeTypes>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeTypeCode'].valid"> income types is required
@@ -39,8 +39,8 @@
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Frequency">
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="frequencies$ | async"
-              aria-label="frequencies" name="frequencies" formControlName="incomeFrequencyCode" #incomeFrequencies>
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="frequencies$" textField="lovDesc"
+            valueField="lovCode" [valuePrimitive]="true" aria-label="frequencies" name="frequencies" formControlName="incomeFrequencyCode" #incomeFrequencies>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeFrequencyCode'].valid"> income Frequency is required
@@ -82,18 +82,18 @@
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
           <kendo-upload aria-label="upload proof" name="upload proof"
-            [restrictions]="uploadFileRestrictions.fileRestrictions" formControlName="incomeUploadedProof"
+            [restrictions]="uploadFileRestrictions.fileRestrictions" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
             #incomeUploadedProof>
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeUploadedProof'].valid"> upload proof is required
+          <kendo-formerror *ngIf="proofOfIncomeValidator"> upload proof is required
           </kendo-formerror>
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
           <kendo-floatinglabel text="Proof of Income Type">
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="proofOfIncomeTypes$ | async"
-              (valueChange)="selectProofOfIncome()" aria-label="proof of income types" name="proof of income types"
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="proofOfIncomeTypes$" textField="lovDesc"
+            valueField="lovCode" [valuePrimitive]="true" (valueChange)="selectProofOfIncome()" aria-label="proof of income types" name="proof of income types"
               formControlName="proofOfIncomeTypes" #proofOfIncomeTypes>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
@@ -102,7 +102,7 @@
 
         </div>
 
-        <div class="flex-col" *ngIf="!hasNoProofOfIncome && incomeTypesOther === 'other'">
+        <div class="flex-col" *ngIf="!hasNoProofOfIncome && incomeTypesOther === 'O'">
           <kendo-floatinglabel text="Name of other Proof">
             <kendo-textbox [fillMode]="formUiStyle.dropDownFillMode" aria-label="Other income" name="Other income"
               formControlName="otherProofOfIncome" #otherProofOfIncome>
