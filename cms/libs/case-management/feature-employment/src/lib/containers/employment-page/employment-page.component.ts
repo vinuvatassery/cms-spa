@@ -26,17 +26,20 @@ import { NavigationType, StatusFlag } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentPageComponent implements OnInit, OnDestroy {
-  /** Public Properties */
-
+  /** Public Methods */
   employmentList$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
-
-  isEmployedGridDisplay = true;
-  isEmployedFlag = StatusFlag.Yes;
-  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
+  employmentStatus$ = this.employmentFacade.employmentStatusGet$;
+  clientCaseId!: string;
+  sessionId!: string;
+  isEmpListGridLoaderShow = false;
 
   /** Private properties **/
   private saveClickSubscription!: Subscription;
+  clientId = 1;
+  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
+  isEmployedGridDisplay = true;
+  isEmployedFlag!: StatusFlag;
 
   /** Constructor */
   constructor(
@@ -46,11 +49,9 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   ) {}
 
   /** Lifecycle Hooks */
+ 
   ngOnInit() {
-    this.employmentFacade.employers$.subscribe((data: any) => {
-      debugger;
-      console.log();
-    });
+    this.loadEmploymentStatus();
     this.addSaveSubscription();
   }
 
@@ -58,12 +59,20 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
   }
 
-  /** Private Methods */
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
+  private loadEmploymentStatus(): void {
+    this.employmentFacade.loadEmploymentStatus(this.clientCaseEligibilityId);
+    //   this.checkBoxSubscription=
+    //   this.employmentStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe((x: boolean)=>  {
+    //   this.isEmployedGridDisplay = x
+    //  });
+  }
+
   loadEmploymentsHandle(gridDataRefinerValue: any): void {
+    this.isEmpListGridLoaderShow = true;
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
@@ -79,10 +88,12 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
       gridDataRefiner.sort,
       gridDataRefiner.sortType
     );
+    this.isEmpListGridLoaderShow = false;
+
     // }
   }
 
-  /** Private Methods **/
+  /** Internal event methods **/
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
       .pipe(
@@ -98,30 +109,21 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   }
 
   private save() {
-    let isValid = true;
-    // TODO: validate the form
-    if (isValid) {
-      if (this.isEmployedGridDisplay) {
-        this.isEmployedFlag = StatusFlag.Yes;
-      } else {
-        this.isEmployedFlag = StatusFlag.No;
-      }
-      this.employmentFacade
-        .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
-        .subscribe({
-          next: (response) => {
-            console.log(response);
-          },
-          error: (err) => {
-            console.error('err', err);
-          },
-        });
-      return this.employmentFacade.save();
-    }
-    return of(false);
+    this.isEmployedFlag =
+      this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
+    this.employmentFacade
+      .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (err) => {
+          console.error('err', err);
+        },
+      });
+    return this.employmentFacade.save();
   }
 
-  /** Internal event methods **/
   onUnEmployedClicked() {
     this.isEmployedGridDisplay = !this.isEmployedGridDisplay;
   }

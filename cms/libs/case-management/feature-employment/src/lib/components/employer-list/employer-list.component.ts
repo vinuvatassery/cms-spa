@@ -24,10 +24,11 @@ export class EmployerListComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() employment$: any;
+  @Input() isGridLoaderShow: any;
   @Output() loadEmploymentsEvent = new EventEmitter<any>(); 
-  
+  @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/ 
-  isAddEmployerButtonDisplayed!: boolean;
+  isAddEmployerButtonDisplayed!: boolean; 
   isAdd = true;
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
@@ -81,7 +82,11 @@ export class EmployerListComponent implements OnInit {
   }
   
   /** Private methods **/
-
+  pageselectionchange(data: any){
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadEmployments();
+  }
   private addEmployerButtonDisplay() {
     if (this.data === ScreenType.Case360Page) {
       this.isAddEmployerButtonDisplayed = false;
@@ -111,6 +116,9 @@ export class EmployerListComponent implements OnInit {
     }
   }
   
+  updateEmploymentHandle(employements : any) {
+    this.loadEmployments();
+  }
   onRemoveEmployerConfirmationClosed() {
     this.isRemoveEmployerConfirmationPopupOpened = false;
   }
@@ -119,7 +127,7 @@ export class EmployerListComponent implements OnInit {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
-    this.state=stateData;
+    this.state= stateData;
     this.loadEmployments();   
 }
 

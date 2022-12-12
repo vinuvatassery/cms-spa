@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { EmploymentPageComponent } from '../../containers/employment-page/employment-page.component';
  
 import {
   Validators,
@@ -26,6 +27,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerDetailComponent {
+  employmentList$ = this.employmentFacade.employers$;
   isRemoveEmployerConfirmationPopupOpened = false;
   employer: ClientEmployer = new ClientEmployer();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -35,6 +37,7 @@ export class EmployerDetailComponent {
   @Input() isAdd = true;
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
+  @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
 
   public empDetailsForm: FormGroup = new FormGroup({
     empName: new FormControl('', []),
@@ -103,7 +106,8 @@ export class EmployerDetailComponent {
           this.employmentFacade.createEmployer(this.employer).subscribe({
             next: (response) => {
               console.log(response);
-              // this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
+
+              this.addUpdateEmploymentEvent.next(response);  
               this.closeModal.emit(true);
               const snackbarMessage: SnackBar = {
                 title: 'Sucess',
@@ -126,7 +130,7 @@ export class EmployerDetailComponent {
           this.employmentFacade.updateEmployer(this.employer).subscribe({
             next: (response) => {
               console.log(response);
-              // this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
+              this.addUpdateEmploymentEvent.next(response);  
               this.closeModal.emit(true);
               const snackbarMessage: SnackBar = {
                 title: 'Sucess',

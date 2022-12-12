@@ -14,6 +14,7 @@ export class RemoveEmployerConfirmationComponent {
   /** Public properties **/
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
+  @Output() deleteUpdateEmploymentEvent = new EventEmitter<any>();
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
@@ -36,6 +37,7 @@ export class RemoveEmployerConfirmationComponent {
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
           // this.employmentFacade.loadEmployers(this.clientCaseEligibilityId);
+          this.deleteUpdateEmploymentEvent.next(response);  
           this.onRemoveEmployerConfirmationClosed();
           const snackbarMessage: SnackBar = {
             title: 'Sucess',

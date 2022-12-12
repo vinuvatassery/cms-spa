@@ -16,56 +16,68 @@ export class EmployersDataService {
   ) {}
 
   /** Public methods **/
-  loadEmployers(clientCaseEligibilityId : string, skipcount : number,maxResultCount : number ,sort : string, sortType : string) {
-    return this.http.get<ClientEmployer>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      // `/case-management/client-employers/${clientCaseEligibilityId}`
-      `/case-management/client-employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+
+  ///2load dependent status  for checkbox
+  loadEmploymentStatusService(clientCaseEligibilityId: string) {
+    return this.http.get<ClientEmployer[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/client-employers/${clientCaseEligibilityId}/employer-status`
     );
   }
-  loadEmployersDetails(
+
+  loadEmploymentService(
+    clientCaseEligibilityId: string,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string
+  ) {
+    return this.http.get<ClientEmployer>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        // `/case-management/client-employers/${clientCaseEligibilityId}`
+        `/case-management/client-employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+  }
+  loadEmployersDetailsService(
     clientCaseEligibilityId: string,
     clientEmployerId: string
   ) {
     return this.http.get<ClientEmployer>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
     );
   }
-  createClientEmployer(clientEmployer: ClientEmployer) {
+  createClientNewEmployerService(clientEmployer: ClientEmployer) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-employers`,
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/client-employers`,
       clientEmployer
     );
   }
-
-  updateClientEmployer(clientEmployer: ClientEmployer) {
+  updateClientEmployerService(clientEmployer: ClientEmployer) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-employers`,
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/client-employers`,
       clientEmployer
     );
   }
-
-  deleteClientEmployer(
+  removeClientEmployerService(
     clientCaseEligibilityId: string,
     clientEmployerId: string
   ) {
     return this.http.delete(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
     );
   }
-
-
-  unEmploymentChecked(
+  employmentStatusUpdateService(
     clientCaseEligibilityId: string,
     isEmployed: string
   ) {
     return this.http.patch(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-employers/${clientCaseEligibilityId}/${isEmployed}`, ''
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/client-employers/${clientCaseEligibilityId}/${isEmployed}`,
+      ''
     );
   }
 }

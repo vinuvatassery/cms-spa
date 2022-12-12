@@ -16,10 +16,11 @@ export class EmploymentFacade {
   /** Private properties **/
   private employersSubject = new Subject<any>();
   private employersDetailsSubject = new BehaviorSubject<any>([]);
-
+  private employmentStatusGetSubject = new Subject<any>();
   /** Public properties **/
   employers$ = this.employersSubject.asObservable();
   employersDetails$ = this.employersDetailsSubject.asObservable();
+  employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
 
   /** Constructor**/
   constructor(
@@ -28,6 +29,17 @@ export class EmploymentFacade {
   ) {}
 
   /** Public methods **/
+  loadEmploymentStatus(clientCaseEligibilityId : string) : void {
+    this.employersDataService.loadEmploymentStatusService(clientCaseEligibilityId).subscribe({
+      next: (employmentStatusGetResponse) => {
+        this.employmentStatusGetSubject.next(employmentStatusGetResponse);
+      },
+      error: (err) => {  
+        // this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+      },
+    });
+  }
+
   loadEmployers(
     clientCaseEligibilityId: string,
     skipcount: number,
@@ -36,7 +48,7 @@ export class EmploymentFacade {
     sortType: string
   ) {
     this.employersDataService
-      .loadEmployers(
+      .loadEmploymentService(
         clientCaseEligibilityId,
         skipcount,
         maxResultCount,
@@ -45,7 +57,6 @@ export class EmploymentFacade {
       )
       .subscribe({
         next: (employersResponse: any) => {
-          // this.employersSubject.next(employersResponse);
 
           if (employersResponse) {
             const gridView: any = {
@@ -75,7 +86,7 @@ export class EmploymentFacade {
     clientCaseEligibilityId: string,
     clientEmployerId: string
   ) {
-    return this.employersDataService.loadEmployersDetails(
+    return this.employersDataService.loadEmployersDetailsService(
       clientCaseEligibilityId,
       clientEmployerId
     );
@@ -89,30 +100,31 @@ export class EmploymentFacade {
     //   },
     // });
   }
-  save(): Observable<boolean> {
-    //TODO: save api call
-    return of(true);
-  }
-
   createEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.employersDataService.createClientEmployer(clientEmployer);
+    return this.employersDataService.createClientNewEmployerService(clientEmployer);
   }
 
   updateEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.employersDataService.updateClientEmployer(clientEmployer);
+    return this.employersDataService.updateClientEmployerService(clientEmployer);
   }
 
   deleteEmployer(clientCaseEligibilityId: string, clientEmployerId: string) {
-    return this.employersDataService.deleteClientEmployer(
+    return this.employersDataService.removeClientEmployerService(
       clientCaseEligibilityId,
       clientEmployerId
     );
   }
 
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-    return this.employersDataService.unEmploymentChecked(
+    return this.employersDataService.employmentStatusUpdateService(
       clientCaseEligibilityId,
       isEmployed
     );
   }
+
+  save(): Observable<boolean> {
+    //TODO: save api call
+    return of(true);
+  }
+  
 }

@@ -25,6 +25,7 @@
           <case-management-employer-list
           [employment$]="employmentList$"
           (loadEmploymentsEvent)="loadEmploymentsHandle($event)"
+          [isGridLoaderShow]="isEmpListGridLoaderShow"
           ></case-management-employer-list>
         </div>
       </div>
