@@ -162,7 +162,6 @@
  
   <div class="flex-row">
     <div class="flex-col flex-col-4">
-      <!-- [disabled]="isSSNChecked" -->
       <kendo-floatinglabel text="Social Security Number">
         <kendo-textbox aria-label="social security number"  
           [fillMode]="formUiStyle.inputFillMode" 
@@ -349,54 +348,54 @@
 
 
     <common-optionbutton-list
-    [appInfoForm]="appInfoForm"
-    [rdoInputlov]="rdoMaterials$"
-    [dropdownInutLov]="materialsyeslov$"
-    [optionButtonValid]="materialOptionButtonValid"
-    [textFieldDisable] ="yesMaterialDisable"
-    [OptionControlerName] ="'selectedMaterial'"
-    [textControlerName]="'yesMaterial'"
-    [textFieldType]="'dropDown'"
-    [textFieldAfter]="'YES'">    
-    </common-optionbutton-list>
-
-
-    <!-- <case-management-client-edit-view-disability
-    [appInfoForm]="appInfoForm"
-    [rdoInputlov]="rdoMaterials$"
-    [dropdownInutLov]="materialsyeslov$"
-    [materialOptionButtonValid]="materialOptionButtonValid"
-    [textFieldDisable] ="yesMaterialDisable"
-    [OptionControlerName] ="'selectedMaterial'"
-    [textControlerName]="'yesMaterial'"
-    [textFieldType]="'dropDown'"
-    ></case-management-client-edit-view-disability> -->
-    
-   
+          [appInfoForm]="appInfoForm"
+          [rdoInputlov]="rdoMaterials$"
+          [dropdownInutLov]="materialsyeslov$"
+          [optionButtonValid]="materialOptionButtonValid"
+          [textFieldDisable] ="yesMaterialDisable"
+          [OptionControlerName] ="'materialInAlternateFormatCode'"
+          [textControlerName]="'materialInAlternateFormatDesc'"
+          [textFieldType]="'dropDown'"
+          [textFieldAfter]="'YES'"
+          [textPlaceholderText]="'Select formats'"
+          [textValidationMessage]="'Material is required.'">    
+    </common-optionbutton-list>   
   </div>
 
   <div class="flex-row">
-    <div class="flex-col flex-col-4">
+    <div class="flex-col flex-col-4">   
       <kendo-floatinglabel text="Spoken language">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSpokenLanguages$ | async">
-        </kendo-dropdownlist>
+        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+         [data]="spokenWrittenLanguagelov$ | async"
+          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+          formControlName="spokenLanguage">
+      </kendo-dropdownlist>  
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken language is required.</kendo-formerror>
     </div>
   </div>
   <div class="flex-row">
-    <div class="flex-col flex-col-4">
+    <div class="flex-col flex-col-4">    
       <kendo-floatinglabel text="Written language">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlWrittenLanguages$ | async">
-        </kendo-dropdownlist>
+        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+         [data]="spokenWrittenLanguagelov$ | async"
+        textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+        formControlName="writtenLanguage">
+      </kendo-dropdownlist>  
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written language is required.</kendo-formerror>
     </div>
   </div>
   <div class="flex-row">
-    <div class="flex-col flex-col-4">
+    <div class="flex-col flex-col-4">    
       <kendo-floatinglabel text="English proficiency">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEnglishProficiencies$ | async">
-        </kendo-dropdownlist>
+        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+         [data]="englishProficiencylov$ | async"
+        textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+        formControlName="englishProficiency">
+      </kendo-dropdownlist>  
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English proficiency is required.</kendo-formerror>
     </div>
   </div>
 </section>
@@ -406,269 +405,93 @@
 
   <h5>Needs interpreter?</h5>
   <common-optionbutton-list
-  [appInfoForm]="appInfoForm"
-  [rdoInputlov]="rdoInterpreters$"
-  [optionButtonValid]="interpreterOptionButtonValid"
-  [textFieldDisable] ="interpreterTextDisable"
-  [OptionControlerName] ="'selectedInterpreter'"
-  [textControlerName]="'yesInterpreter'"
-  [textFieldType]="'textField'"
-  [textFieldAfter]="'YES'">
+        [appInfoForm]="appInfoForm"
+        [rdoInputlov]="rdoMaterials$"
+        [optionButtonValid]="interpreterOptionButtonValid"
+        [textFieldDisable] ="interpreterTypeInputDisable"
+        [OptionControlerName] ="'interpreterCode'"
+        [textControlerName]="'interpreterType'"
+        [textFieldType]="'textField'"
+        [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Type of interpreter'"
+        [textValidationMessage]="'Type is required.'"
+        [textFieldMaxLimit]="50">
   </common-optionbutton-list>
-
-
-    <!-- <case-management-client-edit-view-disability
-    [appInfoForm]="appInfoForm"
-    [rdoInputlov]="rdoMaterials$"
-    [dropdownInutLov]="materialsyeslov$"
-    [materialOptionButtonValid]="materialOptionButtonValid"
-    [textFieldDisable] ="interpreterTextDisable"
-    [OptionControlerName] ="'seletedInterpreter'"
-    [textControlerName]="'yesInterpreter'"
-    [textFieldType]="'textField'"
-    ></case-management-client-edit-view-disability> -->
-
-
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let interpreter of rdoInterpreters$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ interpreter.id }}"
-        value="{{ interpreter.value }}"
-        name="rdoInterpreter"
-        (click)="onInterpreterRdoClicked($event)"
-        aria-labelledby="needsInterpreter"
-        tabindex="6"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ interpreter.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="interpreter.id === 1"
-        text="Type of interpreter"
-        
-      >      
-        <kendo-textbox aria-label="type of interpreter" [disabled]="isInterpreterTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </span>
-  </div> -->
 </section>
 <section>
   <h5 class="mt-3">Deaf or serious difficulty hearing?</h5>
     <common-optionbutton-list
-    [appInfoForm]="appInfoForm"
-    [rdoInputlov]="rdoInterpreters$"
-    [optionButtonValid]="deafOrHearingOptionButtonValid"
-    [textFieldDisable] ="deafOrHearingTextDisable"
-    [OptionControlerName] ="'selecteddeafOrHearing'"
-    [textControlerName]="'yesdeafOrHearing'"
-    [textFieldType]="'numericField'"
-    [textFieldAfter]="'YES'">
-    </common-optionbutton-list>
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let deaf of rdoDeafs$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ deaf.id }}"
-        value="{{ deaf.value }}"
-        name="rdoHearingDifficulty"
-        (click)="onDeafRdoClicked($event)"
-        aria-labelledby="difficultyInHearing"
-        tabindex="7"
-      />
-      <kendo-label class="k-radio-label" text="{{ deaf.value }}"></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="deaf.id === 1"
-        text="Age this condition began"
-        
-      >
-     
-        <kendo-textbox aria-label="age this condition began" [disabled]="isDeafTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </span>
-  </div> -->
+          [appInfoForm]="appInfoForm"
+          [rdoInputlov]="rdoMaterials$"
+          [optionButtonValid]="deafOrHearingOptionButtonValid"
+          [textFieldDisable] ="startAgeDeafOrHearingInputDisable"
+          [OptionControlerName] ="'deafOrHearingCode'"
+          [textControlerName]="'startAgeDeafOrHearing'"
+          [textFieldType]="'numericField'"
+          [textFieldAfter]="'YES'"
+          [textPlaceholderText]="'Age this condition began'"
+          [textValidationMessage]="'Age is required.'"
+          [textFieldMaxLimit]="120">
+    </common-optionbutton-list> 
 </section>
 <section>
   <h5 class="mt-3">
     Blind or serious difficulty seeing, even when wearing glasses?
   </h5>
   <common-optionbutton-list
-  [appInfoForm]="appInfoForm"
-  [rdoInputlov]="rdoInterpreters$"
-  [optionButtonValid]="blindOrSeriousDiffOptionButtonValid"
-  [textFieldDisable] ="blindOrSeriousDiffTextDisable"
-  [OptionControlerName] ="'selectedBlindOrSeriousDiff'"
-  [textControlerName]="'yesblindOrSeriousDiff'"
-  [textFieldType]="'numericField'"
-  [textFieldAfter]="'YES'">
-  </common-optionbutton-list>
-
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let blind of rdoBlinds$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ blind.id }}"
-        value="{{ blind.value }}"
-        name="rdoSeeingDifficulty"
-        (click)="onBlindRdoClicked($event)"
-        aria-labelledby="difficultyInSeeing"
-        tabindex="8"
-      />
-      <kendo-label class="k-radio-label" text="{{ blind.value }}"></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="blind.id === 1"
-        text="Age this condition began"
-        
-      >
-      
-        <kendo-textbox aria-label="age this condition began" [disabled]="isBlindTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div> -->
+      [appInfoForm]="appInfoForm"
+      [rdoInputlov]="rdoMaterials$"
+      [optionButtonValid]="blindOrSeriousDiffOptionButtonValid"
+      [textFieldDisable] ="startAgeBlindSeeingInputDisable"
+      [OptionControlerName] ="'blindSeeingCode'"
+      [textControlerName]="'startAgeBlindSeeing'"
+      [textFieldType]="'numericField'"
+      [textFieldAfter]="'YES'"
+      [textPlaceholderText]="'Age this condition began'"
+      [textValidationMessage]="'Age is required.'"
+      [textFieldMaxLimit]="120">
+  </common-optionbutton-list>    
 </section>
 <section>
   <h5 class="mt-3">Any limiting physical, mental, or emotional conditions?</h5>
   <common-optionbutton-list
-  [appInfoForm]="appInfoForm"
-  [rdoInputlov]="rdoInterpreters$"
-  [optionButtonValid]="physicalMentaDiffOptionButtonValid"
-  [textFieldDisable] ="physicalMentaDiffTextDisable"
-  [OptionControlerName] ="'selectedPhysicalMentaDiff'"
-  [textControlerName]="'yesPhysicalMentaDiff'">
-  </common-optionbutton-list>
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
-        id="conditions"
-        tabindex="9"
-      />
-      <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-    </span>
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
-        tabindex="10"
-        id="conditions1"
-      />
-      <kendo-label class="k-radio-label" text="No"></kendo-label>
-    </span>
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-        id="conditions2"
-        tabindex="11"
-      />
-      <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-    </span>
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer"
-        tabindex="12"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="Don’t want to answer"
-      ></kendo-label>
-    </span>
-  </div> -->
+      [appInfoForm]="appInfoForm"
+      [rdoInputlov]="rdoMaterials$"
+      [optionButtonValid]="physicalMentaDiffOptionButtonValid"
+      [OptionControlerName] ="'limitingConditionCode'">
+  </common-optionbutton-list>  
 </section>
 <section>
   <h5 class="mt-3">Serious difficulty walking or climbing stairs?</h5>
   <common-optionbutton-list
-  [appInfoForm]="appInfoForm"
-  [rdoInputlov]="rdoInterpreters$"
-  [optionButtonValid]="walkingOrClimbingOptionButtonValid"
-  [textFieldDisable] ="walkingOrClimbingTextDisable"
-  [OptionControlerName] ="'selectedWalkingOrClimbing'"
-  [textControlerName]="'yesWalkingOrClimbing'"
-  [textFieldType]="'numericField'"
-  [textFieldAfter]="'YES'">
-  </common-optionbutton-list>
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let walking of rdoWalked$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ walking.id }}"
-        value="{{ walking.value }}"
-        name="rdoClimbingStairs"
-        (click)="onWalkingRdoClicked($event)"
-        aria-labelledby="difficultyInWalking"
-        tabindex="13"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ walking.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="walking.id === 1"
-        text="Age this condition began"
-        
-      >
-        
-        <kendo-textbox aria-label="age this condition began" [disabled]="isWalkingTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div> -->
+      [appInfoForm]="appInfoForm"
+      [rdoInputlov]="rdoMaterials$"
+      [optionButtonValid]="walkingOrClimbingOptionButtonValid"
+      [textFieldDisable] ="startAgeWalkingClimbingDifficultyInputDisable"
+      [OptionControlerName] ="'walkingClimbingDifficultyCode'"
+      [textControlerName]="'startAgeWalkingClimbingDifficulty'"
+      [textFieldType]="'numericField'"
+      [textFieldAfter]="'YES'"
+      [textPlaceholderText]="'Age this condition began'"
+      [textValidationMessage]="'Age is required.'"
+      [textFieldMaxLimit]="120">
+  </common-optionbutton-list>   
 </section>
 <section>
   <h5 class="mt-3">Difficulty dressing or bathing?</h5>
   <common-optionbutton-list
-  [appInfoForm]="appInfoForm"
-  [rdoInputlov]="rdoInterpreters$"
-  [optionButtonValid]="dressingOrBathOptionButtonValid"
-  [textFieldDisable] ="dressingOrBathTextDisable"
-  [OptionControlerName] ="'selectedDressingOrBath'"
-  [textControlerName]="'yesDressingOrBath'"
-  [textFieldType]="'numericField'"
-  [textFieldAfter]="'YES'">
-  </common-optionbutton-list>
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let dressingorbathing of rdoDressedorBathed$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ dressingorbathing.id }}"
-        value="{{ dressingorbathing.value }}"
-        name="rdoDifficultyDressing"
-        (click)="onDressingorBathingRdoClicked($event)"
-        aria-labelledby="difficultyInDressing"
-        tabindex="14"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ dressingorbathing.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="dressingorbathing.id === 1"
-        text="Age this condition began"
-        
-      >
-      
-        <kendo-textbox aria-label="age this condition began" [disabled]="isDressingorBathingTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div> -->
+      [appInfoForm]="appInfoForm"
+      [rdoInputlov]="rdoMaterials$"
+      [optionButtonValid]="dressingOrBathOptionButtonValid"
+      [textFieldDisable] ="startAgeDressingBathingDifficultyInputDisable"
+      [OptionControlerName] ="'dressingBathingDifficultyCode'"
+      [textControlerName]="'startAgeDressingBathingDifficulty'"
+      [textFieldType]="'numericField'"
+      [textFieldAfter]="'YES'"
+      [textPlaceholderText]="'Age this condition began'"
+      [textValidationMessage]="'Age is required.'"
+      [textFieldMaxLimit]="120">
+  </common-optionbutton-list>  
 
 </section>
 <section>
@@ -677,43 +500,18 @@
     physical, mental, or emotional condition?
   </h5>
   <common-optionbutton-list
-  [appInfoForm]="appInfoForm"
-  [rdoInputlov]="rdoInterpreters$"
-  [optionButtonValid]="concentrateAndRememberDiffOptionButtonValid"
-  [textFieldDisable] ="concentrateAndRememberDiffTextDisable"
-  [OptionControlerName] ="'selectedConcentrateAndRememberDiff'"
-  [textControlerName]="'yesConcentrateAndRememberDiff'"
-  [textFieldType]="'numericField'"
-  [textFieldAfter]="'YES'">
+      [appInfoForm]="appInfoForm"
+      [rdoInputlov]="rdoMaterials$"
+      [optionButtonValid]="concentrateAndRememberDiffOptionButtonValid"
+      [textFieldDisable] ="startAgeConcentratingDifficultyInputDisable"
+      [OptionControlerName] ="'concentratingDifficultyCode'"
+      [textControlerName]="'startAgeConcentratingDifficulty'"
+      [textFieldType]="'numericField'"
+      [textFieldAfter]="'YES'"
+      [textPlaceholderText]="'Age this condition began'"
+      [textValidationMessage]="'Age is required.'"
+      [textFieldMaxLimit]="120">
   </common-optionbutton-list>
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let concentration of rdoConcentration$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ concentration.id }}"
-        value="{{ concentration.value }}"
-        name="rdoEmotionalCondition"
-        (click)="onConcentrationRdoClicked($event)"
-        aria-labelledby="difficultyInConcentrating"
-        tabindex="15"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ concentration.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="concentration.id === 1"
-        text="Age this condition began"
-        
-      >
-    
-
-        <kendo-textbox aria-label="age this condition began" [disabled]="isConcentrationTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div> -->
 </section>
 <section>
   <h5 class="mt-3">
@@ -721,41 +519,19 @@
     emotional condition?
   </h5>
   <common-optionbutton-list
-  [appInfoForm]="appInfoForm"
-  [rdoInputlov]="rdoInterpreters$"
-  [optionButtonValid]="seriesDiffOptionButtonValid"
-  [textFieldDisable] ="seriesDiffTextDisable"
-  [OptionControlerName] ="'selectedSeriesDiff'"
-  [textControlerName]="'yesSeriesDiff'"
-  [textFieldType]="'numericField'"
-  [textFieldAfter]="'YES'">
+      [appInfoForm]="appInfoForm"
+      [rdoInputlov]="rdoMaterials$"
+      [optionButtonValid]="seriesDiffOptionButtonValid"
+      [textFieldDisable] ="startAgeErrandsDifficultyInputDisable"
+      [OptionControlerName] ="'errandsDifficultyCode'"
+      [textControlerName]="'startAgeErrandsDifficulty'"
+      [textFieldType]="'numericField'"
+      [textFieldAfter]="'YES'"
+      [textPlaceholderText]="'Age this condition began'"
+      [textValidationMessage]="'Age is required.'"
+      [textFieldMaxLimit]="120">
   </common-optionbutton-list>
-  <!-- <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let errands of rdoErrands$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ errands.id }}"
-        value="{{ errands.value }}"
-        name="rdoDifficultyEmotional"
-        (click)="onErrandsRdoClicked($event)"
-        aria-labelledby="difficultyInDoingErrands"
-        tabindex="16"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ errands.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="errands.id === 1"
-        text="Age this condition began"
-        
-      >
-        <kendo-textbox aria-label="age this condition began" [disabled]="isErrandsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
-      </kendo-floatinglabel>
-    </span>
-  </div> -->
 </section>
 
 

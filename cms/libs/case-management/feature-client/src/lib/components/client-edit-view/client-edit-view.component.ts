@@ -41,7 +41,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
   rdoMaterials$ = this.lovFacade.materialslov$;  
   materialsyeslov$ = this.lovFacade.materialsyeslov$; 
-  rdoInterpreters$ = this.lovFacade.interpreterlov$; //this.clientfacade.rdoInterpreters$;
+  spokenWrittenLanguagelov$ = this.lovFacade.spokenWrittenLanguagelov$;
+  englishProficiencylov$ = this.lovFacade.englishProficiencylov$;
+  
+  //this.clientfacade.rdoInterpreters$;
 
   rdoDeafs$ = this.clientfacade.rdoDeaf$;
   rdoBlinds$ = this.clientfacade.rdoBlind$;
@@ -104,14 +107,21 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   textboxDisable!:boolean;
   optionButtonValid!:boolean;
   yesMaterialDisable!:boolean;
-  interpreterTextDisable!:boolean;
-  deafOrHearingTextDisable!:boolean;
-  blindOrSeriousDiffTextDisable!:boolean;
-  physicalMentaDiffTextDisable!:boolean;
-  walkingOrClimbingTextDisable!:boolean;
-  dressingOrBathTextDisable!:boolean;
-  concentrateAndRememberDiffTextDisable!:boolean;
-  seriesDiffTextDisable!:boolean;
+  interpreterTypeInputDisable!: boolean;
+  startAgeDeafOrHearingInputDisable!:boolean;
+  startAgeBlindSeeingInputDisable!:boolean;
+  startAgeWalkingClimbingDifficultyInputDisable!:boolean;
+  startAgeDressingBathingDifficultyInputDisable!:boolean;
+  startAgeConcentratingDifficultyInputDisable!:boolean;
+  startAgeErrandsDifficultyInputDisable!:boolean;
+  // interpreterTextDisable!:boolean;
+  // deafOrHearingTextDisable!:boolean;
+  // blindOrSeriousDiffTextDisable!:boolean;
+  // physicalMentaDiffTextDisable!:boolean;
+  // walkingOrClimbingTextDisable!:boolean;
+  // dressingOrBathTextDisable!:boolean;
+  // concentrateAndRememberDiffTextDisable!:boolean;
+  // seriesDiffTextDisable!:boolean;
 
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
@@ -172,9 +182,11 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
   setChangedPronoun(pronoun:any){
     this.pronounList = pronoun;
-    this.PronounChanges.emit(this.pronounList);
+    if(this.pronounList !== null){
+        this.PronounChanges.emit(this.pronounList);
+        this.assignPronounModelToForm();
+    }
   }
- 
   ngAfterViewChecked() {  
     var firstName = '';
     var lastName ='';
@@ -234,24 +246,26 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssnNotApplicable:  [''],
       registerToVote: [''],
       pronouns: [''] ,
-      selectedMaterial:[''],
-      yesMaterial:[''],
-      selectedInterpreter:[''],
-      yesInterpreter:[''],
-      selecteddeafOrHearing:[''],
-      yesdeafOrHearing:[''],
-      selectedBlindOrSeriousDiff:[''],
-      yesblindOrSeriousDiff:[''],
-      selectedPhysicalMentaDiff:[''],
-      yesPhysicalMentaDiff:[''],
-      selectedWalkingOrClimbing:[''],
-      yesWalkingOrClimbing:[''],
-      selectedDressingOrBath:[''],
-      yesDressingOrBath:[''],
-      selectedConcentrateAndRememberDiff:[''],
-      yesConcentrateAndRememberDiff:[''],
-      selectedSeriesDiff:[''],
-      yesSeriesDiff:['']
+      materialInAlternateFormatCode:[''],
+      materialInAlternateFormatDesc:[''],
+      interpreterCode:[''],
+      interpreterType:[''],
+      deafOrHearingCode:[''],
+      startAgeDeafOrHearing:[''],
+      blindSeeingCode:[''],
+      startAgeBlindSeeing:[''],
+      limitingConditionCode:[''],
+      walkingClimbingDifficultyCode:[''],
+      startAgeWalkingClimbingDifficulty:[''],
+      dressingBathingDifficultyCode:[''],
+      startAgeDressingBathingDifficulty:[''],
+      concentratingDifficultyCode:[''],
+      startAgeConcentratingDifficulty:[''],
+      errandsDifficultyCode:[''],
+      startAgeErrandsDifficulty:[''],
+      spokenLanguage:[''],
+      writtenLanguage:[''],
+      englishProficiency:['']
 
     });  
 
@@ -259,16 +273,22 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   private LoadLovs(){
     this.lovFacade.getMaterialLovs();
     this.lovFacade.getMaterialYesLovs();
-    this.lovFacade.getInterpreterLovs();
-
+    this.lovFacade.getSpokenWrittenLanguageLovs();
+    this.lovFacade.getEnglishProficiencyLovs();
   }
   private loadApplicantInfoSubscription(){
     
     this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
       this.textboxDisable  = true; 
       this.yesMaterialDisable = true;
-      this.interpreterTextDisable = true;
-      this.deafOrHearingTextDisable = true;
+      this.interpreterTypeInputDisable = true;
+      this.startAgeDeafOrHearingInputDisable = true;
+      this.startAgeBlindSeeingInputDisable = true;
+      this.startAgeWalkingClimbingDifficultyInputDisable = true;
+      this.startAgeDressingBathingDifficultyInputDisable = true;
+      this.startAgeConcentratingDifficultyInputDisable = true;
+      this.startAgeErrandsDifficultyInputDisable = true;
+
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
       if(this.appInfoForm !== undefined){
@@ -394,26 +414,93 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls['BirthGenderDescription'].setValue(applicantInfo.client.genderAtBirthDesc);
   }
 
-  if(applicantInfo.clientPronounList != null || undefined){   
-    applicantInfo.clientPronounList.forEach(pronoun => {  
-      if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
-      if(pronoun.clientPronounCode ==='NOT_LISTED'){
-        this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
-        this.textboxDisable = false;
-      }   
-      }
-    })
-    this.clientfacade.pronounListSubject.next(this.pronounList);     
-  }
-  this.appInfoForm.controls["selectedMaterial"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
-  this.appInfoForm.controls["yesMaterial"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
+  this.assignPronounModelToForm();
+  // if(applicantInfo.clientPronounList != null || undefined){   
+  //   applicantInfo.clientPronounList.forEach(pronoun => {  
+  //     if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
+  //     this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+  //     if(pronoun.clientPronounCode ==='NOT_LISTED'){
+  //       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
+  //       this.textboxDisable = false;
+  //     }   
+  //     }
+  //   })
+  //   this.clientfacade.pronounListSubject.next(this.pronounList);     
+  //}
+  this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
+  this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
   if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode !== null && 
     this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode ==='YES'){
       this.yesMaterialDisable = false;
-    }
+  }
+  this.appInfoForm.controls["interpreterCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode);
+  this.appInfoForm.controls["interpreterType"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode ==='YES'){
+      this.interpreterTypeInputDisable = false;
+  }
+  this.appInfoForm.controls["deafOrHearingCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode);
+  this.appInfoForm.controls["startAgeDeafOrHearing"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode ==='YES'){
+      this.startAgeDeafOrHearingInputDisable = false;
+  }
 
+  this.appInfoForm.controls["blindSeeingCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode);
+  this.appInfoForm.controls["startAgeBlindSeeing"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode ==='YES'){
+      this.startAgeBlindSeeingInputDisable = false;
+  }
+
+  this.appInfoForm.controls["limitingConditionCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.limitingConditionCode);
   
+  this.appInfoForm.controls["walkingClimbingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode);
+  this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode ==='YES'){
+      this.startAgeWalkingClimbingDifficultyInputDisable = false;
+  }
+
+  this.appInfoForm.controls["dressingBathingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode);
+  this.appInfoForm.controls["startAgeDressingBathingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode ==='YES'){
+      this.startAgeDressingBathingDifficultyInputDisable = false;
+  }
+
+  this.appInfoForm.controls["concentratingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode);
+  this.appInfoForm.controls["startAgeConcentratingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode ==='YES'){
+      this.startAgeConcentratingDifficultyInputDisable = false;
+  }
+
+  this.appInfoForm.controls["errandsDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode);
+  this.appInfoForm.controls["startAgeErrandsDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode ==='YES'){
+      this.startAgeErrandsDifficultyInputDisable = false;
+  }
+  this.appInfoForm.controls["spokenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.spokenLanguageCode);
+  this.appInfoForm.controls["writtenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.writtenLanguageCode);
+  this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode);
+ 
+}
+
+private assignPronounModelToForm(){
+  if(this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
+    this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
+  if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
+      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+  if(pronoun.clientPronounCode ==='NOT_LISTED'){
+      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
+      this.textboxDisable = false;
+    }   
+    }
+ })
+    this.clientfacade.pronounListSubject.next(this.pronounList);     
+}
 }
 
   private adjustAttributeChanged(event: Event) { 
@@ -442,69 +529,69 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
        else{
         this.checkBoxValid = false;
        }
-       if(this.appInfoForm.controls["selectedMaterial"].valid){
+       if(this.appInfoForm.controls["materialInAlternateFormatCode"].valid){
         this.materialOptionButtonValid = true;
 
        }
        else{
         this.materialOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selectedInterpreter"].valid){
+       if(this.appInfoForm.controls["interpreterCode"].valid){
         this.interpreterOptionButtonValid = true;
 
        }
        else{
         this.interpreterOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selecteddeafOrHearing"].valid){
+       if(this.appInfoForm.controls["deafOrHearingCode"].valid){
         this.deafOrHearingOptionButtonValid = true;
 
        }
        else{
         this.deafOrHearingOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selectedBlindOrSeriousDiff"].valid){
+       if(this.appInfoForm.controls["blindSeeingCode"].valid){
         this.blindOrSeriousDiffOptionButtonValid = true;
 
        }
        else{
         this.blindOrSeriousDiffOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selectedPhysicalMentaDiff"].valid){
+       if(this.appInfoForm.controls["limitingConditionCode"].valid){
         this.physicalMentaDiffOptionButtonValid = true;
 
        }
        else{
         this.physicalMentaDiffOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selectedWalkingOrClimbing"].valid){
+       if(this.appInfoForm.controls["walkingClimbingDifficultyCode"].valid){
         this.walkingOrClimbingOptionButtonValid = true;
 
        }
        else{
         this.walkingOrClimbingOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selectedDressingOrBath"].valid){
+       if(this.appInfoForm.controls["dressingBathingDifficultyCode"].valid){
         this.dressingOrBathOptionButtonValid = true;
 
        }
        else{
         this.dressingOrBathOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selectedConcentrateAndRememberDiff"].valid){
+       if(this.appInfoForm.controls["concentratingDifficultyCode"].valid){
         this.concentrateAndRememberDiffOptionButtonValid = true;
 
        }
        else{
         this.concentrateAndRememberDiffOptionButtonValid = false;
        }
-       if(this.appInfoForm.controls["selectedConcentrateAndRememberDiff"].valid){
-        this.seriesDiffOptionButtonValid = true;
+      //  if(this.appInfoForm.controls["selectedConcentrateAndRememberDiff"].valid){
+      //   this.seriesDiffOptionButtonValid = true;
 
-       }
-       else{
-        this.seriesDiffOptionButtonValid = false;
-       }
+      //  }
+      //  else{
+      //   this.seriesDiffOptionButtonValid = false;
+      //  }
        
        
        

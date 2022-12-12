@@ -99,6 +99,20 @@
     }
   }
 }
+
+.k-numerictextbox{
+  &.k-input {
+  .k-button {
+    &.k-icon-button {
+      background: transparent;
+      position: relative;
+      right: auto;
+      top: auto;
+      z-index: 1;
+    }
+  }
+  }
+}
 // .k-input {
 //   font-size: $font-size;
 //   height: 38px;

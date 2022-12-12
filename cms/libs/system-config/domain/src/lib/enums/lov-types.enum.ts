@@ -6,5 +6,6 @@ export enum LovType {
     Transgender ='Transgender',
     SexAtBirth ='SEX_AT_BIRTH',
     SexulaIdentity ='SEXUAL_IDENTITY',
-    InterpreterCode = 'Interpreter_Code'
+    SpokenWrittenLanguage ='Spoken_Written_Language',
+    EnglishProficiency ='English_Proficiency',
   }

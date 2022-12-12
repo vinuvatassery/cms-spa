@@ -27,7 +27,8 @@ export class LovFacade {
   private lovSexAtBirthSubject = new BehaviorSubject<Lov[]>([]);
   private lovSexulaIdentitySubject = new BehaviorSubject<Lov[]>([]);
   private lovGenderSubject = new BehaviorSubject<Lov[]>([]);
-  private lovInterpreterSubject = new BehaviorSubject<Lov[]>([]);
+  private lovSpokenWriottenLanguageSubject = new BehaviorSubject<Lov[]>([]);
+  private lovEnglishProficiencySubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -40,7 +41,8 @@ export class LovFacade {
   sexAtBirthlov$ = this.lovSexAtBirthSubject.asObservable();
   sexulaIdentitylov$ = this.lovSexulaIdentitySubject.asObservable();
   genderlov$ = this.lovGenderSubject.asObservable();
-  interpreterlov$ = this.lovInterpreterSubject.asObservable();
+  spokenWrittenLanguagelov$ = this.lovSpokenWriottenLanguageSubject.asObservable();
+  englishProficiencylov$ = this.lovEnglishProficiencySubject.asObservable();
 
         /** Public methods **/
 
@@ -140,15 +142,24 @@ getMaterialYesLovs(): void {
   });
   
 }
-getInterpreterLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.InterpreterCode).subscribe({
-    next: (lovInterpreterResponse) => {
-      this.lovInterpreterSubject.next(lovInterpreterResponse);
+getSpokenWrittenLanguageLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.SpokenWrittenLanguage).subscribe({
+    next: (LanguageResponse) => {
+      this.lovSpokenWriottenLanguageSubject.next(LanguageResponse);
     },
     error: (err) => {
       console.error('err', err);
     },
   });
-  
+}
+getEnglishProficiencyLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.EnglishProficiency).subscribe({
+    next: (proficiencyResponse) => {
+      this.lovEnglishProficiencySubject.next(proficiencyResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
 }
 }

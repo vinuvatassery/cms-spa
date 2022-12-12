@@ -61,7 +61,6 @@ export class ClientEditViewDisabilityComponent implements OnInit {
   //     });   
   //  }
     onMaterialsRdoClicked(event: any) {
-      debugger;
       if( this.appInfoForm.controls[this.OptionControlerName].value.toUpperCase() ===YesNoFlag.Yes.toUpperCase()){
         this.textFieldDisable = false;
       }
