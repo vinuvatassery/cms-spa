@@ -415,18 +415,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   }
 
   this.assignPronounModelToForm();
-  // if(applicantInfo.clientPronounList != null || undefined){   
-  //   applicantInfo.clientPronounList.forEach(pronoun => {  
-  //     if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-  //     this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
-  //     if(pronoun.clientPronounCode ==='NOT_LISTED'){
-  //       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
-  //       this.textboxDisable = false;
-  //     }   
-  //     }
-  //   })
-  //   this.clientfacade.pronounListSubject.next(this.pronounList);     
-  //}
+
   this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
   this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
   if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode !== null && 
@@ -489,7 +478,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
 }
 
 private assignPronounModelToForm(){
-  if(this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
+  if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
     this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
   if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
