@@ -13,22 +13,27 @@
             aria-hidden="true"
             >search</span
           >
-          <kendo-multicolumncombobox
+          <span *ngIf="showInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+          <kendo-multicolumncombobox         
             [data]="caseSearchResults$ | async"
             textField="name"
             valueField="id"
+            [loading] = "showInputLoader"
             placeholder="Search Case Name, Member ID or SSN"
             [fillMode]="formUiStyle.dropDownFillMode"
-            [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }" 
+            [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }"
+            [filterable]="true"
+            (filterChange)="onsearchTextChange($event)" 
           >
             <kendo-combobox-column>
-              <ng-template
+              
+              <ng-template 
                 kendoMultiColumnComboBoxColumnCellTemplate
                 let-dataItem
               >
-                <span class="pr-1">{{ dataItem.name }}</span>
-                <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
-                <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
+                <span class="pr-1">{{ dataItem.clientFullName }}</span>
+                <span class="pr-1 text-muted">ID XXXX</span>
+                <span class="pr-1 text-muted">DOB {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
                 <span class="text-muted">SSN {{ dataItem.ssn }}</span>
               </ng-template>
             </kendo-combobox-column>
@@ -62,9 +67,9 @@
 </section>
 
 <!-- Program Selection Modal -->
-<div class="form-group" [formGroup]="parentForm" #formDir="ngForm" class="k-form">
+<form class="form-group" (ngSubmit)="onSubmit()" [formGroup]="parentForm" class="k-form">
 <kendo-dialog
-  *ngIf="isProgramSelectionOpened"
+  *ngIf="isProgramSelectionOpened && parentForm"
   (close)="onCloseProgramSelectionClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np"
   title="Create New Case"
@@ -75,7 +80,16 @@
     <p class="text-muted mb-2">
       All fields are required unless otherwise stated.
     </p>
-    <case-management-case-detailed-summary [isProgramVIsible]="true" [parentForm]="parentForm" [isSubmitted]="isSubmitted"></case-management-case-detailed-summary>
+    <case-management-case-detailed-summary
+     [isProgramVIsible]="true" 
+     [parentForm]="parentForm"
+     [isSubmitted]="isSubmitted"
+     [caseSearchResults$]="caseSearchResults$"
+     [caseOwners]="caseOwners"
+     [ddlPrograms]="ddlPrograms"
+     [ddlCaseOrigins]="ddlCaseOrigins"   
+     [selectedProgram]="selectedProgram"   
+     ></case-management-case-detailed-summary>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -83,7 +97,7 @@
         <button
           aria-label="cancel new case"
           kendoButton
-          [primary]="true"
+          (click)="onCloseProgramSelectionClicked()"
           look="outline"
         >
           Cancel
@@ -91,8 +105,8 @@
         <button
           aria-label="save and continue"
           kendoButton
-          [primary]="true"
-          (click)="onCreateCaseClicked()"
+          [primary]="true"     
+          [disabled]="formButtonDisabled"    
         >
           Save & Continue
         </button>
@@ -101,4 +115,4 @@
   </kendo-dialog-actions>
 
 </kendo-dialog>
-</div>
+</form>

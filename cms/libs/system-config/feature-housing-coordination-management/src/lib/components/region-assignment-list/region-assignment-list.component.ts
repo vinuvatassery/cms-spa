@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
- 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-region-assignment-list',
   templateUrl: './region-assignment-list.component.html',
@@ -15,6 +15,7 @@ export class RegionAssignmentListComponent implements OnInit {
   clientProfilRegionAssignment$ =
     this.userManagementFacade.clientProfilRegionAssignment$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
 
     public pageSize = 10;
     public skip = 0;

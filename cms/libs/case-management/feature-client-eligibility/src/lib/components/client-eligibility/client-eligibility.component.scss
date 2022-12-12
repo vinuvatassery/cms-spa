@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  flex-wrap: wrap;
   .k-button {
     opacity: 0.5;
     &:hover {
@@ -12,6 +13,7 @@
 .toggle-wrap {
   cursor: pointer;
 }
+
 .top-lg-space {
   margin-top: 100px;
 }

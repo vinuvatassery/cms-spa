@@ -7,32 +7,32 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="PNumber or QRNumber">
-        <kendo-textbox  fillMode="outline"> </kendo-textbox>
+        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         <!-- <input kendoTextBox /> -->
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="First Name">
-        <kendo-textbox  fillMode="outline"> </kendo-textbox>
+        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         <!-- <input kendoTextBox /> -->
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Last Name">
-        <kendo-textbox  fillMode="outline"> </kendo-textbox>
+        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         <!-- <input kendoTextBox /> -->
       </kendo-floatinglabel>
     </div>
   
     <div class="flex-col">
       <kendo-floatinglabel text="Email Address">
-        <kendo-textbox  fillMode="outline"> </kendo-textbox>
+        <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         <!-- <input kendoTextBox /> -->
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="User Role">
-        <kendo-dropdownlist fillMode="outline" [data]="ddlUserRole$ | async"> </kendo-dropdownlist>
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlUserRole$ | async"> </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
   </div>

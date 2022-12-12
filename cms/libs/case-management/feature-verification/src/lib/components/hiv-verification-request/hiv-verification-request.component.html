@@ -5,7 +5,7 @@
         *ngIf="data === 'Request from Healthcare Provider via email'"
         text="Healthcare Provider’s Email Address"
       >
-      <kendo-textbox aria-label="healthcare providers email address"    fillMode="outline">   </kendo-textbox>
+      <kendo-textbox aria-label="healthcare providers email address"    [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
         <!-- <input kendoTextBox aria-label="healthcare providers email address" /> -->
       </kendo-floatinglabel>
       <div *ngIf="data !== 'Upload an attachment'" class="mt-2">

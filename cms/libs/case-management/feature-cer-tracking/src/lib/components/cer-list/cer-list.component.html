@@ -3,7 +3,7 @@
   <div class="filter-col-select">
     <span>SP End Date</span>
     <kendo-floatinglabel text="Date" >
-      <kendo-dropdownlist fillMode="outline" [data]="ddlCer$ | async"> </kendo-dropdownlist>
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCer$ | async"> </kendo-dropdownlist>
     </kendo-floatinglabel>
   </div>
   <div class="table-sorted-info filter-col-sort-info">

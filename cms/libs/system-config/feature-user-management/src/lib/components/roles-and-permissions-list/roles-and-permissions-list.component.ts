@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-roles-and-permissions-list',
   templateUrl: './roles-and-permissions-list.component.html',
@@ -20,6 +20,7 @@ export class RolesAndPermissionsListComponent implements OnInit {
   isSelectRolePopup = false;
   isInternalRole !: boolean;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
 
   public moreactions = [
     {

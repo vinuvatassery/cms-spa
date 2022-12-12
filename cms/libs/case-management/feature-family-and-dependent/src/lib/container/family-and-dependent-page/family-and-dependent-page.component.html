@@ -17,6 +17,7 @@
             (click)="onNoFamilyMemberClicked()"
             aria-labelledby="clientDoesNotHaveFamilyOrDependents"
             id="clientsDoesNotHaveFamilyOrDependents"
+           [checked]="dependentStatus$ | async"           
           />
           <label
             class="k-checkbox-label"
@@ -25,10 +26,28 @@
           >
           </span>
         </div>
-        <div class="flex-col" *ngIf="isFamilyGridDisplay">
-          <case-management-family-and-dependent-list></case-management-family-and-dependent-list>
+        <div class="flex-col" *ngIf="!isFamilyGridDisplay">
+          <case-management-family-and-dependent-list
+          [dependents$]="dependentList$"
+          [dependentSearch$]="dependentSearch$"
+          [ddlRelationships$]="ddlRelationships$"
+          [dependentGet$]="dependentGet$"
+          [dependentGetExisting$]="dependentGetExisting$"
+          [dependentdelete$]="dependentdelete$"
+          (addUpdateDependentEvent)="addUpdateDependentHandle($event)"
+          (GetNewDependentHandleEvent)="GetNewDependentHandle($event)"        
+          (loadDependentsEvent)="loadDependentsHandle($event)"     
+          (deleteDependentsEvent)="deleteDependentParamHandle($event)"    
+          (searchTextHandleEvent)="searchTextHandleEventHandle($event)"
+          (GetExistclientDependentEvent)="GetExistclientDependentEventHandle($event)"       
+          (addExistingClientEvent)="AddUpdateExistingDependentHandle($event)"
+          >         
+          </case-management-family-and-dependent-list>
         </div>
       </div>
     </div>
   </section>
 </div>
+
+
+<common-notification-snack-bar [data$]="familyfacadesnackbar$"> </common-notification-snack-bar>

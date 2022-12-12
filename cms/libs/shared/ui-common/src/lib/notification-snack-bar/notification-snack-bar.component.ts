@@ -17,13 +17,13 @@ import { NotificationService } from '@progress/kendo-angular-notification';
 @Component({
   selector: 'common-notification-snack-bar',
   templateUrl: './notification-snack-bar.component.html',
-  styleUrls: ['./notification-snack-bar.component.scss'],
+   styleUrls: ['./notification-snack-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationSnackBarComponent implements OnInit {
   /** Input properties **/
   @Input() data$!: Observable<SnackBar>;
-
+  public hideAfter = 200;
   /** Public properties **/
   @ViewChild('notificationAlertTemplate', { read: TemplateRef })
   alertTemplate!: TemplateRef<any>;
@@ -41,9 +41,10 @@ export class NotificationSnackBarComponent implements OnInit {
           this.notificationService.show({
             content: this.alertTemplate,
             position: { horizontal: 'center', vertical: 'top' },
-            animation: { type: 'fade', duration: 500 },
-            closable: true,
+            animation: { type: 'fade', duration: 600 },
+            closable: false,
             type: { style: res.type, icon: true },
+            hideAfter: 1000,
           });
         }
       },

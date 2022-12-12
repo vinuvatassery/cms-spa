@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-eid-lifetime-period-list',
   templateUrl: './eid-lifetime-period-list.component.html',
@@ -28,7 +29,7 @@ export class EidLifetimePeriodListComponent implements OnInit {
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
   clientProfilePeriods$ = this.userManagementFacade.clientProfilePeriods$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [
     {
       buttonType:"btn-h-primary",

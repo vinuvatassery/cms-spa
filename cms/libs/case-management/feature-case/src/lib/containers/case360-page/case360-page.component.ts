@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
+import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -19,6 +20,8 @@ export class Case360PageComponent implements OnInit {
   private selectedCase = new BehaviorSubject<any>({});
 
   /** Public properties **/
+  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
   ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;
   ddlFamilyAndDependentEP$ = this.caseFacade.ddlFamilyAndDependentEP$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;

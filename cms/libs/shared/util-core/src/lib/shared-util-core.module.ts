@@ -12,7 +12,7 @@ import { AppErrorHandler } from './application/services/app-error-handler.servic
 import { LocalStorageService } from './infrastructure/local-storage.service';
 import { NotificationService } from './api/services/notification.service';
 import { ConfigurationProvider } from './api/providers/configuration.provider';
-
+import { LoaderInterceptor } from './application/http-interceptors/http-loader.interceptor';
 export { ConfigurationProvider, LocalStorageService, NotificationService };
 
 @NgModule({
@@ -20,11 +20,16 @@ export { ConfigurationProvider, LocalStorageService, NotificationService };
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
-    {
+     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpLoggingInterceptor,
       multi: true,
     },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: LoaderInterceptor,
+    //   multi: true,
+    // },
   ],
 })
 export class SharedUtilCoreModule {
