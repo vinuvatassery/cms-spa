@@ -3,12 +3,12 @@ import {  Component, OnInit,  ChangeDetectionStrategy,
    ChangeDetectorRef,  Output,  EventEmitter,  Input,} from '@angular/core';
 import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
 import { ProgramCode } from '@cms/case-management/domain';
-
+ 
 /** Internal Libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-
+import { debounceTime, delay, distinctUntilChanged, Subject, tap, timeout } from 'rxjs';
+import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
@@ -16,7 +16,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewCaseComponent implements OnInit {
-
+public showInputLoader = false;
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
   @Output() newcaseSaveEvent = new EventEmitter<any>();
@@ -41,24 +41,29 @@ export class NewCaseComponent implements OnInit {
   /** Constructor**/
   constructor(   
     private readonly ref: ChangeDetectorRef, 
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private loaderService: LoaderService,
   ) {
-   
+ 
     this.filterManager
     .pipe(   
     debounceTime(500),
     distinctUntilChanged()
     )      
     .subscribe(
+      
       (text) => 
       {
         if(text)
         {
         this.searchTextEvent.emit(text)
-        }
+        this.showInputLoader = false;  
+ 
+        } 
       }
+      
       );    
-
+      this.showInputLoader = false;  
    }
 
   /** Lifecycle hooks **/
@@ -96,8 +101,10 @@ export class NewCaseComponent implements OnInit {
 
   onSubmit() {     
     this.parentForm.markAllAsTouched();
+    // this.loaderService.show();
     this.isSubmitted = true;
     this.newcaseSaveEvent.emit(this.parentForm);
+
   }
 
   onCloseProgramSelectionClicked() {
@@ -106,7 +113,11 @@ export class NewCaseComponent implements OnInit {
   }
 
   onsearchTextChange(text : string)
-  {       
-     this.filterManager.next(text);
+  {    
+
+    if(text){ 
+      this.showInputLoader = true;  
+      this.filterManager.next(text); 
+    } 
   }
 }
