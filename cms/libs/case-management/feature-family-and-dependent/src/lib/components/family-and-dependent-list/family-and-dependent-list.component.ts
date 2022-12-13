@@ -83,8 +83,7 @@ CAClient = DependentTypeCode.CAClient;
       buttonType:"btn-h-primary",
       text: "Edit Family Member",
       icon: "edit" ,   
-      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {  
-        debugger   
+      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {             
         if(!this.editbuttonEmitted)
         {   
           this.editbuttonEmitted =true;

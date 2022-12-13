@@ -5,12 +5,10 @@ import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Dependent } from '../entities/dependent';
-import { ClientDependentGroupDesc ,ClientDependentGroup } from '../enums/client-dependent-group.enum';
+import { ClientDependentGroupDesc} from '../enums/client-dependent-group.enum';
 import { DependentTypeCode } from '../enums/dependent-type.enum';
 /** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
-import { DatePipe } from '@angular/common';
-import { FamilyMember, FamilyMember2LabelMapping } from '../enums/family-member.enum';
 
 
 /** Facade **/

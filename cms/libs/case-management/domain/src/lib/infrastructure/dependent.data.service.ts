@@ -3,9 +3,6 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core';
-import { FamilyDependent } from '../entities/dependent';
-import { FamilyMember } from '../enums/family-member.enum';
 
 
 /** Providers **/
