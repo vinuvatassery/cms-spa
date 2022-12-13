@@ -14,7 +14,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
   @Output() RaceAndEthnicityData = new EventEmitter<any>();  
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  raceAndEthnicitylov$ = this.lovFacade.raceAndEthnicitylov$;
+  ethnicitylov$ = this.lovFacade.ethnicitylov$;
 
   raceAndEthnicityData: Array<any> = [];
   //primaryRacialData: Array<any> = [];
@@ -28,7 +28,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
     this.appInfoForm = this.formBuilder.group({ RaceAndEthnicity: [[]] });
   }
   ngOnInit(): void {
-    this.lovFacade.getRaceAndEthnicityLovs();
+    this.lovFacade.getEthnicityLovs();
     this.loadRaceAndEthnicity();
     this.appInfoForm.addControl(
       'RaceAndEthnicityPrimary',
@@ -36,7 +36,8 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
     );
   }
   private loadRaceAndEthnicity() {
-    this.raceAndEthnicitylov$.subscribe((data) => {
+    this.ethnicitylov$.subscribe((data) => {
+      debugger
       //console.log(data, Parents);
       const Parents = data.filter((m) => m.parentCode === null);
       const raceAndEthnicityDataGroup: Array<any> = [];
