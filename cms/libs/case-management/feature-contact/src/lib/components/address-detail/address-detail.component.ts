@@ -50,7 +50,7 @@ export class AddressDetailComponent implements OnInit {
 
   /** Private methods **/
   private loadDdlCountries() {
-    this.contactFacade.loadDdlCountries();
+    //this.contactFacade.loadDdlCountries();
   }
 
   private loadDdlAddressType() {
