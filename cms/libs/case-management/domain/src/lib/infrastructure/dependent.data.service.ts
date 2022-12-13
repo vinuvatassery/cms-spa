@@ -20,7 +20,7 @@ export class DependentDataService {
   constructor(private readonly http: HttpClient,
     private configurationProvider : ConfigurationProvider) {}
 
-  /** Public methods **/
+  /** Public methods **/  
 
    ///1load dependents for grid
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
@@ -51,7 +51,7 @@ export class DependentDataService {
 
 
      ///4add new dependent
-     AddNewDependent(dependent: Dependent) {   
+     addNewDependent(dependent: Dependent) {   
       const data =
       {
         clientDependentId:"00000000-0000-0000-0000-000000000000",
@@ -73,14 +73,14 @@ export class DependentDataService {
     }
      
   //5get new dependent for edit 
-  GetNewDependent(clientDependentId: string) {
+  getNewDependent(clientDependentId: string) {
     return this.http.get<Dependent>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${clientDependentId}`      
     );
   }
 
   ///6update new dependent
-  UpdateNewDependent(dependent: Dependent) {
+  updateNewDependent(dependent: Dependent) {
 
     const data =
     {
@@ -103,14 +103,14 @@ export class DependentDataService {
 
  
     //7 mark dependent as inactive
-  DeleteDependent(clientDependentId: string) {
+  deleteDependent(clientDependentId: string) {
     return this.http.delete(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${clientDependentId}`      
     );
   }
 
      ///8update client as dependent
-     AddExistingDependent(data : any) {      
+     addExistingDependent(data : any) {      
       return this.http.put(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client/${data?.clientId}
         &dependentClientId=${data?.dependentClientId}&dependentType=${data?.dependentType}&relationshipCode=${data?.relationshipCode}&
@@ -120,74 +120,17 @@ export class DependentDataService {
     }
 
   //9get client dependent for edit (client)
-  GetExistingClientDependent(clientDependentId: string , dependentType :  string) {
+  getExistingClientDependent(clientDependentId: string , dependentType :  string) {
     return this.http.get<Dependent>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client/clientDependentId=${clientDependentId}&dependentType=${dependentType}`  
     );
   }
    
   //10search for autocomplete
-  SearchDependents(text :  string) {
+  searchDependents(text :  string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search/text=${text}`  
     );
-  }
-   
-   
-
-  loadDependentSearch() {
-    return of([
-      {
-        firstName: 'Donna',
-        lastName: 'Summer',       
-        dob: '08-11-1995',
-        ssn: '956-08-9876',  
-        clientDependentId:'',
-        clientId : 1,
-        memberType: '',
-        fullName:'',fullCustomName : ''
-      },
-      {
-        firstName: 'Donna',
-        lastName: 'Summer',       
-        dob: '08-11-1995',
-        ssn: '956-08-9876',        
-        clientDependentId:'',
-        clientId :2,
-        memberType: '',
-        fullName:'',fullCustomName : ''
-      },
-      {
-        firstName: 'Donna',
-        lastName: 'Summer',       
-        dob: '08-11-1995',
-        ssn: '956-08-9876',    
-        clientDependentId:'',
-        clientId : 3,
-        memberType: '',
-        fullName:'',fullCustomName : ''
-      }
-      ,
-      {
-        firstName: 'Donna',
-        lastName: 'Summer',       
-        dob: '08-11-1995',
-        ssn: '956-08-9876',       
-        clientDependentId:'a702f4b2-9032-4544-8998-029643760fad',
-        clientId : 0,
-        memberType: '',  fullName:'',fullCustomName : ''
-      }
-      ,
-      {
-        firstName: 'Donna',
-        lastName: 'Summer',       
-        dob: '08-11-1995',
-        ssn: '956-08-9876',   
-        clientDependentId:'f523d0e1-6229-4d86-b50a-01d6675ac337',
-        clientId : 0,
-        memberType: '',  fullName:'',fullCustomName : ''
-      }
-    ]);
-  }
+  }   
 
 }

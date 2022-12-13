@@ -83,8 +83,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
     .subscribe((session: any) => {      
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-     this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-     this.clientId =JSON.parse(session.sessionData).clientId   
+     this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
+     this.clientId = JSON.parse(session.sessionData).clientId   
      this.loadDependentsStatus();      
     });        
   } 
@@ -100,6 +100,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
    
     if((this.isFamilyGridDisplay ?? false) == false)
     {
+      this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
     this.familyAndDependentFacade.loadDependents(this.clientId
       , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
     }

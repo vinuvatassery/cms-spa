@@ -157,10 +157,10 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Social Security Number (optional)">
-          <kendo-textbox aria-label="social security number optional" 
+          <kendo-maskedtextbox aria-label="social security number optional" 
            [fillMode]="formUiStyle.inputFillMode"
-           formControlName="ssn"   
-           >   </kendo-textbox> 
+           formControlName="ssn"   [mask]="ssnMaskFormat" 
+           >   </kendo-maskedtextbox> 
         </kendo-floatinglabel>
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
       </div>

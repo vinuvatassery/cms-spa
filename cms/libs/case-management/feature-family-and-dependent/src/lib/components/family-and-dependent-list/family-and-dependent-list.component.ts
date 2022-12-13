@@ -97,10 +97,10 @@ CAClient = DependentTypeCode.CAClient;
   ];  
 
   /** Lifecycle hooks **/
-  ngOnChanges(): void {        
+  ngOnChanges(): void {         
       this.state = {
       skip: 0,
-      take: 5,
+      take: this.pageSizes[0]?.value,
       sort: this.sort
   };    
         this.loadFamilyDependents()

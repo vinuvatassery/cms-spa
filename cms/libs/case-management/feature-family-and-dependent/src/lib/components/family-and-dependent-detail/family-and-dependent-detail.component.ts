@@ -41,6 +41,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   showDependentSearchInputLoader = false;
   dependentSearch!: GroupResult[];
   popupClass = 'k-autocomplete-custom';
+  ssnMaskFormat = "000-00-0000" 
   isSubmitted = false;
   isExistSubmitted = false;
   isExistDependent =false;
@@ -108,7 +109,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       dob: ['', Validators.required],
-      ssn: ['',Validators.pattern(new RegExp(/^(?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4}$/))],
+      ssn: [''],
       enrolledInInsuranceFlag: ['', Validators.required],
       clientId: [0, ],
       clientDependentId: ['', ],

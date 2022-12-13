@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -9,6 +9,8 @@ import { ClientDependentGroupDesc} from '../enums/client-dependent-group.enum';
 import { DependentTypeCode } from '../enums/dependent-type.enum';
 /** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 
 /** Facade **/
@@ -18,12 +20,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
-  public gridPageSizes = [
-    {text: "5", value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20}   
-  ];
-  
+  public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'fullName'
   public sortType = 'asc'
 
@@ -65,11 +62,18 @@ export class FamilyAndDependentFacade {
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
 
-  handleSnackBar(title : string , subtitle : string ,type : string )
-  {    
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    let subtitleText = subtitle;
+    const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
+    if(type == SnackBarNotificationType.ERROR)
+    {
+      const err= subtitle;
+      subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
+    }
     const snackbarMessage: SnackBar = {
-      title: title,
-      subtitle: subtitle,
+      title: titleText,
+      subtitle: subtitleText,
       type: type,
     };
     this.snackbarSubject.next(snackbarMessage);
@@ -79,7 +83,8 @@ export class FamilyAndDependentFacade {
 
   /** Constructor**/
   constructor(private readonly dependentDataService: DependentDataService,
-    private workflowFacade: WorkflowFacade ,   private readonly loaderService: LoaderService  ) {}
+    private workflowFacade: WorkflowFacade ,   private readonly loaderService: LoaderService ,
+    private configurationProvider : ConfigurationProvider ) {}
 
   /** Public methods **/
   ShowLoader()
@@ -94,77 +99,67 @@ export class FamilyAndDependentFacade {
 
   DeleteDependent(dependentId: string): void {
    this.ShowLoader();
-    this.dependentDataService.DeleteDependent(dependentId).subscribe({
+    this.dependentDataService.deleteDependent(dependentId).subscribe({
       next: (dependentdeleteResponse) => {      
        if(dependentdeleteResponse == true)
-       {
-        this.handleSnackBar('Success' ,'Dependent Removed','success')     
-       }
-       else
-       {
-        this.handleSnackBar('Error' ,'Error','error') 
-       }        
+       {     
+        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')  
+       }             
         this.dependentdeleteSubject.next(dependentdeleteResponse);
         this.HideLoader();
       },
       error: (err) => {        
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )       
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)      
       },
     });
   }
 
   AddNewDependent(dependent: Dependent): void {
     this.ShowLoader();
-    this.dependentDataService.AddNewDependent(dependent).subscribe({
+    this.dependentDataService.addNewDependent(dependent).subscribe({
       next: (addNewdependentsResponse) => {
         if(addNewdependentsResponse)
-        {
-         this.handleSnackBar('Success' ,'Added New Dependent','success')     
+        {     
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Dependent Added Successfully')  
         }
-        else
-        {
-         this.handleSnackBar('Error' ,'Error','error') 
-        }   
+           
         this.dependentAddNewSubject.next(addNewdependentsResponse);
         this.HideLoader();
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)      
       },
     });
   }
 
   UpdateNewDependent(dependent: Dependent): void {
     this.ShowLoader();
-    this.dependentDataService.UpdateNewDependent(dependent).subscribe({
-      next: (updateNewdependentsResponse) => {
+    this.dependentDataService.updateNewDependent(dependent).subscribe({
+      next: (updateNewdependentsResponse) => {        
+        
         if(updateNewdependentsResponse)
-        {
-         this.handleSnackBar('Success' ,'Dependent data Updated','success')     
+        {     
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent data Updated')  
         }
-        else
-        {
-         this.handleSnackBar('Error' ,'Error','error') 
-        }   
+           
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
         this.HideLoader();
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
 
   GetNewDependent(dependentId: string) : void {
     this.ShowLoader();
-    this.dependentDataService.GetNewDependent(dependentId).subscribe({
-      next: (getNewdependentsResponse) => {
-        getNewdependentsResponse.ssn = this.FormatSSN(getNewdependentsResponse?.ssn)
+    this.dependentDataService.getNewDependent(dependentId).subscribe({
+      next: (getNewdependentsResponse) => {    
         this.dependentGetNewSubject.next(getNewdependentsResponse);
         this.HideLoader();
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -172,14 +167,14 @@ export class FamilyAndDependentFacade {
 
   GetExistingClientDependent(clientDependentId: string) : void {   
     this.ShowLoader(); 
-    this.dependentDataService.GetExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
+    this.dependentDataService.getExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
       next: (dependentGetExistingResponse) => {
         dependentGetExistingResponse.ssn=  'xxx-xx-' +dependentGetExistingResponse.ssn.slice(-4);
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
         this.HideLoader();
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -209,7 +204,7 @@ export class FamilyAndDependentFacade {
           dataPointName: 'family_dependents',
           status: StatusFlag.No
         }]);
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -218,19 +213,17 @@ export class FamilyAndDependentFacade {
     this.ShowLoader();
     this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents).subscribe({
       next: (dependentStatusResponse) => {        
+       
         if(dependentStatusResponse == true)
-        {
-         this.handleSnackBar('Success' ,'Dependent Status Updated','success')     
+        {     
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')  
         }
-        else
-        {
-         this.handleSnackBar('Error' ,'Error','error') 
-        }       
+        
         this.dependentStatusSubject.next(dependentStatusResponse);
         this.HideLoader();
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
         
       },
     });
@@ -242,13 +235,13 @@ export class FamilyAndDependentFacade {
         this.dependentStatusGetSubject.next(dependentStatusGetResponse);
       },
       error: (err) => {  
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
 
   loadDependentSearch(text : string): void {
-    this.dependentDataService.SearchDependents(text).subscribe({
+    this.dependentDataService.searchDependents(text).subscribe({
       next: (dependentSearchResponse) => {
 
         Object.values(dependentSearchResponse).forEach((key) => {            
@@ -268,7 +261,7 @@ export class FamilyAndDependentFacade {
         this.dependentSearchSubject.next(dependentSearchResponse);
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -276,36 +269,20 @@ export class FamilyAndDependentFacade {
 
 
   AddExistingDependent(data : any) : void {
-    this.dependentDataService.AddExistingDependent(data ).subscribe({
-      next: (dependentStatusResponse) => {        
+    this.dependentDataService.addExistingDependent(data ).subscribe({
+      next: (dependentStatusResponse) => {    
         if(dependentStatusResponse == true)
-        {
-         this.handleSnackBar('Success' ,'Client Added as Dependent','success')     
+        {     
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Client Added as Dependent')  
         }
-        else
-        {
-         this.handleSnackBar('Error' ,'Error','error') 
-        }       
+        
         this.dependentStatusSubject.next(dependentStatusResponse);
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
         
       },
     });
   }
 
-  FormatSSN(x: string) : string
-  {  
-    if(x.length >  0)
-    {
-      let fSSN = '';
-      fSSN += x.substr(0, 3);
-      fSSN += '-' + x.substr(3, 2);
-      fSSN += '-' + x.substr(5, 4);
-      return fSSN;    
-    }
-    return '';
-  }
-  
 }
