@@ -23,6 +23,7 @@ export class IncomeListComponent implements OnInit {
 
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
+  incomesTotal:any={};
   dependentsProofofSchools$ = this.incomeFacade.dependentsProofofSchools$;
   isEdit!: boolean;
   isOpenedIncome = false;
@@ -102,6 +103,9 @@ export class IncomeListComponent implements OnInit {
   /** Private methods **/
   private loadIncomes() {
     this.incomeFacade.loadIncomes();
+    this.incomeFacade.incomesResponse$.subscribe((incomeresponse:any)=>{
+      this.incomesTotal=incomeresponse;
+    })
   }
 
   private loadDependentsProofofSchools() {

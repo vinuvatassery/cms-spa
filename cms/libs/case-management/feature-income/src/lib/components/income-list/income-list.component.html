@@ -4,7 +4,7 @@
     <div class="app-c-table" *ngIf="!hasNoIncome">
       <kendo-grid [data]="incomes$ | async">
         <kendo-grid-column
-          field="incomeSourceCode"
+          field="incomeSourceCodeDesc"
           title="Income Source"
           [width]="140"
         >
@@ -16,7 +16,7 @@
             Total Monthly Income
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="incomeTypeCode" title="Income Type" [width]="130">
+        <kendo-grid-column field="incomeTypeCodeDesc" title="Income Type" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column
           field="incomeAmt"
@@ -24,7 +24,7 @@
           [width]="130"
         ></kendo-grid-column>
         <kendo-grid-column
-          field="incomeFrequencyCode"
+          field="incomeFrequencyCodeDesc"
           title="Frequency"
           [width]="110"
         ></kendo-grid-column>
@@ -73,11 +73,11 @@
             let-column
             let-columnIndex="columnIndex"
           >
-            (178% FPL)
+            ({{incomesTotal?.fplPercentage}}% FPL)
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
-          field="MonthlyIncome"
+          field="monthlyIncome"
           title="Monthly Income"
           [width]="100"
           [sticky]="true"
@@ -87,7 +87,7 @@
             let-column
             let-columnIndex="columnIndex"
           >
-            $10000.00
+            {{incomesTotal?.totalIncome}}
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column

@@ -98,7 +98,6 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   private loadIncomeSources() {
-    debugger
     this.lov.incomeSourcelov$.subscribe((incomeSourceLov: Lov[]) => {
       this.incomeSources$ = incomeSourceLov;
     });
@@ -130,7 +129,7 @@ export class IncomeDetailComponent implements OnInit {
       this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([]);
       this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity();
       this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("Y")
-      this.proofOfIncomeValidator=false;
+      this.proofOfIncomeValidator = false;
     }
     else {
       this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("N")
@@ -140,9 +139,9 @@ export class IncomeDetailComponent implements OnInit {
     this.incomeTypesOther = this.IncomeDetailsForm.controls['proofOfIncomeTypes'].value;
   }
   public submitIncomeDetailsForm(): void {
-    this.setValidators();   
+    this.setValidators();
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
-      this.incomeFacade.saveClientIncome(this.IncomeDetailsForm.value,this.proofOfIncomeFiles).subscribe({
+      this.incomeFacade.saveClientIncome(this.IncomeDetailsForm.value, this.proofOfIncomeFiles).subscribe({
         next: (incomeResponse) => {
           this.closeIncomeDetailPoup();
           const snackbarMessage: SnackBar = {
@@ -154,7 +153,6 @@ export class IncomeDetailComponent implements OnInit {
           this.incomeFacade.loadIncomes();
         },
         error: (err) => {
-          debugger;
           console.log(err)
           const snackbarMessage: SnackBar = {
             title: 'Error!',
@@ -172,7 +170,7 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: SelectEvent) {
-    this.proofOfIncomeFiles = event.files
+    this.proofOfIncomeFiles = event.files[0].rawFile
     this.proofOfIncomeValidator = false;
     console.log(this.proofOfIncomeFiles)
   }

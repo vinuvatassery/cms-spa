@@ -15,6 +15,7 @@ export class IncomeFacade {
   private ddlFrequenciesSubject = new BehaviorSubject<any>([]);
   private ddlProofOfIncomeTypesSubject = new BehaviorSubject<any>([]);
   private incomesSubject = new BehaviorSubject<any>([]);
+  private incomesResponseSubject = new BehaviorSubject<any>([]);
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
@@ -23,11 +24,12 @@ export class IncomeFacade {
   ddlFrequencies$ = this.ddlFrequenciesSubject.asObservable();
   ddlProofOfIncomdeTypes$ = this.ddlProofOfIncomeTypesSubject.asObservable();
   incomes$ = this.incomesSubject.asObservable();
+  incomesResponse$ = this.incomesResponseSubject.asObservable();
   dependentsProofofSchools$ =
     this.dependentsProofofSchoolsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) {}
+  constructor(private readonly contactDataService: ContactDataService) { }
 
   /** Public methods **/
   loadDdlIncomeTypes(): void {
@@ -76,9 +78,10 @@ export class IncomeFacade {
 
   loadIncomes(): void {
     this.contactDataService.loadIncomes().subscribe({
-      next: (incomesResponse:any) => {
+      next: (incomesResponse: any) => {
         this.incomesSubject.next(incomesResponse.clientIncomes);
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependets);
+        this.incomesResponseSubject.next(incomesResponse);
       },
       error: (err) => {
         console.error('err', err);
@@ -99,19 +102,24 @@ export class IncomeFacade {
     });
   }
 
-  save():Observable<boolean>{
+  save(): Observable<boolean> {
     //TODO: save api call   
     return of(true);
   }
 
-  saveClientIncome(clientIncome:any,proofOfIncomeFile:any){
-    debugger
-    clientIncome.clientCaseEligibilityId="D323838C-80F3-4BB6-8FD4-EF6A9FE37335";
-    clientIncome.clientDependentId="00640C15-B796-4D12-9F3F-BD5A2B2DB2FD";
-    clientIncome.clientId=2;
-    const formData = new FormData();
-    Object.keys(clientIncome).forEach((key:any) => formData.append(key, clientIncome[key]));
-    formData.append('proofOfIncomeFile',proofOfIncomeFile[0])
+  saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
+    clientIncome.clientCaseEligibilityId = "D323838C-80F3-4BB6-8FD4-EF6A9FE37335";
+    clientIncome.clientId = 2;
+    const formData: any = new FormData();
+    for (var key in clientIncome) {
+      if (key == "incomeStartDate" || key == 'incomeEndDate') {
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+      }
+      else {
+        formData.append(key, clientIncome[key]);
+      }
+    }
+    formData.append('ProofOfIncomeFile', proofOfIncomeFile);
     return this.contactDataService.saveIncome(formData);
   }
 
