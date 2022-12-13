@@ -233,6 +233,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssn:  ['',{disabled:false}],
       ssnNotApplicable:  [''],
       registerToVote: [''],
+      pronoun: [''] ,
       pronouns: [''] ,
       materialInAlternateFormatCode:[''],
       materialInAlternateFormatDesc:[''],
@@ -471,7 +472,7 @@ private assignPronounModelToForm(){
   if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
   if(pronoun.clientPronounCode ==='NOT_LISTED'){
-      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
+      this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
       this.textboxDisable = false;
     }   
     }

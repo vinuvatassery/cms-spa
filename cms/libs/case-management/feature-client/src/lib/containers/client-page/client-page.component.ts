@@ -443,7 +443,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       if(existingPronoun === null || existingPronoun === undefined){
           var clientPronoun = new ClientPronoun();
           if(pronoun.lovCode=='NOT_LISTED') {
-                    clientPronoun.otherDesc = this.appInfoForm.controls["NOT_LISTED"].value;
+                    clientPronoun.otherDesc = this.appInfoForm.controls["pronoun"].value;
                     clientPronoun.clientPronounCode =pronoun.lovCode;
                     clientPronoun.clientId = this.clientId;
             }
@@ -457,6 +457,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           if(pronoun.lovCode=='NOT_LISTED') {
             const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);          
             this.applicantInfo.clientPronounList[index].clientPronounCode = pronoun.lovCode;
+            this.applicantInfo.clientPronounList[index].otherDesc = this.appInfoForm.controls["pronoun"].value;
            }
         }
 
