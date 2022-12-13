@@ -1,14 +1,17 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 /** External libraries **/
-import {DateInputSize, DateInputRounded, DateInputFillMode,} from '@progress/kendo-angular-dateinputs';
+import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType,CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { LoaderService } from '@cms/shared/util-core';
+
+
 
 
 
@@ -83,7 +86,8 @@ export class CaseDetailPageComponent implements OnInit {
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
-    private workflowFacade: WorkflowFacade
+    private workflowFacade: WorkflowFacade,
+    private loaderService: LoaderService
   ) {
   }
 
@@ -99,7 +103,7 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   /** Private Methods */
-  private loadQueryParams() {   
+  private loadQueryParams() {
     const workflowType: string = WorkflowTypeCode.NewCase;
     const entityId: string = this.route.snapshot.queryParams['eid'];
     this.sessionId = this.route.snapshot.queryParams['sid'];
@@ -208,20 +212,22 @@ export class CaseDetailPageComponent implements OnInit {
     this.workflowFacade.save(NavigationType.Next);
   }
 
-  applyWorkflowChanges(object: any) {    
-    if(object?.isReset ?? false){
-        this.workflowFacade.resetWorkflowNavigation();
+  applyWorkflowChanges(object: any) {
+    this.loaderService.show();
+    if (object?.isReset ?? false) {
+      this.workflowFacade.resetWorkflowNavigation();
+      this.loaderService.hide();
     }
-    else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) 
-    {
+    else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
       this.workflowFacade.saveNonequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
         .subscribe(() => {
-          this.workflowFacade.updateNonequenceNavigation(object?.route); 
+          this.loaderService.hide();
+          this.workflowFacade.updateNonequenceNavigation(object?.route);
         });
     }
   }
 
-  openInnerLeftMenu(){
+  openInnerLeftMenu() {
     this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
   }
 }

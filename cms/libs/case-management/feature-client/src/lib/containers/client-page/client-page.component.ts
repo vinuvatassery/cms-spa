@@ -475,6 +475,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
          control= control.replace('Gender','');
          let clientGender = new ClientGender();
          clientGender.clientGenderCode =control;
+         clientGender.clientId = this.clientId;
          if(clientGender.clientGenderCode==='NOT_LISTED'){
            clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
          }

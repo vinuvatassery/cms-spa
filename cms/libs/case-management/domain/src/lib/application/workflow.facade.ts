@@ -35,7 +35,10 @@ export class WorkflowFacade {
   routes$ = this.routesSubject.asObservable();
   completionStatus$ = this.wfProcessCompletionStatusSubject.asObservable();
   sessionSubject$ = this.sessionSubject.asObservable();
-  sessionDataSubject$ =  this.sessionDataSubject.asObservable();
+  sessionDataSubject$ = this.sessionDataSubject.asObservable();
+  clientId: number | undefined;
+  clientCaseId: string | undefined;
+  clientCaseEligibilityId: string | undefined;
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
@@ -59,14 +62,14 @@ export class WorkflowFacade {
     }
   }
 
-  createNewSession(newCaseFormData : FormGroup) {   
+  createNewSession(newCaseFormData: FormGroup) {
     const sessionData = {
       entityId: newCaseFormData?.controls["programId"].value,
       EntityTypeCode: EntityTypeCode.Program,
       workflowTypeCode: WorkflowTypeCode.NewCase,
-      assignedCwUserId : newCaseFormData?.controls["caseOwnerId"].value ,
+      assignedCwUserId: newCaseFormData?.controls["caseOwnerId"].value,
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
-      caseStartDate: newCaseFormData?.controls["applicationDate"].value  
+      caseStartDate: newCaseFormData?.controls["applicationDate"].value
     }
 
     this.workflowService.createNewSession(sessionData)
@@ -74,9 +77,9 @@ export class WorkflowFacade {
         next: (sessionResp: any) => {
           if (sessionResp && sessionResp?.workflowSessionId) {
             this.router.navigate(['case-management/case-detail'], {
-              queryParams: {               
-                sid: sessionResp?.workflowSessionId ,
-                eid: sessionData?.entityId                             
+              queryParams: {
+                sid: sessionResp?.workflowSessionId,
+                eid: sessionData?.entityId
               },
             });
           }
@@ -95,7 +98,7 @@ export class WorkflowFacade {
           forkJoin(
             [
               of(wfMaster),
-              this.workflowService.loadWorkflow(sessionId)
+              this.workflowService.loadWorkflow(sessionId)             
             ])
         ),
       ).subscribe({
@@ -103,8 +106,8 @@ export class WorkflowFacade {
           this.currentSession = wfSession;
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
-          this.routesSubject.next(wfSession?.workFlowProgress);     
-          this.sessionSubject.next(this.currentSession);          
+          this.routesSubject.next(wfSession?.workFlowProgress);
+          this.sessionSubject.next(this.currentSession);
         },
         error: (err: any) => {
           console.error('error', err);
@@ -332,9 +335,17 @@ export class WorkflowFacade {
   }
 
 
-  loadWorkFlowSessionData(sessionId : string): void {
+  loadWorkFlowSessionData(sessionId: string): void {
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
+        if (ddlsessionDataResponse) {
+          const sessionData = JSON.parse(ddlsessionDataResponse?.sessionData);
+          if (ddlsessionDataResponse) {
+            this.clientId = sessionData?.clientId;
+            this.clientCaseId = sessionData?.ClientCaseId;
+            this.clientCaseEligibilityId = sessionData?.clientCaseEligibilityId;
+          }
+        }
         this.sessionDataSubject.next(ddlsessionDataResponse);
       },
       error: (err) => {

@@ -30,6 +30,7 @@ import { ClientEditViewSexualIdentityComponent } from './components/client-edit-
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
+    
   ],
   declarations: [
     ClientPageComponent,
