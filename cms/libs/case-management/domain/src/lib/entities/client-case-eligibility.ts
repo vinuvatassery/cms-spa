@@ -24,7 +24,7 @@ export class ClientCaseEligibility{
         blindSeeingCode :string|null=null;
         startAgeBlindSeeing :number | null = null;
         limitingConditionCode :string |null=null;
-        startAgeLimitingCondition :number|null=null;
+        //startAgeLimitingCondition :number|null=null;
         walkingClimbingDifficultyCode :string|null=null;
         startAgeWalkingClimbingDifficulty :number|null=null;
         dressingBathingDifficultyCode :string|null=null;

@@ -16,6 +16,7 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
 import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
+import { SsnPipe } from './pipes/ssn.pipe';
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
@@ -34,6 +35,7 @@ import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list
     LoaderComponent,
     GridLoaderComponent,
     OptionbuttonListComponent,
+    SsnPipe
   ],
   exports: [
     LoginStatusComponent,
@@ -48,6 +50,7 @@ import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list
     LoaderComponent,
     GridLoaderComponent,
     OptionbuttonListComponent,
+    SsnPipe
   ],
 })
 export class SharedUiCommonModule {}

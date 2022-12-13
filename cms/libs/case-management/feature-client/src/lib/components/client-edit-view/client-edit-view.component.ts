@@ -13,6 +13,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { kMaxLength } from 'buffer';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { first } from '@progress/kendo-angular-editor/util';
+import { SsnPipe } from '@cms/shared/ui-common';
 
 
  
@@ -120,7 +121,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
   lengthRestrictForty=40;
-  maxLengthSsn =9;
+  maxLengthSsn =11;
   applicantInfo$ = this.clientfacade.applicantInfo$;
   public value = "";
   isVisible: any;
@@ -144,7 +145,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadDdlEnglishProficiencies();
     this.loadRdoTransGender();
     this.loadRdoSexAssigned();
-    //this.loadRdoMaterials();
     this.loadRdoInterpreter();
     this.loadRdoDeaf();
     this.loadRdoBlind();
@@ -152,11 +152,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoDressingorBathing();
     this.loadRdoConcentration();
     this.loadRdoErrands();
-    this.loadTareaRaceAndEthinicity();  
-
-    this.LoadLovs() 
+    this.loadTareaRaceAndEthinicity();
+    this.LoadLovs(); 
     this.buildForm(); 
-
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
      this.ValidateFields.emit(this.appInfoForm);
@@ -195,8 +193,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     else{
       lastName = this.appInfoForm.controls["lastName"].value
     }
-    
-
     this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
@@ -212,8 +208,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.AdjustAttrChanged.emit(initialAjustment);
     }
   }
- 
-  
+
   public onClose(event: any) {    
       //event.preventDefault();   
   }

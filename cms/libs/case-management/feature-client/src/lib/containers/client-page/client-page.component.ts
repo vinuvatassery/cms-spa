@@ -12,6 +12,7 @@ import { CompletionChecklist } from '@cms/case-management/domain';
 import { NavigationType } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { LoaderService } from '@cms/shared/util-core';
 
 
 
@@ -39,12 +40,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientId!:number;
   clientCaseEligibilityId!:string;
   sessionId! : string;
+  message!:string;
  
     /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
               private clientFacade: ClientFacade, 
               private route: ActivatedRoute,
               private readonly caseFacade: CaseFacade,
+              private loaderService: LoaderService,
               ) { }
 
 
@@ -60,18 +63,26 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   /** Private methods **/
-  private addSaveSubscription(): void {
-    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
+  private addSaveSubscription(): void {   
+    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(      
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
-    ).subscribe(([navigationType, isSaved]) => {  
+    ).subscribe(([navigationType, isSaved]) => { 
+      debugger; 
       next:{
-        if (isSaved) {
+        if (isSaved) { 
+          this.clientFacade.handleSnackBar('Success' ,this.message,'success')         
           this.workFlowFacade.navigate(navigationType);
+          this.loaderService.hide();
+        }
+        else{
+          debugger;
         }
       }    
       error:{
+        debugger;
+        this.loaderService.hide();
            console.log("error")
       }
      
@@ -80,7 +91,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   private loadSessionData()
   {  
-    this.applicantInfo = new ApplicantInfo();
+   this.loaderService.show();
+   this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
@@ -110,9 +122,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;
           this.loadApplicantInfo();
         }
+        else{
+          this.loaderService.hide();
+        }
        
       
       }
+    }
+    else{
+      this.loaderService.hide();
     }
      
     });   
@@ -199,10 +217,11 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               })
               this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
              
-              
+              this.loaderService.hide();
             }
           } ,
-        error: error => {         
+        error: error => {  
+          this.loaderService.hide();       
           console.error(error);
         }
       });
@@ -210,13 +229,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private saveAndUpdate(){
+    this.loaderService.show();
     this.validateForm();
         if(this.appInfoForm.valid){
           this.populateApplicantInfoModel();
           if(this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined)  {
+            this.message ='Applicant info updated';
             return this.clientFacade.update(this.applicantInfo)            
           }
           else{
+            this.message ='Applicant info saved';
             return this.clientFacade.save(this.applicantInfo)        
           }          
         }

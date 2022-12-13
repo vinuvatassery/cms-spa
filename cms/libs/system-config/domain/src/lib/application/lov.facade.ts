@@ -69,7 +69,7 @@ getCaseOriginLovs(): void {
   
 }
 getPronounLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.Pronouns).subscribe({
+  this.lovDataService.getLovsbyType(LovType.Pronoun).subscribe({
     next: (lovPronounResponse) => {
       this.lovPronounSubject.next(lovPronounResponse);
     },
@@ -81,7 +81,7 @@ getPronounLovs(): void {
 }
 
 getMaterialLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.Materials).subscribe({
+  this.lovDataService.getLovsbyType(LovType.Material).subscribe({
     next: (lovMaterialResponse) => {
       this.lovMaterialSubject.next(lovMaterialResponse);
     },
@@ -132,7 +132,7 @@ getGenderLovs(): void {
   });
 }
 getMaterialYesLovs(): void {
-  this.lovDataService.getLovsbyParent('Yes',LovType.Materials).subscribe({
+  this.lovDataService.getLovsbyParent(LovType.MaterialYes,LovType.Material).subscribe({
     next: (lovMaterialYesResponse) => {
       this.lovMaterialYesSubject.next(lovMaterialYesResponse);
     },

@@ -44,7 +44,8 @@ import { ClientEditViewSexualIdentityComponent } from './components/client-edit-
     ClientEditViewGenderComponent,
     ClientEditViewTransgenderComponent,
     ClientEditViewSexAtBirthComponent,
-    ClientEditViewSexualIdentityComponent,
+    ClientEditViewSexualIdentityComponent
+    
   ],
   exports: [
     ClientPageComponent,

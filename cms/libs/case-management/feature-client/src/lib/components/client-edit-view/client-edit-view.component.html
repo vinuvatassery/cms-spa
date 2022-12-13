@@ -129,6 +129,7 @@
       <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last Name on Official ID/Checkbox is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-4 mt-3">
+       <!-- (change)="onOfficialIdChecked($event)" -->
       <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
@@ -138,7 +139,7 @@
         aria-labelledby="officialIdNotApplicable"
         kendoCheckBox       
         formControlName="officialIdsNotApplicable"
-        (change)="onOfficialIdChecked($event)"
+       
       />
       <label class="k-checkbox-label" for="idNotApplicable"
         >Not Applicable</label
@@ -167,6 +168,7 @@
           [fillMode]="formUiStyle.inputFillMode" 
           formControlName="ssn"
           [maxlength]="maxLengthSsn"
+          [value]="appInfoForm.controls['ssn'].value | ssn"
           >   </kendo-textbox>
 
       </kendo-floatinglabel>
@@ -431,7 +433,7 @@
           [textFieldAfter]="'YES'"
           [textPlaceholderText]="'Age this condition began'"
           [textValidationMessage]="'Age is required.'"
-          [textFieldMaxLimit]="120">
+          [textFieldMaxLimit]="9999">
     </common-optionbutton-list> 
 </section>
 <section>
@@ -449,7 +451,7 @@
       [textFieldAfter]="'YES'"
       [textPlaceholderText]="'Age this condition began'"
       [textValidationMessage]="'Age is required.'"
-      [textFieldMaxLimit]="120">
+      [textFieldMaxLimit]="9999">
   </common-optionbutton-list>    
 </section>
 <section>
@@ -474,7 +476,7 @@
       [textFieldAfter]="'YES'"
       [textPlaceholderText]="'Age this condition began'"
       [textValidationMessage]="'Age is required.'"
-      [textFieldMaxLimit]="120">
+      [textFieldMaxLimit]="9999">
   </common-optionbutton-list>   
 </section>
 <section>
@@ -490,7 +492,7 @@
       [textFieldAfter]="'YES'"
       [textPlaceholderText]="'Age this condition began'"
       [textValidationMessage]="'Age is required.'"
-      [textFieldMaxLimit]="120">
+      [textFieldMaxLimit]="9999">
   </common-optionbutton-list>  
 
 </section>
@@ -510,7 +512,7 @@
       [textFieldAfter]="'YES'"
       [textPlaceholderText]="'Age this condition began'"
       [textValidationMessage]="'Age is required.'"
-      [textFieldMaxLimit]="120">
+      [textFieldMaxLimit]="9999">
   </common-optionbutton-list>
 </section>
 <section>
@@ -529,7 +531,7 @@
       [textFieldAfter]="'YES'"
       [textPlaceholderText]="'Age this condition began'"
       [textValidationMessage]="'Age is required.'"
-      [textFieldMaxLimit]="120">
+      [textFieldMaxLimit]="9999">
   </common-optionbutton-list>
 
 </section>

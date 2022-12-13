@@ -1,11 +1,12 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of,Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ApplicantInfo } from '../entities/applicant-info';
 /** Data services **/
 import { ClientDataService } from '../infrastructure/client.data.service';
+import { SnackBar } from '@cms/shared/ui-common';
 
 @Injectable({ providedIn: 'root' })
 export class ClientFacade {
@@ -52,6 +53,20 @@ export class ClientFacade {
   appInfoForm$ = this.appInfoFormSubject.asObservable();
   applicantInfo$ = this.applicationInfoSubject.asObservable();
   pronounList$ = this.pronounListSubject.asObservable();
+
+  snackbarMessage!: SnackBar;
+  snackbarSubject = new Subject<SnackBar>();
+  familyfacadesnackbar$ = this.snackbarSubject.asObservable();
+
+  handleSnackBar(title : string , subtitle : string ,type : string )
+  {    
+    const snackbarMessage: SnackBar = {
+      title: title,
+      subtitle: subtitle,
+      type: type,
+    };
+    this.snackbarSubject.next(snackbarMessage);
+  }
 
   /** Constructor**/
   constructor(private readonly clientDataService: ClientDataService) {}

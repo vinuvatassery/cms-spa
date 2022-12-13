@@ -20,3 +20,4 @@ export * from './lib/loader/loader.component';
 export * from './lib/loader/grid-loader.component';
 export * from './lib/optionbutton-list/optionbutton-list.component';
 
+export * from './lib/pipes/ssn.pipe';
