@@ -15,9 +15,7 @@ export class LoaderService {
   }
 
   hide() {
- 
       this.isLoading.next(false);
       this.loaderArray.pop();
- 
   }
 }

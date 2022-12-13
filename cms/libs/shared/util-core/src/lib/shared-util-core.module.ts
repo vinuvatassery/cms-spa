@@ -13,7 +13,6 @@ import { LocalStorageService } from './infrastructure/local-storage.service';
 import { NotificationService } from './api/services/notification.service';
 import { ConfigurationProvider } from './api/providers/configuration.provider';
 import { LoaderInterceptor } from './application/http-interceptors/http-loader.interceptor';
-import { LoaderService } from './application/services/app-loader.service';
 export { ConfigurationProvider, LocalStorageService, NotificationService };
 
 @NgModule({

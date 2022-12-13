@@ -50,7 +50,6 @@ export * from './lib/enums/user-default-roles.enum';
 export * from './lib/enums/program.enum';
 export * from './lib/enums/address-type-code.enum';
 export * from './lib/enums/device-type-code.enum';
-export * from './lib/enums/status-flag.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -72,8 +71,6 @@ export * from './lib/infrastructure/provider.data.service';
 export * from './lib/infrastructure/search.data.service';
 export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
-export * from './lib/infrastructure/email.data.service';
-
 export * from './lib/infrastructure/status-period.data.service';
 export * from './lib/infrastructure/client-document.data.service';
 
