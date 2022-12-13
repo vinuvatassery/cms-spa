@@ -194,7 +194,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientRace.clientId = x.clientId;
                 clientRace.clientRaceCategoryCode = x.clientRaceCategoryCode;
                 clientRace.clientRaceId = x.clientRaceId;
-                clientRace.raceDesc = x.raceDesc
+                clientRace.raceDesc = x.raceDesc;
+                clientRace.isPrimaryFlag = x.isPrimaryFlag;
                 if(this.applicantInfo.clientRaceList == undefined || null ){
                   this.applicantInfo.clientRaceList = []
                 }
@@ -488,23 +489,25 @@ export class ClientPageComponent implements OnInit, OnDestroy {
        }
      });
 }
-  private populateClientRace(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*--------------------------remove if------------------------------------------------------ */
-        if(this.applicantInfo.clientRaceList.length ===0) {
-            var clientRace = new ClientRace();
-            clientRace.clientEthnicIdentityCode = 'American Indian or Alaska Native';
-            clientRace.clientRaceCategoryCode = 'American Indian or Alaska Native';
-            //clientRace.activeFlag = "Y";
-            if(this.applicantInfo.clientRaceList == undefined){
-              this.applicantInfo.clientRaceList =[];
-            }
-            clientRace.clientId = this.clientId;
-            this.applicantInfo.clientRaceList.push(clientRace)
-      }
-        
-        /*-------------------------------------------------------------------------------- */
-  }
+private populateClientRace(){
+  const clientRaceListSaved = this.applicantInfo.clientRaceList;// this is in case of update record
+  const RaceAndEthnicity=this.appInfoForm.controls['RaceAndEthnicity'].value;
+  const RaceAndEthnicityPrimary=this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
+  this.applicantInfo.clientRaceList=[];
+  RaceAndEthnicity.forEach((el:any) => {
+      let clientRace = new ClientRace();
+      clientRace.clientEthnicIdentityCode = el.lovCode;
+      clientRace.clientRaceCategoryCode =el.parentCode;
+      if(RaceAndEthnicityPrimary.lovCode===el.lovCode)
+        clientRace.isPrimaryFlag = StatusFlag.Yes;
+      clientRace.clientId = this.clientId;
+      const Existing=clientRaceListSaved.find(m=>m.clientEthnicIdentityCode===el.clientGenderCode);
+         if (Existing!==undefined) {
+          clientRace=Existing;
+         }
+      this.applicantInfo.clientRaceList.push(clientRace)
+  });
+}
   private populateClientSexualIdentity() {
     this.applicantInfo.clientSexualIdentityList = [];
     Object.keys(this.appInfoForm.controls).filter(m => m.includes('SexulaIdentity')).forEach(control => {
@@ -686,6 +689,34 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                   this.appInfoForm.controls['englishProficiency'].setErrors(null);
               }               
               this.appInfoForm.controls['englishProficiency'].updateValueAndValidity();
+
+              this.appInfoForm.controls['RaceAndEthnicity'].setValidators(Validators.required);              
+              if( this.appInfoForm.controls['RaceAndEthnicity'].value  !=='' ||
+                  this.appInfoForm.controls['RaceAndEthnicity'].value !== null){
+                  this.appInfoForm.controls['RaceAndEthnicity'].setErrors(null);
+              }               
+              this.appInfoForm.controls['RaceAndEthnicity'].updateValueAndValidity(); 
+              const RaceAndEthnicity=this.appInfoForm.controls['RaceAndEthnicity'].value;
+              if(Array.isArray(RaceAndEthnicity) && RaceAndEthnicity.length>1){
+                this.appInfoForm.controls['RaceAndEthnicityPrimary'].setValidators(Validators.required);
+                this.appInfoForm.controls['RaceAndEthnicityPrimary'].updateValueAndValidity(); 
+              }       
+
+              this.appInfoForm.controls['GenderGroup'].setValidators(Validators.required); 
+              this.appInfoForm.controls['GenderGroup'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['Transgender'].setValidators(Validators.required); 
+              this.appInfoForm.controls['Transgender'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['SexulaIdentityGroup'].setValidators(Validators.required); 
+              this.appInfoForm.controls['SexulaIdentityGroup'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['BirthGender'].setValidators(Validators.required); 
+              this.appInfoForm.controls['BirthGender'].updateValueAndValidity();
+
+              
+              
+              
               
            
           this.appInfoForm.updateValueAndValidity();
