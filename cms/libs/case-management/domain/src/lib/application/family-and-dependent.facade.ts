@@ -14,9 +14,25 @@ import { DependentDataService } from '../infrastructure/dependent.data.service';
 /** Facade **/
 import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
+  public gridPageSizes = [
+    {text: "5", value: 5}, 
+    {text: '10', value: 10},
+    {text: '20', value: 20}   
+  ];
+  
+  public sortValue = 'fullName'
+  public sortType = 'asc'
+
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
+  
+
   /** Private properties **/
   private dependentSearchSubject = new Subject<any>();
   private ddlRelationshipsSubject = new Subject<any>();
@@ -57,6 +73,7 @@ export class FamilyAndDependentFacade {
       type: type,
     };
     this.snackbarSubject.next(snackbarMessage);
+    this.HideLoader();
   }
 
 
@@ -153,11 +170,13 @@ export class FamilyAndDependentFacade {
   }
 
 
-  GetExistingClientDependent(clientDependentId: string) : void {    
+  GetExistingClientDependent(clientDependentId: string) : void {   
+    this.ShowLoader(); 
     this.dependentDataService.GetExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
       next: (dependentGetExistingResponse) => {
         dependentGetExistingResponse.ssn=  'xxx-xx-' +dependentGetExistingResponse.ssn.slice(-4);
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
+        this.HideLoader();
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
@@ -168,8 +187,7 @@ export class FamilyAndDependentFacade {
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
     this.ShowLoader();
     this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({ 
-      next: (dependentsResponse : any) => {  
-       
+      next: (dependentsResponse : any) => {         
               if(dependentsResponse)
               {      
                   const gridView = {
@@ -184,10 +202,13 @@ export class FamilyAndDependentFacade {
                 this.workflowFacade.updateChecklist(workFlowdata);
                 this.dependentsSubject.next(gridView);
                }
-               this.HideLoader();
-       
+               this.HideLoader();       
       },
       error: (err) => {
+        this.workflowFacade.updateChecklist([{
+          dataPointName: 'family_dependents',
+          status: StatusFlag.No
+        }]);
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
       },
     });

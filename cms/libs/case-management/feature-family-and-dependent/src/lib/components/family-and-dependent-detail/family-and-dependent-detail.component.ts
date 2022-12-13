@@ -1,21 +1,15 @@
 /** Angular **/
 import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+  Component,  OnInit,  ChangeDetectionStrategy,  Input,
+  ChangeDetectorRef,  Output,  EventEmitter,} from '@angular/core';
 
 /** External libraries **/
 import { groupBy, GroupResult } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Dependent, DependentTypeCode } from '@cms/case-management/domain';
+import { DependentTypeCode } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
-import { debug } from 'console';
+
 @Component({
   selector: 'case-management-family-and-dependent-detail',
   templateUrl: './family-and-dependent-detail.component.html',
@@ -123,9 +117,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   this.onFamilyFormLoad()
   }
 
-
-
-
   private loadFamilyDependents() {   
   
     this.dependentSearch$.subscribe({
@@ -134,11 +125,9 @@ export class FamilyAndDependentDetailComponent implements OnInit {
           { field: 'memberType' },
         ]);
       }
-    });
-  
+    });  
 
   }
-
 
   /** Internal event methods **/
   onNewFamilyMemberClicked() {
@@ -294,19 +283,14 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       })
    }
 
-
-
-
    onsearchTextChange(text : string)      
    {    
-    if(text.length > 3)
-    {
-      this.showDependentSearchInputLoader = true;
-    this.filterManager.next(text); 
-
-
-    }
-   } 
+      if(text.length > 3)
+      {
+        this.showDependentSearchInputLoader = true;
+      this.filterManager.next(text); 
+      }
+    } 
    
 
 }

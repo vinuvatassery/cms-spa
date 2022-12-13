@@ -1,5 +1,5 @@
 /** Angular **/
-import { AfterViewInit, OnDestroy } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,7 +20,7 @@ import { LoaderService } from '@cms/shared/util-core';
   styleUrls: ['./family-and-dependent-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  AfterViewInit{
+export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   /** Public Methods **/
   dependentList$ = this.familyAndDependentFacade.dependents$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
@@ -33,15 +33,18 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
   dependentdelete$  = this.familyAndDependentFacade.dependentdelete$;
   dependentAddNewGet$= this.familyAndDependentFacade.dependentAddNewGet$
   dependentUpdateNew$=this.familyAndDependentFacade.dependentUpdateNew$
-  isFamilyGridDisplay! : boolean;
+  isFamilyGridDisplay =true;
   clientCaseId! : string;
   sessionId! : string;
- 
+  pageSizes = this.familyAndDependentFacade.gridPageSizes;
+  sortValue  = this.familyAndDependentFacade.sortValue;
+  sortType  = this.familyAndDependentFacade.sortType;
+  sort  = this.familyAndDependentFacade.sort;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;
-  clientId = 1
-  clientCaseEligibilityId = '73052435-be42-4bbb-9e82-1a71d303601a'
+  clientId ! : number
+  clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
   
 
@@ -60,21 +63,16 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
 
 
   /** Lifecycle Hooks **/
-
-  ngAfterViewInit() {
-   this.loadDependentsStatus(); 
-  }
+ 
   ngOnInit(): void {   
    
     this.lovFacade.getRelationShipsLovs(); 
     this.loadCase()   
-    this.addSaveSubscription();  
-   // this.loadDependentSearch();
+    this.addSaveSubscription();    
   }
 
   ngOnDestroy(): void {
-    this.saveClickSubscription.unsubscribe();
-    //this.familyfacadesnackbar$.unsubscribe();
+    this.saveClickSubscription.unsubscribe(); 
   }
 
   /** Private Methods **/
@@ -85,14 +83,13 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
     this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
     .subscribe((session: any) => {      
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-     //this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-     this.clientId = 1//JSON.parse(session.sessionData).clientId   
-    
+     this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
+     this.clientId =JSON.parse(session.sessionData).clientId   
+     this.loadDependentsStatus();      
     });        
   } 
 
-  loadDependentsHandle( gridDataRefinerValue : any ): void {
-    
+  loadDependentsHandle( gridDataRefinerValue : any ): void {    
     const gridDataRefiner = 
     {
       skipcount: gridDataRefinerValue.skipCount,
@@ -108,7 +105,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
     }
   }
 
-  private loadDependentsStatus() : void {
+  private loadDependentsStatus() : void {    
       this.familyAndDependentFacade.loadDependentsStatus(this.clientCaseEligibilityId);
       this.checkBoxSubscription= 
       this.dependentStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
@@ -118,11 +115,6 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
      
     });
   }
-
-  private updateCompletionStatus(status: any) {
-    this.completionStatusFacade.updateCompletionStatus(status);
-  }
-
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
@@ -130,7 +122,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
       ),
     ).subscribe(([navigationType, isSaved]) => {      
       if (isSaved) {        
-      this.checkBoxSubscription.unsubscribe();
+      this.checkBoxSubscription.unsubscribe();      
         this.workflowFacade.navigate(navigationType);
       }
     });
@@ -139,8 +131,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
   private save() {       
     this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
        this.familyAndDependentFacade.updateDependentStatus
-      (this.clientCaseEligibilityId,this.familyStatus);      
-      return of(this.familyAndDependentFacade.dependentStatus$)//this.familyAndDependentFacade.dependentStatus$//.pipe(first(x=>x?.noDependentFlag == true));
+      (this.clientCaseEligibilityId,this.familyStatus);          
+      return of(this.familyAndDependentFacade.dependentStatus$)
      }
 
   /** Internal event methods **/

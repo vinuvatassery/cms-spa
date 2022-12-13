@@ -10,7 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { DependentTypeCode, ScreenType } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
-import { SortDescriptor, State } from '@progress/kendo-data-query';
+import {  State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
 
 
@@ -35,6 +35,10 @@ CAClient = DependentTypeCode.CAClient;
   @Input() dependentdelete$ : any;
   @Input() dependentAddNewGet$ : any;
   @Input() dependentUpdateNew$ : any;
+  @Input() pageSizes : any;
+  @Input() sortValue : any;
+  @Input() sortType : any;
+  @Input() sort : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
@@ -47,37 +51,22 @@ CAClient = DependentTypeCode.CAClient;
     /**Constructor */
     constructor( private router: Router , private activatedRoute : ActivatedRoute) { }
 
-  //public pageSize = 5;
-  //public skip = 0;
-  public sortValue = 'fullName'
-  public sortType = 'asc'
-  public pageSizes = [
-    {text: "5", value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20}   
-  ];
-
-  public sort: SortDescriptor[] = [{
-    field: this.sortValue,
-    dir: 'asc' 
-  }];
-  
-  isEditFamilyMember!: boolean;
-  isAddOrEditFamilyDependentDisplay!: boolean;
-  isOpenedFamilyMember = false;
-  isOpenedEditFamilyMember = false;
-  dependentsObject! : any
-  relationshipsObject! : any 
-  dependentTypeCodeSelected! : DependentTypeCode
-  popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  deleteRequestSubject = new Subject<DeleteRequest>();
-  deleteRqclientDependentId! : string
-  deleteRqdependentTypeCode! : string 
-  openDeleteConfirmation! : boolean
-  deletebuttonEmitted = false
-  editbuttonEmitted = false
-  deleteRequest$ = this.deleteRequestSubject.asObservable();  
-
+    isEditFamilyMember!: boolean;
+    isAddOrEditFamilyDependentDisplay!: boolean;
+    isOpenedFamilyMember = false;
+    isOpenedEditFamilyMember = false;
+    dependentsObject! : any
+    relationshipsObject! : any 
+    dependentTypeCodeSelected! : DependentTypeCode
+    popupClassAction = 'TableActionPopup app-dropdown-action-list';
+    deleteRequestSubject = new Subject<DeleteRequest>();
+    deleteRqclientDependentId! : string
+    deleteRqdependentTypeCode! : string 
+    openDeleteConfirmation! : boolean
+    deletebuttonEmitted = false
+    editbuttonEmitted = false
+    deleteRequest$ = this.deleteRequestSubject.asObservable();  
+    public  state!: State
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -105,16 +94,15 @@ CAClient = DependentTypeCode.CAClient;
       },
     },  
  
-  ]; 
-
-  public  state: State = {
-    skip: 0,
-    take: 5,
-    sort: this.sort
-};
+  ];  
 
   /** Lifecycle hooks **/
-  ngOnChanges(): void {            
+  ngOnChanges(): void {        
+      this.state = {
+      skip: 0,
+      take: 5,
+      sort: this.sort
+  };    
         this.loadFamilyDependents()
  } 
 
