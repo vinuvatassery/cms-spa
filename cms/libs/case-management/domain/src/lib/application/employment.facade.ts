@@ -1,14 +1,20 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
 /** External libraries **/
+import { Observable, of, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { ClientEmployer } from '../entities/client-employer';
-/** Data services **/
+/** interal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { EmployersDataService } from '../infrastructure/employers.data.service';
-import {  CompletionChecklist,  StatusFlag,  WorkflowFacade,} from '@cms/case-management/domain';
 import { SortDescriptor } from '@progress/kendo-data-query';
+// entities library
+import { ClientEmployer } from '../entities/client-employer';
+import { CompletionChecklist, WorkflowProcessCompletionStatus } from '../entities/workflow-stage-completion-status';
+/** Data services **/
+import { EmployersDataService } from '../infrastructure/employers.data.service';
+// enum  library
+import {StatusFlag} from '../enums/status-flag.enum'
+import {WorkflowFacade}from  './workflow.facade'
+
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
 
