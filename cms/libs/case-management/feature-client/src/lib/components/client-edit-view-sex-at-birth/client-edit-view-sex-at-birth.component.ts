@@ -34,7 +34,7 @@ export class ClientEditViewSexAtBirthComponent implements OnInit {
       if (!Array.isArray(data)) return;
       this.appInfoForm.addControl(
         'BirthGender',
-        new FormControl('', [Validators.required])
+        new FormControl('')
       );
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
       this.Genders = data;

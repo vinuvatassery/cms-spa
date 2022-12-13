@@ -44,7 +44,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
       this.appInfoForm.addControl(
         'SexulaIdentityGroup',
-        new FormControl('', [Validators.required])
+        new FormControl('')
       );
       this.SexulaIdentities = data;
     });
