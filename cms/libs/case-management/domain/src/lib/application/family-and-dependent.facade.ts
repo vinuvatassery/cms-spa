@@ -13,6 +13,7 @@ import { DependentDataService } from '../infrastructure/dependent.data.service';
 
 /** Facade **/
 import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { LoaderService } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -60,10 +61,22 @@ export class FamilyAndDependentFacade {
 
 
   /** Constructor**/
-  constructor(private readonly dependentDataService: DependentDataService,private workflowFacade: WorkflowFacade) {}
+  constructor(private readonly dependentDataService: DependentDataService,
+    private workflowFacade: WorkflowFacade ,   private readonly loaderService: LoaderService  ) {}
 
   /** Public methods **/
+  ShowLoader()
+  {
+    this.loaderService.show();
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
+
   DeleteDependent(dependentId: string): void {
+   this.ShowLoader();
     this.dependentDataService.DeleteDependent(dependentId).subscribe({
       next: (dependentdeleteResponse) => {      
        if(dependentdeleteResponse == true)
@@ -75,6 +88,7 @@ export class FamilyAndDependentFacade {
         this.handleSnackBar('Error' ,'Error','error') 
        }        
         this.dependentdeleteSubject.next(dependentdeleteResponse);
+        this.HideLoader();
       },
       error: (err) => {        
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )       
@@ -83,6 +97,7 @@ export class FamilyAndDependentFacade {
   }
 
   AddNewDependent(dependent: Dependent): void {
+    this.ShowLoader();
     this.dependentDataService.AddNewDependent(dependent).subscribe({
       next: (addNewdependentsResponse) => {
         if(addNewdependentsResponse)
@@ -94,6 +109,7 @@ export class FamilyAndDependentFacade {
          this.handleSnackBar('Error' ,'Error','error') 
         }   
         this.dependentAddNewSubject.next(addNewdependentsResponse);
+        this.HideLoader();
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
@@ -102,6 +118,7 @@ export class FamilyAndDependentFacade {
   }
 
   UpdateNewDependent(dependent: Dependent): void {
+    this.ShowLoader();
     this.dependentDataService.UpdateNewDependent(dependent).subscribe({
       next: (updateNewdependentsResponse) => {
         if(updateNewdependentsResponse)
@@ -113,6 +130,7 @@ export class FamilyAndDependentFacade {
          this.handleSnackBar('Error' ,'Error','error') 
         }   
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
+        this.HideLoader();
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
@@ -121,10 +139,12 @@ export class FamilyAndDependentFacade {
   }
 
   GetNewDependent(dependentId: string) : void {
+    this.ShowLoader();
     this.dependentDataService.GetNewDependent(dependentId).subscribe({
       next: (getNewdependentsResponse) => {
         getNewdependentsResponse.ssn = this.FormatSSN(getNewdependentsResponse?.ssn)
         this.dependentGetNewSubject.next(getNewdependentsResponse);
+        this.HideLoader();
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
@@ -146,7 +166,7 @@ export class FamilyAndDependentFacade {
   }
 
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
-    
+    this.ShowLoader();
     this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({ 
       next: (dependentsResponse : any) => {  
        
@@ -164,6 +184,7 @@ export class FamilyAndDependentFacade {
                 this.workflowFacade.updateChecklist(workFlowdata);
                 this.dependentsSubject.next(gridView);
                }
+               this.HideLoader();
        
       },
       error: (err) => {
@@ -173,6 +194,7 @@ export class FamilyAndDependentFacade {
   }
 
   updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string): void {
+    this.ShowLoader();
     this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents).subscribe({
       next: (dependentStatusResponse) => {        
         if(dependentStatusResponse == true)
@@ -184,6 +206,7 @@ export class FamilyAndDependentFacade {
          this.handleSnackBar('Error' ,'Error','error') 
         }       
         this.dependentStatusSubject.next(dependentStatusResponse);
+        this.HideLoader();
       },
       error: (err) => {
         this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    

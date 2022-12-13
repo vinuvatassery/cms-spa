@@ -11,6 +11,7 @@ import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Statu
 import {  NavigationType } from '@cms/case-management/domain';
 
 import {LovFacade } from '@cms/system-config/domain' 
+import { LoaderService } from '@cms/shared/util-core';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
     private readonly router: Router,
     private readonly workFlowFacade : WorkflowFacade,
     private route: ActivatedRoute,
-    private readonly lovFacade : LovFacade   
+    private readonly lovFacade : LovFacade,
+    private readonly loaderService: LoaderService   
   ) { }
 
 
@@ -142,14 +144,6 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
      }
 
   /** Internal event methods **/
-  onChangeCounterClick() {
-    this.updateCompletionStatus({
-      name: 'Family & Dependents',
-      completed: 15,
-      total: 31,
-    });
-  }
-
   onNoFamilyMemberClicked() {  
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;    
   }
@@ -184,8 +178,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
   }
 
   deleteDependentParamHandle(clientDependentId : any)
-  {   
-   
+  {      
       if(clientDependentId)
       {
        this.familyAndDependentFacade.DeleteDependent(clientDependentId);
@@ -201,7 +194,5 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy ,  Aft
   {
     this.familyAndDependentFacade.AddExistingDependent(data);
   }
-
-
-
+ 
 }
