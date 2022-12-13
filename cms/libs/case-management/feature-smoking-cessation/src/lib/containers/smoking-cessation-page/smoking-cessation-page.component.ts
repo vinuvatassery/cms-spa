@@ -139,9 +139,9 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.validate();
     if(this.smokingCessationForm.valid){    
       this.smokingCessation.clientCaseEligibilityId = this.clientCaseEligibilityId;
-      this.smokingCessation.clientCaseId = this.clientCaseId;
-      return this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation);   
-      this.loaderService.hide();    
+      this.smokingCessation.clientCaseId = this.clientCaseId;     
+      return this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation);  
+        
    }
     return of(false)
   }
