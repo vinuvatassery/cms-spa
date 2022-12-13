@@ -11,6 +11,7 @@
     {"text": "20", "value": 20}   
   ],
   "snackbarAnimationDuration":"600",
+  "instrumentationKey": "d208c057-65ff-4fa0-9e47-b4d35712daa4",
   "oidc": {
     "sendAccessToken": true,
     "authority": "https://login.microsoftonline.com/bf61c743-739e-485a-8e3d-b313fa1a759b/v2.0",
