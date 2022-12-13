@@ -5,13 +5,12 @@ import {
   ChangeDetectionStrategy,
   Input,
   EventEmitter,
-  Output
- 
+  Output,
 } from '@angular/core';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /** Facades **/
-import {ClientEmployer, EmploymentFacade } from '@cms/case-management/domain'; 
+import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
 @Component({
@@ -25,53 +24,49 @@ export class EmployerListComponent implements OnInit {
   @Input() data!: any;
   @Input() employment$: any;
   @Input() isGridLoaderShow: any;
-  @Output() loadEmploymentsEvent = new EventEmitter<any>(); 
+  @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
-  /** Public properties **/ 
-  isAddEmployerButtonDisplayed!: boolean; 
+  /** Public properties **/
+  isAddEmployerButtonDisplayed!: boolean;
   isAdd = true;
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
   selectedEmployer: ClientEmployer = new ClientEmployer();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  public sortValue = 'employerName'
-  public sortType = 'asc'
-  public pageSizes = [
-    {text: "5", value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20}   
-  ];
-
-  public sort: SortDescriptor[] = [{
-    field: this.sortValue,
-    dir: 'asc' 
-  }];
-  public  state: State = {
-    skip: 0,
-    take: 5,
-    sort: this.sort
-};
+  public sortValue = this.employmentFacade.sortValue;
+  public sortType = this.employmentFacade.sortType;
+  public pageSizes = this.employmentFacade.gridPageSizes;
+  public sort = this.employmentFacade.sort;
+  public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
- 
+
   public actions = [
     {
-      buttonType: "btn-h-primary",
-      text: "Edit Employer",
-      icon: "edit",
-      type: "edit"
+      buttonType: 'btn-h-primary',
+      text: 'Edit Employer',
+      icon: 'edit',
+      type: 'edit',
     },
     {
-      buttonType: "btn-h-danger",
-      text: "Delete Employer",
-      icon: "delete",
-      type: "delete"
+      buttonType: 'btn-h-danger',
+      text: 'Delete Employer',
+      icon: 'delete',
+      type: 'delete',
     },
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade) { }
+  constructor(private readonly employmentFacade: EmploymentFacade) {}
 
   /** Lifecycle hooks **/
+  ngOnChanges(): void {
+    this.state = {
+      skip: 0,
+      take: 5,
+      sort: this.sort,
+    };
+    this.loadEmployments();
+  }
   ngOnInit(): void {
     this.addEmployerButtonDisplay();
     this.loadEmployments();
@@ -80,9 +75,9 @@ export class EmployerListComponent implements OnInit {
   receiveDetailFromEmpDetails($event: boolean) {
     this.isEmployerOpened = $event;
   }
-  
+
   /** Private methods **/
-  pageselectionchange(data: any){
+  pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadEmployments();
@@ -105,45 +100,56 @@ export class EmployerListComponent implements OnInit {
     this.isAdd = isEmployerAdd;
   }
 
-  onEmployerActionClicked(selectedEmployer: ClientEmployer, modalType: string = "") {
+  onEmployerActionClicked(
+    selectedEmployer: ClientEmployer,
+    modalType: string = ''
+  ) {
     this.selectedEmployer = selectedEmployer;
-    if (modalType == "edit") {
+    if (modalType == 'edit') {
       this.isEmployerOpened = true;
       this.isAdd = false;
     }
-    if (modalType == "delete") {
+    if (modalType == 'delete') {
       this.isRemoveEmployerConfirmationPopupOpened = true;
     }
   }
-  
-  updateEmploymentHandle(employements : any) {
+
+  updateEmploymentHandle(employements: any) {
     this.loadEmployments();
   }
   onRemoveEmployerConfirmationClosed() {
     this.isRemoveEmployerConfirmationPopupOpened = false;
   }
 
-  public dataStateChange(stateData: any): void {         
+  public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field
-    this.sortType = stateData.sort[0]?.dir ?? 'asc'
-    this.state= stateData;
-    this.loadEmployments();   
-}
-
-private loadEmployments(): void {   
-  this.loadEmploymentsLists(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)    
-}
-
-loadEmploymentsLists(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
-{
-  const gridDataRefinerValue = 
-  {
-    skipCount: skipcountValue,
-    pagesize : maxResultCountValue,
-    sortColumn : sortValue,
-    sortType : sortTypeValue,
+    this.sortValue = stateData.sort[0]?.field;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.loadEmployments();
   }
-  this.loadEmploymentsEvent.next(gridDataRefinerValue)
-}
+
+  private loadEmployments(): void {
+    this.loadEmploymentsLists(
+      this.state.skip ?? 0,
+      this.state.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+
+  loadEmploymentsLists(
+    skipcountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    const gridDataRefinerValue = {
+      skipCount: skipcountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+    };
+    this.loadEmploymentsEvent.next(gridDataRefinerValue);
+  }
 }

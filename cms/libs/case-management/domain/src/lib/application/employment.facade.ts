@@ -6,21 +6,33 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ClientEmployer } from '../entities/client-employer';
 /** Data services **/
 import { EmployersDataService } from '../infrastructure/employers.data.service';
-import {
-  CompletionChecklist,
-  StatusFlag,
-  WorkflowFacade,
-} from '@cms/case-management/domain';
+import {  CompletionChecklist,  StatusFlag,  WorkflowFacade,} from '@cms/case-management/domain';
+import { SortDescriptor } from '@progress/kendo-data-query';
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
+
+  public gridPageSizes = [
+    {text: "5", value: 5}, 
+    {text: '10', value: 10},
+    {text: '20', value: 20}   
+  ];
+  public sortValue = 'employerName'
+  public sortType = 'asc'
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
+  
   /** Private properties **/
   private employersSubject = new Subject<any>();
   private employersDetailsSubject = new BehaviorSubject<any>([]);
   private employmentStatusGetSubject = new Subject<any>();
+  private employersStatusSubject =  new BehaviorSubject<any>([]);
   /** Public properties **/
   employers$ = this.employersSubject.asObservable();
   employersDetails$ = this.employersDetailsSubject.asObservable();
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
+  employersStatus$ = this.employersStatusSubject.asObservable();
 
   /** Constructor**/
   constructor(
@@ -116,10 +128,19 @@ export class EmploymentFacade {
   }
 
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-    return this.employersDataService.employmentStatusUpdateService(
-      clientCaseEligibilityId,
-      isEmployed
-    );
+
+    this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed).subscribe({
+      next: (employmentStatusResponse) => {        
+        this.employersStatusSubject.next(employmentStatusResponse);
+      },
+      error: (err) => { 
+      },
+    });
+
+    // return this.employersDataService.employmentStatusUpdateService(
+    //   clientCaseEligibilityId,
+    //   isEmployed
+    // );
   }
 
   save(): Observable<boolean> {

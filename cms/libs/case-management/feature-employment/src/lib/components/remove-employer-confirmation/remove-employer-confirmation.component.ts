@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
+import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
  
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
@@ -28,11 +28,14 @@ export class RemoveEmployerConfirmationComponent {
     };
     this.snackbarSubject.next(snackbarMessage);
   }
-  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
+  clientId = this.workflowFacade.clientId;
+  clientCaseId = this.workflowFacade.clientCaseId;
+  clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId;
   /** Constructor **/
   constructor(
     private readonly employmentFacade: EmploymentFacade, 
-    private loaderService: LoaderService) { }
+    private loaderService: LoaderService,
+    private workflowFacade: WorkflowFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

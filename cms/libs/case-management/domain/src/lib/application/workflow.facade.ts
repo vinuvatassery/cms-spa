@@ -41,6 +41,10 @@ export class WorkflowFacade {
   currentSession!: WorkflowSession;
   currentWorkflowMaster!: WorkflowMaster[];
 
+  clientId: number | undefined;
+  clientCaseId = 1; /*string | undefined; */
+  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846'; /* string | undefined;*/
+
   /**Constructor */
   constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute) { }
 

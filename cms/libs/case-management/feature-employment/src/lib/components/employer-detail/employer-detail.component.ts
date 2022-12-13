@@ -1,19 +1,8 @@
 /** Angular **/
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter,} from '@angular/core';
+import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {
-  Validators,
-  FormGroup,
-  FormControl,
- 
-} from '@angular/forms';
+import { Validators, FormGroup, FormControl,} from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
@@ -25,12 +14,14 @@ import { LoaderService } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerDetailComponent {
+  public employer: ClientEmployer = new ClientEmployer();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   employmentList$ = this.employmentFacade.employers$;
   isRemoveEmployerConfirmationPopupOpened = false;
-  employer: ClientEmployer = new ClientEmployer();
-  public formUiStyle: UIFormStyle = new UIFormStyle();
   empNameMaxValue = 100;
-  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846'
+  clientId = this.workflowFacade.clientId;
+  clientCaseId = this.workflowFacade.clientCaseId;
+  clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId;
   /** Input properties **/
   @Input() isAdd = true;
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
@@ -54,6 +45,7 @@ export class EmployerDetailComponent {
     this.snackbarSubject.next(snackbarMessage);
   }
   constructor(private readonly employmentFacade: EmploymentFacade, 
+    private workflowFacade: WorkflowFacade,
     private loaderService: LoaderService) {}
 
   /** Lifecycle hooks **/

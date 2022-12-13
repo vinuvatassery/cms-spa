@@ -1,21 +1,10 @@
 /** Angular **/
-
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
-/** Internal Libraries **/
-import {
-  WorkflowFacade,
-  CompletionStatusFacade,
-  EmploymentFacade,
-} from '@cms/case-management/domain';
+import { ChangeDetectionStrategy,  Component,  OnDestroy,  OnInit,} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
-
+import { filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
+import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType, StatusFlag } from '@cms/case-management/domain';
 
@@ -30,26 +19,30 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   employmentList$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   employmentStatus$ = this.employmentFacade.employmentStatusGet$;
-  clientCaseId!: string;
+  clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId;
+  clientId = this.workflowFacade.clientId;
+  clientCaseId = this.workflowFacade.clientCaseId;
   sessionId!: string;
   isEmpListGridLoaderShow = false;
-
-  /** Private properties **/
-  private saveClickSubscription!: Subscription;
-  clientId = 1;
-  clientCaseEligibilityId = 'B7D1A86D-833E-4981-8957-6A189F0FC846';
   isEmployedGridDisplay = true;
   isEmployedFlag!: StatusFlag;
+  
+  /** Private properties **/
+  private saveClickSubscription!: Subscription;
+  private checkBoxSubscription!: Subscription;
+
 
   /** Constructor */
   constructor(
     private employmentFacade: EmploymentFacade,
     private completionStatusFacade: CompletionStatusFacade,
-    private workflowFacade: WorkflowFacade
+    private workflowFacade: WorkflowFacade,
+    private readonly router: Router,
+    private route: ActivatedRoute
   ) {}
 
   /** Lifecycle Hooks */
- 
+
   ngOnInit() {
     this.loadEmploymentStatus();
     this.addSaveSubscription();
@@ -65,10 +58,11 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
 
   private loadEmploymentStatus(): void {
     this.employmentFacade.loadEmploymentStatus(this.clientCaseEligibilityId);
-    //   this.checkBoxSubscription=
-    //   this.employmentStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe((x: boolean)=>  {
-    //   this.isEmployedGridDisplay = x
-    //  });
+    this.checkBoxSubscription = this.employmentStatus$
+      .pipe(filter((x) => typeof x === 'boolean'))
+      .subscribe((x: boolean) => {
+        this.isEmployedGridDisplay = x;
+      });
   }
 
   loadEmploymentsHandle(gridDataRefinerValue: any): void {
@@ -79,18 +73,16 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
       sort: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
     };
-    // if((this.isEmployedGridDisplay ?? false) == false)
-    // {
-    this.employmentFacade.loadEmployers(
-      this.clientCaseEligibilityId,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sort,
-      gridDataRefiner.sortType
-    );
-    this.isEmpListGridLoaderShow = false;
-
-    // }
+    if ((this.isEmployedGridDisplay ?? false) == false) {
+      this.employmentFacade.loadEmployers(
+        this.clientCaseEligibilityId,
+        gridDataRefiner.skipcount,
+        gridDataRefiner.maxResultCount,
+        gridDataRefiner.sort,
+        gridDataRefiner.sortType
+      );
+      this.isEmpListGridLoaderShow = false;
+    }
   }
 
   /** Internal event methods **/
@@ -103,6 +95,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
       )
       .subscribe(([navigationType, isSaved]) => {
         if (isSaved) {
+          this.checkBoxSubscription.unsubscribe();
           this.workflowFacade.navigate(navigationType);
         }
       });
@@ -111,24 +104,14 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   private save() {
     this.isEmployedFlag =
       this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
-    this.employmentFacade
-      .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
-      .subscribe({
-        next: (response) => {   },
-        error: (err) => {  },
-      });
-    return this.employmentFacade.save();
+    this.employmentFacade.unEmploymentUpdate(
+      this.clientCaseEligibilityId,
+      this.isEmployedFlag
+    );
+    return of(this.employmentFacade.employersStatus$);
   }
 
   onUnEmployedClicked() {
     this.isEmployedGridDisplay = !this.isEmployedGridDisplay;
-  }
-
-  onChangeCounterClick() {
-    this.updateCompletionStatus({
-      name: 'Employment',
-      completed: 15,
-      total: 31,
-    });
   }
 }
