@@ -70,7 +70,7 @@ export class EmploymentFacade {
         this.employmentStatusGetSubject.next(employmentStatusGetResponse);
       },
       error: (err) => {
-        this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' ); 
       },
    
     });
@@ -115,7 +115,7 @@ export class EmploymentFacade {
           }
         },
         error: (err) => {
-          this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
+          this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' ); 
         },
       });
   }
@@ -157,7 +157,7 @@ export class EmploymentFacade {
         this.employersStatusSubject.next(employmentStatusResponse);
       },
       error: (err) => {
-        this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );
       },
     });
 
@@ -165,11 +165,6 @@ export class EmploymentFacade {
     //   clientCaseEligibilityId,
     //   isEmployed
     // );
-  }
-
-  save(): Observable<boolean> {
-    //TODO: save api call
-    return of(true);
   }
   
 }

@@ -75,9 +75,8 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
           this.loaderService.hide() 
         },
         error: (err) => {
-          this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
           this.loaderService.hide()
-
+          this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' ) ;
         },
       }
       );

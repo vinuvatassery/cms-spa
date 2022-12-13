@@ -106,7 +106,7 @@ export class EmployerDetailComponent implements OnInit{
         }
       },
       error: (err) => {
-        this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
+        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );
       },
     }
     );
@@ -146,7 +146,7 @@ export class EmployerDetailComponent implements OnInit{
                   },
                   error: (err) => { 
                     this.loaderService.hide();
-                    this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
+                    this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );  
                   },
                 });
               } else {
@@ -168,7 +168,7 @@ export class EmployerDetailComponent implements OnInit{
                   },
                   error: (err) => {
                     this.loaderService.hide(); 
-                    this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
+                    this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );  
                   },
                 });
               }
