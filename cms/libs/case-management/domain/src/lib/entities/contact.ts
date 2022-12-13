@@ -17,13 +17,6 @@ export interface ClientAddress {
   zip?: string;
   county?: string;
   concurrencyStamp?: string;
-  // startDate?: string;
-  // endDate?: string;
-  // createUser?: string;
-  // createDate: Date;
-  // lastUpdateUser?: string;
-  // lastUpdateDate?: string;
-  // activeFlag?: string;
 }
 
 export interface ClientPhone {
@@ -31,18 +24,12 @@ export interface ClientPhone {
   clientId?: number;
   deviceTypeCode?: string;
   phoneNbr?: string;
-  //effectiveDate?: Date;
   preferredFlag?: string;
   applicableFlag?: string;
   detailMsgConsentFlag?: string;
   smsTextConsentFlag?: string;
   otherPhoneNote?: string;
   concurrencyStamp?: string;
-  // createUser?: string;
-  // createDate: Date;
-  // lastUpdateUser?: string;
-  // lastUpdateDate?: string;
-  // activeFlag?: string;
 }
 
 export interface ClientEmail {
@@ -54,11 +41,6 @@ export interface ClientEmail {
   applicableFlag?: string;
   detailMsgFlag?: string;
   concurrencyStamp?: string;
-  // createUser?: string;
-  // createDate: string;
-  // lastUpdateUser?: string;
-  // lastUpdateDate?: string;
-  // activeFlag?: string;
 }
 
 export interface FriedsOrFamilyContact {
@@ -73,14 +55,18 @@ export interface FriedsOrFamilyContact {
 
 export interface ContactInfo {
   address?: ClientAddress[];
-  homelessFlag?: string;
-  homeAddressProofFlag?: any;
-  housingStabilityCode?:string;
   phone?: ClientPhone[];
   email?: ClientEmail;
   preferredContactCode?: string;
-  papperlessFlag?: string;
   friedsOrFamilyContact?: FriedsOrFamilyContact;
-  elgbtyflagConcurrencyStamp?: string;
+  clientCaseEligibility?: ClientCaseElgblty;
+}
+
+export interface ClientCaseElgblty {
+  homelessFlag?: string;
+  homeAddressProofFlag?: any;
+  housingStabilityCode?: string;
+  paperlessFlag?: string;
+  elgbtyFlagConcurrencyStamp?: string;
   elgbtyConcurrencyStamp?: string;
 }

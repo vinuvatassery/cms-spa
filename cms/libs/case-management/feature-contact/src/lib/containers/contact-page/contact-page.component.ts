@@ -6,7 +6,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, filter, Observable } from 'rxjs';
 
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
@@ -91,8 +91,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {
-      control.addEventListener('click', this.adjustAttributeChanged.bind(this));      
-    });   
+      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
+    });
   }
 
   /** Private methods **/
@@ -118,7 +118,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     const sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
     this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
-      if(resp){
+      if (resp) {
         this.loadContactInfo();
       }
     });
@@ -139,10 +139,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
   }
 
-  private adjustAttributeInit(){
+  private adjustAttributeInit() {
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
-    adjustControls.forEach((control: any) => {     
+    adjustControls.forEach((control: any) => {
       const data: CompletionChecklist = {
         dataPointName: control.name,
         status: control.checked ? StatusFlag.Yes : StatusFlag.No
@@ -516,6 +516,16 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       otherDesc: ffContactGroup.controls['otherDesc']?.value,
     }
 
+    const clientCaseElgibility: ClientCaseElgblty = {
+      homelessFlag: this.getFlag(homeAddressGroup?.get('homelessFlag')?.value),
+      housingStabilityCode: homeAddressGroup?.get('housingStabilityCode')?.value,
+      paperlessFlag: this.getFlag(emailGroup?.get('papperlessFlag')?.value),
+      homeAddressProofFlag: this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value),
+      elgbtyFlagConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyFlagConcurrencyStamp,
+      elgbtyConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyConcurrencyStamp,
+    };
+
+
     if (this.isEdit) {
       const homeAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
       const mailingAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
@@ -548,8 +558,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       friedsOrFamilyContact.clientDependentId = this.contactInfo?.friedsOrFamilyContact?.clientDependentId;
       friedsOrFamilyContact.concurrencyStamp = this.contactInfo?.friedsOrFamilyContact?.concurrencyStamp;
-      contactInfoData.elgbtyflagConcurrencyStamp = this.contactInfo?.elgbtyflagConcurrencyStamp;
-      contactInfoData.elgbtyConcurrencyStamp = this.contactInfo?.elgbtyConcurrencyStamp;
 
     }
 
@@ -557,13 +565,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     contactInfoData.phone = [homePhone, cellPhone, workPhone, otherPhone];
     contactInfoData.email = email;
     contactInfoData.friedsOrFamilyContact = friedsOrFamilyContact;
-    contactInfoData.homelessFlag = this.getFlag(homeAddressGroup?.get('homelessFlag')?.value);
-    contactInfoData.housingStabilityCode = homeAddressGroup?.get('housingStabilityCode')?.value;
-    contactInfoData.papperlessFlag = this.getFlag(emailGroup?.get('papperlessFlag')?.value);
-    contactInfoData.homeAddressProofFlag = this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value);
-    contactInfoData.elgbtyflagConcurrencyStamp = this.contactInfo?.elgbtyflagConcurrencyStamp;
-    const preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
+    contactInfoData.clientCaseEligibility = clientCaseElgibility;
 
+    const preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
     if (preferredContactCode === homePhone?.phoneNbr) {
       homePhone.preferredFlag = StatusFlag.Yes;
     }
@@ -584,6 +588,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     if (this.isEdit) {
       return this.updateContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', contactInfoData);
     }
+
     return this.contactFacade.createContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', contactInfoData);
   }
 
@@ -622,9 +627,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         this.contactInfoForm.get('homeAddress.state')?.patchValue(homeAddress?.state);
         this.contactInfoForm.get('homeAddress.zip')?.patchValue(homeAddress?.zip);
         this.contactInfoForm.get('homeAddress.county')?.patchValue(homeAddress?.county);
-        this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(this.contactInfo?.homelessFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.homeAddressProofFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.patchValue(this.contactInfo?.housingStabilityCode);
+        this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homelessFlag === StatusFlag.Yes);
+        this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressProofFlag === StatusFlag.Yes);
+        this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.patchValue(this.contactInfo?.clientCaseEligibility?.housingStabilityCode);
       }
       if (mailingAddress) {
         this.contactInfoForm.get('maillingAddress')?.patchValue(mailingAddress);
@@ -663,7 +668,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm.get('email.email')?.patchValue(this.contactInfo?.email?.email);
       this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('email.detailMsgConsentFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('email.papperlessFlag')?.patchValue(this.contactInfo?.papperlessFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('email.papperlessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes);
       //this.contactInfoForm?.get('email.preferredContactMethod')?.patchValue(this.contactInfo?.preferredContactCode);
       this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
         homePhone,
@@ -712,7 +717,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private sameAsMailingAddressChangeSubscription() {
     //this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.valueChanges
     (this.contactInfoForm.get('homeAddress') as FormGroup)
-    ?.controls['sameAsMailingAddressFlag']?.valueChanges
+      ?.controls['sameAsMailingAddressFlag']?.valueChanges
       .pipe(
         startWith(null),
         pairwise()
