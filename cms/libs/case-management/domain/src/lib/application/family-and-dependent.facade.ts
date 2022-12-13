@@ -10,7 +10,7 @@ import { DependentTypeCode } from '../enums/dependent-type.enum';
 /** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
 /** Providers **/
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoggingService } from '@cms/shared/util-core';
 
 
 /** Facade **/
@@ -70,6 +70,7 @@ export class FamilyAndDependentFacade {
     {
       const err= subtitle;
       subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
+      this.loggingService.logException(err)
     }
     const snackbarMessage: SnackBar = {
       title: titleText,
@@ -84,7 +85,8 @@ export class FamilyAndDependentFacade {
   /** Constructor**/
   constructor(private readonly dependentDataService: DependentDataService,
     private workflowFacade: WorkflowFacade ,   private readonly loaderService: LoaderService ,
-    private configurationProvider : ConfigurationProvider ) {}
+    private configurationProvider : ConfigurationProvider ,
+    private loggingService : LoggingService ) {}
 
   /** Public methods **/
   ShowLoader()
