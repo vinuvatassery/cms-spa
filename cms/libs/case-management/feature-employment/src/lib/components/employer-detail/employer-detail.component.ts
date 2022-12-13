@@ -20,7 +20,12 @@ export class EmployerDetailComponent implements OnInit{
   employmentList$ = this.employmentFacade.employers$;
   isRemoveEmployerConfirmationPopupOpened = false;
   empNameMaxValue = 100;
-  public currentDate= new Date();
+  public currentDate=  new Date;
+  public date = new Date();
+  public now_utc = Date.UTC(this.date.getUTCFullYear(), this.date.getUTCMonth(),
+  this.date.getUTCDate(), this.date.getUTCHours(),
+  this.date.getUTCMinutes(), this.date.getUTCSeconds());
+  employerFormSubmitted = false;
   sessionId!: string;
   clientId : any;
   clientCaseId: any;
@@ -109,7 +114,7 @@ export class EmployerDetailComponent implements OnInit{
 
   // submiting the employer form details
   saveEmployer() {
- 
+ this.employerFormSubmitted = true;
     this.empDetailsForm.markAllAsTouched();
     this.empDetailsForm.controls['empName'].setValidators([  Validators.required,  ]);
     this.empDetailsForm.controls['empHireDate'].setValidators([  Validators.required,  ]);
@@ -123,11 +128,14 @@ export class EmployerDetailComponent implements OnInit{
             this.employer.clientEmployerId = this.selectedEmployer.clientEmployerId;
             this.employer.employerName =  this.empDetailsForm.controls['empName'].value;
             this.employer.clientCaseEligibilityId =  this.selectedEmployer.clientCaseEligibilityId;
+            let dateOfHire = new Date(this.empDetailsForm.controls['empHireDate'].value);
             this.employer.dateOfHire = new Date(this.empDetailsForm.controls['empHireDate'].value);
           
             if (this.employer) {
               this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
               this.loaderService.show();
+              this.employerFormSubmitted = false;
+
               if (this.isAdd) {
                 this.employmentFacade.createEmployer(this.employer).subscribe({
                   next: (response) => { 
@@ -142,12 +150,20 @@ export class EmployerDetailComponent implements OnInit{
                   },
                 });
               } else {
+                this.employer.dateOfHire = new Date(
+                  dateOfHire.getUTCFullYear(),
+                  dateOfHire.getUTCMonth() ,
+                  dateOfHire.getUTCDate() + 1,
+                  dateOfHire.getUTCHours(),
+                  dateOfHire.getUTCMinutes(),
+                  dateOfHire.getUTCSeconds()
+                );
                 this.employmentFacade.updateEmployer(this.employer).subscribe({
                   next: (response) => { 
-                    this.addUpdateEmploymentEvent.next(response);  
-                    this.closeModal.emit(true);
+                    this.addUpdateEmploymentEvent.next(response); 
+                    this.employerFormSubmitted = false; 
+                    this.closeModal.emit(true);            
                     this.loaderService.hide();
-
                     this.handleSnackBar('Success' ,'Employer Successfully added','success') ; 
                   },
                   error: (err) => {
