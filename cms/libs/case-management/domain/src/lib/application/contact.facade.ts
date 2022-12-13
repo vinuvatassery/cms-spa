@@ -1,19 +1,18 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact } from '../entities/contact';
+import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
+import { LovFacade, ZipCodeFacade } from '@cms/system-config/domain'
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
   /** Private properties **/
   private ddlStatesSubject = new BehaviorSubject<any>([]);
   private ddlCountriesSubject = new BehaviorSubject<any>([]);
-  private ddlRelationshipsSubject = new BehaviorSubject<any>([]);
   private ddlPreferredContactMethodsSubject = new BehaviorSubject<any>([]);
   private ddlAddressTypesSubject = new BehaviorSubject<any>([]);
   private ddlPhoneTypesSubject = new BehaviorSubject<any>([]);
@@ -27,7 +26,6 @@ export class ContactFacade {
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   ddlCountries$ = this.ddlCountriesSubject.asObservable();
-  ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   ddlPreferredContactMethods$ =
     this.ddlPreferredContactMethodsSubject.asObservable();
   ddlAddressTypes$ = this.ddlAddressTypesSubject.asObservable();
@@ -40,11 +38,15 @@ export class ContactFacade {
   emailAddress$ = this.emailAddressesSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) {}
+  constructor(
+    private readonly contactDataService: ContactDataService,
+    private readonly lovFacade: LovFacade,
+    private readonly zipCodeFacade: ZipCodeFacade
+  ) { }
 
   /** Public methods **/
   loadDdlStates(): void {
-    this.contactDataService.loadDdlStates().subscribe({
+    this.zipCodeFacade.getStates().subscribe({
       next: (ddlStatesResponse) => {
         this.ddlStatesSubject.next(ddlStatesResponse);
       },
@@ -54,8 +56,8 @@ export class ContactFacade {
     });
   }
 
-  loadDdlCountries(): void {
-    this.contactDataService.loadDdlCountries().subscribe({
+  loadDdlCountries(stateCode: string): void {
+    this.zipCodeFacade.getCounties(stateCode).subscribe({
       next: (ddlCountriesResponse) => {
         this.ddlCountriesSubject.next(ddlCountriesResponse);
       },
@@ -63,18 +65,7 @@ export class ContactFacade {
         console.error('err', err);
       },
     });
-  }
-
-  loadDdlRelationships(): void {
-    this.contactDataService.loadDdlRelationships().subscribe({
-      next: (ddlRelationshipsResponse) => {
-        this.ddlRelationshipsSubject.next(ddlRelationshipsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
+  }  
 
   loadDdlPreferredContactMethods(): void {
     this.contactDataService.loadDdlPreferredContactMethods().subscribe({
@@ -168,8 +159,15 @@ export class ContactFacade {
     });
   }
 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
+    return this.contactDataService.loadContactInfo(clientId, clientCaseEligibilityId);
+  }
+
+  createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.contactDataService.createContactInfo(clientId, clientCaseEligibilityId, contactInfo);
+  }
+
+  updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo);
   }
 }

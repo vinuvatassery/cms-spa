@@ -1,16 +1,20 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { Income } from '../entities/income';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ContactInfo } from '../entities/contact';
+import { Income } from '../entities/income';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
+  constructor(
+    private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadEmployers() {
@@ -114,7 +118,7 @@ export class ContactDataService {
   }
 
   loadDdlStates() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['AL', 'AK', 'AZ', 'AR', 'NM']);
   }
 
   loadDdlCountries() {
@@ -422,7 +426,26 @@ export class ContactDataService {
     ]);
   }
 
-  saveIncome(clientIncome: any) {
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
+    return this.http.get<ContactInfo>(this.getUrl(clientId, clientCaseEligibilityId));
+  }
+
+  createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.http.post(this.getUrl(clientId, clientCaseEligibilityId)
+      , contactInfo);
+  }
+
+  updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.http.put(this.getUrl(clientId, clientCaseEligibilityId)
+      , contactInfo);
+  }
+
+    /** Private methods **/
+  private getUrl(clientId: number, clientCaseEligibilityId: string) {
+    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
+  }
+
+ saveIncome(clientIncome: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
   }
 }
