@@ -104,6 +104,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   isSelected = true;
   applicantInfo!:any;
   pronounList =[];
+  raceAndEthnicity =[];
   applicantInfoSubscription !:Subscription;
  
   /** Constructor**/
@@ -152,6 +153,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   setChangedPronoun(pronoun:any){
     this.pronounList = pronoun;
     this.PronounChanges.emit(this.pronounList);
+  }
+
+  setRaceAndEthnicityData(value:any){
+    this.raceAndEthnicity = value;
   }
  
   ngAfterViewChecked() {  
@@ -215,7 +220,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       pronouns: [''] ,
       selectedMaterial:[''],
       yesMaterial:[''],
-      RaceAndEthnicity: [''] 
+      RaceAndEthnicity: [[]] 
     });  
 
   } 
@@ -328,7 +333,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
         this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
       }
-      this.appInfoForm.controls['GenderGroup'].setValue(gender.clientGenderCode);
+      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);
       
     })
   }
@@ -353,6 +358,19 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   if (BirthGender==='NOT_LISTED') {
     this.appInfoForm.controls['BirthGenderDescription'].setValue(applicantInfo.client.genderAtBirthDesc);
   }
+  if (Array.isArray(applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
+    const RaceAndEthnicity: any = [];
+    applicantInfo.clientRaceList.forEach((el: any) => {
+      const found = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
+      if(found!==undefined)
+      RaceAndEthnicity.push(found);
+      if(el.isPrimaryFlag===StatusFlag.Yes)
+      this.appInfoForm.controls['RaceAndEthnicityPrimary'].setValue(found);
+
+    });
+    this.appInfoForm.controls['RaceAndEthnicity'].setValue(RaceAndEthnicity);
+  }
+  
 
   if(applicantInfo.clientPronounList != null || undefined){   
     applicantInfo.clientPronounList.forEach(pronoun => {  

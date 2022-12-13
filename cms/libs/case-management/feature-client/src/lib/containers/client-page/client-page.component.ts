@@ -173,7 +173,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientRace.clientId = x.clientId;
                 clientRace.clientRaceCategoryCode = x.clientRaceCategoryCode;
                 clientRace.clientRaceId = x.clientRaceId;
-                clientRace.raceDesc = x.raceDesc
+                clientRace.raceDesc = x.raceDesc;
+                clientRace.isPrimaryFlag = x.isPrimaryFlag;
                 if(this.applicantInfo.clientRaceList == undefined || null ){
                   this.applicantInfo.clientRaceList = []
                 }
@@ -391,21 +392,31 @@ export class ClientPageComponent implements OnInit, OnDestroy {
      });
 }
   private populateClientRace(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*--------------------------remove if------------------------------------------------------ */
-        if(this.applicantInfo.clientRaceList.length ===0) {
-            var clientRace = new ClientRace();
-            clientRace.clientEthnicIdentityCode = 'American Indian or Alaska Native';
-            clientRace.clientRaceCategoryCode = 'American Indian or Alaska Native';
-            //clientRace.activeFlag = "Y";
+        const RaceAndEthnicity=this.appInfoForm.controls['RaceAndEthnicity'].value;
+        const RaceAndEthnicityPrimary=this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
+        RaceAndEthnicity.forEach((el:any) => {
+            const clientRace = new ClientRace();
+            clientRace.clientEthnicIdentityCode = el.lovCode;
+            clientRace.clientRaceCategoryCode =el.parentCode;
+            if(RaceAndEthnicityPrimary.lovCode===el.lovCode)
+              clientRace.isPrimaryFlag = StatusFlag.Yes;
             if(this.applicantInfo.clientRaceList == undefined){
               this.applicantInfo.clientRaceList =[];
             }
             clientRace.clientId = this.clientId;
             this.applicantInfo.clientRaceList.push(clientRace)
-      }
-        
-        /*-------------------------------------------------------------------------------- */
+        });
+      //   if(this.applicantInfo.clientRaceList.length ===0) {
+      //       var clientRace = new ClientRace();
+      //       clientRace.clientEthnicIdentityCode = 'American Indian or Alaska Native';
+      //       clientRace.clientRaceCategoryCode = 'American Indian or Alaska Native';
+      //       //clientRace.activeFlag = "Y";
+      //       if(this.applicantInfo.clientRaceList == undefined){
+      //         this.applicantInfo.clientRaceList =[];
+      //       }
+      //       clientRace.clientId = this.clientId;
+      //       this.applicantInfo.clientRaceList.push(clientRace)
+      // }
   }
   private populateClientSexualIdentity() {
     this.applicantInfo.clientSexualIdentityList = [];

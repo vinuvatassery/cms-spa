@@ -23,7 +23,6 @@
             #multiselect
             [fillMode]="formUiStyle.dropDownFillMode"
             [data]="raceAndEthnicityData"
-            (valueChange)="RaceAndEthnicityhange($event)"
             [textField]="'lovDesc'"
             [valueField]="'lovCode'"
             [popupSettings]="{
@@ -78,7 +77,8 @@
         <kendo-floatinglabel text="Primary identity">
           <kendo-dropdownlist
             [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="primaryRacialData"
+            [data]="appInfoForm.controls['RaceAndEthnicity'].value"
+            formControlName="RaceAndEthnicityPrimary"
             textField="lovDesc"
             valueField="lovCode"
           >
