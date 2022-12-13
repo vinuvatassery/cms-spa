@@ -20,7 +20,7 @@ import { State } from '@progress/kendo-data-query';
   styleUrls: ['./employer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployerListComponent implements OnInit {
+export class EmployerListComponent implements OnInit, OnChanges {
   /** Input properties **/
   @Input() data!: any;
   @Input() employment$: any;
@@ -60,6 +60,12 @@ export class EmployerListComponent implements OnInit {
   constructor(private readonly employmentFacade: EmploymentFacade) {}
 
   /** Lifecycle hooks **/
+
+  ngOnInit(): void {
+    this.addEmployerButtonDisplay();
+    this.loadEmployments();
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -68,40 +74,8 @@ export class EmployerListComponent implements OnInit {
     };
     this.loadEmployments();
   }
-  ngOnInit(): void {
-    this.addEmployerButtonDisplay();
-    this.loadEmployments();
-  }
 
-  
-  receiveDetailFromEmpDetails($event: boolean) {
-    this.isEmployerOpened = $event;
-  }
-
-  /** Private methods **/
-  pageselectionchange(data: any) {
-    this.state.take = data.value;
-    this.state.skip = 0;
-    this.loadEmployments();
-  }
-  private addEmployerButtonDisplay() {
-    if (this.data === ScreenType.Case360Page) {
-      this.isAddEmployerButtonDisplayed = false;
-    } else {
-      this.isAddEmployerButtonDisplayed = true;
-    }
-  }
-
-  /** Internal event methods **/
-  onEmployerClosed() {
-    this.isEmployerOpened = false;
-  }
-
-  onEmployerClicked(isEmployerAdd: boolean) {
-    this.isEmployerOpened = true;
-    this.isAdd = isEmployerAdd;
-  }
-
+// Grid More action clicl function
   onEmployerActionClicked(
     selectedEmployer: ClientEmployer,
     modalType: string = ''
@@ -116,11 +90,11 @@ export class EmployerListComponent implements OnInit {
     }
   }
 
-  updateEmploymentHandle(employements: any) {
+// updating the pagination infor based on dropdown selection
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
     this.loadEmployments();
-  }
-  onRemoveEmployerConfirmationClosed() {
-    this.isRemoveEmployerConfirmationPopupOpened = false;
   }
 
   public dataStateChange(stateData: any): void {
@@ -130,7 +104,7 @@ export class EmployerListComponent implements OnInit {
     this.state = stateData;
     this.loadEmployments();
   }
-
+  // Loading the grid data based on pagination
   private loadEmployments(): void {
     this.loadEmploymentsLists(
       this.state.skip ?? 0,
@@ -153,5 +127,34 @@ export class EmployerListComponent implements OnInit {
       sortType: sortTypeValue,
     };
     this.loadEmploymentsEvent.next(gridDataRefinerValue);
+  }
+  // updating the grid data
+  updateEmploymentHandle(employements: any) {
+    this.loadEmployments();
+  }
+  private addEmployerButtonDisplay() {
+    if (this.data === ScreenType.Case360Page) {
+      this.isAddEmployerButtonDisplayed = false;
+    } else {
+      this.isAddEmployerButtonDisplayed = true;
+    }
+  }
+  
+  // employer detail popup close handler
+  onEmployerClosed() {
+      this.isEmployerOpened = false;
+  }
+  // employer detail popup show handler
+  onEmployerClicked(isEmployerAdd: boolean) {
+      this.isEmployerOpened = true;
+      this.isAdd = isEmployerAdd;
+  }
+  // employer detail popup show/hide handler
+  receiveDetailFromEmpDetails($event: boolean) {
+        this.isEmployerOpened = $event;
+  }
+  // employer remove popup close
+  onRemoveEmployerConfirmationClosed() {
+        this.isRemoveEmployerConfirmationPopupOpened = false;
   }
 }

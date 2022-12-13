@@ -1,3 +1,4 @@
+<!-- employer form details -->
 <form class="k-form" [formGroup]="empDetailsForm" novalidate>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
@@ -5,15 +6,12 @@
   </p>
   <div class="flex-row">
     <div class="flex-col">
-  
       <kendo-floatinglabel text="Name of Employer">
         <kendo-textbox formControlName="empName"  #empName aria-label="name of employer" 
           [fillMode]="formUiStyle.inputFillMode" [maxlength]="empNameMaxValue"> </kendo-textbox>
-        <!-- <input kendoTextBox aria-label="name of employer" /> -->
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!empDetailsForm.controls['empName'].valid">Employer name is required
       </kendo-formerror>
-  
     </div>
     <div class="flex-col mb-1">
       <kendo-floatinglabel aria-label="date of hire" text="Date of Hire">
@@ -24,10 +22,8 @@
       <kendo-formerror *ngIf="!empDetailsForm.controls['empHireDate'].valid">Employer date of hire is required
       </kendo-formerror>
     </div>
-   
   </div>
 </section>
-
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div>
@@ -46,6 +42,9 @@
   </div>
 </kendo-dialog-actions>
 </form>
+
+
+<!-- remove emploer popup confirmation  -->
 <kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove employer">
   <case-management-remove-employer-confirmation  (deleteUpdateEmploymentEvent)="updateEmploymentHandle($event)"  [selectedEmployer]="selectedEmployer"
@@ -53,5 +52,5 @@
 </kendo-dialog>
 
 
-
+<!-- Common Snackbar to show the success and error  -->
 <common-notification-snack-bar [data$]="snackbar$"> </common-notification-snack-bar>

@@ -4,6 +4,7 @@
       <kendo-grid [data]="employment$ | async"  [loading]="isGridLoaderShow" #employersGrid [pageSize]="state.take" [pageable]="true"
         [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
         [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
+             <!-- grid column filter template -->
         <ng-template kendoGridColumnMenuTemplate let-service="service">
           <span class="k-icon k-i-x" (click)="service.close()"
             style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
@@ -13,6 +14,7 @@
           <kendo-grid-columnmenu-lock [service]="service">
           </kendo-grid-columnmenu-lock>
         </ng-template>
+        <!-- Column started -->
         <kendo-grid-column field="employerName" title="Name of Employer">
         </kendo-grid-column>
         <kendo-grid-column field="dateOfHire" title="Date of Hire">
@@ -20,6 +22,7 @@
             {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
+         <!-- grid more ation column template -->
         <kendo-grid-column field="Option" title="Option" [width]="75" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action"
@@ -33,38 +36,12 @@
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                   <label> {{ buttondataItem.text }} </label>
                 </button>
-                <!-- <button
-                  kendoButton
-                  icon="edit"
-                  look="flat"
-                  class="btn-h-primary"
-                  aria-label="edit employer"
-                  (click)="onEmployerClicked(false)"
-                >
-                  Edit Employer
-                </button>
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
-      </kendo-grid>
-    </div>
-    <div class="flex-row">
-      <div class="flex-col mt-1">
-        <button *ngIf="isAddEmployerButtonDisplayed" kendoButton [primary]="true" icon="add" aria-label="add employer"
-          (click)="onEmployerClicked(true)">
-          Employer
-        </button>
-
-      </div>
-    </div>
-  </div>
-</div>
-  Add Income  Modal -->
-              </ng-template>
-            </kendo-dropdownbutton>
-          </ng-template>
-        </kendo-grid-column>
+        <!-- Column ended -->
+        <!-- grid Pagination template -->
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
           let-currentPage="currentPage">
           <div class="grid-custom-paginationtemplates d-flex">
@@ -83,11 +60,14 @@
             </div>
           </div>
         </ng-template>
+        <!-- grid loader template -->
         <ng-template kendoGridLoadingTemplate>
           <common-grid-loader-component></common-grid-loader-component>
         </ng-template>
       </kendo-grid>
     </div>
+
+    <!-- add employer button -->
     <div class="flex-row">
       <div class="flex-col mt-1">
         <button *ngIf="isAddEmployerButtonDisplayed" kendoButton [primary]="true" icon="add" aria-label="add employer"
@@ -100,6 +80,8 @@
   </div>
 </div>
 
+
+<!-- Employment details popup add or edit form -->
 <kendo-dialog *ngIf="isEmployerOpened" (close)="onEmployerClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>
     {{ isAdd ? 'Add Employer' : 'Edit Employer ' }}
@@ -108,6 +90,9 @@
     (closeModal)="onEmployerClosed()">
   </case-management-employer-detail>
 </kendo-dialog>
+
+
+<!-- Employment remove confirmation popup -->
 <kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove employer">
   <case-management-remove-employer-confirmation (deleteUpdateEmploymentEvent)="updateEmploymentHandle($event)" [selectedEmployer]="selectedEmployer"

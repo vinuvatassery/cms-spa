@@ -1,9 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientEmployer } from '../entities/client-employer';
 
@@ -17,7 +15,7 @@ export class EmployersDataService {
 
   /** Public methods **/
 
-  ///2load dependent status  for checkbox
+  ///get employment status  for checkbox
   loadEmploymentStatusService(clientCaseEligibilityId: string) {
     return this.http.get<ClientEmployer[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -25,6 +23,7 @@ export class EmployersDataService {
     );
   }
 
+  // geting the list of employer
   loadEmploymentService(
     clientCaseEligibilityId: string,
     skipcount: number,
@@ -38,6 +37,7 @@ export class EmployersDataService {
         `/case-management/client-employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
   }
+  // geting the  employer details
   loadEmployersDetailsService(
     clientCaseEligibilityId: string,
     clientEmployerId: string
@@ -47,6 +47,8 @@ export class EmployersDataService {
         `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
     );
   }
+
+  // Adding new employer
   createClientNewEmployerService(clientEmployer: ClientEmployer) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -54,6 +56,8 @@ export class EmployersDataService {
       clientEmployer
     );
   }
+  
+  // updating the employer
   updateClientEmployerService(clientEmployer: ClientEmployer) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -61,6 +65,8 @@ export class EmployersDataService {
       clientEmployer
     );
   }
+  
+  // removing the employer
   removeClientEmployerService(
     clientCaseEligibilityId: string,
     clientEmployerId: string
@@ -70,6 +76,8 @@ export class EmployersDataService {
         `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
     );
   }
+  
+  // updating the unemployment status
   employmentStatusUpdateService(
     clientCaseEligibilityId: string,
     isEmployed: string

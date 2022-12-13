@@ -1,10 +1,10 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
  
 import { SnackBar } from '@cms/shared/ui-common';
-import {  first, forkJoin, mergeMap, of, Subscription, Subject } from 'rxjs';
+import {  first, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-employer-confirmation',
@@ -12,7 +12,7 @@ import { LoaderService } from '@cms/shared/util-core';
   styleUrls: ['./remove-employer-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RemoveEmployerConfirmationComponent {
+export class RemoveEmployerConfirmationComponent implements OnInit{
   /** Public properties **/
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
@@ -24,6 +24,8 @@ export class RemoveEmployerConfirmationComponent {
   clientId: any;
   clientCaseId : any;
   clientCaseEligibilityId : any;
+
+  // Snackbar declaration
   handleSnackBar(title : string , subtitle : string ,type : string )
   {    
     const snackbarMessage: SnackBar = {
@@ -47,7 +49,7 @@ export class RemoveEmployerConfirmationComponent {
     this.loadCase();
   }
 
-
+  // loading case details like session id, eligibility id , clientid and clientcaseid
   loadCase(){
     this.sessionId = this.route.snapshot.queryParams['sid'];    
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
@@ -59,10 +61,8 @@ export class RemoveEmployerConfirmationComponent {
      });        
   }
   /** Internal event methods **/
-  onRemoveEmployerConfirmationClosed() {
-    this.closeModal.emit(true);
-  }
 
+  // click on remove employer confirmation
   removeEmployer() {
     this.loaderService.show()
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
@@ -82,5 +82,9 @@ export class RemoveEmployerConfirmationComponent {
       }
       );
     }
+  }
+  // closing the remove employment popup
+  onRemoveEmployerConfirmationClosed() {
+    this.closeModal.emit(true);
   }
 }

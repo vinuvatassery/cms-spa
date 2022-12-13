@@ -14,7 +14,7 @@ import { LoaderService } from '@cms/shared/util-core';
   styleUrls: ['./employer-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployerDetailComponent {
+export class EmployerDetailComponent implements OnInit{
   public employer: ClientEmployer = new ClientEmployer();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   employmentList$ = this.employmentFacade.employers$;
@@ -35,6 +35,8 @@ export class EmployerDetailComponent {
     empName: new FormControl('', []),
     empHireDate: new FormControl(new Date(), []),
   });
+
+  // Snackbar declaration
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
@@ -47,6 +49,8 @@ export class EmployerDetailComponent {
     };
     this.snackbarSubject.next(snackbarMessage);
   }
+
+  // constructor
   constructor(private readonly employmentFacade: EmploymentFacade, 
     private workflowFacade: WorkflowFacade,
     private readonly router: Router,
@@ -68,7 +72,7 @@ export class EmployerDetailComponent {
       this.loadEmployersDetails();
     }
   }
-
+  // loading case details like session id, eligibility id , clientid and clientcaseid
   loadCase(){
     this.sessionId = this.route.snapshot.queryParams['sid'];    
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
@@ -79,7 +83,7 @@ export class EmployerDetailComponent {
       this.clientId =JSON.parse(session.sessionData).clientId   
      });        
   }
-
+  // loading employment detail based on emploerid
   loadEmployersDetails(){ 
     this.employmentFacade.loadEmployersDetails(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
       next: (response) => {
@@ -102,8 +106,8 @@ export class EmployerDetailComponent {
     }
     );
   }
- 
 
+  // submiting the employer form details
   saveEmployer() {
  
     this.empDetailsForm.markAllAsTouched();
@@ -158,17 +162,20 @@ export class EmployerDetailComponent {
           }
         }
   }
-
+  // close the employer form details popup
   cancelModal() {
     this.closeModal.emit(true);
   }
-
-  onRemoveEmployerConfirmationClicked() {
-    this.isRemoveEmployerConfirmationPopupOpened = true;
-  }
+  // updating the employment list after saving a new or updated record
   updateEmploymentHandle(response : any){
     this.addUpdateEmploymentEvent.next(response);  
   }
+
+  // on clicking on the remove button in edit view
+  onRemoveEmployerConfirmationClicked() {
+    this.isRemoveEmployerConfirmationPopupOpened = true;
+  }
+    // closing the remove confirmation popup
   onRemoveEmployerConfirmationClosed() {
     this.closeModal.emit(true);
     this.isRemoveEmployerConfirmationPopupOpened = false;

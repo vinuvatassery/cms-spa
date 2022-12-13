@@ -8,7 +8,7 @@ import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 // entities library
 import { ClientEmployer } from '../entities/client-employer';
-import { CompletionChecklist, WorkflowProcessCompletionStatus } from '../entities/workflow-stage-completion-status';
+import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 /** Data services **/
 import { EmployersDataService } from '../infrastructure/employers.data.service';
 // enum  library
@@ -40,6 +40,8 @@ export class EmploymentFacade {
   employersDetails$ = this.employersDetailsSubject.asObservable();
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
   employersStatus$ = this.employersStatusSubject.asObservable();
+
+  // handling the snackbar
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
@@ -59,6 +61,9 @@ export class EmploymentFacade {
   ) {}
 
   /** Public methods **/
+
+
+  // Loading the unemployment status
   loadEmploymentStatus(clientCaseEligibilityId : string) : void {
     this.employersDataService.loadEmploymentStatusService(clientCaseEligibilityId).subscribe({
       next: (employmentStatusGetResponse) => {
@@ -71,6 +76,7 @@ export class EmploymentFacade {
     });
   }
 
+  // Loading the employmet lists
   loadEmployers(
     clientCaseEligibilityId: string,
     skipcount: number,
@@ -113,6 +119,8 @@ export class EmploymentFacade {
         },
       });
   }
+  
+  // Loading the employmet details based on employerid
   loadEmployersDetails(
     clientCaseEligibilityId: string,
     clientEmployerId: string
@@ -122,14 +130,18 @@ export class EmploymentFacade {
       clientEmployerId
     );
   }
+
+  // creating a new employer
   createEmployer(clientEmployer: ClientEmployer): Observable<any> {
     return this.employersDataService.createClientNewEmployerService(clientEmployer);
   }
 
+  // updating the employer
   updateEmployer(clientEmployer: ClientEmployer): Observable<any> {
     return this.employersDataService.updateClientEmployerService(clientEmployer);
   }
 
+  // removing the employer
   deleteEmployer(clientCaseEligibilityId: string, clientEmployerId: string) {
     return this.employersDataService.removeClientEmployerService(
       clientCaseEligibilityId,
@@ -137,6 +149,7 @@ export class EmploymentFacade {
     );
   }
 
+  // updating the unemployment stats
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
 
     this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed).subscribe({

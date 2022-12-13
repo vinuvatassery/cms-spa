@@ -20,8 +20,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   employmentStatus$ = this.employmentFacade.employmentStatusGet$;
   clientCaseEligibilityId: any;
-  clientId : any;
-  clientCaseId : any;
+  clientId: any;
+  clientCaseId: any;
   sessionId!: string;
   isEmpListGridLoaderShow = false;
   isEmployedGridDisplay = true;
@@ -51,21 +51,26 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
   }
-loadCase(){
-  this.sessionId = this.route.snapshot.queryParams['sid'];    
-  this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-   this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-   .subscribe((session: any) => {      
-    this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-    this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-    this.clientId =JSON.parse(session.sessionData).clientId   
-    this.loadEmploymentStatus();
-   });        
-}
+  // loading case details like session id, eligibility id , clientid and clientcaseid
+  loadCase() {
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId);
+    this.workflowFacade.sessionDataSubject$
+      .pipe(first((sessionData) => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+        this.clientCaseEligibilityId = JSON.parse(
+          session.sessionData
+        ).clientCaseEligibilityId;
+        this.clientId = JSON.parse(session.sessionData).clientId;
+        this.loadEmploymentStatus();
+      });
+  }
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
-
+  /** Internal event methods **/
+  // loading the unemployment status
   private loadEmploymentStatus(): void {
     this.employmentFacade.loadEmploymentStatus(this.clientCaseEligibilityId);
     this.checkBoxSubscription = this.employmentStatus$
@@ -74,7 +79,7 @@ loadCase(){
         this.isEmployedGridDisplay = x;
       });
   }
-
+  // loading the employment list in grid
   loadEmploymentsHandle(gridDataRefinerValue: any): void {
     this.isEmpListGridLoaderShow = true;
     const gridDataRefiner = {
@@ -94,8 +99,7 @@ loadCase(){
       this.isEmpListGridLoaderShow = false;
     }
   }
-
-  /** Internal event methods **/
+  // workflow save and continue subscription
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
       .pipe(
@@ -111,6 +115,7 @@ loadCase(){
       });
   }
 
+  // save and continue subscription save method
   private save() {
     this.isEmployedFlag =
       this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
@@ -121,6 +126,7 @@ loadCase(){
     return of(this.employmentFacade.employersStatus$);
   }
 
+  // unemployment checkbox click
   onUnEmployedClicked() {
     this.isEmployedGridDisplay = !this.isEmployedGridDisplay;
   }
