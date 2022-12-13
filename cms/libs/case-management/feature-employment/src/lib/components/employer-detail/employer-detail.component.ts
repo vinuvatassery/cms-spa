@@ -1,11 +1,11 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output,OnDestroy, OnInit, EventEmitter,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Validators, FormGroup, FormControl,} from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
-import { filter, first, forkJoin, mergeMap, of, Subscription, Subject } from 'rxjs';
+import { first, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
 
 @Component({

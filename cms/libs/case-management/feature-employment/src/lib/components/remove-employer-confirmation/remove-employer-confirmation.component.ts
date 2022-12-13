@@ -1,10 +1,10 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output,OnDestroy, OnInit, EventEmitter,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
  
 import { SnackBar } from '@cms/shared/ui-common';
-import { filter, first, forkJoin, mergeMap, of, Subscription, Subject } from 'rxjs';
+import {  first, forkJoin, mergeMap, of, Subscription, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-employer-confirmation',

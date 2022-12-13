@@ -5,6 +5,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ClientEmployer } from '../entities/client-employer';
 /** Data services **/
+import { SnackBar } from '@cms/shared/ui-common';
 import { EmployersDataService } from '../infrastructure/employers.data.service';
 import {  CompletionChecklist,  StatusFlag,  WorkflowFacade,} from '@cms/case-management/domain';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -33,7 +34,18 @@ export class EmploymentFacade {
   employersDetails$ = this.employersDetailsSubject.asObservable();
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
   employersStatus$ = this.employersStatusSubject.asObservable();
-
+  snackbarMessage!: SnackBar;
+  snackbarSubject = new Subject<SnackBar>();
+  snackbar$ = this.snackbarSubject.asObservable();
+  handleSnackBar(title : string , subtitle : string ,type : string )
+  {    
+    const snackbarMessage: SnackBar = {
+      title: title,
+      subtitle: subtitle,
+      type: type,
+    };
+    this.snackbarSubject.next(snackbarMessage);
+  }
   /** Constructor**/
   constructor(
     private readonly employersDataService: EmployersDataService,
@@ -46,9 +58,10 @@ export class EmploymentFacade {
       next: (employmentStatusGetResponse) => {
         this.employmentStatusGetSubject.next(employmentStatusGetResponse);
       },
-      error: (err) => {  
-        // this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' )    
+      error: (err) => {
+        this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
       },
+   
     });
   }
 
@@ -90,7 +103,7 @@ export class EmploymentFacade {
           }
         },
         error: (err) => {
-          console.error('err', err);
+          this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
         },
       });
   }
@@ -102,15 +115,6 @@ export class EmploymentFacade {
       clientCaseEligibilityId,
       clientEmployerId
     );
-
-    // this.contactDataService.loadEmployersDetails(clientCaseEligibilityId, clientEmployerId).subscribe({
-    //   next: (employersDetailsResponse) => {
-    //     this.employersDetailsSubject.next(employersDetailsResponse);
-    //   },
-    //   error: (err) => {
-    //     console.error('err', err);
-    //   },
-    // });
   }
   createEmployer(clientEmployer: ClientEmployer): Observable<any> {
     return this.employersDataService.createClientNewEmployerService(clientEmployer);
@@ -133,7 +137,8 @@ export class EmploymentFacade {
       next: (employmentStatusResponse) => {        
         this.employersStatusSubject.next(employmentStatusResponse);
       },
-      error: (err) => { 
+      error: (err) => {
+        this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
       },
     });
 

@@ -6,13 +6,14 @@ import {
   Input,
   EventEmitter,
   Output,
+  OnChanges,
 } from '@angular/core';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SortDescriptor, State } from '@progress/kendo-data-query';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
