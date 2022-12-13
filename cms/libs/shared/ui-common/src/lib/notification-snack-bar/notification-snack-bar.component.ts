@@ -23,7 +23,6 @@ import { NotificationService } from '@progress/kendo-angular-notification';
 export class NotificationSnackBarComponent implements OnInit {
   /** Input properties **/
   @Input() data$!: Observable<SnackBar>;
-  public hideAfter = 200;
   /** Public properties **/
   @ViewChild('notificationAlertTemplate', { read: TemplateRef })
   alertTemplate!: TemplateRef<any>;

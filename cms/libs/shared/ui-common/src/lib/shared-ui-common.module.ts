@@ -16,7 +16,6 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
 import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
  
-
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
