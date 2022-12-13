@@ -142,7 +142,7 @@ export class EmployerDetailComponent implements OnInit{
                     this.addUpdateEmploymentEvent.next(response);  
                     this.closeModal.emit(true);
                     this.loaderService.hide();
-                    this.handleSnackBar('Success' ,'Employer Successfully added','success');    
+                    this.handleSnackBar('Success' ,'Employer successfully added','success');    
                   },
                   error: (err) => { 
                     this.loaderService.hide();
@@ -164,7 +164,7 @@ export class EmployerDetailComponent implements OnInit{
                     this.employerFormSubmitted = false; 
                     this.closeModal.emit(true);            
                     this.loaderService.hide();
-                    this.handleSnackBar('Success' ,'Employer Successfully added','success') ; 
+                    this.handleSnackBar('Success' ,'Employer successfully updated','success') ; 
                   },
                   error: (err) => {
                     this.loaderService.hide(); 

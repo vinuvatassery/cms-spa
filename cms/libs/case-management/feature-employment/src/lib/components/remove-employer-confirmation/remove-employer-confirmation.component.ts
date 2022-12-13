@@ -70,7 +70,7 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
           this.onRemoveEmployerConfirmationClosed();
-          this.handleSnackBar('Success' ,'Employer Successfully Removed','info');
+          this.handleSnackBar('Success' ,'Employer successfully removed','info');
           this.deleteUpdateEmploymentEvent.next(response);  
           this.loaderService.hide() 
         },
