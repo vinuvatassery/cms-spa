@@ -101,7 +101,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
        
         },
         error: error => {               
-          this.clientFacade.handleSnackBar('Error' ,'Error while saving smoking cessation','error')    
+          this.clientFacade.handleSnackBar('Error' ,'Error while loading smoking cessation','error')    
             this.loaderService.hide();
           }
            
