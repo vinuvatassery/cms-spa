@@ -173,7 +173,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
   setChangedPronoun(pronoun:any){
     this.pronounList = pronoun;
-    if(this.pronounList !== null){
+    if(this.pronounList  !== undefined && this.pronounList !== null){
         this.PronounChanges.emit(this.pronounList);
         this.assignPronounModelToForm();
     }
