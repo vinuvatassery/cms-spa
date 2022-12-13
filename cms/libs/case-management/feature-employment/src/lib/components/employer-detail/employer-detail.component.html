@@ -1,10 +1,11 @@
 <form class="k-form" [formGroup]="empDetailsForm" novalidate>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    Enter the employer’s name and the date the client was hired.
+    Enter the employer’s name and the date the client was hired. {{empDetailsForm.controls['empHireDate'].valid}}
   </p>
   <div class="flex-row">
     <div class="flex-col">
+  
       <kendo-floatinglabel text="Name of Employer">
         <kendo-textbox formControlName="empName"  #empName aria-label="name of employer" 
           [fillMode]="formUiStyle.inputFillMode" [maxlength]="empNameMaxValue"> </kendo-textbox>
@@ -12,11 +13,12 @@
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!empDetailsForm.controls['empName'].valid">Employer name is required
       </kendo-formerror>
+  
     </div>
     <div class="flex-col mb-1">
       <kendo-floatinglabel aria-label="date of hire" text="Date of Hire">
-        <kendo-datepicker  formControlName="empHireDate" #empHireDate  [fillMode]="formUiStyle.dateInputFillMode"
-          format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        <kendo-datepicker [incompleteDateValidation]="true" formControlName="empHireDate" #empHireDate  [fillMode]="formUiStyle.dateInputFillMode"
+          format="MM-dd-yyyy" formatPlaceholder="formatPattern" [max]="currentDate">
         </kendo-datepicker>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!empDetailsForm.controls['empHireDate'].valid">Employer date of hire is required

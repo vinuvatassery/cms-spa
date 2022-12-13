@@ -1,9 +1,10 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output,OnDestroy, OnInit, EventEmitter,} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
  
 import { SnackBar } from '@cms/shared/ui-common';
-import { Subject } from 'rxjs';
+import { filter, first, forkJoin, mergeMap, of, Subscription, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-employer-confirmation',
@@ -19,6 +20,10 @@ export class RemoveEmployerConfirmationComponent {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
+  sessionId!: string;
+  clientId: any;
+  clientCaseId : any;
+  clientCaseEligibilityId : any;
   handleSnackBar(title : string , subtitle : string ,type : string )
   {    
     const snackbarMessage: SnackBar = {
@@ -28,19 +33,31 @@ export class RemoveEmployerConfirmationComponent {
     };
     this.snackbarSubject.next(snackbarMessage);
   }
-  clientId = this.workflowFacade.clientId;
-  clientCaseId = this.workflowFacade.clientCaseId;
-  clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId;
+
   /** Constructor **/
   constructor(
     private readonly employmentFacade: EmploymentFacade, 
     private loaderService: LoaderService,
+    private readonly router: Router,
+    private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadCase();
   }
 
+
+  loadCase(){
+    this.sessionId = this.route.snapshot.queryParams['sid'];    
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+     this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+     .subscribe((session: any) => {      
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
+      this.clientId =JSON.parse(session.sessionData).clientId   
+     });        
+  }
   /** Internal event methods **/
   onRemoveEmployerConfirmationClosed() {
     this.closeModal.emit(true);

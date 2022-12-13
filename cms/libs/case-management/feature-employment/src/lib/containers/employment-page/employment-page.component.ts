@@ -19,18 +19,17 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   employmentList$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   employmentStatus$ = this.employmentFacade.employmentStatusGet$;
-  clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId;
-  clientId = this.workflowFacade.clientId;
-  clientCaseId = this.workflowFacade.clientCaseId;
+  clientCaseEligibilityId: any;
+  clientId : any;
+  clientCaseId : any;
   sessionId!: string;
   isEmpListGridLoaderShow = false;
   isEmployedGridDisplay = true;
   isEmployedFlag!: StatusFlag;
-  
+
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private checkBoxSubscription!: Subscription;
-
 
   /** Constructor */
   constructor(
@@ -46,12 +45,23 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadEmploymentStatus();
     this.addSaveSubscription();
+    this.loadCase();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
   }
-
+loadCase(){
+  this.sessionId = this.route.snapshot.queryParams['sid'];    
+  this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+   this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+   .subscribe((session: any) => {      
+    this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
+    this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
+    this.clientId =JSON.parse(session.sessionData).clientId   
+    this.loadEmploymentStatus();
+   });        
+}
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }

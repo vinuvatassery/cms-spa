@@ -1,10 +1,11 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output,OnDestroy, OnInit, EventEmitter,} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Validators, FormGroup, FormControl,} from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
-import { Subject } from 'rxjs';
+import { filter, first, forkJoin, mergeMap, of, Subscription, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
@@ -19,9 +20,11 @@ export class EmployerDetailComponent {
   employmentList$ = this.employmentFacade.employers$;
   isRemoveEmployerConfirmationPopupOpened = false;
   empNameMaxValue = 100;
-  clientId = this.workflowFacade.clientId;
-  clientCaseId = this.workflowFacade.clientCaseId;
-  clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId;
+  public currentDate= new Date();
+  sessionId!: string;
+  clientId : any;
+  clientCaseId: any;
+  clientCaseEligibilityId: any;
   /** Input properties **/
   @Input() isAdd = true;
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
@@ -46,10 +49,13 @@ export class EmployerDetailComponent {
   }
   constructor(private readonly employmentFacade: EmploymentFacade, 
     private workflowFacade: WorkflowFacade,
+    private readonly router: Router,
+    private route: ActivatedRoute,
     private loaderService: LoaderService) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadCase();
     this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.isAdd) {
       this.empDetailsForm.reset();
@@ -57,10 +63,23 @@ export class EmployerDetailComponent {
         empName: new FormControl( ''),
         empHireDate: new FormControl(new Date()),
       });
+ 
     } else{
       this.loadEmployersDetails();
     }
   }
+
+  loadCase(){
+    this.sessionId = this.route.snapshot.queryParams['sid'];    
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+     this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+     .subscribe((session: any) => {      
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
+      this.clientId =JSON.parse(session.sessionData).clientId   
+     });        
+  }
+
   loadEmployersDetails(){ 
     this.employmentFacade.loadEmployersDetails(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
       next: (response) => {
@@ -72,13 +91,13 @@ export class EmployerDetailComponent {
           this.employer.dateOfHire = new Date(this.selectedEmployer.dateOfHire);
           this.employer.concurrencyStamp = this.selectedEmployer.concurrencyStamp; 
           this.empDetailsForm.controls['empName'].setValue(this.selectedEmployer.employerName);
-          this.empDetailsForm.controls['empHireDate'].setValue(this.selectedEmployer.dateOfHire);
+          this.empDetailsForm.controls['empHireDate'].setValue(new Date(this.selectedEmployer.dateOfHire));
           this.empDetailsForm.controls['empName'].updateValueAndValidity();
           this.empDetailsForm.controls['empHireDate'].updateValueAndValidity();
         }
       },
       error: (err) => {
-      
+        this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
       },
     }
     );
@@ -86,55 +105,58 @@ export class EmployerDetailComponent {
  
 
   saveEmployer() {
+ 
     this.empDetailsForm.markAllAsTouched();
     this.empDetailsForm.controls['empName'].setValidators([  Validators.required,  ]);
     this.empDetailsForm.controls['empHireDate'].setValidators([  Validators.required,  ]);
     this.empDetailsForm.controls['empName'].updateValueAndValidity();
     this.empDetailsForm.controls['empHireDate'].updateValueAndValidity();
+ 
+ if(this.empDetailsForm.controls['empHireDate'].value <= new Date()){
+ 
 
-    if (this.empDetailsForm.valid) {
-      this.employer.clientEmployerId = this.selectedEmployer.clientEmployerId;
-      this.employer.employerName =
-        this.empDetailsForm.controls['empName'].value;
-      this.employer.clientCaseEligibilityId =
-        this.selectedEmployer.clientCaseEligibilityId;
-      this.employer.dateOfHire =
-        this.empDetailsForm.controls['empHireDate'].value;
-      if (this.employer) {
-        this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
-        this.loaderService.show();
-        if (this.isAdd) {
-          this.employmentFacade.createEmployer(this.employer).subscribe({
-            next: (response) => { 
-              this.addUpdateEmploymentEvent.next(response);  
-              this.closeModal.emit(true);
-              this.loaderService.hide();
-              this.handleSnackBar('Success' ,'Employer Successfully added','success');    
-            },
-            error: (err) => { 
-              this.loaderService.hide();
-              this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
-            },
-          });
-        } else {
-          this.employmentFacade.updateEmployer(this.employer).subscribe({
-            next: (response) => { 
-              this.addUpdateEmploymentEvent.next(response);  
-              this.closeModal.emit(true);
-              this.loaderService.hide();
+          if (this.empDetailsForm.valid) {
+            this.employer.clientEmployerId = this.selectedEmployer.clientEmployerId;
+            this.employer.employerName =  this.empDetailsForm.controls['empName'].value;
+            this.employer.clientCaseEligibilityId =  this.selectedEmployer.clientCaseEligibilityId;
+            this.employer.dateOfHire = new Date(this.empDetailsForm.controls['empHireDate'].value);
+          
+            if (this.employer) {
+              this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
+              this.loaderService.show();
+              if (this.isAdd) {
+                this.employmentFacade.createEmployer(this.employer).subscribe({
+                  next: (response) => { 
+                    this.addUpdateEmploymentEvent.next(response);  
+                    this.closeModal.emit(true);
+                    this.loaderService.hide();
+                    this.handleSnackBar('Success' ,'Employer Successfully added','success');    
+                  },
+                  error: (err) => { 
+                    this.loaderService.hide();
+                    this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');   
+                  },
+                });
+              } else {
+                this.employmentFacade.updateEmployer(this.employer).subscribe({
+                  next: (response) => { 
+                    this.addUpdateEmploymentEvent.next(response);  
+                    this.closeModal.emit(true);
+                    this.loaderService.hide();
 
-              this.handleSnackBar('Success' ,'Employer Successfully added','success') ; 
-            },
-            error: (err) => {
-              this.loaderService.hide(); 
-              this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
-            },
-          });
+                    this.handleSnackBar('Success' ,'Employer Successfully added','success') ; 
+                  },
+                  error: (err) => {
+                    this.loaderService.hide(); 
+                    this.handleSnackBar( err.code + ' / ' + err.name ,err.message,'error');  
+                  },
+                });
+              }
+        
+
+            }
+          }
         }
-   
-
-      }
-    }
   }
 
   cancelModal() {

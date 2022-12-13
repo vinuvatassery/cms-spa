@@ -72,6 +72,7 @@ export class EmployerListComponent implements OnInit {
     this.loadEmployments();
   }
 
+  
   receiveDetailFromEmpDetails($event: boolean) {
     this.isEmployerOpened = $event;
   }

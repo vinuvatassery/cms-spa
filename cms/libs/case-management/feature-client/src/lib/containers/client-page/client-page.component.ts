@@ -202,7 +202,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private saveAndUpdate(){
-    // this.validateForm();
+    this.validateForm();
         if(this.appInfoForm.valid){
           this.populateApplicantInfoModel();
           if(this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined)  {
@@ -214,7 +214,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           
         }
         else{
-          return of(true);
+          return of(false);
         } 
  
   }
