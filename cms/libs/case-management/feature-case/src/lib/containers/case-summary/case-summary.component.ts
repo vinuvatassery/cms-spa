@@ -20,6 +20,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export class CaseSummaryComponent implements OnInit , OnDestroy {
   /** Public properties **/
+
   parentForm!: FormGroup;
   isProgramSelectionOpened = false;
   selectedProgram!: any;

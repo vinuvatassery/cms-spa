@@ -5,11 +5,13 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { empty } from 'rxjs';
+import { ApplicantInfo } from '../entities/applicant-info';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ClientDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,private readonly configurationProvider:ConfigurationProvider) {}
 
   /** Public methods **/
   loadDdlCaseOrigin() {
@@ -337,8 +339,21 @@ export class ClientDataService {
       ]);
     }
   }
+  save(applicantInfo: ApplicantInfo) {  
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
+      applicantInfo,
 
-  // saveApplicationInfo():Observable<Client>{
-  //     return empty();
-  // }
+    )}
+    load(clientCaseId:any,eligibilityId:any){
+      return this.http.get<ApplicantInfo>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client/${clientCaseId}/${eligibilityId}`,);
+       }
+    update(applicantInfo: ApplicantInfo) {  
+      return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
+        applicantInfo,
+    
+    )}
+    
 }

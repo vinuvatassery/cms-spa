@@ -1,19 +1,19 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { groupBy } from '@progress/kendo-data-query';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
-import { debounceTime, distinctUntilChanged, pairwise, startWith } from 'rxjs';
+import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, isEmpty, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
 /** Facades **/
-import { ClientFacade, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
+import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+
+import { kMaxLength } from 'buffer';
+import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
+import { first } from '@progress/kendo-angular-editor/util';
+
 
  
 @Component({
@@ -22,20 +22,20 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
   styleUrls: ['./client-edit-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientEditViewComponent implements OnInit {
+export class ClientEditViewComponent implements OnInit,OnDestroy {
  
-  public value = "";
-  isVisible: any;
-  isSelected = true;
-
+     
   /** Output Properties **/
-  @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
-  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
+ @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
+ @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
+ @Output() ValidateFields = new EventEmitter<FormGroup>();
+ @Output() PronounChanges = new EventEmitter<any>();
+ @Output() ApplicantNameChange = new EventEmitter<any>();
+  
 
 
   /** Public properties **/
-  public currentDate = new Date();
- 
+  public currentDate = new Date(); 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
   rdoMaterials$ = this.clientfacade.rdoMaterials$;
@@ -51,10 +51,8 @@ export class ClientEditViewComponent implements OnInit {
   ddlEnglishProficiencies$ = this.clientfacade.ddlEnglishProficiencies$;
   ddlWrittenLanguages$ = this.clientfacade.ddlWrittenLanguages$;
   ddlRacialIdentities$ = this.clientfacade.ddlRacialIdentities$;
-  isMiddleNameChecked!: boolean;
-  isInsuranceCardChecked!: boolean;
-  isOfficialIdChecked!: boolean;
-  isSSNChecked!: boolean;
+  pronounList$ = this.clientfacade.pronounList$;
+  isSSNChecked!: boolean ;
   isDescribeGenderChecked!: boolean;
   isPronounsChecked!: boolean;
   isGenderChecked!: boolean;
@@ -89,13 +87,28 @@ export class ClientEditViewComponent implements OnInit {
   public racialName: any = [];
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
+  checkBoxValid!:boolean;
+  textboxDisable!:boolean;
+  pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
-
+  lengthRestrictThirty=30;
+  lengthRestrictForty=40;
+  maxLengthSsn =9;
+  applicantInfo$ = this.clientfacade.applicantInfo$;
+  public value = "";
+  isVisible: any;
+  isSelected = true;
+  applicantInfo!:any;
+  pronounList =[];
+  applicantInfoSubscription !:Subscription;
+ 
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
-    private readonly elementRef: ElementRef) { }
+    private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade,
+    private formBuilder:FormBuilder,private readonly lovFacade : LovFacade) { }
 
   /** Lifecycle hooks **/
+  
   ngOnInit(): void {
     this.loadDdlRacialIdentities();
     this.loadDdlPrimaryIdentities();
@@ -112,9 +125,16 @@ export class ClientEditViewComponent implements OnInit {
     this.loadRdoDressingorBathing();
     this.loadRdoConcentration();
     this.loadRdoErrands();
-    this.loadTareaRaceAndEthinicity();
-    this.buildForm();
-    this.addAppInfoFormChangeSubscription();
+    this.loadTareaRaceAndEthinicity();   
+    
+     this.buildForm();     
+     this.addAppInfoFormChangeSubscription();    
+     this.loadApplicantInfoSubscription();   
+     this.ValidateFields.emit(this.appInfoForm);
+  }
+ 
+  ngOnDestroy(): void {
+    this.applicantInfoSubscription.unsubscribe();    
   }
 
   ngAfterViewInit(){
@@ -122,9 +142,33 @@ export class ClientEditViewComponent implements OnInit {
     adjustControls.forEach((control: any) => {   
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     }); 
+  } 
+
+  setChangedPronoun(pronoun:any){
+    this.pronounList = pronoun;
+    this.PronounChanges.emit(this.pronounList);
   }
 
-  ngAfterViewChecked() {
+
+ 
+  ngAfterViewChecked() {  
+    var firstName = '';
+    var lastName ='';
+    if(this.appInfoForm.controls["firstName"].value === null){
+      firstName = ''
+    }
+    else{
+      firstName = this.appInfoForm.controls["firstName"].value
+    }
+    if(this.appInfoForm.controls["lastName"].value === null){
+      lastName = ''
+    }
+    else{
+      lastName = this.appInfoForm.controls["lastName"].value
+    }
+    
+
+    this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -140,11 +184,9 @@ export class ClientEditViewComponent implements OnInit {
     }
   }
  
-
-  public onClose(event: any) {
-    
-      event.preventDefault();
-   
+  
+  public onClose(event: any) {    
+      event.preventDefault();   
   }
   public clearForm(): void {
     //this.form.reset();
@@ -152,30 +194,141 @@ export class ClientEditViewComponent implements OnInit {
   /** Private methods **/ 
 
   private buildForm() {
-    this.appInfoForm = new FormGroup({
-      firstName: new FormControl('', { updateOn: 'blur' }),
-      middleName: new FormControl({ value: '', disabled: false }, { updateOn: 'blur' }),
-      chkmiddleName: new FormControl(true),
-      lastName: new FormControl('', { updateOn: 'blur' }),
-      prmInsFirstName: new FormControl('', { updateOn: 'blur' }),
-      prmInsLastName: new FormControl('', { updateOn: 'blur' }),
-      prmInsNotApplicable: new FormControl(false),
-      officialIdFirstName: new FormControl('', { updateOn: 'blur' }),
-      officialIdLastName: new FormControl('', { updateOn: 'blur' }),
-      officialIdsNotApplicable: new FormControl(false),
-      dateOfBirth: new FormControl('', { updateOn: 'blur' }),
-      ssn: new FormControl('', { updateOn: 'blur' }),
-      ssnNotApplicable: new FormControl(false),
-      //TODO: other form controls 
-    })
+    this.appInfoForm = this.formBuilder.group({
+      firstName: [''],
+      middleName: [''],
+      chkmiddleName:  [''],
+      lastName:  [''],
+      prmInsFirstName:  [''],
+      prmInsLastName:  ['',{disabled:false}],
+      prmInsNotApplicable:  [''],
+      officialIdFirstName:  ['',{disabled:false}],
+      officialIdLastName:  ['',{disabled:false}],
+      officialIdsNotApplicable:  [''],
+      dateOfBirth:  [this.currentDate],
+      ssn:  ['',{disabled:false}],
+      ssnNotApplicable:  [''],
+      registerToVote: [''],
+      pronouns: [''],      
+    });  
+
+  } 
+
+  private loadApplicantInfoSubscription(){
+    
+    this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
+      this.textboxDisable  = true; 
+    if(applicantInfo.client !=undefined){
+      this.isVisible =false;
+      if(this.appInfoForm !== undefined){
+      this.appInfoForm.reset();    
+      this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
+      this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
+      this.appInfoForm.controls['middleName'].enable();
+      this.appInfoForm.controls["officialIdLastName"].enable();
+      this.appInfoForm.controls["officialIdFirstName"].enable();
+      this.appInfoForm.controls["prmInsFirstName"].enable();
+      this.appInfoForm.controls["prmInsLastName"].enable();
+      this.appInfoForm.controls["ssn"].enable();
+      }
+      this.applicantInfo = applicantInfo;
+      if(this.applicantInfo.clientCaseId !== null){
+      this.assignModelToForm(applicantInfo);
+      }
+    }
+   
+  }); 
+}
+
+private assignModelToForm(applicantInfo:ApplicantInfo){
+  this.appInfoForm.controls["firstName"].setValue(applicantInfo.client?.firstName);
+  if(applicantInfo.client?.noMiddleInitialFlag =="Y"){
+    this.appInfoForm.controls["chkmiddleName"].setValue(true);
+    this.appInfoForm.controls["middleName"].setValue(null);
+    this.appInfoForm.controls['middleName'].disable();
+
   }
+  else{
+    this.appInfoForm.controls["chkmiddleName"].setValue(false);
+    this.appInfoForm.controls["middleName"].setValue(applicantInfo.client?.middleName);
+    this.appInfoForm.controls['middleName'].enable();
+
+  }
+  this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
+  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined && 
+    applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag === StatusFlag.Yes){
+    this.appInfoForm.controls['officialIdsNotApplicable'].setValue(true);
+    this.appInfoForm.controls["officialIdFirstName"].setValue(null);
+    this.appInfoForm.controls["officialIdLastName"].setValue(null);
+    this.appInfoForm.controls["officialIdLastName"].disable();
+    this.appInfoForm.controls["officialIdFirstName"].disable();
+
+  }
+ else{
+  this.appInfoForm.controls['officialIdsNotApplicable'].setValue(false);
+  this.appInfoForm.controls["officialIdFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdFirstName)
+  this.appInfoForm.controls["officialIdLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.officialIdLastName)
+  this.appInfoForm.controls["officialIdLastName"].enable();
+  this.appInfoForm.controls["officialIdFirstName"].enable();
+
+ }
+ if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined &&
+  applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag ==StatusFlag.Yes){
+  this.appInfoForm.controls['prmInsNotApplicable'].setValue(true);
+  this.appInfoForm.controls["prmInsFirstName"].setValue(null);
+  this.appInfoForm.controls["prmInsLastName"].setValue(null);
+  this.appInfoForm.controls["prmInsFirstName"].disable();
+  this.appInfoForm.controls["prmInsLastName"].disable();
+ }
+ else{
+    this.appInfoForm.controls['prmInsNotApplicable'].setValue(false);
+    this.appInfoForm.controls["prmInsFirstName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceFirstName);
+    this.appInfoForm.controls["prmInsLastName"].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility?.insuranceLastName);
+    this.appInfoForm.controls["prmInsFirstName"].enable();
+    this.appInfoForm.controls["prmInsLastName"].enable();
+
+ }
+  this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));   
+  if(applicantInfo.client?.ssnNotApplicableFlag ==StatusFlag.Yes){
+    this.appInfoForm.controls["ssnNotApplicable"].setValue(true);
+    this.appInfoForm.controls["ssn"].setValue(null);
+    this.appInfoForm.controls["ssn"].disable();
+
+  }
+  else{
+    this.appInfoForm.controls["ssnNotApplicable"].setValue(false);
+    this.appInfoForm.controls["ssn"].setValue(applicantInfo.client?.ssn)
+    this.appInfoForm.controls["ssn"].enable();
+
+  }
+  if(applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibilityFlag?.registerToVoteFlag?.toUpperCase() ==StatusFlag.Yes){
+    this.isVisible = true;
+    this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.Yes);
+  }
+  else{
+    this.isVisible = false
+    this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
+  }
+  if(applicantInfo.clientPronounList != null || undefined){   
+    applicantInfo.clientPronounList.forEach(pronoun => {  
+      if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
+      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+      if(pronoun.clientPronounCode ==='NOT_LISTED'){
+        this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
+        this.textboxDisable = false;
+      }   
+      }
+    })
+    this.clientfacade.pronounListSubject.next(this.pronounList);     
+  }
+  
+}
 
   private adjustAttributeChanged(event: Event) { 
     const data: CompletionChecklist = {
       dataPointName: (event.target as HTMLInputElement).name,
       status: (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No
     };
-
     this.AdjustAttrChanged.emit([data]);
   }
 
@@ -187,10 +340,18 @@ export class ClientEditViewComponent implements OnInit {
         startWith(null), pairwise()
       )
       .subscribe(([prev, curr]: [any, any]) => {
-        this.updateFormCompleteCount(prev, curr);
+        this.updateFormCompleteCount(prev, curr);      
       });
+      this.appInfoForm.statusChanges.subscribe(a=>{   
+       if(this.appInfoForm.controls["pronouns"].valid){
+        this.checkBoxValid = true;
+       }
+       else{
+        this.checkBoxValid = false;
+       }
+     
+    });
   }
-
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.appInfoForm.controls).forEach(key => {
@@ -297,41 +458,59 @@ export class ClientEditViewComponent implements OnInit {
     this.clientfacade.loadDdlEnglishProficiencies();
   }
 
+ 
   /** Internal event methods **/
   onMiddleNameChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.appInfoForm.controls['middleName'].reset();
-      this.appInfoForm.controls['middleName'].enable();
+      this.appInfoForm.controls['middleName'].disable();
+      this.appInfoForm.controls['middleName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();      
     }
     else {
-      this.appInfoForm.controls['middleName'].disable();
+      this.appInfoForm.controls['middleName'].enable();
+      this.appInfoForm.controls['middleName'].setValidators(Validators.required);
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();    
     }
   }
-
   onInsuranceCardChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.appInfoForm.controls['prmInsLastName'].disable();
+
+      this.appInfoForm.controls['prmInsFirstName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['prmInsLastName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsFirstName'].disable();
+      this.appInfoForm.controls['prmInsLastName'].disable();
     }
     else {
-      this.appInfoForm.controls['prmInsLastName'].reset();
-      this.appInfoForm.controls['prmInsFirstName'].reset();
-      this.appInfoForm.controls['prmInsLastName'].enable();
+
+      this.appInfoForm.controls['prmInsFirstName'].setValidators(Validators.required);
+      this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['prmInsLastName'].setValidators(Validators.required);
+      this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsFirstName'].enable();
+      this.appInfoForm.controls['prmInsLastName'].enable();
     }
   }
 
   onOfficialIdChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
+      this.appInfoForm.controls['officialIdFirstName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['officialIdLastName'].removeValidators(Validators.required);
+      this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdFirstName'].disable();
       this.appInfoForm.controls['officialIdLastName'].disable();
     }
     else {
-      this.appInfoForm.controls['officialIdFirstName'].reset();
-      this.appInfoForm.controls['officialIdLastName'].reset();
+
+      this.appInfoForm.controls['officialIdFirstName'].setValidators(Validators.required);
+      this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['officialIdLastName'].setValidators(Validators.required);
+      this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdFirstName'].enable();
       this.appInfoForm.controls['officialIdLastName'].enable();
     }
@@ -340,12 +519,25 @@ export class ClientEditViewComponent implements OnInit {
   onSsnNotApplicableChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
+      this.isSSNChecked = true;
+      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
       this.appInfoForm.controls['ssn'].disable();
     }
     else {
-      this.appInfoForm.controls['ssn'].reset();
+      this.isSSNChecked = false;
+      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
       this.appInfoForm.controls['ssn'].enable();
     }
+  }
+  registerToVoteSelected(event:Event){
+   if((event.target as HTMLInputElement).value.toUpperCase()==StatusFlag.Yes){
+    this.isVisible = true;
+   }
+   else{
+    this.isVisible = false;
+   }
   }
 
   onTransgenderRdoClicked(event: any) {
