@@ -69,21 +69,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
     ).subscribe(([navigationType, isSaved]) => { 
-      debugger; 
       next:{
         if (isSaved) { 
-          this.clientFacade.handleSnackBar('Success' ,this.message,'success')         
-          this.workFlowFacade.navigate(navigationType);
           this.loaderService.hide();
+          
+          this.clientFacade.handleSnackBar('Success' ,this.message,'success')         
+          this.workFlowFacade.navigate(navigationType);          
         }
         else{
-          debugger;
         }
       }    
       error:{
-        debugger;
         this.loaderService.hide();
-           console.log("error")
+        this.clientFacade.handleSnackBar('Error' ,'Error while saving applicantInfo','error')     
       }
      
     });
