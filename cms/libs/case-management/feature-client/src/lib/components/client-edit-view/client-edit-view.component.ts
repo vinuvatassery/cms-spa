@@ -128,6 +128,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   isSelected = true;
   applicantInfo!:any;
   pronounList =[];
+  raceAndEthnicity =[];
   applicantInfoSubscription !:Subscription;
  
   /** Constructor**/
@@ -176,6 +177,12 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     if(this.pronounList  !== undefined && this.pronounList !== null){
         this.PronounChanges.emit(this.pronounList);
         this.assignPronounModelToForm();
+    }
+  }
+  setRaceAndEthnicityData(value:any){
+    this.raceAndEthnicity = value;
+    if(Array.isArray(value) && value.length>0){
+      this.assignRaceAndEthnicityToForm();
     }
   }
   ngAfterViewChecked() {  
@@ -253,7 +260,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       startAgeErrandsDifficulty:[''],
       spokenLanguage:[''],
       writtenLanguage:[''],
-      englishProficiency:['']
+      englishProficiency:[''],
+      RaceAndEthnicity: [[]] 
 
     });  
 
@@ -376,7 +384,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
         this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
       }
-      this.appInfoForm.controls['GenderGroup'].setValue(gender.clientGenderCode);
+      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);
       
     })
   }
@@ -386,7 +394,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       if(identity.clientSexualIdentityCode==="NOT_LISTED" && identity.otherDesc!==null){
         this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
       }
-      this.appInfoForm.controls['SexulaIdentityGroup'].setValue(identity.clientSexualIdentityCode);
+      this.appInfoForm.controls['SexulaIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
       
     })
   }
@@ -402,6 +410,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls['BirthGenderDescription'].setValue(applicantInfo.client.genderAtBirthDesc);
   }
 
+  
+this.assignRaceAndEthnicityToForm();
   this.assignPronounModelToForm();
 
   this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
@@ -464,7 +474,21 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode);
  
 }
+private assignRaceAndEthnicityToForm(){
+  if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
+    const RaceAndEthnicity: any = [];
+    this.applicantInfo.clientRaceList.forEach((el: any) => {
+      const found = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
+      if(found!==undefined)
+      RaceAndEthnicity.push(found);
+      if(el.isPrimaryFlag===StatusFlag.Yes)
+      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(found);
 
+    });
+    this.appInfoForm.controls['RaceAndEthnicity']?.setValue(RaceAndEthnicity);
+  }
+ 
+}
 private assignPronounModelToForm(){
   if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
     this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  

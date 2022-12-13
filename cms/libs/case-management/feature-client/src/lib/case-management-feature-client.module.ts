@@ -21,6 +21,7 @@ import { ClientEditViewGenderComponent } from './components/client-edit-view-gen
 import { ClientEditViewTransgenderComponent } from './components/client-edit-view-transgender/client-edit-view-transgender.component';
 import { ClientEditViewSexAtBirthComponent } from './components/client-edit-view-sex-at-birth/client-edit-view-sex-at-birth.component';
 import { ClientEditViewSexualIdentityComponent } from './components/client-edit-view-sexual-identity/client-edit-view-sexual-identity.component';
+import { ClientEditViewRaceAndEthnicityComponent } from './components/client-edit-view-race-and-ethnicity/client-edit-view-race-and-ethnicity.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,6 @@ import { ClientEditViewSexualIdentityComponent } from './components/client-edit-
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
-    
   ],
   declarations: [
     ClientPageComponent,
@@ -45,8 +45,8 @@ import { ClientEditViewSexualIdentityComponent } from './components/client-edit-
     ClientEditViewGenderComponent,
     ClientEditViewTransgenderComponent,
     ClientEditViewSexAtBirthComponent,
-    ClientEditViewSexualIdentityComponent
-    
+    ClientEditViewSexualIdentityComponent,
+    ClientEditViewRaceAndEthnicityComponent,
   ],
   exports: [
     ClientPageComponent,

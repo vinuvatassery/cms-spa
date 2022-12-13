@@ -35,7 +35,7 @@ export class ClientEditViewTransgenderComponent implements OnInit {
 
       this.appInfoForm.addControl(
         'Transgender',
-        new FormControl('', [Validators.required])
+        new FormControl('')
       );
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
       this.Transgenders = data;

@@ -10,5 +10,6 @@ export enum LovType {
     SpokenWrittenLanguage ='Spoken_Written_Language',
     EnglishProficiency ='English_Proficiency',
     RelationshipCode = 'RELATIONSHIP_CODE',
-    ContactRelationshipCode = 'CONTACT_RELATIONSHIP_CODE'
+    ContactRelationshipCode = 'CONTACT_RELATIONSHIP_CODE',
+    RaceAndEthnicity = 'RACE_AND_ETHNICITY'
   }

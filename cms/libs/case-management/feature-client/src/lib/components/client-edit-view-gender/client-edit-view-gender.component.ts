@@ -42,7 +42,7 @@ export class ClientEditViewGenderComponent implements OnInit {
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
       this.appInfoForm.addControl(
         'GenderGroup',
-        new FormControl('', [Validators.required])
+        new FormControl('')
       );
       this.Genders = data;
     });
