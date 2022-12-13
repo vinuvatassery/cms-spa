@@ -258,11 +258,11 @@ export class FamilyAndDependentFacade {
         
           if(key?.clientId > 0)   
           {
-              key.memberType = ClientDependentGroupDesc.Inactive            
+              key.memberType = ClientDependentGroupDesc.Clients            
           }
           else
           {
-              key.memberType = ClientDependentGroupDesc.Active
+              key.memberType = ClientDependentGroupDesc.Dependents
           }
         });
         this.dependentSearchSubject.next(dependentSearchResponse);
