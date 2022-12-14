@@ -1,8 +1,13 @@
 import { Component, Input, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
-import {  ClientFacade} from '@cms/case-management/domain';
+import { ClientFacade } from '@cms/case-management/domain';
 import { groupBy } from '@progress/kendo-data-query';
 
 @Component({
@@ -12,7 +17,7 @@ import { groupBy } from '@progress/kendo-data-query';
 })
 export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
-  @Output() RaceAndEthnicityData = new EventEmitter<any>();  
+  @Output() RaceAndEthnicityData = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   racelov$ = this.lovFacade.racelov$;
   ethnicitylov$ = this.lovFacade.ethnicitylov$;
@@ -20,7 +25,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   raceAndEthnicityData: Array<any> = [];
   ethnicityData: Array<any> = [];
   //primaryRacialData: Array<any> = [];
-   
+
   popupClassMultiSelect = 'multiSelectSearchPopup';
   constructor(
     private readonly lovFacade: LovFacade,
@@ -31,58 +36,57 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
   ngOnInit(): void {
     this.lovFacade.getRaceLovs();
-    this.lovFacade.getEthnicityLovs();
+    //this.lovFacade.getEthnicityLovs();
     this.loadEthnicity();
     this.loadRaceAndEthnicity();
-    this.appInfoForm.addControl(
-      'RaceAndEthnicityPrimary',
-      new FormControl({})
-    );
-    this.appInfoForm.addControl(
-      'Ethnicity',
-      new FormControl([])
-    );
+    this.appInfoForm.addControl('RaceAndEthnicityPrimary', new FormControl({}));
+    this.appInfoForm.addControl('Ethnicity', new FormControl([]));
   }
   private loadEthnicity() {
     this.ethnicitylov$.subscribe((data) => {
-      this.ethnicityData=data;
+      this.ethnicityData = data;
     });
   }
   private loadRaceAndEthnicity() {
     this.racelov$.subscribe((data) => {
-      if(data.length===0) return;
-      
-      console.log(data)
-      let parents:any[]=[];
-      data.forEach((el:any) => {
-        parents.push(el[0]);
+      if (data.length === 0) return;
+
+      let RaceData: Array<any> = [];
+      const raceAndEthnicityData: Array<any> = [];
+      data.forEach((el: any) => {
+        el.forEach((el2: any) => {
+          raceAndEthnicityData.push(el2);
+          if (el2.lovTypeCode === 'ETHNICITY') {
+            this.ethnicityData.push(el2);
+          } else {
+            RaceData.push(el2);
+          }
+        });
       });
-      
-      //const raceAndEthnicityDataGroup: Array<any> = [];
-      // parents.forEach((el:any) => {
-      //   data.filter(t=>t.).filter((m) => m.parentCode === el.lovCode)
-      //     .forEach((child:any) => {
-      //       raceAndEthnicityDataGroup.push({
-      //         lovCode: child.lovCode,
-      //         lovDesc: child.lovDesc,
-      //         parentCode: el.lovCode,
-      //       });
-      //     });
-      // });
-      // debugger
-      // this.raceAndEthnicityData = groupBy(raceAndEthnicityDataGroup, [
-      //   { field: 'parentCode' },
-      // ]);
-      // this.RaceAndEthnicityData.emit(raceAndEthnicityDataGroup);
+      const Parents = RaceData.filter((m) => m.parentCode === null);
+      const raceAndEthnicityDataGroup: Array<any> = [];
+      Parents.forEach((el) => {
+        RaceData.filter((m) => m.parentCode === el.lovCode).forEach((child) => {
+          raceAndEthnicityDataGroup.push({
+            lovCode: child.lovCode,
+            lovDesc: child.lovDesc,
+            parentCode: el.lovCode,
+          });
+        });
+      });
+      this.raceAndEthnicityData = groupBy(raceAndEthnicityDataGroup, [
+        { field: 'parentCode' },
+      ]);
+      this.RaceAndEthnicityData.emit(raceAndEthnicityData);
     });
   }
 
   public RaceAndEthnicityhange(value: any): void {
-    if(Array.isArray(value) && value.length==1){
+    if (Array.isArray(value) && value.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(value[0]);
-    }else{
+    } else {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
     }
-     // console.log('valueChange', value);
+    // console.log('valueChange', value);
   }
 }
