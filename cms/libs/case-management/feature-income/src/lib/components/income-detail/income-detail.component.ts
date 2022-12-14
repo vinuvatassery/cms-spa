@@ -17,11 +17,9 @@ import {
   FormControl,
   FormBuilder,
 } from '@angular/forms';
-
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
-import { RemoveEvent, SelectEvent } from '@progress/kendo-angular-upload';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-detail',
@@ -166,13 +164,13 @@ export class IncomeDetailComponent implements OnInit {
     this.closePopup.emit(this.isIncomeDetailsPopupOpen);
   }
 
-  handleFileSelected(event: SelectEvent) {
+  handleFileSelected(event: any) {
     this.proofOfIncomeFiles = event.files[0].rawFile
     this.proofOfIncomeValidator = false;
     console.log(this.proofOfIncomeFiles)
   }
 
-  handleFileRemoved(event: RemoveEvent) {
+  handleFileRemoved(event: any) {
     this.proofOfIncomeFiles = null;
     console.log(this.proofOfIncomeFiles)
   }
