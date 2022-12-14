@@ -104,7 +104,7 @@ export class CaseFacade {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -242,12 +242,9 @@ export class CaseFacade {
           clientCaseId  : clientCaseId,
           assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
           caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
-          caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
+          caseStartDate: new Date(existingCaseFormData?.controls["applicationDate"].value) ,
           concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
-        }
-      //  const status = this.caseDataService.UpdateCase(caseData);
-        //this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case updated Successfully')  
-      // return status;    
+        }    
        
         this.caseDataService.UpdateCase(caseData).subscribe({
           next: (updateCaseResponse) => {        

@@ -85,7 +85,7 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
         this.parentForm.reset()
           if(caseData.programId != null && caseData.caseStartDate != null
             && caseData.assignedCwUserId != null)
-          {   this.parentForm.reset();            
+          {            
             this.parentForm.setValue(
               {
                 applicationDate : new Date(caseData.caseStartDate),

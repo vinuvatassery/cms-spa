@@ -34,7 +34,7 @@ export class CasePageComponent implements OnInit {
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
   ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
-  
+  worflowsnackbar$=this.workflowFacade.worflowsnackbar$;
  
   /** Constructor**/
     
