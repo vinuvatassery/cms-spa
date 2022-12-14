@@ -101,9 +101,7 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes() {
-    let clientId=3;
-    let clientCaseEligibilityId='D323838C-80F3-4BB6-8FD4-EF6A9FE37335'
+  loadIncomes(clientId:string,clientCaseEligibilityId:string) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}`);
   }
 
@@ -446,7 +444,6 @@ export class ContactDataService {
   }
 
  saveIncome(clientIncome: any) {
-  debugger;
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
   }
 

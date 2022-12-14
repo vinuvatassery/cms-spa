@@ -52,14 +52,10 @@
           [width]="150"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button
-              kendoButton
-              look="flat"
-              class="card-link-button"
-              aria-label="proof of income"
-            >
-              {{ dataItem.ProofofIncome }}
-            </button>
+            <div *ngIf="dataItem.documentPath != null">
+              <a [href]="dataItem.documentPath" target="_blank">Income Proof</a>
+            </div>
+            
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
@@ -243,7 +239,7 @@
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>
-  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit"> </case-management-income-detail>
+  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"> </case-management-income-detail>
 </kendo-dialog>
 
 

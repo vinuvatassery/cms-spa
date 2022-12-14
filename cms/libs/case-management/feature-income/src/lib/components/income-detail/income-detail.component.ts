@@ -17,11 +17,10 @@ import {
   FormControl,
   FormBuilder,
 } from '@angular/forms';
-
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
-import { RemoveEvent, SelectEvent } from '@progress/kendo-angular-upload';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-detail',
   templateUrl: './income-detail.component.html',
@@ -33,6 +32,10 @@ export class IncomeDetailComponent implements OnInit {
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   /** Input properties **/
   @Input() isEditValue!: boolean;
+  @Input() clientCaseEligibilityId: string = "";
+  @Input() clientId: string = "";
+  @Input() clientCaseId: string = "";
+
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
@@ -67,13 +70,13 @@ export class IncomeDetailComponent implements OnInit {
     noIncomeProofFlag: new FormControl('', []),
     incomeNote: new FormControl('', []),
     incomeUploadedProof: new FormControl('', []),
-    proofOfIncomeTypes: new FormControl('', []),
+    proofIncomeTypeCode: new FormControl('', []),
     otherProofOfIncome: new FormControl('', []),
   });
 
 
   /** Constructor **/
-  constructor(private readonly incomeFacade: IncomeFacade, private lov: LovFacade) { }
+  constructor(private readonly incomeFacade: IncomeFacade, private lov: LovFacade, private readonly loaderService: LoaderService, private loggingService: LoggingService, private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -126,8 +129,8 @@ export class IncomeDetailComponent implements OnInit {
   onProofOfIncomeValueChanged() {
     this.hasNoProofOfIncome = !this.hasNoProofOfIncome;
     if (this.hasNoProofOfIncome) {
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([]);
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity();
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([]);
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
       this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("Y")
       this.proofOfIncomeValidator = false;
     }
@@ -136,30 +139,28 @@ export class IncomeDetailComponent implements OnInit {
     }
   }
   selectProofOfIncome(): void {
-    this.incomeTypesOther = this.IncomeDetailsForm.controls['proofOfIncomeTypes'].value;
+    this.incomeTypesOther = this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value;
+
   }
   public submitIncomeDetailsForm(): void {
     this.setValidators();
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
+      let incomeData = this.IncomeDetailsForm.value
+      incomeData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
+      incomeData["clientId"] = this.clientId;
+      incomeData["clientCaseId"]=this.clientCaseId;
+      if (this.incomeTypesOther == 'O') {
+        incomeData.proofIncomeTypeCode = this.IncomeDetailsForm.controls['otherProofOfIncome'].value;
+      }
+      this.loaderService.show();
       this.incomeFacade.saveClientIncome(this.IncomeDetailsForm.value, this.proofOfIncomeFiles).subscribe({
         next: (incomeResponse) => {
           this.closeIncomeDetailPoup();
-          const snackbarMessage: SnackBar = {
-            title: 'Success!',
-            subtitle: 'Income Successfully Added.',
-            type: 'success',
-          };
-          this.snackbarSubject.next(snackbarMessage);
-          this.incomeFacade.loadIncomes();
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Income created successfully.')
+          this.incomeFacade.loadIncomes(this.clientId, this.clientCaseEligibilityId);
         },
         error: (err) => {
-          console.log(err)
-          const snackbarMessage: SnackBar = {
-            title: 'Error!',
-            subtitle: err.error.error.message,
-            type: 'error',
-          };
-          this.snackbarSubject.next(snackbarMessage);
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR, err)
         },
       });
     }
@@ -169,13 +170,13 @@ export class IncomeDetailComponent implements OnInit {
     this.closePopup.emit(this.isIncomeDetailsPopupOpen);
   }
 
-  handleFileSelected(event: SelectEvent) {
+  handleFileSelected(event: any) {
     this.proofOfIncomeFiles = event.files[0].rawFile
     this.proofOfIncomeValidator = false;
     console.log(this.proofOfIncomeFiles)
   }
 
-  handleFileRemoved(event: RemoveEvent) {
+  handleFileRemoved(event: any) {
     this.proofOfIncomeFiles = null;
     console.log(this.proofOfIncomeFiles)
   }
@@ -196,8 +197,8 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
     if (!this.hasNoProofOfIncome) {
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([Validators.required,]);
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity();
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
       if (!this.proofOfIncomeFiles) {
         this.proofOfIncomeValidator = true;
       }
@@ -205,5 +206,14 @@ export class IncomeDetailComponent implements OnInit {
         this.proofOfIncomeValidator = false;
       }
     }
+  }
+
+  ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.loaderService.hide();
   }
 }

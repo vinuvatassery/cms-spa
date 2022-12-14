@@ -20,7 +20,9 @@ export class IncomeListComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() hasNoIncome!: boolean;
-
+  @Input() clientCaseEligibilityId: string="";
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
@@ -102,7 +104,6 @@ export class IncomeListComponent implements OnInit {
 
   /** Private methods **/
   private loadIncomes() {
-    this.incomeFacade.loadIncomes();
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse:any)=>{
       this.incomesTotal=incomeresponse;
     })

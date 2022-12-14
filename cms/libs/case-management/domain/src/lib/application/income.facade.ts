@@ -1,5 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -29,7 +30,31 @@ export class IncomeFacade {
     this.dependentsProofofSchoolsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) { }
+  constructor(private readonly contactDataService: ContactDataService,
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly loaderService: LoaderService ) { }
+
+    ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+    {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+         const err= subtitle;    
+         this.loggingService.logException(err)
+      }  
+      this.notificationSnackbarService.manageSnackBar(type,subtitle)
+      this.HideLoader();   
+    }
+
+    ShowLoader()
+    {
+      this.loaderService.show();
+    }
+  
+    HideLoader()
+    {
+      this.loaderService.hide();
+    }
 
   /** Public methods **/
   loadDdlIncomeTypes(): void {
@@ -38,7 +63,7 @@ export class IncomeFacade {
         this.ddlIncomeTypesSubject.next(ddlIncomesTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -49,7 +74,7 @@ export class IncomeFacade {
         this.ddlIncomeSourcesSubject.next(ddlIncomeSourcesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -60,7 +85,7 @@ export class IncomeFacade {
         this.ddlFrequenciesSubject.next(ddlFrequenciesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -71,20 +96,22 @@ export class IncomeFacade {
         this.ddlProofOfIncomeTypesSubject.next(ddlProofOfIncomeTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
 
-  loadIncomes(): void {
-    this.contactDataService.loadIncomes().subscribe({
+  loadIncomes(clientId:string,clientCaseEligibilityId:string): void {
+    this.ShowLoader();
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId).subscribe({
       next: (incomesResponse: any) => {
         this.incomesSubject.next(incomesResponse.clientIncomes);
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependets);
         this.incomesResponseSubject.next(incomesResponse);
+        this.HideLoader();
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -97,21 +124,16 @@ export class IncomeFacade {
         );
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
 
   save(noIncomeData : any): Observable<any> {
-    //TODO: save api call
-    debugger;
     return this.contactDataService.updateNoIncomeData(noIncomeData);
-    //return of(true);
   }
 
   saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
-    clientIncome.clientCaseEligibilityId = "D323838C-80F3-4BB6-8FD4-EF6A9FE37335";
-    clientIncome.clientId = 2;
     const formData: any = new FormData();
     for (var key in clientIncome) {
       if (key == "incomeStartDate" || key == 'incomeEndDate') {

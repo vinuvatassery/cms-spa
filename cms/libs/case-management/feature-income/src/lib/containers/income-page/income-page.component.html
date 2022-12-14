@@ -11,7 +11,7 @@
       <div class="flex-row">
         <div class="flex-col mb-1">
           <span>
-            <input type="checkbox" kendoCheckBox (change)="onIncomeValueChanged($event)"
+            <input type="checkbox" kendoCheckBox [(ngModel)]="noIncomeFlag" (change)="onIncomeValueChanged($event)"
               aria-labelledby="clientDoesNotRecieveAnyIncome" name="client does ot recieve any income"
               id="clientDoesNotRecieveAnyIncome" />
             <label class="k-checkbox-label" for="clientDoesNotRecieveAnyIncome">Client does not receive any
@@ -72,7 +72,10 @@
 
             </form>
           </section>
-          <case-management-income-list [hasNoIncome]="hasNoIncome"></case-management-income-list>
+          <section *ngIf="!hasNoIncome">
+            <case-management-income-list [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"></case-management-income-list>
+          </section>
+          
         </div>
       </div>
     </div>

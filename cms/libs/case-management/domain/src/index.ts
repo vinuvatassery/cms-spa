@@ -47,6 +47,8 @@ export * from './lib/enums/data-point-type.enum';
 export * from './lib/enums/entity-type-code.enum';
 export * from './lib/enums/user-default-roles.enum';
 export * from './lib/enums/program.enum';
+export * from './lib/enums/dependent-type.enum';
+export * from './lib/enums/client-dependent-group.enum';
 export * from './lib/enums/address-type-code.enum';
 export * from './lib/enums/device-type-code.enum';
 export * from './lib/enums/status-flag.enum';
