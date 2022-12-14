@@ -4,10 +4,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag ,ClientFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService } from '@cms/shared/util-core';
 
 
 @Component({
@@ -43,9 +42,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,
     private route: ActivatedRoute,
-    private caseFacad: CaseFacade,    
-    private loaderService: LoaderService,
-    private clientFacade: ClientFacade, ) {
+    private caseFacad: CaseFacade) {
   }
 
   /** Lifecycle hooks **/
@@ -62,7 +59,6 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
   }
  loadSessionData(){
-  this.loaderService.show();
   this.sessionId = this.route.snapshot.queryParams['sid'];    
   this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
   this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
@@ -97,14 +93,10 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
             this.isDisabled = true;
           }
-          this.loaderService.hide();
        
         },
         error: error => {               
-          this.clientFacade.handleSnackBar('Error' ,'Error while loading smoking cessation','error')    
-            this.loaderService.hide();
-          }
-           
+            console.error(error);}
         });
   
   }
@@ -128,20 +120,18 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
-        this.loaderService.hide();
-        this.clientFacade.handleSnackBar('Success' ,'Smoking cessation saved','success')   
         this.workflowFacade.navigate(navigationType);
       }
     });
   }
+
   private save() {
-    this.loaderService.show();
     this.validate();
     if(this.smokingCessationForm.valid){    
       this.smokingCessation.clientCaseEligibilityId = this.clientCaseEligibilityId;
-      this.smokingCessation.clientCaseId = this.clientCaseId;     
-      return this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation);  
-        
+      this.smokingCessation.clientCaseId = this.clientCaseId;
+      return this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation);
+       
    }
     return of(false)
   }
