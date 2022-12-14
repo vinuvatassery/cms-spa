@@ -235,6 +235,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           }          
         }
         else{
+          this.loaderService.hide();    
           return of(false);
         } 
  
