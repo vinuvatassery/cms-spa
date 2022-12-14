@@ -79,13 +79,13 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
   GetCaseData()
   { 
     
-    this.showInputLoader = true
+  
       this.selectedCase?.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
       .subscribe((caseData: any) => {   
-          
+        this.parentForm.reset()
           if(caseData.programId != null && caseData.caseStartDate != null
             && caseData.assignedCwUserId != null)
-          {   this.parentForm.reset();
+          {   this.parentForm.reset();            
             this.parentForm.setValue(
               {
                 applicationDate : new Date(caseData.caseStartDate),
@@ -100,7 +100,7 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
         }
         
         ) 
-        this.showInputLoader = true 
+       
        
   } 
 

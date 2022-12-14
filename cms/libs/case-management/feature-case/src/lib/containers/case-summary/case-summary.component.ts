@@ -36,7 +36,8 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   case$ = this.caseFacade.getCase$;
   clientCaseId! : string;
   sessionId! : string;
-
+  casefacadesnackbar$ = this.caseFacade.casefacadesnackbar$;
+  updateCase$ = this.caseFacade.updateCase$;
   private saveClickSubscription !: Subscription;
 
   /** Constructor**/
@@ -112,7 +113,8 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
       this.parentForm.updateValueAndValidity()
       if(this.parentForm.valid)
       {
-      return this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId)
+       this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId)
+       return of(this.updateCase$)
       }
       else return of(false)
     }
