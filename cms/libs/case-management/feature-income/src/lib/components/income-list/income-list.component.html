@@ -243,7 +243,7 @@
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>
-  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit"> </case-management-income-detail>
+  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"> </case-management-income-detail>
 </kendo-dialog>
 
 

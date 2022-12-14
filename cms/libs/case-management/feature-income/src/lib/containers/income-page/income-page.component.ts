@@ -2,12 +2,13 @@
 /** Angular **/
 import {  Component,  ChangeDetectionStrategy,  Output,  EventEmitter,  Input,  OnDestroy,  OnInit,} from '@angular/core';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Validators,  FormGroup,  FormControl,  FormBuilder, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'case-management-income-page',
@@ -37,6 +38,11 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   tareaJustification = '';
   tareaJustificationCharachtersCount!: number;
   tareaJustificationMaxLength = 300;
+  sessionId:any="";
+  clientId:string="";
+  clientCaseEligibilityId:string="";
+  clientCaseId:string="";
+  private loadSessionSubscription!:Subscription;
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     dateClientSigned: new FormControl('', []),
     dateSignatureNoted: new FormControl(this.todaysDate, []),
@@ -46,10 +52,12 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   constructor(private readonly incomeFacade: IncomeFacade,
     private completionStatusFacade: CompletionStatusFacade,
     private workflowFacade: WorkflowFacade,
-    private lov:LovFacade) { }
+    private lov:LovFacade,
+    private route: ActivatedRoute) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadSessionData();
     this.loadIncomeTypes();
     this.tareaJustificationWordCount();
     this.loadIncomeSources();
@@ -60,6 +68,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.loadSessionSubscription.unsubscribe();
   } 
   
   /** Private methods **/
@@ -121,8 +130,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
  
   /** Private Methods **/
-  private loadIncomes(): void {
-    this.incomeFacade.loadIncomes();
+  private loadIncomes(clientId:string,clientCaseEligibilityId:string): void {
+    this.incomeFacade.loadIncomes(clientId,clientCaseEligibilityId);
   }
 
   updateCompletionStatus(status: any) {
@@ -179,4 +188,19 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     //this.incomeFacade.saveClientIncome(clientIncomeDetails)
   }
 
+  loadSessionData(){
+    //this.loaderService.show();
+    this.sessionId = this.route.snapshot.queryParams['sid'];    
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {     
+        if(session !== null && session !== undefined && session.sessionData !==undefined){
+        this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId ;
+        this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId ;
+        this.clientId = JSON.parse(session.sessionData).clientId; 
+        this.loadIncomes(this.clientId,this.clientCaseEligibilityId);
+      }
+    });   
+  
+  }
 }

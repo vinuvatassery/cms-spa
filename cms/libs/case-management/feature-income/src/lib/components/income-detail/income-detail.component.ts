@@ -33,6 +33,9 @@ export class IncomeDetailComponent implements OnInit {
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   /** Input properties **/
   @Input() isEditValue!: boolean;
+  @Input() clientCaseEligibilityId: string="";
+  @Input() clientId: string="";
+
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
@@ -141,6 +144,9 @@ export class IncomeDetailComponent implements OnInit {
   public submitIncomeDetailsForm(): void {
     this.setValidators();
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
+      let incomeData=this.IncomeDetailsForm.value
+      incomeData["clientCaseEligibilityId"]=this.clientCaseEligibilityId;
+      incomeData["clientId"]=this.clientId;
       this.incomeFacade.saveClientIncome(this.IncomeDetailsForm.value, this.proofOfIncomeFiles).subscribe({
         next: (incomeResponse) => {
           this.closeIncomeDetailPoup();
@@ -150,7 +156,7 @@ export class IncomeDetailComponent implements OnInit {
             type: 'success',
           };
           this.snackbarSubject.next(snackbarMessage);
-          this.incomeFacade.loadIncomes();
+          this.incomeFacade.loadIncomes(this.clientId,this.clientCaseEligibilityId);
         },
         error: (err) => {
           console.log(err)

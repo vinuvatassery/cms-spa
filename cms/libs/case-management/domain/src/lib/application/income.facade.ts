@@ -76,8 +76,8 @@ export class IncomeFacade {
     });
   }
 
-  loadIncomes(): void {
-    this.contactDataService.loadIncomes().subscribe({
+  loadIncomes(clientId:string,clientCaseEligibilityId:string): void {
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId).subscribe({
       next: (incomesResponse: any) => {
         this.incomesSubject.next(incomesResponse.clientIncomes);
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependets);
@@ -108,8 +108,6 @@ export class IncomeFacade {
   }
 
   saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
-    clientIncome.clientCaseEligibilityId = "D323838C-80F3-4BB6-8FD4-EF6A9FE37335";
-    clientIncome.clientId = 2;
     const formData: any = new FormData();
     for (var key in clientIncome) {
       if (key == "incomeStartDate" || key == 'incomeEndDate') {
