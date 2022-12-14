@@ -82,6 +82,8 @@ public showInputLoader = false;
   }
   private registerFormData()
   {
+    if(this.selectedProgram)
+    {
     this.parentForm = this.formBuilder.group({
       applicationDate: [new Date(), Validators.required],
       caseOriginCode: ['', Validators.required],
@@ -89,6 +91,7 @@ public showInputLoader = false;
       programId: [{ value: this.selectedProgram?.programId, disabled: true }, [Validators.required]] ,
       concurrencyStamp : ['']  
       });
+    }
   }
 
 
