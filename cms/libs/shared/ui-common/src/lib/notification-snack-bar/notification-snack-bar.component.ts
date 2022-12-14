@@ -14,6 +14,10 @@ import { SnackBar } from '../entities/snack-bar';
 /** Services **/
 import { NotificationService } from '@progress/kendo-angular-notification';
 
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
+
 @Component({
   selector: 'common-notification-snack-bar',
   templateUrl: './notification-snack-bar.component.html',
@@ -23,16 +27,20 @@ import { NotificationService } from '@progress/kendo-angular-notification';
 export class NotificationSnackBarComponent implements OnInit {
   /** Input properties **/
   @Input() data$!: Observable<SnackBar>;
+  public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
+  public duration =this.configurationProvider.appSettings.snackbarAnimationDuration;
   /** Public properties **/
   @ViewChild('notificationAlertTemplate', { read: TemplateRef })
   alertTemplate!: TemplateRef<any>;
   snackbarMessage!: SnackBar;
 
   /** Constructor **/
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(private readonly notificationService: NotificationService,
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    
     this.data$.subscribe({
       next: (res) => {
         if (res) {
@@ -40,10 +48,10 @@ export class NotificationSnackBarComponent implements OnInit {
           this.notificationService.show({
             content: this.alertTemplate,
             position: { horizontal: 'center', vertical: 'top' },
-            animation: { type: 'fade', duration: 600 },
+            animation: { type: 'fade', duration: this.duration },
             closable: false,
             type: { style: res.type, icon: true },
-            hideAfter: 1000,
+            hideAfter: this.hideAfter,
           });
         }
       },
@@ -51,5 +59,6 @@ export class NotificationSnackBarComponent implements OnInit {
         console.error('err', err);
       },
     });
-  }
+  }   
+
 }
