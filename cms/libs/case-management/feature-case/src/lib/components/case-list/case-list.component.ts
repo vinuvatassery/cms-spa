@@ -33,8 +33,8 @@ public isGridLoaderShow = false;
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  public buttonCount = 2;
-  public sizes = [10, 20, 50];
+ 
+ 
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade) {}
 

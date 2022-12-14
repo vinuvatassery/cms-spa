@@ -26,11 +26,13 @@ export { ConfigurationProvider, LocalStorageService, NotificationService,Logging
       useClass: HttpLoggingInterceptor,
       multi: true,
     },
+ 
     // {
     //   provide: HTTP_INTERCEPTORS,
     //   useClass: LoaderInterceptor,
     //   multi: true,
     // },
+ 
   ],
 })
 export class SharedUtilCoreModule {

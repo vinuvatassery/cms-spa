@@ -97,16 +97,20 @@
         align-items: center;
         transition: ease-in all 0.4s;
         padding: ($size-xx + $size-s) $size-xlg;
+        position: relative;
         cursor: pointer;
         .material-icons {
           font-size: $font-size-xx;
           color: material-color($hive-success-palette, 500);
+          position: absolute;
+          right: 14px;
+          top: 8px;
         }
         &:hover,
         &:active,
         &:focus,
         &.active-item {
-          background: material-color($hive-success-palette, 100);
+          background: material-color($hive-success-palette, 50);
           border-radius: $size-0;
           &.case-menu-disabled{
             opacity: 1;
