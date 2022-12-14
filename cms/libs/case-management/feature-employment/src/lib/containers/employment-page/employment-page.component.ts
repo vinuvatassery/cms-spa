@@ -7,7 +7,7 @@ import { filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType, StatusFlag } from '@cms/case-management/domain';
-import { LoaderService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-employment-page',
@@ -28,7 +28,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   isEmpListGridLoaderShow = false;
   isEmployedGridDisplay = true;
   isEmployedFlag!: StatusFlag;
-  employmentSnackbar$ = this.notificationSnackbarService.snackbar$;
+  employmentFacadeSnackbar$ = this.notificationSnackbarService.snackbar$;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private checkBoxSubscription!: Subscription;

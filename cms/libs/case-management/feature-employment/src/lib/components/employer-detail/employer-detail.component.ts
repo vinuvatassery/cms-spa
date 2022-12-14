@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Validators, FormGroup, FormControl,} from '@angular/forms';
-import { first, Subject } from 'rxjs';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { first } from 'rxjs';
+import {  SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-employer-detail',
@@ -17,7 +17,6 @@ export class EmployerDetailComponent implements OnInit{
   public employer: ClientEmployer = new ClientEmployer();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   employmentList$ = this.employmentFacade.employers$;
-  employerSnackbar$ = this.notificationSnackbarService.snackbar$;
   isRemoveEmployerConfirmationPopupOpened = false;
   empNameMaxValue = 100;
   public date = new Date();
@@ -44,10 +43,7 @@ export class EmployerDetailComponent implements OnInit{
   constructor(private readonly employmentFacade: EmploymentFacade, 
     private workflowFacade: WorkflowFacade,
     private readonly router: Router,
-    private route: ActivatedRoute,
-    private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
-    private loaderService: LoaderService) {}
+    private route: ActivatedRoute) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

@@ -2,8 +2,8 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
-import {  first, Subject } from 'rxjs';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import {  first } from 'rxjs';
+import {  SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-employer-confirmation',
   templateUrl: './remove-employer-confirmation.component.html',
@@ -19,15 +19,11 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
   clientId: any;
   clientCaseId : any;
   clientCaseEligibilityId : any;
-  employmentSnackbar$ = this.notificationSnackbarService.snackbar$;
   /** Constructor **/
   constructor(
     private readonly employmentFacade: EmploymentFacade, 
-    private loaderService: LoaderService,
     private readonly router: Router,
     private route: ActivatedRoute,
-    private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
     private workflowFacade: WorkflowFacade) { }
 
   /** Lifecycle hooks **/
