@@ -402,13 +402,13 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
   this.appInfoForm.controls['Transgender']?.setValue(Transgender);
   if (Transgender==='NOT_LISTED') {
-    this.appInfoForm.controls['TransgenderDescription'].setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
+    this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
   }
 
   const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
   this.appInfoForm.controls['BirthGender']?.setValue(BirthGender);
   if (BirthGender==='NOT_LISTED') {
-    this.appInfoForm.controls['BirthGenderDescription'].setValue(applicantInfo.client.genderAtBirthDesc);
+    this.appInfoForm.controls['BirthGenderDescription']?.setValue(applicantInfo.client.genderAtBirthDesc);
   }
 
   
@@ -475,21 +475,28 @@ this.assignRaceAndEthnicityToForm();
   this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode);
  
 }
-private assignRaceAndEthnicityToForm(){
-  if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
-    const RaceAndEthnicity: any = [];
-    this.applicantInfo.clientRaceList.forEach((el: any) => {
-      const found = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
-      if(found!==undefined)
-      RaceAndEthnicity.push(found);
-      if(el.isPrimaryFlag===StatusFlag.Yes)
-      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(found);
+  private assignRaceAndEthnicityToForm() {
+    if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
+      const RaceAndEthnicity: any = [];
+      const Ethnicity: any = [];
+      this.applicantInfo.clientRaceList.forEach((el: any) => {
+        const foundRace = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientRaceCategoryCode);
+        if (foundRace !== undefined) {
+          RaceAndEthnicity.push(foundRace);
+          if (el.isPrimaryFlag === StatusFlag.Yes)
+            this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(foundRace);
 
-    });
-    this.appInfoForm.controls['RaceAndEthnicity']?.setValue(RaceAndEthnicity);
+        }
+        const foundEthnicity = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
+        if (foundEthnicity !== undefined)
+          Ethnicity.push(foundEthnicity);
+
+      });
+      this.appInfoForm.controls['RaceAndEthnicity']?.setValue(RaceAndEthnicity);
+      this.appInfoForm.controls['Ethnicity']?.setValue(Ethnicity);
+    }
+
   }
- 
-}
 private assignPronounModelToForm(){
   if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
     this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  

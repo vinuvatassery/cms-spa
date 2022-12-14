@@ -481,23 +481,39 @@ export class ClientPageComponent implements OnInit, OnDestroy {
      });
 }
 private populateClientRace(){
-  const clientRaceListSaved = this.applicantInfo.clientRaceList;// this is in case of update record
-  const RaceAndEthnicity=this.appInfoForm.controls['RaceAndEthnicity'].value;
-  const RaceAndEthnicityPrimary=this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
   this.applicantInfo.clientRaceList=[];
+  //const clientRaceListSaved = this.applicantInfo.clientRaceList;// this is in case of update record
+  const RaceAndEthnicity=this.appInfoForm.controls['RaceAndEthnicity'].value;
+  const Ethnicity=this.appInfoForm.controls['Ethnicity'].value;
+  const RaceAndEthnicityPrimary=this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
+  debugger
   RaceAndEthnicity.forEach((el:any) => {
       let clientRace = new ClientRace();
-      clientRace.clientEthnicIdentityCode = el.lovCode;
-      clientRace.clientRaceCategoryCode =el.parentCode;
+      clientRace.clientRaceCategoryCode =el.lovCode;
+      clientRace.clientEthnicIdentityCode = "";
       if(RaceAndEthnicityPrimary.lovCode===el.lovCode)
         clientRace.isPrimaryFlag = StatusFlag.Yes;
       clientRace.clientId = this.clientId;
-      const Existing=clientRaceListSaved.find(m=>m.clientEthnicIdentityCode===el.clientGenderCode);
-         if (Existing!==undefined) {
-          clientRace=Existing;
-         }
+      // const Existing=clientRaceListSaved.find(m=>m.clientEthnicIdentityCode===el.clientGenderCode);
+      //    if (Existing!==undefined) {
+      //     clientRace=Existing;
+      //    }
       this.applicantInfo.clientRaceList.push(clientRace)
   });
+
+  Ethnicity.forEach((el:any) => {
+    let clientRace = new ClientRace();
+    clientRace.clientEthnicIdentityCode = el.lovCode;
+    clientRace.clientRaceCategoryCode ="";
+    if(RaceAndEthnicityPrimary.lovCode===el.lovCode)
+      clientRace.isPrimaryFlag = StatusFlag.Yes;
+    clientRace.clientId = this.clientId;
+    // const Existing=clientRaceListSaved.find(m=>m.clientEthnicIdentityCode===el.clientGenderCode);
+    //    if (Existing!==undefined) {
+    //     clientRace=Existing;
+    //    }
+    this.applicantInfo.clientRaceList.push(clientRace)
+});
 }
   private populateClientSexualIdentity() {
     this.applicantInfo.clientSexualIdentityList = [];
