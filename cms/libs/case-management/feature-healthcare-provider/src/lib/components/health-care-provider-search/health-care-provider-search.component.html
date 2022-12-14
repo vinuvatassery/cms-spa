@@ -1,0 +1,78 @@
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+      Start typing provider name, then select one from the 
+      suggestions. 
+    </p>
+    <div class="flex-row">
+      <div class="flex-col">
+        <div class="autoSelect-search mat-form-no-b-space">
+          <div class="global-search">
+            <span
+              class="material-icons global-search-icon"
+              aria-label="search provider"
+              aria-hidden="true"
+              >search</span
+            >
+            <kendo-multicolumncombobox
+            [fillMode]="formUiStyle.dropDownFillMode"
+              [data]="providers$ | async"
+              textField="clinicName"
+              valueField="providerId"
+              placeholder="Search Provider Name/Number"
+              [(ngModel)]="filteredSelectedProvider"
+            >
+              <kendo-combobox-column [width]="250">
+                <ng-template
+                  kendoMultiColumnComboBoxColumnCellTemplate
+                  let-dataItem
+                >
+                  <span class="pr-1">{{ dataItem.clinicName }}</span>
+                  <span class="pr-1"> {{ dataItem.providerId }}</span>
+                  <span class="text-muted">{{ dataItem.address }}</span>
+                </ng-template>
+              </kendo-combobox-column>
+            </kendo-multicolumncombobox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div>
+        <button
+          kendoButton
+          [primary]="true"
+          look="flat"
+          (click)="onOpenNewProviderClicked()"
+          *ngIf="!isEditSearchHealthProviderValue && isAdminRole"
+          aria-label="add new provider"
+        >
+          Add New
+        </button>
+        <button
+          kendoButton
+          class="k-danger-link"
+          *ngIf="isEditSearchHealthProviderValue && isAdminRole"
+          aria-label="remove provider"
+        >
+          Remove
+        </button>
+      </div>
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          (click)="onCloseProviderClicked()"
+          aria-label="cancel adding provider"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="add or update pharmacy">
+          {{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

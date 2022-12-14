@@ -4,9 +4,10 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
-/** Facades **/
-import { HealthcareProviderFacade } from '@cms/case-management/domain';
+
 
 @Component({
   selector: 'case-management-health-care-provider-list',
@@ -17,20 +18,28 @@ import { HealthcareProviderFacade } from '@cms/case-management/domain';
 export class HealthCareProviderListComponent implements OnInit {
   /** Input properties **/
   @Input() hasNoProvider!: boolean;
+  @Input() healthCareProvidersData! : any;
 
+  @Output() deleteConfimedEvent =  new EventEmitter<string>();
+  
   /** Public properties **/
-  healthCareProviders$ = this.providerFacade.healthCareProviders$;
+   healthCareProviders$! :any ;
+  // removeHealthProvider$ ;
   isEditHealthProvider!: boolean;
   isOpenedProvider = false;
-  // actions: Array<any> = [{ text: 'Action' }];
+  isOpenedDeleteConfirm = false;
+  prvSelectedId! : string; 
+  isEditSearchHealthProvider!: boolean;
+  isOpenedProviderSearch = false;
+  
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
       buttonType:"btn-h-primary",
       text: "Edit Provider",
       icon: "edit",
-      click: (): void => {
-        this.onOpenProviderClicked(true);
+      click: (): void => {                      
+        this.onOpenProviderSearchClicked(true);
       },
     },
    
@@ -38,24 +47,17 @@ export class HealthCareProviderListComponent implements OnInit {
       buttonType:"btn-h-danger",
       text: "Remove Provider",
       icon: "delete",
-      click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
+      click: (): void => {      
+        this.onRemoveProviderClicked()
       },
     },
   ];
 
-  /** Constructor **/
-  constructor(private readonly providerFacade: HealthcareProviderFacade) {}
-
+  
   /** Lifecycle hooks **/
-  ngOnInit(): void {
-    this.loadHealthCareProviders();
-  }
-
-  /** Private methods **/
-  private loadHealthCareProviders() {
-    this.providerFacade.loadHealthCareProviders();
-  }
+   ngOnInit(): void {
+    this.healthCareProviders$ = this.healthCareProvidersData;
+   }
 
   /** Internal event methods **/
   onCloseProviderClicked() {
@@ -66,4 +68,40 @@ export class HealthCareProviderListComponent implements OnInit {
     this.isOpenedProvider = true;
     this.isEditHealthProvider = isEditHealthProviderValue;
   }
+
+  onOpenProviderSearchClicked(isEditSearchHealthProviderValue: boolean) {
+    this.isOpenedProviderSearch = true;
+    this.isEditSearchHealthProvider = isEditSearchHealthProviderValue;
+  }
+  onCloseProviderSearchClicked() {
+    this.isOpenedProviderSearch = false;
+  }
+  onRemoveProviderClicked()
+  { 
+    this.isOpenedDeleteConfirm = true;
+  }
+
+  onDeleteConfirmCloseClicked()
+  {
+    this.isOpenedDeleteConfirm = false;
+  }
+
+  onRemoveClick(prvId : string)
+  { 
+    this.prvSelectedId = prvId;      
+  }
+
+      /** External event methods **/
+  handleDeclinePrvRemove() {
+    this.onDeleteConfirmCloseClicked()
+  }
+
+  handleAcceptPrvRemove(isDelete :boolean)
+   {  
+      if(isDelete)
+      {
+        this.deleteConfimedEvent.emit(this.prvSelectedId);
+      }      
+      this.onDeleteConfirmCloseClicked()        
+   }
 }

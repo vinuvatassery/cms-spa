@@ -1,5 +1,7 @@
 export interface HealthcareProvider {
-  id: number;
-  name: string;
-  description: string;
+  providerId: string;
+  clinicName: string;
+  providerName: string;
+  primaryPhone : string;
+  providerAddress : string;
 }

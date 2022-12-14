@@ -1,11 +1,7 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-/** External libraries **/
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
-/** Facades **/
-import { WorkflowFacade, HealthcareProviderFacade } from '@cms/case-management/domain';
-/** Enums **/
-import { NavigationType } from '@cms/case-management/domain';
+import {  HealthcareProviderFacade } from '@cms/case-management/domain';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-healthcare-provider-page',
@@ -14,19 +10,38 @@ import { NavigationType } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
+
+  ClientCaseEligibilityId  = "90478CC0-1EB5-4D76-BC49-05423EFA3D93";
+
   /** Public properties **/
-  hasNoProvider = false;
+  hasNoProvider = false; 
+  healthCareProviders$ = this.healthProvider.healthCareProviders$;
+  removeHealthProvider$ =this.healthProvider.removeHealthProvider$;
+
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
 
   /** Constructor **/
-  constructor(private workflowFacade: WorkflowFacade,
-    private healthProviderFacade: HealthcareProviderFacade) { }
+  constructor(
+    private healthProvider:HealthcareProviderFacade) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
-    this.addSaveSubscription();
+    this.loadHealthCareProviders(this.ClientCaseEligibilityId);
+    this.saveClickSubscribed();
+  }
+
+   /** Private methods **/
+   private loadHealthCareProviders(ClientCaseEligibilityId : string) {  
+    this.healthProvider.loadHealthCareProviders(ClientCaseEligibilityId);   
+  }
+
+  private removeHealthCareProvider(ProviderId : string){
+     this.healthProvider.removeHealthCareProviders(this.ClientCaseEligibilityId, ProviderId);      
+  }
+  UpdateHealthCareProvidersFlag(nohealthCareProviderFlag : string) {
+    this.healthProvider.UpdateHealthCareProvidersFlag(this.ClientCaseEligibilityId, nohealthCareProviderFlag);   
   }
 
   ngOnDestroy(): void {
@@ -34,30 +49,26 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods **/
-  private addSaveSubscription(): void {
-    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
-      mergeMap((navigationType: NavigationType) =>
-        forkJoin([of(navigationType), this.save()])
-      ),
-    ).subscribe(([navigationType, isSaved]) => {
-      if (isSaved) {
-        this.workflowFacade.navigate(navigationType);
-      }
-    });
-  }
-
-  private save() {
-    let isValid = true;
-    // TODO: validate the form
-    if (isValid) {
-      return this.healthProviderFacade.save();
-    }
-
-    return of(false)
+  private saveClickSubscribed(): void {
+    // this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
+    //   this.healthProvider.save().subscribe((response: boolean) => {
+    //     if(response){
+    //       this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
+    //     }
+    //   })
+    // });
   }
 
   /** Internal event methods **/
   onProviderValueChanged() {
     this.hasNoProvider = !this.hasNoProvider;
+    this.UpdateHealthCareProvidersFlag( this.hasNoProvider == true ? "Y" : "N");  
   }
+
+/** events from child components**/
+   handlePrvRemove(prvSelectedId : string)
+   {        
+      this.removeHealthCareProvider(prvSelectedId);                  
+   }
+  
 }

@@ -20,6 +20,8 @@
         <div class="flex-col">
           <case-management-health-care-provider-list
             [hasNoProvider]="hasNoProvider"
+            [healthCareProvidersData]="healthCareProviders$"
+            (deleteConfimedEvent)="handlePrvRemove($event)"           
           ></case-management-health-care-provider-list>
         </div>
       </div>
