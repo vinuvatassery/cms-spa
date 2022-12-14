@@ -14,9 +14,11 @@ import { ConfigurationProvider, LoggingService, NotificationSnackbarService, Sna
 
 
 /** Facade **/
-import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { WorkflowFacade } from './workflow.facade';
+import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
