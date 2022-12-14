@@ -33,6 +33,7 @@ export class ClientFacade {
   appInfoFormSubject = new BehaviorSubject<any>([]);
   applicationInfoSubject = new BehaviorSubject<any>([]);
   pronounListSubject = new  BehaviorSubject<any>([]);
+  clientDetailsSubject = new  BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -55,6 +56,7 @@ export class ClientFacade {
   appInfoForm$ = this.appInfoFormSubject.asObservable();
   applicantInfo$ = this.applicationInfoSubject.asObservable();
   pronounList$ = this.pronounListSubject.asObservable();
+  clientDetails$ = this.clientDetailsSubject.asObservable();
 
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();

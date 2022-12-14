@@ -71,6 +71,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]) => {     
         if (isSaved) { 
+          this.clientFacade.clientDetailsSubject.next(isSaved);
           this.loaderService.hide();                 
           this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
           this.workFlowFacade.navigate(navigationType);          
@@ -96,6 +97,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.clientCaseId = this.clientCaseId
         this.applicantInfo.workFlowSessionId = this.sessionId;      
         if(this.clientCaseEligibilityId !=undefined && this.clientCaseEligibilityId != null){
+          var clientDetails = {"ClientCaseId":this.clientCaseId,
+          "clientCaseEligibilityId":this.clientCaseEligibilityId};
+          this.clientFacade.clientDetailsSubject.next(clientDetails);
           if(  this.applicantInfo.client === undefined){
             this.applicantInfo.client = new Client;
           }
