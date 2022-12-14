@@ -17,7 +17,6 @@ import { NotificationService } from '@progress/kendo-angular-notification';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
-
 @Component({
   selector: 'common-notification-snack-bar',
   templateUrl: './notification-snack-bar.component.html',
@@ -33,6 +32,7 @@ export class NotificationSnackBarComponent implements OnInit {
   @ViewChild('notificationAlertTemplate', { read: TemplateRef })
   alertTemplate!: TemplateRef<any>;
   snackbarMessage!: SnackBar;
+
 
   /** Constructor **/
   constructor(private readonly notificationService: NotificationService,
@@ -60,5 +60,8 @@ export class NotificationSnackBarComponent implements OnInit {
       },
     });
   }   
+
+
+
 
 }
