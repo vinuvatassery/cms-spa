@@ -1,8 +1,8 @@
 export enum LovType {
     CaseOrigin = 'CASE_ORIGIN',
-    Pronoun ='Pronouns',
-    Material='Material_In_Alternate_Format',
-    MaterialYes='Material_In_Alternate_Format_Yes',
+    Pronoun ='PRONOUNS',
+    Material='MATERIAL_IN_ALTERNATE_FORMAT',
+    MaterialYes='MATERIAL_IN_ALTERNATE_FORMAT_YES',
     Gender ='Gender',
     Transgender ='Transgender',
     SexAtBirth ='SEX_AT_BIRTH',

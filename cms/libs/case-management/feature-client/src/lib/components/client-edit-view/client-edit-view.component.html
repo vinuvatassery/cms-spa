@@ -12,7 +12,7 @@
         </kendo-textbox>
         
         <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
-        <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First Name is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
      
         </kendo-floatinglabel>
       </div>
@@ -26,7 +26,7 @@
               >
           </kendo-textbox>
         
-          <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle Initial/Checkbox is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle initial is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 mt-3">
@@ -52,7 +52,7 @@
               formControlName="lastName"
               [maxlength]="lengthRestrictForty">
           </kendo-textbox>
-          <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last Name is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
           <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
         </kendo-floatinglabel>
       </div>
@@ -68,7 +68,7 @@
               >
           </kendo-textbox>
         
-          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsFirstName'].valid && !this.appInfoForm.controls['prmInsFirstName'].disabled">First Name on Primary Insurance Card/Checkbox is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsFirstName'].valid && !this.appInfoForm.controls['prmInsFirstName'].disabled">First name on primary insurance card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <!-- [disabled]="isInsuranceCardChecked" -->
@@ -81,7 +81,7 @@
               >   
           </kendo-textbox>
         
-          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled" >Last Name on Primary Insurance Card/Checkbox is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled" >Last name on primary insurance card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 mt-3">
@@ -114,7 +114,7 @@
           </kendo-textbox>
       
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First Name on Official ID/Checkbox is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First name on official id is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Official ID">
@@ -126,7 +126,7 @@
             >   
           </kendo-textbox>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last Name on Official ID/Checkbox is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last name on official id is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 mt-3">
          <!-- (change)="onOfficialIdChecked($event)" -->
@@ -174,7 +174,7 @@
             >   </kendo-textbox>
   
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social Security Number/Checkbox is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 mt-3">
         <span class="app-checkboxwidtext-wrapper">
@@ -233,7 +233,7 @@
               text="No"
               for="register1"
             ></kendo-label>
-            <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register To Vote is required.</kendo-formerror>
+            <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is required.</kendo-formerror>
           </span>
           <div class="voterreg-info d-flex" *ngIf="isVisible">
             <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>This application will  send voter registeration collaterial via letter or email once the applicaiton is saved  with the necessary contact information</p>
