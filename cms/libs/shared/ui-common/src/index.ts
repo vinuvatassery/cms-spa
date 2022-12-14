@@ -19,5 +19,3 @@ export * from './lib/user-profile-card/user-profile-card.component';
 export * from './lib/loader/loader.component';
 export * from './lib/loader/grid-loader.component';
  
-/** Enums **/
-export * from './lib/enums/snack-bar-notification-type.enum';

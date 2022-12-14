@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** interal libraries **/
-import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
+import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 // entities library
 import { ClientEmployer } from '../entities/client-employer';
@@ -15,7 +15,7 @@ import { EmployersDataService } from '../infrastructure/employers.data.service';
 import {StatusFlag} from '../enums/status-flag.enum'
 import {WorkflowFacade}from  './workflow.facade'
 /** Providers **/
-import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
@@ -42,34 +42,29 @@ export class EmploymentFacade {
    // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
-  snackbar$ = this.snackbarSubject.asObservable();
+  employmentFacadeSnackbar$ = this.snackbarSubject.asObservable();
 
-  ShowLoader(){this.loaderService.show();}
+  showLoader(){this.loaderService.show();}
   hideLoader(){ this.loaderService.hide();}
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
-    let subtitleText = subtitle;
-    const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
     if(type == SnackBarNotificationType.ERROR)
     {
-      const err= subtitle;
-      subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
-    }
-    const snackbarMessage: SnackBar = {
-      title: titleText,
-      subtitle: subtitleText,
-      type: type,
-    };
-    this.snackbarSubject.next(snackbarMessage);
-    this.hideLoader();
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.hideLoader();   
   }
 
   /** Constructor**/
   constructor(
     private readonly employersDataService: EmployersDataService,
     private workflowFacade: WorkflowFacade,
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
     private configurationProvider : ConfigurationProvider,
     private readonly loaderService: LoaderService
   ) {}
@@ -135,10 +130,7 @@ export class EmploymentFacade {
   }
   
   // Loading the employmet details based on employerid
-  loadEmployersDetails(
-    clientCaseEligibilityId: string,
-    clientEmployerId: string
-  ) {
+  loadEmployersDetails(  clientCaseEligibilityId: string,  clientEmployerId: string ) {
     return this.employersDataService.loadEmployersDetailsService(
       clientCaseEligibilityId,
       clientEmployerId
@@ -165,27 +157,20 @@ export class EmploymentFacade {
 
   // updating the unemployment stats
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-    this.ShowLoader();
+    this.showLoader();
     this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed).subscribe({
       next: (employmentStatusResponse) => {   
-
-         
           if(employmentStatusResponse == true)
           {     
-           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employment Updated Successfully')  
+           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employment Status Updated Successfully')  
           }             
            this.employersStatusSubject.next(employmentStatusResponse);
            this.hideLoader();
          },
-      
          error: (err) => {        
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
         },
     });
-    // return this.employersDataService.employmentStatusUpdateService(
-    //   clientCaseEligibilityId,
-    //   isEmployed
-    // );
   }
   
 }

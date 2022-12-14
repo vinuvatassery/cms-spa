@@ -4,9 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Validators, FormGroup, FormControl,} from '@angular/forms';
-import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
 import { first, Subject } from 'rxjs';
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-employer-detail',
@@ -18,6 +17,7 @@ export class EmployerDetailComponent implements OnInit{
   public employer: ClientEmployer = new ClientEmployer();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   employmentList$ = this.employmentFacade.employers$;
+  employerSnackbar$ = this.notificationSnackbarService.snackbar$;
   isRemoveEmployerConfirmationPopupOpened = false;
   empNameMaxValue = 100;
   public date = new Date();
@@ -39,40 +39,14 @@ export class EmployerDetailComponent implements OnInit{
     empName: new FormControl('', []),
     empHireDate: new FormControl(new Date(), []),
   });
-
-   // handling the snackbar & loader
-   snackbarMessage!: SnackBar;
-   snackbarSubject = new Subject<SnackBar>();
-   snackbar$ = this.snackbarSubject.asObservable();
- 
-   showLoader(){this.loaderService.show();}
-   hideLoader(){ this.loaderService.hide();}
- 
- 
-   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-   {        
-     let subtitleText = subtitle;
-     const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
-     if(type == SnackBarNotificationType.ERROR)
-     {
-       const err= subtitle;
-       subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
-     }
-     const snackbarMessage: SnackBar = {
-       title: titleText,
-       subtitle: subtitleText,
-       type: type,
-     };
-     this.snackbarSubject.next(snackbarMessage);
-     this.hideLoader();
-   }
- 
-
+  
   // constructor
   constructor(private readonly employmentFacade: EmploymentFacade, 
     private workflowFacade: WorkflowFacade,
     private readonly router: Router,
     private route: ActivatedRoute,
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
     private loaderService: LoaderService) {}
 
   /** Lifecycle hooks **/
@@ -119,7 +93,7 @@ export class EmployerDetailComponent implements OnInit{
         }
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
+        this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
       },
     }
     );
@@ -142,7 +116,7 @@ export class EmployerDetailComponent implements OnInit{
           
             if (this.employer) {
               this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
-              this.showLoader();
+              this.employmentFacade.showLoader();
               this.employerFormSubmitted = false;
 
               if (this.isAdd) {
@@ -150,12 +124,12 @@ export class EmployerDetailComponent implements OnInit{
                   next: (response) => { 
                     this.addUpdateEmploymentEvent.next(response);  
                     this.closeModal.emit(true);
-                    this.hideLoader();
-                    this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer successfully added') ;  
+                    this.employmentFacade.hideLoader();
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer added successfully') ;  
                   },
                   error: (err) => { 
-                    this.hideLoader();
-                    this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
+                    this.employmentFacade.hideLoader();
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
                   },
                 });
               } else {
@@ -172,12 +146,12 @@ export class EmployerDetailComponent implements OnInit{
                     this.addUpdateEmploymentEvent.next(response); 
                     this.employerFormSubmitted = false; 
                     this.closeModal.emit(true);            
-                    this.hideLoader();
-                    this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer successfully updated') ;  
+                    this.employmentFacade.hideLoader();
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer updated successfully') ;  
                   },
                   error: (err) => {
-                    this.hideLoader(); 
-                    this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
+                    this.employmentFacade.hideLoader(); 
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
                   },
                 });
               }
