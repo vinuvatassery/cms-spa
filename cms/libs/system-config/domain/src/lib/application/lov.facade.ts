@@ -1,5 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { LoggingService } from '@cms/shared/util-core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -13,6 +14,7 @@ export class LovFacade {
 
   constructor(
     private readonly lovDataService: LovDataService,
+    private loggingService : LoggingService
 
   ) { }
   
@@ -48,7 +50,7 @@ export class LovFacade {
       this.lovcascadeSubject.next(lovResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -59,7 +61,7 @@ getRelationShipsLovs(): void {
       this.lovRelationShipSubject.next(relationsResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -71,7 +73,7 @@ getCaseOriginLovs(): void {
       this.lovcaseoriginSubject.next(lovcaseoriginResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
   
@@ -82,7 +84,7 @@ getPronounLovs(): void {
       this.lovPronounSubject.next(lovPronounResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
   
@@ -94,7 +96,7 @@ getContactRelationShipsLovs(): void {
       this.lovCntRelationshipCodeSubject.next(relationsResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -105,7 +107,7 @@ getIncomeSourceLovs():void{
       this.lovIncomeSourceSubject.next(lovIncomeSourceResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -116,7 +118,7 @@ getIncomeTypeLovs():void{
       this.lovIncomeTypeSubject.next(lovIncomeTypeResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -127,7 +129,7 @@ getIncomeFrequencyLovs():void{
       this.lovIncomeFrequencySubject.next(lovIncomeFrequencyResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
