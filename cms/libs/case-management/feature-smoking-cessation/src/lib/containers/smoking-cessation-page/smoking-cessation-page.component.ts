@@ -2,11 +2,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, first, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag ,ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ActivatedRoute } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
 
