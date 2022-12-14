@@ -279,13 +279,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value; 
       var dob =  this.appInfoForm.controls["dateOfBirth"].value;
       if(this.clientCaseEligibilityId != null){
-        this.applicantInfo.client.dob = new Date(
-          dob.getUTCFullYear(),
-          dob.getUTCMonth() ,
-          dob.getUTCDate() + 1,
-          dob.getUTCHours(),
-          dob.getUTCMinutes(),
-          dob.getUTCSeconds()
+        this.applicantInfo.client.dob = new Date(dob.getUTCFullYear(), dob.getUTCMonth(),dob.getUTCDate() + 1, 
+        dob.getUTCHours(), dob.getUTCMinutes(), dob.getUTCSeconds()
         );
       }  
       else{
