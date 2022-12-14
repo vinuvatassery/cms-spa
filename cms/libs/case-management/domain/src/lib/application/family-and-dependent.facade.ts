@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
+import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -10,7 +10,7 @@ import { DependentTypeCode } from '../enums/dependent-type.enum';
 /** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
 /** Providers **/
-import { ConfigurationProvider, LoggingService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 /** Facade **/
@@ -62,23 +62,16 @@ export class FamilyAndDependentFacade {
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
 
+
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
-    let subtitleText = subtitle;
-    const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
     if(type == SnackBarNotificationType.ERROR)
     {
-      const err= subtitle;
-      subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
-      this.loggingService.logException(err)
-    }
-    const snackbarMessage: SnackBar = {
-      title: titleText,
-      subtitle: subtitleText,
-      type: type,
-    };
-    this.snackbarSubject.next(snackbarMessage);
-    this.HideLoader();
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
   }
 
 
@@ -86,7 +79,8 @@ export class FamilyAndDependentFacade {
   constructor(private readonly dependentDataService: DependentDataService,
     private workflowFacade: WorkflowFacade ,   private readonly loaderService: LoaderService ,
     private configurationProvider : ConfigurationProvider ,
-    private loggingService : LoggingService ) {}
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService ) {}
 
   /** Public methods **/
   ShowLoader()
