@@ -1,4 +1,5 @@
- 
+import { NoIncomeData } from './../../../../../domain/src/lib/entities/no-income-data';
+
 /** Angular **/
 import {  Component,  ChangeDetectionStrategy,  Output,  EventEmitter,  Input,  OnDestroy,  OnInit,} from '@angular/core';
 /** External libraries **/
@@ -22,25 +23,26 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
-  isNodateSignatureNoted = true;
+  isNodateSignatureNoted = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() isEditValue!: boolean;
   todaysDate = new Date();
+  noIncomeData = new NoIncomeData();
   /** Public properties **/
   incomeTypes$ = this.incomeFacade.ddlIncomeTypes$;
   incomeSources$ = this.incomeFacade.ddlIncomeSources$;
   frequencies$ = this.incomeFacade.ddlFrequencies$;
   proofOfIncomeTypes$ = this.incomeFacade.ddlProofOfIncomdeTypes$;
   hasNoProofOfIncome = false;
-  tareaJustificationCounter!: string;
-  tareaJustification = '';
-  tareaJustificationCharachtersCount!: number;
-  tareaJustificationMaxLength = 300;
+  incomeNoteCounter!: string;
+  incomeNote = '';
+  incomeNoteCharachtersCount!: number;
+  incomeNoteMaxLength = 300;
   public noIncomeDetailsForm: FormGroup = new FormGroup({
-    dateClientSigned: new FormControl('', []),
-    dateSignatureNoted: new FormControl(this.todaysDate, []),
-    tareaJustifications: new FormControl('', []),
+    noIncomeClientSignedDate: new FormControl('', []),
+    noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+    noIncomeNote: new FormControl('', []),
   });
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
@@ -51,7 +53,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadIncomeTypes();
-    this.tareaJustificationWordCount();
+    this.incomeNoteWordCount();
     this.loadIncomeSources();
     this.loadFrequencies();
     this.loadProofOfIncomeTypes();
@@ -60,14 +62,14 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-  } 
-  
+  }
+
   /** Private methods **/
-  private tareaJustificationWordCount() {
-    this.tareaJustificationCharachtersCount = this.tareaJustification
-      ? this.tareaJustification.length
+  private incomeNoteWordCount() {
+    this.incomeNoteCharachtersCount = this.incomeNote
+      ? this.incomeNote.length
       : 0;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+    this.incomeNoteCounter = `${this.incomeNoteCharachtersCount}/${this.incomeNoteMaxLength}`;
   }
 
   private loadIncomeTypes() {
@@ -103,23 +105,23 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
     // TODO: validate the form
     this.submitIncomeDetailsForm();
-    if (this.noIncomeDetailsForm.valid && isValid) { 
-        return this.incomeFacade.save(); 
-    } 
- 
+    if (this.noIncomeDetailsForm.valid && isValid) {
+        return this.incomeFacade.save(this.noIncomeData);
+    }
+
     return of(false)
   }
 
   /** Internal event methods **/
-  onTareaJustificationValueChange(event: any): void {
-    this.tareaJustificationCharachtersCount = event.length;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+  onIncomeNoteValueChange(event: any): void {
+    this.incomeNoteCharachtersCount = event.length;
+    this.incomeNoteCounter = `${this.incomeNoteCharachtersCount}/${this.incomeNoteMaxLength}`;
   }
 
   onProofOfIncomeValueChanged() {
     this.hasNoProofOfIncome = !this.hasNoProofOfIncome;
   }
- 
+
   /** Private Methods **/
   private loadIncomes(): void {
     this.incomeFacade.loadIncomes();
@@ -128,7 +130,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
- 
+
   /** Internal Event Methods **/
   onChangeCounterClick() {
     this.updateCompletionStatus({
@@ -140,41 +142,56 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   onIncomeValueChanged(event: any) {
     this.hasNoIncome = !this.hasNoIncome;
-    if(!this.hasNoIncome){
- this.noIncomeDetailsForm.reset();
+    if(this.hasNoIncome)
+    {
+      this.noIncomeDetailsForm = new FormGroup({
+        noIncomeClientSignedDate: new FormControl('', []),
+        noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+        noIncomeNote: new FormControl('', []),
+      });
+      this.isNodateSignatureNoted = true;
     }
-   
+    // if(!this.hasNoIncome){
+    // this.noIncomeDetailsForm.reset();
+    // }
+
   }
 
   public submitIncomeDetailsForm(): void {
     this.noIncomeDetailsForm.markAllAsTouched();
     if (this.hasNoIncome) {
       console.log(this.noIncomeDetailsForm);
-      this.noIncomeDetailsForm.controls['dateClientSigned'].setValidators([
+      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators([
         Validators.required,
       ]);
-      this.noIncomeDetailsForm.controls['dateSignatureNoted'].setValidators([
+      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValidators([
         Validators.required,
       ]);
-      this.noIncomeDetailsForm.controls['tareaJustifications'].setValidators([
+      this.noIncomeDetailsForm.controls['noIncomeNote'].setValidators([
         Validators.required,
       ]);
       this.noIncomeDetailsForm.controls[
-        'dateClientSigned'
+        'noIncomeClientSignedDate'
       ].updateValueAndValidity();
       this.noIncomeDetailsForm.controls[
-        'dateSignatureNoted'
+        'noIncomeSignatureNotedDate'
       ].updateValueAndValidity();
       this.noIncomeDetailsForm.controls[
-        'tareaJustifications'
+        'noIncomeNote'
       ].updateValueAndValidity();
       // this.onDoneClicked();
       if (this.noIncomeDetailsForm.valid) {
+        this.noIncomeData.noIncomeFlag = this.hasNoIncome == true? "Y":"N";
+        this.noIncomeData.clientCaseEligibilityId = 'D323838C-80F3-4BB6-8FD4-EF6A9FE37335';
+        this.noIncomeData.clientId = 3;
+        this.noIncomeData.noIncomeClientSignedDate = this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value;
+        this.noIncomeData.noIncomeSignatureNotedDate = this.noIncomeDetailsForm.get("noIncomeSignatureNotedDate")?.value;
+        this.noIncomeData.noIncomeNote = this.noIncomeDetailsForm.get("noIncomeNote")?.value;
         console.log(this.noIncomeDetailsForm);
       }
     }
   }
-  
+
   saveIncomeDetails(clientIncomeDetails:any){
     //this.incomeFacade.saveClientIncome(clientIncomeDetails)
   }

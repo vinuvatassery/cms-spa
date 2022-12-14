@@ -446,6 +446,11 @@ export class ContactDataService {
   }
 
  saveIncome(clientIncome: any) {
+  debugger;
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+  }
+
+  updateNoIncomeData(noIncomeData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
   }
 }

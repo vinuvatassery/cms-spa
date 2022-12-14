@@ -102,9 +102,11 @@ export class IncomeFacade {
     });
   }
 
-  save(): Observable<boolean> {
-    //TODO: save api call   
-    return of(true);
+  save(noIncomeData : any): Observable<any> {
+    //TODO: save api call
+    debugger;
+    return this.contactDataService.updateNoIncomeData(noIncomeData);
+    //return of(true);
   }
 
   saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
