@@ -20,7 +20,6 @@ export class EmployerDetailComponent implements OnInit{
   employmentList$ = this.employmentFacade.employers$;
   isRemoveEmployerConfirmationPopupOpened = false;
   empNameMaxValue = 100;
-  public currentDate=  new Date;
   public date = new Date();
   public now_utc = Date.UTC(this.date.getUTCFullYear(), this.date.getUTCMonth(),
   this.date.getUTCDate(), this.date.getUTCHours(),
