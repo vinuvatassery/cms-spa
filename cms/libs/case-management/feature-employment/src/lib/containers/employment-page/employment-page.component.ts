@@ -19,6 +19,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   employmentList$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   employmentStatus$ = this.employmentFacade.employmentStatusGet$;
+  pageSizes = this.employmentFacade.gridPageSizes;
   clientCaseEligibilityId: any;
   clientId: any;
   clientCaseId: any;
@@ -89,6 +90,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
       sortType: gridDataRefinerValue.sortType,
     };
     if ((this.isEmployedGridDisplay ?? false) == false) {
+      this.pageSizes = this.employmentFacade.gridPageSizes;
       this.employmentFacade.loadEmployers(
         this.clientCaseEligibilityId,
         gridDataRefiner.skipcount,

@@ -21,6 +21,7 @@ import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 export class EmploymentFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'employerName'
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{

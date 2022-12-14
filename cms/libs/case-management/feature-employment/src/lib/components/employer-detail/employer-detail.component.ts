@@ -133,10 +133,6 @@ export class EmployerDetailComponent implements OnInit{
     this.empDetailsForm.controls['empHireDate'].setValidators([  Validators.required,  ]);
     this.empDetailsForm.controls['empName'].updateValueAndValidity();
     this.empDetailsForm.controls['empHireDate'].updateValueAndValidity();
- 
- if(this.empDetailsForm.controls['empHireDate'].value <= new Date()){
- 
-
           if (this.empDetailsForm.valid) {
             this.employer.clientEmployerId = this.selectedEmployer.clientEmployerId;
             this.employer.employerName =  this.empDetailsForm.controls['empName'].value;
@@ -188,8 +184,7 @@ export class EmployerDetailComponent implements OnInit{
         
 
             }
-          }
-        }
+          }    
   }
   // close the employer form details popup
   cancelModal() {

@@ -37,6 +37,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   public sortValue = this.employmentFacade.sortValue;
   public sortType = this.employmentFacade.sortType;
   public pageSizes = this.employmentFacade.gridPageSizes;
+  public gridSkipCount = this.employmentFacade.skipCount;
   public sort = this.employmentFacade.sort;
   public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -68,8 +69,8 @@ export class EmployerListComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.state = {
-      skip: 0,
-      take: 5,
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
     this.loadEmployments();
