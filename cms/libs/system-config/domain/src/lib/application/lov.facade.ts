@@ -32,6 +32,7 @@ export class LovFacade {
   private lovSpokenWriottenLanguageSubject = new BehaviorSubject<Lov[]>([]);
   private lovEnglishProficiencySubject = new BehaviorSubject<Lov[]>([]);
   private lovRaceSubject = new BehaviorSubject<Lov[]>([]);
+  private lovEthnicitySubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -49,6 +50,7 @@ export class LovFacade {
   spokenWrittenLanguagelov$ = this.lovSpokenWriottenLanguageSubject.asObservable();
   englishProficiencylov$ = this.lovEnglishProficiencySubject.asObservable();
   racelov$ = this.lovRaceSubject.asObservable();
+  ethnicitylov$ = this.lovEthnicitySubject.asObservable();
 
         /** Public methods **/
 
@@ -190,9 +192,19 @@ getEnglishProficiencyLovs(): void {
   });
 }
 getRaceLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.RaceAndEthnicity).subscribe({
+  this.lovDataService.getLovsbyTypes(LovType.RaceGroup).subscribe({
     next: (response) => {
       this.lovRaceSubject.next(response);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+getEthnicityLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Ethnicity).subscribe({
+    next: (response) => {
+      this.lovEthnicitySubject.next(response);
     },
     error: (err) => {
       console.error('err', err);

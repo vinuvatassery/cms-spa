@@ -15,8 +15,10 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   @Output() RaceAndEthnicityData = new EventEmitter<any>();  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   racelov$ = this.lovFacade.racelov$;
+  ethnicitylov$ = this.lovFacade.ethnicitylov$;
 
   raceAndEthnicityData: Array<any> = [];
+  ethnicityData: Array<any> = [];
   //primaryRacialData: Array<any> = [];
    
   popupClassMultiSelect = 'multiSelectSearchPopup';
@@ -29,31 +31,49 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
   ngOnInit(): void {
     this.lovFacade.getRaceLovs();
+    this.lovFacade.getEthnicityLovs();
+    this.loadEthnicity();
     this.loadRaceAndEthnicity();
     this.appInfoForm.addControl(
       'RaceAndEthnicityPrimary',
       new FormControl({})
     );
+    this.appInfoForm.addControl(
+      'Ethnicity',
+      new FormControl([])
+    );
+  }
+  private loadEthnicity() {
+    this.ethnicitylov$.subscribe((data) => {
+      this.ethnicityData=data;
+    });
   }
   private loadRaceAndEthnicity() {
     this.racelov$.subscribe((data) => {
-      const Parents = data.filter((m) => m.parentCode === null);
-      const raceAndEthnicityDataGroup: Array<any> = [];
-      Parents.forEach((el) => {
-        data
-          .filter((m) => m.parentCode === el.lovCode)
-          .forEach((child) => {
-            raceAndEthnicityDataGroup.push({
-              lovCode: child.lovCode,
-              lovDesc: child.lovDesc,
-              parentCode: el.lovCode,
-            });
-          });
+      if(data.length===0) return;
+      
+      console.log(data)
+      let parents:any[]=[];
+      data.forEach((el:any) => {
+        parents.push(el[0]);
       });
-      this.raceAndEthnicityData = groupBy(raceAndEthnicityDataGroup, [
-        { field: 'parentCode' },
-      ]);
-      this.RaceAndEthnicityData.emit(raceAndEthnicityDataGroup);
+      
+      //const raceAndEthnicityDataGroup: Array<any> = [];
+      // parents.forEach((el:any) => {
+      //   data.filter(t=>t.).filter((m) => m.parentCode === el.lovCode)
+      //     .forEach((child:any) => {
+      //       raceAndEthnicityDataGroup.push({
+      //         lovCode: child.lovCode,
+      //         lovDesc: child.lovDesc,
+      //         parentCode: el.lovCode,
+      //       });
+      //     });
+      // });
+      // debugger
+      // this.raceAndEthnicityData = groupBy(raceAndEthnicityDataGroup, [
+      //   { field: 'parentCode' },
+      // ]);
+      // this.RaceAndEthnicityData.emit(raceAndEthnicityDataGroup);
     });
   }
 

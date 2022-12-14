@@ -11,5 +11,6 @@ export enum LovType {
     EnglishProficiency ='English_Proficiency',
     RelationshipCode = 'RELATIONSHIP_CODE',
     ContactRelationshipCode = 'CONTACT_RELATIONSHIP_CODE',
-    RaceAndEthnicity = 'RACE_AND_ETHNICITY'
+    RaceGroup = 'RACE,RACE_AND_ETHNICITY,RACE_ASIAN_SUBGROUP,RACE_ETHNICITY_OTHER_CATEGORIES,RACE_NATIVE_HAWAIIAN_AND_PACIFIC_ISLANDER',
+    Ethnicity = 'ETHNICITY'
   }
