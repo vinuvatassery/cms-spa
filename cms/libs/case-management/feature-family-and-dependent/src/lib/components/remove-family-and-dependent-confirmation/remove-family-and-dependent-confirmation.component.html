@@ -1,1 +1,30 @@
-<p>remove-family-and-dependent-confirmation works!</p>
+<kendo-dialog-titlebar> Remove healthcare provider? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+        {{ deleteRqdependentTypeCode === CAClient ? 'Their CAREAssist profile will no longer be associated with this client' : 'Their data will be permanently deleted from this application' }}
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel adding health provider"
+          (click)="onDeleteConfirm(false)"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="delete health provider"
+          (click)="onDeleteConfirm(true)"
+        >
+        {{ deleteRqdependentTypeCode === CAClient ? 'REMOVE' : 'DELETE' }}
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

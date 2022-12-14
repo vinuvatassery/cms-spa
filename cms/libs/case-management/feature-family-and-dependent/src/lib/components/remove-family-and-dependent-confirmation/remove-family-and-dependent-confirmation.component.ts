@@ -1,5 +1,6 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { DependentTypeCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-remove-family-and-dependent-confirmation',
@@ -7,4 +8,27 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./remove-family-and-dependent-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RemoveFamilyAndDependentConfirmationComponent {}
+export class RemoveFamilyAndDependentConfirmationComponent {
+  
+
+    /** Input properties **/
+    @Input() deleteRqclientDependentId!: string;
+    @Input() deleteRqdependentTypeCode!: string;    
+  
+    @Output() deleteConfimEvent =  new EventEmitter<any>();
+
+    /******enumeration Alias *****/
+    Dependent = DependentTypeCode.Dependent;
+    CAClient = DependentTypeCode.CAClient;    
+
+   
+    onDeleteConfirm(isDelete : boolean)
+    {  
+      const deleteConfirmParams =
+      {
+        isDelete : isDelete ,
+        clientDependentId : this.deleteRqclientDependentId
+      }
+      this.deleteConfimEvent.emit(deleteConfirmParams);
+    }
+}
