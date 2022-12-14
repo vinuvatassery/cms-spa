@@ -11,7 +11,7 @@ import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, Statu
 import {  NavigationType } from '@cms/case-management/domain';
 
 import {LovFacade } from '@cms/system-config/domain' 
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, NotificationSnackbarService } from '@cms/shared/util-core';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   dependentStatus$  = this.familyAndDependentFacade.dependentStatusGet$;
   dependentGet$= this.familyAndDependentFacade.dependentGetNew$;
   dependentGetExisting$ =this.familyAndDependentFacade.dependentGetExisting$;
-  familyfacadesnackbar$ = this.familyAndDependentFacade.familyfacadesnackbar$;
+  familyfacadesnackbar$ =   this.notificationSnackbarService.snackbar$
   dependentdelete$  = this.familyAndDependentFacade.dependentdelete$;
   dependentAddNewGet$= this.familyAndDependentFacade.dependentAddNewGet$
   dependentUpdateNew$=this.familyAndDependentFacade.dependentUpdateNew$
@@ -58,7 +58,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     private readonly workFlowFacade : WorkflowFacade,
     private route: ActivatedRoute,
     private readonly lovFacade : LovFacade,
-    private readonly loaderService: LoaderService   
+    private readonly loaderService: LoaderService   ,
+    private readonly notificationSnackbarService : NotificationSnackbarService
   ) { }
 
 
