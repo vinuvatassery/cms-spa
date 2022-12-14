@@ -12,7 +12,7 @@ import { CompletionChecklist } from '@cms/case-management/domain';
 import { NavigationType } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService,LoggingService,SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
 
 
 
@@ -27,6 +27,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!:Subscription;
+  private notificatiionSubscription!: Subscription;
 
    /** Public properties **/
   isValid:boolean=true;
@@ -41,6 +42,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId!:string;
   sessionId! : string;
   message!:string;
+  clientFacadesnackbar$ = this.notificationSnackbarService.snackbar$
+  //snackbar:any;
  
     /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
@@ -48,7 +51,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private readonly caseFacade: CaseFacade,
               private loaderService: LoaderService,
-              private loggingService:LoggingService
+              private loggingService:LoggingService,
+              private readonly notificationSnackbarService : NotificationSnackbarService
               ) { }
 
 
@@ -272,8 +276,21 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.middleName = this.appInfoForm.controls["middleName"].value;
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
-      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value;   
-      this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
+      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value; 
+      var dob =  this.appInfoForm.controls["dateOfBirth"].value;
+      if(this.clientCaseEligibilityId != null){
+        this.applicantInfo.client.dob = new Date(
+          dob.getUTCFullYear(),
+          dob.getUTCMonth() ,
+          dob.getUTCDate() + 1,
+          dob.getUTCHours(),
+          dob.getUTCMinutes(),
+          dob.getUTCSeconds()
+        );
+      }  
+      else{
+        this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
+      }
       this.applicantInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
       if (this.applicantInfo.client.genderAtBirthCode==='NOT_LISTED') {
         this.applicantInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;

@@ -58,7 +58,7 @@ export class ClientFacade {
 
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
-  familyfacadesnackbar$ = this.snackbarSubject.asObservable();
+  clientFacadesnackbar$ = this.snackbarSubject.asObservable();
 
   // handleSnackBar(title : string , subtitle : string ,type : string )
   // {    
@@ -77,7 +77,8 @@ export class ClientFacade {
        this.loggingService.logException(err)
     }  
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.HideLoader();
+       
   }
 
   /** Constructor**/
