@@ -27,7 +27,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!:Subscription;
-  private notificatiionSubscription!: Subscription;
 
    /** Public properties **/
   isValid:boolean=true;
