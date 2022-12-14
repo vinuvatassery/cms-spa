@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Validators, FormGroup, FormControl,} from '@angular/forms';
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
 import { first, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
 
@@ -41,19 +41,33 @@ export class EmployerDetailComponent implements OnInit{
     empHireDate: new FormControl(new Date(), []),
   });
 
-  // Snackbar declaration
-  snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>();
-  snackbar$ = this.snackbarSubject.asObservable();
-  handleSnackBar(title : string , subtitle : string ,type : string )
-  {    
-    const snackbarMessage: SnackBar = {
-      title: title,
-      subtitle: subtitle,
-      type: type,
-    };
-    this.snackbarSubject.next(snackbarMessage);
-  }
+   // handling the snackbar & loader
+   snackbarMessage!: SnackBar;
+   snackbarSubject = new Subject<SnackBar>();
+   snackbar$ = this.snackbarSubject.asObservable();
+ 
+   showLoader(){this.loaderService.show();}
+   hideLoader(){ this.loaderService.hide();}
+ 
+ 
+   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+   {        
+     let subtitleText = subtitle;
+     const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
+     if(type == SnackBarNotificationType.ERROR)
+     {
+       const err= subtitle;
+       subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
+     }
+     const snackbarMessage: SnackBar = {
+       title: titleText,
+       subtitle: subtitleText,
+       type: type,
+     };
+     this.snackbarSubject.next(snackbarMessage);
+     this.hideLoader();
+   }
+ 
 
   // constructor
   constructor(private readonly employmentFacade: EmploymentFacade, 
@@ -106,7 +120,7 @@ export class EmployerDetailComponent implements OnInit{
         }
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
       },
     }
     );
@@ -133,7 +147,7 @@ export class EmployerDetailComponent implements OnInit{
           
             if (this.employer) {
               this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
-              this.loaderService.show();
+              this.showLoader();
               this.employerFormSubmitted = false;
 
               if (this.isAdd) {
@@ -141,12 +155,12 @@ export class EmployerDetailComponent implements OnInit{
                   next: (response) => { 
                     this.addUpdateEmploymentEvent.next(response);  
                     this.closeModal.emit(true);
-                    this.loaderService.hide();
-                    this.handleSnackBar('Success' ,'Employer successfully added','success');    
+                    this.hideLoader();
+                    this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer successfully added') ;  
                   },
                   error: (err) => { 
-                    this.loaderService.hide();
-                    this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );  
+                    this.hideLoader();
+                    this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
                   },
                 });
               } else {
@@ -163,12 +177,12 @@ export class EmployerDetailComponent implements OnInit{
                     this.addUpdateEmploymentEvent.next(response); 
                     this.employerFormSubmitted = false; 
                     this.closeModal.emit(true);            
-                    this.loaderService.hide();
-                    this.handleSnackBar('Success' ,'Employer successfully updated','success') ; 
+                    this.hideLoader();
+                    this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer successfully updated') ;  
                   },
                   error: (err) => {
-                    this.loaderService.hide(); 
-                    this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );  
+                    this.hideLoader(); 
+                    this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
                   },
                 });
               }

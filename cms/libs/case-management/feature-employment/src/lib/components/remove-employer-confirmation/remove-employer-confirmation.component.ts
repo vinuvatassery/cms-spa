@@ -2,8 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
- 
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
 import {  first, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
@@ -17,24 +16,37 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
   @Output() deleteUpdateEmploymentEvent = new EventEmitter<any>();
-  snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>();
-  snackbar$ = this.snackbarSubject.asObservable();
   sessionId!: string;
   clientId: any;
   clientCaseId : any;
   clientCaseEligibilityId : any;
 
-  // Snackbar declaration
-  handleSnackBar(title : string , subtitle : string ,type : string )
-  {    
-    const snackbarMessage: SnackBar = {
-      title: title,
-      subtitle: subtitle,
-      type: type,
-    };
-    this.snackbarSubject.next(snackbarMessage);
-  }
+   // handling the snackbar & loader
+   snackbarMessage!: SnackBar;
+   snackbarSubject = new Subject<SnackBar>();
+   snackbar$ = this.snackbarSubject.asObservable();
+ 
+   ShowLoader(){this.loaderService.show();}
+   HideLoader(){ this.loaderService.hide();}
+ 
+ 
+   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+   {        
+     let subtitleText = subtitle;
+     const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
+     if(type == SnackBarNotificationType.ERROR)
+     {
+       const err= subtitle;
+       subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
+     }
+     const snackbarMessage: SnackBar = {
+       title: titleText,
+       subtitle: subtitleText,
+       type: type,
+     };
+     this.snackbarSubject.next(snackbarMessage);
+     this.HideLoader();
+   }
 
   /** Constructor **/
   constructor(
@@ -64,19 +76,19 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
 
   // click on remove employer confirmation
   removeEmployer() {
-    this.loaderService.show()
+    this.ShowLoader()
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.selectedEmployer) {
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
           this.onRemoveEmployerConfirmationClosed();
-          this.handleSnackBar('Success' ,'Employer successfully removed','info');
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer successfully removed')  
           this.deleteUpdateEmploymentEvent.next(response);  
-          this.loaderService.hide() 
+          this.HideLoader() 
         },
         error: (err) => {
-          this.loaderService.hide()
-          this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' ) ;
+          this.HideLoader()
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
         },
       }
       );

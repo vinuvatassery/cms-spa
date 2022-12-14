@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** interal libraries **/
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 // entities library
 import { ClientEmployer } from '../entities/client-employer';
@@ -14,15 +14,13 @@ import { EmployersDataService } from '../infrastructure/employers.data.service';
 // enum  library
 import {StatusFlag} from '../enums/status-flag.enum'
 import {WorkflowFacade}from  './workflow.facade'
+/** Providers **/
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
 
-  public gridPageSizes = [
-    {text: "5", value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20}   
-  ];
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'employerName'
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
@@ -40,24 +38,39 @@ export class EmploymentFacade {
   employersDetails$ = this.employersDetailsSubject.asObservable();
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
   employersStatus$ = this.employersStatusSubject.asObservable();
-
-  // handling the snackbar
+   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
-  handleSnackBar(title : string , subtitle : string ,type : string )
-  {    
+
+  ShowLoader(){this.loaderService.show();}
+  hideLoader(){ this.loaderService.hide();}
+
+
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    let subtitleText = subtitle;
+    const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
+    if(type == SnackBarNotificationType.ERROR)
+    {
+      const err= subtitle;
+      subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
+    }
     const snackbarMessage: SnackBar = {
-      title: title,
-      subtitle: subtitle,
+      title: titleText,
+      subtitle: subtitleText,
       type: type,
     };
     this.snackbarSubject.next(snackbarMessage);
+    this.hideLoader();
   }
+
   /** Constructor**/
   constructor(
     private readonly employersDataService: EmployersDataService,
-    private workflowFacade: WorkflowFacade
+    private workflowFacade: WorkflowFacade,
+    private configurationProvider : ConfigurationProvider,
+    private readonly loaderService: LoaderService
   ) {}
 
   /** Public methods **/
@@ -70,7 +83,7 @@ export class EmploymentFacade {
         this.employmentStatusGetSubject.next(employmentStatusGetResponse);
       },
       error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' ); 
+         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
       },
    
     });
@@ -115,7 +128,7 @@ export class EmploymentFacade {
           }
         },
         error: (err) => {
-          this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' ); 
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);     
         },
       });
   }
@@ -151,16 +164,23 @@ export class EmploymentFacade {
 
   // updating the unemployment stats
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-
+    this.ShowLoader();
     this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed).subscribe({
-      next: (employmentStatusResponse) => {        
-        this.employersStatusSubject.next(employmentStatusResponse);
-      },
-      error: (err) => {
-        this.handleSnackBar('error' , (err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '') ,'error' );
-      },
-    });
+      next: (employmentStatusResponse) => {   
 
+         
+          if(employmentStatusResponse == true)
+          {     
+           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employment Updated Successfully')  
+          }             
+           this.employersStatusSubject.next(employmentStatusResponse);
+           this.hideLoader();
+         },
+      
+         error: (err) => {        
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
+        },
+    });
     // return this.employersDataService.employmentStatusUpdateService(
     //   clientCaseEligibilityId,
     //   isEmployed
