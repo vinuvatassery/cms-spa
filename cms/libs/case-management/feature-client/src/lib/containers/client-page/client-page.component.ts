@@ -69,17 +69,23 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
-    ).subscribe(([navigationType, isSaved]) => {     
-        if (isSaved) { 
-          this.clientFacade.clientDetailsSubject.next(isSaved);
-          this.loaderService.hide();                 
-          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
-          this.workFlowFacade.navigate(navigationType);          
-        }     
+    ).subscribe({     
+        next:([navigationType, isSaved]) =>{
+          if (isSaved) {
+              this.loaderService.hide();                 
+              this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
+              this.workFlowFacade.navigate(navigationType);          
+        }    
+      },
+      error: (error: any) => {
+        this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+      },
 
     });
     
-  }
+  } 
+
   private loadSessionData()
   {  
    this.applicantInfo = new ApplicantInfo();
@@ -96,10 +102,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       if(this.clientCaseId !== undefined && this.clientCaseId  !==null){
         this.applicantInfo.clientCaseId = this.clientCaseId
         this.applicantInfo.workFlowSessionId = this.sessionId;      
-        if(this.clientCaseEligibilityId !=undefined && this.clientCaseEligibilityId != null){
-          var clientDetails = {"ClientCaseId":this.clientCaseId,
-          "clientCaseEligibilityId":this.clientCaseEligibilityId};
-          this.clientFacade.clientDetailsSubject.next(clientDetails);
+        if(this.clientCaseEligibilityId !=undefined && this.clientCaseEligibilityId != null){        
           if(  this.applicantInfo.client === undefined){
             this.applicantInfo.client = new Client;
           }
