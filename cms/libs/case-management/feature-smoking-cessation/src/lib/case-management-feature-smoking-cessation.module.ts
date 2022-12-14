@@ -7,6 +7,7 @@ import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { CaseManagementFeatureSmokingCessationRoutingModule } from './case-management-feature-smoking-cessation-routing.module';
 /** Components **/
 import { SmokingCessationPageComponent } from './containers/smoking-cessation-page/smoking-cessation-page.component';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { SmokingCessationPageComponent } from './containers/smoking-cessation-pa
     CaseManagementDomainModule,
     CaseManagementFeatureSmokingCessationRoutingModule,
     SharedUiTpaModule,
+    SharedUiCommonModule 
   ],
   declarations: [SmokingCessationPageComponent],
   exports: [SmokingCessationPageComponent],

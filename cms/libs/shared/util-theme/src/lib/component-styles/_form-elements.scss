@@ -259,6 +259,9 @@
   &:hover{
 
   }
+  &:focus, &:focus-within{
+    border: 1px solid $app-primary !important;
+  }
 }
 
 

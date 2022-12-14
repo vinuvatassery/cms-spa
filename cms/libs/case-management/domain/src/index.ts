@@ -23,6 +23,7 @@ export * from './lib/entities/verification';
 export * from './lib/entities/smoking-cessation';
 export * from './lib/entities/workflow';
 export * from './lib/entities/workflow-stage-completion-status';
+export * from './lib/entities/client-employer';
 export * from './lib/entities/client-sexual-identity';
 export * from './lib/entities/client-race';
 export * from './lib/entities/client-pronoun';
@@ -51,7 +52,6 @@ export * from './lib/enums/dependent-type.enum';
 export * from './lib/enums/client-dependent-group.enum';
 export * from './lib/enums/address-type-code.enum';
 export * from './lib/enums/device-type-code.enum';
-export * from './lib/enums/status-flag.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

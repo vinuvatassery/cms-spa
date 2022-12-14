@@ -2,11 +2,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag  } from '@cms/case-management/domain';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag ,ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
 
 
 @Component({
@@ -36,13 +38,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     smokingCessationNote: ''
   };
   isDisabled =false;
+  smokingCessationsnackbar$ = this.notificationSnackbarService.snackbar$
   
   public formUiStyle : UIFormStyle = new UIFormStyle();
   constructor(
     private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,
     private route: ActivatedRoute,
-    private caseFacad: CaseFacade) {
+    private caseFacad: CaseFacade,    
+    private loaderService: LoaderService,
+    private loggingService:LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService ) {
   }
 
   /** Lifecycle hooks **/
@@ -57,6 +63,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.loadSessionSubscription.unsubscribe();
   }
  loadSessionData(){
   this.sessionId = this.route.snapshot.queryParams['sid'];    
@@ -93,10 +100,15 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
             this.isDisabled = true;
           }
+   
        
         },
-        error: error => {               
-            console.error(error);}
+        error: error => {             
+          this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error?.error?.error) 
+
+          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error})
+          }
+           
         });
   
   }
@@ -120,18 +132,20 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
+        this.loaderService.hide();
+        this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,'Smoking cessation saved sucessfully')   
         this.workflowFacade.navigate(navigationType);
       }
     });
   }
-
   private save() {
+    this.loaderService.show();
     this.validate();
     if(this.smokingCessationForm.valid){    
       this.smokingCessation.clientCaseEligibilityId = this.clientCaseEligibilityId;
-      this.smokingCessation.clientCaseId = this.clientCaseId;
-      return this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation);
-       
+      this.smokingCessation.clientCaseId = this.clientCaseId;     
+      return this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation);  
+        
    }
     return of(false)
   }
@@ -206,7 +220,5 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       }    
     this.isDisabled = disable;
   }
-  submit(): void {
-    console.log('submitted');
-  }
+ 
 }

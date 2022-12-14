@@ -1,9 +1,4 @@
-<!-- <button class="k-button k-primary" (click)="onChangeCounterClick()">
-  Change the counter
-</button>
-<br />
-<br />
-<br /> -->
+
 <div class="client-data-block">
   <h3>Employment</h3>
   <section>
@@ -15,16 +10,24 @@
             type="checkbox"
             kendoCheckBox
             aria-labelledby="employment"
-            id="employment"
+            id="clientDoesNotHaveEmployment"
             (click)="onUnEmployedClicked()"
+            [checked]="employmentStatus$ | async"    
           />
-          <label class="k-checkbox-label" for="employment">Unemployed</label>
+          <label class="k-checkbox-label" for="clientDoesNotHaveEmployment">Unemployed</label>
           </span>
         </div>
-        <div class="flex-col" *ngIf="isEmploymentGridDisplay">
-          <case-management-employer-list></case-management-employer-list>
+        <div class="flex-col" *ngIf="!isEmployedGridDisplay">
+          <case-management-employer-list
+          [employment$]="employmentList$"
+          (loadEmploymentsEvent)="loadEmploymentsHandle($event)"
+          [isGridLoaderShow]="isEmpListGridLoaderShow"
+          ></case-management-employer-list>
         </div>
       </div>
     </div>
   </section>
 </div>
+
+
+<common-notification-snack-bar [data$]="employmentFacadeSnackbar$"> </common-notification-snack-bar>
