@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { CaseFacade, CaseScreenTab, WorkflowFacade,
   UserDefaultRoles  } from '@cms/case-management/domain';
   import {UITabStripScroll} from '@cms/shared/ui-tpa'
+import { NotificationSnackbarService } from '@cms/shared/util-core';
 
   import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
@@ -34,7 +35,7 @@ export class CasePageComponent implements OnInit {
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
   ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
-  worflowsnackbar$=this.workflowFacade.worflowsnackbar$;
+  worflowsnackbar$=this.notificationSnackbarService.snackbar$;
  
   /** Constructor**/
     
@@ -42,7 +43,8 @@ export class CasePageComponent implements OnInit {
       private readonly caseFacade: CaseFacade,
       private readonly workflowFacade :WorkflowFacade,
       private readonly loginUserFacade : UserManagementFacade,
-      private readonly lovFacade : LovFacade) {}
+      private readonly lovFacade : LovFacade,
+      private readonly notificationSnackbarService : NotificationSnackbarService) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {    

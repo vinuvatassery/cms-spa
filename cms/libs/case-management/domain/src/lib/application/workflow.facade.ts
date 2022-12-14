@@ -16,8 +16,8 @@ import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
-import { LoaderService, LoggingService } from '@cms/shared/util-core';
+import { SnackBar } from '@cms/shared/ui-common';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({
   providedIn: 'root'
@@ -49,29 +49,19 @@ export class WorkflowFacade {
   /**Constructor */
   constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
     ,   private readonly loaderService: LoaderService,
-    private loggingService : LoggingService ) { }
-
-  snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>();
-  worflowsnackbar$ = this.snackbarSubject.asObservable();
+    private loggingService : LoggingService ,
+    private readonly notificationSnackbarService : NotificationSnackbarService) { }
+  
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
-    let subtitleText = subtitle;
-    const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
     if(type == SnackBarNotificationType.ERROR)
     {
-      const err= subtitle;
-      subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
-      this.loggingService.logException(err)
-    }
-    const snackbarMessage: SnackBar = {
-      title: titleText,
-      subtitle: subtitleText,
-      type: type,
-    };
-    this.snackbarSubject.next(snackbarMessage);
-    this.HideLoader();
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
   }
 
   ShowLoader()
@@ -120,6 +110,7 @@ export class WorkflowFacade {
               },
             });
           }
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')  
           this.HideLoader();
         },
         error: (err: any) => {
@@ -146,7 +137,7 @@ export class WorkflowFacade {
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
-          this.sessionSubject.next(this.currentSession);
+          this.sessionSubject.next(this.currentSession);          
           this.HideLoader();
         },
         error: (err: any) => {

@@ -1,8 +1,8 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { SnackBar, SnackBarNotificationText, SnackBarNotificationType } from '@cms/shared/ui-common';
-import { LoaderService, LoggingService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService ,SnackBarNotificationType } from '@cms/shared/util-core';
+
 import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -45,16 +45,13 @@ export class CaseFacade {
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
   updateCase$ = this.updateCaseSubject.asObservable();
-  getCase$ = this.getCaseSubject.asObservable();
-
-  snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>();
-  casefacadesnackbar$ = this.snackbarSubject.asObservable();
+  getCase$ = this.getCaseSubject.asObservable(); 
 
   constructor(
     private readonly caseDataService: CaseDataService,
     private loggingService : LoggingService,
-    private readonly loaderService: LoaderService 
+    private readonly loaderService: LoaderService ,
+    private readonly notificationSnackbarService : NotificationSnackbarService
   ) { }
  
   ShowLoader()
@@ -68,21 +65,13 @@ export class CaseFacade {
   }
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {    
-    let subtitleText = subtitle;
-    const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
+  {        
     if(type == SnackBarNotificationType.ERROR)
     {
-      const err= subtitle;
-      subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
-      this.loggingService.logException(err)
-    }
-    const snackbarMessage: SnackBar = {
-      title: titleText,
-      subtitle: subtitleText,
-      type: type,
-    };
-    this.snackbarSubject.next(snackbarMessage);
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
     this.HideLoader();   
   }
 

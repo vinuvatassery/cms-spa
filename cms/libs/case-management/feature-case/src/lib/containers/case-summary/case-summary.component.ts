@@ -11,6 +11,7 @@ import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/dom
 /**external libraries */
 import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-summary',
@@ -35,11 +36,10 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
   case$ = this.caseFacade.getCase$;
   clientCaseId! : string;
-  sessionId! : string;
-  casefacadesnackbar$ = this.caseFacade.casefacadesnackbar$;
+  sessionId! : string; 
   updateCase$ = this.caseFacade.updateCase$;
   private saveClickSubscription !: Subscription;
-
+  casefacadesnackbar$   = this.notificationSnackbarService.snackbar$
   /** Constructor**/
   constructor(
     private readonly router: Router,
@@ -49,7 +49,8 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     private route: ActivatedRoute,
     private readonly workFlowFacade : WorkflowFacade,
     private readonly loginUserFacade : UserManagementFacade,
-    private readonly lovFacade : LovFacade
+    private readonly lovFacade : LovFacade,
+    private readonly notificationSnackbarService : NotificationSnackbarService
   ) {}
 
   /** Lifecycle hooks **/
