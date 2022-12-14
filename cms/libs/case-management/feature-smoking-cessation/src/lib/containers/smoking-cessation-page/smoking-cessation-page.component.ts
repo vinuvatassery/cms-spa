@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pair
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag ,ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService,LoggingService,SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Component({
@@ -45,7 +45,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private caseFacad: CaseFacade,    
     private loaderService: LoaderService,
-    private clientFacade: ClientFacade, ) {
+    private loggingService:LoggingService ) {
   }
 
   /** Lifecycle hooks **/
@@ -63,7 +63,6 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.loadSessionSubscription.unsubscribe();
   }
  loadSessionData(){
-  //this.loaderService.show();
   this.sessionId = this.route.snapshot.queryParams['sid'];    
   this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
   this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
@@ -98,12 +97,13 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
             this.isDisabled = true;
           }
-          //this.loaderService.hide();
+   
        
         },
-        error: error => {               
-          this.smokingCessationFacade.handleSnackBar('Error' ,'Error while loading smoking cessation','error')    
-            //this.loaderService.hide();
+        error: error => {             
+          this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error?.error?.error) 
+
+          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error})
           }
            
         });
@@ -130,7 +130,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.smokingCessationFacade.handleSnackBar('Success' ,'Smoking cessation saved','success')   
+        this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,'Smoking cessation saved sucessfully')   
         this.workflowFacade.navigate(navigationType);
       }
     });
@@ -217,7 +217,5 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       }    
     this.isDisabled = disable;
   }
-  submit(): void {
-    console.log('submitted');
-  }
+ 
 }
