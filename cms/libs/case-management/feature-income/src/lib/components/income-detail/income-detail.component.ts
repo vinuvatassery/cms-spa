@@ -22,6 +22,7 @@ import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { RemoveEvent, SelectEvent } from '@progress/kendo-angular-upload';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-detail',
   templateUrl: './income-detail.component.html',
@@ -76,7 +77,7 @@ export class IncomeDetailComponent implements OnInit {
 
 
   /** Constructor **/
-  constructor(private readonly incomeFacade: IncomeFacade, private lov: LovFacade) { }
+  constructor(private readonly incomeFacade: IncomeFacade, private lov: LovFacade,private readonly loaderService: LoaderService,private loggingService : LoggingService,private readonly notificationSnackbarService : NotificationSnackbarService,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -147,25 +148,15 @@ export class IncomeDetailComponent implements OnInit {
       let incomeData=this.IncomeDetailsForm.value
       incomeData["clientCaseEligibilityId"]=this.clientCaseEligibilityId;
       incomeData["clientId"]=this.clientId;
+      this.loaderService.show();
       this.incomeFacade.saveClientIncome(this.IncomeDetailsForm.value, this.proofOfIncomeFiles).subscribe({
         next: (incomeResponse) => {
           this.closeIncomeDetailPoup();
-          const snackbarMessage: SnackBar = {
-            title: 'Success!',
-            subtitle: 'Income Successfully Added.',
-            type: 'success',
-          };
-          this.snackbarSubject.next(snackbarMessage);
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income created successfully.')  
           this.incomeFacade.loadIncomes(this.clientId,this.clientCaseEligibilityId);
         },
         error: (err) => {
-          console.log(err)
-          const snackbarMessage: SnackBar = {
-            title: 'Error!',
-            subtitle: err.error.error.message,
-            type: 'error',
-          };
-          this.snackbarSubject.next(snackbarMessage);
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
         },
       });
     }
@@ -211,5 +202,16 @@ export class IncomeDetailComponent implements OnInit {
         this.proofOfIncomeValidator = false;
       }
     }
+  }
+
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.loaderService.hide();   
   }
 }
