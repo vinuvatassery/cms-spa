@@ -12,7 +12,7 @@ import { CompletionChecklist } from '@cms/case-management/domain';
 import { NavigationType } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService,LoggingService,SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 
@@ -48,6 +48,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private readonly caseFacade: CaseFacade,
               private loaderService: LoaderService,
+              private loggingService:LoggingService
               ) { }
 
 
@@ -70,8 +71,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]) => {     
         if (isSaved) { 
-          this.loaderService.hide();          
-          this.clientFacade.handleSnackBar('Success' ,this.message,'success')         
+          this.loaderService.hide();                 
+          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
           this.workFlowFacade.navigate(navigationType);          
         }     
 
@@ -80,7 +81,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   private loadSessionData()
   {  
-   this.loaderService.show();
    this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
@@ -112,16 +112,12 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.loadApplicantInfo();
         }
         else{
-          this.loaderService.hide();
         }
        
       
       }
     }
-    else{
-      this.loaderService.hide();
-    }
-     
+  
     });   
     
   } 
@@ -207,12 +203,11 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               })
               this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
              
-              this.loaderService.hide();
             }
           } ,
-        error: error => {  
-          this.loaderService.hide();       
-          console.error(error);
+        error: error => {       
+          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error?.error?.error)  
+          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error})
         }
       });
 
@@ -224,11 +219,11 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         if(this.appInfoForm.valid){
           this.populateApplicantInfoModel();
           if(this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined)  {
-            this.message ='Applicant info updated';
+            this.message ='Applicant info updated successfully';
             return this.clientFacade.update(this.applicantInfo)            
           }
           else{
-            this.message ='Applicant info saved';
+            this.message ='Applicant info saved successfully';
             return this.clientFacade.save(this.applicantInfo)        
           }          
         }

@@ -7,6 +7,8 @@ import { ApplicantInfo } from '../entities/applicant-info';
 /** Data services **/
 import { ClientDataService } from '../infrastructure/client.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
+import { NotificationSnackbarService,SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
+
 
 @Injectable({ providedIn: 'root' })
 export class ClientFacade {
@@ -58,20 +60,43 @@ export class ClientFacade {
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
 
-  handleSnackBar(title : string , subtitle : string ,type : string )
-  {    
-    const snackbarMessage: SnackBar = {
-      title: title,
-      subtitle: subtitle,
-      type: type,
-    };
-    this.snackbarSubject.next(snackbarMessage);
+  // handleSnackBar(title : string , subtitle : string ,type : string )
+  // {    
+  //   const snackbarMessage: SnackBar = {
+  //     title: title,
+  //     subtitle: subtitle,
+  //     type: type,
+  //   };
+  //   this.snackbarSubject.next(snackbarMessage);
+  // }
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
   }
 
   /** Constructor**/
-  constructor(private readonly clientDataService: ClientDataService) {}
+  constructor(private readonly clientDataService: ClientDataService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private loggingService : LoggingService,
+    private readonly loaderService: LoaderService) {}
 
   /** Public methods **/
+  ShowLoader()
+  {
+    this.loaderService.show();
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
+
   loadDdlCaseOrigin(): void {
     this.clientDataService.loadDdlCaseOrigin().subscribe({
       next: (ddlCaseOriginsResponse) => {
