@@ -52,8 +52,12 @@
           [width]="150"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
-            <div *ngIf="dataItem.documentPath != null">
+            <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
+              <button aria-label="client name" kendoButton look="flat" class="card-link-button"
+               >
               <a [href]="dataItem.documentPath" target="_blank">Income Proof</a>
+            </button>
+              
             </div>
             
           </ng-template>
