@@ -158,19 +158,7 @@ export class EmploymentFacade {
   // updating the unemployment stats
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
     this.showLoader();
-    this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed).subscribe({
-      next: (employmentStatusResponse) => {   
-          if(employmentStatusResponse == true)
-          {     
-           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employment Status Updated Successfully')  
-          }             
-           this.employersStatusSubject.next(employmentStatusResponse);
-           this.hideLoader();
-         },
-         error: (err) => {        
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
-        },
-    });
+    return this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed);
   }
   
 }
