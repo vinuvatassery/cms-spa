@@ -9,7 +9,9 @@ export class NotificationSnackbarService {
     
       snackbarSubject = new Subject<any>();
       snackbar$ = this.snackbarSubject.asObservable();
+      subscribeNotification(){
 
+      }
       manageSnackBar(type : SnackBarNotificationType , subtitle : any)
       {    
         let subtitleText = subtitle;

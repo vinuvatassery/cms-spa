@@ -15,7 +15,9 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { UserProfileCardComponent } from './user-profile-card/user-profile-card.component';
 import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
- 
+import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
+import { SsnPipe } from './pipes/ssn.pipe';
+
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
@@ -32,6 +34,8 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
     UserProfileCardComponent,
     LoaderComponent,
     GridLoaderComponent,
+    OptionbuttonListComponent,
+    SsnPipe
   ],
   exports: [
     LoginStatusComponent,
@@ -45,6 +49,8 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
     UserProfileCardComponent,
     LoaderComponent,
     GridLoaderComponent,
+    OptionbuttonListComponent,
+    SsnPipe
   ],
 })
 export class SharedUiCommonModule {}
