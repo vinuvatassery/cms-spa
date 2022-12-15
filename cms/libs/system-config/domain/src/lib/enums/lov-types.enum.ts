@@ -3,8 +3,8 @@ export enum LovType {
     Pronouns ='PRONOUNS',
     RelationshipCode = 'RELATIONSHIP_CODE',
     ContactRelationshipCode = 'CONTACT_RELATIONSHIP_CODE',
-	IncomeSource='INCOME_SOURCE',
-  	Frequency='FREQUENCY',
-  	IncomeType='INCOME_TYPE',
-  	ProofOfIncomeType='PROOF_INCOME_TYPE'
+	IncomeSource='INCOME_SOURCE_CODE',
+  	Frequency='FREQUENCY_CODE',
+  	IncomeType='INCOME_TYPE_CODE',
+  	ProofOfIncomeType='PROOF_INCOME_TYPE_CODE'
   }
