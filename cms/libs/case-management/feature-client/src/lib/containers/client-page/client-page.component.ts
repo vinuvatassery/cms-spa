@@ -3,7 +3,7 @@ import { OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
-import { first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag } from '@cms/case-management/domain';
 /** Entities **/
@@ -81,6 +81,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }    
       },
       error: (error: any) => {
+        this.loaderService.hide();      
         this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
         this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
       },
@@ -230,11 +231,33 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.populateApplicantInfoModel();
           if(this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined)  {
             this.message ='Applicant info updated successfully';
-            return this.clientFacade.update(this.applicantInfo)            
+            return this.clientFacade.update(this.applicantInfo).pipe(
+              catchError((error:any)=>{
+                if(error){
+                  this.loaderService.hide();      
+                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  return of(false);
+                }
+                return of(false);
+              })
+              
+            );            
           }
           else{
             this.message ='Applicant info saved successfully';
-            return this.clientFacade.save(this.applicantInfo)        
+            return this.clientFacade.save(this.applicantInfo).pipe(
+              catchError((error:any)=>{
+                if(error){
+                  this.loaderService.hide();      
+                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  return of(false);
+                }
+                return of(false);
+              })
+              
+            );          
           }          
         }
         else{
