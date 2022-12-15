@@ -1,9 +1,9 @@
-import { Component, OnInit,Input , ChangeDetectorRef, ChangeDetectionStrategy,  OnChanges, SimpleChanges } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit,Input  } from '@angular/core';
+import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
-import { YesNoFlag } from '@cms/case-management/domain';
+import { YesNoFlag } from '../enums/yes-no-flag-enum';
 
 @Component({
   selector: 'common-optionbutton-list',
