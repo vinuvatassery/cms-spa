@@ -18,3 +18,6 @@ export * from './lib/account-settings/account-settings.component';
 export * from './lib/user-profile-card/user-profile-card.component';
 export * from './lib/loader/loader.component';
 export * from './lib/loader/grid-loader.component';
+export * from './lib/optionbutton-list/optionbutton-list.component';
+
+export * from './lib/pipes/ssn.pipe';

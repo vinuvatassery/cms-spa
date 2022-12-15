@@ -51,6 +51,7 @@
       .k-notification-sub-title {
         font-family: $font-family;
         padding-left: $size-l;
+        word-break: break-all;
       }
     }
     .k-i-close {
@@ -73,6 +74,7 @@
     &.k-notification-error {
       border-color: material-color($hive-error-palette, 400);
       background-color: material-color($hive-error-palette, 400);
+      color: $white;
       .k-i-error {
         &:before {
           content: '\e5c9';

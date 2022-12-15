@@ -11,21 +11,14 @@ import { Income } from '../entities/income';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
+
+
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  loadEmployers() {
-    return of([
-      {
-        NameofEmployer: 'John Cena',
-        DateofHire: '01-01-2022',
-      },
-    ]);
-  }
-
   loadMedicalHealthPlans() {
     return of([
       {

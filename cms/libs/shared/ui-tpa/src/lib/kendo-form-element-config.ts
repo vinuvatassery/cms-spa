@@ -7,7 +7,7 @@ export class UploadFileRistrictionOptions  {
   };
 }
 
-export class CurrencyFromat  {
+export class CurrencyFormat  {
   public currencyFormatOptions: NumberFormatOptions = {
     style: "currency",
     currency: "USD",

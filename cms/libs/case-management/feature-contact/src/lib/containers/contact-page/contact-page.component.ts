@@ -8,7 +8,7 @@ import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, 
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+import { StatusFlag } from '@cms/case-management/domain';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { LoaderService } from '@cms/shared/util-core';

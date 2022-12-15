@@ -1,0 +1,16 @@
+.k-multiselect-wrapper {
+    width: auto;
+    min-width: 31%;
+    position: relative;
+    .multi-dropdown-icon {
+      right: 7px;
+      top: 38px;
+      position: absolute;
+      z-index: 1;
+      width: 10px;
+      height: 3px;
+      padding: 0;
+      line-height: 0;
+      text-indent: -8px;
+    }
+  }
