@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { NotificationSnackbarService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
 
 @Component({
@@ -10,7 +11,9 @@ import { AuthService } from '@cms/shared/util-oidc';
 export class AppComponent {
   title = 'cms';
 
-  constructor(private authService: AuthService) {}
+  commonackbar$   = this.notificationSnackbarService.snackbar$
+  constructor(private authService: AuthService,
+    private readonly notificationSnackbarService : NotificationSnackbarService) {}
 
   user() {
     return this.authService.getUser();

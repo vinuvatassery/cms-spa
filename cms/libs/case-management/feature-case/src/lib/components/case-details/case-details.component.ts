@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component,  Input, OnInit, 
-  ChangeDetectorRef, ChangeDetectionStrategy,  OnChanges, SimpleChanges } from '@angular/core';
+  ChangeDetectorRef, ChangeDetectionStrategy,  OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
   import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms'; 
 
@@ -8,7 +8,7 @@ import { FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'  
 
 /** external Libraries **/
-import { first, tap } from 'rxjs';
+import { first, Subscription, tap } from 'rxjs';
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
 
 @Component({
@@ -17,7 +17,7 @@ import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
   styleUrls :  ['./case-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailsSummaryComponent   implements OnChanges    {   
+export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , OnInit  {   
 
   /// filter autocomplete with startswith
   public showInputLoader = false;
@@ -41,6 +41,8 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
   @Input() selectedProgram! : any
   @Input() selectedCase! : any 
  
+  private caseDataDataSubscription !: Subscription;
+
 
    /** Constructor**/
   constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef 
@@ -51,36 +53,31 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
    
     console.log(changes)
     if(changes['caseOwners']?.currentValue?.source != null)
-    {
-        // /// the startswith functionality will
-        // ///  work only if the observable is
-        // /// subscribed synchronously
-        this.caseOwners.pipe(
-      
-        )
+    {       
+        this.caseOwners.pipe()
         .subscribe((Owners: any[]) => {             
-          this.caseOwnersObject = [...Owners];   
-      
+          this.caseOwnersObject = [...Owners];         
           if(!this.isProgramVIsible)
           {  
-          this.GetCaseData();   
-             
-          }
-        
+          this.GetCaseData();               
+          }        
         });  
     
     }  
  } 
 
-
+ ngOnInit(): void {   
+  this.parentForm.patchValue(
+    {
+      clientId: this.selectedProgram?.programId      
+    }) 
+ }
 
   ///get case details
   ///with session id
   GetCaseData()
-  { 
-    
-  
-      this.selectedCase?.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
+  {    
+    this.caseDataDataSubscription = this.selectedCase?.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
       .subscribe((caseData: any) => {   
         this.parentForm.reset()
           if(caseData.programId != null && caseData.caseStartDate != null
@@ -97,11 +94,16 @@ export class CaseDetailsSummaryComponent   implements OnChanges    {
             )
        
           }
-        }
-        
-        ) 
-       
-       
+        }        
+        )   
   } 
 
+
+  ngOnDestroy(): void 
+  {
+    if(!this.isProgramVIsible)
+    { 
+    this.caseDataDataSubscription.unsubscribe();
+    }
+  }
 }
