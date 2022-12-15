@@ -157,8 +157,7 @@ export class IncomeFacade {
         formData.append(key, clientIncome[key]);
       }
     }
-    Object.keys(clientIncome).forEach((key:any) => formData.append(key, clientIncome[key]));
-    formData.append('proofOfIncomeFile',proofOfIncomeFile[0])
+    formData.append('proofOfIncomeFile',proofOfIncomeFile)
     return this.contactDataService.editIncome(formData);
   }
 

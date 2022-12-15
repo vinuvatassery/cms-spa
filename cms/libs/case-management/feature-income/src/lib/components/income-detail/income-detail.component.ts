@@ -205,7 +205,10 @@ export class IncomeDetailComponent implements OnInit {
       this.incomeFacade.ShowLoader();
       incomeData["clientIncomeId"] = this.selectedIncome.clientIncomeId;
       incomeData["concurrencyStamp"]=this.selectedIncome.concurrencyStamp;
-      incomeData["documentConcurrencyStamp"]=this.selectedIncome.documentConcurrencyStamp;
+      if(this.selectedIncome.clientDocumentId != null){
+        incomeData["documentConcurrencyStamp"]=this.selectedIncome.documentConcurrencyStamp;
+      }
+    
       incomeData["activeFlag"]=this.selectedIncome.activeFlag;
       this.incomeFacade.editClientIncome(this.IncomeDetailsForm.value, this.proofOfIncomeFiles).subscribe({
         next: (incomeResponse) => {
