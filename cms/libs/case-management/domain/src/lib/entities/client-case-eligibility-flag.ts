@@ -24,5 +24,6 @@ export class clientCaseEligibilityFlag{
         homelessFlag :string|null=null;
         homeAddressProofFlag :string|null=null;
         emailNotApplicableFlag :string|null=null;
+        genderDescFlag :string|null=null;
       
 }

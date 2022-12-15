@@ -15,7 +15,9 @@ import { WorkflowTypeCode } from '../enums/workflow-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {  FormGroup } from '@angular/forms';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +47,33 @@ export class WorkflowFacade {
   currentWorkflowMaster!: WorkflowMaster[];
 
   /**Constructor */
-  constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute) { }
+  constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
+    ,   private readonly loaderService: LoaderService,
+    private loggingService : LoggingService ,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService) { }
+  
 
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
+  }
+
+  ShowLoader()
+  {
+    this.loaderService.show();
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
 
   /** Public methods **/
   save(navigationType: NavigationType) {
@@ -63,6 +90,7 @@ export class WorkflowFacade {
   }
 
   createNewSession(newCaseFormData: FormGroup) {
+    this.ShowLoader();
     const sessionData = {
       entityId: newCaseFormData?.controls["programId"].value,
       EntityTypeCode: EntityTypeCode.Program,
@@ -70,8 +98,9 @@ export class WorkflowFacade {
       assignedCwUserId: newCaseFormData?.controls["caseOwnerId"].value,
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: newCaseFormData?.controls["applicationDate"].value
-    }
-
+    }      
+    sessionData.caseStartDate = this.intl.parseDate(sessionData.caseStartDate.toLocaleDateString())
+    
     this.workflowService.createNewSession(sessionData)
       .subscribe({
         next: (sessionResp: any) => {
@@ -83,15 +112,18 @@ export class WorkflowFacade {
               },
             });
           }
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')  
+          this.HideLoader();
         },
         error: (err: any) => {
-          console.error('error', err);
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
 
       });
   }
 
   loadWorkflowSession(type: string, entityId: string, sessionId: string) {
+    this.ShowLoader();
     this.workflowService.loadWorkflowMaster(entityId, EntityTypeCode.Program, type)
       .pipe(
         mergeMap((wfMaster: any) =>
@@ -107,10 +139,11 @@ export class WorkflowFacade {
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
-          this.sessionSubject.next(this.currentSession);
+          this.sessionSubject.next(this.currentSession);          
+          this.HideLoader();
         },
         error: (err: any) => {
-          console.error('error', err);
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
       })
   }

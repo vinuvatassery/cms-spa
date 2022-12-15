@@ -21,22 +21,32 @@
             [loading] = "showInputLoader"
             placeholder="Search Case Name, Member ID or SSN"
             [fillMode]="formUiStyle.dropDownFillMode"
-            [popupSettings]="{popupClass: 'case-search-footer',  appendTo:'component' ,animate: true }"
+            [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
             [filterable]="true"
-            (filterChange)="onsearchTextChange($event)" 
-          >
+            (filterChange)="onsearchTextChange($event)">
+          <!-- (close)="$event.preventDefault(); " -->
+          <!-- title="Name" -->
             <kendo-combobox-column>
-              
-              <ng-template 
-                kendoMultiColumnComboBoxColumnCellTemplate
-                let-dataItem
-              >
-                <span class="pr-1">{{ dataItem.clientFullName }}</span>
-                <span class="pr-1 text-muted">ID XXXX</span>
-                <span class="pr-1 text-muted">DOB {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
-                <span class="text-muted">SSN {{ dataItem.ssn }}</span>
+              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+                <span  >{{ dataItem.clientFullName }}</span>
               </ng-template>
             </kendo-combobox-column>
+            <kendo-combobox-column  [width]="62">
+              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+                <span class=" text-muted"> <em>ID:</em> {{dataItem.clientId}}</span>
+              </ng-template>
+            </kendo-combobox-column>
+            <kendo-combobox-column   [width]="120">
+              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+                <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
+              </ng-template>
+            </kendo-combobox-column>
+            <kendo-combobox-column  [width]="130">
+              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+                <span class="text-muted"><em> SSN:</em> {{ dataItem.ssn }}</span>
+              </ng-template>
+            </kendo-combobox-column>
+            
             <ng-template kendoMultiColumnComboBoxFooterTemplate class="p-0" >
               <div class="app-c-globalSearch app-c-globalSearch-footer p-0">
                 <div class="flex-row p-0">

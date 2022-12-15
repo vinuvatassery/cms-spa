@@ -3,15 +3,15 @@ import { ElementRef, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries **/
-import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, filter, Observable, catchError } from 'rxjs';
+import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, filter, Observable } from 'rxjs';
 
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { StatusFlag } from 'libs/case-management/domain/src/lib/enums/status-flag.enum';
+import { StatusFlag } from '@cms/case-management/domain';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
-import { LoaderService, NotificationSnackbarService,LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -70,10 +70,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly lovFacade: LovFacade,
     private readonly elementRef: ElementRef,
     private readonly loaderService: LoaderService,
-    private readonly loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly route: ActivatedRoute,
-
+    private route: ActivatedRoute
   ) { }
 
   /** Lifecycle hooks **/
@@ -352,19 +349,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.contactInfoForm.markAllAsTouched();
     if (this.contactInfoForm.valid) {
       this.loaderService.show();
-      return this.saveContactInfo().pipe(
-        catchError((err: any) => {
-          if (err?.error) {
-            if(err?.error){
-              const message = `${err?.error?.code}: ${err?.error?.error}`;
-              this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, message)
-            }            
-            this.loggingService.logException(err);
-          }
-          this.loaderService.hide();
-          return of(false)
-        })
-      );
+      return this.saveContactInfo();
     }
 
     return of(false)

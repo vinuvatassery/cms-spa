@@ -9,6 +9,7 @@ import { CaseFacade, CaseScreenTab, WorkflowFacade,
   UserDefaultRoles  } from '@cms/case-management/domain';
   import {UITabStripScroll} from '@cms/shared/ui-tpa'
 
+
   import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 @Component({
@@ -34,7 +35,6 @@ export class CasePageComponent implements OnInit {
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
   ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
-  
  
   /** Constructor**/
     
@@ -42,7 +42,8 @@ export class CasePageComponent implements OnInit {
       private readonly caseFacade: CaseFacade,
       private readonly workflowFacade :WorkflowFacade,
       private readonly loginUserFacade : UserManagementFacade,
-      private readonly lovFacade : LovFacade) {}
+      private readonly lovFacade : LovFacade
+    ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {    

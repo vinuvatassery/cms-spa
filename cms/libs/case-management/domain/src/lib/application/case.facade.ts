@@ -1,6 +1,10 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { LoaderService, LoggingService, NotificationSnackbarService ,SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
+
+import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -25,8 +29,8 @@ export class CaseFacade {
   private ddlGridColumnsSubject = new BehaviorSubject<any>([]);
   private ddlCommonActionsSubject = new BehaviorSubject<any>([]);
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
-  private updateCaseSubject = new BehaviorSubject<any>([]);
-  private getCaseSubject = new BehaviorSubject<any>([]);
+  private updateCaseSubject = new Subject<any>();
+  private getCaseSubject = new Subject<any>();
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -42,12 +46,36 @@ export class CaseFacade {
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
   updateCase$ = this.updateCaseSubject.asObservable();
-  getCase$ = this.getCaseSubject.asObservable();
+  getCase$ = this.getCaseSubject.asObservable(); 
 
   constructor(
     private readonly caseDataService: CaseDataService,
-
+    private loggingService : LoggingService,
+    private readonly loaderService: LoaderService ,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService
   ) { }
+ 
+  ShowLoader()
+  {
+    this.loaderService.show();
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
+
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
+  }
 
   /** Public methods **/
   loadCases(): void {
@@ -67,7 +95,7 @@ export class CaseFacade {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -128,13 +156,14 @@ export class CaseFacade {
   }
   loadCasesById(clientCaseId : string)
   {
-    this.caseDataService.loadCasesById(clientCaseId).subscribe({
-      next: (ddlcaseGetResponse) => {
-        console.log(ddlcaseGetResponse)
+    this.ShowLoader();
+    this.caseDataService.loadCasesById(clientCaseId).subscribe({    
+      next: (ddlcaseGetResponse) => {      
         this.getCaseSubject.next(ddlcaseGetResponse);
+        this.HideLoader();
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -197,15 +226,21 @@ export class CaseFacade {
   }
 
 
-  UpdateCase(existingCaseFormData : FormGroup ,clientCaseId : string ) {   
-    const caseData = { 
-      clientCaseId  : clientCaseId,
-      assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
-      caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
-      caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
-      concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
+  UpdateCase(existingCaseFormData : FormGroup ,clientCaseId : string ) 
+  {   
+       this.ShowLoader();
+        const caseData = { 
+          clientCaseId  : clientCaseId,
+          assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
+          caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
+          caseStartDate: new Date(existingCaseFormData?.controls["applicationDate"].value) ,
+          concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
+        }    
+
+        caseData.caseStartDate =  this.intl.parseDate(caseData.caseStartDate.toLocaleDateString())
+       
+        return  this.caseDataService.UpdateCase(caseData)
+
     }
-    return this.caseDataService.UpdateCase(caseData);
-  }
 
 }

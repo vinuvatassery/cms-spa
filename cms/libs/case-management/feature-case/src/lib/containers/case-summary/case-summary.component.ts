@@ -6,11 +6,12 @@ import {
 import { CaseFacade, WorkflowFacade,
    UserDefaultRoles, NavigationType  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/domain'
+import {LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 /**external libraries */
-import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-summary',
@@ -35,9 +36,10 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
   case$ = this.caseFacade.getCase$;
   clientCaseId! : string;
-  sessionId! : string;
-
+  sessionId! : string; 
+  updateCase$ = this.caseFacade.updateCase$;
   private saveClickSubscription !: Subscription;
+  private sessionDataSubscription !: Subscription;
 
   /** Constructor**/
   constructor(
@@ -48,7 +50,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     private route: ActivatedRoute,
     private readonly workFlowFacade : WorkflowFacade,
     private readonly loginUserFacade : UserManagementFacade,
-    private readonly lovFacade : LovFacade
+    private readonly lovFacade : LovFacade 
   ) {}
 
   /** Lifecycle hooks **/
@@ -61,6 +63,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   } 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.sessionDataSubscription.unsubscribe();
   }
 
     private loadFormdata()
@@ -75,7 +78,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   {     
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
-    this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+    this.sessionDataSubscription =this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
     .subscribe((session: any) => {      
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId     
      this.caseFacade.loadCasesById(this.clientCaseId);      
@@ -100,19 +103,29 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
       this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
         mergeMap((navigationType: NavigationType) =>
           forkJoin([of(navigationType), this.updateCase()])
-        ),
+        ),       
       ).subscribe(([navigationType, isSaved]) => {
-        if (isSaved) {
+        if (isSaved == true) {
+          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
           this.workFlowFacade.navigate(navigationType);
         }
       });
     }
+
     private updateCase()
     {      
       this.parentForm.updateValueAndValidity()
       if(this.parentForm.valid)
       {
-      return this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId)
+       return  this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId)
+       .pipe
+       (
+        catchError((err: any) => {      
+          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) 
+          
+          return of(false)  
+        })
+       )     
       }
       else return of(false)
     }

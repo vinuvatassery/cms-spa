@@ -48,9 +48,9 @@ export class WorkflowDataService {
     );
   }
 
-  createNewSession(newSessionData: any){
+  createNewSession(newSessionData: any){    
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions`,      
       newSessionData
     );
   }

@@ -1,47 +1,59 @@
 /** Angular **/
-import {Component, OnInit, ChangeDetectionStrategy, Input,} from '@angular/core';
-/** External libraries **/
-import { Subject } from 'rxjs/internal/Subject';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+} from '@angular/core';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /** Facades **/
-import { EmploymentFacade } from '@cms/case-management/domain';
-/** Entities **/
-import { DeleteRequest } from '@cms/shared/ui-common';
+import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
   styleUrls: ['./employer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployerListComponent implements OnInit {
+export class EmployerListComponent implements OnInit, OnChanges {
   /** Input properties **/
   @Input() data!: any;
-
+  @Input() employment$: any;
+  @Input() isGridLoaderShow: any;
+  @Output() loadEmploymentsEvent = new EventEmitter<any>();
+  @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/
-  employers$ = this.employmentFacade.employers$;
   isAddEmployerButtonDisplayed!: boolean;
   isAdd = true;
+  isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
+  selectedEmployer: ClientEmployer = new ClientEmployer();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  public sortValue = this.employmentFacade.sortValue;
+  public sortType = this.employmentFacade.sortType;
+  public pageSizes = this.employmentFacade.gridPageSizes;
+  public gridSkipCount = this.employmentFacade.skipCount;
+  public sort = this.employmentFacade.sort;
+  public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  deleteRequestSubject = new Subject<DeleteRequest>();
-  deleteRequest$ = this.deleteRequestSubject.asObservable();
+
   public actions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Employer',
       icon: 'edit',
-      click: (): void => {
-        this.onEmployerClicked(false);
-      },
+      type: 'edit',
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Employer',
       icon: 'delete',
-      click: (): void => {
-         this.onDeleteEmployerDetailsClicked('john')
-      },
+      type: 'delete',
     },
   ];
 
@@ -49,20 +61,78 @@ export class EmployerListComponent implements OnInit {
   constructor(private readonly employmentFacade: EmploymentFacade) {}
 
   /** Lifecycle hooks **/
+
   ngOnInit(): void {
-    this.loadEmployers();
     this.addEmployerButtonDisplay();
+    this.loadEmployments();
   }
 
-  receiveDetailFromEmpDetails($event: boolean) {
-    this.isEmployerOpened = $event;
-  }
-  
-  /** Private methods **/
-  private loadEmployers() {
-    this.employmentFacade.loadEmployers();
+  ngOnChanges(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.loadEmployments();
   }
 
+// Grid More action clicl function
+  onEmployerActionClicked(
+    selectedEmployer: ClientEmployer,
+    modalType: string = ''
+  ) {
+    this.selectedEmployer = selectedEmployer;
+    if (modalType == 'edit') {
+      this.isEmployerOpened = true;
+      this.isAdd = false;
+    }
+    if (modalType == 'delete') {
+      this.isRemoveEmployerConfirmationPopupOpened = true;
+    }
+  }
+
+// updating the pagination infor based on dropdown selection
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadEmployments();
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.loadEmployments();
+  }
+  // Loading the grid data based on pagination
+  private loadEmployments(): void {
+    this.loadEmploymentsLists(
+      this.state.skip ?? 0,
+      this.state.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+
+  loadEmploymentsLists(
+    skipcountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    const gridDataRefinerValue = {
+      skipCount: skipcountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+    };
+    this.loadEmploymentsEvent.next(gridDataRefinerValue);
+  }
+  // updating the grid data
+  updateEmploymentHandle(employements: any) {
+    this.loadEmployments();
+  }
   private addEmployerButtonDisplay() {
     if (this.data === ScreenType.Case360Page) {
       this.isAddEmployerButtonDisplayed = false;
@@ -70,28 +140,22 @@ export class EmployerListComponent implements OnInit {
       this.isAddEmployerButtonDisplayed = true;
     }
   }
-
-  /** Internal event methods **/
+  
+  // employer detail popup close handler
   onEmployerClosed() {
-    this.isEmployerOpened = false;
+      this.isEmployerOpened = false;
   }
-
+  // employer detail popup show handler
   onEmployerClicked(isEmployerAdd: boolean) {
-    this.isEmployerOpened = true;
-    this.isAdd = isEmployerAdd;
+      this.isEmployerOpened = true;
+      this.isAdd = isEmployerAdd;
   }
-
-
-  onDeleteEmployerDetailsClicked(deleteDetails: any) {
-    const deleteConfirmation: DeleteRequest = {
-      title: ' Employer',
-      content: 'The employer will be deleted from the application',
-      data: deleteDetails,
-    };
-    this.deleteRequestSubject.next(deleteConfirmation);
+  // employer detail popup show/hide handler
+  receiveDetailFromEmpDetails($event: boolean) {
+        this.isEmployerOpened = $event;
   }
-
-  handleDeleteConfirmationClicked(event: any) {
-    console.log('Response Data :', event);
+  // employer remove popup close
+  onRemoveEmployerConfirmationClosed() {
+        this.isRemoveEmployerConfirmationPopupOpened = false;
   }
 }
