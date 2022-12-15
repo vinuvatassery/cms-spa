@@ -7,7 +7,7 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 
 import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType, StatusFlag } from '@cms/case-management/domain';
-
+import {  SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-employment-page',
   templateUrl: './employment-page.component.html',
@@ -127,7 +127,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
       .pipe(
         catchError((err: any) => {
           if (err?.error) {
-            alert('${err?error?.code}: ${err?.error?.error}');
+            this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      
           }
           this.employmentFacade.hideLoader();
           return of(false);
