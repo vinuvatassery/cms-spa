@@ -41,7 +41,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId!:string;
   sessionId! : string;
   message!:string;
-  clientFacadesnackbar$ = this.notificationSnackbarService.snackbar$
+  //clientFacadesnackbar$ = this.notificationSnackbarService.snackbar$
   //snackbar:any;
  
     /** Constructor **/

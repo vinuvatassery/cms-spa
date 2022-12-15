@@ -187,21 +187,26 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.assignRaceAndEthnicityToForm();
     }
   }
-  raceAndEthnicityChange(value:any){
-    const Ethnicity= this.appInfoForm.controls["Ethnicity"]?.value;
-    const Race= this.appInfoForm.controls["RaceAndEthnicity"]?.value;
-    this.raceAndEthnicityPrimaryData=[];
-    this.raceAndEthnicityPrimaryNotListed=false;
-    Ethnicity.forEach((el:any) => {
-      this.raceAndEthnicityPrimaryData.push(el);
-    });
+  raceAndEthnicityChange(value: any) {
+    const Ethnicity = this.appInfoForm.controls["Ethnicity"]?.value;
+    const Race = this.appInfoForm.controls["RaceAndEthnicity"]?.value;
+    this.raceAndEthnicityPrimaryData = [];
+    this.raceAndEthnicityPrimaryNotListed = false;
+    if (Array.isArray(Ethnicity)) {
+      Ethnicity.forEach((el: any) => {
+        this.raceAndEthnicityPrimaryData.push(el);
+      });
+    }
 
-    Race.forEach((el:any) => {
-      if(el.lovCode !== 'NOT_LISTED')
-      this.raceAndEthnicityPrimaryData.push(el);
-      else
-      this.raceAndEthnicityPrimaryNotListed=true;
-    });
+    if (Array.isArray(Race)) {
+      Race.forEach((el: any) => {
+        if (el.lovCode !== 'NOT_LISTED')
+          this.raceAndEthnicityPrimaryData.push(el);
+        else
+          this.raceAndEthnicityPrimaryNotListed = true;
+      });
+    }
+
 
     if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
