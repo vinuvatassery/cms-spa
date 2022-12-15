@@ -148,15 +148,12 @@
     @media (max-width: $breakpoint-xlg) {
       min-width: 300px;
       max-width: 300px;
-      
     }
+
   }
   kendo-multicolumncombobox > .k-button {
     display: none;
-  }
-
-
-  
+  } 
 }
 .hidedropicon  kendo-combobox > .k-button {
   display: none ;
@@ -182,13 +179,6 @@
 }
 // New case search
 .search-case {
-  kendo-multicolumncombobox > kendo-popup {
-    max-width: 500px;
-    width: 100% !important;
-    margin: 0 auto;
-    left: 0 !important;
-    right: 0;
-  }
   .case-search-footer {
     .k-table-body {
       .k-table {
@@ -298,4 +288,33 @@
 
  .k-menu-popup{
   margin-right: 15px;
+ }
+
+ .combotable_search_list{
+
+ 
+   .k-table-td,  .k-table-th{
+    border-left: 0px;
+    border-right: 0px;
+    padding: 8px 4px;
+    cursor: pointer;
+    text-overflow: unset;
+    white-space: normal;
+    em{
+      font-weight: 500;
+      font-style: normal;
+    }
+    .text-muted{
+      color: rgba($black, 0.6);
+    }
+  }
+  .k-table-td{
+    border:0px;
+    color: $black;
+  }
+ 
+ }
+
+ .k-no-data, .k-nodata{
+  min-height: 40px;
  }
