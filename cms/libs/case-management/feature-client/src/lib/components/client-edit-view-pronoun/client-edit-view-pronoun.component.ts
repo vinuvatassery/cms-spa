@@ -56,19 +56,29 @@ export class ClientEditViewPronounComponent implements OnInit {
  }
    onCheckChange(event:any,lovCode:any) { 
     if(event.target.checked && lovCode ==='NOT_LISTED'){
-      this.appInfoForm.controls['NOT_LISTED'].setErrors({'incorrect': true});
-      this.textboxDisable = false;
+      if(this.appInfoForm.controls['pronoun'].value === null ||
+       this.appInfoForm.controls['pronoun'].value ===""){
+      this.appInfoForm.controls['pronoun'].setErrors({'incorrect': true});
+      }
+      this.textboxDisable = false;      
     }
    
     if(!event.target.checked && lovCode ==='NOT_LISTED') {
-      this.appInfoForm.controls['NOT_LISTED'].setErrors(null);
+      this.appInfoForm.controls['pronoun'].setErrors(null);
+      this.appInfoForm.controls['pronoun'].updateValueAndValidity();
       this.textboxDisable = true;
     } 
+    if(event.target.checked){
+      this.appInfoForm.controls['pronouns'].setErrors(null);
+    }
    
    }
    onChange(event:any){
     if(event ===""){
-      this.appInfoForm.controls['NOT_LISTED'].setErrors({'incorrect': true});
+      this.appInfoForm.controls['pronoun'].setErrors({'incorrect': true});
+    }
+    else{
+      this.appInfoForm.controls['pronoun'].setErrors(null);
     }
 
    }

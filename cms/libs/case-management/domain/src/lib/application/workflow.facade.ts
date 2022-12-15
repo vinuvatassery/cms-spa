@@ -15,9 +15,9 @@ import { WorkflowTypeCode } from '../enums/workflow-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { SnackBar } from '@cms/shared/ui-common';
+import {  FormGroup } from '@angular/forms';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +50,8 @@ export class WorkflowFacade {
   constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
     ,   private readonly loaderService: LoaderService,
     private loggingService : LoggingService ,
-    private readonly notificationSnackbarService : NotificationSnackbarService) { }
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService) { }
   
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -97,8 +98,9 @@ export class WorkflowFacade {
       assignedCwUserId: newCaseFormData?.controls["caseOwnerId"].value,
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: newCaseFormData?.controls["applicationDate"].value
-    }
-
+    }      
+    sessionData.caseStartDate = this.intl.parseDate(sessionData.caseStartDate.toLocaleDateString())
+    
     this.workflowService.createNewSession(sessionData)
       .subscribe({
         next: (sessionResp: any) => {

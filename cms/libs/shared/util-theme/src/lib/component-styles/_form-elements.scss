@@ -99,6 +99,20 @@
     }
   }
 }
+
+.k-numerictextbox{
+  &.k-input {
+  .k-button {
+    &.k-icon-button {
+      background: transparent;
+      position: relative;
+      right: auto;
+      top: auto;
+      z-index: 1;
+    }
+  }
+  }
+}
 // .k-input {
 //   font-size: $font-size;
 //   height: 38px;
@@ -244,6 +258,9 @@
   border-color: rgba(0, 0, 0, 0.12);
   &:hover{
 
+  }
+  &:focus, &:focus-within{
+    border: 1px solid $app-primary !important;
   }
 }
 
@@ -724,6 +741,8 @@ kendo-timepicker {
 
 .k-input:disabled,
 .k-input[disabled],
+.k-picker-outline[disabled], 
+.k-picker-outline.k-disabled,
 .k-input.k-disabled {
   background: material-color($hive-neutral-palette, 50) !important;
   border-color: material-color($hive-neutral-palette, 50);

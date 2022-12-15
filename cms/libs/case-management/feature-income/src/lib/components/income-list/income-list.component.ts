@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
@@ -8,7 +8,7 @@ import { ScreenType } from '@cms/case-management/domain';
 /**  Facades **/
 import { IncomeFacade } from '@cms/case-management/domain';
 /** Entities **/
-import { DeleteRequest } from '@cms/shared/ui-common';
+import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-income-list',
@@ -20,9 +20,12 @@ export class IncomeListComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() hasNoIncome!: boolean;
-
+  @Input() clientCaseEligibilityId: string="";
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
+  incomesTotal:any={};
   dependentsProofofSchools$ = this.incomeFacade.dependentsProofofSchools$;
   isEdit!: boolean;
   isOpenedIncome = false;
@@ -30,6 +33,10 @@ export class IncomeListComponent implements OnInit {
   isIncludeNote!: boolean;
   deleteRequestSubject = new Subject<DeleteRequest>();
   deleteRequest$ = this.deleteRequestSubject.asObservable();
+  
+  snackbarMessage!: SnackBar;
+  snackbarSubject = new Subject<SnackBar>();
+  snackbar$ = this.snackbarSubject.asObservable();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -92,13 +99,14 @@ export class IncomeListComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadIncomes();
-    this.loadDependentsProofofSchools();
     this.includeAddIncomeButtonAndFooterNote();
   }
 
   /** Private methods **/
   private loadIncomes() {
-    this.incomeFacade.loadIncomes();
+    this.incomeFacade.incomesResponse$.subscribe((incomeresponse:any)=>{
+      this.incomesTotal=incomeresponse;
+    })
   }
 
   private loadDependentsProofofSchools() {
@@ -123,9 +131,10 @@ export class IncomeListComponent implements OnInit {
     this.isEdit = editValue;
   }
 
-  receiveDetailFromIcomeDetails($event: boolean) {
-    this.isOpenedIncome = $event;
+  closeIncomePopup($event:any){
+    this.isOpenedIncome = $event.popupState;
   }
+
   onDeleteEmployerDetailsClicked(deleteDetails: any) {
     const deleteConfirmation: DeleteRequest = {
       title: ' Income',

@@ -4,7 +4,8 @@
   "caseApiUrl": "https://localhost:44362/api",
   "sysConfigApiUrl": "https://localhost:44352/api",
   "signalrHubUrl": "https://localhost:5200/notification",
-  "snackbarHideAfter":"1000",
+  "gridSkipCount":0,
+  "snackbarHideAfter":"2000",
   "gridPageSizeValues" : [
     {"text": "5", "value": 5}, 
     {"text": "10", "value": 10},

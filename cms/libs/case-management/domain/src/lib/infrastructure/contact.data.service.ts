@@ -1,30 +1,24 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ContactInfo } from '../entities/contact';
+import { Income } from '../entities/income';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
+
+
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  loadEmployers() {
-    return of([
-      {
-        NameofEmployer: 'John Cena',
-        DateofHire: '01-01-2022',
-      },
-    ]);
-  }
-
   loadMedicalHealthPlans() {
     return of([
       {
@@ -100,64 +94,8 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes() {
-    return of([
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-    ]);
+  loadIncomes(clientId:string,clientCaseEligibilityId:string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}`);
   }
 
   loadDependentsProofofSchools() {
@@ -496,5 +434,13 @@ export class ContactDataService {
     /** Private methods **/
   private getUrl(clientId: number, clientCaseEligibilityId: string) {
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
+  }
+
+ saveIncome(clientIncome: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+  }
+
+  updateNoIncomeData(noIncomeData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
   }
 }
