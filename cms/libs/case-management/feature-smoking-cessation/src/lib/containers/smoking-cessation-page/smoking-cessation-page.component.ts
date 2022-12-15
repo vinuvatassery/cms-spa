@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pair
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag ,ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
+import { LoaderService,LoggingService,SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     smokingCessationNote: ''
   };
   isDisabled =false;
-  smokingCessationsnackbar$ = this.notificationSnackbarService.snackbar$
+
   
   public formUiStyle : UIFormStyle = new UIFormStyle();
   constructor(
@@ -46,8 +46,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private caseFacad: CaseFacade,    
     private loaderService: LoaderService,
-    private loggingService:LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService ) {
+    private loggingService:LoggingService
+   ) {
   }
 
   /** Lifecycle hooks **/

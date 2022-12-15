@@ -23,6 +23,14 @@ export class LovDataService {
     );
   }
 
+  getLovsbyTypes(lovType : string) {
+        
+    return this.http.get<Lov[]>(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+        `/system-config/lovs/types/${lovType}`
+    );
+  }
+
   getLovsbyParent(lovType : string ,parentCode : string) {
         
     return this.http.get<Lov[]>(
