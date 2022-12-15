@@ -7,8 +7,9 @@ import { ProgramCode } from '@cms/case-management/domain';
 /** Internal Libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { debounceTime, delay, distinctUntilChanged, Subject, tap, timeout } from 'rxjs';
+import { debounceTime,  distinctUntilChanged, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
@@ -43,6 +44,7 @@ public showInputLoader = false;
     private readonly ref: ChangeDetectorRef, 
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
+    public intl: IntlService
   ) {
  
     this.filterManager
@@ -82,8 +84,7 @@ public showInputLoader = false;
   }
   private registerFormData()
   {
-    if(this.selectedProgram)
-    {
+    
     this.parentForm = this.formBuilder.group({
       applicationDate: [new Date(), Validators.required],
       caseOriginCode: ['', Validators.required],
@@ -91,7 +92,7 @@ public showInputLoader = false;
       programId: [{ value: this.selectedProgram?.programId, disabled: true }, [Validators.required]] ,
       concurrencyStamp : ['']  
       });
-    }
+    
   }
 
 
@@ -104,8 +105,7 @@ public showInputLoader = false;
 
   onSubmit() {     
     this.parentForm.markAllAsTouched();
-    // this.loaderService.show();
-    this.isSubmitted = true;
+    this.isSubmitted = true;    
     this.newcaseSaveEvent.emit(this.parentForm);
 
   }

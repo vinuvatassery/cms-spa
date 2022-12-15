@@ -16,8 +16,8 @@ export class NotificationSnackbarService {
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
         if(type == SnackBarNotificationType.ERROR)
         {
-          const err= subtitle;
-          subtitleText =(err?.name ?? '')+''+(err?.error?.code ?? '')+''+(err?.error?.error ?? '');
+          const err= subtitle;          
+          subtitleText =(err?.name ?? '')+' '+(err?.error?.code ?? '')+' '+(err?.error?.error ?? '')+' '+(err?.status);
         
         }
         const snackbarMessage: any = {
