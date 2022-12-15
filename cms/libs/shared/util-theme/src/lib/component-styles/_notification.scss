@@ -110,7 +110,17 @@
   border-radius: $border-radius-xl;
   background: material-color($hive-primary-palette, 300);
 }
+.app-pageloader-on {
+  common-loader-component{
+    position: fixed;
+    z-index: 999999;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
 
+}
 .loader-wrap {
   display: flex;
   align-items: center;

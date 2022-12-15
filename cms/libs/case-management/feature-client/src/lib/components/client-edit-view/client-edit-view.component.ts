@@ -186,7 +186,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  
   
   public onClose(event: any) {    
-      event.preventDefault();   
+      // event.preventDefault();   
   }
   public clearForm(): void {
     //this.form.reset();

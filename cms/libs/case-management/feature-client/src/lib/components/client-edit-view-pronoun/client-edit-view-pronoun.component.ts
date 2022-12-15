@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'case-management-client-edit-view-pronoun',
   templateUrl: './client-edit-view-pronoun.component.html',
@@ -24,6 +24,7 @@ export class ClientEditViewPronounComponent implements OnInit {
    saveClickSubscription!:Subscription;
    pronounLovs$= this.lovFacade.pronounslov$;
    showNotListedRequired:boolean=false;
+   public formUiStyle : UIFormStyle = new UIFormStyle();  
    //textboxDisable:boolean=true;
 
      /** Construtor **/
