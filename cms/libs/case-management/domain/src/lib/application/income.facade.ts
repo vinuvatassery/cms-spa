@@ -26,8 +26,7 @@ export class IncomeFacade {
   ddlProofOfIncomdeTypes$ = this.ddlProofOfIncomeTypesSubject.asObservable();
   incomes$ = this.incomesSubject.asObservable();
   incomesResponse$ = this.incomesResponseSubject.asObservable();
-  dependentsProofofSchools$ =
-    this.dependentsProofofSchoolsSubject.asObservable();
+  dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly contactDataService: ContactDataService,
@@ -106,7 +105,7 @@ export class IncomeFacade {
     this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId).subscribe({
       next: (incomesResponse: any) => {
         this.incomesSubject.next(incomesResponse.clientIncomes);
-        this.dependentsProofofSchoolsSubject.next(incomesResponse.dependets);
+        this.dependentsProofofSchoolsSubject.next(incomesResponse.dependents);
         this.incomesResponseSubject.next(incomesResponse);
          this.HideLoader();
       },
