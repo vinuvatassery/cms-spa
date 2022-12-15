@@ -433,6 +433,7 @@ export class ContactDataService {
 
     /** Private methods **/
   private getUrl(clientId: number, clientCaseEligibilityId: string) {
+ 
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 
@@ -442,5 +443,19 @@ export class ContactDataService {
 
   updateNoIncomeData(noIncomeData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
+  }
+
+  editIncome(clientIncome: any) { 
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+
+  }
+
+  deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}/${clientId}/${clientCaseEligibilityId}`,);
+  }
+
+  loadIncomeDetailsService(clientIncomeId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}`,);
+
   }
 }

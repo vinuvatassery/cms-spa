@@ -103,30 +103,12 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
             
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-                  <label>   {{ dataItem.text }} </label>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="onIncomeActionClicked(dataItem,buttondataItem.type)">
+                  <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                  <label>   {{ buttondataItem.text }} </label>
               </button>
-                <!-- <button
-                  kendoButton
-                  icon="edit"
-                  look="flat"
-                  class="btn-h-primary"
-                  (click)="onIncomeClicked(true)"
-                  aria-label="edit income"
-                >
-                  Edit Income
-                </button>
-                <button
-                  kendoButton
-                  icon="delete"
-                  look="flat"
-                  class="btn-h-danger"
-                  aria-label="delete income"
-                >
-                  Delete Income
-                </button> -->
+            
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
@@ -186,45 +168,11 @@
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
-              <!-- <span
-                class="material-icons"
-                aria-label="upload income details"
-                aria-hidden="true"
-                role="menuitem"
-                >upload</span
-              > -->
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click" >
                   <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
                   <label>   {{ dataItem.text }} </label>
-              </button>
-
-<!--                 
-                <button
-                  kendoButton
-                  look="flat"
-                  class="btn-h-primary"
-                  aria-label="attach from computer"
-                >
-                  Attach from computer
-                </button>
-                <button
-                  kendoButton
-                  look="flat"
-                  class="btn-h-primary"
-                  aria-label="attach from client attachments"
-                >
-                  Attach from client attachments
-                </button>
-                <button
-                  kendoButton
-                  icon="delete"
-                  look="flat"
-                  class="btn-h-danger"
-                  aria-label="remove file"
-                >
-                  Remove File
-                </button> -->
+              </button> 
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
@@ -239,14 +187,16 @@
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>
-  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"> </case-management-income-detail>
+  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" [selectedIncome]="selectedIncome"> </case-management-income-detail>
 </kendo-dialog>
 
 
-<div kendoDialogContainer>
-  <common-delete-confirmation
-    (sendBackInformation)="handleDeleteConfirmationClicked($event)"
-    [data$]="deleteRequest$"
-  ></common-delete-confirmation>
-</div>
+<kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened"  (close)="onRemoveIncomeConfirmationClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
+  <case-management-remove-income-confirmation
+  (closeModal)="onRemoveIncomeConfirmationClosed()" 
+  [selectedIncome]="selectedIncome"></case-management-remove-income-confirmation>
+
+  
+</kendo-dialog>
 

@@ -108,9 +108,10 @@ export class IncomeFacade {
         this.incomesSubject.next(incomesResponse.clientIncomes);
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependets);
         this.incomesResponseSubject.next(incomesResponse);
-        this.HideLoader();
+         this.HideLoader();
       },
       error: (err) => {
+        this.HideLoader();
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
@@ -146,5 +147,26 @@ export class IncomeFacade {
     formData.append('ProofOfIncomeFile', proofOfIncomeFile);
     return this.contactDataService.saveIncome(formData);
   }
+  editClientIncome(clientIncome:any, proofOfIncomeFile:any){
+    const formData: any = new FormData();
+    for (var key in clientIncome) {
+      if (key == "incomeStartDate" || key == 'incomeEndDate') {
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+      }
+      else {
+        formData.append(key, clientIncome[key]);
+      }
+    }
+    Object.keys(clientIncome).forEach((key:any) => formData.append(key, clientIncome[key]));
+    formData.append('proofOfIncomeFile',proofOfIncomeFile[0])
+    return this.contactDataService.editIncome(formData);
+  }
 
+  deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string) {
+    return this.contactDataService.deleteIncome(clientIncomeId,clientId,clientCaseEligibilityId);
+  }
+
+  loadIncomeDetails(clientIncomeId : string){
+    return this.contactDataService.loadIncomeDetailsService(clientIncomeId)
+  }
 }
