@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Dependent } from '../entities/dependent';
@@ -14,9 +14,11 @@ import { ConfigurationProvider, LoggingService, NotificationSnackbarService, Sna
 
 
 /** Facade **/
-import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { WorkflowFacade } from './workflow.facade';
+import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -205,24 +207,9 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string): void {
+  updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string) {    
     this.ShowLoader();
-    this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents).subscribe({
-      next: (dependentStatusResponse) => {        
-       
-        if(dependentStatusResponse == true)
-        {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')  
-        }
-        
-        this.dependentStatusSubject.next(dependentStatusResponse);
-        this.HideLoader();
-      },
-      error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
-        
-      },
-    });
+    return this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents)
   }
 
   loadDependentsStatus(clientCaseEligibilityId : string) : void {

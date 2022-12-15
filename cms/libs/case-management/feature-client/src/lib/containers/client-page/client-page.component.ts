@@ -6,6 +6,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { catchError, first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/

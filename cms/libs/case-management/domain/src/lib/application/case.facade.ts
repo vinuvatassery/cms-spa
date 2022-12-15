@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { LoaderService, LoggingService, NotificationSnackbarService ,SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 import { Subject } from 'rxjs';
 /** External libraries **/
@@ -51,7 +52,8 @@ export class CaseFacade {
     private readonly caseDataService: CaseDataService,
     private loggingService : LoggingService,
     private readonly loaderService: LoaderService ,
-    private readonly notificationSnackbarService : NotificationSnackbarService
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService
   ) { }
  
   ShowLoader()
@@ -234,22 +236,10 @@ export class CaseFacade {
           caseStartDate: new Date(existingCaseFormData?.controls["applicationDate"].value) ,
           concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
         }    
+
+        caseData.caseStartDate =  this.intl.parseDate(caseData.caseStartDate.toLocaleDateString())
        
-        this.caseDataService.UpdateCase(caseData).subscribe({
-          next: (updateCaseResponse) => {        
-            
-            if(updateCaseResponse)
-            {     
-              this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
-            }
-              
-            this.updateCaseSubject.next(updateCaseResponse);
-            this.HideLoader();
-          },
-          error: (err) => {
-            this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
-          },
-        });
+        return  this.caseDataService.UpdateCase(caseData)
 
     }
 
