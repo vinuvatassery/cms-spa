@@ -11,7 +11,7 @@ import { AuthService } from '@cms/shared/util-oidc';
 export class AppComponent {
   title = 'cms';
 
-  commonackbar$   = this.notificationSnackbarService.snackbar$
+  commonSnackbar$   = this.notificationSnackbarService.snackbar$
   constructor(private authService: AuthService,
     private readonly notificationSnackbarService : NotificationSnackbarService) {}
 

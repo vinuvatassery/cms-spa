@@ -105,10 +105,7 @@ public showInputLoader = false;
 
   onSubmit() {     
     this.parentForm.markAllAsTouched();
-    // this.loaderService.show();
     this.isSubmitted = true;    
-
-   // this.parentForm.controls["applicationDate"].value =   this.intl.parseDate(new Date().toDateString(),"MM-dd-yyyy")
     this.newcaseSaveEvent.emit(this.parentForm);
 
   }
