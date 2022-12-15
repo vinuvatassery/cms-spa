@@ -727,6 +727,8 @@ kendo-timepicker {
 
 .k-input:disabled,
 .k-input[disabled],
+.k-picker-outline[disabled], 
+.k-picker-outline.k-disabled,
 .k-input.k-disabled {
   background: material-color($hive-neutral-palette, 50) !important;
   border-color: material-color($hive-neutral-palette, 50);

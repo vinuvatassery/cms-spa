@@ -1,8 +1,8 @@
 /** Angular **/
-import { ChangeDetectionStrategy,  Component,  OnDestroy,  OnInit,} from '@angular/core';
+import { ChangeDetectionStrategy, Component,  OnDestroy,  OnInit,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import { filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
 import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
 /** Enums **/
@@ -123,11 +123,17 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   private save() {
     this.isEmployedFlag =
       this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
-    this.employmentFacade.unEmploymentUpdate(
-      this.clientCaseEligibilityId,
-      this.isEmployedFlag
-    );
-    return of(this.employmentFacade.employersStatus$);
+    return this.employmentFacade
+      .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
+      .pipe(
+        catchError((err: any) => {
+          if (err?.error) {
+            alert('${err?error?.code}: ${err?.error?.error}');
+          }
+          this.employmentFacade.hideLoader();
+          return of(false);
+        })
+      );
   }
 
   // unemployment checkbox click
