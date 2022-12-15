@@ -1,5 +1,6 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy,Input } from '@angular/core';
+import { FormGroup,FormBuilder } from '@angular/forms';
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
 
@@ -9,6 +10,7 @@ import { HealthInsuranceFacade } from '@cms/case-management/domain';
   styleUrls: ['./medical-premium-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class MedicalPremiumListComponent implements OnInit {
   /** Public properties **/
   medicalHealthPlans$ = this.healthFacade.medicalHealthPlans$;
@@ -18,6 +20,10 @@ export class MedicalPremiumListComponent implements OnInit {
   isEdit!: boolean;
   dialogTitle!: string;
   insuranceType!: string;
+
+  /** Input properties **/
+  @Input() healthInsuranceForm: FormGroup;
+
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -53,7 +59,10 @@ export class MedicalPremiumListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly healthFacade: HealthInsuranceFacade) {}
+  constructor(private readonly healthFacade: HealthInsuranceFacade,
+    private formBuilder: FormBuilder) {
+      this.healthInsuranceForm = this.formBuilder.group({});
+    }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

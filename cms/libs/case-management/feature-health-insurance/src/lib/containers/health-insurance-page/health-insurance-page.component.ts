@@ -6,6 +6,7 @@ import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { WorkflowFacade, HealthInsuranceFacade, CaseFacade } from '@cms/case-management/domain';
 /** Enums **/
 import {  NavigationType } from '@cms/case-management/domain';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -15,16 +16,20 @@ import {  NavigationType } from '@cms/case-management/domain';
 })
 export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
+
+  healthInsuranceForm!: FormGroup;
+  
   /** Private properties **/
   private saveClickSubscription !: Subscription;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private healthInsuranceFacade: HealthInsuranceFacade,
-    private caseFacad: CaseFacade) { }
+    private formBuilder:FormBuilder) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
+    this.buildForm();
     this.addSaveSubscription();
   }
 
@@ -33,6 +38,20 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods **/
+  private buildForm() {
+    this.healthInsuranceForm = this.formBuilder.group({
+      insuranceType: [''],
+      insuranceStartDate:[''],
+      insuranceEndDate:[''], 
+      insuranceIdNumber:[''],
+      insuranceCarrierName:[''],
+      insurancePlanName:[''],
+      wantHelpBuyingPremium:[''] 
+
+    });  
+
+  } 
+
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
