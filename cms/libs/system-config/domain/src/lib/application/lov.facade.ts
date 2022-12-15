@@ -1,5 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { LoggingService } from '@cms/shared/util-core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -13,6 +14,7 @@ export class LovFacade {
 
   constructor(
     private readonly lovDataService: LovDataService,
+    private loggingService : LoggingService
 
   ) { }
   
@@ -33,7 +35,10 @@ export class LovFacade {
   private lovEnglishProficiencySubject = new BehaviorSubject<Lov[]>([]);
   private lovRaceSubject = new BehaviorSubject<Lov[]>([]);
   private lovEthnicitySubject = new BehaviorSubject<Lov[]>([]);
-
+  private lovIncomeSourceSubject = new BehaviorSubject<Lov[]>([]);
+  private lovIncomeTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovIncomeFrequencySubject = new BehaviorSubject<Lov[]>([]);
+  private lovProofOfIncomeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -51,6 +56,10 @@ export class LovFacade {
   englishProficiencylov$ = this.lovEnglishProficiencySubject.asObservable();
   racelov$ = this.lovRaceSubject.asObservable();
   ethnicitylov$ = this.lovEthnicitySubject.asObservable();
+  incomeSourcelov$ = this.lovIncomeSourceSubject.asObservable();
+  incomeTypelov$ = this.lovIncomeTypeSubject.asObservable();
+  incomeFrequencylov$ = this.lovIncomeFrequencySubject.asObservable();
+  proofOfIncomelov$ = this.lovProofOfIncomeSubject.asObservable();
 
         /** Public methods **/
 
@@ -60,7 +69,7 @@ export class LovFacade {
       this.lovcascadeSubject.next(lovResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -71,7 +80,7 @@ getRelationShipsLovs(): void {
       this.lovRelationShipSubject.next(relationsResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -92,7 +101,7 @@ getCaseOriginLovs(): void {
       this.lovcaseoriginSubject.next(lovcaseoriginResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
   
@@ -103,7 +112,7 @@ getPronounLovs(): void {
       this.lovPronounSubject.next(lovPronounResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
   
@@ -156,7 +165,7 @@ getContactRelationShipsLovs(): void {
       this.lovCntRelationshipCodeSubject.next(relationsResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 }
@@ -169,7 +178,17 @@ getMaterialYesLovs(): void {
       console.error('err', err);
     },
   });
+}
   
+getIncomeSourceLovs():void{
+  this.lovDataService.getLovsbyType(LovType.IncomeSource).subscribe({
+    next: (lovIncomeSourceResponse) => {
+      this.lovIncomeSourceSubject.next(lovIncomeSourceResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
+    },
+  });
 }
 getSpokenWrittenLanguageLovs(): void {
   this.lovDataService.getLovsbyType(LovType.SpokenWrittenLanguage).subscribe({
@@ -211,4 +230,30 @@ getEthnicityLovs(): void {
     },
   });
 }
+getIncomeTypeLovs():void{
+  this.lovDataService.getLovsbyType(LovType.IncomeType).subscribe({
+    next: (lovIncomeTypeResponse) => {
+      this.lovIncomeTypeSubject.next(lovIncomeTypeResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
+    },
+  });
 }
+
+getIncomeFrequencyLovs():void{
+  this.lovDataService.getLovsbyType(LovType.Frequency).subscribe({
+    next: (lovIncomeFrequencyResponse) => {
+      this.lovIncomeFrequencySubject.next(lovIncomeFrequencyResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
+    },
+  });
+}
+
+getProofOfIncomeTypesLov(parentCode : string) {
+  return this.lovDataService.getLovsbyParent(LovType.ProofOfIncomeType, parentCode)
+}
+}
+
