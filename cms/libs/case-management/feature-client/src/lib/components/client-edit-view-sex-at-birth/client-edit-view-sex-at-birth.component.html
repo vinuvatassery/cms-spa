@@ -24,6 +24,7 @@
               <div *ngIf="gender.lovCode === 'NOT_LISTED'">
                 <kendo-floatinglabel text="Enter Answer">
                   <kendo-textbox
+                  [fillMode]="formUiStyle.inputFillMode"
                     [formControlName]="DescriptionField"
                     [disabled]="
                       appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'

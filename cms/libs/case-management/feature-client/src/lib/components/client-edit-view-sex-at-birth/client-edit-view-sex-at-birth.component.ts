@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {  LovFacade } from '@cms/system-config/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-client-edit-view-sex-at-birth',
   templateUrl: './client-edit-view-sex-at-birth.component.html',
@@ -18,6 +18,7 @@ export class ClientEditViewSexAtBirthComponent implements OnInit {
   DescriptionField = 'BirthGenderDescription';
   Genders: any = [];
   GendersAtBirthLovs$ = this.lovFacade.sexAtBirthlov$;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder
