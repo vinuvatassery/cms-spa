@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { LoaderService, LoggingService, NotificationSnackbarService ,SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 import { Subject } from 'rxjs';
@@ -12,7 +12,10 @@ import { Case } from '../entities/case';
 
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
+import { SnackBar } from '@cms/shared/ui-common';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
+  
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -48,12 +51,23 @@ export class CaseFacade {
   updateCase$ = this.updateCaseSubject.asObservable();
   getCase$ = this.getCaseSubject.asObservable(); 
 
+
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortValue = '';
+  public sortType = 'asc';
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
   constructor(
     private readonly caseDataService: CaseDataService,
     private loggingService : LoggingService,
     private readonly loaderService: LoaderService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService
+    public intl: IntlService, 
+    private configurationProvider : ConfigurationProvider,
+ 
   ) { }
  
   ShowLoader()
