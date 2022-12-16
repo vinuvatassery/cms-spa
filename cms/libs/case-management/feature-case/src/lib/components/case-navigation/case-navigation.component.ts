@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/internal/Observable';
 
 /** Internal Libraries **/
 import { ScreenType, StatusFlag, WorkFlowProgress } from '@cms/case-management/domain';
+import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-navigation',
@@ -37,7 +38,7 @@ export class CaseNavigationComponent implements OnInit {
   isNotReadyForReview  = true; 
 
   /** constructor **/
-  constructor(private router: Router, private actRoute: ActivatedRoute) { }
+  constructor(private router: Router, private actRoute: ActivatedRoute, private readonly loaderService:LoaderService) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -75,6 +76,7 @@ export class CaseNavigationComponent implements OnInit {
   }
 
   private navigate(routes: any) {
+    this.loaderService.show();
     this.navigationIndex = routes.findIndex((route: WorkFlowProgress) =>
       route?.currentFlag === StatusFlag.Yes
     );
@@ -99,6 +101,7 @@ export class CaseNavigationComponent implements OnInit {
         }
       );
     }
+    this.loaderService.hide();
   }
 
   private navigateByUrl(routes: any) {

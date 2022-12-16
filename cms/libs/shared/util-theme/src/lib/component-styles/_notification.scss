@@ -15,6 +15,13 @@
   .material-icons {
     font-size: $font-size-xlg;
   }
+  .input-inline-loader{
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    background: transparent;
+  }
   &.badge-primary {
     background: material-color($hive-primary-palette, 500);
     color: $white;
