@@ -25,12 +25,13 @@
             [data]="ethnicityData"
             [textField]="'lovDesc'"
             [valueField]="'lovCode'"
+            (valueChange)="RaceAndEthnicityhange($event)"
             [popupSettings]="{
               popupClass: popupClassMultiSelect,
               animate: true
             }"
           >
-            <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
+            <!-- <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
               <div class="input-search">
                 <span
                   class="material-icons"
@@ -39,7 +40,6 @@
                   >search</span
                 >
                 <kendo-floatinglabel text="Search">
-                  <!-- <input kendoTextBox aria-label="search racial identity" /> -->
                   <kendo-textbox
                     aria-label="search racial identity"
                     [fillMode]="formUiStyle.inputFillMode"
@@ -47,7 +47,7 @@
                   </kendo-textbox>
                 </kendo-floatinglabel>
               </div>
-            </ng-template>
+            </ng-template> -->
             <ng-template kendoMultiSelectItemTemplate let-dataItem>
               <span class="app-checkboxwidtext-wrapper">
                 <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
@@ -58,14 +58,13 @@
             </ng-template>
           </kendo-multiselect>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicity'].valid">Racial or Ethnic Identity is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['Ethnicity'].valid">Ethnic Identity is required.</kendo-formerror>
       </div>
     </div>
   </section>
     <section>
       <h5 class="mt-3 mb-0">
-        Which options describe their Racial or Ethnic Identity? (Select all that
-        apply)
+        Which options describe their Racial Identity? (Select all that apply)
       </h5>
       <div class="flex-row">
         <div class="flex-col">
@@ -119,7 +118,7 @@
                     type="checkbox"
                     kendoCheckBox
                     aria-labelledby="lovDesc"
-                    [id]="dataItem.racialName"
+                    [id]="dataItem.lovDesc"
                   />
                   <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
                     dataItem.lovDesc
@@ -128,7 +127,7 @@
               </ng-template>
             </kendo-multiselect>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicity'].valid">Racial or Ethnic Identity is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicity'].valid">Racial Identity is required.</kendo-formerror>
         </div>
       </div>
     </section>
@@ -143,7 +142,7 @@
           <kendo-floatinglabel text="Primary identity">
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
-              [data]="appInfoForm.controls['RaceAndEthnicity'].value"
+              [data]="raceAndEthnicityPrimaryData"
               formControlName="RaceAndEthnicityPrimary"
               textField="lovDesc"
               valueField="lovCode"
@@ -154,6 +153,24 @@
             </kendo-dropdownlist>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicityPrimary'].valid">Primary identity is required.</kendo-formerror>
+        </div>
+      </div>
+    </section>
+
+    <section *ngIf="raceAndEthnicityPrimaryNotListed">
+      <div class="flex-row">
+        <div class="flex-col flex-col-4">
+          <kendo-floatinglabel text="Racial or Ethnic Identity if Not listed, please specify">
+            <kendo-textbox
+              aria-label="Racial or Ethnic Identity"
+              formControlName="RaceAndEthnicityNotListed"
+              [fillMode]="formUiStyle.inputFillMode"
+              
+            >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicityNotListed'].valid"
+            >Racial or Ethnic Identity is required.</kendo-formerror>
         </div>
       </div>
     </section>

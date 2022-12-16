@@ -17,35 +17,32 @@ import { groupBy } from '@progress/kendo-data-query';
 })
 export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
+  @Input() raceAndEthnicityPrimaryData: Array<any>;
+  @Input() raceAndEthnicityPrimaryNotListed: boolean;
+  
   @Output() RaceAndEthnicityData = new EventEmitter<any>();
+  @Output() RaceAndEthnicityChange = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   racelov$ = this.lovFacade.racelov$;
-  ethnicitylov$ = this.lovFacade.ethnicitylov$;
 
   raceAndEthnicityData: Array<any> = [];
   ethnicityData: Array<any> = [];
-  //primaryRacialData: Array<any> = [];
 
   popupClassMultiSelect = 'multiSelectSearchPopup';
   constructor(
     private readonly lovFacade: LovFacade,
-    private formBuilder: FormBuilder,
-    private readonly clientfacade: ClientFacade
+    private formBuilder: FormBuilder
   ) {
     this.appInfoForm = this.formBuilder.group({ RaceAndEthnicity: [[]] });
+    this.raceAndEthnicityPrimaryData=[];
+    this.raceAndEthnicityPrimaryNotListed=false;
   }
   ngOnInit(): void {
     this.lovFacade.getRaceLovs();
-    //this.lovFacade.getEthnicityLovs();
-    this.loadEthnicity();
     this.loadRaceAndEthnicity();
     this.appInfoForm.addControl('RaceAndEthnicityPrimary', new FormControl({}));
     this.appInfoForm.addControl('Ethnicity', new FormControl([]));
-  }
-  private loadEthnicity() {
-    this.ethnicitylov$.subscribe((data) => {
-      this.ethnicityData = data;
-    });
+    this.appInfoForm.addControl('RaceAndEthnicityNotListed', new FormControl(''));
   }
   private loadRaceAndEthnicity() {
     this.racelov$.subscribe((data) => {
@@ -53,6 +50,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
       let RaceData: Array<any> = [];
       const raceAndEthnicityData: Array<any> = [];
+      this.ethnicityData=[];
       data.forEach((el: any) => {
         el.forEach((el2: any) => {
           raceAndEthnicityData.push(el2);
@@ -70,7 +68,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
           raceAndEthnicityDataGroup.push({
             lovCode: child.lovCode,
             lovDesc: child.lovDesc,
-            parentCode: el.lovCode,
+            parentCode: el.lovDesc,
           });
         });
       });
@@ -82,11 +80,12 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
 
   public RaceAndEthnicityhange(value: any): void {
-    if (Array.isArray(value) && value.length == 1) {
-      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(value[0]);
-    } else {
-      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
-    }
+    this.RaceAndEthnicityChange.emit(true);
+    // if (Array.isArray(value) && value.length == 1) {
+    //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(value[0]);
+    // } else {
+    //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
+    // }
     // console.log('valueChange', value);
   }
 }

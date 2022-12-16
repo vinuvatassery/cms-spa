@@ -17,9 +17,10 @@ import {
   FormControl,
   FormBuilder,
 } from '@angular/forms';
- 
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
+import { Lov, LovFacade } from '@cms/system-config/domain';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-detail',
   templateUrl: './income-detail.component.html',
@@ -31,18 +32,25 @@ export class IncomeDetailComponent implements OnInit {
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   /** Input properties **/
   @Input() isEditValue!: boolean;
+  @Input() clientCaseEligibilityId: string = "";
+  @Input() clientId: string = "";
+  @Input() clientCaseId: string = "";
+
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
-  @Output() public sendDetailToIncomeList = new EventEmitter<boolean>();
+  @Output() public sendDetailToIncomeList = new EventEmitter<any>();
+  @Output() public closePopup = new EventEmitter<any>();
   isIncomeDetailsPopupOpen = false;
+  proofOfIncomeFiles: any;
+  proofOfIncomeValidator: boolean = false;
 
   currentDate = new Date();
   /** Public properties **/
-  incomeTypes$ = this.incomeFacade.ddlIncomeTypes$;
-  incomeSources$ = this.incomeFacade.ddlIncomeSources$;
-  frequencies$ = this.incomeFacade.ddlFrequencies$;
-  proofOfIncomeTypes$ = this.incomeFacade.ddlProofOfIncomdeTypes$;
+  incomeTypes$: Lov[] = [];
+  incomeSources$: Lov[] = [];
+  frequencies$: Lov[] = [];
+  proofOfIncomeTypes$: Lov[] = [];
   hasNoProofOfIncome = false;
   tareaJustificationCounter!: string;
   tareaJustification = '';
@@ -53,21 +61,22 @@ export class IncomeDetailComponent implements OnInit {
     incomeAmount: 0,
   };
   public IncomeDetailsForm: FormGroup = new FormGroup({
-    incomeSources: new FormControl('', []),
-    incomeTypes: new FormControl('', []),
-    incomeAmount: new FormControl('', []),
-    incomeFrequencies: new FormControl('', []),
+    incomeSourceCode: new FormControl('', []),
+    incomeTypeCode: new FormControl('', []),
+    incomeAmt: new FormControl('', []),
+    incomeFrequencyCode: new FormControl('', []),
     incomeStartDate: new FormControl('', []),
     incomeEndDate: new FormControl('', []),
+    noIncomeProofFlag: new FormControl('', []),
+    incomeNote: new FormControl('', []),
     incomeUploadedProof: new FormControl('', []),
-    proofOfIncomeTypes: new FormControl('', []),
-    tareaJustifications: new FormControl('', []),
+    proofIncomeTypeCode: new FormControl('', []),
     otherProofOfIncome: new FormControl('', []),
   });
 
 
   /** Constructor **/
-  constructor(private readonly incomeFacade: IncomeFacade) {}
+  constructor(private readonly incomeFacade: IncomeFacade, private lov: LovFacade, private readonly loaderService: LoaderService, private loggingService: LoggingService, private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -75,7 +84,6 @@ export class IncomeDetailComponent implements OnInit {
     this.tareaJustificationWordCount();
     this.loadIncomeSources();
     this.loadFrequencies();
-    this.loadProofOfIncomeTypes();
   }
 
   /** Private methods **/
@@ -87,19 +95,29 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   private loadIncomeTypes() {
-    this.incomeFacade.loadDdlIncomeTypes();
+    this.lov.incomeTypelov$.subscribe((incomeTypesLov: Lov[]) => {
+      this.incomeTypes$ = incomeTypesLov;
+    });
   }
 
   private loadIncomeSources() {
-    this.incomeFacade.loadDdlIncomeSources();
+    this.lov.incomeSourcelov$.subscribe((incomeSourceLov: Lov[]) => {
+      this.incomeSources$ = incomeSourceLov;
+    });
   }
 
   private loadFrequencies() {
-    this.incomeFacade.loadDdlFrequencies();
+    this.lov.incomeFrequencylov$.subscribe((incomeFrequencyLov: Lov[]) => {
+      this.frequencies$ = incomeFrequencyLov;
+    });
   }
 
-  private loadProofOfIncomeTypes() {
-    this.incomeFacade.loadDdlProofOfIncomeTypes();
+  loadProofOfIncomeTypes() {
+    if (this.IncomeDetailsForm.controls['incomeTypeCode'].value != null && this.IncomeDetailsForm.controls['incomeTypeCode'].value != '') {
+      this.lov.getProofOfIncomeTypesLov(this.IncomeDetailsForm.controls['incomeTypeCode'].value).subscribe((proofOfIncomeTypesLov: Lov[]) => {
+        this.proofOfIncomeTypes$ = proofOfIncomeTypesLov;
+      });
+    }
   }
 
   /** Internal event methods **/
@@ -110,57 +128,92 @@ export class IncomeDetailComponent implements OnInit {
 
   onProofOfIncomeValueChanged() {
     this.hasNoProofOfIncome = !this.hasNoProofOfIncome;
-    if(this.hasNoProofOfIncome){
-      this.IncomeDetailsForm.controls['incomeUploadedProof'].setValidators([]);
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([]);
-      this.IncomeDetailsForm.controls['incomeUploadedProof'].updateValueAndValidity();
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity();
+    if (this.hasNoProofOfIncome) {
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([]);
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
+      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("Y")
+      this.proofOfIncomeValidator = false;
+    }
+    else {
+      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("N")
     }
   }
-  selectProofOfIncome(): void{
-    this.incomeTypesOther =  this.IncomeDetailsForm.controls['proofOfIncomeTypes'].value;
+  selectProofOfIncome(): void {
+    this.incomeTypesOther = this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value;
+
   }
   public submitIncomeDetailsForm(): void {
-    this.IncomeDetailsForm.markAllAsTouched();
-
-    console.log(this.IncomeDetailsForm);
-    this.IncomeDetailsForm.controls['incomeSources'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeTypes'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeAmount'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeFrequencies'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeEndDate'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['tareaJustifications'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeSources'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeTypes'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeAmount'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeFrequencies'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['tareaJustifications'].updateValueAndValidity();
-    if (!this.hasNoProofOfIncome) {
-      this.IncomeDetailsForm.controls['incomeUploadedProof'].setValidators([Validators.required,]);
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].setValidators([Validators.required,]);
-      this.IncomeDetailsForm.controls['incomeUploadedProof'].updateValueAndValidity();
-      this.IncomeDetailsForm.controls['proofOfIncomeTypes'].updateValueAndValidity();   
-    
-    
-    
-    
-    }  
-    if (this.IncomeDetailsForm.valid) {
-      this.sendDetailToIncomeList.emit(this.isIncomeDetailsPopupOpen);
-      console.log(this.isIncomeDetailsPopupOpen, 'incomedetails');
-      const snackbarMessage: SnackBar = {
-        title: 'Success!',
-        subtitle: 'Income Successfully Added.',
-        type: 'success',
-      };
-      this.snackbarSubject.next(snackbarMessage);
+    this.setValidators();
+    if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
+      let incomeData = this.IncomeDetailsForm.value
+      incomeData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
+      incomeData["clientId"] = this.clientId;
+      incomeData["clientCaseId"]=this.clientCaseId;
+      if (this.incomeTypesOther == 'O') {
+        incomeData.proofIncomeTypeCode = this.IncomeDetailsForm.controls['otherProofOfIncome'].value;
+      }
+      this.loaderService.show();
+      this.incomeFacade.saveClientIncome(this.IncomeDetailsForm.value, this.proofOfIncomeFiles).subscribe({
+        next: (incomeResponse) => {
+          this.closeIncomeDetailPoup();
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Income created successfully.')
+          this.incomeFacade.loadIncomes(this.clientId, this.clientCaseEligibilityId);
+        },
+        error: (err) => {
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      });
     }
   }
   closeIncomeDetailPoup(): void {
     this.IncomeDetailsForm.reset();
-    this.sendDetailToIncomeList.emit(this.isIncomeDetailsPopupOpen);
+    this.closePopup.emit(this.isIncomeDetailsPopupOpen);
+  }
+
+  handleFileSelected(event: any) {
+    this.proofOfIncomeFiles = event.files[0].rawFile
+    this.proofOfIncomeValidator = false;
+    console.log(this.proofOfIncomeFiles)
+  }
+
+  handleFileRemoved(event: any) {
+    this.proofOfIncomeFiles = null;
+    console.log(this.proofOfIncomeFiles)
+  }
+  setValidators() {
+    this.IncomeDetailsForm.markAllAsTouched();
+    this.IncomeDetailsForm.controls['incomeSourceCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeTypeCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeAmt'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeEndDate'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeAmt'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeFrequencyCode'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
+    if (!this.hasNoProofOfIncome) {
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
+      if (!this.proofOfIncomeFiles) {
+        this.proofOfIncomeValidator = true;
+      }
+      else {
+        this.proofOfIncomeValidator = false;
+      }
+    }
+  }
+
+  ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.loaderService.hide();
   }
 }

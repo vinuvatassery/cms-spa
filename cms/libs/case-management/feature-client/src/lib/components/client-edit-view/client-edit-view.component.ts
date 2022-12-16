@@ -129,6 +129,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   applicantInfo!:any;
   pronounList =[];
   raceAndEthnicity =[];
+  raceAndEthnicityPrimaryData: Array<any> = [];
+  raceAndEthnicityPrimaryNotListed: boolean = false;
   applicantInfoSubscription !:Subscription;
  
   /** Constructor**/
@@ -183,6 +185,33 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.raceAndEthnicity = value;
     if(Array.isArray(value) && value.length>0){
       this.assignRaceAndEthnicityToForm();
+    }
+  }
+  raceAndEthnicityChange(value: any) {
+    const Ethnicity = this.appInfoForm.controls["Ethnicity"]?.value;
+    const Race = this.appInfoForm.controls["RaceAndEthnicity"]?.value;
+    this.raceAndEthnicityPrimaryData = [];
+    this.raceAndEthnicityPrimaryNotListed = false;
+    if (Array.isArray(Ethnicity)) {
+      Ethnicity.forEach((el: any) => {
+        this.raceAndEthnicityPrimaryData.push(el);
+      });
+    }
+
+    if (Array.isArray(Race)) {
+      Race.forEach((el: any) => {
+        if (el.lovCode !== 'NOT_LISTED')
+          this.raceAndEthnicityPrimaryData.push(el);
+        else
+          this.raceAndEthnicityPrimaryNotListed = true;
+      });
+    }
+
+
+    if (this.raceAndEthnicityPrimaryData.length == 1) {
+      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
+    } else {
+      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(null);
     }
   }
   ngAfterViewChecked() {  
@@ -479,21 +508,31 @@ this.assignRaceAndEthnicityToForm();
     if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
       const RaceAndEthnicity: any = [];
       const Ethnicity: any = [];
+      let RaceAndEthnicityPrimary=null;
       this.applicantInfo.clientRaceList.forEach((el: any) => {
         const foundRace = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientRaceCategoryCode);
         if (foundRace !== undefined) {
           RaceAndEthnicity.push(foundRace);
           if (el.isPrimaryFlag === StatusFlag.Yes)
-            this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(foundRace);
+          RaceAndEthnicityPrimary=foundRace;
+            //this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(foundRace);
 
         }
         const foundEthnicity = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
-        if (foundEthnicity !== undefined)
+        if (foundEthnicity !== undefined){
           Ethnicity.push(foundEthnicity);
-
+          if (el.isPrimaryFlag === StatusFlag.Yes)
+          RaceAndEthnicityPrimary=foundEthnicity;
+        }
       });
       this.appInfoForm.controls['RaceAndEthnicity']?.setValue(RaceAndEthnicity);
       this.appInfoForm.controls['Ethnicity']?.setValue(Ethnicity);
+      this.raceAndEthnicityChange(true);
+      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(RaceAndEthnicityPrimary);
+      if(this.raceAndEthnicityPrimaryNotListed){
+        const raceAndEthnicityNotListed = this.applicantInfo.clientRaceList.find((m: any) => m.clientRaceCategoryCode === 'NOT_LISTED');
+        this.appInfoForm.controls['RaceAndEthnicityNotListed']?.setValue(raceAndEthnicityNotListed.raceDesc);
+      }
     }
 
   }

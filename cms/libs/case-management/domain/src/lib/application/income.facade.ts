@@ -1,8 +1,10 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Income } from '../entities/income';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 
@@ -14,6 +16,7 @@ export class IncomeFacade {
   private ddlFrequenciesSubject = new BehaviorSubject<any>([]);
   private ddlProofOfIncomeTypesSubject = new BehaviorSubject<any>([]);
   private incomesSubject = new BehaviorSubject<any>([]);
+  private incomesResponseSubject = new BehaviorSubject<any>([]);
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
@@ -22,11 +25,35 @@ export class IncomeFacade {
   ddlFrequencies$ = this.ddlFrequenciesSubject.asObservable();
   ddlProofOfIncomdeTypes$ = this.ddlProofOfIncomeTypesSubject.asObservable();
   incomes$ = this.incomesSubject.asObservable();
-  dependentsProofofSchools$ =
-    this.dependentsProofofSchoolsSubject.asObservable();
+  incomesResponse$ = this.incomesResponseSubject.asObservable();
+  dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) {}
+  constructor(private readonly contactDataService: ContactDataService,
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly loaderService: LoaderService ) { }
+
+    ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+    {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+         const err= subtitle;    
+         this.loggingService.logException(err)
+      }  
+      this.notificationSnackbarService.manageSnackBar(type,subtitle)
+      this.HideLoader();   
+    }
+
+    ShowLoader()
+    {
+      this.loaderService.show();
+    }
+  
+    HideLoader()
+    {
+      this.loaderService.hide();
+    }
 
   /** Public methods **/
   loadDdlIncomeTypes(): void {
@@ -35,7 +62,7 @@ export class IncomeFacade {
         this.ddlIncomeTypesSubject.next(ddlIncomesTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -46,7 +73,7 @@ export class IncomeFacade {
         this.ddlIncomeSourcesSubject.next(ddlIncomeSourcesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -57,7 +84,7 @@ export class IncomeFacade {
         this.ddlFrequenciesSubject.next(ddlFrequenciesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -68,18 +95,22 @@ export class IncomeFacade {
         this.ddlProofOfIncomeTypesSubject.next(ddlProofOfIncomeTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
 
-  loadIncomes(): void {
-    this.contactDataService.loadIncomes().subscribe({
-      next: (incomesResponse) => {
-        this.incomesSubject.next(incomesResponse);
+  loadIncomes(clientId:string,clientCaseEligibilityId:string): void {
+    this.ShowLoader();
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId).subscribe({
+      next: (incomesResponse: any) => {
+        this.incomesSubject.next(incomesResponse.clientIncomes);
+        this.dependentsProofofSchoolsSubject.next(incomesResponse.dependents);
+        this.incomesResponseSubject.next(incomesResponse);
+        this.HideLoader();
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
@@ -92,14 +123,27 @@ export class IncomeFacade {
         );
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }
 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  save(noIncomeData : any): Observable<any> {
+    return this.contactDataService.updateNoIncomeData(noIncomeData);
+  }
+
+  saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
+    const formData: any = new FormData();
+    for (var key in clientIncome) {
+      if (key == "incomeStartDate" || key == 'incomeEndDate') {
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+      }
+      else {
+        formData.append(key, clientIncome[key]);
+      }
+    }
+    formData.append('ProofOfIncomeFile', proofOfIncomeFile);
+    return this.contactDataService.saveIncome(formData);
   }
 
 }

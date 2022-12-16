@@ -12,7 +12,11 @@ export enum LovType {
     RelationshipCode = 'RELATIONSHIP_CODE',
     ContactRelationshipCode = 'CONTACT_RELATIONSHIP_CODE',
     //RaceGroup = 'RACE,RACE_AND_ETHNICITY,RACE_ASIAN_SUBGROUP,RACE_ETHNICITY_OTHER_CATEGORIES,RACE_NATIVE_HAWAIIAN_AND_PACIFIC_ISLANDER',
-    RaceGroup = 'ETHNICITY,RACE2',
+    RaceGroup = 'ETHNICITY,RACE',
     Ethnicity = 'ETHNICITY',
+	IncomeSource='INCOME_SOURCE_CODE',
+  	Frequency='FREQUENCY_CODE',
+  	IncomeType='INCOME_TYPE_CODE',
+  	ProofOfIncomeType='PROOF_INCOME_TYPE_CODE',
     HealthInsuranceType ='HEALTH_INSURANCE_TYPE'
   }
