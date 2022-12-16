@@ -24,6 +24,7 @@ export class ContactFacade {
   private addressesSubject = new BehaviorSubject<any>([]);
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
+  private showloaderOnCounty = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -38,6 +39,7 @@ export class ContactFacade {
   address$ = this.addressesSubject.asObservable();
   phoneNumbers$ = this.phoneNumbersSubject.asObservable();
   emailAddress$ = this.emailAddressesSubject.asObservable();
+  showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
 
   /** Constructor**/
   constructor(
@@ -60,12 +62,15 @@ export class ContactFacade {
   }
 
   loadDdlCountries(stateCode: string): void {
+    this.showloaderOnCounty.next(true);
     this.zipCodeFacade.getCounties(stateCode).subscribe({
       next: (ddlCountriesResponse) => {
         this.ddlCountriesSubject.next(ddlCountriesResponse);
+        this.showloaderOnCounty.next(false);
       },
       error: (err) => {
         this.loggingService.logException(err);
+        this.showloaderOnCounty.next(false);
       },
     });
   }

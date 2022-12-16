@@ -219,7 +219,7 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="County" class="inline-search-loader">
-              <!-- <span *ngIf="showCountyLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span> -->
+              <span *ngIf="showCountyLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
               <kendo-dropdownlist 
               aria-label="County" 
               [fillMode]="formUiStyle.dropDownFillMode"
@@ -372,7 +372,12 @@
               mask="(999) 000-0000"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Home phone is required</kendo-formerror>
+            <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
+              Home phone is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.pattern">
+              Not a valid phone number format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-6 mt-3">
@@ -439,7 +444,12 @@
               mask="(999) 000-0000"
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
-            <kendo-formerror>Cell phone is required</kendo-formerror>
+            <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
+              Cell phone is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.pattern">
+              Not a valid phone number format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-6 mt-3">
@@ -505,7 +515,12 @@
                 mask="(999) 000-0000"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Work phone is required</kendo-formerror>
+              <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
+                Work phone is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.pattern">
+                Not a valid phone number format
+              </kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-6 mt-3">
@@ -572,7 +587,12 @@
                 mask="(999) 000-0000"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Other phone is required</kendo-formerror>
+              <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
+                Other phone is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.pattern">
+                Not a valid phone number format
+              </kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-3">
@@ -651,16 +671,9 @@
                 formControlName="email"
                 > </kendo-textbox>
               </kendo-floatinglabel>
-              <!-- <div *ngIf="contactInfoForm.controls.maillingAddress.controls.address1.invalid">  -->
-              <kendo-formerror>Not valid email format</kendo-formerror>
-              <!-- <kendo-formerror *ngIf="maillingAddressForm['address1'].errors?.required"> -->
-                <!-- <kendo-formerror *ngIf="contactInfoForm.controls['maillingAddress'].controls.address1.errors.required">
-                Email is required
-              </kendo-formerror>
-            </div> -->
-              <!-- <kendo-formerror *ngIf="accountDetails.controls.email.errors?.email">
+              <kendo-formerror *ngIf="email.email.errors?.email">
                 Not a valid email format
-              </kendo-formerror> -->
+              </kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-6 mt-3">
@@ -816,7 +829,12 @@
               mask="(999) 000-0000"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Contact's phone number is required</kendo-formerror>
+             <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">
+              Contact's phone number is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.pattern">
+              Not a valid phone number format 
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>

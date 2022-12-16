@@ -56,7 +56,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   fileUploadRestrictions: FileRestrictions = {
     maxFileSize: 25000000,
   };
-  showCountyLoader: boolean = false;
+  showCountyLoader = this.contactFacade.showloaderOnCounty$;
   showMailAddressValidationLoader$ = new BehaviorSubject(false);
   showHomeAddressValidationLoader$ = new BehaviorSubject(false);
   showRelationshipOtherDec: boolean = false;
@@ -172,9 +172,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   private loadDdlCountries(stateCode: string) {
-    this.showCountyLoader = true;
     this.contactFacade.loadDdlCountries(stateCode);
-    this.showCountyLoader = false;
   }
 
   private addContactInfoFormChangeSubscription() {
@@ -299,7 +297,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         address1: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         address2: new FormControl('', { updateOn: 'blur' }),
         city: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        state: new FormControl('OR', { validators: Validators.required, updateOn: 'blur' }),
+        state: new FormControl('OR', { validators: Validators.required,  }),
         zip: new FormControl('', { validators: [Validators.required, Validators.pattern('^[0-9]{5}(-[0-9]{4})?$')], updateOn: 'blur' }),
         county: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         homelessFlag: new FormControl(false, { validators: Validators.required }),
@@ -351,7 +349,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
-      tap(() => this.loaderService.show()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -359,7 +356,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       next: ([navigationType, isSaved]) => {
         if (isSaved) {
           this.loaderService.hide();
-         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
           this.workflowFacade.navigate(navigationType);
         }
       },
@@ -374,6 +371,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private save() {
     this.contactInfoForm.markAllAsTouched();
     if (this.contactInfoForm.valid) {
+      this.loaderService.show()
       return this.saveContactInfo();
     }
 
@@ -1098,8 +1096,25 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   onFileRemoved(e: SelectEvent) {
   }
 
-  maillingAddressForm(): FormControl {
-    return (this.contactInfoForm.get('maillingAddress.address1') as FormControl);
+  get email() {
+    return (this.contactInfoForm.get('email') as FormGroup).controls as any;
   }
-  // get formData() { return <FormArray>this.lienHolder.get('policyDetails'); }
+
+  get homePhone() {
+    return (this.contactInfoForm.get('homePhone') as FormGroup).controls as any;
+  }
+  get cellPhone() {
+    return (this.contactInfoForm.get('cellPhone') as FormGroup).controls as any;
+  }
+  get workPhone() {
+    return (this.contactInfoForm.get('workPhone') as FormGroup).controls as any;
+  }
+  get otherPhone() {
+    return (this.contactInfoForm.get('otherPhone') as FormGroup).controls as any;
+  }
+
+  get fAfContact() {
+    return (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup).controls as any;
+  }
+  
 }
