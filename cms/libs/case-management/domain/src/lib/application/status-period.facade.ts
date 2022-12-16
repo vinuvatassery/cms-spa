@@ -20,7 +20,7 @@ export class StatusPeriodFacade {
   statusPeriod$ = this.statusPeriodSubject.asObservable();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'ClientName'
+  public sortValue = 'StatusStart'
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
     field: this.sortValue,

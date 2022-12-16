@@ -49,8 +49,15 @@ export class StatusPeriodComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadStatusPeriod();
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
   }
-
+  ngOnChanges(): void {
+ 
+  }
   /** Private methods **/
   private loadStatusPeriod() {
     this.statusPeriodFacade.loadStatusPeriod();

@@ -3,8 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { SnackBar } from '@cms/shared/ui-common';
+import { SortDescriptor } from '@progress/kendo-data-query';
 /** Data services **/
 import { DrugDataService } from '../infrastructure/drug.data.service';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
@@ -23,9 +26,20 @@ export class DrugPharmacyFacade {
   drugsPurchased$ = this.drugsPurchasedSubject.asObservable();
   ddlPriorities$ = this.ddlPrioritiesSubject.asObservable();
   ddlStates$ = this.ddlStatesSubject.asObservable();
-
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortValue = ' '
+  public sortType = 'asc'
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
   /** Constructor**/
-  constructor(private readonly drugDataService: DrugDataService) {}
+  constructor(private readonly drugDataService: DrugDataService,
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private configurationProvider : ConfigurationProvider,
+    private readonly loaderService: LoaderService) {}
 
   /** Public methods **/
   loadPharmacies(): void {

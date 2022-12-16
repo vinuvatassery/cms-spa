@@ -40,6 +40,14 @@ public state!: State;
   ngOnInit(): void {
     this.loadDdlGridColumns();
   }
+  ngOnChanges(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+ 
+  }
 
   /** Private methods **/
   private loadDdlGridColumns() {

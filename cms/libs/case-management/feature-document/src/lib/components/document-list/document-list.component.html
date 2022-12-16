@@ -13,12 +13,6 @@
                         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                             [popover]="onUserProfileDetailsHovered" showOn="hover" aria-labelledby="profile avathar">
                             <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                                <!-- <img
-        src="../assets/images/avatar-1.png"
-        alt="Profile Avatar"
-        class="profile-avatar"
-        hidden
-      /> -->
                                 <span class="profile-text-avatar">AK</span>
                             </div>
                         </button>
@@ -71,8 +65,8 @@
                  <div class="grid-custom-paginationtemplates d-flex"> 
                    <div class="d-flex align-items-center"> 
                      <label class="mr-1">Rows Per Page</label> 
-                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-                       [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
+                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                     [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
                      <kendo-pager-info> </kendo-pager-info>
                      <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
            
