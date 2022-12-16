@@ -63,14 +63,15 @@
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
     <kendo-grid-column field="EligibilityEndDateTwo" title="Eligibility End Date" [width]="100"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
+
+      
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex"> 
-        <div class="d-flex align-items-center">
-          <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
+        <div class="d-flex align-items-center"> 
           <label class="mr-1">Rows Per Page</label> 
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-            [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
 
@@ -86,13 +87,13 @@
      <ng-template kendoGridLoadingTemplate>
        <common-grid-loader-component></common-grid-loader-component>
       </ng-template>
-    <!-- <ng-template kendoPagerTemplate   let-totalPages="totalPages" let-currentPage="currentPage">
-      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-      <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
-      <kendo-pager-next-buttons></kendo-pager-next-buttons>
-      <kendo-pager-info></kendo-pager-info>
-      Current page: {{currentPage}} - {{totalPages}}
-    
-   </ng-template> -->
+
+
+      <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+      </ng-template>
+ 
   </kendo-grid>
 </div>

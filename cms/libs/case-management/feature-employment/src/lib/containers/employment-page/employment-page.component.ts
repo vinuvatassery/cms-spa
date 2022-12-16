@@ -45,9 +45,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   /** Lifecycle Hooks */
 
   ngOnInit() {
-    this.loadEmploymentStatus();
-    this.addSaveSubscription();
     this.loadCase();
+    this.addSaveSubscription();
   }
 
   ngOnDestroy(): void {
@@ -113,8 +112,10 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
       .subscribe(([navigationType, isSaved]) => {
         if (isSaved) {
           this.checkBoxSubscription.unsubscribe();
-          this.workflowFacade.navigate(navigationType);
+          this.workflowFacade.navigate(navigationType); 
+          this.employmentFacade.hideLoader();
         }
+        this.employmentFacade.hideLoader();
       });
   }
 
@@ -122,18 +123,18 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   private save() {
     this.isEmployedFlag =
       this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
+      this.employmentFacade.showLoader();
     return this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
       .pipe(
+
         catchError((err: any) => {
-          if (err?.error) {
-            this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
-      
+          if (err?.error) { 
+            this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
           }
-          this.employmentFacade.hideLoader();
           return of(false);
-        })
-      );
+        }),
+      )
   }
 
   // unemployment checkbox click

@@ -2,7 +2,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-pharmacy-list',
   templateUrl: './pharmacy-list.component.html',
@@ -16,6 +17,13 @@ export class PharmacyListComponent implements OnInit {
   isOpenPharmacyClicked = false;
   isEditPharmacyListClicked = false;
   selectedPharmacy!: any;
+  public sortValue = this.drugPharmacyFacade.sortValue;
+  public sortType = this.drugPharmacyFacade.sortType;
+  public pageSizes = this.drugPharmacyFacade.gridPageSizes;
+  public gridSkipCount = this.drugPharmacyFacade.skipCount;
+  public sort = this.drugPharmacyFacade.sort;
+  public state!: State;
+  public formUiStyle : UIFormStyle = new UIFormStyle(); 
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [

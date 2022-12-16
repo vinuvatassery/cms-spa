@@ -33,7 +33,7 @@
   }
 }
 .k-notification-group {
-  z-index: 999999;  
+  z-index: 999999999;  
   padding-top: $size-xxxx;
   .k-notification-wrap > .k-icon {
     margin-top: $size-0;
@@ -112,7 +112,17 @@
   border-radius: $border-radius-xl;
   background: material-color($hive-primary-palette, 300);
 }
+.app-pageloader-on {
+  common-loader-component{
+    position: fixed;
+    z-index: 9999999;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
 
+}
 .loader-wrap {
   display: flex;
   align-items: center;
