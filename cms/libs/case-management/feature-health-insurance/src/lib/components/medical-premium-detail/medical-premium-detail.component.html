@@ -102,8 +102,8 @@
         [maxlength]="500"
         [fillMode]="formUiStyle.inputFillMode">  
        </kendo-textbox>
-
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insurancePlanName'].valid">Insurance plan name is required.</kendo-formerror>
       <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
         <span>Don’t see the Plan you’re looking for?</span>
         <button
@@ -118,7 +118,7 @@
     </div>
     <div
       class="flex-col  "
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA' ">
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
       <kendo-floatinglabel text="Metal Level">
         <kendo-dropdownlist
         [fillMode]="formUiStyle.dropDownFillMode"
@@ -132,7 +132,9 @@
       class="flex-col mt-1"
       *ngIf="
         ddlInsuranceType !== 'OREGON_HEALTH_PLAN' 
-        && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'">
+        && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'
+        && ddlInsuranceType !== 'COBRA'"
+        >
       <h5>Group Plan Type</h5>
       <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
@@ -195,12 +197,13 @@
     </div>
     <div
       class="flex-col mt-3"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'
+      && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'"
     >
       <div class="block-section">
         <div class="flex-row">
           <div class="flex-col">
-            <h5>Wants help buying premiums?</h5>
+            <h5>Do they want CareAssist to pay for health insurance premiums?</h5>
             <div class="component-list-h">
               <span class="app-radiobtnwidtext-wrapper">
                 <input

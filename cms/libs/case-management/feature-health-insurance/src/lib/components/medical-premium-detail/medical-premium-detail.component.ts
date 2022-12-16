@@ -108,38 +108,22 @@ export class MedicalPremiumDetailComponent implements OnInit {
   }
   private validateForm(){  
       this.healthInsuranceForm.updateValueAndValidity();
-      if(this.healthInsuranceForm.controls["insuranceStartDate"].value === ''){
+     
         this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
-      }
-      else{
-        this.healthInsuranceForm.controls["insuranceStartDate"].removeValidators([Validators.required]); 
-        this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
-      }
-      if(this.healthInsuranceForm.controls["insuranceEndDate"].value === ''){
+    
         this.healthInsuranceForm.controls["insuranceEndDate"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();
-      }
-      else{
-        this.healthInsuranceForm.controls["insuranceEndDate"].removeValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();
-      }
-      if(this.healthInsuranceForm.controls["insuranceIdNumber"].value === ''){
+        this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
+      
         this.healthInsuranceForm.controls["insuranceIdNumber"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();
-      }
-      else{
-        this.healthInsuranceForm.controls["insuranceIdNumber"].removeValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();
-      }
-      if(this.healthInsuranceForm.controls["insuranceCarrierName"].value === ''){
+        this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
+
         this.healthInsuranceForm.controls["insuranceCarrierName"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
-      }
-      else{
-        this.healthInsuranceForm.controls["insuranceCarrierName"].removeValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
-      }
+      
+        this.healthInsuranceForm.controls["insurancePlanName"].setValidators([Validators.required]);
+        this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
+      
       
   }
   /** Internal event methods **/
