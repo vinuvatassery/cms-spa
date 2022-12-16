@@ -39,6 +39,7 @@ CAClient = DependentTypeCode.CAClient;
   @Input() sortValue : any;
   @Input() sortType : any;
   @Input() sort : any;
+  @Input()  existdependentStatus$ : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
@@ -274,5 +275,17 @@ CAClient = DependentTypeCode.CAClient;
   addExistingClientEventHandle($event : any)
   {
     this.addExistingClientEvent.emit($event)
+    this.editbuttonEmitted =false;    
+      this.existdependentStatus$.pipe(first((updateResponse: any ) => updateResponse?.clientDependentId != null))
+      .subscribe((updateResponse: any) =>
+      {  
+        if(updateResponse?.clientDependentId)
+        { 
+          this.loadFamilyDependents()
+          this.onFamilyMemberClosed()        
+        }
+        
+      })
+    
   }
 }

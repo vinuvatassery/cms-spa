@@ -32,6 +32,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   dependentdelete$  = this.familyAndDependentFacade.dependentdelete$;
   dependentAddNewGet$= this.familyAndDependentFacade.dependentAddNewGet$
   dependentUpdateNew$=this.familyAndDependentFacade.dependentUpdateNew$
+  existdependentStatus$ =this.familyAndDependentFacade.existdependentStatus$ 
   isFamilyGridDisplay =true;
   clientCaseId! : string;
   sessionId! : string;
@@ -147,8 +148,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;    
   }
 
-  private loadDependentSearch(text : string) {
-    this.familyAndDependentFacade.loadDependentSearch(text);
+  private loadDependentSearch(text : string ) {
+    this.familyAndDependentFacade.loadDependentSearch(text , this.clientId);
   }
 
 /** child event methods **/

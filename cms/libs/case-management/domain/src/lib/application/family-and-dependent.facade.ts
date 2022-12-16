@@ -37,7 +37,7 @@ export class FamilyAndDependentFacade {
   private ddlRelationshipsSubject = new Subject<any>();
   private dependentsSubject = new Subject<any>();
   private productsSubject = new Subject<any>();
-  private dependentStatusSubject =  new BehaviorSubject<any>([]);
+  private existdependentStatusSubject =   new Subject<any>();
   private dependentStatusGetSubject = new Subject<any>();
   private dependentAddNewSubject = new Subject<any>();
   private dependentUpdateNewSubject = new Subject<any>();
@@ -51,7 +51,7 @@ export class FamilyAndDependentFacade {
   dependentSearch$ = this.dependentSearchSubject.asObservable();
   ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   dependents$ = this.dependentsSubject.asObservable();
-  dependentStatus$ = this.dependentStatusSubject.asObservable();
+  existdependentStatus$ = this.existdependentStatusSubject.asObservable();
   dependentStatusGet$ = this.dependentStatusGetSubject.asObservable();
   dependentAddNewGet$ = this.dependentAddNewSubject.asObservable();
   dependentUpdateNew$ = this.dependentUpdateNewSubject.asObservable();
@@ -166,8 +166,7 @@ export class FamilyAndDependentFacade {
   GetExistingClientDependent(clientDependentId: string) : void {   
     this.ShowLoader(); 
     this.dependentDataService.getExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
-      next: (dependentGetExistingResponse) => {
-        dependentGetExistingResponse.ssn=  'xxx-xx-' +dependentGetExistingResponse.ssn.slice(-4);
+      next: (dependentGetExistingResponse) => {      
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
         this.HideLoader();
       },
@@ -223,8 +222,8 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  loadDependentSearch(text : string): void {
-    this.dependentDataService.searchDependents(text).subscribe({
+  loadDependentSearch(text : string , clientId : number): void {
+    this.dependentDataService.searchDependents(text , clientId).subscribe({
       next: (dependentSearchResponse) => {
 
         Object.values(dependentSearchResponse).forEach((key) => {            
@@ -251,15 +250,16 @@ export class FamilyAndDependentFacade {
 
 
 
-  AddExistingDependent(data : any) : void {
+  AddExistingDependent(data : any) : void {    
+    this.ShowLoader();
     this.dependentDataService.addExistingDependent(data ).subscribe({
       next: (dependentStatusResponse) => {    
-        if(dependentStatusResponse == true)
+        if(dependentStatusResponse)
         {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Client Added as Dependent')  
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent added successfully')  
         }
         
-        this.dependentStatusSubject.next(dependentStatusResponse);
+        this.existdependentStatusSubject.next(dependentStatusResponse);
       },
       error: (err) => {
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
