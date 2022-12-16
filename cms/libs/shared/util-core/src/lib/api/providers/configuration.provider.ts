@@ -31,7 +31,7 @@ export class ConfigurationProvider {
           responseType: config.oidc.responseType,
           silentRenew: config.oidc.silentRenew,
           maxIdTokenIatOffsetAllowedInSeconds:
-            config.oidc.maxIdTokenIatOffsetAllowedInSeconds,
+          config.oidc.maxIdTokenIatOffsetAllowedInSeconds,
           issValidationOff: config.oidc.issValidationOff,
           autoUserInfo: config.oidc.autoUserInfo,
           ignoreNonceAfterRefresh: true,

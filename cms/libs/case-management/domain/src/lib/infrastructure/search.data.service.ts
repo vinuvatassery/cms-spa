@@ -15,24 +15,35 @@ export class SearchDataService {
   loadSearch(): Observable<Search[]> {
     return of([
       {
-        id: 10001,
+        id: 1001,
         name: 'Donna Summer',
         dob: '09-01-1956',
         ssn: '456-78-9876',
       },
       {
-        id: 10002,
+        id: 1002,
         name: 'David Miller',
         dob: '10-11-1956',
         ssn: '156-78-4576',
       },
       {
-        id: 10003,
+        id: 1003,
         name: 'Philip David',
         dob: '11-01-1996',
         ssn: '766-08-5676',
       },
-      { id: 10004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Benjamin William Oliver Noah', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+      { id: 1004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
+
+
     ]);
   }
 }

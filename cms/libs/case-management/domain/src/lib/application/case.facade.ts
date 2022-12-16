@@ -1,7 +1,8 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { LoaderService, LoggingService, NotificationSnackbarService ,SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 import { Subject } from 'rxjs';
 /** External libraries **/
@@ -11,7 +12,10 @@ import { Case } from '../entities/case';
 
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
+import { SnackBar } from '@cms/shared/ui-common';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
+  
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -47,11 +51,23 @@ export class CaseFacade {
   updateCase$ = this.updateCaseSubject.asObservable();
   getCase$ = this.getCaseSubject.asObservable(); 
 
+
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortValue = '';
+  public sortType = 'asc';
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
   constructor(
     private readonly caseDataService: CaseDataService,
     private loggingService : LoggingService,
     private readonly loaderService: LoaderService ,
-    private readonly notificationSnackbarService : NotificationSnackbarService
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService, 
+    private configurationProvider : ConfigurationProvider,
+ 
   ) { }
  
   ShowLoader()
@@ -234,22 +250,10 @@ export class CaseFacade {
           caseStartDate: new Date(existingCaseFormData?.controls["applicationDate"].value) ,
           concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
         }    
+
+        caseData.caseStartDate =  this.intl.parseDate(caseData.caseStartDate.toLocaleDateString())
        
-        this.caseDataService.UpdateCase(caseData).subscribe({
-          next: (updateCaseResponse) => {        
-            
-            if(updateCaseResponse)
-            {     
-              this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
-            }
-              
-            this.updateCaseSubject.next(updateCaseResponse);
-            this.HideLoader();
-          },
-          error: (err) => {
-            this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
-          },
-        });
+        return  this.caseDataService.UpdateCase(caseData)
 
     }
 

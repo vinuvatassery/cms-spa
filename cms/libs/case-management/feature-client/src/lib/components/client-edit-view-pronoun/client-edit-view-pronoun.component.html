@@ -19,12 +19,13 @@
         <span>
           <kendo-floatinglabel text="Enter Pronouns" >
             <kendo-textbox aria-label="enter pronouns"              
-              [formControlName]="pronoun.lovCode"
+              formControlName="pronoun"
               [disabled]="textboxDisable"
+              [fillMode]="formUiStyle.inputFillMode"
               (valueChange)="onChange($event)">               
             </kendo-textbox>        
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!appInfoForm.controls[pronoun.lovCode].valid ">Pronoun is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['pronoun'].valid ">Pronoun is required.</kendo-formerror>
         </span>     
     </div>
     </span>

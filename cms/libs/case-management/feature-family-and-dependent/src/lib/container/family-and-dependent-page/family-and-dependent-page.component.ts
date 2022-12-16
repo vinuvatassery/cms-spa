@@ -4,14 +4,14 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
-import { filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent } from '@cms/case-management/domain';
 /** Enums **/
 import {  NavigationType } from '@cms/case-management/domain';
 
 import {LovFacade } from '@cms/system-config/domain' 
-import { LoaderService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Component({
@@ -29,10 +29,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   dependentStatus$  = this.familyAndDependentFacade.dependentStatusGet$;
   dependentGet$= this.familyAndDependentFacade.dependentGetNew$;
   dependentGetExisting$ =this.familyAndDependentFacade.dependentGetExisting$;
-  familyfacadesnackbar$ =   this.notificationSnackbarService.snackbar$
   dependentdelete$  = this.familyAndDependentFacade.dependentdelete$;
   dependentAddNewGet$= this.familyAndDependentFacade.dependentAddNewGet$
   dependentUpdateNew$=this.familyAndDependentFacade.dependentUpdateNew$
+  existdependentStatus$ =this.familyAndDependentFacade.existdependentStatus$ 
   isFamilyGridDisplay =true;
   clientCaseId! : string;
   sessionId! : string;
@@ -58,8 +58,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     private readonly workFlowFacade : WorkflowFacade,
     private route: ActivatedRoute,
     private readonly lovFacade : LovFacade,
-    private readonly loaderService: LoaderService   ,
-    private readonly notificationSnackbarService : NotificationSnackbarService
+    private readonly loaderService: LoaderService  
   ) { }
 
 
@@ -121,10 +120,11 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
-      ),
-    ).subscribe(([navigationType, isSaved]) => {      
-      if (isSaved) {        
-      this.checkBoxSubscription.unsubscribe();      
+      ),  
+    ).subscribe(([navigationType, isSaved ]) => {         
+      if (isSaved == true) {    
+        this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')  
+        this.checkBoxSubscription.unsubscribe();      
         this.workflowFacade.navigate(navigationType);
       }
     });
@@ -132,18 +132,24 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
 
   private save() {       
     this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
-       this.familyAndDependentFacade.updateDependentStatus
-      (this.clientCaseEligibilityId,this.familyStatus);          
-      return of(this.familyAndDependentFacade.dependentStatus$)
+     return  this.familyAndDependentFacade.updateDependentStatus
+      (this.clientCaseEligibilityId,this.familyStatus)
+       .pipe
+      (
+       catchError((err: any) => {                     
+         this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+         return  of(false);
+       })  
+      )  
      }
-
+    
   /** Internal event methods **/
   onNoFamilyMemberClicked() {  
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;    
   }
 
-  private loadDependentSearch(text : string) {
-    this.familyAndDependentFacade.loadDependentSearch(text);
+  private loadDependentSearch(text : string ) {
+    this.familyAndDependentFacade.loadDependentSearch(text , this.clientId);
   }
 
 /** child event methods **/

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider } from '../providers/configuration.provider';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
 @Injectable({

@@ -3,15 +3,16 @@ import { OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
-import { first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
-import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
 
 
 
@@ -39,12 +40,18 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientId!:number;
   clientCaseEligibilityId!:string;
   sessionId! : string;
+  message!:string;
+  //clientFacadesnackbar$ = this.notificationSnackbarService.snackbar$
+  //snackbar:any;
  
     /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
               private clientFacade: ClientFacade, 
               private route: ActivatedRoute,
               private readonly caseFacade: CaseFacade,
+              private loaderService: LoaderService,
+              private loggingService:LoggingService,
+              private readonly notificationSnackbarService : NotificationSnackbarService
               ) { }
 
 
@@ -60,36 +67,47 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   /** Private methods **/
-  private addSaveSubscription(): void {
-    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
+  private addSaveSubscription(): void {   
+    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(      
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
-    ).subscribe(([navigationType, isSaved]:[NavigationType, any]) => {      
-      if (isSaved) {
-        this.workFlowFacade.navigate(navigationType);
-      }
+    ).subscribe({     
+        next:([navigationType, isSaved]) =>{
+          if (isSaved) {
+              this.loaderService.hide();                 
+              this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
+              this.workFlowFacade.navigate(navigationType);          
+        }    
+      },
+      error: (error: any) => {
+        this.loaderService.hide();      
+        this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+      },
+
     });
     
-  }
+  } 
+
   private loadSessionData()
   {  
+   this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
    this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {
-      this.applicantInfo = new ApplicantInfo();
+    .subscribe((session: any) => {     
       this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
-     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
-     this.clientId = JSON.parse(session.sessionData).clientId; 
-     this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-      if(this.clientCaseId  !==null || this.clientCaseId !== undefined){
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
+      this.clientId = JSON.parse(session.sessionData).clientId; 
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
+      if(this.clientCaseId !== undefined && this.clientCaseId  !==null){
         this.applicantInfo.clientCaseId = this.clientCaseId
         this.applicantInfo.workFlowSessionId = this.sessionId;      
-        if(this.clientCaseEligibilityId != null || this.clientCaseEligibilityId !=undefined){
-          if(  this.applicantInfo.client == undefined){
+        if(this.clientCaseEligibilityId !=undefined && this.clientCaseEligibilityId != null){        
+          if(  this.applicantInfo.client === undefined){
             this.applicantInfo.client = new Client;
           }
           if(  this.applicantInfo.clientCaseEligibilityAndFlag === undefined){
@@ -104,10 +122,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;
           this.loadApplicantInfo();
         }
+        else{
+        }
+       
       
       }
     }
-     
+  
     });   
     
   } 
@@ -144,6 +165,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientGender.clientGenderCode = x.clientGenderCode;
                 clientGender.clientGenderId = x.clientGenderId;
                 clientGender.clientId = x.clientId;
+                clientGender.otherDesc = x.otherDesc;
                 if(this.applicantInfo.clientGenderList == undefined || null ){
                   this.applicantInfo.clientGenderList = []
                 }
@@ -170,7 +192,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 clientRace.clientId = x.clientId;
                 clientRace.clientRaceCategoryCode = x.clientRaceCategoryCode;
                 clientRace.clientRaceId = x.clientRaceId;
-                clientRace.raceDesc = x.raceDesc
+                clientRace.raceDesc = x.raceDesc;
+                clientRace.isPrimaryFlag = x.isPrimaryFlag;
                 if(this.applicantInfo.clientRaceList == undefined || null ){
                   this.applicantInfo.clientRaceList = []
                 }
@@ -191,29 +214,54 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               })
               this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
              
-              
             }
           } ,
-        error: error => {         
-          console.error(error);
+        error: error => {       
+          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error?.error?.error)  
+          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error})
         }
       });
 
   }
 
   private saveAndUpdate(){
+    this.loaderService.show();
     this.validateForm();
         if(this.appInfoForm.valid){
           this.populateApplicantInfoModel();
           if(this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined)  {
-            return this.clientFacade.update(this.applicantInfo)            
+            this.message ='Applicant info updated successfully';
+            return this.clientFacade.update(this.applicantInfo).pipe(
+              catchError((error:any)=>{
+                if(error){
+                  this.loaderService.hide();      
+                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  return of(false);
+                }
+                return of(false);
+              })
+              
+            );            
           }
           else{
-            return this.clientFacade.save(this.applicantInfo)        
-          }
-          
+            this.message ='Applicant info saved successfully';
+            return this.clientFacade.save(this.applicantInfo).pipe(
+              catchError((error:any)=>{
+                if(error){
+                  this.loaderService.hide();      
+                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  return of(false);
+                }
+                return of(false);
+              })
+              
+            );          
+          }          
         }
         else{
+          this.loaderService.hide();    
           return of(false);
         } 
  
@@ -224,13 +272,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.populateClient();
     this.populateClientCaseEligibility();
     this.populateClientPronoun();
+    this.populateClientGender();
+    this.populateClientSexualIdentity();
 
     /*Modify when the get is ready */
     /*-------------------------------------------------------------------------------- */
      //this.populateClientCase();
-    this.populateClientGender();
+    
      this.populateClientRace();
-     this.populateClientSexualIdentity();
+     
     /*-------------------------------------------------------------------------------- */
 
   }
@@ -248,8 +298,21 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.middleName = this.appInfoForm.controls["middleName"].value;
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
-      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value;   
-      this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value
+      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value; 
+      var dob =  this.appInfoForm.controls["dateOfBirth"].value;
+      if(this.clientCaseEligibilityId != null){
+        this.applicantInfo.client.dob = new Date(dob.getUTCFullYear(), dob.getUTCMonth(),dob.getUTCDate() + 1, 
+        dob.getUTCHours(), dob.getUTCMinutes(), dob.getUTCSeconds()
+        );
+      }  
+      else{
+        this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
+      }
+      this.applicantInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
+      if (this.applicantInfo.client.genderAtBirthCode==='NOT_LISTED') {
+        this.applicantInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;
+      }
+
    
       if(this.appInfoForm.controls["ssnNotApplicable"].value){
         this.applicantInfo.client.ssn = null;
@@ -268,17 +331,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility == undefined){
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
-        }          
-       /*Mocking the other required fields need to change as per the UI story progress */        
+        }    
         
-           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode="NO";          
-
-      //------------------------------------
-
-        
+           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+           if (this.appInfoForm.controls["Transgender"].value==='NOT_LISTED') {
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
+           }
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = new clientCaseEligibilityFlag;
         }
+        
         if(this.appInfoForm.controls["prmInsNotApplicable"].value){
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = '';
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = '';
@@ -300,12 +362,92 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag = StatusFlag.No;
         }    
     
-      if(this.appInfoForm.controls["registerToVote"].value.toUpperCase() === StatusFlag.Yes){
+        if(this.appInfoForm.controls["registerToVote"].value.toUpperCase() === StatusFlag.Yes){
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.registerToVoteFlag = StatusFlag.Yes;
-      }
-      else{
+        }
+        else{
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.registerToVoteFlag = StatusFlag.No;
-      }
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode = this.appInfoForm.controls["materialInAlternateFormatCode"].value
+        if(this.appInfoForm.controls["materialInAlternateFormatCode"].value !== null && 
+        this.appInfoForm.controls["materialInAlternateFormatCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = this.appInfoForm.controls["materialInAlternateFormatDesc"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = '';
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode = this.appInfoForm.controls["interpreterCode"].value
+        if(this.appInfoForm.controls["interpreterCode"].value !== null && 
+        this.appInfoForm.controls["interpreterCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType = this.appInfoForm.controls["interpreterType"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType = '';
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode = this.appInfoForm.controls["deafOrHearingCode"].value
+        if(this.appInfoForm.controls["deafOrHearingCode"].value !== null && 
+        this.appInfoForm.controls["deafOrHearingCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = this.appInfoForm.controls["startAgeDeafOrHearing"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = null;
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode = this.appInfoForm.controls["blindSeeingCode"].value
+        if(this.appInfoForm.controls["blindSeeingCode"].value !== null && 
+        this.appInfoForm.controls["blindSeeingCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing = this.appInfoForm.controls["startAgeBlindSeeing"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing = null;
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.limitingConditionCode = this.appInfoForm.controls["limitingConditionCode"].value
+      
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode = this.appInfoForm.controls["walkingClimbingDifficultyCode"].value
+        if(this.appInfoForm.controls["walkingClimbingDifficultyCode"].value !== null && 
+        this.appInfoForm.controls["walkingClimbingDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty = this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty = null;
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode = this.appInfoForm.controls["dressingBathingDifficultyCode"].value
+        if(this.appInfoForm.controls["dressingBathingDifficultyCode"].value !== null && 
+        this.appInfoForm.controls["dressingBathingDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty = this.appInfoForm.controls["startAgeDressingBathingDifficulty"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty = null;
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode = this.appInfoForm.controls["concentratingDifficultyCode"].value
+        if(this.appInfoForm.controls["concentratingDifficultyCode"].value !== null && 
+        this.appInfoForm.controls["concentratingDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty = this.appInfoForm.controls["startAgeConcentratingDifficulty"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty = null;
+        }
+
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode = this.appInfoForm.controls["errandsDifficultyCode"].value
+        if(this.appInfoForm.controls["errandsDifficultyCode"].value !== null && 
+        this.appInfoForm.controls["errandsDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty = this.appInfoForm.controls["startAgeErrandsDifficulty"].value
+        }
+        else{
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty = null;
+        }
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.spokenLanguageCode =  this.appInfoForm.controls["spokenLanguage"].value;
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.writtenLanguageCode =  this.appInfoForm.controls["writtenLanguage"].value;
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode = this.appInfoForm.controls["englishProficiency"].value;
+
+
       
   }
   private populateClientPronoun(){
@@ -330,7 +472,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       if(existingPronoun === null || existingPronoun === undefined){
           var clientPronoun = new ClientPronoun();
           if(pronoun.lovCode=='NOT_LISTED') {
-                    clientPronoun.otherDesc = this.appInfoForm.controls["NOT_LISTED"].value;
+                    clientPronoun.otherDesc = this.appInfoForm.controls["pronoun"].value;
                     clientPronoun.clientPronounCode =pronoun.lovCode;
                     clientPronoun.clientId = this.clientId;
             }
@@ -344,6 +486,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           if(pronoun.lovCode=='NOT_LISTED') {
             const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);          
             this.applicantInfo.clientPronounList[index].clientPronounCode = pronoun.lovCode;
+            this.applicantInfo.clientPronounList[index].otherDesc = this.appInfoForm.controls["pronoun"].value;
            }
         }
 
@@ -355,54 +498,74 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   
   private populateClientGender(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*---------------------------------remove if----------------------------------------------- */
-        //this.applicantInfo.clientGenderList =[];
-        if(this.applicantInfo.clientGenderList.length ===0 ){
-          var clientGender = new ClientGender();
-          clientGender.clientGenderCode = 'Woman or Girl';
-          //clientGender.activeFlag ="Y";
-          if(this.applicantInfo.clientGenderList == undefined){
-            this.applicantInfo.clientGenderList = [];
-          }
-          clientGender.clientId = this.clientId;
-          this.applicantInfo.clientGenderList.push(clientGender)
-      }
-        
-        /*-------------------------------------------------------------------------------- */
+    const clientGenderListSaved = this.applicantInfo.clientGenderList;// this is in case of update record
+    this.applicantInfo.clientGenderList=[];
+     Object.keys( this.appInfoForm.controls).filter(m=>m.includes('Gender')).forEach(control => {
+       if (this.appInfoForm.controls[control].value===true) {
+         control= control.replace('Gender','');
+         let clientGender = new ClientGender();
+         clientGender.clientGenderCode =control;
+         clientGender.clientId = this.clientId;
+         if(clientGender.clientGenderCode==='NOT_LISTED'){
+           clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
+         }
+         const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
+         if (Existing!==undefined) {
+           clientGender=Existing;
+         }
+         this.applicantInfo.clientGenderList.push(clientGender);
+       }
+     });
+}
+  private populateClientRace() {
+    this.applicantInfo.clientRaceList = [];
+    //const clientRaceListSaved = this.applicantInfo.clientRaceList;// this is in case of update record
+    const RaceAndEthnicity = this.appInfoForm.controls['RaceAndEthnicity'].value;
+    const Ethnicity = this.appInfoForm.controls['Ethnicity'].value;
+    const RaceAndEthnicityPrimary = this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
+    RaceAndEthnicity.forEach((el: any) => {
+      const clientRace = new ClientRace();
+      clientRace.clientRaceCategoryCode =el.lovCode;
+      clientRace.clientEthnicIdentityCode = "";
+      if (RaceAndEthnicityPrimary.lovCode===el.lovCode)
+        clientRace.isPrimaryFlag = StatusFlag.Yes;
+      clientRace.clientId = this.clientId;
+      if (el.lovCode === 'NOT_LISTED')
+        clientRace.raceDesc = this.appInfoForm.controls['RaceAndEthnicityNotListed'].value;
+      this.applicantInfo.clientRaceList.push(clientRace)
+    });
+
+    Ethnicity.forEach((el: any) => {
+      const clientRace = new ClientRace();
+      clientRace.clientEthnicIdentityCode = el.lovCode;
+      clientRace.clientRaceCategoryCode = "";
+      if (RaceAndEthnicityPrimary.lovCode === el.lovCode)
+        clientRace.isPrimaryFlag = StatusFlag.Yes;
+      clientRace.clientId = this.clientId;
+      // const Existing=clientRaceListSaved.find(m=>m.clientEthnicIdentityCode===el.clientGenderCode);
+      //    if (Existing!==undefined) {
+      //     clientRace=Existing;
+      //    }
+      this.applicantInfo.clientRaceList.push(clientRace)
+    });
   }
-  private populateClientRace(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*--------------------------remove if------------------------------------------------------ */
-        if(this.applicantInfo.clientRaceList.length ===0) {
-            var clientRace = new ClientRace();
-            clientRace.clientEthnicIdentityCode = 'American Indian or Alaska Native';
-            clientRace.clientRaceCategoryCode = 'American Indian or Alaska Native';
-            //clientRace.activeFlag = "Y";
-            if(this.applicantInfo.clientRaceList == undefined){
-              this.applicantInfo.clientRaceList =[];
-            }
-            clientRace.clientId = this.clientId;
-            this.applicantInfo.clientRaceList.push(clientRace)
+  private populateClientSexualIdentity() {
+    this.applicantInfo.clientSexualIdentityList = [];
+    Object.keys(this.appInfoForm.controls).filter(m => m.includes('SexulaIdentity')).forEach(control => {
+      if (this.appInfoForm.controls[control].value === true) {
+        control = control.replace('SexulaIdentity', '');
+        const clientSexualIdentity = new ClientSexualIdentity();
+        clientSexualIdentity.clientSexualIdentityCode = control;
+        clientSexualIdentity.clientId = this.clientId;
+        if (clientSexualIdentity.clientSexualIdentityCode === 'NOT_LISTED') {
+          clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexulaIdentityDescription'].value;
+        }
+
+        this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity);
       }
-        
-        /*-------------------------------------------------------------------------------- */
+    });
   }
-  private populateClientSexualIdentity(){
-        /*Mocking the other required fields need to change as per the UI story progress/Get */
-        /*--------------------------remove if------------------------------------------------------ */
-        if(this.applicantInfo.clientSexualIdentityList.length ===0 ){
-            var clientSexualIdentity = new ClientSexualIdentity();
-            clientSexualIdentity.clientSexualIdentityCode = 'Straight';
-            //clientSexualIdentity.activeFlag ="Y";
-            if(this.applicantInfo.clientSexualIdentityList == undefined){
-              this.applicantInfo.clientSexualIdentityList =[];
-            }
-            clientSexualIdentity.clientId = this.clientId;
-            this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity)
-      }
-        /*-------------------------------------------------------------------------------- */
-  }
+
 
 
 
@@ -474,7 +637,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-        }          
+          }          
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           this.pronounList.forEach((pronoun:any) => {
@@ -483,7 +646,125 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             }
             
           });
-         
+          this.appInfoForm.controls['materialInAlternateFormatCode'].setValidators(Validators.required);
+          this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
+            if( this.appInfoForm.controls['materialInAlternateFormatCode'].value  !=='' ||
+                this.appInfoForm.controls['materialInAlternateFormatCode'].value !== null){
+                this.appInfoForm.controls['materialInAlternateFormatCode'].setErrors(null);
+                this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
+              }     
+          this.appInfoForm.controls['interpreterCode'].setValidators(Validators.required);
+          this.appInfoForm.controls['interpreterCode'].updateValueAndValidity();
+           if( this.appInfoForm.controls['interpreterCode'].value  !=='' ||
+                this.appInfoForm.controls['interpreterCode'].value !== null){
+                this.appInfoForm.controls['interpreterCode'].setErrors(null);
+                this.appInfoForm.controls['interpreterCode'].updateValueAndValidity();
+           } 
+           this.appInfoForm.controls['deafOrHearingCode'].setValidators(Validators.required);
+           this.appInfoForm.controls['deafOrHearingCode'].updateValueAndValidity();
+           if( this.appInfoForm.controls['deafOrHearingCode'].value  !=='' ||
+                this.appInfoForm.controls['deafOrHearingCode'].value !== null){
+                this.appInfoForm.controls['deafOrHearingCode'].setErrors(null);
+                this.appInfoForm.controls['deafOrHearingCode'].updateValueAndValidity();
+            } 
+           this.appInfoForm.controls['blindSeeingCode'].setValidators(Validators.required);
+           this.appInfoForm.controls['blindSeeingCode'].updateValueAndValidity();
+            if( this.appInfoForm.controls['blindSeeingCode'].value  !=='' ||
+                this.appInfoForm.controls['blindSeeingCode'].value !== null){
+                this.appInfoForm.controls['blindSeeingCode'].setErrors(null);
+                this.appInfoForm.controls['blindSeeingCode'].updateValueAndValidity();
+            } 
+            this.appInfoForm.controls['limitingConditionCode'].setValidators(Validators.required);
+            this.appInfoForm.controls['limitingConditionCode'].updateValueAndValidity();
+            if( this.appInfoForm.controls['limitingConditionCode'].value  !=='' ||
+                this.appInfoForm.controls['limitingConditionCode'].value !== null){
+                this.appInfoForm.controls['limitingConditionCode'].setErrors(null);
+                this.appInfoForm.controls['limitingConditionCode'].updateValueAndValidity();
+              } 
+             this.appInfoForm.controls['walkingClimbingDifficultyCode'].setValidators(Validators.required);
+             this.appInfoForm.controls['walkingClimbingDifficultyCode'].updateValueAndValidity();
+              if( this.appInfoForm.controls['walkingClimbingDifficultyCode'].value  !=='' ||
+                  this.appInfoForm.controls['walkingClimbingDifficultyCode'].value !== null){
+                  this.appInfoForm.controls['walkingClimbingDifficultyCode'].setErrors(null);
+                  this.appInfoForm.controls['walkingClimbingDifficultyCode'].updateValueAndValidity();
+              } 
+              this.appInfoForm.controls['dressingBathingDifficultyCode'].setValidators(Validators.required);
+              this.appInfoForm.controls['dressingBathingDifficultyCode'].updateValueAndValidity();
+              if( this.appInfoForm.controls['dressingBathingDifficultyCode'].value  !=='' ||
+                  this.appInfoForm.controls['dressingBathingDifficultyCode'].value !== null){
+                  this.appInfoForm.controls['dressingBathingDifficultyCode'].setErrors(null);
+                  this.appInfoForm.controls['dressingBathingDifficultyCode'].updateValueAndValidity();
+              } 
+              this.appInfoForm.controls['concentratingDifficultyCode'].setValidators(Validators.required);
+              this.appInfoForm.controls['concentratingDifficultyCode'].updateValueAndValidity();
+              if( this.appInfoForm.controls['concentratingDifficultyCode'].value  !=='' ||
+                  this.appInfoForm.controls['concentratingDifficultyCode'].value !== null){
+                  this.appInfoForm.controls['concentratingDifficultyCode'].setErrors(null);
+                  this.appInfoForm.controls['concentratingDifficultyCode'].updateValueAndValidity();
+              } 
+              this.appInfoForm.controls['errandsDifficultyCode'].setValidators(Validators.required);
+              this.appInfoForm.controls['errandsDifficultyCode'].updateValueAndValidity();
+              if( this.appInfoForm.controls['errandsDifficultyCode'].value  !=='' ||
+                  this.appInfoForm.controls['errandsDifficultyCode'].value !== null){
+                  this.appInfoForm.controls['errandsDifficultyCode'].setErrors(null);
+                  this.appInfoForm.controls['errandsDifficultyCode'].updateValueAndValidity();
+              } 
+
+              this.appInfoForm.controls['spokenLanguage'].setValidators(Validators.required);              
+              if( this.appInfoForm.controls['spokenLanguage'].value  !=='' ||
+                  this.appInfoForm.controls['spokenLanguage'].value !== null){
+                  this.appInfoForm.controls['spokenLanguage'].setErrors(null);
+              }               
+              this.appInfoForm.controls['spokenLanguage'].updateValueAndValidity();
+
+              this.appInfoForm.controls['writtenLanguage'].setValidators(Validators.required);              
+              if( this.appInfoForm.controls['writtenLanguage'].value  !=='' ||
+                  this.appInfoForm.controls['writtenLanguage'].value !== null){
+                  this.appInfoForm.controls['writtenLanguage'].setErrors(null);
+              }               
+              this.appInfoForm.controls['writtenLanguage'].updateValueAndValidity();
+
+              this.appInfoForm.controls['englishProficiency'].setValidators(Validators.required);              
+              if( this.appInfoForm.controls['englishProficiency'].value  !=='' ||
+                  this.appInfoForm.controls['englishProficiency'].value !== null){
+                  this.appInfoForm.controls['englishProficiency'].setErrors(null);
+              }               
+              this.appInfoForm.controls['englishProficiency'].updateValueAndValidity();
+
+              this.appInfoForm.controls['RaceAndEthnicity'].setValidators(Validators.required);
+              this.appInfoForm.controls['RaceAndEthnicity'].updateValueAndValidity(); 
+              const raceAndEthnicity=this.appInfoForm.controls['RaceAndEthnicity'].value;
+              if(Array.isArray(raceAndEthnicity)){
+                const raceAndEthnicityNotListed=raceAndEthnicity.some((m:any)=>m.lovCode==='NOT_LISTED');
+                if(raceAndEthnicityNotListed){
+                  this.appInfoForm.controls['RaceAndEthnicityNotListed'].setValidators(Validators.required);
+                  this.appInfoForm.controls['RaceAndEthnicityNotListed'].updateValueAndValidity(); 
+                }
+              }
+              
+              this.appInfoForm.controls['Ethnicity'].setValidators(Validators.required); 
+              this.appInfoForm.controls['Ethnicity'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['RaceAndEthnicityPrimary'].setValidators(Validators.required); 
+              this.appInfoForm.controls['RaceAndEthnicityPrimary'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['GenderGroup'].setValidators(Validators.required); 
+              this.appInfoForm.controls['GenderGroup'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['Transgender'].setValidators(Validators.required); 
+              this.appInfoForm.controls['Transgender'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['SexulaIdentityGroup'].setValidators(Validators.required); 
+              this.appInfoForm.controls['SexulaIdentityGroup'].updateValueAndValidity(); 
+
+              this.appInfoForm.controls['BirthGender'].setValidators(Validators.required); 
+              this.appInfoForm.controls['BirthGender'].updateValueAndValidity();
+
+              
+              
+              
+              
+           
           this.appInfoForm.updateValueAndValidity();
   }
   setAppInfoForm(appInfoForm:FormGroup)

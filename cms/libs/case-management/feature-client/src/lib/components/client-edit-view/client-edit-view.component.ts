@@ -13,6 +13,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { kMaxLength } from 'buffer';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { first } from '@progress/kendo-angular-editor/util';
+import { SsnPipe } from '@cms/shared/ui-common';
 
 
  
@@ -38,8 +39,14 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public currentDate = new Date(); 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
-  rdoMaterials$ = this.clientfacade.rdoMaterials$;
-  rdoInterpreters$ = this.clientfacade.rdoInterpreters$;
+
+  rdoMaterials$ = this.lovFacade.materialslov$;  
+  materialsyeslov$ = this.lovFacade.materialsyeslov$; 
+  spokenWrittenLanguagelov$ = this.lovFacade.spokenWrittenLanguagelov$;
+  englishProficiencylov$ = this.lovFacade.englishProficiencylov$;
+  
+  //this.clientfacade.rdoInterpreters$;
+
   rdoDeafs$ = this.clientfacade.rdoDeaf$;
   rdoBlinds$ = this.clientfacade.rdoBlind$;
   rdoWalked$ = this.clientfacade.rdoWalked$;
@@ -88,18 +95,42 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
+  materialOptionButtonValid!:boolean;
+  interpreterOptionButtonValid!:boolean;
+  deafOrHearingOptionButtonValid!:boolean;
+  blindOrSeriousDiffOptionButtonValid!:boolean;
+  physicalMentaDiffOptionButtonValid!:boolean;
+  walkingOrClimbingOptionButtonValid!:boolean;
+  dressingOrBathOptionButtonValid!:boolean;
+  concentrateAndRememberDiffOptionButtonValid!:boolean;
+  seriesDiffOptionButtonValid!:boolean;
+
   textboxDisable!:boolean;
+  optionButtonValid!:boolean;
+  yesMaterialDisable!:boolean;
+  interpreterTypeInputDisable!: boolean;
+  startAgeDeafOrHearingInputDisable!:boolean;
+  startAgeBlindSeeingInputDisable!:boolean;
+  startAgeWalkingClimbingDifficultyInputDisable!:boolean;
+  startAgeDressingBathingDifficultyInputDisable!:boolean;
+  startAgeConcentratingDifficultyInputDisable!:boolean;
+  startAgeErrandsDifficultyInputDisable!:boolean;
+ 
+
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
   lengthRestrictThirty=30;
   lengthRestrictForty=40;
-  maxLengthSsn =9;
+  maxLengthSsn =11;
   applicantInfo$ = this.clientfacade.applicantInfo$;
   public value = "";
   isVisible: any;
   isSelected = true;
   applicantInfo!:any;
   pronounList =[];
+  raceAndEthnicity =[];
+  raceAndEthnicityPrimaryData: Array<any> = [];
+  raceAndEthnicityPrimaryNotListed: boolean = false;
   applicantInfoSubscription !:Subscription;
  
   /** Constructor**/
@@ -117,7 +148,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadDdlEnglishProficiencies();
     this.loadRdoTransGender();
     this.loadRdoSexAssigned();
-    this.loadRdoMaterials();
     this.loadRdoInterpreter();
     this.loadRdoDeaf();
     this.loadRdoBlind();
@@ -125,9 +155,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoDressingorBathing();
     this.loadRdoConcentration();
     this.loadRdoErrands();
-    this.loadTareaRaceAndEthinicity();   
-    
-     this.buildForm();     
+    this.loadTareaRaceAndEthinicity();
+    this.LoadLovs(); 
+    this.buildForm(); 
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
      this.ValidateFields.emit(this.appInfoForm);
@@ -146,11 +176,44 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
   setChangedPronoun(pronoun:any){
     this.pronounList = pronoun;
-    this.PronounChanges.emit(this.pronounList);
+    if(this.pronounList  !== undefined && this.pronounList !== null){
+        this.PronounChanges.emit(this.pronounList);
+        this.assignPronounModelToForm();
+    }
   }
+  setRaceAndEthnicityData(value:any){
+    this.raceAndEthnicity = value;
+    if(Array.isArray(value) && value.length>0){
+      this.assignRaceAndEthnicityToForm();
+    }
+  }
+  raceAndEthnicityChange(value: any) {
+    const Ethnicity = this.appInfoForm.controls["Ethnicity"]?.value;
+    const Race = this.appInfoForm.controls["RaceAndEthnicity"]?.value;
+    this.raceAndEthnicityPrimaryData = [];
+    this.raceAndEthnicityPrimaryNotListed = false;
+    if (Array.isArray(Ethnicity)) {
+      Ethnicity.forEach((el: any) => {
+        this.raceAndEthnicityPrimaryData.push(el);
+      });
+    }
+
+    if (Array.isArray(Race)) {
+      Race.forEach((el: any) => {
+        if (el.lovCode !== 'NOT_LISTED')
+          this.raceAndEthnicityPrimaryData.push(el);
+        else
+          this.raceAndEthnicityPrimaryNotListed = true;
+      });
+    }
 
 
- 
+    if (this.raceAndEthnicityPrimaryData.length == 1) {
+      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
+    } else {
+      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(null);
+    }
+  }
   ngAfterViewChecked() {  
     var firstName = '';
     var lastName ='';
@@ -166,8 +229,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     else{
       lastName = this.appInfoForm.controls["lastName"].value
     }
-    
-
     this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
@@ -183,10 +244,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.AdjustAttrChanged.emit(initialAjustment);
     }
   }
- 
-  
+
   public onClose(event: any) {    
-      event.preventDefault();   
+      //event.preventDefault();   
   }
   public clearForm(): void {
     //this.form.reset();
@@ -209,15 +269,52 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       ssn:  ['',{disabled:false}],
       ssnNotApplicable:  [''],
       registerToVote: [''],
-      pronouns: [''],      
+      pronoun: [''] ,
+      pronouns: [''] ,
+      materialInAlternateFormatCode:[''],
+      materialInAlternateFormatDesc:[''],
+      interpreterCode:[''],
+      interpreterType:[''],
+      deafOrHearingCode:[''],
+      startAgeDeafOrHearing:[''],
+      blindSeeingCode:[''],
+      startAgeBlindSeeing:[''],
+      limitingConditionCode:[''],
+      walkingClimbingDifficultyCode:[''],
+      startAgeWalkingClimbingDifficulty:[''],
+      dressingBathingDifficultyCode:[''],
+      startAgeDressingBathingDifficulty:[''],
+      concentratingDifficultyCode:[''],
+      startAgeConcentratingDifficulty:[''],
+      errandsDifficultyCode:[''],
+      startAgeErrandsDifficulty:[''],
+      spokenLanguage:[''],
+      writtenLanguage:[''],
+      englishProficiency:[''],
+      RaceAndEthnicity: [[]] 
+
     });  
 
   } 
-
+  private LoadLovs(){
+    this.lovFacade.getMaterialLovs();
+    this.lovFacade.getMaterialYesLovs();
+    this.lovFacade.getSpokenWrittenLanguageLovs();
+    this.lovFacade.getEnglishProficiencyLovs();
+  }
   private loadApplicantInfoSubscription(){
     
     this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
       this.textboxDisable  = true; 
+      this.yesMaterialDisable = true;
+      this.interpreterTypeInputDisable = true;
+      this.startAgeDeafOrHearingInputDisable = true;
+      this.startAgeBlindSeeingInputDisable = true;
+      this.startAgeWalkingClimbingDifficultyInputDisable = true;
+      this.startAgeDressingBathingDifficultyInputDisable = true;
+      this.startAgeConcentratingDifficultyInputDisable = true;
+      this.startAgeErrandsDifficultyInputDisable = true;
+
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
       if(this.appInfoForm !== undefined){
@@ -230,7 +327,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls["prmInsFirstName"].enable();
       this.appInfoForm.controls["prmInsLastName"].enable();
       this.appInfoForm.controls["ssn"].enable();
-      }
+      }      
+
       this.applicantInfo = applicantInfo;
       if(this.applicantInfo.clientCaseId !== null){
       this.assignModelToForm(applicantInfo);
@@ -309,19 +407,148 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
   }
-  if(applicantInfo.clientPronounList != null || undefined){   
-    applicantInfo.clientPronounList.forEach(pronoun => {  
-      if(  this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
-      if(pronoun.clientPronounCode ==='NOT_LISTED'){
-        this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(pronoun.otherDesc);
-        this.textboxDisable = false;
-      }   
-      }
-    })
-    this.clientfacade.pronounListSubject.next(this.pronounList);     
-  }
   
+  if (Array.isArray(applicantInfo.clientGenderList) ) {
+    applicantInfo.clientGenderList.forEach(gender => { 
+      this.appInfoForm.controls['Gender'+gender.clientGenderCode]?.setValue(true);
+      if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
+        this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
+      }
+      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);
+      
+    })
+  }
+  if (Array.isArray(applicantInfo.clientSexualIdentityList) ) {
+    applicantInfo.clientSexualIdentityList.forEach(identity => { 
+      this.appInfoForm.controls['SexulaIdentity'+identity.clientSexualIdentityCode]?.setValue(true);
+      if(identity.clientSexualIdentityCode==="NOT_LISTED" && identity.otherDesc!==null){
+        this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
+      }
+      this.appInfoForm.controls['SexulaIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
+      
+    })
+  }
+  const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
+  this.appInfoForm.controls['Transgender']?.setValue(Transgender);
+  if (Transgender==='NOT_LISTED') {
+    this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
+  }
+
+  const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
+  this.appInfoForm.controls['BirthGender']?.setValue(BirthGender);
+  if (BirthGender==='NOT_LISTED') {
+    this.appInfoForm.controls['BirthGenderDescription']?.setValue(applicantInfo.client.genderAtBirthDesc);
+  }
+
+  
+this.assignRaceAndEthnicityToForm();
+  this.assignPronounModelToForm();
+
+  this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
+  this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode ==='YES'){
+      this.yesMaterialDisable = false;
+  }
+  this.appInfoForm.controls["interpreterCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode);
+  this.appInfoForm.controls["interpreterType"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode ==='YES'){
+      this.interpreterTypeInputDisable = false;
+  }
+  this.appInfoForm.controls["deafOrHearingCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode);
+  this.appInfoForm.controls["startAgeDeafOrHearing"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode ==='YES'){
+      this.startAgeDeafOrHearingInputDisable = false;
+  }
+
+  this.appInfoForm.controls["blindSeeingCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode);
+  this.appInfoForm.controls["startAgeBlindSeeing"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode ==='YES'){
+      this.startAgeBlindSeeingInputDisable = false;
+  }
+
+  this.appInfoForm.controls["limitingConditionCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.limitingConditionCode);
+  
+  this.appInfoForm.controls["walkingClimbingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode);
+  this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode ==='YES'){
+      this.startAgeWalkingClimbingDifficultyInputDisable = false;
+  }
+
+  this.appInfoForm.controls["dressingBathingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode);
+  this.appInfoForm.controls["startAgeDressingBathingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode ==='YES'){
+      this.startAgeDressingBathingDifficultyInputDisable = false;
+  }
+
+  this.appInfoForm.controls["concentratingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode);
+  this.appInfoForm.controls["startAgeConcentratingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode ==='YES'){
+      this.startAgeConcentratingDifficultyInputDisable = false;
+  }
+
+  this.appInfoForm.controls["errandsDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode);
+  this.appInfoForm.controls["startAgeErrandsDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty);
+  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode !== null && 
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode ==='YES'){
+      this.startAgeErrandsDifficultyInputDisable = false;
+  }
+  this.appInfoForm.controls["spokenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.spokenLanguageCode);
+  this.appInfoForm.controls["writtenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.writtenLanguageCode);
+  this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode);
+ 
+}
+  private assignRaceAndEthnicityToForm() {
+    if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
+      const RaceAndEthnicity: any = [];
+      const Ethnicity: any = [];
+      let RaceAndEthnicityPrimary=null;
+      this.applicantInfo.clientRaceList.forEach((el: any) => {
+        const foundRace = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientRaceCategoryCode);
+        if (foundRace !== undefined) {
+          RaceAndEthnicity.push(foundRace);
+          if (el.isPrimaryFlag === StatusFlag.Yes)
+          RaceAndEthnicityPrimary=foundRace;
+            //this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(foundRace);
+
+        }
+        const foundEthnicity = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
+        if (foundEthnicity !== undefined){
+          Ethnicity.push(foundEthnicity);
+          if (el.isPrimaryFlag === StatusFlag.Yes)
+          RaceAndEthnicityPrimary=foundEthnicity;
+        }
+      });
+      this.appInfoForm.controls['RaceAndEthnicity']?.setValue(RaceAndEthnicity);
+      this.appInfoForm.controls['Ethnicity']?.setValue(Ethnicity);
+      this.raceAndEthnicityChange(true);
+      this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(RaceAndEthnicityPrimary);
+      if(this.raceAndEthnicityPrimaryNotListed){
+        const raceAndEthnicityNotListed = this.applicantInfo.clientRaceList.find((m: any) => m.clientRaceCategoryCode === 'NOT_LISTED');
+        this.appInfoForm.controls['RaceAndEthnicityNotListed']?.setValue(raceAndEthnicityNotListed.raceDesc);
+      }
+    }
+
+  }
+private assignPronounModelToForm(){
+  if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
+    this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
+  if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
+      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+  if(pronoun.clientPronounCode ==='NOT_LISTED'){
+      this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
+      this.textboxDisable = false;
+    }   
+    }
+ })
+    this.clientfacade.pronounListSubject.next(this.pronounList);     
+}
 }
 
   private adjustAttributeChanged(event: Event) { 
@@ -345,11 +572,75 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       this.appInfoForm.statusChanges.subscribe(a=>{   
        if(this.appInfoForm.controls["pronouns"].valid){
         this.checkBoxValid = true;
+
        }
        else{
         this.checkBoxValid = false;
        }
-     
+       if(this.appInfoForm.controls["materialInAlternateFormatCode"].valid){
+        this.materialOptionButtonValid = true;
+
+       }
+       else{
+        this.materialOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["interpreterCode"].valid){
+        this.interpreterOptionButtonValid = true;
+
+       }
+       else{
+        this.interpreterOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["deafOrHearingCode"].valid){
+        this.deafOrHearingOptionButtonValid = true;
+
+       }
+       else{
+        this.deafOrHearingOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["blindSeeingCode"].valid){
+        this.blindOrSeriousDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.blindOrSeriousDiffOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["limitingConditionCode"].valid){
+        this.physicalMentaDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.physicalMentaDiffOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["walkingClimbingDifficultyCode"].valid){
+        this.walkingOrClimbingOptionButtonValid = true;
+
+       }
+       else{
+        this.walkingOrClimbingOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["dressingBathingDifficultyCode"].valid){
+        this.dressingOrBathOptionButtonValid = true;
+
+       }
+       else{
+        this.dressingOrBathOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["concentratingDifficultyCode"].valid){
+        this.concentrateAndRememberDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.concentrateAndRememberDiffOptionButtonValid = false;
+       }
+       if(this.appInfoForm.controls["errandsDifficultyCode"].valid){
+        this.seriesDiffOptionButtonValid = true;
+
+       }
+       else{
+        this.seriesDiffOptionButtonValid = false;
+       }    
+ 
     });
   }
   private updateFormCompleteCount(prev: any, curr: any) {
@@ -396,9 +687,9 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.clientfacade.loadRdoSexAssigned();
   }
 
-  private loadRdoMaterials() {
-    this.clientfacade.loadRdoMaterials();
-  }
+  // private loadRdoMaterials() {
+  //   this.clientfacade.loadRdoMaterials();
+  // }
 
   private loadRdoInterpreter() {
     this.clientfacade.loadRdoInterpreter();
@@ -531,6 +822,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       this.appInfoForm.controls['ssn'].enable();
     }
   }
+
   registerToVoteSelected(event:Event){
    if((event.target as HTMLInputElement).value.toUpperCase()==StatusFlag.Yes){
     this.isVisible = true;
@@ -558,14 +850,14 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     }
   }
 
-  onMaterialsRdoClicked(event: any) {
-    this.materialsSelectedValue = event.target.id;
-    if (this.materialsSelectedValue == 1) {
-      this.isMaterialsTextBoxDisabled = false;
-    } else {
-      this.isMaterialsTextBoxDisabled = true;
-    }
-  }
+  // onMaterialsRdoClicked(event: any) {
+  //   this.materialsSelectedValue = event.target.id;
+  //   if (this.materialsSelectedValue == 1) {
+  //     this.isMaterialsTextBoxDisabled = false;
+  //   } else {
+  //     this.isMaterialsTextBoxDisabled = true;
+  //   }
+  // }
 
   onInterpreterRdoClicked(event: any) {
     this.interpreterSelectedValue = event.target.id;

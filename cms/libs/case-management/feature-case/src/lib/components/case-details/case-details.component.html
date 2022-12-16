@@ -24,7 +24,7 @@
   </div>
   <div class="flex-col hidedropicon">
     <kendo-floatinglabel text="Case Owner" class="inline-search-loader">   
-      <span *ngIf="showInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+      <!-- <span *ngIf="showInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span> -->
       <kendo-combobox   
       [fillMode]="formUiStyle.dropDownFillMode"    
       #caseOwnr
@@ -46,7 +46,7 @@
       <kendo-dropdownlist formControlName="programId"
        [fillMode]="formUiStyle.dropDownFillMode"
         [data]="ddlPrograms | async" textField="programName" valueField="programId" 
-         [valuePrimitive]="true"
+         [valuePrimitive]="true"  
         >
       </kendo-dropdownlist>
     </kendo-floatinglabel>

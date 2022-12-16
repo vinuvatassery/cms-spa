@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Dependent } from '../entities/dependent';
@@ -14,9 +14,11 @@ import { ConfigurationProvider, LoggingService, NotificationSnackbarService, Sna
 
 
 /** Facade **/
-import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { WorkflowFacade } from './workflow.facade';
+import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -35,7 +37,7 @@ export class FamilyAndDependentFacade {
   private ddlRelationshipsSubject = new Subject<any>();
   private dependentsSubject = new Subject<any>();
   private productsSubject = new Subject<any>();
-  private dependentStatusSubject =  new BehaviorSubject<any>([]);
+  private existdependentStatusSubject =   new Subject<any>();
   private dependentStatusGetSubject = new Subject<any>();
   private dependentAddNewSubject = new Subject<any>();
   private dependentUpdateNewSubject = new Subject<any>();
@@ -49,7 +51,7 @@ export class FamilyAndDependentFacade {
   dependentSearch$ = this.dependentSearchSubject.asObservable();
   ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   dependents$ = this.dependentsSubject.asObservable();
-  dependentStatus$ = this.dependentStatusSubject.asObservable();
+  existdependentStatus$ = this.existdependentStatusSubject.asObservable();
   dependentStatusGet$ = this.dependentStatusGetSubject.asObservable();
   dependentAddNewGet$ = this.dependentAddNewSubject.asObservable();
   dependentUpdateNew$ = this.dependentUpdateNewSubject.asObservable();
@@ -164,8 +166,7 @@ export class FamilyAndDependentFacade {
   GetExistingClientDependent(clientDependentId: string) : void {   
     this.ShowLoader(); 
     this.dependentDataService.getExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
-      next: (dependentGetExistingResponse) => {
-        dependentGetExistingResponse.ssn=  'xxx-xx-' +dependentGetExistingResponse.ssn.slice(-4);
+      next: (dependentGetExistingResponse) => {      
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
         this.HideLoader();
       },
@@ -205,24 +206,9 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string): void {
+  updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string) {    
     this.ShowLoader();
-    this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents).subscribe({
-      next: (dependentStatusResponse) => {        
-       
-        if(dependentStatusResponse == true)
-        {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')  
-        }
-        
-        this.dependentStatusSubject.next(dependentStatusResponse);
-        this.HideLoader();
-      },
-      error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
-        
-      },
-    });
+    return this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents)
   }
 
   loadDependentsStatus(clientCaseEligibilityId : string) : void {
@@ -236,8 +222,8 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  loadDependentSearch(text : string): void {
-    this.dependentDataService.searchDependents(text).subscribe({
+  loadDependentSearch(text : string , clientId : number): void {
+    this.dependentDataService.searchDependents(text , clientId).subscribe({
       next: (dependentSearchResponse) => {
 
         Object.values(dependentSearchResponse).forEach((key) => {            
@@ -264,15 +250,16 @@ export class FamilyAndDependentFacade {
 
 
 
-  AddExistingDependent(data : any) : void {
+  AddExistingDependent(data : any) : void {    
+    this.ShowLoader();
     this.dependentDataService.addExistingDependent(data ).subscribe({
       next: (dependentStatusResponse) => {    
-        if(dependentStatusResponse == true)
+        if(dependentStatusResponse)
         {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Client Added as Dependent')  
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent added successfully')  
         }
         
-        this.dependentStatusSubject.next(dependentStatusResponse);
+        this.existdependentStatusSubject.next(dependentStatusResponse);
       },
       error: (err) => {
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    

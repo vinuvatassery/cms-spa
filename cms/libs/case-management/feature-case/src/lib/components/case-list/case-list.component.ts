@@ -9,7 +9,7 @@ import {
 import { CaseFacade } from '@cms/case-management/domain';
  
 import { UIFormStyle } from '@cms/shared/ui-tpa' 
- 
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-case-list',
   templateUrl: './case-list.component.html',
@@ -19,28 +19,34 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 export class CaseListComponent implements OnInit {
 
 public isGridLoaderShow = false;
-  public pageSize = 10;
-  public skip = 0;
-  public pageSizes = [
-    {text: '5', value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100}
-  ];
+public sortValue = this.caseFacade.sortValue;
+public sortType = this.caseFacade.sortType;
+public pageSizes = this.caseFacade.gridPageSizes;
+public gridSkipCount = this.caseFacade.skipCount;
+public sort = this.caseFacade.sort;
+public state!: State;
   /*** Input properties ***/
   @Input() cases: any;
  
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  public buttonCount = 2;
-  public sizes = [10, 20, 50];
+ 
+ 
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadDdlGridColumns();
+  }
+  ngOnChanges(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+ 
   }
 
   /** Private methods **/
