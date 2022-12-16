@@ -20,7 +20,9 @@
               formControlName="address1"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Address line 1 is required</kendo-formerror>
+            <kendo-formerror> 
+              <!-- <span *ngIf="maillingAddressForm.address1.errors.required"></span> -->
+              Address line 1 is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -51,7 +53,7 @@
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: City is required</kendo-formerror>
+            <kendo-formerror>City is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -70,13 +72,14 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: State is required</kendo-formerror>
+            <kendo-formerror>State is required</kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3">
             <kendo-formfield>
-            <kendo-floatinglabel text="Zip">
+            <kendo-floatinglabel text="Zip" class="">
               <!-- <input kendoTextBox aria-label="zip optional" /> -->
+
               <kendo-textbox 
               aria-label="Zip" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -84,13 +87,19 @@
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Zip is required</kendo-formerror>
+            <kendo-formerror>Zip is required</kendo-formerror>
           </kendo-formfield>
           </div>
-        </div>
+          <div class="flex-col flex-col-3 mt-04" *ngIf="showMailAddressValidationLoader$ | async">
+            <span class="app-c-badge  mt-3">       
+              <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+              <span> Validating address...</span> 
+            </span>           
+          </div>
+        </div>    
         <div class="flex-row" *ngIf="mailingAddressIsNotValid">
           <div class="flex-col flex-col-6">
-          <span class="app-c-badge badge-warn-light mt-3">
+          <span class="app-c-badge badge-warn-light mt-3">       
             <span class="material-icons" aria-label="income Information" aria-hidden="true">
               info
             </span>
@@ -131,7 +140,7 @@
               formControlName="address1"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Address line 1 is required</kendo-formerror>
+            <kendo-formerror>Address line 1 is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -147,7 +156,7 @@
               formControlName="address2"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Address line 1 is required</kendo-formerror>
+            <kendo-formerror>Address line 1 is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -162,7 +171,7 @@
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: City is required</kendo-formerror>
+            <kendo-formerror>City is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -182,7 +191,7 @@
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: State is required</kendo-formerror>
+            <kendo-formerror>State is required</kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3">
@@ -196,8 +205,14 @@
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Zip is required</kendo-formerror>
+            <kendo-formerror>Zip is required</kendo-formerror>
           </kendo-formfield>
+          </div>
+          <div class="flex-col flex-col-3 mt-04" *ngIf="showHomeAddressValidationLoader$ | async">
+            <span class="app-c-badge  mt-3">       
+              <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+              <span> Validating address...</span> 
+            </span>           
           </div>
         </div>
         <div class="flex-row">
@@ -216,7 +231,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: County is required</kendo-formerror>
+            <kendo-formerror>County is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -338,7 +353,7 @@
                   for="unstable"
                 ></kendo-label>
               </span>
-              <kendo-formerror>Error: How stable is your housing is required</kendo-formerror>
+              <kendo-formerror>How stable is your housing is required</kendo-formerror>
           </kendo-formfield>
         </div>   
       </div>
@@ -357,7 +372,7 @@
               mask="(999) 000-0000"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Home phone is required</kendo-formerror>
+            <kendo-formerror>Home phone is required</kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-6 mt-3">
@@ -424,7 +439,7 @@
               mask="(999) 000-0000"
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Cell phone is required</kendo-formerror>
+            <kendo-formerror>Cell phone is required</kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-6 mt-3">
@@ -490,7 +505,7 @@
                 mask="(999) 000-0000"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Work phone is required</kendo-formerror>
+              <kendo-formerror>Work phone is required</kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-6 mt-3">
@@ -557,7 +572,7 @@
                 mask="(999) 000-0000"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Other phone is required</kendo-formerror>
+              <kendo-formerror>Other phone is required</kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-3">
@@ -571,7 +586,7 @@
                 formControlName="otherPhoneNote"
                   > </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Note is required</kendo-formerror>
+              <kendo-formerror>Note is required</kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-3 mt-3">
@@ -636,7 +651,16 @@
                 formControlName="email"
                 > </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Not valid email format</kendo-formerror>
+              <!-- <div *ngIf="contactInfoForm.controls.maillingAddress.controls.address1.invalid">  -->
+              <kendo-formerror>Not valid email format</kendo-formerror>
+              <!-- <kendo-formerror *ngIf="maillingAddressForm['address1'].errors?.required"> -->
+                <!-- <kendo-formerror *ngIf="contactInfoForm.controls['maillingAddress'].controls.address1.errors.required">
+                Email is required
+              </kendo-formerror>
+            </div> -->
+              <!-- <kendo-formerror *ngIf="accountDetails.controls.email.errors?.email">
+                Not a valid email format
+              </kendo-formerror> -->
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-6 mt-3">
@@ -693,7 +717,7 @@
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <kendo-formfield>
-              <kendo-floatinglabel text="Preferred Contact Method">
+              <kendo-floatinglabel text="Preferred Contact">
                 <kendo-dropdownlist 
                 [fillMode]="formUiStyle.dropDownFillMode" 
                 [data]="preferredContactMethods"
@@ -702,7 +726,7 @@
                 >
                 </kendo-dropdownlist>
               </kendo-floatinglabel>
-              <kendo-formerror>Error: Preferred contact method is required</kendo-formerror>
+              <kendo-formerror>Preferred contact is required</kendo-formerror>
             </kendo-formfield>
             </div>
           </div>
@@ -733,7 +757,7 @@
         <div class="flex-row">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
-            <kendo-floatinglabel text="Contacts Name">
+            <kendo-floatinglabel text="Contact's Name">
               <kendo-textbox 
               aria-label="contacts name" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -741,7 +765,7 @@
               formControlName="contactName"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Contacts name is required</kendo-formerror>
+            <kendo-formerror>Contacts name is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -760,23 +784,22 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Contact's relationship to client is required</kendo-formerror>
+            <kendo-formerror>Contact's relationship to client is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
-        <div class="flex-row">
+        <div class="flex-row" *ngIf="showRelationshipOtherDec">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Description">
-              <kendo-textbox 
-              [disabled]="true" 
+              <kendo-textbox              
               aria-label="other description"
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="50"
               formControlName="otherDesc"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Description is required</kendo-formerror>
+            <kendo-formerror>Description is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -793,7 +816,7 @@
               mask="(999) 000-0000"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Error: Contact's phone number is required</kendo-formerror>
+            <kendo-formerror>Contact's phone number is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -823,7 +846,7 @@
     <form [formGroup]="selectedAddressForm">
     <kendo-formfield>
     <div class="flex-row mt-4">
-      <!-- <kendo-formerror>Error: Required to choose one of the address</kendo-formerror> -->
+      <!-- <kendo-formerror>Required to choose one of the address</kendo-formerror> -->
       <div class="flex-col flex-col-6">
           <span>
           <input
@@ -904,7 +927,7 @@
     <form [formGroup]="selectedAddressForm">
     <kendo-formfield>
     <div class="flex-row mt-4">
-      <!-- <kendo-formerror>Error: Required to choose one of the address</kendo-formerror> -->
+      <!-- <kendo-formerror>Required to choose one of the address</kendo-formerror> -->
       <div class="flex-col flex-col-6">
           <span>
           <input

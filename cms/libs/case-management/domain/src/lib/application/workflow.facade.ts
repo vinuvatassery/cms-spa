@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import { BehaviorSubject, forkJoin, mergeMap, of, Subject } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, mergeMap, of, Subject } from 'rxjs';
 /** Entities **/
 import { DatapointsAdjustment, WorkFlowProgress, WorkflowMaster, WorkflowSession } from '../entities/workflow';
 import { CompletionChecklist, WorkflowProcessCompletionStatus } from '../entities/workflow-stage-completion-status';
@@ -175,7 +175,16 @@ export class WorkflowFacade {
         completedDatapointsCount: completionStatus?.completedCount ?? 0
       }
 
-      return this.workflowService.saveWorkflowProgress(navUpdate, sessionld);
+      return this.workflowService.saveWorkflowProgress(navUpdate, sessionld)
+      .pipe(
+        catchError((err: any) => {
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+          if (!(err?.error ?? false)) {
+            this.loggingService.logException(err);
+          }
+          return of(false);
+        })
+      );
     }
 
     return of(false);

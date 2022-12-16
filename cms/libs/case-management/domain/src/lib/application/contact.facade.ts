@@ -7,6 +7,8 @@ import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { LovFacade, ZipCodeFacade } from '@cms/system-config/domain'
+import { catchError, of } from 'rxjs';
+import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -40,7 +42,8 @@ export class ContactFacade {
   /** Constructor**/
   constructor(
     private readonly contactDataService: ContactDataService,
-    private readonly lovFacade: LovFacade,
+    private readonly loggingService: LoggingService,
+    private readonly snackbarService: NotificationSnackbarService,
     private readonly zipCodeFacade: ZipCodeFacade
   ) { }
 
@@ -51,7 +54,7 @@ export class ContactFacade {
         this.ddlStatesSubject.next(ddlStatesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -62,10 +65,10 @@ export class ContactFacade {
         this.ddlCountriesSubject.next(ddlCountriesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
-  }  
+  }
 
   loadDdlPreferredContactMethods(): void {
     this.contactDataService.loadDdlPreferredContactMethods().subscribe({
@@ -75,7 +78,7 @@ export class ContactFacade {
         );
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -86,7 +89,7 @@ export class ContactFacade {
         this.addressesSubject.next(addressesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -97,7 +100,7 @@ export class ContactFacade {
         this.ddlAddressTypesSubject.next(ddlAddressTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -108,7 +111,7 @@ export class ContactFacade {
         this.phoneNumbersSubject.next(phoneNumbersResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -119,7 +122,7 @@ export class ContactFacade {
         this.ddlPhoneTypesSubject.next(ddlPhoneTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -130,7 +133,7 @@ export class ContactFacade {
         this.emailAddressesSubject.next(emailAddressesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -143,7 +146,7 @@ export class ContactFacade {
         );
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -154,7 +157,7 @@ export class ContactFacade {
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -164,10 +167,27 @@ export class ContactFacade {
   }
 
   createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
-    return this.contactDataService.createContactInfo(clientId, clientCaseEligibilityId, contactInfo);
+    return this.contactDataService.createContactInfo(clientId, clientCaseEligibilityId, contactInfo)
+      .pipe(
+        catchError((err: any) => {
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+          if (!(err?.error ?? false)) {
+            this.loggingService.logException(err);
+          }
+          return of(false);
+        })
+      );
   }
 
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
-    return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo);
+    return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo).pipe(
+      catchError((err: any) => {
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+        }
+        return of(false);
+      })
+    );
   }
 }
