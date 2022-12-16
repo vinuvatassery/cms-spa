@@ -21,7 +21,6 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror> 
-              <!-- <span *ngIf="maillingAddressForm.address1.errors.required"></span> -->
               Address line 1 is required</kendo-formerror>
           </kendo-formfield>
           </div>
@@ -30,7 +29,6 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 2 (Optional)">
-              <!-- <input kendoTextBox aria-label="address line 2" /> -->
               <kendo-textbox 
               aria-label="address line 2" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -45,7 +43,6 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="City">
-              <!-- <input kendoTextBox aria-label="city" /> -->
               <kendo-textbox 
               aria-label="city" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -78,8 +75,6 @@
           <div class="flex-col flex-col-3">
             <kendo-formfield>
             <kendo-floatinglabel text="Zip" class="">
-              <!-- <input kendoTextBox aria-label="zip optional" /> -->
-
               <kendo-textbox 
               aria-label="Zip" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -132,7 +127,6 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 1">
-              <!-- <input kendoTextBox aria-label="address line 1" /> -->
               <kendo-textbox 
               aria-label="address line 1" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -148,7 +142,6 @@
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 2 (Optional)">
-              <!-- <input kendoTextBox aria-label="address line 2" /> -->
               <kendo-textbox 
               aria-label="address line 2" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -197,7 +190,6 @@
           <div class="flex-col flex-col-3">
             <kendo-formfield>
             <kendo-floatinglabel text="Zip">
-              <!-- <input kendoTextBox aria-label="zip optional" /> -->
               <kendo-textbox 
               aria-label="zip optional" 
               [fillMode]="formUiStyle.inputFillMode"
@@ -864,7 +856,6 @@
     <form [formGroup]="selectedAddressForm">
     <kendo-formfield>
     <div class="flex-row mt-4">
-      <!-- <kendo-formerror>Required to choose one of the address</kendo-formerror> -->
       <div class="flex-col flex-col-6">
           <span>
           <input
@@ -878,7 +869,6 @@
           />
           <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
         </span>
-        <!-- </kendo-formfield>      -->
         <p class="mt-2 ml-3">
         {{mailAddressEntered?.address1 | uppercase }} <br>
         {{mailAddressEntered?.address2 | uppercase }} <br>
@@ -886,7 +876,6 @@
         </p>
       </div>
       <div class="flex-col flex-col-6">
-        <!-- <kendo-formfield> -->
           <span>
           <input
           type="radio"
@@ -945,7 +934,6 @@
     <form [formGroup]="selectedAddressForm">
     <kendo-formfield>
     <div class="flex-row mt-4">
-      <!-- <kendo-formerror>Required to choose one of the address</kendo-formerror> -->
       <div class="flex-col flex-col-6">
           <span>
           <input
@@ -959,7 +947,6 @@
           />
           <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
         </span>
-        <!-- </kendo-formfield>      -->
         <p class="mt-2 ml-3">
         {{homeAddressEntered?.address1 | uppercase }} <br>
         {{homeAddressEntered?.address2 | uppercase }} <br>
@@ -967,7 +954,6 @@
         </p>
       </div>
       <div class="flex-col flex-col-6">
-        <!-- <kendo-formfield> -->
           <span>
           <input
           type="radio"
