@@ -271,7 +271,7 @@
   
   <case-management-client-edit-view-sex-at-birth [appInfoForm]="appInfoForm"></case-management-client-edit-view-sex-at-birth>
   
-  <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm" (RaceAndEthnicityData)="setRaceAndEthnicityData($event)"></case-management-client-edit-view-race-and-ethnicity>
+  <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm" [raceAndEthnicityPrimaryData]="raceAndEthnicityPrimaryData" [raceAndEthnicityPrimaryNotListed]="raceAndEthnicityPrimaryNotListed" (RaceAndEthnicityData)="setRaceAndEthnicityData($event)" (RaceAndEthnicityChange)="raceAndEthnicityChange($event)"></case-management-client-edit-view-race-and-ethnicity>
   <section>
     <h5>
       Needs materials in alternate format (Braille, large print, audio recordings,
