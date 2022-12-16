@@ -28,7 +28,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomeDetailComponent implements OnInit {
- 
+  public uploadRemoveUrl = "removeUrl";
   public uploadedIncomeFile: any[] = [ ];
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
@@ -307,11 +307,18 @@ loadingIncomeDetailsIntoForm(response: any){
   }
 
   if (!this.hasNoProofOfIncome) {
+    this.loadProofOfIncomeTypes();
     this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValue(this.selectedIncome.proofIncomeTypeCode);
     this.incomeTypesOther = this.selectedIncome.proofIncomeTypeCode;
-    this.loadProofOfIncomeTypes();
     this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity(); 
   }
+
+  if (this.incomeTypesOther == 'O') {
+    this.IncomeDetailsForm.controls['otherProofOfIncome'].setValue(this.selectedIncome.otherProofOfIncome);
+    this.IncomeDetailsForm.controls['otherProofOfIncome'].updateValueAndValidity();
+ 
+  }
+ 
   if( this.selectedIncome?.clientDocumentId  && this.selectedIncome?.documentName && this.selectedIncome?.documentPath){
     this.proofOfIncomeValidator = false;
     this.proofOfIncomeFiles = true;
