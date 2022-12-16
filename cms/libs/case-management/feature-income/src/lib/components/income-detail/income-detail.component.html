@@ -87,11 +87,11 @@
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
           <kendo-upload aria-label="upload proof" name="upload proof" 
             [restrictions]="uploadFileRestrictions.fileRestrictions" [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
-            #incomeUploadedProof>
+            #incomeUploadedProof [ngModel]="uploadedIncomeFile" [ngModelOptions]="{standalone: true}">
+ 
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
-          <kendo-formerror *ngIf="proofOfIncomeValidator"> Upload proof is required
-          </kendo-formerror>
+          <kendo-formerror *ngIf="proofOfIncomeValidator"> Upload proof is required </kendo-formerror>
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">

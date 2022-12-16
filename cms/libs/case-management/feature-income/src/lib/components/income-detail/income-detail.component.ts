@@ -28,6 +28,8 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomeDetailComponent implements OnInit {
+ 
+  public uploadedIncomeFile: any[] = [ ];
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   /** Input properties **/
@@ -72,7 +74,7 @@ export class IncomeDetailComponent implements OnInit {
     noIncomeProofFlag: new FormControl('', []),
     noProofOfIncome: new FormControl('', []),
     incomeNote: new FormControl('', []),
-    incomeUploadedProof: new FormControl('', []),
+    // incomeUploadedProof: new FormControl('', []),
     proofIncomeTypeCode: new FormControl('', []),
     otherProofOfIncome: new FormControl('', []),
   });
@@ -91,7 +93,9 @@ export class IncomeDetailComponent implements OnInit {
 
     if(this.isEditValue){
       this.loadIncomeDetails();
-    } 
+    } else{
+     this.selectedIncome = [];
+    }
   }
 
   /** Private methods **/
@@ -153,15 +157,19 @@ export class IncomeDetailComponent implements OnInit {
 
   onProofOfIncomeValueChanged() {
     this.hasNoProofOfIncome = !this.hasNoProofOfIncome;
-    if (this.hasNoProofOfIncome) {
+    this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
+  }
+
+  onProofofIncomeValueChangedUpdated(hasNoProofOfIncomeStatus: any){
+    if (hasNoProofOfIncomeStatus) {
       this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([]);
       this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
-      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("Y")
+      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("Y");
       this.proofOfIncomeValidator = false;
     }
     else {
       this.loadProofOfIncomeTypes();
-      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("N")
+      this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("N");
     }
   }
   selectProofOfIncome(): void {
@@ -171,11 +179,12 @@ export class IncomeDetailComponent implements OnInit {
   public submitIncomeDetailsForm(): void {
     this.setValidators();
     if(this.isEditValue){
+      this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
       this.proofOfIncomeValidator = false;
     }
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
-      let incomeData = this.IncomeDetailsForm.value
 
+      let incomeData = this.IncomeDetailsForm.value 
       incomeData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
       incomeData["clientId"] = this.clientId;
       incomeData["clientCaseId"]=this.clientCaseId;
@@ -202,11 +211,14 @@ export class IncomeDetailComponent implements OnInit {
     }
 
     if(this.isEditValue){
+
       this.incomeFacade.ShowLoader();
       incomeData["clientIncomeId"] = this.selectedIncome.clientIncomeId;
       incomeData["concurrencyStamp"]=this.selectedIncome.concurrencyStamp;
+      incomeData["monthlyIncome"]=this.selectedIncome.monthlyIncome;
       if(this.selectedIncome.clientDocumentId != null){
-        incomeData["documentConcurrencyStamp"]=this.selectedIncome.documentConcurrencyStamp;
+        incomeData["clientDocumentId"]=this.selectedIncome.clientDocumentId; 
+        incomeData["documentConcurrencyStamp"]=this.selectedIncome.documentConcurrencyStamp; 
       }
     
       incomeData["activeFlag"]=this.selectedIncome.activeFlag;
@@ -215,14 +227,11 @@ export class IncomeDetailComponent implements OnInit {
           this.incomeFacade.loadIncomes(this.clientId, this.clientCaseEligibilityId);
           this.closeIncomeDetailPoup(); 
           this.incomeFacade.HideLoader();
-          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Income updated successfully.')
-          
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Income updated successfully.') 
         },
-        error: (err) => {
-   
+        error: (err) => { 
           this.incomeFacade.HideLoader();
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR, err)
-
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR, err) 
         },
       });
     }
@@ -234,6 +243,7 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
+ 
     this.proofOfIncomeFiles = event.files[0].rawFile
     this.proofOfIncomeValidator = false;
     console.log(this.proofOfIncomeFiles)
@@ -287,25 +297,34 @@ loadingIncomeDetailsIntoForm(response: any){
   this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
   this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
   this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
- 
+  this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue("Y");
   if(this.selectedIncome?.noIncomeProofFlag =="Y"){
     this.IncomeDetailsForm.controls["noProofOfIncome"].setValue(true);
+    this.hasNoProofOfIncome = this.IncomeDetailsForm.controls["noProofOfIncome"].value;
   } else{
     this.IncomeDetailsForm.controls["noProofOfIncome"].setValue(false);
+    this.hasNoProofOfIncome = this.IncomeDetailsForm.controls["noProofOfIncome"].value;
   }
-  this.hasNoProofOfIncome = this.IncomeDetailsForm.controls["noProofOfIncome"].value;
+
   if (!this.hasNoProofOfIncome) {
     this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValue(this.selectedIncome.proofIncomeTypeCode);
-    this.incomeTypesOther = this.selectedIncome.proofIncomeTypeCode
+    this.incomeTypesOther = this.selectedIncome.proofIncomeTypeCode;
     this.loadProofOfIncomeTypes();
-    this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
-    if (!this.proofOfIncomeFiles) {
-      this.proofOfIncomeValidator = true;
-    }
-    else {
-      this.proofOfIncomeValidator = false;
-    }
+    this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity(); 
   }
+  if( this.selectedIncome?.clientDocumentId  && this.selectedIncome?.documentName && this.selectedIncome?.documentPath){
+    this.proofOfIncomeValidator = false;
+    this.proofOfIncomeFiles = true;
+    this.uploadedIncomeFile  = [
+      { name: this.selectedIncome.documentName,
+          src: this.selectedIncome.documentPath,
+          uid: this.selectedIncome.clientDocumentId
+      },
+  ];
+    
+  }
+
+
 }
   ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
