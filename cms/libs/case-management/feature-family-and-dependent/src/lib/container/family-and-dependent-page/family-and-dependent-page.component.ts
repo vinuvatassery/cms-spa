@@ -144,8 +144,17 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
      }
     
   /** Internal event methods **/
-  onNoFamilyMemberClicked() {  
+  onNoFamilyMemberClicked() {      
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;    
+    this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.familyAndDependentFacade.updateDependentStatus
+    (this.clientCaseEligibilityId,this.familyStatus).subscribe((isSaved) => {         
+      if (isSaved == true) {    
+        this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')        
+                
+      }
+    });    
+   
   }
 
   private loadDependentSearch(text : string ) {

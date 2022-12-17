@@ -191,7 +191,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
          this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
              {     
-               clientId:  existDependentData?.clientId,  
+               clientId:  existDependentData?.dependentClientId,  
                dependentClientId:  existDependentData?.dependentClientId,     
                existRelationshipCode: existDependentData?.relationshipCode, 
                clientDependentId: existDependentData?.clientDependentId,

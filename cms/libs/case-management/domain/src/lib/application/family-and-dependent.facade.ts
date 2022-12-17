@@ -213,9 +213,11 @@ export class FamilyAndDependentFacade {
   }
 
   loadDependentsStatus(clientCaseEligibilityId : string) : void {
+    this.ShowLoader();
     this.dependentDataService.loadDependentsStatus(clientCaseEligibilityId).subscribe({
       next: (dependentStatusGetResponse) => {
         this.dependentStatusGetSubject.next(dependentStatusGetResponse);
+        this.HideLoader();
       },
       error: (err) => {  
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
@@ -230,8 +232,8 @@ export class FamilyAndDependentFacade {
         Object.values(dependentSearchResponse).forEach((key) => {   
                    
           key.fullName = key.firstName + ' ' + key.lastName
-          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);
-          key.dob = new Date(key?.dob).toLocaleDateString()
+          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);          
+          key.dob = new Date(key?.dob).toLocaleDateString().replace('/','-').replace('/','-')
           key.fullCustomName =key?.fullName + ' DOB '+key?.dob+' SSN '+key?.ssn      
           
           if(key?.clientId > 0)   
