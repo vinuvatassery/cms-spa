@@ -184,7 +184,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
        if(existDependentData?.dependentClientId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-        this.fullClientName = fullName + ' DOB '+ new Date(existDependentData?.dob).toLocaleDateString().toString()+' SSN '+existDependentData?.ssn  
+        this.fullClientName = fullName + ' DOB '+ new Date(existDependentData?.dob).toLocaleDateString().toString()+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
 
         this.clientDependentId = existDependentData?.clientDependentId;
         this.dependentTypeCode = DependentTypeCode.CAClient;

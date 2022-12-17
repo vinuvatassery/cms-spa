@@ -192,6 +192,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
 
   AddUpdateExistingDependentHandle(data : any)
   {
+    data.parentClientId =   this.clientId 
     this.familyAndDependentFacade.AddExistingDependent(data);
   }
  
