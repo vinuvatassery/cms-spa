@@ -171,8 +171,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.contactFacade.loadDdlStates();
   }
 
-  private loadDdlCountries(stateCode: string) {
-    this.contactFacade.loadDdlCountries(stateCode);
+  private loadDdlCounties(stateCode: string) {
+    this.contactFacade.loadDdlCounties(stateCode);
   }
 
   private addContactInfoFormChangeSubscription() {
@@ -632,11 +632,15 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   private loadContactInfo() {
+    this.loaderService.show()
     this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '').subscribe((data: ContactInfo) => {
       if (data) {
         this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
         this.contactInfo = data;
         this.setFormValues();
+        if(!this.isEdit){
+          this.loadDdlCounties('OR');
+        }
       }
     });
   }
@@ -712,6 +716,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.contactInfoForm.get('familyAndFriendsContact')?.patchValue(this.contactInfo?.friedsOrFamilyContact);
       this.contactInfoForm.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.patchValue(this.contactInfo?.friedsOrFamilyContact?.noFriendOrFamilyContactFlag === StatusFlag.Yes);
       this.adjustAttributeInit();
+      this.loaderService.hide();
     }
   }
 
@@ -761,7 +766,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private addStateChangesubscription() {
     (this.contactInfoForm.get('homeAddress') as FormGroup)?.controls['state']?.valueChanges.subscribe(value => {
-      this.loadDdlCountries(value);
+      this.loadDdlCounties(value);
     })
   }
 
