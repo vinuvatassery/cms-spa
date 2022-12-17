@@ -26,11 +26,8 @@ export class HealthCareProviderDetailComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadDdlStates();
+    console.log('')
   }
 
-  /** Private methods **/
-  private loadDdlStates() {
-    this.providerFacade.loadDdlStates();
-  }
+  
 }

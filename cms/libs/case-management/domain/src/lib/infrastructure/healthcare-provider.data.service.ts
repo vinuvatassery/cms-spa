@@ -17,14 +17,8 @@ export class HealthcareProviderDataService {
               private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  loadHealthCareProviders(ClientCaseEligibilityId : string) {     
-    return this.http.get<HealthcareProvider[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${ClientCaseEligibilityId}`
-    );
-    
-  }
 
+  ///1
   removeHealthCareProvider(ClientCaseEligibilityId : string,ProviderId : string)
   {
     return this.http.delete(
@@ -34,16 +28,46 @@ export class HealthcareProviderDataService {
     );
   }
 
-  UpdateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
+
+  ///2
+  loadProviderStatusStatus(clientCaseEligibilityId : string) {     
+    return this.http.get<HealthcareProvider[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers/${clientCaseEligibilityId}/provider-status`
+    );
+    
+  }
+  
+  ///3
+  updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
   {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/clientCaseEligibilityId=${ClientCaseEligibilityId}`+
-      `&nohealthCareProviderFlag=${nohealthCareProviderFlag}`     
+      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/${nohealthCareProviderFlag}`     
     ,null);
   }
 
-  loadDdlStates() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+
+
+  ///4
+  loadHealthCareProviders(ClientCaseEligibilityId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
+    return this.http.get<HealthcareProvider[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers?clientCaseEligibilityId=${ClientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+    
   }
+
+
+    ///1
+    addExistingHealthCareProvider(ClientCaseEligibilityId : string,ProviderId : string)
+    {
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}`+
+        `/case-management/healthcare-providers/${ClientCaseEligibilityId}/providers`+
+        `/${ProviderId}`,null
+      );
+    }
+  
+ 
 }

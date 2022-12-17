@@ -8,20 +8,26 @@
           <input
             type="checkbox"
             kendoCheckBox
-            (change)="onProviderValueChanged()"
+            (click)="onProviderValueChanged()"
             aria-labelledby="clientDoesNotHaveHealthcareProvider"
             id="noHealthcareProvider"
+            [checked]="healthCareProvideGetFlag$ | async"   
           />
           <label class="k-checkbox-label" for="noHealthcareProvider"
             >Client does not have a healthcare provider</label
           >
           </span>
         </div>
-        <div class="flex-col">
-          <case-management-health-care-provider-list
-            [hasNoProvider]="hasNoProvider"
-            [healthCareProvidersData]="healthCareProviders$"
-            (deleteConfimedEvent)="handlePrvRemove($event)"           
+        <div class="flex-col"  *ngIf="!isProvidersGridDisplay">
+          <case-management-health-care-provider-list          
+            [pageSizes]="pageSizes"
+            [sortValue]="sortValue"
+            [sortType]="sortType"
+            [sort]="sort"
+            [removeHealthProvider$]="removeHealthProvider$"
+            [healthCareProvidersData$]="healthCareProviders$"
+            (deleteConfimedEvent)="handlePrvRemove($event)"    
+            (loadProvidersListEvent)="loadProvidersHandle($event)"          
           ></case-management-health-care-provider-list>
         </div>
       </div>

@@ -1,7 +1,9 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import {  HealthcareProviderFacade } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import {  HealthcareProviderFacade, NavigationType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-healthcare-provider-page',
@@ -11,58 +13,120 @@ import { Subscription } from 'rxjs';
 })
 export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
 
-  ClientCaseEligibilityId  = "90478CC0-1EB5-4D76-BC49-05423EFA3D93";
+ 
+  clientId ! : number
+  clientCaseEligibilityId ! : string
 
-  /** Public properties **/
-  hasNoProvider = false; 
+  /** Public properties **/  
   healthCareProviders$ = this.healthProvider.healthCareProviders$;
   removeHealthProvider$ =this.healthProvider.removeHealthProvider$;
-
-
+  healthCareProvideGetFlag$  =this.healthProvider.healthCareProvideGetFlag$;
+  isProvidersGridDisplay =true;
+  pageSizes = this.healthProvider.gridPageSizes;
+  sortValue  = this.healthProvider.sortValue;
+  sortType  = this.healthProvider.sortType;
+  sort  = this.healthProvider.sort;
+  clientCaseId! : string;
+  sessionId! : string;
+  providersStatus!: StatusFlag;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
-
+  private checkBoxSubscription !: Subscription;
+  
   /** Constructor **/
   constructor(
-    private healthProvider:HealthcareProviderFacade) { }
+    private healthProvider:HealthcareProviderFacade,
+    private route: ActivatedRoute,
+    private workFlowFacade: WorkflowFacade) { }
 
   /** Lifecycle Hooks **/
-  ngOnInit(): void {
-    this.loadHealthCareProviders(this.ClientCaseEligibilityId);
-    this.saveClickSubscribed();
+  ngOnInit(): void {  
+    this.saveClickSubscribed();    
+    this.loadCase();
   }
-
-   /** Private methods **/
-   private loadHealthCareProviders(ClientCaseEligibilityId : string) {  
-    this.healthProvider.loadHealthCareProviders(ClientCaseEligibilityId);   
-  }
-
-  private removeHealthCareProvider(ProviderId : string){
-     this.healthProvider.removeHealthCareProviders(this.ClientCaseEligibilityId, ProviderId);      
-  }
-  UpdateHealthCareProvidersFlag(nohealthCareProviderFlag : string) {
-    this.healthProvider.UpdateHealthCareProvidersFlag(this.ClientCaseEligibilityId, nohealthCareProviderFlag);   
-  }
-
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+  }
+   /** Private methods **/
+   private loadCase()
+   {  
+    this.sessionId = this.route.snapshot.queryParams['sid'];    
+    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
+     this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+     .subscribe((session: any) => {      
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
+      this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
+      this.clientId = JSON.parse(session.sessionData).clientId   
+      this.loadProviderStatus();      
+     });        
+   } 
+
+   private loadProviderStatus() : void 
+   {    
+        this.healthProvider.loadProviderStatusStatus(this.clientCaseEligibilityId);
+        this.checkBoxSubscription= 
+        this.healthCareProvideGetFlag$.pipe(filter(x=> typeof x === 'boolean')).subscribe
+      ((x: boolean)=>
+      {               
+        this.isProvidersGridDisplay = x
+      
+      });
+   }
+
+   loadProvidersHandle( gridDataRefinerValue : any ): void
+    {    
+        const gridDataRefiner = 
+        {
+          skipcount: gridDataRefinerValue.skipCount,
+          maxResultCount : gridDataRefinerValue.pagesize,
+          sort : gridDataRefinerValue.sortColumn,
+          sortType : gridDataRefinerValue.sortType,
+        }
+   
+        if((this.isProvidersGridDisplay ?? false) == false)
+        {
+          this.pageSizes = this.healthProvider.gridPageSizes;
+        this.healthProvider.loadHealthCareProviders(this.clientCaseEligibilityId
+          , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
+        }
+    }
+
+  private removeHealthCareProvider(ProviderId : string){
+     this.healthProvider.removeHealthCareProviders(this.clientCaseEligibilityId, ProviderId);      
   }
 
   /** Private Methods **/
   private saveClickSubscribed(): void {
-    // this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-    //   this.healthProvider.save().subscribe((response: boolean) => {
-    //     if(response){
-    //       this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-    //     }
-    //   })
-    // });
+    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),  
+    ).subscribe(([navigationType, isSaved ]) => {         
+      if (isSaved == true) {    
+        this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
+        this.checkBoxSubscription.unsubscribe();      
+        this.workFlowFacade.navigate(navigationType);
+      }
+    });
   }
+
+
+  private save() {       
+    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+     return  this.healthProvider.updateHealthCareProvidersFlag
+      (this.clientCaseEligibilityId,this.providersStatus)
+       .pipe
+      (
+       catchError((err: any) => {                     
+         this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+         return  of(false);
+       })  
+      )  
+     }
 
   /** Internal event methods **/
   onProviderValueChanged() {
-    this.hasNoProvider = !this.hasNoProvider;
-    this.UpdateHealthCareProvidersFlag( this.hasNoProvider == true ? "Y" : "N");  
+    this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
   }
 
 /** events from child components**/
