@@ -99,9 +99,8 @@ export class WorkflowFacade {
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: newCaseFormData?.controls["applicationDate"].value
     }      
-    //sessionData.caseStartDate = this.intl.parseDate(sessionData.caseStartDate.toLocaleDateString())
+ 
    sessionData.caseStartDate = this.intl.parseDate(Intl.DateTimeFormat('en-US').format(sessionData.caseStartDate))
-    //sessionData.caseStartDate = Intl.DateTimeFormat('en-US').format(sessionData.caseStartDate)
     
     this.workflowService.createNewSession(sessionData)
       .subscribe({
