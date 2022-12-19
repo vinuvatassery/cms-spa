@@ -35,6 +35,7 @@ export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
 export * from './lib/entities/vendor';
 export * from './lib/entities/insurance-plan';
+export * from './lib/entities/client-insurance-policy';
 
 
 
