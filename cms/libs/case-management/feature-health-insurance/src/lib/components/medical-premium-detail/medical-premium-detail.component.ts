@@ -19,6 +19,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class MedicalPremiumDetailComponent implements OnInit {
  currentDate = new Date();
+ public isaddNewInsuranceProviderOpen = false;
+ public isaddNewInsurancePlanOpen = false;
  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() dialogTitle!: string;
@@ -109,5 +111,23 @@ export class MedicalPremiumDetailComponent implements OnInit {
   }
   onToggleNewPersonClicked() {
     this.isToggleNewPerson = !this.isToggleNewPerson;
+  }
+
+
+
+  public addNewInsuranceProviderClose(): void {
+    this.isaddNewInsuranceProviderOpen = false;
+  }
+
+  public addNewInsuranceProviderOpen(): void {
+    this.isaddNewInsuranceProviderOpen = true;
+  }
+
+  public addNewInsurancePlanClose(): void {
+    this.isaddNewInsurancePlanOpen = false;
+  }
+
+  public addNewInsurancePlanOpen(): void {
+    this.isaddNewInsurancePlanOpen = true;
   }
 }

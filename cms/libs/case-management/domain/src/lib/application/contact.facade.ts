@@ -61,7 +61,7 @@ export class ContactFacade {
     });
   }
 
-  loadDdlCountries(stateCode: string): void {
+  loadDdlCounties(stateCode: string): void {
     this.showloaderOnCounty.next(true);
     this.zipCodeFacade.getCounties(stateCode).subscribe({
       next: (ddlCountriesResponse) => {
