@@ -73,7 +73,11 @@
           <h5 class="text-caital">Poof of Income</h5>
           <div>
             <span class="app-checkboxwidtext-wrapper">
-              <input kendoCheckBox id="noProofOfIncome" name="no proof of income" type="checkbox"
+              <input kendoCheckBox id="noProofOfIncome" 
+          
+              name="noProofOfIncome"
+              formControlName="noProofOfIncome"
+               type="checkbox"
                 (change)="onProofOfIncomeValueChanged()" aria-labelledby="noProofOfIncome" />
               <label class="k-checkbox-label" for="noProofOfIncome">No proof of Income</label>
             </span>
@@ -81,19 +85,23 @@
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
-          <kendo-upload aria-label="upload proof" name="upload proof"
-            [restrictions]="uploadFileRestrictions.fileRestrictions" [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
-            #incomeUploadedProof>
+          <kendo-upload aria-label="upload proof" name="upload proof" 
+            [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
+            #incomeUploadedProof [ngModel]="uploadedIncomeFile" [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl">
+         <!-- <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+              <a target="_blank" [href]="sanitize(selectedIncome.documentPath)" *ngIf="!isUploaded(state)">{{ files[0].name }} </a> 
+              <a target="_blank" href="javascript:void(0)" *ngIf="isUploaded(state)">{{   files[0].name  }}</a>
+              <a>{{   files[0].size  }}</a> 
+            </ng-template> -->
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
-          <kendo-formerror *ngIf="proofOfIncomeValidator"> Upload proof is required
-          </kendo-formerror>
+          <kendo-formerror *ngIf="proofOfIncomeValidator"> Upload proof is required </kendo-formerror>
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
           <kendo-floatinglabel text="Proof of Income Type">
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="proofOfIncomeTypes$" textField="lovDesc"
-            valueField="lovCode" [valuePrimitive]="true" (valueChange)="selectProofOfIncome()" aria-label="proof of income types" name="proof of income types"
+            valueField="lovCode" [valuePrimitive]="true" (valueChange)="selectProofOfIncome()" aria-label="proof of income types" name="proofIncomeTypeCode"
               formControlName="proofIncomeTypeCode" #proofOfIncomeTypes>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
@@ -105,10 +113,10 @@
         <div class="flex-col" *ngIf="!hasNoProofOfIncome && incomeTypesOther === 'O'">
           <kendo-floatinglabel text="Name of other Proof">
             <kendo-textbox [fillMode]="formUiStyle.dropDownFillMode" aria-label="Other income" name="Other income"
-              formControlName="otherProofOfIncome" #otherProofOfIncome>
+              formControlName="otherDesc" #otherDesc>
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['proofOfIncomeTypes'].valid"> Other income is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['otherDesc'].valid"> Other income is required
           </kendo-formerror>
 
         </div>
@@ -135,7 +143,7 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div>
-          <button kendoButton class="k-danger-link" *ngIf="isEditValue" aria-label="delete income">
+          <button kendoButton class="k-danger-link" *ngIf="isEditValue" aria-label="delete income" (click)="onDeleteIncomeClicked()">
             Delete
           </button>
         </div>
@@ -144,8 +152,15 @@
             (click)="closeIncomeDetailPoup()">
             Cancel
           </button>
-          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income">Add</button>
+          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income">  {{ isEditValue ? 'Update' : 'Add ' }}</button>
         </div>
       </div>
     </kendo-dialog-actions>
   </form>
+  <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
+  <case-management-remove-income-confirmation 
+  (closeModal)="onRemoveIncomeConfirmationClosed()" 
+  [selectedIncome]="selectedIncome"></case-management-remove-income-confirmation>
+
+  
+</kendo-dialog>
