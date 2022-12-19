@@ -124,6 +124,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
   }
  
   private validateForm(){  
+      this.resetValidators();
       this.healthInsuranceForm.updateValueAndValidity();  
       if(this.ddlInsuranceType ==='COBRA' ||this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN')  { 
         this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
