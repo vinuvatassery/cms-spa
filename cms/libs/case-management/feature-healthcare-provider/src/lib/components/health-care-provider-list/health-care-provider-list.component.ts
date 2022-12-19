@@ -36,14 +36,19 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   public  state!: State
   deletebuttonEmitted = false;
   editbuttonEmitted = false;
+  isOpenedbusinessInfo =false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
       buttonType:"btn-h-primary",
       text: "Edit Provider",
       icon: "edit",
-      click: (providerId : string): void => {                      
-        this.onOpenProviderSearchClicked(true);
+      click: (providerId : string): void => {     
+        if(!this.editbuttonEmitted)
+        {                 
+        this.editbuttonEmitted= true;
+        this.onOpenProviderSearchClicked(providerId ,true);
+        }
       },
     },
    
@@ -87,17 +92,29 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
     this.isEditHealthProvider = isEditHealthProviderValue;
   }
 
-  onOpenProviderSearchClicked(isEditSearchHealthProviderValue: boolean) {
+  onOpenProviderSearchClicked(providerId : string,isEdit : boolean) {
     this.isOpenedProviderSearch = true;
-    this.isEditSearchHealthProvider = isEditSearchHealthProviderValue;
+    this.isEditSearchHealthProvider = isEdit;
+    this.prvSelectedId = providerId;
   }
   onCloseProviderSearchClicked() {
     this.isOpenedProviderSearch = false;
+    this.editbuttonEmitted =false;
+  }
+  onBusinessInfoCloseClicked()
+  {
+    this.isOpenedbusinessInfo = false;
   }
 
+  onOpenBusinessLogicClicked()
+  {
+    this.onCloseProviderSearchClicked()
+    this.isOpenedbusinessInfo = true;
+  }
 
   onDeleteConfirmCloseClicked()
   {
+    this.deletebuttonEmitted =false;
     this.isOpenedDeleteConfirm = false;
   }
 
@@ -106,6 +123,14 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
     this.isOpenedDeleteConfirm = true;
     this.prvSelectedId = prvId;      
   }
+ /** child component event methods **/
+
+ /**from search component */
+ handlePrvRemove(prvId : any)
+ {
+  this.onCloseProviderSearchClicked()
+  this.onRemoveClick(prvId)
+ }
 
       /** External event methods **/
   handleDeclinePrvRemove() {

@@ -23,6 +23,7 @@ export class HealthCareProviderSearchComponent
 
      /** Output properties  **/
   @Output() closeProviderSearchEvent = new EventEmitter();
+  @Output() businessLogicEvent = new EventEmitter();
   /** Constructor **/
   constructor(private readonly drugPharmacyFacade: HealthcareProviderFacade) {}
 
@@ -30,12 +31,20 @@ export class HealthCareProviderSearchComponent
 
     /** Input properties **/
   @Input() isEditSearchHealthProviderValue!: boolean;
+  @Input() prvId!: string;
+  
+  @Output() deleteProviderEvent =  new EventEmitter<string>();
 
   /** Public properties **/
   providers$ = this.drugPharmacyFacade.healthCareProviders$;
   isOpenNewProviderClicked = false;
   filteredSelectedProvider! : any;
-  isAdminRole =false;
+  isAdminRole =false; 
+
+  onDeleteConfirm()
+  {  
+    this.deleteProviderEvent.emit(this.prvId);
+  }
 
   /** Internal event methods **/
   onCloseNewPharmacyClicked() {
@@ -49,5 +58,9 @@ export class HealthCareProviderSearchComponent
 
   onCloseProviderClicked() {
     this.closeProviderSearchEvent.emit();
+  }
+  onOpenBusinessLogicClicked()
+  {
+    this.businessLogicEvent.emit();
   }
 }

@@ -1,7 +1,7 @@
 <section class="k-dialog-body">
     <p class="text-muted mb-2">
-      Start typing provider name, then select one from the 
-      suggestions. 
+      Start typing the provider's name, then select one from the suggestions. If you don't see the correct provider,
+       click "ADD NEW" to add a new Healthcare Provider to the master list.
     </p>
     <div class="flex-row">
       <div class="flex-col">
@@ -44,19 +44,20 @@
           kendoButton
           [primary]="true"
           look="flat"
-          (click)="onOpenNewProviderClicked()"
-          *ngIf="!isEditSearchHealthProviderValue && isAdminRole"
+          (click)="onOpenBusinessLogicClicked()"        
           aria-label="add new provider"
+          *ngIf="!isEditSearchHealthProviderValue"
         >
-          Add New
+          ADD NEW
         </button>
         <button
           kendoButton
           class="k-danger-link"
-          *ngIf="isEditSearchHealthProviderValue && isAdminRole"
+          *ngIf="isEditSearchHealthProviderValue"
           aria-label="remove provider"
+          (click)="onDeleteConfirm()"
         >
-          Remove
+          REMOVE
         </button>
       </div>
       <div class="justify-content-end">
@@ -67,7 +68,7 @@
           (click)="onCloseProviderClicked()"
           aria-label="cancel adding provider"
         >
-          Cancel
+          CANCEL
         </button>
         <button kendoButton [primary]="true" aria-label="add or update pharmacy">
           {{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}

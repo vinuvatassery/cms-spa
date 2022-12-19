@@ -31,6 +31,10 @@
       </ng-template>
     
         <kendo-grid-column field="clinicName" title="Clinic Name" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button look="flat"   class="card-link-button" kendoButton   kendoPopoverAnchor   [popover]="onUserProfileDetailsHovered"
+            showOn="hover">{{dataItem.clinicName}}</button>
+          </ng-template> 
         </kendo-grid-column>
         <kendo-grid-column
           field="providerName"
@@ -110,7 +114,7 @@
           kendoButton
           [primary]="true"
           icon="add"
-          (click)="onOpenProviderSearchClicked(false)"
+          (click)="onOpenProviderSearchClicked('',false)"
           aria-label="add healthcare provider"
         >
           Provider
@@ -120,7 +124,7 @@
   </div>
 </div>
 
-<!-- Add Provider  Modal -->
+<!-- Add Provider  Modal C4 Module-->
 <kendo-dialog
   *ngIf="isOpenedProvider"
   (close)="onCloseProviderClicked()"
@@ -139,14 +143,17 @@
 <kendo-dialog
   *ngIf="isOpenedProviderSearch"
   (close)="onCloseProviderSearchClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar
     >{{ isEditSearchHealthProvider ? 'Edit Health Care Provider' : 'Add Health Care Provider' }}
   </kendo-dialog-titlebar>
   <case-management-health-care-provider-search
+    [prvId]="prvSelectedId" 
+   (deleteProviderEvent)="handlePrvRemove($event)"
     [isEditSearchHealthProviderValue]="isEditSearchHealthProvider"
     (closeProviderSearchEvent)="onCloseProviderSearchClicked()"
+    (businessLogicEvent) = "onOpenBusinessLogicClicked()"
   ></case-management-health-care-provider-search>
 </kendo-dialog>
 
@@ -163,4 +170,30 @@
  (deleteConfimEvent)="handleAcceptPrvRemove($event)"
  >
  </case-management-health-care-provider-remove-confirmation>
+</kendo-dialog>
+
+
+<!-- Business Logic Modal -->
+<kendo-dialog  *ngIf="isOpenedbusinessInfo"   class="app-c-modal app-c-modal-sm app-c-modal-np"
+><kendo-dialog-titlebar  (close)="onBusinessInfoCloseClicked()">Add New Healthcare Provider </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+      This feature is part of future scope of work for the ORCares project   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel adding health provider"
+          (click)="onBusinessInfoCloseClicked()"
+        >
+          OK
+        </button>        
+      </div>
+    </div>
+  </kendo-dialog-actions>
 </kendo-dialog>
