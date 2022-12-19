@@ -157,7 +157,6 @@ export class EmploymentFacade {
 
   // updating the unemployment stats
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-    this.showLoader();
     return this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed);
   }
   

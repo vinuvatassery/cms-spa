@@ -4,12 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 
 /** Internal Libraries **/
 import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 
@@ -87,7 +87,9 @@ export class CaseDetailPageComponent implements OnInit {
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private loggingService : LoggingService,
+    private readonly snackbarService : NotificationSnackbarService
   ) {
   }
 
@@ -117,9 +119,10 @@ export class CaseDetailPageComponent implements OnInit {
   private addNavigationSubscription() {
     this.navigationSubscription = this.workflowFacade.navigationTrigger$
       .pipe(
+        tap(()=> this.loaderService.show()),
         mergeMap((navigationType: NavigationType) =>
           forkJoin(
-            [
+            [              
               of(navigationType),
               this.workflowFacade.saveWorkflowProgress(navigationType, this.sessionId, this.route.snapshot.queryParams['pid'])
             ])
@@ -131,9 +134,12 @@ export class CaseDetailPageComponent implements OnInit {
           if (paramProcessId) {
             this.workflowFacade.updateSequenceNavigation(navigationType, paramProcessId);
           }
+          this.loaderService.hide();
         },
         error: (err: any) => {
-          console.error('error', err);
+          this.loaderService.hide();            
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);  
+          this.loggingService.logException(err);
         },
       });
   }

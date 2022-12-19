@@ -25,6 +25,7 @@
               <kendo-floatinglabel text="Enter Answer">
                 <kendo-textbox
                   aria-label="transgender"
+                  [fillMode]="formUiStyle.inputFillMode"
                   [formControlName]="DescriptionField"
                   [disabled]="
                     appInfoForm.controls['Transgender'].value !== 'NOT_LISTED'

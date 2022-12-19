@@ -34,6 +34,7 @@ export * from './lib/entities/client-case-eligibility-and-flag';
 export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
 export * from './lib/entities/income';
+export * from './lib/entities/no-income-data';
 
 
 /** Enums **/
