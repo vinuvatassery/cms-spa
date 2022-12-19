@@ -33,6 +33,9 @@ export * from './lib/entities/applicant-info';
 export * from './lib/entities/client-case-eligibility-and-flag';
 export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
+export * from './lib/entities/vendor';
+export * from './lib/entities/insurance-plan';
+
 
 
 /** Enums **/
@@ -75,6 +78,8 @@ export * from './lib/infrastructure/verification.data.service';
 export * from './lib/infrastructure/completion-status.data.service';
 export * from './lib/infrastructure/status-period.data.service';
 export * from './lib/infrastructure/client-document.data.service';
+export * from './lib/infrastructure/vendor.data.service';
+export * from './lib/infrastructure/insurance-plan.data.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -103,4 +108,6 @@ export * from './lib/application/verification.facade';
 export * from './lib/application/completion-status.facade';
 export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
+export * from './lib/application/vendor.facade';
+export * from './lib/application/insurance-plan.facade';
 

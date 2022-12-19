@@ -6,7 +6,7 @@ import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { WorkflowFacade, HealthInsuranceFacade, CaseFacade } from '@cms/case-management/domain';
 /** Enums **/
 import {  NavigationType } from '@cms/case-management/domain';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
 
 @Component({
   selector: 'case-management-health-insurance-page',

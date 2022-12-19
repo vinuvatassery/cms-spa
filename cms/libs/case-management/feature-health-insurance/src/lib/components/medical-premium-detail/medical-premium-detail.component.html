@@ -69,52 +69,12 @@
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid">Insurance id number is required.</kendo-formerror>
     </div>
-    <div
-      class="flex-col mat-form-sm-b-space"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
-    >
-      <kendo-floatinglabel text="Insurance Carrier Name">      
-        <kendo-textbox  [disabled]="isViewContentEditable"
-         aria-label="insurance carrier name"
-         formControlName ="insuranceCarrierName" 
-         [maxlength]="500"
-         [fillMode]="formUiStyle.inputFillMode">   
-        </kendo-textbox>
-      </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceCarrierName'].valid">Insurance carrier name is required.</kendo-formerror>
-      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-        <span>Don’t see the Carrier you’re looking for?</span>
-        <button
-          kendoButton
-          class="card-link-button ml-1 no-ul"
-          [disabled]="isViewContentEditable"
-          aria-label="add new insurance carrier"
-        >
-          ADD NEW
-        </button>
-      </div>
+    <div class="flex-col mat-form-sm-b-space" *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'">
+      <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isSubmitted]="isSubmitted" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"></case-management-medical-premium-detail-insurance-carrier-name>
     </div>
+    
     <div class="flex-col mat-form-sm-b-space ">
-      <kendo-floatinglabel text="Insurance Plan Name">   
-        <kendo-textbox  [disabled]="isViewContentEditable" 
-        aria-label="insurance plan name" 
-        formControlName ="insurancePlanName" 
-        [maxlength]="500"
-        [fillMode]="formUiStyle.inputFillMode">  
-       </kendo-textbox>
-      </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insurancePlanName'].valid">Insurance plan name is required.</kendo-formerror>
-      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-        <span>Don’t see the Plan you’re looking for?</span>
-        <button
-          kendoButton
-          class="card-link-button ml-1 no-ul"
-          [disabled]="isViewContentEditable"
-          aria-label="add new insurance plan"
-        >
-          ADD NEW
-        </button>
-      </div>
+      <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"  [insurancePlans]="insurancePlans" [isViewContentEditable]="isViewContentEditable" ></case-management-medical-premium-detail-insurance-plan-name>
     </div>
     <div
       class="flex-col  "
@@ -133,6 +93,8 @@
       *ngIf="
         ddlInsuranceType !== 'OREGON_HEALTH_PLAN' 
         && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'
+        && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'
+        
         && ddlInsuranceType !== 'COBRA'"
         >
       <h5>Group Plan Type</h5>
@@ -198,7 +160,9 @@
     <div
       class="flex-col mt-3"
       *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'
-      && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'"
+      && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'
+      && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'"
+      
     >
       <div class="block-section">
         <div class="flex-row">

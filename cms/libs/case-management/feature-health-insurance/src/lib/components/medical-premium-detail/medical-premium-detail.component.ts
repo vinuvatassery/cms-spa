@@ -12,6 +12,7 @@ import { HealthInsuranceFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
+import { InsurancePlanFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -44,14 +45,17 @@ export class MedicalPremiumDetailComponent implements OnInit {
   ddlInsuranceType!: string;
   isEditViewPopup!: boolean;
   isDeleteEnabled!: boolean;
+  isSubmitted: boolean=false;
   isViewContentEditable!: boolean;
   isToggleNewPerson!: boolean;
   isOpenDdl = false;
+  insurancePlans: Array<any> = [];
 
   /** Constructor **/
   constructor(private readonly healthFacade: HealthInsuranceFacade,
      private formBuilder: FormBuilder,
-     private lovFacade: LovFacade) {
+     private lovFacade: LovFacade,
+     private insurancePlanFacade:InsurancePlanFacade) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -106,8 +110,10 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.ddlInsuranceType = this.insuranceType;
     this.isOpenDdl = true;
   }
+ 
   private validateForm(){  
       this.healthInsuranceForm.updateValueAndValidity();
+
      
         this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
@@ -123,7 +129,6 @@ export class MedicalPremiumDetailComponent implements OnInit {
       
         this.healthInsuranceForm.controls["insurancePlanName"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
-      
       
   }
   /** Internal event methods **/
@@ -144,8 +149,15 @@ export class MedicalPremiumDetailComponent implements OnInit {
   onToggleNewPersonClicked() {
     this.isToggleNewPerson = !this.isToggleNewPerson;
   }
+  insuranceCarrierNameChange(value:string){
+    this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe((data:any) => {
+      this.insurancePlans=[];
+      if (!Array.isArray(data)) return;
+      this.insurancePlans=data;
+    });
+  }
   save(){
-    debugger;
+    this.isSubmitted=true;
     this.validateForm();
   }
 
