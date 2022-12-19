@@ -60,7 +60,8 @@ export class MedicalPremiumDetailComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void {   
+    this.validateFormMode();
     this.loadLovs();
     this.loadDdlMedicalHealthInsurancePlans();
     this.loadDdlMedicalHealthPlanMetalLevel();
@@ -71,6 +72,17 @@ export class MedicalPremiumDetailComponent implements OnInit {
   /** Private methods **/
   private loadLovs(){
     this.lovFacade.getInsuranceTypeLovs()
+  }
+  private validateFormMode(){
+    if(this.dialogTitle ==='Add'){
+      this.resetForm();
+      this.resetValidators();
+    }
+
+  }
+  resetForm(){
+    this.healthInsuranceForm.reset();
+    this.healthInsuranceForm.updateValueAndValidity();
   }
   private loadDdlMedicalHealthInsurancePlans() {
     this.healthFacade.loadDdlMedicalHealthInsurancePlans();
@@ -112,9 +124,8 @@ export class MedicalPremiumDetailComponent implements OnInit {
   }
  
   private validateForm(){  
-      this.healthInsuranceForm.updateValueAndValidity();
-
-     
+      this.healthInsuranceForm.updateValueAndValidity();  
+      if(this.ddlInsuranceType ==='COBRA' ||this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN')  { 
         this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
     
@@ -129,7 +140,24 @@ export class MedicalPremiumDetailComponent implements OnInit {
       
         this.healthInsuranceForm.controls["insurancePlanName"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
+      }
       
+  }
+  private resetValidators(){
+    this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators(); 
+    this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
+
+    this.healthInsuranceForm.controls["insuranceEndDate"].clearValidators();
+    this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
+  
+    this.healthInsuranceForm.controls["insuranceIdNumber"].clearValidators();
+    this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
+
+    this.healthInsuranceForm.controls["insuranceCarrierName"].clearValidators();
+    this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
+  
+    this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
+    this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
   }
   /** Internal event methods **/
   onHealthInsuranceTypeChanged() {
