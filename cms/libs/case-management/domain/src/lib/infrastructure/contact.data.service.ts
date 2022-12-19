@@ -94,7 +94,7 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId:string,clientCaseEligibilityId:string) {
+  loadIncomes(clientId: string, clientCaseEligibilityId: string) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}`);
   }
 
@@ -422,25 +422,54 @@ export class ContactDataService {
   }
 
   createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    const fd = new FormData();
+    if (contactInfo?.homeAddressProof?.document) {
+      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
+    }
+    this.FormData_append_object(fd, contactInfo);
+
     return this.http.post(this.getUrl(clientId, clientCaseEligibilityId)
-      , contactInfo);
+      , fd, { reportProgress: true, });
   }
 
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    const fd = new FormData();
+    if (contactInfo?.homeAddressProof?.document) {
+      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
+    }
+    this.FormData_append_object(fd, contactInfo);
+
     return this.http.put(this.getUrl(clientId, clientCaseEligibilityId)
-      , contactInfo);
+      , fd, { reportProgress: true, });
   }
 
-    /** Private methods **/
+  /** Private methods **/
   private getUrl(clientId: number, clientCaseEligibilityId: string) {
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 
- saveIncome(clientIncome: any) {
+  saveIncome(clientIncome: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
   }
 
   updateNoIncomeData(noIncomeData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
+  }
+
+  FormData_append_object(fd: FormData, obj: any, key?: any) {
+    var i, k;
+    for (i in obj) {
+      k = key ? key + '[' + i + ']' : i;
+      if (obj[i] instanceof File) {
+        continue;
+      }
+      else if (typeof obj[i] == 'object') {
+        this.FormData_append_object(fd, obj[i], k);
+      }
+      else {
+        fd.append(k, obj[i]);
+        console.log(obj[i])
+      }
+    }
   }
 }

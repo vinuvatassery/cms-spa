@@ -8,5 +8,6 @@ export interface ClientDocument {
     documentTypeCode?: string;
     clientCaseEligibilityId?: string;
     documentTemplateId?: string;
+    documentName?:string;
     documentPath?: string;
 }

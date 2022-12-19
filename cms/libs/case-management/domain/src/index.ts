@@ -104,4 +104,4 @@ export * from './lib/application/verification.facade';
 export * from './lib/application/completion-status.facade';
 export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
-
+export * from './lib/application/client-document-facade';
