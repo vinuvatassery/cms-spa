@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {  LovFacade } from '@cms/system-config/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-client-edit-view-transgender',
   templateUrl: './client-edit-view-transgender.component.html',
@@ -18,6 +18,7 @@ export class ClientEditViewTransgenderComponent implements OnInit {
   DescriptionField = 'TransgenderDescription';
   Transgenders: any = [];
   TransgenderLovs$ = this.lovFacade.transgenderlov$;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder

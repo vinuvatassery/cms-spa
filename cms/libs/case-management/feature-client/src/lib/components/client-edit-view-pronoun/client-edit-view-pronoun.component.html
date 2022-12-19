@@ -21,6 +21,7 @@
             <kendo-textbox aria-label="enter pronouns"              
               formControlName="pronoun"
               [disabled]="textboxDisable"
+              [fillMode]="formUiStyle.inputFillMode"
               (valueChange)="onChange($event)">               
             </kendo-textbox>        
           </kendo-floatinglabel>

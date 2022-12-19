@@ -6,8 +6,10 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Provider } from '../entities/provider';
 /** Data services **/
- 
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusPeriodDataService } from '../infrastructure/status-period.data.service';
+import { SnackBar } from '@cms/shared/ui-common';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class StatusPeriodFacade {
@@ -16,10 +18,22 @@ export class StatusPeriodFacade {
 
   /** Public properties **/
   statusPeriod$ = this.statusPeriodSubject.asObservable();
- 
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortValue = 'StatusStart'
+  public sortType = 'asc'
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
 
   /** Constructor**/
-  constructor(private readonly statusPeriodDataService: StatusPeriodDataService) {}
+  constructor(private readonly statusPeriodDataService: StatusPeriodDataService,
+    private loggingService : LoggingService,
+    private readonly loaderService: LoaderService ,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private configurationProvider : ConfigurationProvider,
+    ) {}
 
   /** Public methods **/
   loadStatusPeriod(): void {

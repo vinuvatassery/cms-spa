@@ -5,7 +5,8 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',
@@ -19,6 +20,13 @@ export class PharmaciesListComponent implements OnInit {
   isOpenPharmacyClicked = false;
   isEditPharmacyListClicked = false;
   selectedPharmacy!: any;
+  public sortValue = this.drugPharmacyFacade.sortValue;
+  public sortType = this.drugPharmacyFacade.sortType;
+  public pageSizes = this.drugPharmacyFacade.gridPageSizes;
+  public gridSkipCount = this.drugPharmacyFacade.skipCount;
+  public sort = this.drugPharmacyFacade.sort;
+  public state!: State;
+  public formUiStyle : UIFormStyle = new UIFormStyle(); 
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -55,6 +63,11 @@ export class PharmaciesListComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadPharmacieslist();
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
   }
 
   /** Private methods **/
