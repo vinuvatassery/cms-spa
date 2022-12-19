@@ -234,9 +234,8 @@ export class FamilyAndDependentFacade {
         Object.values(dependentSearchResponse).forEach((key) => {   
                    
           key.fullName = key.firstName + ' ' + key.lastName
-          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);   
-                
-          key.dob = Intl.DateTimeFormat(this.timeFormat).format(new Date(key?.dob)).replace('/','-').replace('/','-')
+          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);                   
+          key.dob = Intl.DateTimeFormat(this.timeFormat).format(new Date(key.dob))
           key.fullCustomName =key?.fullName + ' DOB '+key?.dob+' SSN '+key?.ssn      
           
           if(key?.clientId > 0)   
