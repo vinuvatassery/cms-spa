@@ -28,6 +28,7 @@
         </div>
         <div class="flex-col" *ngIf="!isFamilyGridDisplay">
           <case-management-family-and-dependent-list
+          [timeFormat]="timeFormat"
           [dependents$]="dependentList$"
           [dependentSearch$]="dependentSearch$"
           [ddlRelationships$]="ddlRelationships$"

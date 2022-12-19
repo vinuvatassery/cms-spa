@@ -46,7 +46,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
-  
+  timeFormat= this.familyAndDependentFacade.timeFormat
 
 
   /** Constructor **/

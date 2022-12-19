@@ -16,7 +16,7 @@ import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
 import {  FormGroup } from '@angular/forms';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({
@@ -41,6 +41,7 @@ export class WorkflowFacade {
   clientId: number | undefined;
   clientCaseId: string | undefined;
   clientCaseEligibilityId: string | undefined;
+  timeFormat = this.configurationProvider.appSettings.dateformat;
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
@@ -51,7 +52,8 @@ export class WorkflowFacade {
     ,   private readonly loaderService: LoaderService,
     private loggingService : LoggingService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService) { }
+    public intl: IntlService,
+    private configurationProvider : ConfigurationProvider ) { }
   
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -99,7 +101,8 @@ export class WorkflowFacade {
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: newCaseFormData?.controls["applicationDate"].value
     }      
-    sessionData.caseStartDate = this.intl.parseDate(sessionData.caseStartDate.toLocaleDateString())
+    
+    sessionData.caseStartDate = this.intl.parseDate(Intl.DateTimeFormat(this.timeFormat).format(sessionData.caseStartDate))
     
     this.workflowService.createNewSession(sessionData)
       .subscribe({

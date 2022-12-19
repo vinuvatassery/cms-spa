@@ -64,6 +64,8 @@ export class FamilyAndDependentFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
+  timeFormat = this.configurationProvider.appSettings.dateformat;
+
 
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -232,8 +234,9 @@ export class FamilyAndDependentFacade {
         Object.values(dependentSearchResponse).forEach((key) => {   
                    
           key.fullName = key.firstName + ' ' + key.lastName
-          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);          
-          key.dob = new Date(key?.dob).toLocaleDateString().replace('/','-').replace('/','-')
+          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);   
+                
+          key.dob = Intl.DateTimeFormat(this.timeFormat).format(new Date(key?.dob)).replace('/','-').replace('/','-')
           key.fullCustomName =key?.fullName + ' DOB '+key?.dob+' SSN '+key?.ssn      
           
           if(key?.clientId > 0)   

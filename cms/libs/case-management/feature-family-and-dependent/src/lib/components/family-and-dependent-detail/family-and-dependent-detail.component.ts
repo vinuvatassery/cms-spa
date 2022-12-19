@@ -25,6 +25,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   @Input() dependentTypeCodeSelected: any;
   @Input() dependentGet$: any;
   @Input() dependentGetExisting$ : any;
+  @Input() timeFormat : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() closeFamilyMemberFormEvent = new EventEmitter<any>();
   @Output() getNewFamilyMemberFormEvent = new EventEmitter<any>();
@@ -184,7 +185,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
        if(existDependentData?.dependentClientId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-        this.fullClientName = fullName + ' DOB '+ new Date(existDependentData?.dob).toLocaleDateString().toString()+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
+        this.fullClientName = fullName + ' DOB '+ Intl.DateTimeFormat(this.timeFormat).format(new Date(existDependentData?.dob))+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
 
         this.clientDependentId = existDependentData?.clientDependentId;
         this.dependentTypeCode = DependentTypeCode.CAClient;

@@ -51,7 +51,7 @@ export class CaseFacade {
   updateCase$ = this.updateCaseSubject.asObservable();
   getCase$ = this.getCaseSubject.asObservable(); 
 
-
+  timeFormat = this.configurationProvider.appSettings.dateformat;
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = '';
@@ -251,7 +251,7 @@ export class CaseFacade {
           concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
         }    
 
-        caseData.caseStartDate =  this.intl.parseDate(caseData.caseStartDate.toLocaleDateString())
+        caseData.caseStartDate =  this.intl.parseDate(Intl.DateTimeFormat(this.timeFormat).format(caseData.caseStartDate))      
        
         return  this.caseDataService.UpdateCase(caseData)
 
