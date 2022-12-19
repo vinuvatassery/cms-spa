@@ -35,7 +35,7 @@ export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
 export * from './lib/entities/vendor';
 export * from './lib/entities/insurance-plan';
-export * from './lib/entities/client-insurance-policy';
+export * from './lib/entities/health-insurance-policy';
 
 
 
@@ -81,6 +81,7 @@ export * from './lib/infrastructure/status-period.data.service';
 export * from './lib/infrastructure/client-document.data.service';
 export * from './lib/infrastructure/vendor.data.service';
 export * from './lib/infrastructure/insurance-plan.data.service';
+export * from './lib/infrastructure/health-insurance-policy.data.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -111,4 +112,5 @@ export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
 export * from './lib/application/vendor.facade';
 export * from './lib/application/insurance-plan.facade';
+export * from './lib/application/health-insurance-policy.facade';
 

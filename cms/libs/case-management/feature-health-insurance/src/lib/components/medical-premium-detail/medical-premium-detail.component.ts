@@ -8,7 +8,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
@@ -50,12 +50,14 @@ export class MedicalPremiumDetailComponent implements OnInit {
   isToggleNewPerson!: boolean;
   isOpenDdl = false;
   insurancePlans: Array<any> = [];
+  healthInsurancePolicy!:healthInsurancePolicy;
 
   /** Constructor **/
   constructor(private readonly healthFacade: HealthInsuranceFacade,
      private formBuilder: FormBuilder,
      private lovFacade: LovFacade,
-     private insurancePlanFacade:InsurancePlanFacade) {
+     private insurancePlanFacade:InsurancePlanFacade,
+     private insurancePolicyFacade: HealthInsurancePolicyFacade) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -188,6 +190,11 @@ export class MedicalPremiumDetailComponent implements OnInit {
   save(){
     this.isSubmitted=true;
     this.validateForm();
+    if(this.healthInsuranceForm.valid){
+       //this.insurancePolicy.saveHealthInsurancePolicy()
+       return this.insurancePolicyFacade.saveHealthInsurancePolicy(this.healthInsurancePolicy);
+    }
+    return null;
   }
 
 }

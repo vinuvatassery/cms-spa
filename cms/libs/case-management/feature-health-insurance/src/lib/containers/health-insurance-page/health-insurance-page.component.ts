@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 /** External libraries **/
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
-import { WorkflowFacade, HealthInsuranceFacade, CaseFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy } from '@cms/case-management/domain';
 /** Enums **/
 import {  NavigationType } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
@@ -18,13 +18,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
 
   healthInsuranceForm!: FormGroup;
+  healthInsurancePolicy!:healthInsurancePolicy;
   
   /** Private properties **/
   private saveClickSubscription !: Subscription;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
-    private healthInsuranceFacade: HealthInsuranceFacade,
+    private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private formBuilder:FormBuilder) { }
 
   /** Lifecycle Hooks **/
@@ -68,7 +69,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     let isValid = true;
     // TODO: validate the form
     if (isValid) {
-      return this.healthInsuranceFacade.save();
+     
     }
 
     return of(false)

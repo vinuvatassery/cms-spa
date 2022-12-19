@@ -1,4 +1,4 @@
-export class clientInsurancePolicy {
+export class healthInsurancePolicy {
         clientInsurancePolicyId :string|null=null;
         clientId :number|null=null;
         insuranceCarrierId :string|null=null;
