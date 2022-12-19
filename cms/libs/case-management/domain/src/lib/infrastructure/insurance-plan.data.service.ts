@@ -11,6 +11,6 @@ export class InsurancePlanDataService{
     
       loadInsurancePlanByProviderId(providerId:string){
         return this.http.get<InsurancePlan>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plan/byProvider/${providerId}`);
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-plan/byProvider/${providerId}`);
       }
 }
