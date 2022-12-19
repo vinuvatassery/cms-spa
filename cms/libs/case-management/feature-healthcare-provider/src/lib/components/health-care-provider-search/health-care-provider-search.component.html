@@ -11,27 +11,26 @@
               class="material-icons global-search-icon"
               aria-label="search provider"
               aria-hidden="true"
-              >search</span
-            >
-            <kendo-multicolumncombobox
-            [fillMode]="formUiStyle.dropDownFillMode"
-              [data]="providers$ | async"
-              textField="clinicName"
-              valueField="providerId"
-              placeholder="Search Provider Name/Number"
-              [(ngModel)]="filteredSelectedProvider"
-            >
-              <kendo-combobox-column [width]="250">
-                <ng-template
-                  kendoMultiColumnComboBoxColumnCellTemplate
-                  let-dataItem
-                >
-                  <span class="pr-1">{{ dataItem.clinicName }}</span>
-                  <span class="pr-1"> {{ dataItem.providerId }}</span>
-                  <span class="text-muted">{{ dataItem.address }}</span>
-                </ng-template>
-              </kendo-combobox-column>
-            </kendo-multicolumncombobox>
+              >search</span>
+              <span *ngIf="providerSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+            <kendo-autocomplete
+            [fillMode]="formUiStyle.dropDownFillMode" 
+            [data]="healthCareProviderSearchList$ | async"           
+            [value]="selectedClinic"
+            valueField ="providerId"              
+            placeholder="Search Provider Name/Number"
+            [popupSettings]="{ popupClass: popupClass, animate: true }"                 
+            [filterable]="true"   
+            (filterChange)="onsearchTextChange($event)"   
+          >          
+            <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+              <!-- <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
+              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
+              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>             -->
+            </ng-template>
+            <ng-template kendoAutoCompleteFooterTemplate>             
+            </ng-template>
+          </kendo-autocomplete>  
           </div>
         </div>
       </div>

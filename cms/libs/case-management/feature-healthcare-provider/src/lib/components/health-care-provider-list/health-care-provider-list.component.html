@@ -150,10 +150,12 @@
   </kendo-dialog-titlebar>
   <case-management-health-care-provider-search
     [prvId]="prvSelectedId" 
+    [healthCareProviderSearchList$]="healthCareProviderSearchList$"
    (deleteProviderEvent)="handlePrvRemove($event)"
     [isEditSearchHealthProviderValue]="isEditSearchHealthProvider"
     (closeProviderSearchEvent)="onCloseProviderSearchClicked()"
     (businessLogicEvent) = "onOpenBusinessLogicClicked()"
+    (searchTextEvent)="searchTextEventHandleer($event)"
   ></case-management-health-care-provider-search>
 </kendo-dialog>
 

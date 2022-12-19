@@ -18,6 +18,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId ! : string
 
   /** Public properties **/  
+  healthCareProviderSearchList$  =this.healthProvider.healthCareProviderSearchList$;
   healthCareProviders$ = this.healthProvider.healthCareProviders$;
   removeHealthProvider$ =this.healthProvider.removeHealthProvider$;
   healthCareProvideGetFlag$  =this.healthProvider.healthCareProvideGetFlag$;
@@ -133,6 +134,11 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
    handlePrvRemove(prvSelectedId : string)
    {        
       this.removeHealthCareProvider(prvSelectedId);                  
+   }
+
+   searchTextEventHandleer(text : string)
+   {
+    this.healthProvider.searchHealthCareProviders(text, this.clientCaseEligibilityId);
    }
   
 }

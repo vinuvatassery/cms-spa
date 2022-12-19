@@ -24,10 +24,12 @@
             [sortValue]="sortValue"
             [sortType]="sortType"
             [sort]="sort"
+            [healthCareProviderSearchList$]="healthCareProviderSearchList$"
             [removeHealthProvider$]="removeHealthProvider$"
             [healthCareProvidersData$]="healthCareProviders$"
             (deleteConfimedEvent)="handlePrvRemove($event)"    
             (loadProvidersListEvent)="loadProvidersHandle($event)"          
+            (searchTextEvent)="searchTextEventHandleer($event)"
           ></case-management-health-care-provider-list>
         </div>
       </div>

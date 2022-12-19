@@ -20,6 +20,7 @@ export class HealthcareProviderFacade {
   private healthCareProvideRemoveSubject = new Subject<any>();
   private healthCareProvideUpdateFlagSubject = new Subject<any>();
   private healthCareProvideGetFlagSubject = new Subject<any>();
+  private healthCareProviderSearchSubject = new Subject<any>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -27,6 +28,7 @@ export class HealthcareProviderFacade {
   removeHealthProvider$ = this.healthCareProvideRemoveSubject.asObservable();
   updateHealthProvider$ = this.healthCareProvideUpdateFlagSubject.asObservable();
   healthCareProvideGetFlag$ = this.healthCareProvideGetFlagSubject.asObservable();
+  healthCareProviderSearchList$ = this.healthCareProviderSearchSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'fullName'
   public sortType = 'asc'
@@ -100,15 +102,6 @@ export class HealthcareProviderFacade {
   {
     this.ShowLoader();
     return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
-    // .subscribe({
-    //   next: (updateHealthCareProvidersFlagResponse) => { 
-    //     this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider status updated Successfully')  
-    //     this.healthCareProvideUpdateFlagSubject.next(updateHealthCareProvidersFlagResponse);        
-    //   },
-    //   error: (err) => {
-    //     this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
-    //   },
-    // });
   }
 
   loadHealthCareProviders(clientCaseEligibilityId : string,skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
@@ -137,7 +130,20 @@ export class HealthcareProviderFacade {
     });
   }
 
- 
+
+ searchHealthCareProviders(text : string , clientCaseEligibilityId : string): void {  
+    this.healthcareProviderDataService.searchProviders(text,clientCaseEligibilityId).subscribe({
+      next: (healthCareProvidersSearchResponse : any) => {        
+        if(healthCareProvidersSearchResponse)
+        {            
+          this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);
+         }         
+      },
+      error: (err) => {
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
 
 
 

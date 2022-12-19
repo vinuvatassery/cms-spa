@@ -20,9 +20,11 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   @Input() sortType : any;
   @Input() sort : any;
   @Input() removeHealthProvider$: any;
+  @Input() healthCareProviderSearchList$: any;
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
   @Output() loadProvidersListEvent = new EventEmitter<any>(); 
+  @Output() searchTextEvent = new EventEmitter<string>(); 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
   /** Public properties **/
@@ -179,5 +181,10 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
        sortType : sortTypeValue,
      }
      this.loadProvidersListEvent.next(gridDataRefinerValue)
+   }
+
+   searchTextEventHandleer($event : any)
+   {
+     this.searchTextEvent.next($event);
    }
 }

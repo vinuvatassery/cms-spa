@@ -69,5 +69,11 @@ export class HealthcareProviderDataService {
       );
     }
   
+      //search for autocomplete
+      searchProviders(text :  string , clientCaseEligibilityId : string) {
+        return this.http.get<HealthcareProvider[]>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/search/text=${text}&clientCaseEligibilityId=${clientCaseEligibilityId}`  
+        );
+      }  
  
 }
