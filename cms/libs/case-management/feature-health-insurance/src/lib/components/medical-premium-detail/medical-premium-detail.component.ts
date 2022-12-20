@@ -159,7 +159,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   private validateForm(){  
       this.resetValidators();
       this.healthInsuranceForm.updateValueAndValidity();  
-      if(this.ddlInsuranceType ==='COBRA' ||this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN')  { 
+      if(this.ddlInsuranceType ==='COBRA' || this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' )  { 
         this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
     
@@ -174,33 +174,56 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       
         this.healthInsuranceForm.controls["insurancePlanName"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
+
+        if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
+          this.healthInsuranceForm.controls["aptcFlag"].setValidators([Validators.required]);
+          this.healthInsuranceForm.controls["aptcFlag"].updateValueAndValidity();
+          if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
+            this.healthInsuranceForm.controls["aptcMonthlyAmt"].setValidators([Validators.required]);
+            this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
+          }
+        }
+        
+
+
+        
+        
+      }
+      if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN'){
+        this.healthInsuranceForm.controls["metalLevel"].setValidators([Validators.required]);
+        this.healthInsuranceForm.controls["metalLevel"].updateValueAndValidity();
       }
       
   }
   private resetValidators(){
-    this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators(); 
-    this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
+    Object.keys(this.healthInsuranceForm.controls).forEach((key:string) => {
+      this.healthInsuranceForm.controls[key].clearValidators(); 
+    this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    });
+    
+    // this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators(); 
+    // this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
 
-    this.healthInsuranceForm.controls["insuranceEndDate"].clearValidators();
-    this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
+    // this.healthInsuranceForm.controls["insuranceEndDate"].clearValidators();
+    // this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
   
-    this.healthInsuranceForm.controls["insuranceIdNumber"].clearValidators();
-    this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
+    // this.healthInsuranceForm.controls["insuranceIdNumber"].clearValidators();
+    // this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
 
-    this.healthInsuranceForm.controls["insuranceCarrierName"].clearValidators();
-    this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
+    // this.healthInsuranceForm.controls["insuranceCarrierName"].clearValidators();
+    // this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
   
-    this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
-    this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
+    // this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
+    // this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
   }
   
   private populateInsurancePolicy(){
     {
       this.healthInsurancePolicy = new healthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
-      this.healthInsurancePolicy.insuranceCarrierId='4ED4C4D3-7C88-4C82-BDA9-FEC16E5E3301';
+      this.healthInsurancePolicy.insuranceCarrierId=this.healthInsuranceForm.controls["insuranceCarrierName"].value;
       this.healthInsurancePolicy.clientCaseEligibilityId=this.clientCaseEligibilityId;
-      this.healthInsurancePolicy.insurancePlanId='86A1D4AD-7C34-41C8-A47F-0C2D9CA706E6';
+      this.healthInsurancePolicy.insurancePlanId=this.healthInsuranceForm.controls["insurancePlanName"].value;
       this.healthInsurancePolicy.clientMaximumId='C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
       this.healthInsurancePolicy.healthInsuranceTypeCode=this.ddlInsuranceType;
       this.healthInsurancePolicy.insuranceIdNbr=this.healthInsuranceForm.controls["insuranceIdNumber"].value;
@@ -208,7 +231,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       this.healthInsurancePolicy.priorityCode='Y';
       this.healthInsurancePolicy.policyHolderFirstName= null;
       this.healthInsurancePolicy.policyHolderLastName= null;
-      this.healthInsurancePolicy.metalLevelCode= null;
+      this.healthInsurancePolicy.metalLevelCode= this.healthInsuranceForm.controls["metalLevel"].value?.lovCode;
       this.healthInsurancePolicy.premiumAmt= 0,
       this.healthInsurancePolicy.startDate= new Date(this.healthInsuranceForm.controls["insuranceStartDate"].value);
       this.healthInsurancePolicy.endDate=new Date(this.healthInsuranceForm.controls["insuranceEndDate"].value);
@@ -218,9 +241,14 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       this.healthInsurancePolicy.nextPremiumDueDate=new Date();
       this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag='Y';
       this.healthInsurancePolicy.paymentIdNbr='string';
-      this.healthInsurancePolicy.aptcFlag='Y';
-      this.healthInsurancePolicy.aptcNotTakingFlag='Y';
-      this.healthInsurancePolicy.aptcMonthlyAmt= 0,
+      if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
+        this.healthInsurancePolicy.aptcFlag='Y';
+      }else{
+        this.healthInsurancePolicy.aptcNotTakingFlag=this.healthInsuranceForm.controls["aptcFlag"].value;
+      }
+      
+      
+      this.healthInsurancePolicy.aptcMonthlyAmt= this.healthInsuranceForm.controls["aptcMonthlyAmt"].value,
       this.healthInsurancePolicy.othersCoveredOnPlanFlag='Y';
       this.healthInsurancePolicy.isClientPolicyHolderFlag='Y';
       this.healthInsurancePolicy.medicareBeneficiaryIdNbr='string';

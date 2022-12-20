@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
@@ -16,7 +14,6 @@ import { VendorFacade } from '@cms/case-management/domain';
 export class MedicalPremiumDetailInsuranceCarrierNameComponent implements OnInit{
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
-  @Input() isSubmitted!: boolean;
 
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
 

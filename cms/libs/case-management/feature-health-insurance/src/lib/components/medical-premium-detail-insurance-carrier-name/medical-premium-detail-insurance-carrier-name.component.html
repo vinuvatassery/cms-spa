@@ -16,7 +16,7 @@
       >
       </kendo-combobox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="isSubmitted && !healthInsuranceForm.controls['insuranceCarrierName'].valid">Insurance carrier name is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceCarrierName'].valid">Insurance carrier name is required.</kendo-formerror>
       <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
         <span>Don’t see the Carrier you’re looking for?</span>
         <button

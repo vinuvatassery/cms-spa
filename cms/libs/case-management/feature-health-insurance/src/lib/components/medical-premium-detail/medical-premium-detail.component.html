@@ -70,7 +70,7 @@
       <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid">Insurance id number is required.</kendo-formerror>
     </div>
     <div class="flex-col mat-form-sm-b-space" *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'">
-      <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isSubmitted]="isSubmitted" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"></case-management-medical-premium-detail-insurance-carrier-name>
+      <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"></case-management-medical-premium-detail-insurance-carrier-name>
     </div>
     
     <div class="flex-col mat-form-sm-b-space ">
@@ -79,14 +79,7 @@
     <div
       class="flex-col  "
       *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
-      <kendo-floatinglabel text="Metal Level">
-        <kendo-dropdownlist
-        [fillMode]="formUiStyle.dropDownFillMode"
-          [data]="ddlMedicalHealthPlanMetalLevel$ | async"
-          [disabled]="isViewContentEditable"
-        >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
+      <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-metal-level>
     </div>
     <div
       class="flex-col mt-1"
@@ -277,23 +270,25 @@
     </div>
     <div
       class="flex-col mt-3"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
-      <h5>Advanced Premium Tax Credit?</h5>
+      *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
+      <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
+      <!-- <h5>Advanced Premium Tax Credit?</h5>
       <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
           <input
             [disabled]="isViewContentEditable"
             type="radio"
             kendoRadioButton
-            name="advancedPremium1"
+            formControlName="aptcFlag"
+            value="Y"
+            name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditYes"
-            id="advancedPremium"
-            tabindex="5"
+            id="aptcFlagY"
           />
           <kendo-label
             class="k-radio-label"
             text="Yes"
-            for="advancedPremium1"
+            for="aptcFlagY"
           ></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
@@ -301,15 +296,16 @@
             [disabled]="isViewContentEditable"
             type="radio"
             kendoRadioButton
-            name="advancedPremium"
+            formControlName="aptcFlag"
+            value="N"
+            name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditNo"
-            id="advancedPremium2"
-            tabindex="6"
+            id="aptcFlagN"
           />
           <kendo-label
             class="k-radio-label"
             text="No"
-            for="advancedPremium2"
+            for="aptcFlagN"
           ></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
@@ -317,16 +313,16 @@
             [disabled]="isViewContentEditable"
             type="radio"
             kendoRadioButton
-            name="advancedPremium"
+            formControlName="aptcFlag"
+            value="U"
+            name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditUnknown"
-            id="advancedPremium3"
-            tabindex="7"
+            id="aptcFlagU"
           />
           <kendo-label
             class="k-radio-label"
             text="Unknown"
-            id="advancedPremiumTaxCreditUnknown"
-            for="advancedPremium3"
+            for="aptcFlagU"
           ></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
@@ -334,15 +330,16 @@
             type="radio"
             [disabled]="isViewContentEditable"
             kendoRadioButton
-            name="advancedPremium"
+            formControlName="aptcFlag"
+            value="E"
+            name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditEligibleButNotTaking"
-            for="advancedPremium4"
-            tabindex="8"
+            id="aptcFlagE"
           />
           <kendo-label
             class="k-radio-label"
             text="Eligible, but not taking"
-            for="advancedPremium4"
+            for="aptcFlagE"
           ></kendo-label>
         </span>
       </div>
@@ -353,11 +350,11 @@
             </kendo-textbox>
            
         </kendo-floatinglabel>
-      </div>
+      </div> -->
     </div>
     <div
       class="flex-col"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'">
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' &&  ddlInsuranceType !== 'COBRA'">
       <h5>Are others covered on the plan?</h5>
       <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
@@ -396,7 +393,7 @@
     </div>
     <div
       class="flex-col mt-2"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'">
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' &&  ddlInsuranceType !== 'COBRA'">
       <h5>Others covered on the plan(Select all that apply)</h5>
       <div class="component-list-h">
         <span class="app-checkboxwidtext-wrapper">
@@ -460,7 +457,7 @@
     <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
       <div
         class="flex-col"
-        *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'"
+        *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'COBRA'"
       >
         <button
           kendoButton
@@ -479,7 +476,7 @@
     </div>
     <div
       class="flex-col mb-2 mt-2"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'"
     >
       <h5 class="text-capital">Copy of Insurance Card</h5>
       <kendo-upload [disabled]="isViewContentEditable"> </kendo-upload>
@@ -487,7 +484,7 @@
     </div>
     <div
       class="flex-col mb-2"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'"
     >
       <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
       <kendo-upload [disabled]="isViewContentEditable"> </kendo-upload>
