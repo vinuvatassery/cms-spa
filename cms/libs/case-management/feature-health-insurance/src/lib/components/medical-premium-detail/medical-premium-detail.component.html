@@ -69,7 +69,7 @@
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid">Insurance id number is required.</kendo-formerror>
     </div>
-    <div class="flex-col mat-form-sm-b-space" *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'">
+    <div class="flex-col mat-form-sm-b-space" >
       <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"></case-management-medical-premium-detail-insurance-carrier-name>
     </div>
     

@@ -159,7 +159,8 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   private validateForm(){  
       this.resetValidators();
       this.healthInsuranceForm.updateValueAndValidity();  
-      if(this.ddlInsuranceType ==='COBRA' || this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' )  { 
+      if(this.ddlInsuranceType ==='COBRA' || this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' 
+      || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' || this.ddlInsuranceType ==='OREGON_HEALTH_PLAN' )  { 
         this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
     
@@ -183,10 +184,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
             this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
           }
         }
-        
-
-
-        
+ 
         
       }
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN'){
