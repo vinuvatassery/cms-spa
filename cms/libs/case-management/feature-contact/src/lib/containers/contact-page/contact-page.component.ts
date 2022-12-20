@@ -660,15 +660,23 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private loadContactInfo() {
     this.loaderService.show()
-    this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '').subscribe((data: ContactInfo) => {
-      if (data) {
-        this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
-        this.contactInfo = data;
-        this.setFormValues();
-        if(!this.isEdit){
-          this.loadDdlCounties('OR');
+    this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '').subscribe({
+      next: (data: ContactInfo) => {
+        this.loaderService.hide();
+        if (data) {
+          this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
+          this.contactInfo = data;
+          this.setFormValues();
+          if (!this.isEdit) {
+            this.loadDdlCounties('OR');
+          }
         }
-      }
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
     });
   }
 
