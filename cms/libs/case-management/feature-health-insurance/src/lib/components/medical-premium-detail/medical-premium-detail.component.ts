@@ -157,9 +157,20 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   }
  
   private validateForm(){  
+   const QualifiedHealthPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','aptcFlag'];
       this.resetValidators();
-      this.healthInsuranceForm.updateValueAndValidity();  
-      if(this.ddlInsuranceType ==='COBRA' || this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' )  { 
+      this.healthInsuranceForm.updateValueAndValidity(); 
+      if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
+        QualifiedHealthPlanRequiredFields.forEach((key:string) => {
+          this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
+          this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        });
+        if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
+          this.healthInsuranceForm.controls["aptcMonthlyAmt"].setValidators([Validators.required]);
+          this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
+        }
+      } 
+      if(this.ddlInsuranceType ==='COBRA'  || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' )  { 
         this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
     
@@ -175,14 +186,14 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
         this.healthInsuranceForm.controls["insurancePlanName"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
 
-        if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
-          this.healthInsuranceForm.controls["aptcFlag"].setValidators([Validators.required]);
-          this.healthInsuranceForm.controls["aptcFlag"].updateValueAndValidity();
-          if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
-            this.healthInsuranceForm.controls["aptcMonthlyAmt"].setValidators([Validators.required]);
-            this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
-          }
-        }
+        // if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
+        //   this.healthInsuranceForm.controls["aptcFlag"].setValidators([Validators.required]);
+        //   this.healthInsuranceForm.controls["aptcFlag"].updateValueAndValidity();
+        //   if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
+        //     this.healthInsuranceForm.controls["aptcMonthlyAmt"].setValidators([Validators.required]);
+        //     this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
+        //   }
+        // }
         
 
 
