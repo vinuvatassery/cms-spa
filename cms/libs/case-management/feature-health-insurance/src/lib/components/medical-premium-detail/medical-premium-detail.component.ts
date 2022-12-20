@@ -6,6 +6,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  OnChanges,
 } from '@angular/core';
 /** Facades **/
 import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy } from '@cms/case-management/domain';
@@ -22,7 +23,7 @@ import { Subscription,first } from 'rxjs';
   styleUrls: ['./medical-premium-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalPremiumDetailComponent implements OnInit {
+export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
  currentDate = new Date();
  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Input properties **/
@@ -59,6 +60,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
   clientCaseId!: any;
   clientCaseEligibilityId!: any
   sessionId!: any;
+  clientId!:any;
 
   /** Constructor **/
   constructor(private readonly healthFacade: HealthInsuranceFacade,
@@ -74,13 +76,15 @@ export class MedicalPremiumDetailComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {   
     this.validateFormMode();
+    this.loadSessionData();
     this.loadLovs();
     this.loadDdlMedicalHealthInsurancePlans();
     this.loadDdlMedicalHealthPlanMetalLevel();
     this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
   }
-
+  ngOnChanges() {
+  }
   ngOnDestroy(): void {
     this.loadSessionSubscription.unsubscribe();
   }
@@ -110,6 +114,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+          this.clientId = JSON.parse(session.sessionData).clientId; 
         }
       });
 
@@ -186,23 +191,25 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
     this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
   }
+  
   private populateInsurancePolicy(){
     {
-      this.healthInsurancePolicy.clientId = 19938228478;
+      this.healthInsurancePolicy = new healthInsurancePolicy();
+      this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.insuranceCarrierId='4ED4C4D3-7C88-4C82-BDA9-FEC16E5E3301';
-      this.healthInsurancePolicy.clientCaseEligibilityId='3D136AE7-CC83-4B7B-8C7B-FFB4F2C2294A';
+      this.healthInsurancePolicy.clientCaseEligibilityId=this.clientCaseEligibilityId;
       this.healthInsurancePolicy.insurancePlanId='86A1D4AD-7C34-41C8-A47F-0C2D9CA706E6';
       this.healthInsurancePolicy.clientMaximumId='C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
-      this.healthInsurancePolicy.healthInsuranceTypeCode='COBRA';
-      this.healthInsurancePolicy.insuranceIdNbr='454545554';
+      this.healthInsurancePolicy.healthInsuranceTypeCode=this.ddlInsuranceType;
+      this.healthInsurancePolicy.insuranceIdNbr=this.healthInsuranceForm.controls["insuranceIdNumber"].value;
       this.healthInsurancePolicy.insuranceGroupPlanTypeCode='P';
       this.healthInsurancePolicy.priorityCode='Y';
       this.healthInsurancePolicy.policyHolderFirstName= null;
       this.healthInsurancePolicy.policyHolderLastName= null;
       this.healthInsurancePolicy.metalLevelCode= null;
       this.healthInsurancePolicy.premiumAmt= 0,
-      this.healthInsurancePolicy.startDate=new Date();
-      this.healthInsurancePolicy.endDate=new Date();
+      this.healthInsurancePolicy.startDate= new Date(this.healthInsuranceForm.controls["insuranceStartDate"].value);
+      this.healthInsurancePolicy.endDate=new Date(this.healthInsuranceForm.controls["insuranceEndDate"].value);
       this.healthInsurancePolicy.careassistPayingPremiumFlag='Y';
       this.healthInsurancePolicy.premiumPaidThruDate=new Date();
       this.healthInsurancePolicy.premiumFrequencyCode='string';
@@ -264,9 +271,10 @@ export class MedicalPremiumDetailComponent implements OnInit {
     if(this.healthInsuranceForm.valid){
        //this.insurancePolicy.saveHealthInsurancePolicy()
        this.populateInsurancePolicy();
-       return this.insurancePolicyFacade.saveHealthInsurancePolicy(this.healthInsurancePolicy);
+       this.insurancePolicyFacade.saveHealthInsurancePolicy(this.healthInsurancePolicy).subscribe(data=>{
+        this.onModalCloseClicked();
+       })
     }
-    return null;
   }
 
 }
