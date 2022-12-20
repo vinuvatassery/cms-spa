@@ -43,16 +43,15 @@ export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , On
   @Input() selectedCase! : any 
  
   private caseDataDataSubscription !: Subscription;
-
+today =new Date();
 
    /** Constructor**/
-  constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef 
+  constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef    
    
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-   
-    console.log(changes)
+  ngOnChanges(changes: SimpleChanges): void {   
+    
     if(changes['caseOwners']?.currentValue?.source != null)
     {       
         this.caseOwners.pipe()
@@ -68,7 +67,7 @@ export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , On
  } 
 
 
- ngOnInit(): void {   
+ ngOnInit(): void {    
   this.setDefaultProgram();  
  }
 

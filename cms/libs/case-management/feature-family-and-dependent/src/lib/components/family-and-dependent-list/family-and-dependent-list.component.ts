@@ -39,6 +39,7 @@ CAClient = DependentTypeCode.CAClient;
   @Input() sortValue : any;
   @Input() sortType : any;
   @Input() sort : any;
+  @Input() timeFormat : any;
   @Input()  existdependentStatus$ : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();

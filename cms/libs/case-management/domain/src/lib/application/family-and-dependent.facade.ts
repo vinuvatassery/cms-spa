@@ -19,6 +19,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
+import { dateFieldName, IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -63,6 +64,8 @@ export class FamilyAndDependentFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
+ 
+
 
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -82,7 +85,8 @@ export class FamilyAndDependentFacade {
     private workflowFacade: WorkflowFacade ,   private readonly loaderService: LoaderService ,
     private configurationProvider : ConfigurationProvider ,
     private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService ) {}
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService ) {}
 
   /** Public methods **/
   ShowLoader()
@@ -212,9 +216,11 @@ export class FamilyAndDependentFacade {
   }
 
   loadDependentsStatus(clientCaseEligibilityId : string) : void {
+    this.ShowLoader();
     this.dependentDataService.loadDependentsStatus(clientCaseEligibilityId).subscribe({
       next: (dependentStatusGetResponse) => {
         this.dependentStatusGetSubject.next(dependentStatusGetResponse);
+        this.HideLoader();
       },
       error: (err) => {  
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
@@ -226,17 +232,20 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.searchDependents(text , clientId).subscribe({
       next: (dependentSearchResponse) => {
 
-        Object.values(dependentSearchResponse).forEach((key) => {            
+        Object.values(dependentSearchResponse).forEach((key) => {   
+                   
           key.fullName = key.firstName + ' ' + key.lastName
-          key.ssn=  'xxx-xx-' +key.ssn.slice(-4);
-          key.fullCustomName =key?.fullName + ' DOB '+key?.dob.toString()+' SSN '+key?.ssn      
-        
+          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);                   
+          key.dob = this.intl.formatDate(key.dob)
+          
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob+' SSN '+key?.ssn      
+          
           if(key?.clientId > 0)   
           {
               key.memberType = ClientDependentGroupDesc.Clients            
           }
           else
-          {
+          {            
               key.memberType = ClientDependentGroupDesc.Dependents
           }
         });

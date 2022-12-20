@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
 /**  Facades **/
-import { IncomeFacade } from '@cms/case-management/domain';
+import { IncomeFacade, Income } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 
@@ -23,17 +23,19 @@ export class IncomeListComponent implements OnInit {
   @Input() clientCaseEligibilityId: string="";
   @Input() clientId: any;
   @Input() clientCaseId: any;
+ 
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
   dependentsProofofSchools$ = this.incomeFacade.dependentsProofofSchools$;
   isEdit!: boolean;
+  selectedIncome: any;
   isOpenedIncome = false;
   isAddIncomeButtonAndFooterNoteDisplay!: boolean;
   isIncludeNote!: boolean;
   deleteRequestSubject = new Subject<DeleteRequest>();
   deleteRequest$ = this.deleteRequestSubject.asObservable();
-  
+  isRemoveIncomeConfirmationPopupOpened = false;
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
@@ -75,9 +77,10 @@ export class IncomeListComponent implements OnInit {
       buttonType:"btn-h-primary",
       text: "Edit Income",
         icon: "edit",
-      click: (): void => {
-        this.onIncomeClicked(true);
-      },
+        type: 'edit',
+        // click: (): void => {
+        //   this.onIncomeClicked(true);
+        // },
     },
     
  
@@ -85,9 +88,10 @@ export class IncomeListComponent implements OnInit {
       buttonType:"btn-h-danger",
       text: "Delete Income",
       icon: "delete",
-      click: (): void => {
-      this.onDeleteEmployerDetailsClicked('john')
-      },
+      // click: (): void => {
+      // this.onDeleteEmployerDetailsClicked('john')
+      // },
+      type: 'delete',
     },
    
     
@@ -107,8 +111,19 @@ export class IncomeListComponent implements OnInit {
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse:any)=>{
       this.incomesTotal=incomeresponse;
     })
+    this.incomeFacade.HideLoader();
   }
-
+// Grid More action clicl function
+onIncomeActionClicked(
+  selectedincome : any, modalType: string = '') {
+    this.selectedIncome = selectedincome;
+  if (modalType == 'edit') {
+ this.onIncomeClicked(true);
+  }
+  if (modalType == 'delete') {
+    this.isRemoveIncomeConfirmationPopupOpened = true;
+  }
+}
   private loadDependentsProofofSchools() {
     this.incomeFacade.loadDependentsProofofSchools();
   }
@@ -135,18 +150,15 @@ export class IncomeListComponent implements OnInit {
     this.isOpenedIncome = $event.popupState;
   }
 
-  onDeleteEmployerDetailsClicked(deleteDetails: any) {
-    const deleteConfirmation: DeleteRequest = {
-      title: ' Income',
-      content: 'The Income will be deleted from the application',
-      data: deleteDetails,
-    };
-    this.deleteRequestSubject.next(deleteConfirmation);
+  updateIncomeHandle(icome: any) {
+    this.loadIncomes();
   }
 
   handleDeleteConfirmationClicked(event: any) {
     console.log('Response Data :', event);
   }
 
- 
+  onRemoveIncomeConfirmationClosed() {
+    this.isRemoveIncomeConfirmationPopupOpened = false;
+}
 }

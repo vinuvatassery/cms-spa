@@ -15,16 +15,28 @@ export class ClientDocumentDataService {
 
     /** pubic methods**/
     uploadDocument(doc: ClientDocument) {
-        var postData = JSON.stringify(doc);
-        var formData = new FormData();
-        formData.append("postData", postData);
+        var documentFormData = new FormData();
+        documentFormData.append("document", doc?.document ?? '');
+        documentFormData.append("clientDocumentId", doc?.clientDocumentId ?? '');
+        documentFormData.append("clientId", `${doc?.clientId}`);
+        documentFormData.append("clientCaseId", doc?.clientCaseId ?? '');
+        documentFormData.append("entityId", doc?.entityId ?? '');
+        documentFormData.append("entityTypeCode", doc?.entityTypeCode ?? '');
+        documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
+        documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
+        documentFormData.append("documentTemplateId", doc?.documentTemplateId ?? '');
+        documentFormData.append("documentPath", doc?.documentPath ?? '');
 
-        return this.http.post(this.getUrl()
-            , formData);
+        return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
+    }
+
+    removeDocument(documentId: string) {
+        const url = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/${documentId}`;
+        return this.http.delete(url);
     }
 
     /** private methods**/
     private getUrl() {
-        return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/document`
+        return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/upload`
     }
 }

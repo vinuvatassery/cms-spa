@@ -51,9 +51,9 @@ export class CaseFacade {
   updateCase$ = this.updateCaseSubject.asObservable();
   getCase$ = this.getCaseSubject.asObservable(); 
 
-
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   public sortValue = '';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
@@ -247,12 +247,10 @@ export class CaseFacade {
           clientCaseId  : clientCaseId,
           assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
           caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
-          caseStartDate: new Date(existingCaseFormData?.controls["applicationDate"].value) ,
+          caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
           concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
         }    
-
-        caseData.caseStartDate =  this.intl.parseDate(caseData.caseStartDate.toLocaleDateString())
-       
+        caseData.caseStartDate =this.intl.formatDate(caseData.caseStartDate,this.dateFormat)   
         return  this.caseDataService.UpdateCase(caseData)
 
     }
