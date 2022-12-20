@@ -9,6 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'case-management-family-and-dependent-detail',
@@ -56,6 +57,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
+    public intl: IntlService
   ) {
 
     this.filterManager
@@ -185,7 +187,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
        if(existDependentData?.dependentClientId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-        this.fullClientName = fullName + ' DOB '+ Intl.DateTimeFormat(this.timeFormat).format(new Date(existDependentData?.dob))+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
+        this.fullClientName = fullName + ' DOB '+ this.intl.formatDate(existDependentData?.dob)+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
 
         this.clientDependentId = existDependentData?.clientDependentId;
         this.dependentTypeCode = DependentTypeCode.CAClient;

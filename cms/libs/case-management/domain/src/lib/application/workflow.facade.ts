@@ -40,12 +40,12 @@ export class WorkflowFacade {
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
-  clientCaseEligibilityId: string | undefined;
-  timeFormat = this.configurationProvider.appSettings.dateformat;
+  clientCaseEligibilityId: string | undefined; 
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
   currentWorkflowMaster!: WorkflowMaster[];
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /**Constructor */
   constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
@@ -100,10 +100,9 @@ export class WorkflowFacade {
       assignedCwUserId: newCaseFormData?.controls["caseOwnerId"].value,
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: newCaseFormData?.controls["applicationDate"].value
-    }      
+    }         
     
-    sessionData.caseStartDate = this.intl.parseDate(Intl.DateTimeFormat(this.timeFormat).format(sessionData.caseStartDate))
-    
+    sessionData.caseStartDate =  this.intl.formatDate(sessionData.caseStartDate,this.dateFormat)   
     this.workflowService.createNewSession(sessionData)
       .subscribe({
         next: (sessionResp: any) => {

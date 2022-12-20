@@ -45,8 +45,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   private checkBoxSubscription !: Subscription;
   clientId ! : number
   clientCaseEligibilityId ! : string
-  familyStatus! : StatusFlag
-  timeFormat= this.familyAndDependentFacade.timeFormat
+  familyStatus! : StatusFlag  
 
 
   /** Constructor **/

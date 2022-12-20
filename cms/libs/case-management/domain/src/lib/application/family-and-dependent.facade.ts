@@ -19,7 +19,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { dateFieldName } from '@progress/kendo-angular-intl';
+import { dateFieldName, IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -64,7 +64,7 @@ export class FamilyAndDependentFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
-  timeFormat = this.configurationProvider.appSettings.dateformat;
+ 
 
 
 
@@ -85,7 +85,8 @@ export class FamilyAndDependentFacade {
     private workflowFacade: WorkflowFacade ,   private readonly loaderService: LoaderService ,
     private configurationProvider : ConfigurationProvider ,
     private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService ) {}
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService ) {}
 
   /** Public methods **/
   ShowLoader()
@@ -235,7 +236,8 @@ export class FamilyAndDependentFacade {
                    
           key.fullName = key.firstName + ' ' + key.lastName
           key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);                   
-          key.dob = Intl.DateTimeFormat(this.timeFormat).format(new Date(key.dob))
+          key.dob = this.intl.formatDate(key.dob)
+          
           key.fullCustomName =key?.fullName + ' DOB '+key?.dob+' SSN '+key?.ssn      
           
           if(key?.clientId > 0)   
