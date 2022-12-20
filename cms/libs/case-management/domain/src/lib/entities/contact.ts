@@ -60,6 +60,7 @@ export interface ContactInfo {
   preferredContactCode?: string;
   friedsOrFamilyContact?: FriedsOrFamilyContact;
   clientCaseEligibility?: ClientCaseElgblty;
+  homeAddressProof?:HomeAddressProof;
 }
 
 export interface ClientCaseElgblty {
@@ -69,4 +70,19 @@ export interface ClientCaseElgblty {
   paperlessFlag?: string;
   elgbtyFlagConcurrencyStamp?: string;
   elgbtyConcurrencyStamp?: string;
+}
+
+export interface HomeAddressProof{
+  documentId?: string;
+  clientCaseId?: string;
+  documentName?: string;
+  documentSize?:number;
+  documentPath  ?: string;
+  document?: File;
+  concurrencyStamp?: string;
+}
+
+export interface PreferredContactLov{
+  lovCode:string,
+  lovDesc:string,
 }
