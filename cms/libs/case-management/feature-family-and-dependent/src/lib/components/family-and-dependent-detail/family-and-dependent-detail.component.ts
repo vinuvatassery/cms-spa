@@ -9,6 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'case-management-family-and-dependent-detail',
@@ -25,6 +26,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   @Input() dependentTypeCodeSelected: any;
   @Input() dependentGet$: any;
   @Input() dependentGetExisting$ : any;
+  @Input() timeFormat : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() closeFamilyMemberFormEvent = new EventEmitter<any>();
   @Output() getNewFamilyMemberFormEvent = new EventEmitter<any>();
@@ -55,6 +57,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
+    public intl: IntlService
   ) {
 
     this.filterManager
@@ -157,9 +160,9 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   {
         this.existFamilyMemberForm = this.formBuilder.group({    
           existRelationshipCode: ['', Validators.required],
-          clientId: [0],           
+          clientId: [0, Validators.required],           
           dependentClientId: [0]  ,
-          clientDependentId: ['']  ,              
+          clientDependentId: ['', Validators.required]  ,              
           dependentType   : ['', Validators.required]  ,
           selectedClientDependentId: ['']  
       });
@@ -184,18 +187,18 @@ export class FamilyAndDependentDetailComponent implements OnInit {
        if(existDependentData?.dependentClientId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-        this.fullClientName = fullName + ' DOB '+ new Date(existDependentData?.dob).toLocaleDateString().toString()+' SSN '+existDependentData?.ssn  
+        this.fullClientName = fullName + ' DOB '+ this.intl.formatDate(existDependentData?.dob)+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
 
         this.clientDependentId = existDependentData?.clientDependentId;
-        this.dependentTypeCode = existDependentData?.dependentTypeCode;
+        this.dependentTypeCode = DependentTypeCode.CAClient;
          this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
              {     
-               clientId:  existDependentData?.clientId,  
+               clientId:  existDependentData?.dependentClientId,  
                dependentClientId:  existDependentData?.dependentClientId,     
                existRelationshipCode: existDependentData?.relationshipCode, 
                clientDependentId: existDependentData?.clientDependentId,
-               dependentType: existDependentData?.dependentTypeCode,
+               dependentType: DependentTypeCode.CAClient,
                selectedClientDependentId :  existDependentData?.clientDependentId
              }
            )
@@ -207,16 +210,23 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   onExistDependentSubmit()
   {
     this.isExistSubmitted =true;
-    const existDepData =
+    if(this.existFamilyMemberForm.valid)
     {
-      clientId : this.existFamilyMemberForm?.controls["clientId"].value,
-      dependentClientId  : this.existFamilyMemberForm?.controls["dependentClientId"].value ,
-      dependentType :this.existFamilyMemberForm?.controls["dependentType"].value ,
-      relationshipCode : this.existFamilyMemberForm?.controls["existRelationshipCode"].value ,
-      clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value ,
-      selectedClientDependentId: this.existFamilyMemberForm?.controls["clientDependentId"].value 
+      const existDepData =
+      {
+        clientId : this.existFamilyMemberForm?.controls["clientId"].value,
+        dependentClientId  : this.existFamilyMemberForm?.controls["dependentClientId"].value ,
+        dependentType :DependentTypeCode.CAClient ,
+        relationshipCode : this.existFamilyMemberForm?.controls["existRelationshipCode"].value ,
+        clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value ,
+        selectedClientDependentId: this.existFamilyMemberForm?.controls["clientDependentId"].value 
+      }   
+
+      existDepData.clientDependentId =  existDepData?.clientDependentId=='' ? "00000000-0000-0000-0000-000000000000" : existDepData?.clientDependentId
+      existDepData.selectedClientDependentId =  existDepData?.selectedClientDependentId=='' ? "00000000-0000-0000-0000-000000000000" : existDepData?.selectedClientDependentId
+     
+      this.addExistingClientEvent.emit(existDepData)
     }
-    this.addExistingClientEvent.emit(existDepData)
   }
 
 

@@ -2,7 +2,7 @@
   <input type="hidden" formControlName="concurrencyStamp">
   <div class="flex-col">
     <kendo-floatinglabel text="Date Application Received">
-      <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+      <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy" formatPlaceholder="formatPattern"
         formControlName="applicationDate" 
         >
       </kendo-datepicker>
@@ -46,7 +46,7 @@
       <kendo-dropdownlist formControlName="programId"
        [fillMode]="formUiStyle.dropDownFillMode"
         [data]="ddlPrograms | async" textField="programName" valueField="programId" 
-         [valuePrimitive]="true"
+         [valuePrimitive]="true"  
         >
       </kendo-dropdownlist>
     </kendo-floatinglabel>

@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import { BehaviorSubject, forkJoin, mergeMap, of, Subject } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, mergeMap, of, Subject } from 'rxjs';
 /** Entities **/
 import { DatapointsAdjustment, WorkFlowProgress, WorkflowMaster, WorkflowSession } from '../entities/workflow';
 import { CompletionChecklist, WorkflowProcessCompletionStatus } from '../entities/workflow-stage-completion-status';
@@ -16,7 +16,7 @@ import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
 import {  FormGroup } from '@angular/forms';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({
@@ -40,18 +40,20 @@ export class WorkflowFacade {
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
-  clientCaseEligibilityId: string | undefined;
+  clientCaseEligibilityId: string | undefined; 
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
   currentWorkflowMaster!: WorkflowMaster[];
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /**Constructor */
   constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
     ,   private readonly loaderService: LoaderService,
     private loggingService : LoggingService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService) { }
+    public intl: IntlService,
+    private configurationProvider : ConfigurationProvider ) { }
   
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -98,9 +100,9 @@ export class WorkflowFacade {
       assignedCwUserId: newCaseFormData?.controls["caseOwnerId"].value,
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: newCaseFormData?.controls["applicationDate"].value
-    }      
-    sessionData.caseStartDate = this.intl.parseDate(sessionData.caseStartDate.toLocaleDateString())
+    }         
     
+    sessionData.caseStartDate =  this.intl.formatDate(sessionData.caseStartDate,this.dateFormat)   
     this.workflowService.createNewSession(sessionData)
       .subscribe({
         next: (sessionResp: any) => {
@@ -175,7 +177,16 @@ export class WorkflowFacade {
         completedDatapointsCount: completionStatus?.completedCount ?? 0
       }
 
-      return this.workflowService.saveWorkflowProgress(navUpdate, sessionld);
+      return this.workflowService.saveWorkflowProgress(navUpdate, sessionld)
+      .pipe(
+        catchError((err: any) => {
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+          if (!(err?.error ?? false)) {
+            this.loggingService.logException(err);
+          }
+          return of(false);
+        })
+      );
     }
 
     return of(false);

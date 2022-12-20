@@ -111,11 +111,9 @@ export class DependentDataService {
 
      ///8update client as dependent
      addExistingDependent(data : any) {      
-      return this.http.put(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client/${data?.clientId}
-        &dependentClientId=${data?.dependentClientId}&dependentType=${data?.dependentType}&relationshipCode=${data?.relationshipCode}&
-        clientDependentId=${data?.clientDependentId}&deletedClientDependentId=${data.selectedClientDependentId}`,
-        null
+      return this.http.put(       
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client`,
+        data
       );
     }
 
@@ -127,9 +125,16 @@ export class DependentDataService {
   }
    
   //10search for autocomplete
-  searchDependents(text :  string) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search/text=${text}`  
+  searchDependents(text :  string , clientId : number) {
+    const data =
+    {
+      text: text,
+      clientId:clientId
+    }
+
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search`,
+      data
     );
   }   
 

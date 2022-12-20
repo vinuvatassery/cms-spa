@@ -26,7 +26,7 @@
               [data]="dependentSearch"           
               [value]="fullClientName"
               valueField ="fullCustomName"              
-              placeholder="Search Name, DOB or SSN"
+              placeholder="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)"
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
               [filterable]="true"   
               (filterChange)="onsearchTextChange($event)"    
@@ -50,7 +50,7 @@
               </ng-template>
             </kendo-autocomplete>      
             
-            <kendo-formerror *ngIf="existFamilyMemberForm?.hasError('required','dependentClientId') && isExistSubmitted">Dependent
+            <kendo-formerror *ngIf="(existFamilyMemberForm?.hasError('required','clientDependentId')&& existFamilyMemberForm?.hasError('required','clientId')) && isExistSubmitted">Dependent
               is required</kendo-formerror>
           </div>
         </div>
@@ -94,7 +94,7 @@
             Cancel
           </button>
           <button kendoButton [primary]="true" aria-label="add family member">
-            Add
+            {{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'UPDATE' : 'ADD' }}
           </button>
         </div>
       </div>
@@ -199,8 +199,11 @@
           </kendo-label>
          
           </span>
-          <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">enrollment status is required</kendo-formerror>
+          
         </div>
+        <div class="flex-col">
+          <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">Enrollment status is required</kendo-formerror>
+          </div>
       </div>
     </div>
   </section>

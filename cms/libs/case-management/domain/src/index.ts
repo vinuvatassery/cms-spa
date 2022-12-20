@@ -33,6 +33,8 @@ export * from './lib/entities/applicant-info';
 export * from './lib/entities/client-case-eligibility-and-flag';
 export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
+export * from './lib/entities/income';
+export * from './lib/entities/no-income-data';
 
 
 /** Enums **/
@@ -103,4 +105,4 @@ export * from './lib/application/verification.facade';
 export * from './lib/application/completion-status.facade';
 export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
-
+export * from './lib/application/client-document-facade';

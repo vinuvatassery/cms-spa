@@ -32,6 +32,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   dependentdelete$  = this.familyAndDependentFacade.dependentdelete$;
   dependentAddNewGet$= this.familyAndDependentFacade.dependentAddNewGet$
   dependentUpdateNew$=this.familyAndDependentFacade.dependentUpdateNew$
+  existdependentStatus$ =this.familyAndDependentFacade.existdependentStatus$ 
   isFamilyGridDisplay =true;
   clientCaseId! : string;
   sessionId! : string;
@@ -44,8 +45,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   private checkBoxSubscription !: Subscription;
   clientId ! : number
   clientCaseEligibilityId ! : string
-  familyStatus! : StatusFlag
-  
+  familyStatus! : StatusFlag  
 
 
   /** Constructor **/
@@ -143,12 +143,21 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
      }
     
   /** Internal event methods **/
-  onNoFamilyMemberClicked() {  
+  onNoFamilyMemberClicked() {      
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;    
+    this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.familyAndDependentFacade.updateDependentStatus
+    (this.clientCaseEligibilityId,this.familyStatus).subscribe((isSaved) => {         
+      if (isSaved == true) {    
+        this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')        
+                
+      }
+    });    
+   
   }
 
-  private loadDependentSearch(text : string) {
-    this.familyAndDependentFacade.loadDependentSearch(text);
+  private loadDependentSearch(text : string ) {
+    this.familyAndDependentFacade.loadDependentSearch(text , this.clientId);
   }
 
 /** child event methods **/
@@ -191,6 +200,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
 
   AddUpdateExistingDependentHandle(data : any)
   {
+    data.parentClientId =   this.clientId 
     this.familyAndDependentFacade.AddExistingDependent(data);
   }
  

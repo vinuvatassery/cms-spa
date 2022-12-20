@@ -4,10 +4,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist ,StatusFlag, SmokingCessation, YesNoFlag ,ClientFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist, StatusFlag, SmokingCessation, YesNoFlag, ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService,LoggingService,SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Component({
@@ -19,64 +19,64 @@ import { LoaderService,LoggingService,SnackBarNotificationType } from '@cms/shar
 export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   private saveClickSubscription !: Subscription;
-  private loadSessionSubscription!:Subscription;
+  private loadSessionSubscription!: Subscription;
   /** Public properties **/
   tareaCessationMaxLength = 300;
   tareaCessationCharachtersCount!: number;
   tareaCessationCounter!: string;
   tareaCessationNote = '';
-  clientCaseId!:any;
-  clientCaseEligibilityId!:any
-  sessionId!:any;
+  clientCaseId!: any;
+  clientCaseEligibilityId!: any
+  sessionId!: any;
   smokingCessationForm!: FormGroup;
-  smokingCessation:SmokingCessation= {    
+  smokingCessation: SmokingCessation = {
     clientCaseEligibilityId: '',
-    clientCaseId:'',
+    clientCaseId: '',
     smokingCessationReferralFlag: '',
     smokingCessationNoteApplicableFlag: '',
     smokingCessationNote: ''
   };
-  isDisabled =false;
+  isDisabled = false;
 
-  
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,
     private route: ActivatedRoute,
-    private caseFacad: CaseFacade,    
+    private caseFacad: CaseFacade,
     private loaderService: LoaderService,
-    private loggingService:LoggingService
-   ) {
+    private loggingService: LoggingService
+  ) {
   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    
+
     this.buildForm();
     this.loadSessionData();
     this.tareaVariablesIntiation();
     this.addSaveSubscription();
-    this.smokingCessationFormChanged();    
+    this.smokingCessationFormChanged();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
   }
- loadSessionData(){
-  this.sessionId = this.route.snapshot.queryParams['sid'];    
-  this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-  this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {     
-      if(session !== null && session !== undefined && session.sessionData !==undefined){
-      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId ;
-      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId ;
-      this.loadSmokingCessation();
-    }
-  });   
-  
- }
+  loadSessionData() {
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session !== null && session !== undefined && session.sessionData !== undefined) {
+          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+          this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+          this.loadSmokingCessation();
+        }
+      });
+
+  }
   /** Private methods **/
   private buildForm() {
     this.smokingCessationForm = new FormGroup({
@@ -85,38 +85,38 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadSmokingCessation(){
+  private loadSmokingCessation() {
     this.isDisabled = false;
     this.smokingCessationFacade.loadSmokingCessation(this.clientCaseEligibilityId,
-      this.clientCaseId).subscribe({         
+      this.clientCaseId).subscribe({
         next: response => {
           this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.smokingCessationNote)
-          if(response.smokingCessationReferralFlag ==StatusFlag.Yes){
+          if (response.smokingCessationReferralFlag == StatusFlag.Yes) {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.Yes)
             this.isDisabled = false;
           }
-          else if(response.smokingCessationReferralFlag == StatusFlag.No){
+          else if (response.smokingCessationReferralFlag == StatusFlag.No) {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
             this.isDisabled = true;
           }
-   
-       
-        },
-        error: error => {             
-          this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error?.error?.error) 
 
-          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error})
-          }
-           
-        });
-  
+
+        },
+        error: error => {
+          this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error?.error?.error)
+
+          this.loggingService.logException({ name: SnackBarNotificationType.ERROR, message: error?.error?.error })
+        }
+
+      });
+
   }
   private smokingCessationFormChanged() {
     this.smokingCessationForm.valueChanges
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        startWith(null), 
+        startWith(null),
         pairwise()
       )
       .subscribe(([prev, curr]: [any, any]) => {
@@ -132,38 +132,38 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,'Smoking cessation saved sucessfully')   
+        this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Smoking cessation saved sucessfully')
         this.workflowFacade.navigate(navigationType);
       }
     });
   }
   private save() {
-    this.loaderService.show();
     this.validate();
-    if(this.smokingCessationForm.valid){    
+    if (this.smokingCessationForm.valid) {
+      this.loaderService.show();
       this.smokingCessation.clientCaseEligibilityId = this.clientCaseEligibilityId;
-      this.smokingCessation.clientCaseId = this.clientCaseId;     
-      return this.smokingCessationFacade.updateSmokingCessation( this.smokingCessation);  
-        
-   }
+      this.smokingCessation.clientCaseId = this.clientCaseId;
+      return this.smokingCessationFacade.updateSmokingCessation(this.smokingCessation);
+
+    }
     return of(false)
   }
-  private validate():void{
-    this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]) 
-      if(this.smokingCessationForm.value.smokingCessation ==YesNoFlag.Yes){
-        this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
-        this.smokingCessation.smokingCessationNoteApplicableFlag =StatusFlag.Yes;
-        this.smokingCessation.smokingCessationReferralFlag = StatusFlag.Yes;
-        this.smokingCessation.smokingCessationNote =this.smokingCessationForm.value.smokingCessationNote;
-      }
-      else{
-        this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();     
-        this.smokingCessation.smokingCessationNoteApplicableFlag =StatusFlag.No;
-        this.smokingCessation.smokingCessationReferralFlag = StatusFlag.No;
-        this.smokingCessation.smokingCessationNote ='';
-      }
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
-      this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity()
+  private validate(): void {
+    this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required])
+    if (this.smokingCessationForm.value.smokingCessation == YesNoFlag.Yes) {
+      this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
+      this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.Yes;
+      this.smokingCessation.smokingCessationReferralFlag = StatusFlag.Yes;
+      this.smokingCessation.smokingCessationNote = this.smokingCessationForm.value.smokingCessationNote;
+    }
+    else {
+      this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
+      this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.No;
+      this.smokingCessation.smokingCessationReferralFlag = StatusFlag.No;
+      this.smokingCessation.smokingCessationNote = '';
+    }
+    this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity()
+    this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity()
   }
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
@@ -212,12 +212,12 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.tareaCessationCharachtersCount = event.length;
     this.tareaCessationCounter = `${this.tareaCessationCharachtersCount}/${this.tareaCessationMaxLength}`;
   }
-  disableSmokingCessationNote(disable:boolean){
-    if(disable){
-       this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();  
-       this.smokingCessationForm.controls["smokingCessationNote"].updateValueAndValidity() 
-      }    
+  disableSmokingCessationNote(disable: boolean) {
+    if (disable) {
+      this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
+      this.smokingCessationForm.controls["smokingCessationNote"].updateValueAndValidity()
+    }
     this.isDisabled = disable;
   }
- 
+
 }

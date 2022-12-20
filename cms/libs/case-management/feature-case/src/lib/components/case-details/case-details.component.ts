@@ -10,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** external Libraries **/
 import { first, Subscription, tap } from 'rxjs';
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
+import { ProgramCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
@@ -42,16 +43,15 @@ export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , On
   @Input() selectedCase! : any 
  
   private caseDataDataSubscription !: Subscription;
-
+today =new Date();
 
    /** Constructor**/
-  constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef 
+  constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef    
    
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-   
-    console.log(changes)
+  ngOnChanges(changes: SimpleChanges): void {   
+    
     if(changes['caseOwners']?.currentValue?.source != null)
     {       
         this.caseOwners.pipe()
@@ -66,12 +66,24 @@ export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , On
     }  
  } 
 
- ngOnInit(): void {   
-  this.parentForm.patchValue(
-    {
-      clientId: this.selectedProgram?.programId      
-    }) 
+
+ ngOnInit(): void {    
+  this.setDefaultProgram();  
  }
+
+  setDefaultProgram() {   
+  this.ddlPrograms.subscribe({
+    next: (programs: any) => {     
+      this.parentForm.patchValue(
+        {
+          programId:  programs.filter(
+            (data: any) => data.programCode == ProgramCode.DefaultProgram
+          )[0].programId      
+        }) 
+    }
+  });  
+}
+
 
   ///get case details
   ///with session id

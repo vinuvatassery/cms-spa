@@ -1,9 +1,9 @@
 export class NoIncomeData {
   clientCaseEligibilityId :string | null = null;
-  clientId :number =0;
-  noIncomeFlag:string='';
+  clientId = 0;
+  noIncomeFlag ='';
   noIncomeSignatureNotedDate:Date= new Date;
   noIncomeClientSignedDate:Date= new Date;
-  noIncomeNote: string = '';
+  noIncomeNote = '';
 
 }

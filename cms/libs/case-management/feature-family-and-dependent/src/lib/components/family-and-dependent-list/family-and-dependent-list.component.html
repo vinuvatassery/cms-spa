@@ -24,12 +24,12 @@
     field="fullName"     title="Full Legal Name">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button aria-label="client name" kendoButton look="flat"   class="card-link-button" 
-      *ngIf="dataItem.dependentTypeCode===CAClient"
+      *ngIf="dataItem.dependentClientId > 0"
       routerLink="../../cases/case360/{{ dataItem.dependentClientId }}"     
       >
         {{ dataItem.firstName + ' '+  dataItem.lastName}}
       </button>
-    <div *ngIf="dataItem.dependentTypeCode===Dependent"> 
+    <div *ngIf="dataItem.dependentClientId === 0"> 
        {{ dataItem.firstName + ' '+  dataItem.lastName }}</div>
     </ng-template>   
     </kendo-grid-column>
@@ -139,6 +139,7 @@
 >
 
   <case-management-family-and-dependent-detail  
+    [timeFormat]="timeFormat"
     [dependentSearch$]="dependentSearch$"
     [ddlRelationships$]="ddlRelationships$"
     [dependentGet$]="dependentGet$"
