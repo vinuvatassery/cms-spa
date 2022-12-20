@@ -6,10 +6,10 @@ import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, filter, Observable, catchError, tap } from 'rxjs';
 
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, PreferredContactLov } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from '@cms/case-management/domain';
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, Lov } from '@cms/system-config/domain';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
@@ -60,6 +60,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   showMailAddressValidationLoader$ = new BehaviorSubject(false);
   showHomeAddressValidationLoader$ = new BehaviorSubject(false);
   showRelationshipOtherDec: boolean = false;
+  showAddressProofRequiredValidation: boolean = false;
+  public homeAddressProofFile: any = undefined;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -75,7 +77,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly clientDocumentFacade: ClientDocumentFacade,
   ) { }
 
   /** Lifecycle hooks **/
@@ -116,7 +119,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.otherPhoneApplicableFlagChangeSubscription();
     this.emailApplicableFlagChangeSubscription();
     this.noFriendsOrFamilyChangeSubscription();
-    this.contactRelationshipChangeSubscription();
+    this.homeAddressProofFlagChangeSubscription();
+    this.contactRelationshipChangeSubscription(); 
   }
 
   private loadCurrentSession() {
@@ -242,7 +246,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     const otherPhoneIsNotApplicable = (this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false;
     const emailIsNotApplicable = (this.contactInfoForm.get('email') as FormGroup)?.controls['applicableFlag']?.value ?? false;
 
-
     if (homePhone?.value && homePhone.valid && !homePhoneIsNotApplicable) {
       preferredContact.push(this.formatPhoneNumber(homePhone?.value ?? ''));
     }
@@ -297,11 +300,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         address1: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         address2: new FormControl('', { updateOn: 'blur' }),
         city: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        state: new FormControl('OR', { validators: Validators.required,  }),
+        state: new FormControl('OR', { validators: Validators.required, }),
         zip: new FormControl('', { validators: [Validators.required, Validators.pattern('^[0-9]{5}(-[0-9]{4})?$')], updateOn: 'blur' }),
         county: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         homelessFlag: new FormControl(false, { validators: Validators.required }),
-        noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required, updateOn: 'blur' }),
+        noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required }),
         sameAsMailingAddressFlag: new FormControl(false, { validators: Validators.required }),
         housingStabilityCode: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
       }),
@@ -354,8 +357,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe({
       next: ([navigationType, isSaved]) => {
+        this.loaderService.hide();
         if (isSaved) {
-          this.loaderService.hide();
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
           this.workflowFacade.navigate(navigationType);
         }
@@ -370,7 +373,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private save() {
     this.contactInfoForm.markAllAsTouched();
-    if (this.contactInfoForm.valid) {
+    const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined)
+    if(isAddressProofRequired){
+      this.showAddressProofRequiredValidation = true;
+    }
+    else if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation) {
       this.loaderService.show()
       return this.saveContactInfo();
     }
@@ -556,6 +563,17 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       elgbtyConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyConcurrencyStamp,
     };
 
+    let addressProofdoc: HomeAddressProof | undefined = undefined;
+    if (this.uploadedHomeAddressProof != null && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
+      addressProofdoc = {
+        clientCaseId: this.workflowFacade.clientCaseId,
+        documentName: this.uploadedHomeAddressProof.name,
+        document: this.uploadedHomeAddressProof,
+        documentSize: this.uploadedHomeAddressProof.size
+      };
+    }
+
+
 
     if (this.isEdit) {
       const homeAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
@@ -590,6 +608,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       friedsOrFamilyContact.clientDependentId = this.contactInfo?.friedsOrFamilyContact?.clientDependentId;
       friedsOrFamilyContact.concurrencyStamp = this.contactInfo?.friedsOrFamilyContact?.concurrencyStamp;
 
+      if (addressProofdoc && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
+        addressProofdoc.concurrencyStamp = this.contactInfo?.homeAddressProof?.concurrencyStamp ?? '';
+        addressProofdoc.documentId = this.contactInfo?.homeAddressProof?.documentId ?? '';
+      }
+
     }
 
     contactInfoData.address = [maillingAddress, homeAddress];
@@ -597,8 +620,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     contactInfoData.email = email;
     contactInfoData.friedsOrFamilyContact = friedsOrFamilyContact;
     contactInfoData.clientCaseEligibility = clientCaseElgibility;
+    if (addressProofdoc) {
+      contactInfoData.homeAddressProof = addressProofdoc;
+    }
 
-    const preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
+    let preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
+    preferredContactCode = preferredContactCode.replace(/[- )(]/g, '');
     if (preferredContactCode === homePhone?.phoneNbr) {
       homePhone.preferredFlag = StatusFlag.Yes;
     }
@@ -715,6 +742,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       this.contactInfoForm.get('familyAndFriendsContact')?.patchValue(this.contactInfo?.friedsOrFamilyContact);
       this.contactInfoForm.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.patchValue(this.contactInfo?.friedsOrFamilyContact?.noFriendOrFamilyContactFlag === StatusFlag.Yes);
+      this.homeAddressProofFile = [
+        {
+          name: this.contactInfo?.homeAddressProof?.documentName,
+          size: this.contactInfo?.homeAddressProof?.documentSize,
+          src: this.contactInfo?.homeAddressProof?.documentPath,
+          uid: this.contactInfo?.homeAddressProof?.documentId
+        },
+      ];
       this.adjustAttributeInit();
       this.loaderService.hide();
     }
@@ -793,6 +828,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private setVisibilityByNoHomeAddressProofFlag(isChecked: boolean) {
     this.isNoProofOfHomeChecked = isChecked;
+    if(this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined){
+      this.showAddressProofRequiredValidation = !isChecked
+    }
   }
 
   private setVisibilityByHomePhoneNotApplicable(isChecked: boolean) {
@@ -966,16 +1004,16 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     email: ClientEmail | undefined) {
     if (!control) return;
     if (homePhone?.preferredFlag ?? false) {
-      control?.patchValue(homePhone?.phoneNbr);
+      control?.patchValue(this.formatPhoneNumber(homePhone?.phoneNbr ?? ''));
     }
     else if (cellPhone?.preferredFlag ?? false) {
-      control?.patchValue(cellPhone?.phoneNbr);
+      control?.patchValue(this.formatPhoneNumber(cellPhone?.phoneNbr ?? ''));
     }
     else if (workPhone?.preferredFlag ?? false) {
-      control?.patchValue(workPhone?.phoneNbr);
+      control?.patchValue(this.formatPhoneNumber(workPhone?.phoneNbr ?? ''));
     }
     else if (otherPhone?.preferredFlag ?? false) {
-      control?.patchValue(otherPhone?.phoneNbr);
+      control?.patchValue(this.formatPhoneNumber(otherPhone?.phoneNbr ?? ''));
     }
     else if (email?.preferredFlag ?? false) {
       control?.patchValue(email?.email);
@@ -1066,8 +1104,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   /** Internal event methods **/
-  onNoHomeAddressProofFlagChecked(event: Event) {
-    this.setVisibilityByNoHomeAddressProofFlag((event.target as HTMLInputElement).checked);
+  homeAddressProofFlagChangeSubscription() {
+    (this.contactInfoForm.get('homeAddress') as FormGroup)?.controls['noHomeAddressProofFlag']?.valueChanges.subscribe(value => {
+    this.setVisibilityByNoHomeAddressProofFlag(value);
+
+    });
   }
 
   contactRelationshipChangeSubscription() {
@@ -1094,11 +1135,61 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.closeValidationPopup(type);
     }
   }
-  onFileSelected(e: SelectEvent) {
+  handleFileSelected(e: SelectEvent) {
     this.uploadedHomeAddressProof = e.files[0].rawFile;
+    this.showAddressProofRequiredValidation = false;
   }
 
-  onFileRemoved(e: SelectEvent) {
+  handleFileRemoved(e: SelectEvent) {
+    if(this.homeAddressProofFile[0]?.uid){
+    this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
+      next: (response) => {
+          if(response === true){
+              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,"Home Address Proof Removed Successfully!")
+              this.homeAddressProofFile = undefined;
+              this.uploadedHomeAddressProof = undefined;
+              this.showAddressProofRequiredValidation = true;
+              this.loadContactInfo();
+            }
+      },
+      error: (err) => {
+        this.loggingService.logException(err);
+      },
+    });
+  }
+  else{
+    this.homeAddressProofFile = undefined;
+    this.uploadedHomeAddressProof = undefined;
+    this.showAddressProofRequiredValidation = true;
+  }
+  
+  }
+
+
+  uploadEventHandler(e: SelectEvent) {
+    if (this.uploadedHomeAddressProof) {
+      var document: ClientDocument = {
+        clientId: this.workflowFacade.clientId,
+        clientCaseId: this.workflowFacade.clientCaseId,
+        clientCaseEligibilityId: this.workflowFacade.clientCaseEligibilityId,
+        // entityId: '',
+        // entityTypeCode: 'HOME_ADDRESS_PROOF',
+        documentName: this.uploadedHomeAddressProof.name,
+        document: this.uploadedHomeAddressProof
+      };
+
+      return this.clientDocumentFacade.uploadDocument(document)
+        .pipe(
+          catchError((err: any) => {
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+            if (!(err?.error ?? false)) {
+              this.loggingService.logException(err);
+            }
+            return of(false);
+          })
+        );
+    }
+    return of({});
   }
 
   get email() {
@@ -1121,5 +1212,5 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   get fAfContact() {
     return (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup).controls as any;
   }
-  
+
 }

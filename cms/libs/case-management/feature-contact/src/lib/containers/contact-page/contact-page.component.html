@@ -265,8 +265,7 @@
               id="check3" 
               kendoCheckBox
               aria-labelledby="proofOfHomeAddress" 
-              formControlName="noHomeAddressProofFlag"
-              (click)="onNoHomeAddressProofFlagChecked($event)"
+              formControlName="noHomeAddressProofFlag"              
                 />
               <label class="k-checkbox-label" for="check3">No proof of home address or residency</label>
             </span>
@@ -275,13 +274,21 @@
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
-            <kendo-fileselect  
-            [disabled]="isNoProofOfHomeChecked"          
-            [restrictions]="fileUploadRestrictions"
-            [multiple]="false"
-            (select)="onFileSelected($event)"
-            (remove)="onFileRemoved($event)"
-            ></kendo-fileselect >
+            <kendo-fileselect 
+            aria-label="proof of home address" 
+            name="upload proof"
+            [disabled]="isNoProofOfHomeChecked"
+            [restrictions]="fileUploadRestrictions" 
+            [multiple]="false"   
+            (select)="handleFileSelected($event)" 
+            (remove)="handleFileRemoved($event)"            
+            [ngModel]="homeAddressProofFile" 
+            [ngModelOptions]="{standalone: true}"
+            #homeAddressProofUploaded>
+          </kendo-fileselect>
+          <kendo-formhint>Max file size 25MB</kendo-formhint> 
+          <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of home address is required
+          </kendo-formerror>
           </div>
         </div>
         <div class="flex-row mt-2">

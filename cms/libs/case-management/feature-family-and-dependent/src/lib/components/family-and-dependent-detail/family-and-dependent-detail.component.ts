@@ -9,6 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'case-management-family-and-dependent-detail',
@@ -25,6 +26,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   @Input() dependentTypeCodeSelected: any;
   @Input() dependentGet$: any;
   @Input() dependentGetExisting$ : any;
+  @Input() timeFormat : any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() closeFamilyMemberFormEvent = new EventEmitter<any>();
   @Output() getNewFamilyMemberFormEvent = new EventEmitter<any>();
@@ -55,6 +57,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
+    public intl: IntlService
   ) {
 
     this.filterManager
@@ -184,14 +187,14 @@ export class FamilyAndDependentDetailComponent implements OnInit {
        if(existDependentData?.dependentClientId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-        this.fullClientName = fullName + ' DOB '+ new Date(existDependentData?.dob).toLocaleDateString().toString()+' SSN '+existDependentData?.ssn  
+        this.fullClientName = fullName + ' DOB '+ this.intl.formatDate(existDependentData?.dob)+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
 
         this.clientDependentId = existDependentData?.clientDependentId;
         this.dependentTypeCode = DependentTypeCode.CAClient;
          this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
              {     
-               clientId:  existDependentData?.clientId,  
+               clientId:  existDependentData?.dependentClientId,  
                dependentClientId:  existDependentData?.dependentClientId,     
                existRelationshipCode: existDependentData?.relationshipCode, 
                clientDependentId: existDependentData?.clientDependentId,

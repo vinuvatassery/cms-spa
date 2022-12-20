@@ -33,6 +33,7 @@ export * from './lib/entities/applicant-info';
 export * from './lib/entities/client-case-eligibility-and-flag';
 export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
+export * from './lib/entities/income';
 export * from './lib/entities/no-income-data';
 export * from './lib/entities/vendor';
 export * from './lib/entities/insurance-plan';
@@ -110,7 +111,7 @@ export * from './lib/application/verification.facade';
 export * from './lib/application/completion-status.facade';
 export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
+export * from './lib/application/client-document-facade';
 export * from './lib/application/vendor.facade';
 export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
-

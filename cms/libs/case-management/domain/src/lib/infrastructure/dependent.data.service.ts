@@ -126,8 +126,15 @@ export class DependentDataService {
    
   //10search for autocomplete
   searchDependents(text :  string , clientId : number) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search/text=${text}&clientId=${clientId}`  
+    const data =
+    {
+      text: text,
+      clientId:clientId
+    }
+
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/search`,
+      data
     );
   }   
 
