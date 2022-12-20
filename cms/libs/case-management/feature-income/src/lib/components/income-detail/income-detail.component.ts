@@ -361,7 +361,7 @@ export class IncomeDetailComponent implements OnInit {
           name: this.selectedIncome.documentName,
           src: this.selectedIncome.documentPath,
           uid: this.selectedIncome.clientDocumentId,
-          size: this.selectedIncome?.extraProperties?.fileSize,
+          size: this.selectedIncome?.documentSize,
         },
       ];
     }
