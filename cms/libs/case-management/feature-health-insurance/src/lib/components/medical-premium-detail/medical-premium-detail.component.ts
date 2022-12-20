@@ -12,7 +12,9 @@ import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolic
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
-import { InsurancePlanFacade } from '@cms/case-management/domain';
+import { InsurancePlanFacade ,WorkflowFacade} from '@cms/case-management/domain';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription,first } from 'rxjs';
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -31,6 +33,9 @@ export class MedicalPremiumDetailComponent implements OnInit {
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
   @Output() editRedirect = new EventEmitter<string>();
+
+  /** Private properties **/
+  private loadSessionSubscription!: Subscription;
 
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
@@ -51,13 +56,18 @@ export class MedicalPremiumDetailComponent implements OnInit {
   isOpenDdl = false;
   insurancePlans: Array<any> = [];
   healthInsurancePolicy!:healthInsurancePolicy;
+  clientCaseId!: any;
+  clientCaseEligibilityId!: any
+  sessionId!: any;
 
   /** Constructor **/
   constructor(private readonly healthFacade: HealthInsuranceFacade,
      private formBuilder: FormBuilder,
      private lovFacade: LovFacade,
      private insurancePlanFacade:InsurancePlanFacade,
-     private insurancePolicyFacade: HealthInsurancePolicyFacade) {
+     private insurancePolicyFacade: HealthInsurancePolicyFacade,
+     private route: ActivatedRoute,
+     private workflowFacade: WorkflowFacade) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -71,6 +81,9 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.viewSelection();
   }
 
+  ngOnDestroy(): void {
+    this.loadSessionSubscription.unsubscribe();
+  }
   /** Private methods **/
   private loadLovs(){
     this.lovFacade.getInsuranceTypeLovs()
@@ -89,7 +102,18 @@ export class MedicalPremiumDetailComponent implements OnInit {
   private loadDdlMedicalHealthInsurancePlans() {
     this.healthFacade.loadDdlMedicalHealthInsurancePlans();
   }
+  private loadSessionData() {
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session !== null && session !== undefined && session.sessionData !== undefined) {
+          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+          this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+        }
+      });
 
+  }
   private loadDdlMedicalHealthPlanMetalLevel() {
     this.healthFacade.loadDdlMedicalHealthPlanMetalLevel();
   }
@@ -162,6 +186,53 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
     this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
   }
+  private populateInsurancePolicy(){
+    {
+      this.healthInsurancePolicy.clientId = 19938228478;
+      this.healthInsurancePolicy.insuranceCarrierId='4ED4C4D3-7C88-4C82-BDA9-FEC16E5E3301';
+      this.healthInsurancePolicy.clientCaseEligibilityId='3D136AE7-CC83-4B7B-8C7B-FFB4F2C2294A';
+      this.healthInsurancePolicy.insurancePlanId='86A1D4AD-7C34-41C8-A47F-0C2D9CA706E6';
+      this.healthInsurancePolicy.clientMaximumId='C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
+      this.healthInsurancePolicy.healthInsuranceTypeCode='COBRA';
+      this.healthInsurancePolicy.insuranceIdNbr='454545554';
+      this.healthInsurancePolicy.insuranceGroupPlanTypeCode='P';
+      this.healthInsurancePolicy.priorityCode='Y';
+      this.healthInsurancePolicy.policyHolderFirstName= null;
+      this.healthInsurancePolicy.policyHolderLastName= null;
+      this.healthInsurancePolicy.metalLevelCode= null;
+      this.healthInsurancePolicy.premiumAmt= 0,
+      this.healthInsurancePolicy.startDate=new Date();
+      this.healthInsurancePolicy.endDate=new Date();
+      this.healthInsurancePolicy.careassistPayingPremiumFlag='Y';
+      this.healthInsurancePolicy.premiumPaidThruDate=new Date();
+      this.healthInsurancePolicy.premiumFrequencyCode='string';
+      this.healthInsurancePolicy.nextPremiumDueDate=new Date();
+      this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag='Y';
+      this.healthInsurancePolicy.paymentIdNbr='string';
+      this.healthInsurancePolicy.aptcFlag='Y';
+      this.healthInsurancePolicy.aptcNotTakingFlag='Y';
+      this.healthInsurancePolicy.aptcMonthlyAmt= 0,
+      this.healthInsurancePolicy.othersCoveredOnPlanFlag='Y';
+      this.healthInsurancePolicy.isClientPolicyHolderFlag='Y';
+      this.healthInsurancePolicy.medicareBeneficiaryIdNbr='string';
+      this.healthInsurancePolicy.medicareCoverageTypeCode='string';
+      this.healthInsurancePolicy.medicarePartAStartDate=new Date();
+      this.healthInsurancePolicy.medicarePartBStartDate=new Date();
+      this.healthInsurancePolicy.onQmbFlag='Y';
+      this.healthInsurancePolicy.onLisFlag='Y';
+      this.healthInsurancePolicy.paymentGroupNumber= 0,
+      this.healthInsurancePolicy.insuranceFirstName='string';
+      this.healthInsurancePolicy.insuranceLastName='string';
+      this.healthInsurancePolicy.oonException= 0,
+      this.healthInsurancePolicy.oonStartDate=new Date();
+      this.healthInsurancePolicy.oonEndDate=new Date();
+      this.healthInsurancePolicy.oonPharmacy='string';
+      this.healthInsurancePolicy.oonDrugs='string';
+      this.healthInsurancePolicy.concurrencyStamp='string';
+      this.healthInsurancePolicy.activeFlag='Y'
+    }
+
+  }
   /** Internal event methods **/
   onHealthInsuranceTypeChanged() {
     this.ddlInsuranceType = this.healthInsuranceForm.controls['insuranceType'].value ;
@@ -192,6 +263,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.validateForm();
     if(this.healthInsuranceForm.valid){
        //this.insurancePolicy.saveHealthInsurancePolicy()
+       this.populateInsurancePolicy();
        return this.insurancePolicyFacade.saveHealthInsurancePolicy(this.healthInsurancePolicy);
     }
     return null;
