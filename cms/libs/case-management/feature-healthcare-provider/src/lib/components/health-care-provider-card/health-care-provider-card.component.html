@@ -39,20 +39,22 @@
       >
       {{gridHoverDataItem.fax}}
     </p>
-    <p class="app-card-details">
+    <div class="app-card-details align-items-fstart">
       <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span >
-      <span> {{gridHoverDataItem.address1}}</span>
+      <div> 
+        <p>  {{gridHoverDataItem.address1}} </p>
 
-      <span> {{gridHoverDataItem.address2}}</span>
+        <p> {{gridHoverDataItem.address2}} </p>
+        <p> {{gridHoverDataItem.city+' '+gridHoverDataItem.stateCode+' '+gridHoverDataItem.zip}} </p>
+      </div> 
 
-      <span> {{gridHoverDataItem.city+' '+gridHoverDataItem.stateCode+' '+gridHoverDataItem.zip}}</span>
+    </div>
+    <h5 class="app-card-heading app-cardcommenthead">Comments</h5>
+    <p class="app-card-details">       
+       {{gridHoverDataItem.checkName}} 
     </p>
-    <p class="app-card-details">
-      <span class="material-icons"  aria-hidden="true"
-        ></span
-      >
-      Comments
-    </p>
-    <span> {{gridHoverDataItem.checkName}}</span>
+   <div class="app-card-bottom-buttons">
+    <button   fillMode ="clear" kendoButton  themeColor="primary"    > Send Email</button>
+   </div>
   </div>
   

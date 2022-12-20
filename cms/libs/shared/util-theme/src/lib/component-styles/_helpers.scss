@@ -23,6 +23,9 @@ section {
 .align-items-end{
   align-items: end;
 }
+.align-items-fstart{
+  align-items: flex-start !important;
+}
 .align-items-center {
   align-items: center;
   display: flex;
