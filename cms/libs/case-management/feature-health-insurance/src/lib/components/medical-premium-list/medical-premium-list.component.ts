@@ -1,6 +1,8 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy,Input } from '@angular/core';
 import { FormGroup,FormBuilder } from '@angular/forms';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { Observable } from 'rxjs';
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
 
@@ -66,12 +68,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadMedicalHealthPlans();
-  }
-
-  /** Private methods **/
-  private loadMedicalHealthPlans() {
-    this.healthFacade.loadMedicalHealthPlans();
+    this.loadHealthInsurancePlans();
   }
 
   /** Internal event methods **/
@@ -116,5 +113,11 @@ export class MedicalPremiumListComponent implements OnInit {
         this.isEdit = false;
         break;
     }
+  }
+
+  loadHealthInsurancePlans(){
+    this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
+   
+    })
   }
 }
