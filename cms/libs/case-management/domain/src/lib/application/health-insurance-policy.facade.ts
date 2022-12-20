@@ -10,23 +10,23 @@ import{HealthInsurancePolicyDataService} from '../infrastructure/health-insuranc
 
 @Injectable({ providedIn: 'root' })
 export class HealthInsurancePolicyFacade {
- 
-  /** Public properties **/ 
+
+  /** Public properties **/
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   healthFacadesnackbar$ = this.snackbarSubject.asObservable();
 
-  
+
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
     this.HideLoader();
-       
+
   }
 
   /** Constructor**/
@@ -44,9 +44,14 @@ export class HealthInsurancePolicyFacade {
   {
     this.loaderService.hide();
   }
- 
+
   saveHealthInsurancePolicy(healthInsurancePolicy:healthInsurancePolicy) {
       return this.healthInsurancePolicyService.saveHealthInsurancePolicy(healthInsurancePolicy);
   }
-  
+
+  getCarrierContactInfo(carrierId:any)
+  {
+    return this.healthInsurancePolicyService.getCarrierContactInfo(carrierId);
+  }
+
 }

@@ -7,15 +7,19 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy } from '@cms/case-management/domain';
+import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy, CarrierContactInfo } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { InsurancePlanFacade ,WorkflowFacade} from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription,first } from 'rxjs';
+import { SsnPipe, PhonePipe } from '@cms/shared/ui-common';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -41,6 +45,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
   this.healthFacade.ddlMedicalHealthInsurancePlans$;
+  carrierContactInfo= new CarrierContactInfo();
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
 
@@ -69,12 +74,14 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
      private insurancePlanFacade:InsurancePlanFacade,
      private insurancePolicyFacade: HealthInsurancePolicyFacade,
      private route: ActivatedRoute,
-     private workflowFacade: WorkflowFacade) {
+     private workflowFacade: WorkflowFacade,
+     private readonly loaderService: LoaderService,
+     private changeDetector: ChangeDetectorRef) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.validateFormMode();
     this.loadSessionData();
     this.loadLovs();
@@ -114,7 +121,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-          this.clientId = JSON.parse(session.sessionData).clientId; 
+          this.clientId = JSON.parse(session.sessionData).clientId;
         }
       });
 
@@ -153,45 +160,45 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     this.ddlInsuranceType = this.insuranceType;
     this.isOpenDdl = true;
   }
- 
-  private validateForm(){  
+
+  private validateForm(){
       this.resetValidators();
-      this.healthInsuranceForm.updateValueAndValidity();  
-      if(this.ddlInsuranceType ==='COBRA' ||this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN')  { 
-        this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
+      this.healthInsuranceForm.updateValueAndValidity();
+      if(this.ddlInsuranceType ==='COBRA' ||this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN')  {
+        this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
-    
+
         this.healthInsuranceForm.controls["insuranceEndDate"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
-      
+        this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();
+
         this.healthInsuranceForm.controls["insuranceIdNumber"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
+        this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();
 
         this.healthInsuranceForm.controls["insuranceCarrierName"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
-      
+
         this.healthInsuranceForm.controls["insurancePlanName"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
       }
-      
+
   }
   private resetValidators(){
-    this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators(); 
+    this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators();
     this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
 
     this.healthInsuranceForm.controls["insuranceEndDate"].clearValidators();
-    this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
-  
+    this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();
+
     this.healthInsuranceForm.controls["insuranceIdNumber"].clearValidators();
-    this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
+    this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();
 
     this.healthInsuranceForm.controls["insuranceCarrierName"].clearValidators();
     this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
-  
+
     this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
     this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
   }
-  
+
   private populateInsurancePolicy(){
     {
       this.healthInsurancePolicy = new healthInsurancePolicy();
@@ -263,6 +270,18 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       this.insurancePlans=[];
       if (!Array.isArray(data)) return;
       this.insurancePlans=data;
+    });
+    this.loaderService.show();
+    this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
+      next: (data) => {
+
+        this.carrierContactInfo = data;
+        this.changeDetector.detectChanges();
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        //this.ShowHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
     });
   }
   save(){
