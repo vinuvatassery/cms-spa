@@ -21,6 +21,9 @@
             placeholder="Search Provider Name/Number"
             [popupSettings]="{ popupClass: popupClass, animate: true }"                 
             [filterable]="true"   
+            (close)="$event.preventDefault(); "
+            class="healthcaresearchinput"
+            [popupSettings]="{popupClass: 'halthcaresearch-list', animate: true, appendTo:'component' }"
             (filterChange)="onsearchTextChange($event)"   
           >          
             <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
@@ -28,6 +31,12 @@
               <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.clinicName }}</span>
               <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.address }}</span>            
             </ng-template>
+            <kendo-combobox-column  >
+              <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                <span>{{ dataItem.fullName }}</span>
+         
+              </ng-template>
+            </kendo-combobox-column>
             <ng-template kendoAutoCompleteFooterTemplate>             
             </ng-template>
           </kendo-autocomplete>  
