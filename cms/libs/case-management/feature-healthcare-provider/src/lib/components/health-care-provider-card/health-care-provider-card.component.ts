@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
   selector: 'case-management-health-care-provider-card',
@@ -8,4 +8,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HealthCareProviderCardComponent {}
+export class HealthCareProviderCardComponent {
+  @Input() gridHoverDataItem!: any;
+}

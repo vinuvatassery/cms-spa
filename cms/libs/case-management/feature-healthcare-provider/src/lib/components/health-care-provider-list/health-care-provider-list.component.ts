@@ -39,6 +39,7 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   deletebuttonEmitted = false;
   editbuttonEmitted = false;
   isOpenedbusinessInfo =false;
+  gridHoverDataItem! : any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -186,5 +187,17 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
    searchTextEventHandleer($event : any)
    {
      this.searchTextEvent.next($event);
+   }
+
+   onProviderHover(dataItem : any)
+   {
+     this.gridHoverDataItem = dataItem;
+     this.gridHoverDataItem.isClinic =false
+   }
+
+   onClinicHover(dataItem : any)
+   {
+     this.gridHoverDataItem = dataItem;
+     this.gridHoverDataItem.isClinic =true 
    }
 }

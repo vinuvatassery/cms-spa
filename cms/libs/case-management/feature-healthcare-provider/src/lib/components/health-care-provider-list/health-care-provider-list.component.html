@@ -1,7 +1,9 @@
 <!-- User Card Profile Details Popover -->
 <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
-    <case-management-health-care-provider-card></case-management-health-care-provider-card>
+    <case-management-health-care-provider-card
+    [gridHoverDataItem]="gridHoverDataItem"
+    ></case-management-health-care-provider-card>
   </ng-template>
 </kendo-popover>
 
@@ -32,7 +34,7 @@
     
         <kendo-grid-column field="clinicName" title="Clinic Name" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button look="flat"   class="card-link-button" kendoButton   kendoPopoverAnchor   [popover]="onUserProfileDetailsHovered"
+            <button look="flat"   class="card-link-button" (mouseover)="onClinicHover(dataItem)" kendoButton   kendoPopoverAnchor   [popover]="onUserProfileDetailsHovered"
             showOn="hover">{{dataItem.clinicName}}</button>
           </ng-template> 
         </kendo-grid-column>
@@ -42,24 +44,24 @@
           [width]="150"
         >       
         <ng-template kendoGridCellTemplate let-dataItem>
-        <button look="flat"   class="card-link-button" kendoButton   kendoPopoverAnchor   [popover]="onUserProfileDetailsHovered"
+        <button look="flat"   class="card-link-button" kendoButton (mouseover)="onProviderHover(dataItem)"   kendoPopoverAnchor   [popover]="onUserProfileDetailsHovered"
         showOn="hover">{{dataItem.providerName}}</button>
       </ng-template>   
       </kendo-grid-column>
+        <kendo-grid-column
+        field="providerPriority"
+        title="Provider Type"
+        [width]="150"
+        [sortable]="false" 
+        [columnMenu]="false"
+      ></kendo-grid-column>     
         <kendo-grid-column
           field="primaryPhone"
           title="Provider Phone"
           [width]="150"
           [sortable]="false" 
           [columnMenu]="false"
-        ></kendo-grid-column>
-        <kendo-grid-column
-          field="providerAddress"
-          title="Provider Address"
-          [width]="200"
-          [sortable]="false" 
-          [columnMenu]="false"
-        ></kendo-grid-column>
+        ></kendo-grid-column>     
         <kendo-grid-column
           field="providerId"
           title="Option"

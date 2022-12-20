@@ -89,5 +89,8 @@ export class HealthCareProviderSearchComponent
          this.filterManager.next(text); 
        }
   } 
-  
+  onSearchTemplateClick(dataItem : any)
+  {
+
+  }
 }

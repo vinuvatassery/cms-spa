@@ -1,40 +1,58 @@
  
 <div class="app-popover-header use-profile-card-wrapper">
  
-    <div class="app-c-avatar avatar-lg">
-      <!-- <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden> -->
-      <span class="profile-text-avatar">AK</span>
+    <div class="app-c-avatar avatar-lg">     
+      <span class="profile-text-avatar"></span>
     </div>
-    <div>
-      <h5>Sara John <span class="text-muted">P567456</span></h5>
-      <p>Human Service Department HOCL(EHOCL)</p>
+    <div *ngIf="gridHoverDataItem.isClinic===false">
+      <h5>{{gridHoverDataItem.providerName}} <span class="text-muted"></span></h5>
+      <p></p>
+    </div>
+
+    <div *ngIf="gridHoverDataItem.isClinic===true">
+      <h5>{{gridHoverDataItem.clinicName}} <span class="text-muted"></span></h5>
+      <p></p>
     </div>
   </div>
   <div class="app-popover-body">
+    <h5 class="app-card-heading">Name on Check</h5>
+    <p class="app-card-details">
+      {{gridHoverDataItem.checkName}}
+     
+    </p>
     <h5 class="app-card-heading">Contact</h5>
     <p class="app-card-details">
       <span class="material-icons" aria-label="email" aria-hidden="true"
         >email</span
       >
-      <a href="mailto:aj.com">exampleemail@gmail.com</a>
+      <a href="mailto:aj.com"> {{gridHoverDataItem.emailAddress}}</a>
     </p>
     <p class="app-card-details">
       <span class="material-icons" aria-label="phone" aria-hidden="true"
         >phone</span
       >
-      (999)-920-2255
+      {{gridHoverDataItem.primaryPhone}}
     </p>
     <p class="app-card-details">
       <span class="material-icons" aria-label="fax" aria-hidden="true"
         >print</span
       >
-      (999)-920-2266
+      {{gridHoverDataItem.fax}}
     </p>
     <p class="app-card-details">
-      <span class="material-icons" aria-label="address" aria-hidden="true"
-        >location_pin</span
-      >
-      455 LARKSPUR DR APT 23 BAVIERA CA 92908‑4601
+      <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span >
+      <span> {{gridHoverDataItem.address1}}</span>
+
+      <span> {{gridHoverDataItem.address2}}</span>
+
+      <span> {{gridHoverDataItem.city+' '+gridHoverDataItem.stateCode+' '+gridHoverDataItem.zip}}</span>
     </p>
+    <p class="app-card-details">
+      <span class="material-icons"  aria-hidden="true"
+        ></span
+      >
+      Comments
+    </p>
+    <span> {{gridHoverDataItem.checkName}}</span>
   </div>
   
