@@ -24,6 +24,8 @@ export class ContactDataService {
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
+    params = params.append('skipCount',1);
+    params = params.append('maxResultCount',9999);
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
   }
 
