@@ -167,6 +167,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
    const QualifiedHealthPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','aptcFlag'];
    const CobraPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
    const OffExchangePlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
+   const OregonPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
       this.resetValidators();
       this.healthInsuranceForm.updateValueAndValidity(); 
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
@@ -191,7 +192,12 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
           this.healthInsuranceForm.controls[key].updateValueAndValidity();
         });       
       } 
-     
+      if(this.ddlInsuranceType ==='OREGON_HEALTH_PLAN' ){
+        OregonPlanRequiredFields.forEach((key:string) => {
+          this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
+          this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        });       
+      } 
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN'){
         this.healthInsuranceForm.controls["metalLevel"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["metalLevel"].updateValueAndValidity();
