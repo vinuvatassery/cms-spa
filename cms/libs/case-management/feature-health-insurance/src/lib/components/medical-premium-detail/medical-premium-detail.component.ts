@@ -359,7 +359,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
           (data:any) => {
               this.onModalCloseClicked();
                this.loaderService.hide();
-               this.insurancePolicyFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Insurance plan saved successfully.');
+               this.insurancePolicyFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Insurance plan updated successfully.');
           },
           (error:any) => {
               if(error){
