@@ -441,4 +441,8 @@ export class ContactDataService {
   updateInsuranceFlags(insuranceFlagsData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
   }
+
+  deleteInsurancePolicy(insurancePolicyId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
+  }
 }

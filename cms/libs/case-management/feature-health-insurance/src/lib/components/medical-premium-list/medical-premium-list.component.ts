@@ -1,6 +1,6 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy,Input, EventEmitter, Output } from '@angular/core';
-import { FormGroup,FormBuilder } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
@@ -25,50 +25,57 @@ export class MedicalPremiumListComponent implements OnInit {
   public pageSizes = this.healthFacade.gridPageSizes;
   public gridSkipCount = this.healthFacade.skipCount;
   public state!: State;
-  
+  currentInsurancePolicyId: any;
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
+  @Input() closeDeleteModal: boolean = false;
+
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
+  @Output() deleteInsurancePlan = new EventEmitter<any>();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Edit Insurance",
       icon: "edit",
+      type: "Edit",
       click: (): void => {
         this.handleHealthInsuranceOpenClicked('edit');
         // this.handleInsuranceType(dataItem.InsuranceType)
       },
     },
-    
+
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Change Priority",
       icon: "format_line_spacing",
+      type: "priority",
       click: (): void => {
-       this.onChangePriorityOpenClicked()
+        this.onChangePriorityOpenClicked()
       },
     },
     {
-      buttonType:"btn-h-danger",
+      buttonType: "btn-h-danger",
       text: "Delete Insurance",
       icon: "delete",
+      type: "Delete",
       click: (): void => {
-       this.onDeleteConfirmOpenClicked()
+        this.onDeleteConfirmOpenClicked()
       },
     },
-   
-    
- 
+
+
+
   ];
 
   /** Constructor **/
   constructor(private readonly healthFacade: HealthInsuranceFacade,
     private formBuilder: FormBuilder) {
-      this.healthInsuranceForm = this.formBuilder.group({});
-    }
+    this.healthInsuranceForm = this.formBuilder.group({});
+  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -78,6 +85,11 @@ export class MedicalPremiumListComponent implements OnInit {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
+
+    if (this.closeDeleteModal) {
+      this.onDeleteConfirmCloseClicked();
+      this.loadInsurancePolicies();
+    }
   }
   /** Internal event methods **/
   onChangePriorityCloseClicked() {
@@ -123,9 +135,9 @@ export class MedicalPremiumListComponent implements OnInit {
     }
   }
 
-  loadHealthInsurancePlans(){
-    this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
-   
+  loadHealthInsurancePlans() {
+    this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
+
     })
   }
 
@@ -156,6 +168,23 @@ export class MedicalPremiumListComponent implements OnInit {
       skipCount: skipcountValue,
       pagesize: maxResultCountValue
     };
-   this.loadInsurancePlanEvent.next(gridDataRefinerValue);
+    this.loadInsurancePlanEvent.next(gridDataRefinerValue);
+  }
+
+  deleteInsurancePolicy() {
+    this.deleteInsurancePlan.next(this.currentInsurancePolicyId);
+  }
+
+  handleOptionClick(dataItem: any, type: any) {
+    if (type == 'Delete') {
+      this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.onDeleteConfirmOpenClicked();
+    }
+    if (type == 'Edit') {
+      this.handleHealthInsuranceOpenClicked('edit');
+    }
+    if (type == 'Priority') {
+      this.onChangePriorityOpenClicked()
+    }
   }
 }

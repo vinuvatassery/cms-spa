@@ -175,4 +175,8 @@ export class HealthInsuranceFacade {
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.contactDataService.updateInsuranceFlags(insuranceFlags);
   }
+
+  deleteInsurancePolicy(insurancePolicyId:any){
+    return this.contactDataService.deleteInsurancePolicy(insurancePolicyId);
+  }
 }
