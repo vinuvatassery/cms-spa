@@ -167,7 +167,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
    const QualifiedHealthPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','aptcFlag'];
    const CobraPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
    const OffExchangePlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
-   const OregonPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
+   const OregonPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
       this.resetValidators();
       this.healthInsuranceForm.updateValueAndValidity(); 
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
