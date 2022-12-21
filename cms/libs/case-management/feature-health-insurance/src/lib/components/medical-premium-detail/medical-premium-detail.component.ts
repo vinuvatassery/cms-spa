@@ -165,6 +165,8 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
  
   private validateForm(){  
    const QualifiedHealthPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','aptcFlag'];
+   const CobraPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
+   const OffExchangePlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
       this.resetValidators();
       this.healthInsuranceForm.updateValueAndValidity(); 
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
@@ -177,36 +179,19 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
           this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
         }
       } 
-      if(this.ddlInsuranceType ==='COBRA'  || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' )  { 
-        this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
-        this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
-
-        this.healthInsuranceForm.controls["insuranceEndDate"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();
-
-        this.healthInsuranceForm.controls["insuranceIdNumber"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();
-
-        this.healthInsuranceForm.controls["insuranceCarrierName"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
-
-        this.healthInsuranceForm.controls["insurancePlanName"].setValidators([Validators.required]);
-        this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
-
-        // if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
-        //   this.healthInsuranceForm.controls["aptcFlag"].setValidators([Validators.required]);
-        //   this.healthInsuranceForm.controls["aptcFlag"].updateValueAndValidity();
-        //   if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
-        //     this.healthInsuranceForm.controls["aptcMonthlyAmt"].setValidators([Validators.required]);
-        //     this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
-        //   }
-        // }
-        
-
-
-        
-        
-      }
+      if(this.ddlInsuranceType ==='COBRA' ){
+        CobraPlanRequiredFields.forEach((key:string) => {
+          this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
+          this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        });       
+      } 
+      if(this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' ){
+        OffExchangePlanRequiredFields.forEach((key:string) => {
+          this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
+          this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        });       
+      } 
+     
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN'){
         this.healthInsuranceForm.controls["metalLevel"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["metalLevel"].updateValueAndValidity();
@@ -219,20 +204,6 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     this.healthInsuranceForm.controls[key].updateValueAndValidity();
     });
     
-    // this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators(); 
-    // this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
-
-    // this.healthInsuranceForm.controls["insuranceEndDate"].clearValidators();
-    // this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
-  
-    // this.healthInsuranceForm.controls["insuranceIdNumber"].clearValidators();
-    // this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
-
-    // this.healthInsuranceForm.controls["insuranceCarrierName"].clearValidators();
-    // this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
-  
-    // this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
-    // this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
   }
 
   private populateInsurancePolicy(){
