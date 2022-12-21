@@ -24,7 +24,7 @@ export class ContactDataService {
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-insurance-policy/`,{params:params});
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
   }
 
   loadDdlMedicalHealthPlanMetalLevel() {
@@ -480,6 +480,6 @@ export class ContactDataService {
 
   }
   updateInsuranceFlags(insuranceFlagsData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-insurance-policy/insurance-flags`, insuranceFlagsData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
   }
 }
