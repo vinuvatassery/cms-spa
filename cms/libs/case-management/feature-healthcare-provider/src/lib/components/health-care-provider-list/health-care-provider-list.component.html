@@ -143,14 +143,16 @@
 
 <!-- Search Provider  Modal -->
 <kendo-dialog
-  *ngIf="isOpenedProviderSearch"
+  *ngIf="editformVisible$ | async"
   (close)="onCloseProviderSearchClicked()"
   class="app-c-modal app-c-modal-lg app-c-modal-np"
 >
   <kendo-dialog-titlebar
     >{{ isEditSearchHealthProvider ? 'Edit Health Care Provider' : 'Add Health Care Provider' }}
   </kendo-dialog-titlebar>
-  <case-management-health-care-provider-search
+  <case-management-health-care-provider-search 
+    [existingProviderData]="existingProviderData"
+    [selectedCustomProviderName]="selectedCustomProviderName"
     [prvId]="prvSelectedId" 
     [healthCareProviderSearchList$]="healthCareProviderSearchList$"
     [addExistingProvider$]="addExistingProvider$"

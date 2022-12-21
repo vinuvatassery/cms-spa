@@ -3,8 +3,8 @@ import {    Component,     ChangeDetectionStrategy,      Input,    Output,   Eve
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HealthcareProviderFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { debug } from 'console';
-import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
+
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
  @Component({
     selector: 'case-management-health-care-provider-search',
@@ -23,7 +23,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Output() searchTextEvent = new EventEmitter<string>(); 
   @Output() addExistingProviderEvent = new EventEmitter<any>(); 
   @Output() deleteProviderEvent =  new EventEmitter<string>();
-  
+  testData = 'sample';
 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
@@ -33,6 +33,9 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Input() healthCareProviderSearchList$: any;
   @Input() addExistingProvider$: any;
   @Input() loadExistingProvider$: any;  
+  @Input() existingProviderData: any;  
+ 
+  @Input() selectedCustomProviderName: any;  
  
 
   /** Public properties **/
@@ -43,7 +46,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   providerSearchInputLoader = false;
   popupClass = 'k-autocomplete-custom';
   selectedClinic! : string
-  selectedCustomProviderName! : string
+ 
   existHealthProvderForm!: FormGroup;
   isExistSubmitted =false;
 
@@ -69,16 +72,14 @@ export class HealthCareProviderSearchComponent implements OnInit
     }
   
       /** Lifecycle hooks **/
-  ngOnInit(): void {   
+  ngOnInit(): void {       
     this.composexistHealthProvdeForm();
-    this.ref.markForCheck();
+    //this.ref.markForCheck();
   }
-
   composexistHealthProvdeForm()
-  {
-    
+  {    
       this.existHealthProvderForm = this.formBuilder.group({   
-        providerId: ['', Validators.required]   ,
+        providerId: ['',Validators.required]   ,
         selectedProviderId: ['']     
       });
       
@@ -97,20 +98,13 @@ export class HealthCareProviderSearchComponent implements OnInit
   }
 
   onExistProviderFormLoad()
-  {      this.ref.markForCheck();
-    this.loadExistingProvider$?.pipe(first((existProviderData: any ) => existProviderData?.providerId != null))
-    .subscribe((existProviderData: any) =>
-    {
-      if( existProviderData?.providerId)
-      {
-        this.selectedCustomProviderName = existProviderData?.fullName+' '+existProviderData?.clinicName+' '+existProviderData?.address
-        this.existHealthProvderForm.setValue(
-          {
-            selectedProviderId: existProviderData?.providerId  ,
-            providerId: existProviderData?.providerId  
-          }) 
-      }
-    });
+  {     
+    
+    this.existHealthProvderForm.setValue(
+            {
+               selectedProviderId: this.existingProviderData?.providerId  ,
+              providerId: this.existingProviderData?.providerId  
+           }) 
   }
 
   onSearchTemplateClick(dataItem : any)

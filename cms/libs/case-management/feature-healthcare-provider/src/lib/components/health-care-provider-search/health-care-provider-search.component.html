@@ -1,6 +1,8 @@
-<form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">   
+<!-- <form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">    -->
+  <form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">   
   <input type="hidden" formControlName="providerId"> 
   <input type="hidden" formControlName="selectedProviderId"> 
+
 <section class="k-dialog-body">
     <p class="text-muted mb-2">
       Start typing the provider's name, then select one from the suggestions. If you don't see the correct provider,
@@ -31,15 +33,7 @@
               <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.clinicName }}</span>
               <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.address }}</span>     
             </ng-template>    
-            <ng-template kendoAutoCompleteFooterTemplate>
-              <button
-                kendoButton
-                [primary]="true"
-                class="btn-full-no-radius"             
-                aria-label="search provider"
-              >              
-              </button>
-            </ng-template>
+           
           </kendo-autocomplete>  
           <kendo-formerror *ngIf="(existHealthProvderForm?.hasError('required','providerId')) && isExistSubmitted">Provider
             is required</kendo-formerror>

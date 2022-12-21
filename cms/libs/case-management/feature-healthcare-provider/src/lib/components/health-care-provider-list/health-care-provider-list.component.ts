@@ -1,9 +1,9 @@
 /** Angular **/
 import {
-  Component,  OnInit,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges,} from '@angular/core';
+  Component,  OnInit,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges, OnDestroy,} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { first } from 'rxjs';
+import { first, Subject, Subscriber, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-health-care-provider-list',
@@ -11,7 +11,7 @@ import { first } from 'rxjs';
   styleUrls: ['./health-care-provider-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HealthCareProviderListComponent implements OnInit , OnChanges {
+export class HealthCareProviderListComponent implements OnInit , OnChanges ,OnDestroy{
   /** Input properties **/
   @Input() hasNoProvider!: boolean;
   @Input() healthCareProvidersData$! : any;
@@ -31,6 +31,9 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   @Output() getExistingProviderEvent = new EventEmitter<any>(); 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
+  editformVisibleSubject = new Subject<boolean>();
+  editformVisible$ = this.editformVisibleSubject.asObservable();
+  subscriptionData! : Subscription;
   /** Public properties **/
 
   isEditHealthProvider!: boolean;
@@ -44,6 +47,8 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   editbuttonEmitted = false;
   isOpenedbusinessInfo =false;
   gridHoverDataItem! : any
+  existingProviderData! : any
+  selectedCustomProviderName! : string
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -75,7 +80,9 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
 
   
   /** Lifecycle hooks **/
-
+  ngOnDestroy(): void {
+    this.subscriptionData.unsubscribe()
+  }
   ngOnChanges(): void {     
     this.state = {
     skip: 0,
@@ -100,16 +107,24 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   }
 
   onOpenProviderSearchClicked(providerId : string,isEdit : boolean) {
-    this.isOpenedProviderSearch = true;
+    this.selectedCustomProviderName="";
+   
     this.isEditSearchHealthProvider = isEdit;
     this.prvSelectedId = providerId;
     if(isEdit === true)
     {
     this.getExistingProviderEvent.emit(this.prvSelectedId)
+    this.onExistProviderFormLoad();
+    }
+    else
+    {
+      this.isOpenedProviderSearch = true;
+      this.editformVisibleSubject.next(this.isOpenedProviderSearch);
     }
   }
   onCloseProviderSearchClicked() {
     this.isOpenedProviderSearch = false;
+    this.editformVisibleSubject.next(this.isOpenedProviderSearch);
     this.editbuttonEmitted =false;
   }
   onBusinessInfoCloseClicked()
@@ -224,4 +239,27 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
     })
   
    }
+
+
+   onExistProviderFormLoad()
+   {     
+    this.subscriptionData =  this.loadExistingProvider$?.pipe(first((existProviderData: any ) => existProviderData?.providerId != null))
+     .subscribe((existProviderData: any) =>
+     {
+       if( existProviderData?.providerId)
+       {        
+          this.existingProviderData=
+          {           
+              selectedProviderId: existProviderData?.providerId  ,
+             providerId: existProviderData?.providerId  ,
+            
+          }   
+          this.selectedCustomProviderName =existProviderData?.fullName+' '+ existProviderData?.clinicName+' '+ existProviderData?.address
+          this.isOpenedProviderSearch = true;
+          this.editformVisibleSubject.next(this.isOpenedProviderSearch);
+        }
+     });
+    
+   }
+   
 }
