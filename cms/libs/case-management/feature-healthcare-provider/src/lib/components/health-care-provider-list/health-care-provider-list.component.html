@@ -145,7 +145,7 @@
 <kendo-dialog
   *ngIf="isOpenedProviderSearch"
   (close)="onCloseProviderSearchClicked()"
-  class="app-c-modal app-c-modal-md app-c-modal-np"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"
 >
   <kendo-dialog-titlebar
     >{{ isEditSearchHealthProvider ? 'Edit Health Care Provider' : 'Add Health Care Provider' }}
@@ -153,11 +153,14 @@
   <case-management-health-care-provider-search
     [prvId]="prvSelectedId" 
     [healthCareProviderSearchList$]="healthCareProviderSearchList$"
+    [addExistingProvider$]="addExistingProvider$"
+    [loadExistingProvider$]="loadExistingProvider$"
    (deleteProviderEvent)="handlePrvRemove($event)"
     [isEditSearchHealthProviderValue]="isEditSearchHealthProvider"
     (closeProviderSearchEvent)="onCloseProviderSearchClicked()"
     (businessLogicEvent) = "onOpenBusinessLogicClicked()"
     (searchTextEvent)="searchTextEventHandleer($event)"
+    (addExistingProviderEvent)="addExistingProviderEventHandler($event)"
   ></case-management-health-care-provider-search>
 </kendo-dialog>
 

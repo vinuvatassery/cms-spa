@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
-import { Observable, of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
 
@@ -21,6 +21,8 @@ export class HealthcareProviderFacade {
   private healthCareProvideUpdateFlagSubject = new Subject<any>();
   private healthCareProvideGetFlagSubject = new Subject<any>();
   private healthCareProviderSearchSubject = new Subject<any>();
+  private addExistingProviderSubject = new Subject<any>();
+  private loadExistingProviderSubject = new Subject<any>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -29,6 +31,8 @@ export class HealthcareProviderFacade {
   updateHealthProvider$ = this.healthCareProvideUpdateFlagSubject.asObservable();
   healthCareProvideGetFlag$ = this.healthCareProvideGetFlagSubject.asObservable();
   healthCareProviderSearchList$ = this.healthCareProviderSearchSubject.asObservable();
+  addExistingProvider$ = this.addExistingProviderSubject.asObservable();
+  loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'fullName'
   public sortType = 'asc'
@@ -98,6 +102,19 @@ export class HealthcareProviderFacade {
     });
   }
 
+  updateHealthCareProvidersFlagonCheck(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string) : void {
+    this.ShowLoader();
+    this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag).subscribe({
+      next: (providerflagStatusGetResponse) => {     
+        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')     
+        this.healthCareProvideUpdateFlagSubject.next(providerflagStatusGetResponse);
+      },
+      error: (err) => {  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
+
   updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
   {
     this.ShowLoader();
@@ -115,8 +132,8 @@ export class HealthcareProviderFacade {
               total:  healthCareProvidersResponse["totalCount"]  
               };       
           const workFlowdata: CompletionChecklist[] = [{
-            dataPointName: 'health_care_providers',
-            status: (parseInt(healthCareProvidersResponse["totalCount"]) > 2) ? StatusFlag.Yes : StatusFlag.No
+            dataPointName: 'health_care_provider',
+            status: (parseInt(healthCareProvidersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
           }];
 
           this.workflowFacade.updateChecklist(workFlowdata);
@@ -133,9 +150,12 @@ export class HealthcareProviderFacade {
 
  searchHealthCareProviders(text : string , clientCaseEligibilityId : string): void {  
     this.healthcareProviderDataService.searchProviders(text,clientCaseEligibilityId).subscribe({
-      next: (healthCareProvidersSearchResponse : any) => {        
+      next: (healthCareProvidersSearchResponse) => {        
         if(healthCareProvidersSearchResponse)
         {            
+          Object.values(healthCareProvidersSearchResponse).forEach((key) => {   
+                    key.selectedCustomProvider = key.fullName+' '+key.clinicName+' '+key.address
+          });
           this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);
          }         
       },
@@ -145,10 +165,31 @@ export class HealthcareProviderFacade {
     });
   }
 
-
-
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  addExistingHealthCareProvider(existProviderData :any) : void {
+    this.ShowLoader();
+    this.healthcareProviderDataService.addExistingHealthCareProvider(existProviderData).subscribe({
+      next: (addExistingProviderGetResponse) => {
+        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
+        this.addExistingProviderSubject.next(addExistingProviderGetResponse);
+      },
+      error: (err) => {  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
   }
+
+
+  loadExistingHealthCareProvider(ClientCaseEligibilityId : string  ,providerId :string) : void {
+    this.ShowLoader();
+    this.healthcareProviderDataService.loadExistingHealthCareProvider(ClientCaseEligibilityId   ,providerId ).subscribe({
+      next: (loadExistingProviderResponse) => {
+        this.HideLoader();
+        this.loadExistingProviderSubject.next(loadExistingProviderResponse);
+      },
+      error: (err) => {  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
+ 
 }

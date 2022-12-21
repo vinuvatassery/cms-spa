@@ -1,8 +1,10 @@
 /** Angular **/
-import {    Component,     ChangeDetectionStrategy,      Input,    Output,   EventEmitter  } from '@angular/core';
+import {    Component,     ChangeDetectionStrategy,      Input,    Output,   EventEmitter, OnInit, ChangeDetectorRef  } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HealthcareProviderFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debug } from 'console';
+import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
 
  @Component({
     selector: 'case-management-health-care-provider-search',
@@ -11,7 +13,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
 
-export class HealthCareProviderSearchComponent
+export class HealthCareProviderSearchComponent implements OnInit
 {
 
   filterManager: Subject<string> = new Subject<string>();
@@ -19,7 +21,9 @@ export class HealthCareProviderSearchComponent
   @Output() closeProviderSearchEvent = new EventEmitter();
   @Output() businessLogicEvent = new EventEmitter();
   @Output() searchTextEvent = new EventEmitter<string>(); 
-
+  @Output() addExistingProviderEvent = new EventEmitter<any>(); 
+  @Output() deleteProviderEvent =  new EventEmitter<string>();
+  
 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
@@ -27,8 +31,9 @@ export class HealthCareProviderSearchComponent
   @Input() isEditSearchHealthProviderValue!: boolean;
   @Input() prvId!: string;
   @Input() healthCareProviderSearchList$: any;
-  
-  @Output() deleteProviderEvent =  new EventEmitter<string>();
+  @Input() addExistingProvider$: any;
+  @Input() loadExistingProvider$: any;  
+ 
 
   /** Public properties **/
   providers$ = this.drugPharmacyFacade.healthCareProviders$;
@@ -38,9 +43,14 @@ export class HealthCareProviderSearchComponent
   providerSearchInputLoader = false;
   popupClass = 'k-autocomplete-custom';
   selectedClinic! : string
+  selectedCustomProviderName! : string
+  existHealthProvderForm!: FormGroup;
+  isExistSubmitted =false;
 
     /** Constructor **/
-    constructor(private readonly drugPharmacyFacade: HealthcareProviderFacade) 
+    constructor(private readonly drugPharmacyFacade: HealthcareProviderFacade,
+      private formBuilder: FormBuilder,
+      private readonly ref: ChangeDetectorRef) 
     {
       this.filterManager
       .pipe(   
@@ -57,6 +67,74 @@ export class HealthCareProviderSearchComponent
         }
         ); 
     }
+  
+      /** Lifecycle hooks **/
+  ngOnInit(): void {   
+    this.composexistHealthProvdeForm();
+    this.ref.markForCheck();
+  }
+
+  composexistHealthProvdeForm()
+  {
+    
+      this.existHealthProvderForm = this.formBuilder.group({   
+        providerId: ['', Validators.required]   ,
+        selectedProviderId: ['']     
+      });
+      
+     if(this.isEditSearchHealthProviderValue === true)
+     {
+       this.onExistProviderFormLoad()
+     }
+     else
+     {
+      this.existHealthProvderForm.patchValue(
+        {
+          selectedProviderId: '00000000-0000-0000-0000-000000000000'
+        }) 
+     }
+     
+  }
+
+  onExistProviderFormLoad()
+  {      this.ref.markForCheck();
+    this.loadExistingProvider$?.pipe(first((existProviderData: any ) => existProviderData?.providerId != null))
+    .subscribe((existProviderData: any) =>
+    {
+      if( existProviderData?.providerId)
+      {
+        this.selectedCustomProviderName = existProviderData?.fullName+' '+existProviderData?.clinicName+' '+existProviderData?.address
+        this.existHealthProvderForm.setValue(
+          {
+            selectedProviderId: existProviderData?.providerId  ,
+            providerId: existProviderData?.providerId  
+          }) 
+      }
+    });
+  }
+
+  onSearchTemplateClick(dataItem : any)
+  {    
+    this.existHealthProvderForm.patchValue(
+      {
+        providerId: dataItem?.providerId  
+      })  
+  }
+
+    onExistHealthProvderSubmit()
+    {      
+       this.isExistSubmitted = true;
+       if(this.existHealthProvderForm.valid)
+       {
+        const existProviderData =
+        {
+          providerId : this.existHealthProvderForm?.controls["providerId"].value,
+          selectedProviderId  : this.existHealthProvderForm?.controls["selectedProviderId"].value 
+        }        
+        this.addExistingProviderEvent.emit(existProviderData);
+       }
+    }
+
 
   onDeleteConfirm()
   {  
@@ -89,8 +167,11 @@ export class HealthCareProviderSearchComponent
          this.filterManager.next(text); 
        }
   } 
-  onSearchTemplateClick(dataItem : any)
-  {
 
+  searchCloseEvent()
+  {
+    this.providerSearchInputLoader = false;
   }
+
+
 }

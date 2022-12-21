@@ -1,3 +1,6 @@
+<form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">   
+  <input type="hidden" formControlName="providerId"> 
+  <input type="hidden" formControlName="selectedProviderId"> 
 <section class="k-dialog-body">
     <p class="text-muted mb-2">
       Start typing the provider's name, then select one from the suggestions. If you don't see the correct provider,
@@ -5,44 +8,44 @@
     </p>
     <div class="flex-row">
       <div class="flex-col">
-        <div class="autoSelect-search mat-form-no-b-space">
-          <div class="global-search">
-            <span
-              class="material-icons global-search-icon"
-              aria-label="search provider"
-              aria-hidden="true"
-              >search</span>
+        <div class="k-auto-complete-box">
+          <span
+            class="material-icons global-search-icon"
+            aria-label="search member"
+            aria-hidden="true"
+            >search</span >
               <span *ngIf="providerSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
             <kendo-autocomplete
             [fillMode]="formUiStyle.dropDownFillMode" 
             [data]="healthCareProviderSearchList$ | async"           
-            [value]="selectedClinic"
-            valueField ="providerId"              
-            placeholder="Search Provider Name/Number"
-            [popupSettings]="{ popupClass: popupClass, animate: true }"                 
+            [value]="selectedCustomProviderName"        
+            valueField ="selectedCustomProvider"                           
+            placeholder="Search Provider Name"               
             [filterable]="true"   
-            (close)="$event.preventDefault(); "
-            class="healthcaresearchinput"
-            [popupSettings]="{popupClass: 'halthcaresearch-list', animate: true, appendTo:'component' }"
-            (filterChange)="onsearchTextChange($event)"   
+            (close)="searchCloseEvent();"
+            [popupSettings]="{popupClass: 'healthcaresearch-list', animate: true, appendTo:'component' }"
+            (filterChange)="onsearchTextChange($event)"  
           >          
-            <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+            <ng-template kendoAutoCompleteItemTemplate let-dataItem >   
               <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
               <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.clinicName }}</span>
-              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.address }}</span>            
-            </ng-template>
-            <kendo-combobox-column  >
-              <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                <span>{{ dataItem.fullName }}</span>
-         
-              </ng-template>
-            </kendo-combobox-column>
-            <ng-template kendoAutoCompleteFooterTemplate>             
+              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.address }}</span>     
+            </ng-template>    
+            <ng-template kendoAutoCompleteFooterTemplate>
+              <button
+                kendoButton
+                [primary]="true"
+                class="btn-full-no-radius"             
+                aria-label="search provider"
+              >              
+              </button>
             </ng-template>
           </kendo-autocomplete>  
+          <kendo-formerror *ngIf="(existHealthProvderForm?.hasError('required','providerId')) && isExistSubmitted">Provider
+            is required</kendo-formerror>
+      
           </div>
-        </div>
-      </div>
+        </div>     
     </div>
   </section>
   <kendo-dialog-actions>
@@ -84,4 +87,4 @@
       </div>
     </div>
   </kendo-dialog-actions>
-  
+</form>

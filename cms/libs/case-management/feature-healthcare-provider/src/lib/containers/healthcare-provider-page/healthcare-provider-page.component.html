@@ -27,9 +27,13 @@
             [healthCareProviderSearchList$]="healthCareProviderSearchList$"
             [removeHealthProvider$]="removeHealthProvider$"
             [healthCareProvidersData$]="healthCareProviders$"
+            [addExistingProvider$]="addExistingProvider$"
+            [loadExistingProvider$]="loadExistingProvider$"
             (deleteConfimedEvent)="handlePrvRemove($event)"    
             (loadProvidersListEvent)="loadProvidersHandle($event)"          
             (searchTextEvent)="searchTextEventHandleer($event)"
+            (addExistingProviderEvent)="addExistingProviderEventHandler($event)"
+            (getExistingProviderEvent)="getExistingProviderEventHandler($event)"
           ></case-management-health-care-provider-list>
         </div>
       </div>

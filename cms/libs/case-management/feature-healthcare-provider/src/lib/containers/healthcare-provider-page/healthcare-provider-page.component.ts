@@ -22,6 +22,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   healthCareProviders$ = this.healthProvider.healthCareProviders$;
   removeHealthProvider$ =this.healthProvider.removeHealthProvider$;
   healthCareProvideGetFlag$  =this.healthProvider.healthCareProvideGetFlag$;
+  addExistingProvider$   =this.healthProvider.addExistingProvider$ ;
+  loadExistingProvider$  =this.healthProvider.loadExistingProvider$;
   isProvidersGridDisplay =true;
   pageSizes = this.healthProvider.gridPageSizes;
   sortValue  = this.healthProvider.sortValue;
@@ -127,6 +129,10 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
 
   /** Internal event methods **/
   onProviderValueChanged() {
+    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.No : StatusFlag.Yes
+    this.healthProvider.updateHealthCareProvidersFlagonCheck
+      (this.clientCaseEligibilityId,this.providersStatus)
+      
     this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
   }
 
@@ -140,5 +146,19 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
    {
     this.healthProvider.searchHealthCareProviders(text, this.clientCaseEligibilityId);
    }
+
+   addExistingProviderEventHandler(existProviderData : any)
+   {
+    existProviderData.clientCaseEligibilityId = this.clientCaseEligibilityId
+   this.healthProvider.addExistingHealthCareProvider(existProviderData)
+      
+   }
   
+   getExistingProviderEventHandler(prvSelectedId : string)
+   {        
+    if(prvSelectedId)
+    {
+    this.healthProvider.loadExistingHealthCareProvider(this.clientCaseEligibilityId,prvSelectedId)
+    }
+   }
 }

@@ -21,10 +21,14 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   @Input() sort : any;
   @Input() removeHealthProvider$: any;
   @Input() healthCareProviderSearchList$: any;
+  @Input() addExistingProvider$: any;
+  @Input() loadExistingProvider$: any;
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
   @Output() loadProvidersListEvent = new EventEmitter<any>(); 
   @Output() searchTextEvent = new EventEmitter<string>(); 
+  @Output() addExistingProviderEvent = new EventEmitter<any>(); 
+  @Output() getExistingProviderEvent = new EventEmitter<any>(); 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
   /** Public properties **/
@@ -99,6 +103,10 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
     this.isOpenedProviderSearch = true;
     this.isEditSearchHealthProvider = isEdit;
     this.prvSelectedId = providerId;
+    if(isEdit === true)
+    {
+    this.getExistingProviderEvent.emit(this.prvSelectedId)
+    }
   }
   onCloseProviderSearchClicked() {
     this.isOpenedProviderSearch = false;
@@ -114,7 +122,6 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
     this.onCloseProviderSearchClicked()
     this.isOpenedbusinessInfo = true;
   }
-
   onDeleteConfirmCloseClicked()
   {
     this.deletebuttonEmitted =false;
@@ -199,5 +206,22 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
    {
      this.gridHoverDataItem = dataItem;
      this.gridHoverDataItem.isClinic =true 
+   }
+
+   addExistingProviderEventHandler($event : any)
+   {
+    this.addExistingProviderEvent.emit($event);
+
+    this. addExistingProvider$.pipe(first((addResponse: any ) => addResponse != null))
+    .subscribe((addResponse: any) =>
+    {  
+      if(addResponse ===true)
+      {        
+        this.loadHealthCareProvidersList()
+        this.onCloseProviderSearchClicked()
+      }
+      
+    })
+  
    }
 }

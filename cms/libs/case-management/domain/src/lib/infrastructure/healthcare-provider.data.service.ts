@@ -58,14 +58,22 @@ export class HealthcareProviderDataService {
     
   }
 
+  loadExistingHealthCareProvider(ClientCaseEligibilityId : string  ,providerId :string) {   
+      
+    return this.http.get<HealthcareProvider[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/providers/${providerId}`
+    );
+    
+  }
+
 
     ///1
-    addExistingHealthCareProvider(ClientCaseEligibilityId : string,ProviderId : string)
+    addExistingHealthCareProvider(existProviderData : any)
     {
       return this.http.post(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/healthcare-providers/${ClientCaseEligibilityId}/providers`+
-        `/${ProviderId}`,null
+        `/case-management/healthcare-providers/${existProviderData?.clientCaseEligibilityId}/providers/${existProviderData?.providerId}/${existProviderData?.selectedProviderId}`,null
       );
     }
   
