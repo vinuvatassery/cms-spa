@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy, CarrierContactInfo } from '@cms/case-management/domain';
+import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy, CarrierContactInfo, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
@@ -45,11 +45,13 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   private loadSessionSubscription!: Subscription;
 
   /** Public properties **/
+  sameAsInsuranceIdFlag = false;
   ddlMedicalHealthInsurancePlans$ =
   this.healthFacade.ddlMedicalHealthInsurancePlans$;
   carrierContactInfo= new CarrierContactInfo();
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
+  premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
 
   ddlMedicalHealthPlanMetalLevel$ =
     this.healthFacade.ddlMedicalHealthPlanMetalLevel$;
@@ -91,6 +93,13 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     this.loadDdlMedicalHealthPlanMetalLevel();
     this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
+    this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
+      if(this.sameAsInsuranceIdFlag === true)
+      {
+        this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
+      }
+
+    })
   }
   ngOnChanges() {
   }
@@ -99,6 +108,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   }
   /** Private methods **/
   private loadLovs(){
+    this.lovFacade.getPremiumFrequencyLovs();
     this.lovFacade.getInsuranceTypeLovs()
   }
   private validateFormMode(){
@@ -162,23 +172,47 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     this.ddlInsuranceType = this.insuranceType;
     this.isOpenDdl = true;
   }
- 
-  private validateForm(){  
+
+  private validateForm(){
    const QualifiedHealthPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','aptcFlag'];
+   const HelpWithPremiumRequiredFields:Array<string> = ['nextPremiumDueDate','premiumAmt','premiumFrequencyCode','paymentIdNbr'];
       this.resetValidators();
-      this.healthInsuranceForm.updateValueAndValidity(); 
+      this.healthInsuranceForm.updateValueAndValidity();
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
         QualifiedHealthPlanRequiredFields.forEach((key:string) => {
-          this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
+          this.healthInsuranceForm.controls[key].setValidators([Validators.required]);
           this.healthInsuranceForm.controls[key].updateValueAndValidity();
         });
         if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
           this.healthInsuranceForm.controls["aptcMonthlyAmt"].setValidators([Validators.required]);
           this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
         }
-      } 
-      if(this.ddlInsuranceType ==='COBRA'  || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' )  { 
-        this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]); 
+      }
+      if(this.ddlInsuranceType !== 'OREGON_HEALTH_PLAN')
+      {
+        this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].setValidators([Validators.required]);
+          this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].updateValueAndValidity();
+        if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y')
+        {
+          HelpWithPremiumRequiredFields.forEach((key:string) => {
+            this.healthInsuranceForm.controls[key].setValidators([Validators.required]);
+            this.healthInsuranceForm.controls[key].updateValueAndValidity();
+          });
+          // this.healthInsuranceForm.controls["nextPremiumDueDate"].setValidators([Validators.required]);
+          // this.healthInsuranceForm.controls["nextPremiumDueDate"].updateValueAndValidity();
+
+          // this.healthInsuranceForm.controls["premiumAmt"].setValidators([Validators.required]);
+          // this.healthInsuranceForm.controls["premiumAmt"].updateValueAndValidity();
+
+          // this.healthInsuranceForm.controls["premiumFrequencyCode"].setValidators([Validators.required]);
+          // this.healthInsuranceForm.controls["premiumFrequencyCode"].updateValueAndValidity();
+
+          // this.healthInsuranceForm.controls["paymentIdNbr"].setValidators([Validators.required]);
+          // this.healthInsuranceForm.controls["paymentIdNbr"].updateValueAndValidity();
+        }
+      }
+      if(this.ddlInsuranceType ==='COBRA'  || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' )  {
+        this.healthInsuranceForm.controls["insuranceStartDate"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
 
         this.healthInsuranceForm.controls["insuranceEndDate"].setValidators([Validators.required]);
@@ -201,11 +235,11 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
         //     this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
         //   }
         // }
-        
 
 
-        
-        
+
+
+
       }
       if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN'){
         this.healthInsuranceForm.controls["metalLevel"].setValidators([Validators.required]);
@@ -215,22 +249,22 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   }
   private resetValidators(){
     Object.keys(this.healthInsuranceForm.controls).forEach((key:string) => {
-      this.healthInsuranceForm.controls[key].clearValidators(); 
+      this.healthInsuranceForm.controls[key].clearValidators();
     this.healthInsuranceForm.controls[key].updateValueAndValidity();
     });
-    
-    // this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators(); 
+
+    // this.healthInsuranceForm.controls["insuranceStartDate"].clearValidators();
     // this.healthInsuranceForm.controls["insuranceStartDate"].updateValueAndValidity();
 
     // this.healthInsuranceForm.controls["insuranceEndDate"].clearValidators();
-    // this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();    
-  
+    // this.healthInsuranceForm.controls["insuranceEndDate"].updateValueAndValidity();
+
     // this.healthInsuranceForm.controls["insuranceIdNumber"].clearValidators();
-    // this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();     
+    // this.healthInsuranceForm.controls["insuranceIdNumber"].updateValueAndValidity();
 
     // this.healthInsuranceForm.controls["insuranceCarrierName"].clearValidators();
     // this.healthInsuranceForm.controls["insuranceCarrierName"].updateValueAndValidity();
-  
+
     // this.healthInsuranceForm.controls["insurancePlanName"].clearValidators();
     // this.healthInsuranceForm.controls["insurancePlanName"].updateValueAndValidity();
   }
@@ -250,22 +284,28 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       this.healthInsurancePolicy.policyHolderFirstName= null;
       this.healthInsurancePolicy.policyHolderLastName= null;
       this.healthInsurancePolicy.metalLevelCode= this.healthInsuranceForm.controls["metalLevel"].value?.lovCode;
-      this.healthInsurancePolicy.premiumAmt= 0,
       this.healthInsurancePolicy.startDate= new Date(this.healthInsuranceForm.controls["insuranceStartDate"].value);
       this.healthInsurancePolicy.endDate=new Date(this.healthInsuranceForm.controls["insuranceEndDate"].value);
-      this.healthInsurancePolicy.careassistPayingPremiumFlag='Y';
-      this.healthInsurancePolicy.premiumPaidThruDate=new Date();
-      this.healthInsurancePolicy.premiumFrequencyCode='string';
-      this.healthInsurancePolicy.nextPremiumDueDate=new Date();
-      this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag='Y';
-      this.healthInsurancePolicy.paymentIdNbr='string';
       if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
         this.healthInsurancePolicy.aptcFlag='Y';
       }else{
         this.healthInsurancePolicy.aptcNotTakingFlag=this.healthInsuranceForm.controls["aptcFlag"].value;
       }
-      
-      
+      if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === StatusFlag.Yes)
+      {
+
+        this.healthInsurancePolicy.careassistPayingPremiumFlag= StatusFlag.Yes;
+        this.healthInsurancePolicy.premiumPaidThruDate= this.healthInsuranceForm.controls["premiumPaidThruDate"].value === null? null : new Date(this.healthInsuranceForm.controls["premiumPaidThruDate"].value);
+        this.healthInsurancePolicy.premiumFrequencyCode= this.healthInsuranceForm.controls["premiumFrequencyCode"].value;
+        this.healthInsurancePolicy.nextPremiumDueDate = new Date(this.healthInsuranceForm.controls["nextPremiumDueDate"].value);
+        this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === true ? StatusFlag.Yes:StatusFlag.No;
+        this.healthInsurancePolicy.paymentIdNbr = this.healthInsuranceForm.controls["paymentIdNbr"].value;
+        this.healthInsurancePolicy.premiumAmt= this.healthInsuranceForm.controls["premiumAmt"].value;
+      }
+      else
+      {
+        this.healthInsurancePolicy.careassistPayingPremiumFlag=this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value;
+      }
       this.healthInsurancePolicy.aptcMonthlyAmt= this.healthInsuranceForm.controls["aptcMonthlyAmt"].value,
       this.healthInsurancePolicy.othersCoveredOnPlanFlag='Y';
       this.healthInsurancePolicy.isClientPolicyHolderFlag='Y';
@@ -343,6 +383,22 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       },
     });
   }
+  onSameAsInsuranceIdValueChange(event: Event)
+  {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.sameAsInsuranceIdFlag = true;
+      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(this.healthInsuranceForm.controls['insuranceIdNumber'].value);
+    }
+    else {
+      this.sameAsInsuranceIdFlag = false;
+      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(null);
+      //this.healthInsuranceForm.controls['paymentIdNbr'].enable();
+    }
+  }
+
+
+
   save(){
     this.isSubmitted=true;
     this.validateForm();

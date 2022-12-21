@@ -128,7 +128,7 @@
     </div>
     <div
     class="flex-col mt-3"
-
+    *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
   >
     <h5 class="text-capital">Insurance Carrier Contact Info</h5>
     <div class="block-section">
@@ -152,10 +152,7 @@
   </div>
     <div
       class="flex-col mt-3"
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'
-      && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'
-      && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'"
-
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
     >
       <div class="block-section">
         <div class="flex-row">
@@ -167,12 +164,12 @@
                   type="radio"
                   [disabled]="isViewContentEditable"
                   kendoRadioButton
-                  name="wantHelpBuyingPremium"
+                  name="careassistPayingPremiumFlag"
                   aria-labelledby="buyingPremiumYes"
-                  formControlName = "wantHelpBuyingPremium"
+                  formControlName = "careassistPayingPremiumFlag"
                   id="buyingPremiumYes"
                   tabindex="3"
-                  value="YES"
+                  value="Y"
                 />
                <kendo-label
                   class="k-radio-label"
@@ -185,12 +182,12 @@
                   type="radio"
                   [disabled]="isViewContentEditable"
                   kendoRadioButton
-                  name="wantHelpBuyingPremium"
+                  name="careassistPayingPremiumFlag"
                   aria-labelledby="buyingPremiumNo"
-                  formControlName = "wantHelpBuyingPremium"
+                  formControlName = "careassistPayingPremiumFlag"
                   id="buyingPremiumNo"
                   tabindex="4"
-                  value="NO"
+                  value="N"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -198,16 +195,17 @@
                   text="No"
                 ></kendo-label>
               </span>
+              <kendo-formerror *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid">Paying premium flag is required.</kendo-formerror>
             </div>
           </div>
         </div>
-        <div class="flex-row mt-3" *ngIf = "ddlInsuranceType !== 'COBRA'">
+        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
           <div class="flex-col flex-col-6">
             <kendo-floatinglabel text="Date Currently Paid through">
               <kendo-datepicker
               [fillMode]="formUiStyle.dateInputFillMode"
                 format="MM-dd-yyyy"
-                [(ngModel)]="currentDate"
+                formControlName = "premiumPaidThruDate"
                 [disabled]="isViewContentEditable"
                 formatPlaceholder="formatPattern"
               >
@@ -219,43 +217,56 @@
               <kendo-datepicker
               [fillMode]="formUiStyle.dateInputFillMode"
                 format="MM-dd-yyyy"
-                [(ngModel)]="currentDate"
+                formControlName = "nextPremiumDueDate"
                 [disabled]="isViewContentEditable"
                 formatPlaceholder="formatPattern"
               >
               </kendo-datepicker>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">Next payment premium due date is required.</kendo-formerror>
+
           </div>
           <div class="flex-col flex-col-6">
             <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
+              <span class="k-input-prefix custom-currencysymbol"> $ </span>
+              <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right" placeholder="00.00"
+                formControlName="premiumAmt" #premiumAmt [fillMode]="formUiStyle.inputFillMode" name="premiumAmt">
 
-              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="premium amount"  [fillMode]="formUiStyle.inputFillMode">
-                <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
-               </kendo-textbox>
+              </kendo-numerictextbox>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid">Premium amount is required.</kendo-formerror>
+
           </div>
           <div class="flex-col flex-col-6">
             <kendo-floatinglabel text="Premium Frequency">
               <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
                 [disabled]="isViewContentEditable"
-                [data]="ddlMedicalHealthPalnPremiumFrequecy$ | async"
+                [data]="premiumFrequencyList$ | async"
+                formControlName = "premiumFrequencyCode"
+                textField ="lovDesc"
+                valueField ="lovCode"
+                [valuePrimitive]="true"
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid">Premium frequency is required.</kendo-formerror>
           </div>
           <div class="flex-col">
             <kendo-floatinglabel text="Payment ID Number">
-              <kendo-textbox  [disabled]="isViewContentEditable" aria-label="payment id number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
+              <kendo-textbox [maxlength]="20" formControlName = "paymentIdNbr" [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" aria-label="payment id number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is required.</kendo-formerror>
+
           </div>
           <div class="flex-col mt-2">
             <span class="app-checkboxwidtext-wrapper">
               <input
                 [disabled]="isViewContentEditable"
                 type="checkbox"
+                formControlName = "paymentIdNbrSameAsInsuranceIdNbrFlag"
+                (change)="onSameAsInsuranceIdValueChange($event)"
                 kendoCheckBox
                 aria-labelledby="sameAsInsuranceId"
                 id="sameAsInsuranceId"
@@ -552,7 +563,7 @@
 
 <kendo-dialog *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Insurance Provider">
- 
+
 <section class="k-dialog-body mb-2">
   <p>
     This feature is part of future scope of work for the ORCares project.
@@ -571,7 +582,7 @@
     </div>
   </div>
 </kendo-dialog-actions>
- 
+
 </kendo-dialog>
 
 
@@ -580,7 +591,7 @@
 
 <kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Plan">
- 
+
 <section class="k-dialog-body mb-2">
   <p>
     This feature is part of future scope of work for the ORCares project.
@@ -599,5 +610,5 @@
     </div>
   </div>
 </kendo-dialog-actions>
- 
+
 </kendo-dialog>

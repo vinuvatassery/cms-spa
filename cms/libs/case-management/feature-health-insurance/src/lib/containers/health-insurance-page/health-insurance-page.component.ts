@@ -22,7 +22,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   healthInsuranceForm!: FormGroup;
   insuranceFlagForm!: FormGroup;
   healthInsurancePolicy!:healthInsurancePolicy;
-  
+
   sessionId: any = "";
   clientId: any;
   clientCaseEligibilityId: string = "";
@@ -57,14 +57,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.loadSessionSubscription.unsubscribe();
   }
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.HideLoader();
   }
 
   ShowLoader()
@@ -83,20 +83,28 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.healthInsuranceForm = this.formBuilder.group({
       insuranceType: [''],
       insuranceStartDate:[''],
-      insuranceEndDate:[''], 
+      insuranceEndDate:[''],
       insuranceIdNumber:[''],
       insuranceCarrierName:[''],
       metalLevel:[''],
       insurancePlanName:[''],
-      wantHelpBuyingPremium:[''],
       aptcFlag:[''],
       aptcMonthlyAmt:[''],
-      
-      
+      careassistPayingPremiumFlag:[''],
+      premiumPaidThruDate:[''],
+      nextPremiumDueDate:[''],
+      premiumAmt:[''],
+      premiumFrequencyCode:[''],
+      paymentIdNbr:[''],
+      paymentIdNbrSameAsInsuranceIdNbrFlag:['']
 
-    });  
 
-  } 
+
+
+
+    });
+
+  }
 
   private buildInsuranceFlagForm(){
     this.insuranceFlagForm = this.formBuilder.group({
@@ -125,7 +133,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       caseEligibilityFlagsData["clientCaseEligibilityId"]=this.clientCaseEligibilityId;
       caseEligibilityFlagsData["clientId"]=this.clientId;
       return this.healthFacade.saveInsuranceFlags(caseEligibilityFlagsData);
-      
+
     }
     return of(false)
   }
