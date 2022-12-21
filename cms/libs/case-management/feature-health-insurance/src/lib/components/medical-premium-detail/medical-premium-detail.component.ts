@@ -29,6 +29,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 })
 export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
  currentDate = new Date();
+ buttonText:string='Add';
  public isaddNewInsuranceProviderOpen = false;
  public isaddNewInsurancePlanOpen = false;
  public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -148,11 +149,14 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
         this.isViewContentEditable = true;
         break;
       case 'Add':
+        this.isEdit=false;
+        this.buttonText='Add';
         this.isDeleteEnabled = false;
         this.isViewContentEditable = false;
         break;
       case 'Edit':
         this.isEdit=true;
+        this.buttonText='Update';
         this.isDeleteEnabled = false;
         this.isViewContentEditable = false;
         this.resetForm();
@@ -243,6 +247,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
 
   private populateInsurancePolicy(){
     {
+      debugger;
       this.healthInsurancePolicy = new healthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.insuranceCarrierId=this.healthInsuranceForm.controls["insuranceCarrierName"].value;
