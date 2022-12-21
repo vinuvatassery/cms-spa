@@ -22,7 +22,7 @@ export class MedicalPremiumDetailMetalLevelComponent implements OnInit {
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder
   ) {
-    this.healthInsuranceForm = this.formBuilder.group({ metalLevel: [''] });
+    this.healthInsuranceForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {

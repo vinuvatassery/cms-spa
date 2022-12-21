@@ -81,12 +81,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   /** Private Methods **/
   private buildForm() {
     this.healthInsuranceForm = this.formBuilder.group({
+      clientInsurancePolicyId: [''],
       insuranceType: [''],
       insuranceStartDate:[''],
       insuranceEndDate:[''], 
       insuranceIdNumber:[''],
       insuranceCarrierName:[''],
-      metalLevel:[''],
+      metalLevel:[{}],
       insurancePlanName:[''],
       wantHelpBuyingPremium:[''],
       aptcFlag:[''],

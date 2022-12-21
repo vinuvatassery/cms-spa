@@ -57,6 +57,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     this.healthFacade.ddlMedicalHealthPalnPremiumFrequecy$;
   ddlInsuranceType!: string;
   isEditViewPopup!: boolean;
+  isEdit!: boolean;
   isDeleteEnabled!: boolean;
   isSubmitted: boolean=false;
   isViewContentEditable!: boolean;
@@ -68,6 +69,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   clientCaseEligibilityId!: any
   sessionId!: any;
   clientId!:any;
+  metalLevelDefaultValue:any={};
 
   /** Constructor **/
   constructor(private readonly healthFacade: HealthInsuranceFacade,
@@ -91,6 +93,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     this.loadDdlMedicalHealthPlanMetalLevel();
     this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
+    
   }
   ngOnChanges() {
   }
@@ -149,13 +152,42 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
         this.isViewContentEditable = false;
         break;
       case 'Edit':
-        this.conditionsInsideView();
-        this.isDeleteEnabled = true;
+        // this.conditionsInsideView();
+        // this.isDeleteEnabled = true;
+        // this.isViewContentEditable = false;
+        this.isEdit=true;
+        this.isDeleteEnabled = false;
         this.isViewContentEditable = false;
+        this.resetForm();
+        this.loadHealthInsurancePolicy();
         break;
       default:
         break;
     }
+  }
+
+  loadHealthInsurancePolicy(){
+    this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data:any)=>{
+      this.bindValues(data);
+    })
+  }
+
+  bindValues(healthInsurancePolicy:healthInsurancePolicy){
+    
+    this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(healthInsurancePolicy.clientInsurancePolicyId);
+    this.healthInsuranceForm.controls['insuranceType'].setValue(healthInsurancePolicy.healthInsuranceTypeCode);
+    this.onHealthInsuranceTypeChanged() ;
+    this.healthInsuranceForm.controls["insuranceStartDate"].setValue(new Date(healthInsurancePolicy.startDate));
+    this.healthInsuranceForm.controls["insuranceEndDate"].setValue(new Date(healthInsurancePolicy.endDate));
+    this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(healthInsurancePolicy.insuranceIdNbr);
+    this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(healthInsurancePolicy.insuranceCarrierId);
+    this.insuranceCarrierNameChange(healthInsurancePolicy.insuranceCarrierId as string);
+    this.healthInsuranceForm.controls['insurancePlanName'].setValue(healthInsurancePolicy.insurancePlanId);
+    const metalLevel={lovCode:healthInsurancePolicy.metalLevelCode};
+    this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
+    this.healthInsuranceForm.controls['aptcFlag'].setValue(healthInsurancePolicy.activeFlag);
+    this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(healthInsurancePolicy.aptcMonthlyAmt);
+
   }
 
   private conditionsInsideView() {
@@ -164,7 +196,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   }
  
   private validateForm(){  
-   const QualifiedHealthPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','aptcFlag'];
+   const QualifiedHealthPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName','aptcFlag','metalLevel'];
    const CobraPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
    const OffExchangePlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceEndDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
    const OregonPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
@@ -326,9 +358,36 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     if(this.healthInsuranceForm.valid){
        //this.insurancePolicy.saveHealthInsurancePolicy()
        this.populateInsurancePolicy();
-       this.insurancePolicyFacade.saveHealthInsurancePolicy(this.healthInsurancePolicy).subscribe(data=>{
-        this.onModalCloseClicked();
-       })
+       this.loaderService.show();     
+       if(this.isEdit){
+        this.healthInsurancePolicy.clientInsurancePolicyId=this.healthInsuranceForm.controls["clientInsurancePolicyId"].value;
+        this.insurancePolicyFacade.updateHealthInsurancePolicy(this.healthInsurancePolicy).subscribe(
+          (data:any) => {
+              this.onModalCloseClicked();
+               this.loaderService.hide();
+          },
+          (error:any) => {
+              if(error){
+            this.loaderService.hide();      
+            this.insurancePolicyFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+          }
+          }
+        )
+       }else{
+        this.insurancePolicyFacade.saveHealthInsurancePolicy(this.healthInsurancePolicy).subscribe(
+          (data:any) => {
+            this.onModalCloseClicked();
+             this.loaderService.hide();
+        },
+        (error:any) => {
+            if(error){
+          this.loaderService.hide();      
+          this.insurancePolicyFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
+        }
+        }
+        )
+       }
+       
     }
   }
 }

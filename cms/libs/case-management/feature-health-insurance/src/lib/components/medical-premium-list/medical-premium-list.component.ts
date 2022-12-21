@@ -4,7 +4,7 @@ import { FormGroup,FormBuilder } from '@angular/forms';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { Observable } from 'rxjs';
 /** Facades **/
-import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import { HealthInsuranceFacade ,HealthInsurancePolicyFacade} from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -33,8 +33,13 @@ export class MedicalPremiumListComponent implements OnInit {
       buttonType:"btn-h-primary",
       text: "Edit Insurance",
       icon: "edit",
-      click: (): void => {
+      click: (dataItem:any): void => {
+        
+        if(dataItem.clientInsurancePolicyId===undefined) return;
+        
         this.handleHealthInsuranceOpenClicked('edit');
+        this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
+        this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
         // this.handleInsuranceType(dataItem.InsuranceType)
       },
     },
@@ -61,7 +66,9 @@ export class MedicalPremiumListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly healthFacade: HealthInsuranceFacade,
+  constructor(
+    private readonly healthFacade: HealthInsuranceFacade,
+    private readonly healthInsurancePolicyFacade: HealthInsurancePolicyFacade,
     private formBuilder: FormBuilder) {
       this.healthInsuranceForm = this.formBuilder.group({});
     }
@@ -70,6 +77,7 @@ export class MedicalPremiumListComponent implements OnInit {
   ngOnInit(): void {
     this.loadHealthInsurancePlans();
   }
+
 
   /** Internal event methods **/
   onChangePriorityCloseClicked() {
@@ -117,7 +125,6 @@ export class MedicalPremiumListComponent implements OnInit {
 
   loadHealthInsurancePlans(){
     this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
-   
     })
   }
 }

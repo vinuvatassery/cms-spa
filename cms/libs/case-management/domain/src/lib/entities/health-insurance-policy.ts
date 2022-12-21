@@ -13,8 +13,8 @@ export class healthInsurancePolicy {
         policyHolderLastName :string|null=null;
         metalLevelCode :string|null=null;
         premiumAmt :number|null=null;
-        startDate? :Date;
-        endDate? :Date;
+        startDate :Date= new Date;;
+        endDate :Date= new Date;
         careassistPayingPremiumFlag :string|null=null;
         premiumPaidThruDate?:Date;
         premiumFrequencyCode :string|null=null;

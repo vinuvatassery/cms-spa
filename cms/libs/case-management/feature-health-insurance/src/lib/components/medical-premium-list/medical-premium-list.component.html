@@ -108,10 +108,10 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
       
-            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-              <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-                <label>   {{ dataItem.text }} </label>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+              <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                <label>   {{ buttondataItem.text }} </label>
             </button>
                 <!-- <button
                   kendoButton
