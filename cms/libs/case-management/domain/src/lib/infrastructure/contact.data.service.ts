@@ -8,6 +8,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ContactInfo } from '../entities/contact';
 import { Income } from '../entities/income';
+import { urlToHttpOptions } from 'url';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -19,20 +20,11 @@ export class ContactDataService {
     private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  loadMedicalHealthPlans() {
-    return of([
-      {
-        InsuranceType: 'Qualified Health Plan',
-        Priority: 'Primary',
-        CarrierName: 'Uma Health',
-        PlanName: 'Super Great Plan',
-        PremiumPaid: '$500.00',
-        Frequency: 'Monthly',
-        StartDate: '10-10-2021',
-        EndDate: '10-10-2021',
-        SmsTextOk: 'Yes',
-      },
-    ]);
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any) {
+    let params = new HttpParams();
+    params = params.append('clientId',clientId);
+    params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-insurance-policy/`,{params:params});
   }
 
   loadDdlMedicalHealthPlanMetalLevel() {
@@ -486,5 +478,8 @@ export class ContactDataService {
   loadIncomeDetailsService(clientIncomeId:any){
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}`,);
 
+  }
+  updateInsuranceFlags(insuranceFlagsData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-insurance-policy/insurance-flags`, insuranceFlagsData);
   }
 }
