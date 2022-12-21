@@ -38,7 +38,7 @@ export * from './lib/entities/no-income-data';
 export * from './lib/entities/vendor';
 export * from './lib/entities/insurance-plan';
 export * from './lib/entities/health-insurance-policy';
-
+export * from './lib/entities/carrier-contact-info'
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
