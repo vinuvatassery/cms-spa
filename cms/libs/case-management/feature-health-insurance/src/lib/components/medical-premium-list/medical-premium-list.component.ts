@@ -1,10 +1,10 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy,Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy,Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup,FormBuilder } from '@angular/forms';
-import { GridDataResult } from '@progress/kendo-angular-grid';
-import { Observable } from 'rxjs';
+import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -22,10 +22,14 @@ export class MedicalPremiumListComponent implements OnInit {
   isEdit!: boolean;
   dialogTitle!: string;
   insuranceType!: string;
-
+  public pageSizes = this.healthFacade.gridPageSizes;
+  public gridSkipCount = this.healthFacade.skipCount;
+  public state!: State;
+  
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
-
+  @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -68,9 +72,13 @@ export class MedicalPremiumListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadHealthInsurancePlans();
   }
-
+  ngOnChanges(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
+  }
   /** Internal event methods **/
   onChangePriorityCloseClicked() {
     this.isOpenedChangePriorityModal = false;
@@ -119,5 +127,35 @@ export class MedicalPremiumListComponent implements OnInit {
     this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
    
     })
+  }
+
+  // updating the pagination infor based on dropdown selection
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadInsurancePolicies();
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
+    this.loadInsurancePolicies();
+  }
+  // Loading the grid data based on pagination
+  private loadInsurancePolicies(): void {
+    this.loadInsurancePolicyList(
+      this.state.skip ?? 0,
+      this.state.take ?? 0
+    );
+  }
+
+  loadInsurancePolicyList(
+    skipcountValue: number,
+    maxResultCountValue: number
+  ) {
+    const gridDataRefinerValue = {
+      skipCount: skipcountValue,
+      pagesize: maxResultCountValue
+    };
+   this.loadInsurancePlanEvent.next(gridDataRefinerValue);
   }
 }

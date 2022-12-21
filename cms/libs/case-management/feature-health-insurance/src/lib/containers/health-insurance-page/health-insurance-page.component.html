@@ -99,7 +99,7 @@
           </div>
           <div class="flex-col">
             <case-management-medical-premium-list 
-                [healthInsuranceForm]="healthInsuranceForm">
+                [healthInsuranceForm]="healthInsuranceForm"  (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)">
           </case-management-medical-premium-list>
           </div>
         </div>

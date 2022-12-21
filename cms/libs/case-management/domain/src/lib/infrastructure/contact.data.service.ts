@@ -20,12 +20,12 @@ export class ContactDataService {
     private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any) {
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any) {
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
-    params = params.append('skipCount',1);
-    params = params.append('maxResultCount',9999);
+    params = params.append('skipCount',skipCount);
+    params = params.append('maxResultCount',pageSize);
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
   }
 

@@ -135,7 +135,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
-          this.healthFacade.loadMedicalHealthPlans(this.clientId,this.clientCaseEligibilityId);
+          
+          const gridDataRefinerValue = {
+            skipCount: this.healthFacade.skipCount,
+            pagesize: this.healthFacade.gridPageSizes[0]?.value
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.loadInsurancePolicyFlags();
         }
       });
@@ -170,5 +175,19 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize
+    };
+      this.healthFacade.loadMedicalHealthPlans(
+        this.clientId,
+        this.clientCaseEligibilityId,
+        gridDataRefiner.skipcount,
+        gridDataRefiner.maxResultCount
+      );
+    }
 }
+
+
+
