@@ -65,6 +65,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   isOpenDdl = false;
   insurancePlans: Array<any> = [];
   healthInsurancePolicy!:healthInsurancePolicy;
+  healthInsurancePolicyCopy!:healthInsurancePolicy;
   clientCaseId!: any;
   clientCaseEligibilityId!: any
   sessionId!: any;
@@ -165,6 +166,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
 
   loadHealthInsurancePolicy(){
     this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data:any)=>{
+      this.healthInsurancePolicyCopy=data;
       this.bindValues(data);
     })
   }
@@ -173,7 +175,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(healthInsurancePolicy.clientInsurancePolicyId);
     this.healthInsuranceForm.controls['insuranceType'].setValue(healthInsurancePolicy.healthInsuranceTypeCode);
-    this.onHealthInsuranceTypeChanged() ;
+    this.onHealthInsuranceTypeChanged();
     this.healthInsuranceForm.controls["insuranceStartDate"].setValue(new Date(healthInsurancePolicy.startDate));
     this.healthInsuranceForm.controls["insuranceEndDate"].setValue(new Date(healthInsurancePolicy.endDate));
     this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(healthInsurancePolicy.insuranceIdNbr);
@@ -328,9 +330,17 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
   public addNewInsurancePlanOpen(): void {
     this.isaddNewInsurancePlanOpen = true;
   }
+  insuranceCarrierNameData(data:any){
+
+    if(this.isEdit){
+      this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(this.healthInsurancePolicyCopy.insuranceCarrierId);
+    }
+  }
   insuranceCarrierNameChange(value:string){
+    this.insurancePlans=[];
+    this.healthInsuranceForm.controls['insurancePlanName'].setValue('');
     this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe((data:any) => {
-      this.insurancePlans=[];
+      
       if (!Array.isArray(data)) return;
       this.insurancePlans=data;
     });

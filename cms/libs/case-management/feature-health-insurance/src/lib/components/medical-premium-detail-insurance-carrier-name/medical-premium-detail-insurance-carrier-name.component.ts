@@ -16,6 +16,7 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent implements OnInit
   @Input() isViewContentEditable!: boolean;
 
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
+  @Output() insuranceCarrierNameData = new EventEmitter<any>();
 
   public formUiStyle : UIFormStyle = new UIFormStyle();
   CarrierNames: any = [];
@@ -37,6 +38,7 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent implements OnInit
     this.vendorFacade.loadAllVendors().subscribe((data:any) => {
       if (!Array.isArray(data)) return;
       this.CarrierNames = data;
+      this.insuranceCarrierNameData.emit(data);
     });
   }
 

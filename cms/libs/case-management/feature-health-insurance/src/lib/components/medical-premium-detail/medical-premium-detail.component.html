@@ -70,7 +70,7 @@
       <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid">Insurance id number is required.</kendo-formerror>
     </div>
     <div class="flex-col mat-form-sm-b-space" >
-      <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"></case-management-medical-premium-detail-insurance-carrier-name>
+      <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)" (insuranceCarrierNameData)="insuranceCarrierNameData($event)"></case-management-medical-premium-detail-insurance-carrier-name>
     </div>
 
     <div class="flex-col mat-form-sm-b-space ">
@@ -127,7 +127,7 @@
       </div>
     </div>
     <div
-    class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'">
+    class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && healthInsuranceForm.controls['insuranceCarrierName'].value">
     <h5 class="text-capital">Insurance Carrier Contact Info</h5>
     <div class="block-section">
       <p class="bold-text">Address</p>

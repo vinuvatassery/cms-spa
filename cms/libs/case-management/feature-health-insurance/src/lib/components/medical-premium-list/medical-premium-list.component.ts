@@ -2,9 +2,10 @@
 import { Component, OnInit, ChangeDetectionStrategy,Input } from '@angular/core';
 import { FormGroup,FormBuilder } from '@angular/forms';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { Observable } from 'rxjs';
+import { first } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 /** Facades **/
-import { HealthInsuranceFacade ,HealthInsurancePolicyFacade} from '@cms/case-management/domain';
+import { HealthInsuranceFacade ,HealthInsurancePolicyFacade,WorkflowFacade} from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -69,6 +70,8 @@ export class MedicalPremiumListComponent implements OnInit {
   constructor(
     private readonly healthFacade: HealthInsuranceFacade,
     private readonly healthInsurancePolicyFacade: HealthInsurancePolicyFacade,
+    private workflowFacade: WorkflowFacade,
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder) {
       this.healthInsuranceForm = this.formBuilder.group({});
     }
@@ -102,7 +105,18 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   handleHealthInsuranceCloseClicked() {
+    debugger
     this.isOpenedHealthInsuranceModal = false;
+    const sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(sessionId)
+     this.workflowFacade.sessionDataSubject$.pipe(first((sessionData:any) => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session !== null && session !== undefined && session.sessionData !== undefined) {
+          const clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+          const clientId = JSON.parse(session.sessionData).clientId;
+          this.healthFacade.loadMedicalHealthPlans(clientId,clientCaseEligibilityId);
+        }
+      });
   }
 
   handleHealthInsuranceOpenClicked(value: string) {
