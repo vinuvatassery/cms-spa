@@ -10,15 +10,15 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy, CarrierContactInfo } from '@cms/case-management/domain';
+import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy, CarrierContactInfo, YesNoFlag, StatusFlag, HealthInsurancePlan } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FormGroup,FormBuilder, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { InsurancePlanFacade ,WorkflowFacade} from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription,first } from 'rxjs';
-import { SsnPipe, PhonePipe } from '@cms/shared/ui-common';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+
 
 
 @Component({
@@ -152,9 +152,6 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
         this.isViewContentEditable = false;
         break;
       case 'Edit':
-        // this.conditionsInsideView();
-        // this.isDeleteEnabled = true;
-        // this.isViewContentEditable = false;
         this.isEdit=true;
         this.isDeleteEnabled = false;
         this.isViewContentEditable = false;
@@ -202,7 +199,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
    const OregonPlanRequiredFields:Array<string> = ['insuranceStartDate','insuranceIdNumber','insuranceCarrierName','insurancePlanName'];
       this.resetValidators();
       this.healthInsuranceForm.updateValueAndValidity(); 
-      if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN'){
+      if(this.ddlInsuranceType ===HealthInsurancePlan.QualifiedHealthPlan){
         QualifiedHealthPlanRequiredFields.forEach((key:string) => {
           this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
           this.healthInsuranceForm.controls[key].updateValueAndValidity();
@@ -212,25 +209,25 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
           this.healthInsuranceForm.controls["aptcMonthlyAmt"].updateValueAndValidity();
         }
       } 
-      if(this.ddlInsuranceType ==='COBRA' ){
+      if(this.ddlInsuranceType ===HealthInsurancePlan.Cobra ){
         CobraPlanRequiredFields.forEach((key:string) => {
           this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
           this.healthInsuranceForm.controls[key].updateValueAndValidity();
         });       
       } 
-      if(this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN' ){
+      if(this.ddlInsuranceType ===HealthInsurancePlan.OffExchangePlan){
         OffExchangePlanRequiredFields.forEach((key:string) => {
           this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
           this.healthInsuranceForm.controls[key].updateValueAndValidity();
         });       
       } 
-      if(this.ddlInsuranceType ==='OREGON_HEALTH_PLAN' ){
+      if(this.ddlInsuranceType ===HealthInsurancePlan.OregonHealthPlan){
         OregonPlanRequiredFields.forEach((key:string) => {
           this.healthInsuranceForm.controls[key].setValidators([Validators.required]); 
           this.healthInsuranceForm.controls[key].updateValueAndValidity();
         });       
       } 
-      if(this.ddlInsuranceType ==='QUALIFIED_HEALTH_PLAN' || this.ddlInsuranceType ==='OFF_EXCHANGE_PLAN'){
+      if(this.ddlInsuranceType ===HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan){
         this.healthInsuranceForm.controls["metalLevel"].setValidators([Validators.required]);
         this.healthInsuranceForm.controls["metalLevel"].updateValueAndValidity();
       }
@@ -254,36 +251,34 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       this.healthInsurancePolicy.clientMaximumId='C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
       this.healthInsurancePolicy.healthInsuranceTypeCode=this.ddlInsuranceType;
       this.healthInsurancePolicy.insuranceIdNbr=this.healthInsuranceForm.controls["insuranceIdNumber"].value;
-      this.healthInsurancePolicy.insuranceGroupPlanTypeCode='P';
-      this.healthInsurancePolicy.priorityCode='Y';
+      this.healthInsurancePolicy.insuranceGroupPlanTypeCode=null;
+      this.healthInsurancePolicy.priorityCode='p';
       this.healthInsurancePolicy.policyHolderFirstName= null;
       this.healthInsurancePolicy.policyHolderLastName= null;
       this.healthInsurancePolicy.metalLevelCode= this.healthInsuranceForm.controls["metalLevel"].value?.lovCode;
       this.healthInsurancePolicy.premiumAmt= 0,
       this.healthInsurancePolicy.startDate= new Date(this.healthInsuranceForm.controls["insuranceStartDate"].value);
       this.healthInsurancePolicy.endDate=new Date(this.healthInsuranceForm.controls["insuranceEndDate"].value);
-      this.healthInsurancePolicy.careassistPayingPremiumFlag='Y';
+      this.healthInsurancePolicy.careassistPayingPremiumFlag=null;
       this.healthInsurancePolicy.premiumPaidThruDate=new Date();
       this.healthInsurancePolicy.premiumFrequencyCode='string';
       this.healthInsurancePolicy.nextPremiumDueDate=new Date();
-      this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag='Y';
+      this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag=null
       this.healthInsurancePolicy.paymentIdNbr='string';
-      if(this.healthInsuranceForm.controls["aptcFlag"].value==='Y'){
-        this.healthInsurancePolicy.aptcFlag='Y';
+      if(this.healthInsuranceForm.controls["aptcFlag"].value===StatusFlag.Yes){
+        this.healthInsurancePolicy.aptcFlag=StatusFlag.Yes;
       }else{
         this.healthInsurancePolicy.aptcNotTakingFlag=this.healthInsuranceForm.controls["aptcFlag"].value;
-      }
-      
-      
+      } 
       this.healthInsurancePolicy.aptcMonthlyAmt= this.healthInsuranceForm.controls["aptcMonthlyAmt"].value,
-      this.healthInsurancePolicy.othersCoveredOnPlanFlag='Y';
-      this.healthInsurancePolicy.isClientPolicyHolderFlag='Y';
+      this.healthInsurancePolicy.othersCoveredOnPlanFlag=null;
+      this.healthInsurancePolicy.isClientPolicyHolderFlag=null;
       this.healthInsurancePolicy.medicareBeneficiaryIdNbr='string';
       this.healthInsurancePolicy.medicareCoverageTypeCode='string';
       this.healthInsurancePolicy.medicarePartAStartDate=new Date();
       this.healthInsurancePolicy.medicarePartBStartDate=new Date();
-      this.healthInsurancePolicy.onQmbFlag='Y';
-      this.healthInsurancePolicy.onLisFlag='Y';
+      this.healthInsurancePolicy.onQmbFlag=null;
+      this.healthInsurancePolicy.onLisFlag=null;
       this.healthInsurancePolicy.paymentGroupNumber= 0,
       this.healthInsurancePolicy.insuranceFirstName='string';
       this.healthInsurancePolicy.insuranceLastName='string';
@@ -293,7 +288,7 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
       this.healthInsurancePolicy.oonPharmacy='string';
       this.healthInsurancePolicy.oonDrugs='string';
       this.healthInsurancePolicy.concurrencyStamp='string';
-      this.healthInsurancePolicy.activeFlag='Y'
+      this.healthInsurancePolicy.activeFlag=StatusFlag.Yes
     }
 
   }
@@ -356,7 +351,6 @@ export class MedicalPremiumDetailComponent implements OnInit,OnChanges  {
     this.isSubmitted=true;
     this.validateForm();
     if(this.healthInsuranceForm.valid){
-       //this.insurancePolicy.saveHealthInsurancePolicy()
        this.populateInsurancePolicy();
        this.loaderService.show();     
        if(this.isEdit){
