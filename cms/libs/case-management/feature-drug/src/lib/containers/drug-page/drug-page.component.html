@@ -1,68 +1,78 @@
 <div class="client-data-block">
   <h3>Prescription drugs</h3>
-
+  <form [formGroup]="prescriptionDrugForm">
   <section>
     <h5 class="mt-1">
       Are they currently taking prescription drugs for HIV (anti-retrovirals)?
     </h5>
-    <div class="component-list-h">
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          aria-labelledby="takingPrescriptionYes"
-          name="prescription"
-          id="takingPrescription1"
-          tabindex="1"
-        />
-        <kendo-label
-          class="k-radio-label"
-          for="takingPrescription1"
-          text="Yes"
-        ></kendo-label>
-      </span>
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          aria-labelledby="takingPrescriptionNo"
-          name="prescription"
-          id="takingPrescription2"
-          tabindex="2"
-        />
-        <kendo-label
-          class="k-radio-label"
-          for="takingPrescription2"
-          text="No"
-        ></kendo-label>
-      </span>
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          aria-labelledby="takingPrescriptionDontKnow"
-          name="prescription"
-          id="takingPrescription3"
-          tabindex="3"
-        />
-        <kendo-label
-          class="k-radio-label"
-          for="takingPrescription3"
-          text="Don't know"
-        ></kendo-label>
-      </span>
-    </div>
+    <!-- <form [formGroup]="prescriptionDrugForm"> -->
+      <div class="component-list-h">
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            type="radio"
+            kendoRadioButton
+            formControlName="hivFlag"
+            value="Y"
+            
+            aria-labelledby="takingPrescriptionYes"
+            name="prescription"
+            id="takingPrescription1"
+            tabindex="1"
+          />
+          <kendo-label
+            class="k-radio-label"
+            for="takingPrescription1"
+            text="Yes"
+          ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            type="radio"
+            kendoRadioButton
+            formControlName="hivFlag"
+            value="N"
+            
+            aria-labelledby="takingPrescriptionNo"
+            name="prescription"
+            id="takingPrescription2"
+            tabindex="2"
+          />
+          <kendo-label
+            class="k-radio-label"
+            for="takingPrescription2"
+            text="No"
+          ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            type="radio"
+            kendoRadioButton
+            aria-labelledby="takingPrescriptionDontKnow"
+            name="prescription"
+            id="takingPrescription3"
+            tabindex="3"
+          />
+          <kendo-label
+            class="k-radio-label"
+            for="takingPrescription3"
+            text="Don't know"
+          ></kendo-label>
+        </span>
+      </div>
   </section>
   <section>
     <h5 class="mt-3">
       Health insurance requires a particular non-preferred pharmacy (e.g. Medco,
       Kaiser, or specified mail order)?
     </h5>
+   
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
           kendoRadioButton
+          formControlName="nonPrefFlag"
+          value="Y"
           aria-labelledby="requiresNonPreferredPharmacyYes"
           name="healthInsurance"
           id="takingPrescription4"
@@ -78,6 +88,8 @@
         <input
           type="radio"
           kendoRadioButton
+          formControlName="nonPrefFlag"
+          value="N"
           aria-labelledby="requiresNonPreferredPharmacyNo"
           name="healthInsurance"
           id="takingPrescription5"
@@ -106,7 +118,9 @@
         ></kendo-label>
       </span>
     </div>
+  <!-- </form> -->
   </section>
+  </form>
   <section>
     <div class="flex-row mt-3">
       <div class="flex-col mat-split-list">
