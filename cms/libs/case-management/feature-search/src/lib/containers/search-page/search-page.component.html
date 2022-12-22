@@ -8,7 +8,6 @@
   <kendo-multicolumncombobox
     [data]="search$ | async"
     textField="name"
-    (close)="$event.preventDefault(); "
     valueField="id"
     [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Case Name, Member ID or SSN"
@@ -24,7 +23,7 @@
  
       </ng-template>
     </kendo-combobox-column>
-    <kendo-combobox-column   [width]="62">
+    <kendo-combobox-column   [width]="65">
       <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
         <span class="text-muted"><em>ID:</em> {{ dataItem.id }}</span>
       </ng-template>
@@ -34,7 +33,7 @@
         <span class="text-muted"> <em>DOB:</em> {{ dataItem.dob }}</span>
       </ng-template>
     </kendo-combobox-column>
-    <kendo-combobox-column   [width]="130">
+    <kendo-combobox-column   [width]="135">
       <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
         <span class="text-muted"><em>SSN:</em> {{ dataItem.ssn }}</span>
       </ng-template>

@@ -116,7 +116,7 @@
   .global-search-icon {
     position: absolute;
     left: 9px;
-    top: 7px;
+    top: 8px;
     z-index: 1;
     color: material-color($hive-neutral-palette, 800);
   }
@@ -294,7 +294,7 @@
 
  .combotable_search_list{
 
- 
+
    .k-table-td,  .k-table-th{
     border-left: 0px;
     border-right: 0px;
@@ -302,6 +302,12 @@
     cursor: pointer;
     text-overflow: unset;
     white-space: normal;
+    &:first-child{
+      padding-left: 10px;
+    }
+    &:last-child{
+      padding-right: 6px;
+    }
     em{
       font-weight: 500;
       font-style: normal;
@@ -309,6 +315,9 @@
     .text-muted{
       color: rgba($black, 0.6);
     }
+  }
+  .k-table-th{
+    padding: 0px !important;
   }
   .k-table-td{
     border:0px;

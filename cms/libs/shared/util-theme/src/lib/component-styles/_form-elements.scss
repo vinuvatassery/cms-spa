@@ -2,6 +2,9 @@
 .k-input-md, .k-picker-md{
   font-size: $font-size;
 }
+.k-input-md .k-input-inner, .k-picker-md .k-input-inner {
+  padding: 10px 16px;
+}
 .k-rounded-md {
   border-radius: 4px;
 }
@@ -108,7 +111,8 @@
       background: transparent;
       position: absolute;
       right: 0;
-      top: 2px;
+      top: 0px;
+      height: 100%;
       z-index: 1;
     }
   }
@@ -196,8 +200,8 @@
   &.k-picker-wrap,
   &.k-dropdownlist,
   &.k-textarea {
-    border: 1px solid $theme-border !important;
-    border-top-color: $theme-border !important;
+    border: 1px solid $inputborder !important;
+    border-top-color: $inputborder !important;
     border-radius: $border-radius-sm;
     &.k-state-disabled {
       border-color: material-color($hive-neutral-palette, 50) !important;
@@ -307,7 +311,16 @@
 .k-empty .k-disabled + .k-label {
   background: transparent;
 }
-
+// .k-disabled + .k-label::before {
+//   content: "";
+//   display: inline-block;
+//   width: 100%;
+//   height: 3px;
+//   background: white;
+//   position: absolute;
+//   z-index: -1;
+//   top: 6px;
+// }
 .k-form-error,
 .k-text-error,
 .k-form-field-error .k-label {
@@ -758,8 +771,9 @@ kendo-timepicker {
 .k-picker-outline[disabled], 
 .k-picker-outline.k-disabled,
 .k-input.k-disabled {
-  background: material-color($hive-neutral-palette, 50) !important;
-  border-color: material-color($hive-neutral-palette, 50);
+  background:material-color($hive-neutral-palette, 50) !important;
+  border-color: material-color($hive-neutral-palette, 50) !important;
+  border: 1px solid material-color($hive-neutral-palette, 50) !important;
   opacity: 1;
 }
 // .k-floating-label-container > .k-label {
@@ -847,4 +861,9 @@ kendo-timepicker {
     border-color: $app-primary;
     color: $app-primary;
   }
+}
+
+
+.mt-checkbox{
+  margin-top: 24px;
 }

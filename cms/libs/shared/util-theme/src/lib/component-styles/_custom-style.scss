@@ -90,7 +90,6 @@
     .kendo-list-base {
       padding-top: $size-0 !important;
       .kendo-list-items {
-        font-family: $font-family-medium;
         justify-content: space-between;
         display: flex;
         flex-direction: row;
@@ -204,7 +203,7 @@
         background: $white;
         width: $size-s;
         position: absolute;
-        left: -2px;
+        left: -4px;
         top: $size-0;
         content: '';
       }
@@ -214,6 +213,11 @@
         position: relative;
         z-index: 1;
         padding-bottom: $size-xlg;
+        font-family: $font-family-bold;
+        font-size: $font-size-xlg;
+      }
+      h5{
+        margin: 20px 0px 8px;
       }
       section {
         padding-left: $size-xxx;
@@ -407,9 +411,17 @@
 }
 
 .multiSelectSearchPopup {
-  padding: $size-0 $size-xlg $size-xlg;
+  // padding: $size-0 $size-xlg $size-xlg;
   max-width: 400px;
   width: 400px;
+  .input-search{
+    position: relative;
+    padding: 0px 10px;
+    .material-icons{
+      left: 18px;
+      top: 28px;
+    }
+  }
   .k-ripple-focus {
     border-color: $theme-border !important;
     &:before {

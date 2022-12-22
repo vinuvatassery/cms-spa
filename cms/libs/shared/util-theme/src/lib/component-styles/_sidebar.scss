@@ -8,7 +8,7 @@ cms-sidenav {
 }
 .app-l-sidebar {
   border-color: $theme-border;
-  width: 220px;
+  width: $app-leftmenu-width;
   transition: ease-in all 0.3s;
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -16,7 +16,7 @@ cms-sidenav {
     max-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
-    width: 220px;
+    width: $app-leftmenu-width;
     height: 100%;
   }
   .sidebar-hamburger {
@@ -33,16 +33,17 @@ cms-sidenav {
       justify-content: flex-end;
       box-shadow: none;
       cursor: pointer;
-      transition:  0.3s;
+      transition: ease-in all 0.3s;
       border: $size-0;
       &:hover {
         opacity: 1;
-        .material-icons{
+        .material-icons {
+          margin-right: 3px;
           opacity: 1;
-          left: 3px;
         }
       }
       .material-icons {
+        transition: ease-in all 0.2s;
         position: relative;
         color: $white;
         font-size: $font-size-xxx;
@@ -72,6 +73,12 @@ cms-sidenav {
       &.active-item {
         background-color: $app-primary-darken;
         transition: ease-in all 0.3s;
+      
+      }
+      &.active-item {
+       .sidebar-menu_label{
+        font-family: $font-family-bold;
+       }
       }
       .sidebar-menu_icon {
         color: $white;
@@ -81,13 +88,15 @@ cms-sidenav {
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: ease-in all 0.3s;
       }
       .sidebar-menu_label {
         color: $white;
         transition: ease-in all 0.3s;
-        font-size: $font-size-m;
+        font-size: $font-size;
         white-space: nowrap;
         cursor: pointer;
+        letter-spacing: .5px;
         .sidebar-menu_label-badge {
           background: material-color($hive-warn-palette, 500);
           color: $white !important;
@@ -125,7 +134,7 @@ cms-sidenav {
       display: none;
     }
     .sidebar-last-visited-cases {
-      padding: $size-xxx;
+      padding: $size-xlg1;
       color: $white;
       border-top: 1px solid $app-primary-darken;
       .last-visited-cases_header {
@@ -176,7 +185,7 @@ cms-sidenav {
           background: $white;
           color: $app-primary-font-color;
         }
-        .last-visited-case-details{
+        .last-visited-case-details {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
@@ -192,7 +201,27 @@ cms-sidenav {
     .drawer-inner-container {
       width: 55px;
       transition: ease-in all 0.3s;
+      .sidebar-hamburger {
+        &:hover {
+          .material-icons {
+            margin-right: 0px;
+            opacity: 1;
+          }
+        }
+        .material-icons {
+          transition: ease-in all 0.2s;
+          margin-right: 3px;
+          opacity: 0.8;
+        }
+      }
+
       .sidebar-menu {
+        .sidebar-menu_icon {
+      
+          width: 55px;
+          min-width: 55px;
+  
+        }
         .sidebar-menu_items {
           &:hover {
             .sidebar-menu_label {
@@ -293,9 +322,9 @@ cms-sidenav {
   }
 }
 
-.activeCase{
-  .last-visited-case{
-    background: $white!important;
+.activeCase {
+  .last-visited-case {
+    background: $white !important;
     color: $app-primary-font-color;
   }
 }

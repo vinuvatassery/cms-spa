@@ -37,8 +37,11 @@
             <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">Input is required.</kendo-formerror>        
          
       </div>  
-      <div *ngIf = "material.lovCode ==='YES' && textFieldType === 'textField'"> 
-          <kendo-floatinglabel            
+      <div class="flex-row" *ngIf = "material.lovCode ==='YES' && textFieldType === 'textField'"> 
+        <div class="flex-col flex-col-6">
+
+      
+        <kendo-floatinglabel            
             text="Type of interpreter" >        
           <kendo-textbox aria-label="type of interpreter"  
             [fillMode]="formUiStyle.inputFillMode"
@@ -47,7 +50,7 @@
          </kendo-textbox>
         </kendo-floatinglabel>
        <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">Input is required.</kendo-formerror>        
-    
+      </div> 
       </div>   
       </span>  
       <kendo-formerror *ngIf="!appInfoForm.controls[OptionControlerName].valid">Atleast one option is required.</kendo-formerror>
