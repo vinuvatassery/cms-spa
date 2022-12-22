@@ -1,11 +1,12 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy,Input } from '@angular/core';
-import { FormGroup,FormBuilder } from '@angular/forms';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { HealthInsuranceFacade ,HealthInsurancePolicyFacade,WorkflowFacade} from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -23,47 +24,53 @@ export class MedicalPremiumListComponent implements OnInit {
   isEdit!: boolean;
   dialogTitle!: string;
   insuranceType!: string;
+  public pageSizes = this.healthFacade.gridPageSizes;
+  public gridSkipCount = this.healthFacade.skipCount;
+  public state!: State;
+  currentInsurancePolicyId: any;
 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
+  @Input() closeDeleteModal: boolean = false;
 
+  @Output() loadInsurancePlanEvent = new EventEmitter<any>();
+  @Output() deleteInsurancePlan = new EventEmitter<any>();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Edit Insurance",
       icon: "edit",
-      click: (dataItem:any): void => {
-        
-        if(dataItem.clientInsurancePolicyId===undefined) return;
-        
+      type: "Edit",
+      click: (): void => {
         this.handleHealthInsuranceOpenClicked('edit');
-        this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
-        this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
         // this.handleInsuranceType(dataItem.InsuranceType)
       },
     },
-    
+
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Change Priority",
       icon: "format_line_spacing",
+      type: "priority",
       click: (): void => {
-       this.onChangePriorityOpenClicked()
+        this.onChangePriorityOpenClicked()
       },
     },
     {
-      buttonType:"btn-h-danger",
+      buttonType: "btn-h-danger",
       text: "Delete Insurance",
       icon: "delete",
+      type: "Delete",
       click: (): void => {
-       this.onDeleteConfirmOpenClicked()
+        this.onDeleteConfirmOpenClicked()
       },
     },
-   
-    
- 
+
+
+
   ];
 
   /** Constructor **/
@@ -73,15 +80,23 @@ export class MedicalPremiumListComponent implements OnInit {
     private workflowFacade: WorkflowFacade,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder) {
-      this.healthInsuranceForm = this.formBuilder.group({});
-    }
+    this.healthInsuranceForm = this.formBuilder.group({});
+  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadHealthInsurancePlans();
   }
+  ngOnChanges(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
 
-
+    if (this.closeDeleteModal) {
+      this.onDeleteConfirmCloseClicked();
+      this.loadInsurancePolicies();
+    }
+  }
   /** Internal event methods **/
   onChangePriorityCloseClicked() {
     this.isOpenedChangePriorityModal = false;
@@ -106,16 +121,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
   handleHealthInsuranceCloseClicked() {
     this.isOpenedHealthInsuranceModal = false;
-    const sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkFlowSessionData(sessionId)
-     this.workflowFacade.sessionDataSubject$.pipe(first((sessionData:any) => sessionData.sessionData != null))
-      .subscribe((session: any) => {
-        if (session !== null && session !== undefined && session.sessionData !== undefined) {
-          const clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-          const clientId = JSON.parse(session.sessionData).clientId;
-          this.healthFacade.loadMedicalHealthPlans(clientId,clientCaseEligibilityId);
-        }
-      });
+    this.loadInsurancePolicies();
   }
 
   handleHealthInsuranceOpenClicked(value: string) {
@@ -136,8 +142,58 @@ export class MedicalPremiumListComponent implements OnInit {
     }
   }
 
-  loadHealthInsurancePlans(){
-    this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
+  loadHealthInsurancePlans() {
+    this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
+
     })
+  }
+
+  // updating the pagination infor based on dropdown selection
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadInsurancePolicies();
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
+    this.loadInsurancePolicies();
+  }
+  // Loading the grid data based on pagination
+  private loadInsurancePolicies(): void {
+    this.loadInsurancePolicyList(
+      this.state.skip ?? 0,
+      this.state.take ?? 0
+    );
+  }
+
+  loadInsurancePolicyList(
+    skipcountValue: number,
+    maxResultCountValue: number
+  ) {
+    const gridDataRefinerValue = {
+      skipCount: skipcountValue,
+      pagesize: maxResultCountValue
+    };
+    this.loadInsurancePlanEvent.next(gridDataRefinerValue);
+  }
+
+  deleteInsurancePolicy() {
+    this.deleteInsurancePlan.next(this.currentInsurancePolicyId);
+  }
+
+  handleOptionClick(dataItem: any, type: any) {
+    if (type == 'Delete') {
+      this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.onDeleteConfirmOpenClicked();
+    }
+    if (type == 'Edit') {
+      this.handleHealthInsuranceOpenClicked('edit');
+      this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
+        this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
+    }
+    if (type == 'Priority') {
+      this.onChangePriorityOpenClicked()
+    }
   }
 }

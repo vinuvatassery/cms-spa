@@ -7,20 +7,29 @@ import {
   Output,
   EventEmitter,
   OnChanges,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade, HealthInsurancePolicyFacade,healthInsurancePolicy, CarrierContactInfo, YesNoFlag, StatusFlag, HealthInsurancePlan } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { FormGroup,FormBuilder, Validators } from '@angular/forms';
+import {
+  HealthInsuranceFacade,
+  HealthInsurancePolicyFacade,
+  healthInsurancePolicy,
+  CarrierContactInfo,
+  YesNoFlag,
+  StatusFlag,
+  HealthInsurancePlan,
+} from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
-import { InsurancePlanFacade ,WorkflowFacade} from '@cms/case-management/domain';
+import {
+  InsurancePlanFacade,
+  WorkflowFacade,
+} from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription,first } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
-
-
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -214,7 +223,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.metalLevelDefaultValue = metalLevel;
     this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
     this.healthInsuranceForm.controls['aptcFlag'].setValue(
-      healthInsurancePolicy.activeFlag
+      healthInsurancePolicy.aptcFlag
     );
     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
       healthInsurancePolicy.aptcMonthlyAmt
@@ -355,16 +364,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = null;
       this.healthInsurancePolicy.paymentIdNbr = 'string';
       if (
-        this.healthInsuranceForm.controls['aptcFlag'].value === StatusFlag.Yes
+        this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
       ) {
-        this.healthInsurancePolicy.aptcFlag = StatusFlag.Yes;
-      } else {
-        this.healthInsurancePolicy.aptcNotTakingFlag =
-          this.healthInsuranceForm.controls['aptcFlag'].value;
-      }
-      (this.healthInsurancePolicy.aptcMonthlyAmt =
-        this.healthInsuranceForm.controls['aptcMonthlyAmt'].value),
-        (this.healthInsurancePolicy.othersCoveredOnPlanFlag = null);
+        this.healthInsurancePolicy.aptcNotTakingFlag =StatusFlag.No;
+      } 
+      this.healthInsurancePolicy.aptcFlag =this.healthInsuranceForm.controls['aptcFlag'].value;
+      this.healthInsurancePolicy.aptcMonthlyAmt =this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
+        
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
       this.healthInsurancePolicy.medicareBeneficiaryIdNbr = 'string';
       this.healthInsurancePolicy.medicareCoverageTypeCode = 'string';
@@ -463,6 +469,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       if (this.isEdit) {
         this.healthInsurancePolicy.clientInsurancePolicyId =
           this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
+        this.healthInsurancePolicy.creationTime =this.healthInsurancePolicyCopy.creationTime;
+        debugger;
         this.insurancePolicyFacade
           .updateHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(

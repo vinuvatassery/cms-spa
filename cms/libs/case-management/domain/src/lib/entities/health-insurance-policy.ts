@@ -42,4 +42,5 @@ export class healthInsurancePolicy {
         oonDrugs :string|null=null;       
         concurrencyStamp :string|null=null;
         activeFlag :string|null=null;
+        creationTime? :Date;
 }
