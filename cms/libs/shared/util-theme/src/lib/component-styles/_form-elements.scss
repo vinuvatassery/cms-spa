@@ -58,17 +58,29 @@
     background: $app-primary;
     color: $white;
     padding: $size-xx $size-xx;
+    a{
+      color: $white;
+    }
   }
   &.red-banner {
     background: material-color($hive-error-palette, 100);
     color: material-color($hive-error-palette, 900);
+    a{
+      color: $white;
+    }
   }
   &.canyon-banner {
     background: material-color($hive-canyon-palette, 100);
     color: material-color($hive-canyon-palette, 900);
+    a{
+      color: $white;
+    }
   }
   &.orange-banner {
     background: material-color($hive-warn-palette, 200);
+    a{
+      color: $white;
+    }
   }
   &.hover-link {
     cursor: pointer;

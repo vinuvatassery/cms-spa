@@ -1,4 +1,7 @@
- .k-button {
+.k-button-clear-primary{
+  color: $app-primary;
+}
+.k-button {
    text-transform: uppercase;
    font-family: $font-family-medium;
    border-width: $size-0;
