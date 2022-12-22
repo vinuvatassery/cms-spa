@@ -3,7 +3,7 @@ import {
   Component,  OnInit,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges, OnDestroy,} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { first, Subject, Subscriber, Subscription } from 'rxjs';
+import { first, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-health-care-provider-list',
@@ -11,7 +11,7 @@ import { first, Subject, Subscriber, Subscription } from 'rxjs';
   styleUrls: ['./health-care-provider-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HealthCareProviderListComponent implements OnInit , OnChanges ,OnDestroy{
+export class HealthCareProviderListComponent implements OnInit , OnChanges {
   /** Input properties **/
   @Input() hasNoProvider!: boolean;
   @Input() healthCareProvidersData$! : any;
@@ -80,9 +80,7 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges ,OnDe
 
   
   /** Lifecycle hooks **/
-  ngOnDestroy(): void {
-    this.subscriptionData.unsubscribe()
-  }
+  
   ngOnChanges(): void {     
     this.state = {
     skip: 0,

@@ -70,9 +70,9 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
         this.checkBoxSubscription= 
         this.healthCareProvideGetFlag$.pipe(filter(x=> typeof x === 'boolean')).subscribe
       ((x: boolean)=>
-      {               
-        this.isProvidersGridDisplay = x
-      
+      {  
+             
+        this.isProvidersGridDisplay = x     
       });
    }
 
@@ -128,12 +128,16 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
      }
 
   /** Internal event methods **/
-  onProviderValueChanged() {
+  onProviderValueChanged() {   
+     
+    this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
     this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.No : StatusFlag.Yes
     this.healthProvider.updateHealthCareProvidersFlagonCheck
-      (this.clientCaseEligibilityId,this.providersStatus)
-      
-    this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
+      (this.clientCaseEligibilityId,this.providersStatus).subscribe((isSaved) => {         
+        if (isSaved == true) {    
+          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')      
+                          }
+      });       
   }
 
 /** events from child components**/
