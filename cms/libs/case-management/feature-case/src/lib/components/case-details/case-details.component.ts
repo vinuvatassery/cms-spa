@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component,  Input, OnInit, 
-  ChangeDetectorRef, ChangeDetectionStrategy,  OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+  ChangeDetectorRef, ChangeDetectionStrategy,  OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
   import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms'; 
 
@@ -11,6 +11,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { first, Subscription, tap } from 'rxjs';
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
 import { ProgramCode } from '@cms/case-management/domain';
+import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
@@ -29,6 +30,7 @@ export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , On
 
   isProgramSelectionOpened = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  
   date =new Date();
   caseOwnersObject! : any
 
@@ -40,13 +42,14 @@ export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , On
   @Input() ddlPrograms! : any
   @Input() ddlCaseOrigins! : any
   @Input() selectedProgram! : any
-  @Input() selectedCase! : any 
- 
+  @Input() selectedCase! : any  
+
   private caseDataDataSubscription !: Subscription;
-today =new Date();
+  today =new Date();
 
    /** Constructor**/
-  constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef    
+  constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef    ,
+    private loaderService: LoaderService,
    
   ) {}
 
@@ -72,14 +75,19 @@ today =new Date();
  }
 
   setDefaultProgram() {   
-  this.ddlPrograms.subscribe({
-    next: (programs: any) => {     
+  this.ddlPrograms  
+  .subscribe({
+    next: (programs: any) => {    
+      if(programs.length > 0)
+      { 
       this.parentForm.patchValue(
         {
           programId:  programs.filter(
             (data: any) => data.programCode == ProgramCode.DefaultProgram
           )[0].programId      
         }) 
+        this.loaderService.hide()
+      }
     }
   });  
 }

@@ -45,7 +45,7 @@ export class FamilyAndDependentFacade {
   private dependentGetNewSubject = new Subject<any>();
   private dependentdeleteSubject = new Subject<any>();
   private dependentGetExistingSubject = new Subject<any>();
-
+  displaydateFormat = this.configurationProvider.appSettings.displaydateFormat;
   /** Public properties **/
   products$ = this.productsSubject.asObservable();
   
@@ -235,12 +235,16 @@ export class FamilyAndDependentFacade {
         Object.values(dependentSearchResponse).forEach((key) => {   
                    
           key.fullName = key.firstName + ' ' + key.lastName
-          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);                   
-          key.dob = this.intl.formatDate(key.dob)
+          key.ssn=  (key.ssn =='' || key.ssn == null) ? '' : 'xxx-xx-' +key.ssn.slice(-4);
           
-          key.fullCustomName =key?.fullName + ' DOB '+key?.dob+' SSN '+key?.ssn      
+          const dateOB = new Date(key.dob)
+                          
+          key.dob = ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )
           
-          if(key?.clientId > 0)   
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)      
+          
+          debugger
+          if(key?.clientDependentId === '00000000-0000-0000-0000-000000000000')   
           {
               key.memberType = ClientDependentGroupDesc.Clients            
           }
