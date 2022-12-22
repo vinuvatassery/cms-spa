@@ -10,6 +10,7 @@ import {
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -21,6 +22,10 @@ export class MedicalPremiumDetailComponent implements OnInit {
  currentDate = new Date();
  public isaddNewInsuranceProviderOpen = false;
  public isaddNewInsurancePlanOpen = false;
+ advancedPremium: string = 'No';
+ clientPolicyHolder: string = 'No';
+ dateOfBirth: any;
+ RelationshipLovs$ = this.lovFacade.lovRelationShip$;
  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() dialogTitle!: string;
@@ -29,6 +34,12 @@ export class MedicalPremiumDetailComponent implements OnInit {
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
   @Output() editRedirect = new EventEmitter<string>();
+
+  /** Constructor **/
+  constructor(
+    private readonly healthFacade: HealthInsuranceFacade,
+    private readonly lovFacade: LovFacade
+    ) {}
 
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
@@ -43,9 +54,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
   isViewContentEditable!: boolean;
   isToggleNewPerson!: boolean;
   isOpenDdl = false;
-
-  /** Constructor **/
-  constructor(private readonly healthFacade: HealthInsuranceFacade) {}
+  relationshipList: any = [];
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -53,6 +62,15 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.loadDdlMedicalHealthPlanMetalLevel();
     this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
+    this.lovFacade.getRelationShipsLovs();
+    this.loadRelationshipLov();
+  }
+
+  private loadRelationshipLov() {
+    this.RelationshipLovs$.subscribe((data: any)=> {
+      if (!Array.isArray(data)) return;
+      this.relationshipList = data.map((x: any)=>x.lovDesc);
+    });
   }
 
   /** Private methods **/

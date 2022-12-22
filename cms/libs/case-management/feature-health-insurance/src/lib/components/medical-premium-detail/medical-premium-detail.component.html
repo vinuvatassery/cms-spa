@@ -317,10 +317,12 @@
             [disabled]="isViewContentEditable"
             type="radio"
             kendoRadioButton
-            name="advancedPremium1"
+            name="advancedPremium"
             aria-labelledby="advancedPremiumTaxCreditYes"
-            id="advancedPremium"
+            id="advancedPremium1"
             tabindex="5"
+            value="Yes"
+            [(ngModel)]="advancedPremium"
           />
           <kendo-label
             class="k-radio-label"
@@ -337,6 +339,8 @@
             aria-labelledby="advancedPremiumTaxCreditNo"
             id="advancedPremium2"
             tabindex="6"
+            value="No"
+            [(ngModel)]="advancedPremium"
           />
           <kendo-label
             class="k-radio-label"
@@ -353,6 +357,8 @@
             aria-labelledby="advancedPremiumTaxCreditUnknown"
             id="advancedPremium3"
             tabindex="7"
+            value="Unknown"
+            [(ngModel)]="advancedPremium"
           />
           <kendo-label
             class="k-radio-label"
@@ -370,6 +376,8 @@
             aria-labelledby="advancedPremiumTaxCreditEligibleButNotTaking"
             for="advancedPremium4"
             tabindex="8"
+            value="Eligible, but not taking"
+            [(ngModel)]="advancedPremium"
           />
           <kendo-label
             class="k-radio-label"
@@ -378,7 +386,7 @@
           ></kendo-label>
         </span>
       </div>
-      <div class="block-section mt-2">
+      <div class="block-section mt-2" *ngIf="advancedPremium == 'Yes' ">
         <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
           <kendo-textbox [disabled]="isViewContentEditable" aria-label="monthly aptc amount"  [fillMode]="formUiStyle.inputFillMode"> 
             <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
@@ -474,7 +482,7 @@
             <kendo-dropdownlist
             [fillMode]="formUiStyle.dropDownFillMode"
               [disabled]="isViewContentEditable"
-              [data]="ddlMedicalHealthInsurancePlans$ | async"
+              [data]="relationshipList"
             >
             </kendo-dropdownlist>
           </kendo-floatinglabel>
@@ -487,6 +495,18 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Last Name">
             <kendo-textbox    [disabled]="isViewContentEditable"  aria-label="last name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-6">
+          <kendo-floatinglabel text="Date of birth">
+            <kendo-datepicker
+            [fillMode]="formUiStyle.dateInputFillMode"
+              format="MM-dd-yyyy"
+              [(ngModel)]="dateOfBirth"
+              [disabled]="isViewContentEditable"
+              formatPlaceholder="formatPattern"
+            >
+            </kendo-datepicker>
           </kendo-floatinglabel>
         </div>
       </div>
@@ -509,6 +529,50 @@
             >add</span
           >NEW PERSON
         </button>
+      </div>
+    </div>
+    <div
+      class="flex-col mt-3"
+      *ngIf="ddlInsuranceType !== 'Oregon Health Plan (OHP)'"
+    >
+      <h5>Is the client the policy holder?</h5>
+      <div class="component-list-h">
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            [disabled]="isViewContentEditable"
+            type="radio"
+            kendoRadioButton
+            name="clientPolicyHolder"
+            aria-labelledby="clientPolicyHolderYes"
+            id="clientPolicyHolder1"
+            tabindex="5"
+            value="Yes"
+            [(ngModel)]="clientPolicyHolder"
+          />
+          <kendo-label
+            class="k-radio-label"
+            text="Yes"
+            for="clientPolicyHolder1"
+          ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            [disabled]="isViewContentEditable"
+            type="radio"
+            kendoRadioButton
+            name="clientPolicyHolder"
+            aria-labelledby="clientPolicyHolderNo"
+            id="clientPolicyHolder2"
+            tabindex="6"
+            value="No"
+            [(ngModel)]="clientPolicyHolder"
+          />
+          <kendo-label
+            class="k-radio-label"
+            text="No"
+            for="clientPolicyHolder2"
+          ></kendo-label>
+        </span>
       </div>
     </div>
     <div
