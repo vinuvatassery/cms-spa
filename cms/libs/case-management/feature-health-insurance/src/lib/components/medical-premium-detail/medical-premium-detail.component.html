@@ -50,6 +50,7 @@
         <kendo-datepicker
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
+          [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
           [disabled]="isViewContentEditable"
           formControlName ="insuranceEndDate"
           formatPlaceholder="formatPattern"        >
@@ -79,7 +80,7 @@
     <div
       class="flex-col  "
       *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
-      <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-metal-level>
+      <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit" [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
     </div>
     <div
       class="flex-col mt-1"

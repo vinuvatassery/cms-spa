@@ -1,9 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
@@ -15,7 +13,9 @@ import { LovFacade } from '@cms/system-config/domain';
 export class MedicalPremiumDetailMetalLevelComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  @Input() isEdit!: boolean;
+  @Input() defaultValue: any = {};
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   metalLevellov$ = this.lovFacade.metalLevellov$;
   MetalLevels: any = [];
   constructor(
@@ -31,10 +31,15 @@ export class MedicalPremiumDetailMetalLevelComponent implements OnInit {
   }
 
   private loadMetalLevelLov() {
-    this.metalLevellov$.subscribe((data:any) => {
+    this.metalLevellov$.subscribe((data: any) => {
       if (!Array.isArray(data)) return;
 
       this.MetalLevels = data;
+      if (this.isEdit && data.length > 0) {
+        this.healthInsuranceForm.controls['metalLevel'].setValue(
+          this.defaultValue
+        );
+      }
     });
   }
 }

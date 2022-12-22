@@ -105,7 +105,6 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   handleHealthInsuranceCloseClicked() {
-    debugger
     this.isOpenedHealthInsuranceModal = false;
     const sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(sessionId)
