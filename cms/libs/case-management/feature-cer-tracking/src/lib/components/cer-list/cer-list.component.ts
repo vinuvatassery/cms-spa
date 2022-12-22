@@ -14,6 +14,7 @@ export class CerListComponent implements OnInit {
   cerGrid$ = this.cerTrackingFacade.cerGrid$;
   ddlCer$ = this.cerTrackingFacade.ddlCer$;
   isOpenSendCER = false;
+  todayDate= new Date();
   public formUiStyle : UIFormStyle = new UIFormStyle();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';

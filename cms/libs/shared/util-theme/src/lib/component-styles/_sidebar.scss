@@ -24,28 +24,33 @@ cms-sidenav {
     align-items: center;
     justify-content: flex-end;
     .sidebar-hamburger_button {
-      width: $sidebar-width;
+      width: 100%;
       min-width: $sidebar-width;
       height: $size-xxxx + $size-xlg;
       background: $app-primary;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       box-shadow: none;
       cursor: pointer;
-      transition: ease-in all 0.3s;
+      transition:  0.3s;
       border: $size-0;
       &:hover {
         opacity: 1;
-        transition: ease-in all 0.3s;
+        .material-icons{
+          opacity: 1;
+          left: 3px;
+        }
       }
       .material-icons {
+        position: relative;
         color: $white;
         font-size: $font-size-xxx;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0;
+        opacity: 0.9;
       }
       .sidebar-hamburger_icon-right {
         display: none;
@@ -170,6 +175,11 @@ cms-sidenav {
         &.item-active {
           background: $white;
           color: $app-primary-font-color;
+        }
+        .last-visited-case-details{
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
       }
     }

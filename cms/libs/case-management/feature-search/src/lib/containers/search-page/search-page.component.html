@@ -8,6 +8,7 @@
   <kendo-multicolumncombobox
     [data]="search$ | async"
     textField="name"
+    (close)="$event.preventDefault(); "
     valueField="id"
     [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Case Name, Member ID or SSN"

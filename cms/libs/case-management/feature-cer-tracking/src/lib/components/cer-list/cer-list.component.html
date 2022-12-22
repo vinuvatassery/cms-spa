@@ -1,9 +1,10 @@
 <!-- Table Top Filter, Search and Export -->
 <section class="mat-form-no-b-space table-filter-section cer-table-filter">
   <div class="filter-col-select">
-    <span>SP End Date</span>
+    <span><strong>SP End Date</strong></span>
     <kendo-floatinglabel text="Date" >
-      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCer$ | async"> </kendo-dropdownlist>
+      <kendo-datepicker  [fillMode]="formUiStyle.dropDownFillMode" [(value)]="todayDate"></kendo-datepicker>
+      <!-- <kendo-dropdownlist [data]="ddlCer$ | async"> </kendo-dropdownlist> -->
     </kendo-floatinglabel>
   </div>
   <div class="table-sorted-info filter-col-sort-info">

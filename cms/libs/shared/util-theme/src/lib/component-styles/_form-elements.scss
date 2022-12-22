@@ -1,5 +1,7 @@
 // /*Global Search*/
-
+.k-input-md, .k-picker-md{
+  font-size: $font-size;
+}
 .k-rounded-md {
   border-radius: 4px;
 }
@@ -293,7 +295,7 @@
   transform: scale(0.85);
   background: $white;
   // padding: 0px 6px !important;
-  z-index: 4;
+  z-index: 2;
 
 }
 .k-floating-label-container .k-picker-outline.k-focus + .k-label,

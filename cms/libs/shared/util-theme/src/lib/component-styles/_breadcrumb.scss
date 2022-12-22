@@ -40,7 +40,9 @@
     cursor: pointer;
     padding: $size-0;
     margin: $size-0;
-    &.k-state-disabled {
+    font-size: $font-size-s;
+
+    &.k-state-disabled, &.k-disabled {
       color: $black-3 !important;
     }
     &:hover,

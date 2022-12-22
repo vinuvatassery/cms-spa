@@ -116,7 +116,7 @@
   .global-search-icon {
     position: absolute;
     left: 9px;
-    top: 8px;
+    top: 7px;
     z-index: 1;
     color: material-color($hive-neutral-palette, 800);
   }
@@ -140,8 +140,8 @@
   &.header-search {
     // position: fixed;
     z-index: 9;
-    max-width: 475px;
-    width: 475px;
+    max-width: 500px;
+    width: 500px;
     // left: 50%;
     // top: 10px;
     // transform: translate(-50%, 0);
@@ -149,7 +149,9 @@
       min-width: 300px;
       max-width: 300px;
     }
-
+    .k-searchbar{
+      min-height: 36px;
+    }
   }
   kendo-multicolumncombobox > .k-button {
     display: none;
