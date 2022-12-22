@@ -1,0 +1,84 @@
+<!-- <form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">    -->
+  <form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">   
+  <input type="hidden" formControlName="providerId"> 
+  <input type="hidden" formControlName="selectedProviderId"> 
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+      Start typing the provider's name, then select one from the suggestions. If you don't see the correct provider,
+       click "ADD NEW" to add a new Healthcare Provider to the master list.
+    </p>
+    <div class="flex-row">
+      <div class="flex-col">
+        <div class="k-auto-complete-box">
+          <span
+            class="material-icons global-search-icon"
+            aria-label="search member"
+            aria-hidden="true"
+            >search</span >
+              <span *ngIf="providerSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+            <kendo-autocomplete
+            [fillMode]="formUiStyle.dropDownFillMode" 
+            [data]="healthCareProviderSearchList$ | async"           
+            [value]="selectedCustomProviderName"        
+            valueField ="selectedCustomProvider"                           
+            placeholder="Search Provider Name"               
+            [filterable]="true"   
+            (close)="searchCloseEvent();"
+            [popupSettings]="{popupClass: 'healthcaresearch-list', animate: true, appendTo:'component' }"
+            (filterChange)="onsearchTextChange($event)"  
+          >          
+            <ng-template kendoAutoCompleteItemTemplate let-dataItem >   
+              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
+              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.clinicName }}</span>
+              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.address }}</span>     
+            </ng-template>    
+           
+          </kendo-autocomplete>  
+          <kendo-formerror *ngIf="(existHealthProvderForm?.hasError('required','providerId')) && isExistSubmitted">Provider
+            is required</kendo-formerror>
+      
+          </div>
+        </div>     
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div>
+        <button
+          kendoButton
+          [primary]="true"
+          look="flat"
+          (click)="onOpenBusinessLogicClicked()"        
+          aria-label="add new provider"
+          *ngIf="!isEditSearchHealthProviderValue"
+        >
+          ADD NEW
+        </button>
+        <button
+          kendoButton
+          class="k-danger-link"
+          *ngIf="isEditSearchHealthProviderValue"
+          aria-label="remove provider"
+          (click)="onDeleteConfirm()"
+        >
+          REMOVE
+        </button>
+      </div>
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          (click)="onCloseProviderClicked()"
+          aria-label="cancel adding provider"
+        >
+          CANCEL
+        </button>
+        <button kendoButton [primary]="true" aria-label="add or update pharmacy">
+          {{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</form>

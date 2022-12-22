@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Entities **/
-import { Provider } from '../entities/provider';
+
 /** Data services **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusPeriodDataService } from '../infrastructure/status-period.data.service';
