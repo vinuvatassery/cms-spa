@@ -366,10 +366,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       if (
         this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
       ) {
-        this.healthInsurancePolicy.aptcNotTakingFlag =StatusFlag.No;
-      } 
-      this.healthInsurancePolicy.aptcFlag =this.healthInsuranceForm.controls['aptcFlag'].value;
-      this.healthInsurancePolicy.aptcMonthlyAmt =this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
+        this.healthInsurancePolicy.aptcNotTakingFlag =this.healthInsuranceForm.controls['aptcFlag'].value;
+      }else{
+        this.healthInsurancePolicy.aptcFlag =StatusFlag.Yes;
+        this.healthInsurancePolicy.aptcMonthlyAmt =this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
+      }
+      
+      
         
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
       this.healthInsurancePolicy.medicareBeneficiaryIdNbr = 'string';
