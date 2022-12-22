@@ -1,0 +1,31 @@
+<div [formGroup]="healthInsuranceForm">
+
+    <kendo-floatinglabel text="Insurance Carrier Name" >   
+        <kendo-combobox   
+        [fillMode]="formUiStyle.dropDownFillMode" 
+        [disabled]="isViewContentEditable"   
+        #caseOwnr
+        formControlName="insuranceCarrierName"     
+        [data]="CarrierNames"   
+        textField="vendorName" 
+        valueField="vendorId"
+        [valuePrimitive]="true"       
+        [filterable]="true"     
+        [kendoDropDownFilter]="caseOwnerfilterSettings"
+        (valueChange)="insuranceCarrierNameChangeValue($event)"      
+      >
+      </kendo-combobox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceCarrierName'].valid">Insurance carrier name is required.</kendo-formerror>
+      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
+        <span>Don’t see the Carrier you’re looking for?</span>
+        <button
+          kendoButton
+          class="card-link-button ml-1 no-ul"
+          [disabled]="isViewContentEditable"
+          aria-label="add new insurance carrier"
+        >
+          ADD NEW
+        </button>
+      </div>
+</div>
