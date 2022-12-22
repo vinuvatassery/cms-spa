@@ -1,7 +1,7 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {  HealthcareProviderFacade, NavigationType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import {  CompletionChecklist, HealthcareProviderFacade, NavigationType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 
@@ -73,6 +73,10 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
       {  
              
         this.isProvidersGridDisplay = x     
+        if(this.isProvidersGridDisplay === true)
+        {
+          this.updateWorkFlowStatus();
+        }
       });
    }
 
@@ -132,6 +136,11 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
      
     this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
     this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.No : StatusFlag.Yes
+
+    if(this.isProvidersGridDisplay === true)
+    {
+      this.updateWorkFlowStatus();
+    }
     this.healthProvider.updateHealthCareProvidersFlagonCheck
       (this.clientCaseEligibilityId,this.providersStatus).subscribe((isSaved) => {         
         if (isSaved == true) {    
@@ -164,5 +173,15 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
     {
     this.healthProvider.loadExistingHealthCareProvider(this.clientCaseEligibilityId,prvSelectedId)
     }
+   }
+
+   updateWorkFlowStatus() 
+   {
+     const workFlowdata: CompletionChecklist[] = [{
+       dataPointName: 'health_care_provider',
+       status: StatusFlag.Yes 
+     }];
+ 
+     this.workFlowFacade.updateChecklist(workFlowdata);
    }
 }

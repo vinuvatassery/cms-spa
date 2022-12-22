@@ -105,15 +105,6 @@ export class HealthcareProviderFacade {
   updateHealthCareProvidersFlagonCheck(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)  {
     this.ShowLoader();
    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
-   //.subscribe({
-    //   next: (providerflagStatusGetResponse) => {     
-    //     this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')     
-    //     this.healthCareProvideUpdateFlagSubject.next(providerflagStatusGetResponse);
-    //   },
-    //   error: (err) => {  
-    //     this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
-    //   },
-    // });
   }
 
   updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
