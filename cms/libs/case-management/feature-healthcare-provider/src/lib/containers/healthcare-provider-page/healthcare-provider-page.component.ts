@@ -135,17 +135,18 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   onProviderValueChanged() {   
      
     this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
-    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.No : StatusFlag.Yes
+    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
 
-    if(this.isProvidersGridDisplay === true)
-    {
-      this.updateWorkFlowStatus();
-    }
+   
     this.healthProvider.updateHealthCareProvidersFlagonCheck
       (this.clientCaseEligibilityId,this.providersStatus).subscribe((isSaved) => {         
         if (isSaved == true) {    
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')      
-                          }
+          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')  
+          if(this.isProvidersGridDisplay === true)
+          {
+            this.updateWorkFlowStatus();
+          }    
+         }
       });       
   }
 

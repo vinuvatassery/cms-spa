@@ -164,6 +164,7 @@ export class HealthCareProviderSearchComponent implements OnInit
 
   searchCloseEvent()
   {
+    debugger
     this.providerSearchInputLoader = false;
   }
 
