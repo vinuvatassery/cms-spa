@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
 import { of, Subject } from 'rxjs';
 /** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
 import { Dependent } from '../entities/dependent';
 import { ClientDependentGroupDesc} from '../enums/client-dependent-group.enum';
 import { DependentTypeCode } from '../enums/dependent-type.enum';
@@ -19,7 +19,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { dateFieldName, IntlService } from '@progress/kendo-angular-intl';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
