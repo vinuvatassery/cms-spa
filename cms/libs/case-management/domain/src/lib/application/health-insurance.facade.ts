@@ -77,18 +77,21 @@ export class HealthInsuranceFacade {
     });
   }
 
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,skipCount:any,pageSize:any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any): void {
     this.ShowLoader();
-    this.contactDataService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId,skipCount,pageSize).subscribe({
+    this.contactDataService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {
+          if (medicalHealthPlansResponse['clientInsurancePolicies'] == null) {
+            medicalHealthPlansResponse['clientInsurancePolicies'] = []
+          }
           const gridView: any = {
             data: medicalHealthPlansResponse['clientInsurancePolicies'],
             total: medicalHealthPlansResponse?.totalCount,
           };
-          
-        this.medicalHealthPlansSubject.next(gridView);
+
+          this.medicalHealthPlansSubject.next(gridView);
         }
         this.HideLoader();
       },
@@ -176,7 +179,7 @@ export class HealthInsuranceFacade {
     return this.contactDataService.updateInsuranceFlags(insuranceFlags);
   }
 
-  deleteInsurancePolicy(insurancePolicyId:any){
+  deleteInsurancePolicy(insurancePolicyId: any) {
     return this.contactDataService.deleteInsurancePolicy(insurancePolicyId);
   }
 }
