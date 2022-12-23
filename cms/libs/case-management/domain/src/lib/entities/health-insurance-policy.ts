@@ -13,8 +13,8 @@ export class healthInsurancePolicy {
         policyHolderLastName :string|null=null;
         metalLevelCode :string|null=null;
         premiumAmt :number|null=null;
-        startDate :Date= new Date;;
-        endDate :Date= new Date;
+        startDate? :Date|null;
+        endDate? :Date|null;
         careassistPayingPremiumFlag :string|null=null;
         premiumPaidThruDate?:Date;
         premiumFrequencyCode :string|null=null;
@@ -28,8 +28,8 @@ export class healthInsurancePolicy {
         isClientPolicyHolderFlag :string|null=null;
         medicareBeneficiaryIdNbr :string|null=null;
         medicareCoverageTypeCode :string|null=null;
-        medicarePartAStartDate?:Date;
-        medicarePartBStartDate?:Date;
+        medicarePartAStartDate?:Date|null;
+        medicarePartBStartDate?:Date|null;
         onQmbFlag :string|null=null;
         onLisFlag :string|null=null;
         paymentGroupNumber:number|null=null;
@@ -39,7 +39,7 @@ export class healthInsurancePolicy {
         oonStartDate? :Date;
         oonEndDate? :Date;
         oonPharmacy :string|null=null;
-        oonDrugs :string|null=null;       
+        oonDrugs :string|null=null;
         concurrencyStamp :string|null=null;
         activeFlag :string|null=null;
         creationTime? :Date;

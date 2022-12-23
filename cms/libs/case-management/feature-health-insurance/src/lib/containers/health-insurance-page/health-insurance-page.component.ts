@@ -82,7 +82,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       clientInsurancePolicyId: [''],
       insuranceType: [''],
       insuranceStartDate:[''],
-      insuranceEndDate:[''], 
+      insuranceEndDate:[''],
       insuranceIdNumber:[''],
       insuranceCarrierName:[''],
       metalLevel:[{}],
@@ -90,8 +90,15 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       wantHelpBuyingPremium:[''],
       aptcFlag:[''],
       aptcMonthlyAmt:[''],
-      
-      
+      medicareBeneficiaryIdNbr: [''],
+      medicareCoverageTypeCode:[''],
+      medicarePartAStartDate:[''],
+      medicarePartBStartDate:[''],
+      onQmbFlag:[''],
+      onLisFlag:['']
+
+
+
 
     });
 

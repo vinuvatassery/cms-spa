@@ -26,7 +26,129 @@
 
   </div>
 
-  <div class="flex-row" *ngIf="isOpenDdl">
+  <div   class="flex-row"  *ngIf="isOpenDdl && ddlInsuranceType === 'Medicare'">
+    <div class="block-section">
+    <div class="flex-col mt-3">
+      <h5 class="text-capital">Medicare Info</h5>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Medicare Benificiary ID Number">
+        <kendo-textbox
+        [disabled]="isViewContentEditable"
+        aria-label="lainsurance id number"
+        formControlName ="medicareBeneficiaryIdNbr"
+        [maxlength]="20"
+        [fillMode]="formUiStyle.inputFillMode">
+      </kendo-textbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid">Medicare Benificiary ID Number is required.</kendo-formerror>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Medicare Coverage Type">
+        <kendo-dropdownlist
+        [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="medicareCoverageTypeList$ | async"
+          (valueChange)="onMedicareCoverageTypeChanged()"
+          formControlName ="medicareCoverageTypeCode"
+          textField ="lovDesc"
+          valueField ="lovCode"
+          [disabled]="isViewContentEditable"
+          [valuePrimitive]="true">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareCoverageTypeCode'].valid">Medicare Coverage Type is required.</kendo-formerror>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Medicare Part A Start Date">
+        <!-- [(ngModel)]="currentDate" -->
+        <kendo-datepicker
+        [fillMode]="formUiStyle.dateInputFillMode"
+          format="MM-dd-yyyy"
+          formControlName ="medicarePartAStartDate"
+          [disabled]="isViewContentEditable"
+          formatPlaceholder="formatPattern"
+        >
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartAStartDate'].valid">Medicare Part A Start Date is required.</kendo-formerror>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Medicare Part B Start Date">
+        <!-- [(ngModel)]="currentDate" -->
+        <kendo-datepicker
+        [fillMode]="formUiStyle.dateInputFillMode"
+          format="MM-dd-yyyy"
+          formControlName ="medicarePartBStartDate"
+          [disabled]="isViewContentEditable"
+          formatPlaceholder="formatPattern"
+        >
+        </kendo-datepicker>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid">Medicare Part B Start Date is required.</kendo-formerror>
+    </div>
+    <div class="flex-col mt-2">
+      <span class="app-checkboxwidtext-wrapper">
+        <input
+          [disabled]="isViewContentEditable"
+          type="checkbox"
+          kendoCheckBox
+          aria-labelledby="qmb"
+          id="qmb"
+          formControlName = "onQmbFlag"
+        />
+        <label class="k-checkbox-label" for="sameAsInsuranceId"
+          >On Qualified Medicare Beneficiary (QMB)</label
+        >
+      </span>
+    </div>
+    <div class="flex-col">
+      <h5>On Low Income Subsidy (LIS)?</h5>
+      <div class="component-list-h">
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            type="radio"
+            [disabled]="isViewContentEditable"
+            kendoRadioButton
+            name="onLisFlag"
+            aria-labelledby="LowIncomeSusidyYes"
+            formControlName ="onLisFlag"
+            id="LowIncomeSusidyYes"
+            tabindex="3"
+            value="Y"
+          />
+         <kendo-label
+            class="k-radio-label"
+            for="LowIncomeSusidyYes"
+            text="Yes"
+          ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            type="radio"
+            [disabled]="isViewContentEditable"
+            kendoRadioButton
+            name="onLisFlag"
+            aria-labelledby="LowIncomeSusidyNo"
+            formControlName ="onLisFlag"
+            id="LowIncomeSusidyNo"
+            tabindex="4"
+            value="N"
+          />
+          <kendo-label
+            class="k-radio-label"
+            for="LowIncomeSusidyNo"
+            text="No"
+          ></kendo-label>
+        </span>
+        <kendo-formerror *ngIf="!healthInsuranceForm.controls['onLisFlag'].valid">On Low Income Subsidy (LIS) is required.</kendo-formerror>
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+  <div class="flex-row" *ngIf="isOpenDdl && medicareInsuranceInfoCheck">
+
     <div class="flex-col mt-3">
       <h5 class="text-capital">Insurance Info</h5>
     </div>
@@ -79,7 +201,7 @@
     </div>
     <div
       class="flex-col  "
-      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA' && ddlInsuranceType !== 'Medicare'">
       <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit" [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
     </div>
     <div
@@ -88,7 +210,7 @@
         ddlInsuranceType !== 'OREGON_HEALTH_PLAN'
         && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'
         && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'
-
+        && ddlInsuranceType !== 'Medicare'
         && ddlInsuranceType !== 'COBRA'"
         >
       <h5>Group Plan Type</h5>
@@ -206,7 +328,6 @@
               <kendo-datepicker
               [fillMode]="formUiStyle.dateInputFillMode"
                 format="MM-dd-yyyy"
-                [(ngModel)]="currentDate"
                 [disabled]="isViewContentEditable"
                 formatPlaceholder="formatPattern"
               >
@@ -218,7 +339,6 @@
               <kendo-datepicker
               [fillMode]="formUiStyle.dateInputFillMode"
                 format="MM-dd-yyyy"
-                [(ngModel)]="currentDate"
                 [disabled]="isViewContentEditable"
                 formatPlaceholder="formatPattern"
               >
@@ -269,7 +389,7 @@
     </div>
     <div
       class="flex-col mt-3"
-      *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
+      *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA' &&  ddlInsuranceType !== 'Medicare'" >
       <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
       <!-- <h5>Advanced Premium Tax Credit?</h5>
       <div class="component-list-h">
@@ -551,7 +671,7 @@
 
 <kendo-dialog *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Insurance Provider">
- 
+
 <section class="k-dialog-body mb-2">
   <p>
     This feature is part of future scope of work for the ORCares project.
@@ -570,7 +690,7 @@
     </div>
   </div>
 </kendo-dialog-actions>
- 
+
 </kendo-dialog>
 
 
@@ -579,7 +699,7 @@
 
 <kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Plan">
- 
+
 <section class="k-dialog-body mb-2">
   <p>
     This feature is part of future scope of work for the ORCares project.
@@ -598,5 +718,5 @@
     </div>
   </div>
 </kendo-dialog-actions>
- 
+
 </kendo-dialog>
