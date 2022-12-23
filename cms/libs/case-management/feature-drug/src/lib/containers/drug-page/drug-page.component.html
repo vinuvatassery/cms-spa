@@ -137,6 +137,18 @@
   <!-- Pharmacies -->
   <section>
     <h5 class="text-capital mt-3">Add Pharmacies</h5>
-    <case-management-pharmacy-list></case-management-pharmacy-list>
+    <case-management-pharmacy-list
+    [clientpharmacies$]="clientpharmacies$"
+    [pharmacysearchResult$]="pharmacysearchResult$"
+    [selectedPharmacy$]="selectedPharmacy$"
+    [addPharmacyResponse$]="addPharmacyRsp$"
+    [editPharmacyResponse$]="editPharmacyRsp$"
+    [removePharmacyResponse$]="removePharmacyRsp$"
+    (searchPharmacy)="searchPharmacy($event)"
+    (addPharmacyClick)="addPharmacy($event)"
+    (editPharmacyInit)="editPharmacyInit($event)"
+    (editPharmacyClick)="editPharmacy($event)"
+    (removePharmacyClick)="removePharmacy($event)"
+    ></case-management-pharmacy-list>
   </section>
 </div>

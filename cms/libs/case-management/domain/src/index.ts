@@ -35,6 +35,7 @@ export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
 export * from './lib/entities/income';
 export * from './lib/entities/no-income-data';
+export * from './lib/entities/client-pharmacy';
 
 
 /** Enums **/
@@ -54,6 +55,7 @@ export * from './lib/enums/dependent-type.enum';
 export * from './lib/enums/client-dependent-group.enum';
 export * from './lib/enums/address-type-code.enum';
 export * from './lib/enums/device-type-code.enum';
+export * from './lib/enums/priority-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

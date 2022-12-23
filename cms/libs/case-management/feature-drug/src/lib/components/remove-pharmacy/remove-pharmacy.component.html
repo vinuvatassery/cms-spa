@@ -1,1 +1,19 @@
-<p>remove-pharmacy works!</p>
+       <section class="k-dialog-body mb-2">
+        <p>
+            The pharmacy will be no longer associated with client
+        </p>
+    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between">
+            <div class="justify-content-end">
+                <button kendoButton [primary]="true" look="outline" aria-label="cancel removing delete client pharmacy"
+                    (click)="onRemoveOrCancelClick(false)">
+                    Cancel
+                </button>
+                <button kendoButton class="k-error-button" aria-label="delete client pharmacy"
+                    (click)="onRemoveOrCancelClick(true)">
+                    REMOVE
+                </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
