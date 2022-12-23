@@ -270,7 +270,7 @@
     <div
       class="flex-col mt-3"
       *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
-      <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
+      <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [healthInsurancePolicy]="healthInsurancePolicyCopy"></case-management-medical-premium-detail-aptc>
       <!-- <h5>Advanced Premium Tax Credit?</h5>
       <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
@@ -500,11 +500,12 @@
         kendoButton
         class="k-danger-link"
         *ngIf="isDeleteEnabled"
+        (click)="onDeleteClick()"
         aria-label="delete medical premium"
       >
         Delete
       </button>
-      <!-- <button
+      <button
         kendoButton
         [primary]="true"
         (click)="onRedirectModalClicked()"
@@ -513,7 +514,7 @@
         aria-label="edit medical premium"
       >
         Edit
-      </button> -->
+      </button>
     </div>
     <div class="justify-content-end">
       <button

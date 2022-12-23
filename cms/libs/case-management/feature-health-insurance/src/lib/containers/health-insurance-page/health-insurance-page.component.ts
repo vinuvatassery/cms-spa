@@ -160,6 +160,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
         if (this.currentInsurance == 'Y') {
           this.showTable = true;
         }
+        else{
+          this.showTable = false;
+        }
         this.ref.detectChanges();
       }
     })

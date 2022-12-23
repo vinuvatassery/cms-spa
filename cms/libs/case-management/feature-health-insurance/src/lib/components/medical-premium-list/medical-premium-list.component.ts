@@ -94,7 +94,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
     if (this.closeDeleteModal) {
       this.onDeleteConfirmCloseClicked();
-      this.loadInsurancePolicies();
+      this.handleHealthInsuranceCloseClicked();
     }
   }
   /** Internal event methods **/
@@ -115,8 +115,11 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   /** External event methods **/
-  handleInsuranceType(insuranceType: string) {
-    this.insuranceType = insuranceType;
+  handleInsuranceType(dataItem: any) {
+    //this.insuranceType = insuranceType;
+    this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+    this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
+    this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
   }
 
   handleHealthInsuranceCloseClicked() {
@@ -196,4 +199,11 @@ export class MedicalPremiumListComponent implements OnInit {
       this.onChangePriorityOpenClicked()
     }
   }
+
+  deleteButonClicked(deleteButonClicked:any){
+    if(deleteButonClicked){
+      this.onDeleteConfirmOpenClicked();
+    }
+  }
+
 }
