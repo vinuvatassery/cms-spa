@@ -7,6 +7,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -19,14 +20,14 @@ import { LovFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalPremiumDetailComponent implements OnInit {
- currentDate = new Date();
- public isaddNewInsuranceProviderOpen = false;
- public isaddNewInsurancePlanOpen = false;
- advancedPremium: string = 'No';
- clientPolicyHolder: string = 'No';
- dateOfBirth: any;
- RelationshipLovs$ = this.lovFacade.lovRelationShip$;
- public formUiStyle : UIFormStyle = new UIFormStyle();
+  currentDate = new Date();
+  public isaddNewInsuranceProviderOpen = false;
+  public isaddNewInsurancePlanOpen = false;
+  advancedPremium: string = 'No';
+  clientPolicyHolder: string = 'No';
+  dateOfBirth: any;
+  RelationshipLovs$ = this.lovFacade.lovRelationShip$;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() dialogTitle!: string;
   @Input() insuranceType!: string;
@@ -34,12 +35,21 @@ export class MedicalPremiumDetailComponent implements OnInit {
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
   @Output() editRedirect = new EventEmitter<string>();
-
+  addPersonForm: FormGroup
   /** Constructor **/
   constructor(
     private readonly healthFacade: HealthInsuranceFacade,
-    private readonly lovFacade: LovFacade
-    ) {}
+    private readonly lovFacade: LovFacade,
+    private fb: FormBuilder
+  ) {
+    this.addPersonForm = this.fb.group({
+      persons: this.fb.array([]),
+    });
+   }
+
+   get persons(): FormArray {
+    return this.addPersonForm.get("persons") as FormArray;
+   }
 
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
@@ -67,9 +77,9 @@ export class MedicalPremiumDetailComponent implements OnInit {
   }
 
   private loadRelationshipLov() {
-    this.RelationshipLovs$.subscribe((data: any)=> {
+    this.RelationshipLovs$.subscribe((data: any) => {
       if (!Array.isArray(data)) return;
-      this.relationshipList = data.map((x: any)=>x.lovDesc);
+      this.relationshipList = data.map((x: any) => x.lovDesc);
     });
   }
 
@@ -127,8 +137,20 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.isDeleteEnabled = true;
     this.editRedirect.emit('edit');
   }
+
   onToggleNewPersonClicked() {
-    this.isToggleNewPerson = !this.isToggleNewPerson;
+    // this.isToggleNewPerson = !this.isToggleNewPerson;
+    let personForm = this.fb.group({
+      relation: '',
+      firstName: '',
+      lastName: '',
+      dob: '',
+    });
+    this.persons.push(personForm);
+  }
+
+  removePerson(i: number) {
+    this.persons.removeAt(i);
   }
 
 
