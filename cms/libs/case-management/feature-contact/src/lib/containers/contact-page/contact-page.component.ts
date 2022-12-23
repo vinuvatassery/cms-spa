@@ -625,7 +625,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
 
     let preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
-    preferredContactCode = preferredContactCode.replace(/[- )(]/g, '');
+    preferredContactCode = preferredContactCode?.replace(/[- )(]/g, '');
     if (preferredContactCode === homePhone?.phoneNbr) {
       homePhone.preferredFlag = StatusFlag.Yes;
     }
