@@ -218,6 +218,9 @@
       }
       h5{
         margin: 20px 0px 8px;
+        &.text-capital{
+          margin-top: 8px;
+        }
       }
       section {
         padding-left: $size-xxx;
@@ -517,3 +520,8 @@
     max-width: 800px;
   }
 }
+
+.fontsize_twel{
+  font-size: $font-size-s;
+}
+

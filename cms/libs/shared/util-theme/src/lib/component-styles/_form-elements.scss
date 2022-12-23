@@ -285,6 +285,7 @@
 
 .k-floating-label-container > .k-label {
   font-size: 14px;
+  line-height: 18px;
 }
 .k-floating-label-container.k-empty > .k-label {
   top: calc(calc(1.25 * 18px) + 1px + 8px);
@@ -300,7 +301,8 @@
   background: $white;
   // padding: 0px 6px !important;
   z-index: 2;
-
+  color: $inputlabelolor;
+  border-radius: 8px;
 }
 .k-floating-label-container .k-picker-outline.k-focus + .k-label,
 .k-floating-label-container .k-input-outline.k-focus + .k-label,
@@ -544,6 +546,9 @@
 .radio-column-list {
   display: flex;
   gap: $size-xxx;
+  .app-radiobtnwidtext-wrapper{
+    width: auto;
+  }
 }
 
 // ************************************************** /* Input Prefix */************************************************************

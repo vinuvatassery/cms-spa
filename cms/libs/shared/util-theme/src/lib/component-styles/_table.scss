@@ -69,7 +69,7 @@ $pagination-height : 48px;
   .k-footer-template {
     td,
     .k-grid-footer-sticky {
-      background-color: material-color($hive-neutral-palette, 900) !important;
+      background-color: $gridfootercolor !important;
       color: $white !important;
       border-left-color: material-color($hive-neutral-palette, 900) !important;
       border-right-color: material-color($hive-neutral-palette, 900) !important;

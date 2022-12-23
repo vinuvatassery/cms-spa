@@ -7,6 +7,7 @@
    border-width: $size-0;
    padding: $size-l $size-xlg;
    border-radius: $border-radius-sm;
+   letter-spacing: 0.56px;
   //  height: 32px;
 
   &.k-button-outline-primary {
@@ -180,10 +181,13 @@
      .btn-inner-block {
        display: flex;
        align-items: center;
-       gap: 10px;
+       gap: 6px;
        font-size: $font-size;
        height: 100%;
        padding: $size-l $size-xlg;
+       .material-icons{
+        font-size: $font-size-xl;
+       }
      }
    }
 
@@ -237,12 +241,16 @@
    box-shadow: none;
 
    .k-toggle-button {
-     background: material-color($hive-neutral-palette, 200);
+     background: material-color($hive-neutral-palette, 100);
      text-transform: capitalize;
 
-     &.k-state-selected {
+     &.k-state-selected, &.k-selected {
        color: $white;
        background: $app-primary;
+       opacity: 1;
+       &::before{
+        opacity: 0;
+       }
      }
    }
 

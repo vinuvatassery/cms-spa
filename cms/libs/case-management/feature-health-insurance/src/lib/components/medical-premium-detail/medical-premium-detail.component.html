@@ -71,11 +71,11 @@
         <kendo-textbox  [disabled]="isViewContentEditable" aria-label="insurance carrier name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
-      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-        <span>Don’t see the Carrier you’re looking for?</span>
+      <div class="d-flex align-items-center mt-1" *ngIf="!isViewContentEditable">
+        <span class="fontsize_twel">Don’t see the Carrier you’re looking for?</span>
         <button
           kendoButton
-          class="card-link-button ml-1 no-ul"
+          class="card-link-button ml-1 no-ul fontsize_twel"
           [disabled]="isViewContentEditable"
           aria-label="add new insurance carrier"
           (click)="addNewInsuranceProviderOpen()"
@@ -94,11 +94,11 @@
         <kendo-textbox  [disabled]="isViewContentEditable" aria-label="insurance plan name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
 
       </kendo-floatinglabel>
-      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-        <span>Don’t see the Plan you’re looking for?</span>
+      <div class="d-flex align-items-center mt-1" *ngIf="!isViewContentEditable">
+        <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
         <button
           kendoButton
-          class="card-link-button ml-1 no-ul"
+          class="card-link-button ml-1 no-ul fontsize_twel"
           [disabled]="isViewContentEditable"
           aria-label="add new insurance plan"
           (click)="addNewInsurancePlanOpen()"
