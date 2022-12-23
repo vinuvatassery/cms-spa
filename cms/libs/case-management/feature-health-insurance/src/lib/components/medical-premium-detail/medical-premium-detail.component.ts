@@ -231,6 +231,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
       healthInsurancePolicy.aptcMonthlyAmt
     );
+    this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
+      healthInsurancePolicy.careassistPayingPremiumFlag
+    );
+    this.disableEnableRadio();
   }
 
   private conditionsInsideView() {
@@ -360,7 +364,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
           this.healthInsuranceForm.controls['insuranceEndDate'].value
         )
       );
-      this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
+      this.healthInsurancePolicy.careassistPayingPremiumFlag = this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value;
       this.healthInsurancePolicy.premiumPaidThruDate = new Date();
       this.healthInsurancePolicy.premiumFrequencyCode = 'string';
       this.healthInsurancePolicy.nextPremiumDueDate = new Date();
@@ -412,6 +416,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.isDeleteEnabled = true;
     this.isEdit = true;
     this.buttonText = 'Update';
+    this.disableEnableRadio();
   }
   onToggleNewPersonClicked() {
     this.isToggleNewPerson = !this.isToggleNewPerson;
@@ -522,5 +527,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
   onDeleteClick() {
     this.isDeleteClicked.next(true);
+  }
+
+  disableEnableRadio(){
+    if(this.isViewContentEditable){
+      this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].disable();
+    }
+    else{
+      this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
+    }
   }
 }

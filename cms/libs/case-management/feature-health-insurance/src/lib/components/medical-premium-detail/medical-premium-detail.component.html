@@ -164,14 +164,14 @@
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
-                  [disabled]="isViewContentEditable"
                   kendoRadioButton
-                  name="wantHelpBuyingPremium"
+                  name="careassistPayingPremiumFlag"
                   aria-labelledby="buyingPremiumYes"
-                  formControlName = "wantHelpBuyingPremium"
+                  formControlName = "careassistPayingPremiumFlag"
                   id="buyingPremiumYes"
                   tabindex="3"
-                  value="YES"
+                  value="Y"
+                  [checked]="healthInsurancePolicyCopy.careassistPayingPremiumFlag=='Y'"
                 />
                <kendo-label
                   class="k-radio-label"
@@ -182,14 +182,14 @@
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
-                  [disabled]="isViewContentEditable"
                   kendoRadioButton
-                  name="wantHelpBuyingPremium"
+                  name="careassistPayingPremiumFlag"
                   aria-labelledby="buyingPremiumNo"
-                  formControlName = "wantHelpBuyingPremium"
+                  formControlName = "careassistPayingPremiumFlag"
                   id="buyingPremiumNo"
                   tabindex="4"
-                  value="NO"
+                  value="N"
+                  [checked]="healthInsurancePolicyCopy.careassistPayingPremiumFlag=='N'"
                 />
                 <kendo-label
                   class="k-radio-label"
