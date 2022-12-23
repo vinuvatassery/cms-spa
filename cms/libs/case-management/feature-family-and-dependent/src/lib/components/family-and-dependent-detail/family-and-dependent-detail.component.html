@@ -30,6 +30,7 @@
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
               [filterable]="true"   
               (filterChange)="onsearchTextChange($event)"    
+              (close)="searchCloseEvent();"
                     
             >          
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               

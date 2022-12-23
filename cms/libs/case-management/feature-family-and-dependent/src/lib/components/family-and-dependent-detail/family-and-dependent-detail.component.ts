@@ -71,7 +71,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         if(text)
         {
         this.searchTextEvent.emit(text)
-        this.showDependentSearchInputLoader = false;
+       
         }
       }
       ); 
@@ -306,5 +306,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       }
     } 
    
-
+    searchCloseEvent()
+    {
+      this.showDependentSearchInputLoader = false;
+    }
 }
