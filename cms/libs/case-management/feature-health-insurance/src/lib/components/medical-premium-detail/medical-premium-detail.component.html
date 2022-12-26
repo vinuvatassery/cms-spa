@@ -78,8 +78,8 @@
         <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"  [insurancePlans]="insurancePlans" [isViewContentEditable]="isViewContentEditable" ></case-management-medical-premium-detail-insurance-plan-name>
       </div>
       <div
-        class="flex-col  "
-        *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
+        class="flex-col"
+        *ngIf="ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
         <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit" [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
       </div>
       <div class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && healthInsuranceForm.controls['insuranceCarrierName'].value">
@@ -103,9 +103,13 @@
           <p>{{ carrierContactInfo.phoneNbr | phone}}</p>
         </div>
         </div>
+       <div class="flex-col mt-3"
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
+        <case-management-medical-premium-detail-group-plan-type [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-group-plan-type>
+       </div>
         <div
           class="flex-col mt-3"
-          *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
+          *ngIf="InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan"
         >
           <div class="block-section">
             <div class="flex-row">
@@ -234,7 +238,7 @@
         </div>
         <div
           class="flex-col mt-3"
-          *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
+          *ngIf="ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
           <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
          
           <div

@@ -250,6 +250,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
       healthInsurancePolicy.careassistPayingPremiumFlag
     );
+    this.healthInsuranceForm.controls['groupPlanType'].setValue(
+      healthInsurancePolicy.insuranceGroupPlanTypeCode
+    );
     this.disableEnableRadio();
   }
 
@@ -288,6 +291,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       'insuranceCarrierName',
       'insurancePlanName',
     ];
+    const GroupPlanRequiredFields: Array<string> = [
+      'insuranceStartDate',
+      'insuranceIdNumber',
+      'insuranceCarrierName',
+      'insurancePlanName',
+      'groupPlanType',
+      'careassistPayingPremiumFlag'
+    ];
     const HelpWithPremiumRequiredFields:Array<string> =
     ['nextPremiumDueDate','premiumAmt','premiumFrequencyCode','paymentIdNbr'];
     this.resetValidators();
@@ -307,6 +318,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
           'aptcMonthlyAmt'
         ].updateValueAndValidity();
       }
+    }
+    if (this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
+      GroupPlanRequiredFields.forEach((key: string) => {
+        this.healthInsuranceForm.controls[key].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      });
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.Cobra) {
       CobraPlanRequiredFields.forEach((key: string) => {
@@ -341,7 +360,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       ]);
       this.healthInsuranceForm.controls['metalLevel'].updateValueAndValidity();
     }
-    if(this.ddlInsuranceType !== 'OREGON_HEALTH_PLAN')
+    if(this.ddlInsuranceType !== HealthInsurancePlan.OregonHealthPlan && this.ddlInsuranceType !== HealthInsurancePlan.Veterans && this.ddlInsuranceType !== HealthInsurancePlan.QualifiedHealthPlan && this.ddlInsuranceType !== HealthInsurancePlan.OffExchangePlan)
       {
         this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].setValidators([Validators.required]);
           this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].updateValueAndValidity();
@@ -374,24 +393,25 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
   private populateInsurancePolicy() {
     {
-      debugger;
       this.healthInsurancePolicy = new healthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.clientCaseEligibilityId =this.clientCaseEligibilityId;
-      if(this.ddlInsuranceType===this.InsurancePlanTypes.Veterans) return;
-
+      this.healthInsurancePolicy.priorityCode = 'p';
+      this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
+      this.healthInsurancePolicy.healthInsuranceTypeCode = this.ddlInsuranceType;
+      if(this.ddlInsuranceType===HealthInsurancePlan.Veterans) return;
       this.healthInsurancePolicy.insuranceCarrierId =this.healthInsuranceForm.controls['insuranceCarrierName'].value;
       
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;
       this.healthInsurancePolicy.clientMaximumId =
         'C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
-      this.healthInsurancePolicy.healthInsuranceTypeCode =
-        this.ddlInsuranceType;
+      
+
       this.healthInsurancePolicy.insuranceIdNbr =
         this.healthInsuranceForm.controls['insuranceIdNumber'].value;
-      this.healthInsurancePolicy.insuranceGroupPlanTypeCode = null;
-      this.healthInsurancePolicy.priorityCode = 'p';
+      this.healthInsurancePolicy.insuranceGroupPlanTypeCode = this.healthInsuranceForm.controls['groupPlanType'].value;
+      
       this.healthInsurancePolicy.policyHolderFirstName = null;
       this.healthInsurancePolicy.policyHolderLastName = null;
       this.healthInsurancePolicy.metalLevelCode =
@@ -448,7 +468,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsurancePolicy.oonPharmacy = 'string';
       this.healthInsurancePolicy.oonDrugs = 'string';
       this.healthInsurancePolicy.concurrencyStamp = 'string';
-      this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
+      
     }
   }
   /** Internal event methods **/
@@ -596,9 +616,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   disableEnableRadio(){
     if(this.isViewContentEditable){
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].disable();
+      this.healthInsuranceForm.controls["groupPlanType"].disable();
     }
     else{
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
+      this.healthInsuranceForm.controls["groupPlanType"].enable();
     }
   }
 }
