@@ -523,3 +523,14 @@ table,
   background: $light-bgcolor;
   padding: 0px;
 }
+
+.case-360-tab{
+  > .k-tabstrip-items-wrapper{
+    .k-tabstrip-items {
+      .k-link{
+        padding: 8px 24px;
+      }
+    }
+
+  }
+}
