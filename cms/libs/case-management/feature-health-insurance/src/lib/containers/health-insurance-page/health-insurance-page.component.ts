@@ -90,6 +90,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       careassistPayingPremiumFlag:[''],
       aptcFlag:[''],
       aptcMonthlyAmt:[''],
+      groupPlanType:[''],
       
       
 

@@ -68,6 +68,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   ddlMedicalHealthPalnPremiumFrequecy$ =
     this.healthFacade.ddlMedicalHealthPalnPremiumFrequecy$;
   ddlInsuranceType!: string;
+  InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   isEditViewPopup!: boolean;
   isEdit!: boolean;
   isDeleteEnabled!: boolean;
@@ -272,6 +273,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       'insuranceCarrierName',
       'insurancePlanName',
     ];
+    // const CobraPlanRequiredFields: Array<string> = [
+    //   'insuranceStartDate',
+    //   'insuranceEndDate',
+    //   'insuranceIdNumber',
+    //   'insuranceCarrierName',
+    //   'insurancePlanName',
+    // ];
     this.resetValidators();
     this.healthInsuranceForm.updateValueAndValidity();
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
@@ -335,10 +343,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     {
       this.healthInsurancePolicy = new healthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
-      this.healthInsurancePolicy.insuranceCarrierId =
-        this.healthInsuranceForm.controls['insuranceCarrierName'].value;
-      this.healthInsurancePolicy.clientCaseEligibilityId =
-        this.clientCaseEligibilityId;
+      this.healthInsurancePolicy.clientCaseEligibilityId =this.clientCaseEligibilityId;
+      if(this.ddlInsuranceType===this.InsurancePlanTypes.Veterans) return;
+
+      this.healthInsurancePolicy.insuranceCarrierId =this.healthInsuranceForm.controls['insuranceCarrierName'].value;
+      
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;
       this.healthInsurancePolicy.clientMaximumId =

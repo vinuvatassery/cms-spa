@@ -82,50 +82,8 @@
         *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
         <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit" [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
       </div>
-      <div
-        class="flex-col mt-1"
-        *ngIf="
-          ddlInsuranceType !== 'OREGON_HEALTH_PLAN'
-          && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'
-          && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'
-
-          && ddlInsuranceType !== 'COBRA'"
-          >
-        <h5>Group Plan Type</h5>
-        <div class="component-list-h">
-          <span class="app-radiobtnwidtext-wrapper">
-            <input
-              [disabled]="isViewContentEditable"
-              type="radio"
-              kendoRadioButton
-              name="group"
-              aria-labelledby="groupPlanTypeEmployerPolicy"
-              id="employerPolicy"
-              tabindex="1"
-            />
-            <kendo-label
-              class="k-radio-label"
-              text="Employer Policy"
-              for="employerPolicy"
-            ></kendo-label>
-          </span>
-          <span class="app-radiobtnwidtext-wrapper">
-            <input
-              type="radio"
-              [disabled]="isViewContentEditable"
-              kendoRadioButton
-              name="group"
-              aria-labelledby="groupPlanTypeRetirementPolicy"
-              id="retirementPolicy"
-              tabindex="2"
-            />
-            <kendo-label
-              class="k-radio-label"
-              text="Retirement Policy"
-              for="retirementPolicy"
-            ></kendo-label>
-          </span>
-        </div>
+      <div class="flex-col mt-1" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
+          <case-management-medical-premium-detail-group-plan-type [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-group-plan-type>
       </div>
       <div
       class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && healthInsuranceForm.controls['insuranceCarrierName'].value">
@@ -255,7 +213,7 @@
       </div>
       <div
         class="flex-col mt-3"
-        *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan" >
         <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [healthInsurancePolicy]="healthInsurancePolicyCopy"></case-management-medical-premium-detail-aptc>
         
       </div>
