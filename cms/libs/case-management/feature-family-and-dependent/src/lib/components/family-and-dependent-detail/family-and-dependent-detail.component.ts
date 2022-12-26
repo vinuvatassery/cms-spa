@@ -71,7 +71,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         if(text)
         {
         this.searchTextEvent.emit(text)
-        this.showDependentSearchInputLoader = false;
+       
         }
       }
       ); 
@@ -187,7 +187,10 @@ export class FamilyAndDependentDetailComponent implements OnInit {
        if(existDependentData?.dependentClientId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
-        this.fullClientName = fullName + ' DOB '+ this.intl.formatDate(existDependentData?.dob)+((existDependentData?.ssn=='') ?  "" :' SSN '+existDependentData?.ssn )
+
+        const dateOB = new Date(existDependentData.dob)
+        
+        this.fullClientName = fullName + ' DOB '+ ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )+((existDependentData?.ssn=='' || existDependentData?.ssn==null) ?  "" :' SSN '+existDependentData?.ssn )
 
         this.clientDependentId = existDependentData?.clientDependentId;
         this.dependentTypeCode = DependentTypeCode.CAClient;
@@ -303,5 +306,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       }
     } 
    
-
+    searchCloseEvent()
+    {
+      this.showDependentSearchInputLoader = false;
+    }
 }

@@ -39,6 +39,8 @@ export class LovFacade {
   private lovIncomeTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovIncomeFrequencySubject = new BehaviorSubject<Lov[]>([]);
   private lovProofOfIncomeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovInsuranceTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovMetalLevelSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -60,6 +62,9 @@ export class LovFacade {
   incomeTypelov$ = this.lovIncomeTypeSubject.asObservable();
   incomeFrequencylov$ = this.lovIncomeFrequencySubject.asObservable();
   proofOfIncomelov$ = this.lovProofOfIncomeSubject.asObservable();
+  insuranceTypelov$ = this.lovInsuranceTypeSubject.asObservable();
+  metalLevellov$ = this.lovMetalLevelSubject.asObservable();
+  
 
         /** Public methods **/
 
@@ -255,5 +260,26 @@ getIncomeFrequencyLovs():void{
 getProofOfIncomeTypesLov(parentCode : string) {
   return this.lovDataService.getLovsbyParent(LovType.ProofOfIncomeType, parentCode)
 }
+getInsuranceTypeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
+    next: (loveInsuranceTypeResponse) => {
+      this.lovInsuranceTypeSubject.next(loveInsuranceTypeResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
 }
+getMetalLevelLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.MetalLevel).subscribe({
+    next: (lovResponse) => {
+      this.lovMetalLevelSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+}
+
 
