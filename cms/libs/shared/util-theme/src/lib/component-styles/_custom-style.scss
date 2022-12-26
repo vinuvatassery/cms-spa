@@ -3,7 +3,7 @@
   display: flex;
   width: 100%;
   min-width: 100%;
-  gap: $size-xxx;
+  gap: $size-xlg1;
   @media (max-width: $breakpoint-xlg) {
     flex-direction: column;
   }
@@ -67,6 +67,13 @@
     }
   }
 
+}
+
+.maintitle_withicon{
+  span{
+    font-size: inherit;
+    vertical-align: top;
+  }
 }
 /* Add client details wrapper*/
 .add-client-wrapper,
