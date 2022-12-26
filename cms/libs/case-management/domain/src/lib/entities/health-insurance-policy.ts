@@ -16,9 +16,9 @@ export class healthInsurancePolicy {
         startDate :Date= new Date;;
         endDate :Date= new Date;
         careassistPayingPremiumFlag :string|null=null;
-        premiumPaidThruDate?:Date;
+        premiumPaidThruDate?:Date|null;
         premiumFrequencyCode :string|null=null;
-        nextPremiumDueDate?:Date;
+        nextPremiumDueDate?:Date|null;
         paymentIdNbrSameAsInsuranceIdNbrFlag :string|null=null;
         paymentIdNbr :string|null=null;
         aptcFlag :string|null=null;
@@ -39,7 +39,7 @@ export class healthInsurancePolicy {
         oonStartDate? :Date;
         oonEndDate? :Date;
         oonPharmacy :string|null=null;
-        oonDrugs :string|null=null;       
+        oonDrugs :string|null=null;
         concurrencyStamp :string|null=null;
         activeFlag :string|null=null;
         creationTime? :Date;

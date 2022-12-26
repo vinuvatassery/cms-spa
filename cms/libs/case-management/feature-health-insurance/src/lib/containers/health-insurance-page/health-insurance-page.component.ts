@@ -82,17 +82,23 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       clientInsurancePolicyId: [''],
       insuranceType: [''],
       insuranceStartDate:[''],
-      insuranceEndDate:[''], 
+      insuranceEndDate:[''],
       insuranceIdNumber:[''],
       insuranceCarrierName:[''],
       metalLevel:[{}],
       insurancePlanName:[''],
-      careassistPayingPremiumFlag:[''],
       aptcFlag:[''],
       aptcMonthlyAmt:[''],
+      careassistPayingPremiumFlag:[''],
+      premiumPaidThruDate:[''],
+      nextPremiumDueDate:[''],
+      premiumAmt:[''],
+      premiumFrequencyCode:[''],
+      paymentIdNbr:[''],
+      paymentIdNbrSameAsInsuranceIdNbrFlag:[''],
       groupPlanType:[''],
-      
-      
+
+
 
     });
 

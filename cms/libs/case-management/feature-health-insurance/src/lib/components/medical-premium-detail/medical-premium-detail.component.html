@@ -82,140 +82,232 @@
         *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
         <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit" [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
       </div>
-      <div class="flex-col mt-1" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
-          <case-management-medical-premium-detail-group-plan-type [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-group-plan-type>
-      </div>
-      <div
-      class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && healthInsuranceForm.controls['insuranceCarrierName'].value">
-      <h5 class="text-capital">Insurance Carrier Contact Info</h5>
+    </div>
+    <div
+    class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && healthInsuranceForm.controls['insuranceCarrierName'].value">
+    <h5 class="text-capital">Insurance Carrier Contact Info</h5>
+    <div class="block-section">
+      <p class="bold-text">Address</p>
+      <p>{{ carrierContactInfo.address1}}</p>
+      <p>{{ carrierContactInfo.address2}}</p>
+    </div>
+    <div class="block-section mt-2">
+      <p class="bold-text">Tax ID Number (TIN)</p>
+      <p>{{ carrierContactInfo.tin | ssn}}</p>
+    </div>
+    <div class="block-section mt-2">
+      <p class="bold-text">Mail Code</p>
+      <p>{{ carrierContactInfo.mailCode }}</p>
+    </div>
+    <div class="block-section mt-2">
+      <p class="bold-text">Contact Name and Phone</p>
+      <p>{{ carrierContactInfo.contactName }}</p>
+      <p>{{ carrierContactInfo.phoneNbr | phone}}</p>
+    </div>
+  </div>
+    <div
+      class="flex-col mt-3"
+      *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
+    >
       <div class="block-section">
-        <p class="bold-text">Address</p>
-        <p>{{ carrierContactInfo.address1}}</p>
-        <p>{{ carrierContactInfo.address2}}</p>
-      </div>
-      <div class="block-section mt-2">
-        <p class="bold-text">Tax ID Number (TIN)</p>
-        <p>{{ carrierContactInfo.tin | ssn}}</p>
-      </div>
-      <div class="block-section mt-2">
-        <p class="bold-text">Mail Code</p>
-        <p>{{ carrierContactInfo.mailCode }}</p>
-      </div>
-      <div class="block-section mt-2">
-        <p class="bold-text">Contact Name and Phone</p>
-        <p>{{ carrierContactInfo.contactName }}</p>
-        <p>{{ carrierContactInfo.phoneNbr | phone}}</p>
-      </div>
-      </div>
-      <div
-        class="flex-col mt-3"
-        *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'
-        && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN'
-        && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'"
-
-      >
-        <div class="block-section">
-          <div class="flex-row">
-            <div class="flex-col">
-              <h5>Do they want CareAssist to pay for health insurance premiums?</h5>
-              <div class="component-list-h">
-                <span class="app-radiobtnwidtext-wrapper">
-                   <input  type="radio"  kendoRadioButton 
-                    name="careassistPayingPremiumFlag"  aria-labelledby="buyingPremiumYes" 
-                    formControlName="careassistPayingPremiumFlag"  id="buyingPremiumYes"  tabindex="3"
-                     value="Y"  [checked]="healthInsurancePolicyCopy?.careassistPayingPremiumFlag=='Y'"
-                     />
-                   <kendo-label  class="k-radio-label"  for="buyingPremiumYes"
-                     text="Yes" ></kendo-label>
-                   </span>
-                 <span class="app-radiobtnwidtext-wrapper">
-                   <input  type="radio"  kendoRadioButton 
-                    name="careassistPayingPremiumFlag"  aria-labelledby="buyingPremiumNo" 
-                    formControlName="careassistPayingPremiumFlag"  id="buyingPremiumNo"  tabindex="4"
-                     value="N"  [checked]="healthInsurancePolicyCopy?.careassistPayingPremiumFlag=='N'"
-                     />
-                   <kendo-label  class="k-radio-label"  for="buyingPremiumNo"
-                     text="No" ></kendo-label>
-                   </span>
-                
-                
-              </div>
-            </div>
-          </div>
-          <div class="flex-row mt-3" *ngIf = "ddlInsuranceType !== 'COBRA'">
-            <div class="flex-col flex-col-6">
-              <kendo-floatinglabel text="Date Currently Paid through">
-                <kendo-datepicker
-                [fillMode]="formUiStyle.dateInputFillMode"
-                  format="MM-dd-yyyy"
-                  [(ngModel)]="currentDate"
-                  [ngModelOptions]="{standalone: true}"
-                  [disabled]="isViewContentEditable"
-                  formatPlaceholder="formatPattern"
-                >
-                </kendo-datepicker>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-6">
-              <kendo-floatinglabel text="Next Payment Premium Due Date">
-                <kendo-datepicker
-                [fillMode]="formUiStyle.dateInputFillMode"
-                  format="MM-dd-yyyy"
-                  [(ngModel)]="currentDate"
-                  [ngModelOptions]="{standalone: true}"
-                  [disabled]="isViewContentEditable"
-                  formatPlaceholder="formatPattern"
-                >
-                </kendo-datepicker>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-6">
-              <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
-
-                <kendo-textbox  [disabled]="isViewContentEditable" aria-label="premium amount"  [fillMode]="formUiStyle.inputFillMode">
-                  <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
-                </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-6">
-              <kendo-floatinglabel text="Premium Frequency">
-                <kendo-dropdownlist
-                [fillMode]="formUiStyle.dropDownFillMode"
-                  [disabled]="isViewContentEditable"
-                  [data]="ddlMedicalHealthPalnPremiumFrequecy$ | async"
-                >
-                </kendo-dropdownlist>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col">
-              <kendo-floatinglabel text="Payment ID Number">
-                <kendo-textbox  [disabled]="isViewContentEditable" aria-label="payment id number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col mt-2">
-              <span class="app-checkboxwidtext-wrapper">
+        <div class="flex-row">
+          <div class="flex-col">
+            <h5>Do they want CareAssist to pay for health insurance premiums?</h5>
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper">
                 <input
+                  type="radio"
                   [disabled]="isViewContentEditable"
-                  type="checkbox"
-                  kendoCheckBox
-                  aria-labelledby="sameAsInsuranceId"
-                  id="sameAsInsuranceId"
+                  kendoRadioButton
+                  name="careassistPayingPremiumFlag"
+                  aria-labelledby="buyingPremiumYes"
+                  formControlName = "careassistPayingPremiumFlag"
+                  id="buyingPremiumYes"
+                  tabindex="3"
+                  value="Y"
                 />
-                <label class="k-checkbox-label" for="sameAsInsuranceId"
-                  >Same as Insurance ID</label
-                >
+               <kendo-label
+                  class="k-radio-label"
+                  for="buyingPremiumYes"
+                  text="Yes"
+                ></kendo-label>
               </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  [disabled]="isViewContentEditable"
+                  kendoRadioButton
+                  name="careassistPayingPremiumFlag"
+                  aria-labelledby="buyingPremiumNo"
+                  formControlName = "careassistPayingPremiumFlag"
+                  id="buyingPremiumNo"
+                  tabindex="4"
+                  value="N"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="buyingPremiumNo"
+                  text="No"
+                ></kendo-label>
+              </span>
+              <kendo-formerror *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid">Paying premium flag is required.</kendo-formerror>
             </div>
           </div>
         </div>
+        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
+          <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Date Currently Paid through">
+              <kendo-datepicker
+              [fillMode]="formUiStyle.dateInputFillMode"
+                format="MM-dd-yyyy"
+                formControlName = "premiumPaidThruDate"
+                [disabled]="isViewContentEditable"
+                formatPlaceholder="formatPattern"
+              >
+              </kendo-datepicker>
+            </kendo-floatinglabel>
+          </div>
+          <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Next Payment Premium Due Date">
+              <kendo-datepicker
+              [fillMode]="formUiStyle.dateInputFillMode"
+                format="MM-dd-yyyy"
+                formControlName = "nextPremiumDueDate"
+                [disabled]="isViewContentEditable"
+                formatPlaceholder="formatPattern"
+              >
+              </kendo-datepicker>
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">Next payment premium due date is required.</kendo-formerror>
+
+          </div>
+          <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
+              <span class="k-input-prefix custom-currencysymbol"> $ </span>
+              <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right" placeholder="00.00"
+                formControlName="premiumAmt" #premiumAmt [fillMode]="formUiStyle.inputFillMode" name="premiumAmt">
+
+              </kendo-numerictextbox>
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid">Premium amount is required.</kendo-formerror>
+
+          </div>
+          <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Premium Frequency">
+              <kendo-dropdownlist
+              [fillMode]="formUiStyle.dropDownFillMode"
+                [disabled]="isViewContentEditable"
+                [data]="premiumFrequencyList$ | async"
+                formControlName = "premiumFrequencyCode"
+                textField ="lovDesc"
+                valueField ="lovCode"
+                [valuePrimitive]="true"
+              >
+              </kendo-dropdownlist>
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid">Premium frequency is required.</kendo-formerror>
+          </div>
+          <div class="flex-col">
+            <kendo-floatinglabel text="Payment ID Number">
+              <kendo-textbox [maxlength]="20" formControlName = "paymentIdNbr" [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" aria-label="payment id number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is required.</kendo-formerror>
+
+          </div>
+          <div class="flex-col mt-2">
+            <span class="app-checkboxwidtext-wrapper">
+              <input
+                [disabled]="isViewContentEditable"
+                type="checkbox"
+                formControlName = "paymentIdNbrSameAsInsuranceIdNbrFlag"
+                (change)="onSameAsInsuranceIdValueChange($event)"
+                kendoCheckBox
+                aria-labelledby="sameAsInsuranceId"
+                id="sameAsInsuranceId"
+              />
+              <label class="k-checkbox-label" for="sameAsInsuranceId"
+                >Same as Insurance ID</label
+              >
+            </span>
+          </div>
+        </div>
       </div>
-      <div
-        class="flex-col mt-3"
-        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan" >
-        <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [healthInsurancePolicy]="healthInsurancePolicyCopy"></case-management-medical-premium-detail-aptc>
-        
+    </div>
+    <div
+      class="flex-col mt-3"
+      *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
+      <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
+      <!-- <h5>Advanced Premium Tax Credit?</h5>
+      <div class="component-list-h">
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            [disabled]="isViewContentEditable"
+            type="radio"
+            kendoRadioButton
+            formControlName="aptcFlag"
+            value="Y"
+            name="aptcFlag"
+            aria-labelledby="advancedPremiumTaxCreditYes"
+            id="aptcFlagY"
+          />
+          <kendo-label
+            class="k-radio-label"
+            text="Yes"
+            for="aptcFlagY"
+          ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            [disabled]="isViewContentEditable"
+            type="radio"
+            kendoRadioButton
+            formControlName="aptcFlag"
+            value="N"
+            name="aptcFlag"
+            aria-labelledby="advancedPremiumTaxCreditNo"
+            id="aptcFlagN"
+          />
+          <kendo-label
+            class="k-radio-label"
+            text="No"
+            for="aptcFlagN"
+          ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            [disabled]="isViewContentEditable"
+            type="radio"
+            kendoRadioButton
+            formControlName="aptcFlag"
+            value="U"
+            name="aptcFlag"
+            aria-labelledby="advancedPremiumTaxCreditUnknown"
+            id="aptcFlagU"
+          />
+          <kendo-label
+            class="k-radio-label"
+            text="Unknown"
+            for="aptcFlagU"
+          ></kendo-label>
+        </span>
+        <span class="app-radiobtnwidtext-wrapper">
+          <input
+            type="radio"
+            [disabled]="isViewContentEditable"
+            kendoRadioButton
+            formControlName="aptcFlag"
+            value="E"
+            name="aptcFlag"
+            aria-labelledby="advancedPremiumTaxCreditEligibleButNotTaking"
+            id="aptcFlagE"
+          />
+          <kendo-label
+            class="k-radio-label"
+            text="Eligible, but not taking"
+            for="aptcFlagE"
+          ></kendo-label>
+        </span>
       </div>
       <div
         class="flex-col"
@@ -421,7 +513,7 @@
 
 <kendo-dialog *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Insurance Provider">
- 
+
 <section class="k-dialog-body mb-2">
   <p>
     This feature is part of future scope of work for the ORCares project.
@@ -440,7 +532,7 @@
     </div>
   </div>
 </kendo-dialog-actions>
- 
+
 </kendo-dialog>
 
 
@@ -449,7 +541,7 @@
 
 <kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Plan">
- 
+
 <section class="k-dialog-body mb-2">
   <p>
     This feature is part of future scope of work for the ORCares project.
@@ -468,5 +560,5 @@
     </div>
   </div>
 </kendo-dialog-actions>
- 
+
 </kendo-dialog>

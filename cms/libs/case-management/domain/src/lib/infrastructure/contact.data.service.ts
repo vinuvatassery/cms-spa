@@ -439,7 +439,7 @@ export class ContactDataService {
 
   /** Private methods **/
   private getUrl(clientId: number, clientCaseEligibilityId: string) {
- 
+
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 
@@ -468,7 +468,7 @@ export class ContactDataService {
     }
   }
 
-  editIncome(clientIncome: any) { 
+  editIncome(clientIncome: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
 
   }
