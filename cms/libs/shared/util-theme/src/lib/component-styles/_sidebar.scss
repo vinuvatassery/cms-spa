@@ -240,21 +240,24 @@ cms-sidenav {
               .sidebar-sub-menu {
                 display: block !important;
                 position: absolute;
-                left: 56px;
+                left: $sidebar-width;
                 padding: $size-xl;
                 white-space: nowrap;
                 transition: ease-in all 0.3s;
                 width: auto;
-                background: $white;
-                border-radius:$border-radius-md;
+                background: $app-primary;
+                border-radius:$border-radius-sm;
                 box-shadow: $button-box-shadow;
                 .sidebar-sub-menu_items {
-                  padding:  $size-xlg $size-xlg1 !important;
-                  background: $white;
+                  padding: $size-xx $size-xlg1 !important;
+                  background: transparent;
                   border-radius: $border-radius-sm;
                   white-space: nowrap;
                   transition: ease-in all 0.3s;
-                  margin-bottom: $size-s;color: $black-3;
+                  margin-bottom: $size-s; 
+                  &:hover{
+                    background: $app-primary-darken;
+                  }
                 }
               }
               .sidebar-menu_items {
@@ -278,7 +281,7 @@ cms-sidenav {
       }
       .sidebar-hamburger_icon-left {
         // display: none !important;
-        transform: rotate(-180deg);
+        transform: rotate(180deg);
      
       }
       .sidebar-last-visited-cases-container {
