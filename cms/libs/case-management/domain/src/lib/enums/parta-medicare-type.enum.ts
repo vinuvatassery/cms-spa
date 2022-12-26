@@ -3,5 +3,5 @@ export enum PartAMedicareType {
   ABDP ='A, B & D/PDP',
   ABM ='A, B & MAPD',
   A ='A',
-  ADP = 'A & D/PDP '
+  ADP = 'A & D/PDP'
 }

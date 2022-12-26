@@ -165,7 +165,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.healthFacade.loadDdlMedicalHealthPalnPremiumFrequecy();
   }
 
-  private viewSelection() {debugger;
+  private viewSelection() {
     this.isToggleNewPerson = false;
     switch (this.dialogTitle) {
       case 'View':
@@ -200,7 +200,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   }
 
   bindValues(healthInsurancePolicy: healthInsurancePolicy) {
-    debugger;
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(
       healthInsurancePolicy.clientInsurancePolicyId
     );
@@ -208,7 +207,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       healthInsurancePolicy.healthInsuranceTypeCode
     );
     this.onHealthInsuranceTypeChanged();
-    if(this.ddlInsuranceType === "Medicare")
+    if(this.ddlInsuranceType === HealthInsurancePlan.Medicare)
     {
       this.healthInsuranceForm.controls['medicareCoverageTypeCode'].setValue(healthInsurancePolicy.medicareCoverageTypeCode);
       this.onMedicareCoverageTypeChanged();
@@ -396,7 +395,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
   private populateInsurancePolicy() {
     {
-      debugger;
       this.healthInsurancePolicy = new healthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.insuranceCarrierId =
@@ -522,11 +520,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   }
   /** Internal event methods **/
   onHealthInsuranceTypeChanged() {
-    debugger;
     this.ddlInsuranceType =
       this.healthInsuranceForm.controls['insuranceType'].value;
     this.isOpenDdl = true;
-    if (this.ddlInsuranceType === 'Medicare')
+    if (this.ddlInsuranceType === HealthInsurancePlan.Medicare)
     {
       this.medicareInsuranceInfoCheck = false;
     }
@@ -601,7 +598,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   }
   onMedicareCoverageTypeChanged()
   {
-    debugger;
     if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("P") || this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("M"))
     {
       this.medicareInsuranceInfoCheck = true;
