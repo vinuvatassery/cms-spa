@@ -1,29 +1,135 @@
+<form [formGroup]="setPrioirityForm">
 <section class="k-dialog-body">
+
   <p class="text-muted mb-2">Select the priority for each pharmacy below.</p>
+
   <div class="flex-row">
+
     <div class="flex-col flex-col-6">
+
       <h5 class="mb-0">Rite Aide #763</h5>
+
       <p>Beaverton, OR</p>
+
     </div>
+
     <div class="flex-col flex-col-6">
+
       <kendo-floatinglabel text="Priority">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlPriorities$ | async">
+
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"   (valueChange)="valueChange($event,1)" formControlName="priority1" textField="text" valueField="value" [data]="loadPrioritites">
         </kendo-dropdownlist>
+
       </kendo-floatinglabel>
+
     </div>
+
   </div>
+
   <div class="flex-row">
+
     <div class="flex-col flex-col-6">
+
       <h5 class="mb-0">Rite Aide #619</h5>
+
       <p>Beaverton, OR</p>
+
     </div>
+
     <div class="flex-col flex-col-6">
+
       <kendo-floatinglabel text="Priority">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlPriorities$ | async">
+
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"   (valueChange)="valueChange($event,2)" formControlName="priority2" textField="text" valueField="value" [data]="loadPrioritites">
         </kendo-dropdownlist>
+
       </kendo-floatinglabel>
+
     </div>
   </div>
+
+</section>
+</form>
+
+
+<kendo-dialog-actions>
+
+  <div class="justify-content-between">
+
+    <div class="justify-content-end">
+
+      <button
+
+        kendoButton
+
+        [primary]="true"
+
+        look="outline"
+
+        (click)="onCloseChangePriorityClicked()"
+
+        aria-label="cancel updating priority"
+
+      >
+
+        Cancel
+
+      </button>
+
+      <button kendoButton [primary]="true"  (click)="onSavePriority()" aria-label="update priority">
+
+        Update
+
+      </button>
+
+    </div>
+
+  </div>
+
+</kendo-dialog-actions>
+
+
+<!-- <section class="k-dialog-body">
+
+  <p class="text-muted mb-2">Select the priority for each pharmacy below.</p>
+  
+    <div class="flex-row">
+      <div class="flex-col flex-col-6">
+        <h5 class="mb-0">Rite Aide #763</h5>
+        <p>Beaverton, OR</p>
+      </div>
+      <div class="flex-col flex-col-6">
+        <kendo-floatinglabel text="Priority">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"   (valueChange)="valueChange($event,1)" formControlName="prioirity1" textField="text" valueField="value" [data]="ddlPriorities$ | async">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col flex-col-6">
+        <h5 class="mb-0">Rite Aide #619</h5>
+        <p>Beaverton, OR</p>
+      </div>
+      <div class="flex-col flex-col-6">
+        <kendo-floatinglabel text="Priority">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"   (valueChange)="valueChange($event,2)" formControlName="prioirity2" [textField]="'text'" [valueField]="'value'" [data]="ddlPriorities$ | async">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-row">
+        <div class="flex-col flex-col-6">
+          <h5 class="mb-0">Rite Aide #756</h5>
+          <p>Beaverton, OR</p>
+        </div>
+        <div class="flex-col flex-col-6">
+          <kendo-floatinglabel text="Priority">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"   (valueChange)="valueChange($event,3)" formControlName="prioirity3" [textField]="'text'" [valueField]="'value'" [data]="ddlPriorities$ | async">
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+        </div>
+    </div>
+ 
+  
 </section>
 
 <kendo-dialog-actions>
@@ -38,9 +144,9 @@
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="update priority">
+      <button kendoButton [primary]="true" (click)="onSavePriority()" aria-label="update priority" [disabled]="savePrirorityObjectList.length==0">
         Update
       </button>
     </div>
   </div>
-</kendo-dialog-actions>
+</kendo-dialog-actions> -->

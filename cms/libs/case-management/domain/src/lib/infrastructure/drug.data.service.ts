@@ -3,15 +3,17 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { PharmacyPriority } from '../entities/pharmacy-priority';
 
 @Injectable({ providedIn: 'root' })
 export class DrugDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,private readonly configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
   loadDdlPriorities() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of([{text:'Primary',value:'P'}, {text:'Secondary',value:'S'},{text:'Tertiary',value:'T'}]);
   }
 
   loadPharmacies() {
@@ -201,5 +203,15 @@ export class DrugDataService {
         EntryDate: '20-5-2022',
       },
     ]);
+  }
+  savePharmacyPriorityService(pharmacyPriority: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/pharmacy-priority/save-pharmacy`, pharmacyPriority
+    );
+  }
+  loadPharmacyPriority(clientId:any){
+    return this.http.get<PharmacyPriority>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacy-priority?clientId=${clientId}`);
   }
 }

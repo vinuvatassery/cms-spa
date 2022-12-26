@@ -11,6 +11,22 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {      
+    debugger;  
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
   /** Private properties **/
   private pharmaciesSubject = new BehaviorSubject<any>([]);
   private clientPharmaciesSubject = new BehaviorSubject<any>([]);
@@ -112,4 +128,12 @@ export class DrugPharmacyFacade {
     //TODO: save api call   
     return of(true);
   }
+  updatePharmacyPriority(pharmacyPriority: any): Observable<any> {
+    return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
+  }
+  loadPharmacyPriority(clientId:any) {
+    debugger;
+    return this.drugDataService.loadPharmacyPriority(clientId);
+  }
+
 }
