@@ -7,7 +7,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** Facades **/
 import { HealthInsuranceFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -20,12 +20,8 @@ import { LovFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalPremiumDetailComponent implements OnInit {
-  currentDate = new Date();
   public isaddNewInsuranceProviderOpen = false;
   public isaddNewInsurancePlanOpen = false;
-  advancedPremium: string = 'No';
-  clientPolicyHolder: string = 'No';
-  dateOfBirth: any;
   RelationshipLovs$ = this.lovFacade.lovRelationShip$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
@@ -43,13 +39,53 @@ export class MedicalPremiumDetailComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.addPersonForm = this.fb.group({
+      currentDate: new FormControl(new Date()),
+      isClientPolicyHolder: new FormControl('No'),
+      advancedPremium: new FormControl('No'),
+      buyingPremium: new FormControl('No'),
+      othersCovered: new FormControl(''),
+      ddlInsuranceType: new FormControl(''),
+      policyHolderFirstName: new FormControl('', Validators.maxLength(40)),
+      policyHolderLastName: new FormControl('', Validators.maxLength(40)),
       persons: this.fb.array([]),
+      copyOfInsuranceCard: new FormControl(''),
+      proofOfPremium: new FormControl(''),
+      copyOfSummary: new FormControl(''),
     });
-   }
 
-   get persons(): FormArray {
+    this.addPersonForm.valueChanges.subscribe(changes => {
+      if (changes.isClientPolicyHolder == 'No' || changes.buyingPremium == 'Yes') {
+        this.addPersonForm.get('policyHolderFirstName')?.setValidators(Validators.required);
+        this.addPersonForm.get('policyHolderLastName')?.setValidators(Validators.required);
+      }
+      else if (changes.isClientPolicyHolder == 'Yes' || changes.buyingPremium == 'No') {
+        this.addPersonForm.get('policyHolderFirstName')?.clearValidators();
+        this.addPersonForm.get('policyHolderLastName')?.clearValidators();
+      }
+      if (changes.buyingPremium == 'Yes') {
+        this.addPersonForm.get('othersCovered')?.setValidators(Validators.required);
+        this.addPersonForm.get('isClientPolicyHolder')?.setValidators(Validators.required);
+      }
+      else if (changes.buyingPremium == 'No') {
+        this.addPersonForm.get('othersCovered')?.clearValidators();
+        this.addPersonForm.get('isClientPolicyHolder')?.setValidators(Validators.required);
+      }
+      if (changes.othersCovered == 'Yes') {
+        this.addPersonForm.get('persons')?.get('relation')?.setValidators(Validators.required);
+        this.addPersonForm.get('persons')?.get('firstName')?.setValidators(Validators.required);
+        this.addPersonForm.get('persons')?.get('lastName')?.setValidators(Validators.required);
+      }
+      else if (changes.othersCovered == 'No') {
+        this.addPersonForm.get('persons')?.get('relation')?.clearValidators();
+        this.addPersonForm.get('persons')?.get('firstName')?.clearValidators();
+        this.addPersonForm.get('persons')?.get('lastName')?.clearValidators();
+      }
+    })
+  }
+
+  get persons(): FormArray {
     return this.addPersonForm.get("persons") as FormArray;
-   }
+  }
 
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
@@ -58,7 +94,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
     this.healthFacade.ddlMedicalHealthPlanMetalLevel$;
   ddlMedicalHealthPalnPremiumFrequecy$ =
     this.healthFacade.ddlMedicalHealthPalnPremiumFrequecy$;
-  ddlInsuranceType!: string;
+
   isEditViewPopup!: boolean;
   isDeleteEnabled!: boolean;
   isViewContentEditable!: boolean;
@@ -119,7 +155,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
   }
 
   private conditionsInsideView() {
-    this.ddlInsuranceType = this.insuranceType;
+    this.addPersonForm.controls['ddlInsuranceType'].setValue(this.insuranceType);
     this.isOpenDdl = true;
   }
 
@@ -141,10 +177,10 @@ export class MedicalPremiumDetailComponent implements OnInit {
   onToggleNewPersonClicked() {
     // this.isToggleNewPerson = !this.isToggleNewPerson;
     let personForm = this.fb.group({
-      relation: '',
-      firstName: '',
-      lastName: '',
-      dob: '',
+      relation: new FormControl(''),
+      firstName: new FormControl('', Validators.maxLength(40)),
+      lastName: new FormControl('', Validators.maxLength(40)),
+      dob: new FormControl(''),
     });
     this.persons.push(personForm);
   }
