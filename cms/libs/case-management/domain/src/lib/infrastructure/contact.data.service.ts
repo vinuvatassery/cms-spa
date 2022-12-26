@@ -20,11 +20,13 @@ export class ContactDataService {
     private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any) {
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any) {
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-insurance-policy/`,{params:params});
+    params = params.append('skipCount',skipCount);
+    params = params.append('maxResultCount',pageSize);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
   }
 
   loadDdlMedicalHealthPlanMetalLevel() {
@@ -437,7 +439,7 @@ export class ContactDataService {
 
   /** Private methods **/
   private getUrl(clientId: number, clientCaseEligibilityId: string) {
- 
+
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 
@@ -466,7 +468,7 @@ export class ContactDataService {
     }
   }
 
-  editIncome(clientIncome: any) { 
+  editIncome(clientIncome: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
 
   }
@@ -480,6 +482,10 @@ export class ContactDataService {
 
   }
   updateInsuranceFlags(insuranceFlagsData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-insurance-policy/insurance-flags`, insuranceFlagsData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
+  }
+
+  deleteInsurancePolicy(insurancePolicyId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
   }
 }

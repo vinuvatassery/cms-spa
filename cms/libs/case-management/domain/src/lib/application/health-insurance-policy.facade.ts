@@ -1,6 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { NotificationSnackbarService,SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
@@ -14,7 +15,10 @@ export class HealthInsurancePolicyFacade {
   /** Public properties **/
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
+  //healthInsurancePolicySubject = new Subject<SnackBar>();
+  private healthInsurancePolicySubject = new Subject<healthInsurancePolicy>();
   healthFacadesnackbar$ = this.snackbarSubject.asObservable();
+  healthInsurancePolicy$ = this.healthInsurancePolicySubject.asObservable();
 
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -48,10 +52,24 @@ export class HealthInsurancePolicyFacade {
   saveHealthInsurancePolicy(healthInsurancePolicy:healthInsurancePolicy) {
       return this.healthInsurancePolicyService.saveHealthInsurancePolicy(healthInsurancePolicy);
   }
+  updateHealthInsurancePolicy(healthInsurancePolicy:healthInsurancePolicy) {
+    return this.healthInsurancePolicyService.updateHealthInsurancePolicy(healthInsurancePolicy);
+}
 
   getCarrierContactInfo(carrierId:any)
   {
     return this.healthInsurancePolicyService.getCarrierContactInfo(carrierId);
+  }
+
+  getHealthInsurancePolicyById(clientInsurancePolicyId:string): void {
+    this.healthInsurancePolicyService.getHealthInsurancePolicyById(clientInsurancePolicyId).subscribe({
+      next: (response) => {
+        this.healthInsurancePolicySubject.next(response);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
   }
 
 }

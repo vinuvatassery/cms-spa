@@ -1,13 +1,13 @@
 /** Angular **/
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 /** External libraries **/
 import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
 import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Enums **/
-import {  NavigationType } from '@cms/case-management/domain';
-import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
+import { NavigationType } from '@cms/case-management/domain';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -21,28 +21,30 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   healthInsuranceForm!: FormGroup;
   insuranceFlagForm!: FormGroup;
-  healthInsurancePolicy!:healthInsurancePolicy;
+  healthInsurancePolicy!: healthInsurancePolicy;
 
   sessionId: any = "";
   clientId: any;
   clientCaseEligibilityId: string = "";
   clientCaseId: any;
-  currentInsurance:string="";
-  groupPolicyEligible:string="";
-  showTable:boolean=false;
+  currentInsurance: string = "";
+  groupPolicyEligible: string = "";
+  showTable: boolean = false;
+  closeDeleteModal:boolean=false;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
+
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly healthFacade: HealthInsuranceFacade,
-    private formBuilder:FormBuilder,
+    private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private readonly ref: ChangeDetectorRef,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private readonly loggingService : LoggingService) { }
+    private readonly loggingService: LoggingService) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -56,24 +58,20 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
   }
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {
-    if(type == SnackBarNotificationType.ERROR)
-    {
-       const err= subtitle;
-       this.loggingService.logException(err)
+  ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.HideLoader();
   }
 
-  ShowLoader()
-  {
+  ShowLoader() {
     this.loaderService.show();
   }
 
-  HideLoader()
-  {
+  HideLoader() {
     this.loaderService.hide();
   }
 
@@ -81,12 +79,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   /** Private Methods **/
   private buildForm() {
     this.healthInsuranceForm = this.formBuilder.group({
+      clientInsurancePolicyId: [''],
       insuranceType: [''],
       insuranceStartDate:[''],
       insuranceEndDate:[''],
       insuranceIdNumber:[''],
       insuranceCarrierName:[''],
-      metalLevel:[''],
+      metalLevel:[{}],
       insurancePlanName:[''],
       aptcFlag:[''],
       aptcMonthlyAmt:[''],
@@ -100,16 +99,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
 
 
-
-
     });
 
   }
 
-  private buildInsuranceFlagForm(){
+  private buildInsuranceFlagForm() {
     this.insuranceFlagForm = this.formBuilder.group({
       currentInsuranceFlag: [null],
-      groupPolicyEligibleFlag:[null]
+      groupPolicyEligibleFlag: [null]
     });
   }
 
@@ -127,11 +124,11 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   }
 
   private save() {
-    if(this.insuranceFlagForm.valid){
+    if (this.insuranceFlagForm.valid) {
       this.ShowLoader();
-      let caseEligibilityFlagsData=this.insuranceFlagForm.value;
-      caseEligibilityFlagsData["clientCaseEligibilityId"]=this.clientCaseEligibilityId;
-      caseEligibilityFlagsData["clientId"]=this.clientId;
+      let caseEligibilityFlagsData = this.insuranceFlagForm.value;
+      caseEligibilityFlagsData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
+      caseEligibilityFlagsData["clientId"] = this.clientId;
       return this.healthFacade.saveInsuranceFlags(caseEligibilityFlagsData);
 
     }
@@ -148,40 +145,75 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
-          this.healthFacade.loadMedicalHealthPlans(this.clientId,this.clientCaseEligibilityId);
+
+          const gridDataRefinerValue = {
+            skipCount: this.healthFacade.skipCount,
+            pagesize: this.healthFacade.gridPageSizes[0]?.value
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.loadInsurancePolicyFlags();
         }
       });
 
   }
 
-  loadInsurancePolicyFlags(){
-    this.healthFacade.medicalHealthPolicy$.subscribe((policy:any)=>{
-      if(policy.currentInsuranceFlag && policy.groupPolicyEligibleFlag){
-        this.currentInsurance=policy.currentInsuranceFlag;
-        this.groupPolicyEligible=policy.groupPolicyEligibleFlag;
+  loadInsurancePolicyFlags() {
+    this.healthFacade.medicalHealthPolicy$.subscribe((policy: any) => {
+      if (policy.currentInsuranceFlag && policy.groupPolicyEligibleFlag) {
+        this.currentInsurance = policy.currentInsuranceFlag;
+        this.groupPolicyEligible = policy.groupPolicyEligibleFlag;
         this.patchInsurancePolicyFlags(policy);
-        if(this.currentInsurance=='Y'){
-          this.showTable=true;
+        if (this.currentInsurance == 'Y') {
+          this.showTable = true;
         }
         this.ref.detectChanges();
       }
     })
   }
 
-  patchInsurancePolicyFlags(insurancePolicy:any){
+  patchInsurancePolicyFlags(insurancePolicy: any) {
     this.insuranceFlagForm?.get('currentInsuranceFlag')?.setValue(insurancePolicy?.currentInsuranceFlag)
     this.insuranceFlagForm?.get('groupPolicyEligibleFlag')?.setValue(insurancePolicy?.groupPolicyEligibleFlag)
   }
 
-  onCurrentInsuranceChange(currentInsuranceValue:string){
-    if(currentInsuranceValue=='Y'){
-      this.showTable=true;
+  onCurrentInsuranceChange(currentInsuranceValue: string) {
+    if (currentInsuranceValue == 'Y') {
+      this.showTable = true;
     }
-    else{
-      this.showTable=false;
+    else {
+      this.showTable = false;
     }
   }
 
+  loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize
+    };
+    this.healthFacade.loadMedicalHealthPlans(
+      this.clientId,
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount
+    );
+  }
 
+  delteInsurancePolicy(insurancePolicyId:any) {
+    if (insurancePolicyId != undefined) {
+      this.ShowLoader();
+      this.closeDeleteModal=false;
+      this.healthFacade.deleteInsurancePolicy(insurancePolicyId).subscribe((response: any) => {
+        this.closeDeleteModal=true;
+        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
+        this.HideLoader();
+        this.ref.detectChanges();
+      },(error) => {
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+        })
+    }
+
+  }
 }
+
+
+

@@ -46,10 +46,11 @@
     </div>
     <div class="flex-col flex-col-6">
       <!-- [(ngModel)]="currentDate" -->
-      <kendo-floatinglabel text="Insurance End Date (Optional)">
+      <kendo-floatinglabel text="Insurance End Date">
         <kendo-datepicker
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
+          [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
           [disabled]="isViewContentEditable"
           formControlName ="insuranceEndDate"
           formatPlaceholder="formatPattern"        >
@@ -63,14 +64,14 @@
         [disabled]="isViewContentEditable"
         aria-label="lainsurance id number"
         formControlName ="insuranceIdNumber"
-        [maxlength]="14"
+        [maxlength]="20"
         [fillMode]="formUiStyle.inputFillMode">
       </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid">Insurance id number is required.</kendo-formerror>
     </div>
     <div class="flex-col mat-form-sm-b-space" >
-      <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"></case-management-medical-premium-detail-insurance-carrier-name>
+      <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)" (insuranceCarrierNameData)="insuranceCarrierNameData($event)"></case-management-medical-premium-detail-insurance-carrier-name>
     </div>
 
     <div class="flex-col mat-form-sm-b-space ">
@@ -79,7 +80,7 @@
     <div
       class="flex-col  "
       *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA'">
-      <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-metal-level>
+      <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit" [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
     </div>
     <div
       class="flex-col mt-1"
@@ -127,9 +128,7 @@
       </div>
     </div>
     <div
-    class="flex-col mt-3"
-    *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN'"
-  >
+    class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && healthInsuranceForm.controls['insuranceCarrierName'].value">
     <h5 class="text-capital">Insurance Carrier Contact Info</h5>
     <div class="block-section">
       <p class="bold-text">Address</p>
@@ -516,7 +515,7 @@
       >
         Delete
       </button>
-      <button
+      <!-- <button
         kendoButton
         [primary]="true"
         (click)="onRedirectModalClicked()"
@@ -525,7 +524,7 @@
         aria-label="edit medical premium"
       >
         Edit
-      </button>
+      </button> -->
     </div>
     <div class="justify-content-end">
       <button
@@ -545,7 +544,7 @@
         aria-label="add new medical premium"
         (click)="save()"
       >
-        Add
+        {{buttonText}}
       </button>
       <button
         kendoButton

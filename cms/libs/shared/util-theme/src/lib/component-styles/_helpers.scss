@@ -20,8 +20,14 @@ section {
   justify-content: space-between;
   display: flex;
 }
+.align-item-fstart{
+  align-items: flex-start;
+}
 .align-items-end{
   align-items: end;
+}
+.align-items-fstart{
+  align-items: flex-start !important;
 }
 .align-items-center {
   align-items: center;
