@@ -71,7 +71,6 @@ savePrirorityObjectList:any[] =[];
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.buildForm();
-    
     this.loadSessionData();
     this.loadPriorities();
     this.addSaveSubscription();
