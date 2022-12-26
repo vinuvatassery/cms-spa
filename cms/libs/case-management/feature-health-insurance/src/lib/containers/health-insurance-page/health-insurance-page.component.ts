@@ -87,7 +87,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       insuranceCarrierName:[''],
       metalLevel:[{}],
       insurancePlanName:[''],
-      wantHelpBuyingPremium:[''],
+      careassistPayingPremiumFlag:[''],
       aptcFlag:[''],
       aptcMonthlyAmt:[''],
       
@@ -159,6 +159,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
         this.patchInsurancePolicyFlags(policy);
         if (this.currentInsurance == 'Y') {
           this.showTable = true;
+        }
+        else{
+          this.showTable = false;
         }
         this.ref.detectChanges();
       }

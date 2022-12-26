@@ -3,7 +3,6 @@
       <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
           <input
-            [disabled]="isViewContentEditable"
             type="radio"
             kendoRadioButton
             formControlName="aptcFlag"
@@ -11,6 +10,7 @@
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditYes"
             id="aptcFlagY"
+            [checked]="aptcFlagValue=='Y'"
           />
           <kendo-label
             class="k-radio-label"
@@ -20,7 +20,6 @@
         </span>
         <span class="app-radiobtnwidtext-wrapper">
           <input
-            [disabled]="isViewContentEditable"
             type="radio"
             kendoRadioButton
             formControlName="aptcFlag"
@@ -28,6 +27,7 @@
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditNo"
             id="aptcFlagN"
+            [checked]="aptcFlagValue=='N'"
           />
           <kendo-label
             class="k-radio-label"
@@ -37,7 +37,6 @@
         </span>
         <span class="app-radiobtnwidtext-wrapper">
           <input
-            [disabled]="isViewContentEditable"
             type="radio"
             kendoRadioButton
             formControlName="aptcFlag"
@@ -45,6 +44,7 @@
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditUnknown"
             id="aptcFlagU"
+            [checked]="aptcFlagValue=='U'"
           />
           <kendo-label
             class="k-radio-label"
@@ -55,13 +55,13 @@
         <span class="app-radiobtnwidtext-wrapper">
           <input
             type="radio"
-            [disabled]="isViewContentEditable"
             kendoRadioButton
             formControlName="aptcFlag"
             value="E"
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditEligibleButNotTaking"
             id="aptcFlagE"
+            [checked]="aptcFlagValue=='E'"
           />
           <kendo-label
             class="k-radio-label"
@@ -69,17 +69,17 @@
             for="aptcFlagE"
           ></kendo-label>
         </span>
-        <kendo-formerror *ngIf="!healthInsuranceForm.controls['aptcFlag'].valid">Advanced Premium Tax Credit is required.</kendo-formerror>
+        <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcFlag'].valid && isViewContentEditable==false)">Advanced Premium Tax Credit is required.</kendo-formerror>
       </div>
       <div class="block-section mt-2" *ngIf="healthInsuranceForm.controls['aptcFlag'].value==='Y'">
         <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
-          <kendo-textbox [disabled]="isViewContentEditable" aria-label="monthly aptc amount"
+          <kendo-textbox  aria-label="monthly aptc amount"
             formControlName="aptcMonthlyAmt"
             [fillMode]="formUiStyle.inputFillMode"> 
             <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
             </kendo-textbox>
            
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!healthInsuranceForm.controls['aptcMonthlyAmt'].valid">Monthly APTC Amount is required.</kendo-formerror>
+        <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcMonthlyAmt'].valid && isViewContentEditable==false)">Monthly APTC Amount is required.</kendo-formerror>
       </div>
     </div>

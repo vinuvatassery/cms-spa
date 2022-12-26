@@ -98,7 +98,7 @@
      [caseOwners]="caseOwners"
      [ddlPrograms]="ddlPrograms"
      [ddlCaseOrigins]="ddlCaseOrigins"   
-     [selectedProgram]="selectedProgram"   
+     [selectedProgram]="selectedProgram"       
      ></case-management-case-detailed-summary>
   </section>
   <kendo-dialog-actions>
@@ -116,7 +116,7 @@
           aria-label="save and continue"
           kendoButton
           [primary]="true"     
-          [disabled]="formButtonDisabled"    
+          [disabled]="formButtonDisabled || !parentForm.valid"    
         >
           Save & Continue
         </button>

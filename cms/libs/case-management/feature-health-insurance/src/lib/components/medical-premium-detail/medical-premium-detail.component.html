@@ -162,41 +162,25 @@
               <h5>Do they want CareAssist to pay for health insurance premiums?</h5>
               <div class="component-list-h">
                 <span class="app-radiobtnwidtext-wrapper">
-                  <input
-                    type="radio"
-                    [disabled]="isViewContentEditable"
-                    kendoRadioButton
-                    name="wantHelpBuyingPremium"
-                    aria-labelledby="buyingPremiumYes"
-                    formControlName = "wantHelpBuyingPremium"
-                    id="buyingPremiumYes"
-                    tabindex="3"
-                    value="YES"
-                  />
-                <kendo-label
-                    class="k-radio-label"
-                    for="buyingPremiumYes"
-                    text="Yes"
-                  ></kendo-label>
-                </span>
-                <span class="app-radiobtnwidtext-wrapper">
-                  <input
-                    type="radio"
-                    [disabled]="isViewContentEditable"
-                    kendoRadioButton
-                    name="wantHelpBuyingPremium"
-                    aria-labelledby="buyingPremiumNo"
-                    formControlName = "wantHelpBuyingPremium"
-                    id="buyingPremiumNo"
-                    tabindex="4"
-                    value="NO"
-                  />
-                  <kendo-label
-                    class="k-radio-label"
-                    for="buyingPremiumNo"
-                    text="No"
-                  ></kendo-label>
-                </span>
+                   <input  type="radio"  kendoRadioButton 
+                    name="careassistPayingPremiumFlag"  aria-labelledby="buyingPremiumYes" 
+                    formControlName="careassistPayingPremiumFlag"  id="buyingPremiumYes"  tabindex="3"
+                     value="Y"  [checked]="healthInsurancePolicyCopy?.careassistPayingPremiumFlag=='Y'"
+                     />
+                   <kendo-label  class="k-radio-label"  for="buyingPremiumYes"
+                     text="Yes" ></kendo-label>
+                   </span>
+                 <span class="app-radiobtnwidtext-wrapper">
+                   <input  type="radio"  kendoRadioButton 
+                    name="careassistPayingPremiumFlag"  aria-labelledby="buyingPremiumNo" 
+                    formControlName="careassistPayingPremiumFlag"  id="buyingPremiumNo"  tabindex="4"
+                     value="N"  [checked]="healthInsurancePolicyCopy?.careassistPayingPremiumFlag=='N'"
+                     />
+                   <kendo-label  class="k-radio-label"  for="buyingPremiumNo"
+                     text="No" ></kendo-label>
+                   </span>
+                
+                
               </div>
             </div>
           </div>
@@ -207,6 +191,7 @@
                 [fillMode]="formUiStyle.dateInputFillMode"
                   format="MM-dd-yyyy"
                   [(ngModel)]="currentDate"
+                  [ngModelOptions]="{standalone: true}"
                   [disabled]="isViewContentEditable"
                   formatPlaceholder="formatPattern"
                 >
@@ -219,6 +204,7 @@
                 [fillMode]="formUiStyle.dateInputFillMode"
                   format="MM-dd-yyyy"
                   [(ngModel)]="currentDate"
+                  [ngModelOptions]="{standalone: true}"
                   [disabled]="isViewContentEditable"
                   formatPlaceholder="formatPattern"
                 >
@@ -270,7 +256,7 @@
       <div
         class="flex-col mt-3"
         *ngIf="ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
-        <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
+        <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [healthInsurancePolicy]="healthInsurancePolicyCopy"></case-management-medical-premium-detail-aptc>
         
       </div>
       <div
@@ -415,6 +401,7 @@
   </div>
 
   </div>
+ 
 </section>
 
 <kendo-dialog-actions>
@@ -424,11 +411,12 @@
         kendoButton
         class="k-danger-link"
         *ngIf="isDeleteEnabled"
+        (click)="onDeleteClick()"
         aria-label="delete medical premium"
       >
         Delete
       </button>
-      <!-- <button
+      <button
         kendoButton
         [primary]="true"
         (click)="onRedirectModalClicked()"
@@ -437,7 +425,7 @@
         aria-label="edit medical premium"
       >
         Edit
-      </button> -->
+      </button>
     </div>
     <div class="justify-content-end">
       <button

@@ -51,6 +51,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
   @Output() editRedirect = new EventEmitter<string>();
+  @Output() isDeleteClicked = new EventEmitter<any>();
 
   /** Private properties **/
   private loadSessionSubscription!: Subscription;
@@ -110,7 +111,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
   }
-  ngOnChanges() {}
+  ngOnChanges() { }
   ngOnDestroy(): void {
     this.loadSessionSubscription.unsubscribe();
   }
@@ -119,7 +120,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.lovFacade.getInsuranceTypeLovs();
   }
   private validateFormMode() {
-    if (this.dialogTitle === 'Add') {
+    if (this.dialogTitle === 'Add' || this.dialogTitle === 'View') {
       this.resetForm();
       this.resetValidators();
     }
@@ -165,6 +166,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
         this.isEditViewPopup = true;
         this.conditionsInsideView();
         this.isViewContentEditable = true;
+        this.resetForm();
+        this.loadHealthInsurancePolicy();
         break;
       case 'Add':
         this.isEdit = false;
@@ -175,7 +178,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       case 'Edit':
         this.isEdit = true;
         this.buttonText = 'Update';
-        this.isDeleteEnabled = false;
+        this.isDeleteEnabled = true;
         this.isViewContentEditable = false;
         this.resetForm();
         this.loadHealthInsurancePolicy();
@@ -228,10 +231,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
       healthInsurancePolicy.aptcMonthlyAmt
     );
+    this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
+      healthInsurancePolicy.careassistPayingPremiumFlag
+    );
+    this.disableEnableRadio();
   }
 
   private conditionsInsideView() {
-    this.ddlInsuranceType = this.insuranceType;
+    //this.ddlInsuranceType = this.insuranceType;
     this.isOpenDdl = true;
   }
 
@@ -357,7 +364,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
           this.healthInsuranceForm.controls['insuranceEndDate'].value
         )
       );
-      this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
+      this.healthInsurancePolicy.careassistPayingPremiumFlag = this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value;
       this.healthInsurancePolicy.premiumPaidThruDate = new Date();
       this.healthInsurancePolicy.premiumFrequencyCode = 'string';
       this.healthInsurancePolicy.nextPremiumDueDate = new Date();
@@ -407,7 +414,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.isViewContentEditable = false;
     this.isEditViewPopup = false;
     this.isDeleteEnabled = true;
-    this.editRedirect.emit('edit');
+    this.isEdit = true;
+    this.buttonText = 'Update';
+    this.disableEnableRadio();
   }
   onToggleNewPersonClicked() {
     this.isToggleNewPerson = !this.isToggleNewPerson;
@@ -468,26 +477,23 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.validateForm();
     if (this.healthInsuranceForm.valid) {
       this.populateInsurancePolicy();
-      this.loaderService.show();
+      this.insurancePolicyFacade.ShowLoader();
       if (this.isEdit) {
         this.healthInsurancePolicy.clientInsurancePolicyId =
           this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
-        this.healthInsurancePolicy.creationTime =this.healthInsurancePolicyCopy.creationTime;
-        debugger;
+        this.healthInsurancePolicy.creationTime = this.healthInsurancePolicyCopy.creationTime;
         this.insurancePolicyFacade
           .updateHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(
             (data: any) => {
-              this.onModalCloseClicked();
-              this.loaderService.hide();
               this.insurancePolicyFacade.ShowHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Insurance plan updated successfully.'
               );
+              this.onModalCloseClicked();
             },
             (error: any) => {
               if (error) {
-                this.loaderService.hide();
                 this.insurancePolicyFacade.ShowHideSnackBar(
                   SnackBarNotificationType.ERROR,
                   error?.error?.error
@@ -500,16 +506,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
           .saveHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(
             (data: any) => {
-              this.onModalCloseClicked();
-              this.loaderService.hide();
               this.insurancePolicyFacade.ShowHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Insurance plan updated successfully.'
               );
+              this.onModalCloseClicked();
             },
             (error: any) => {
               if (error) {
-                this.loaderService.hide();
                 this.insurancePolicyFacade.ShowHideSnackBar(
                   SnackBarNotificationType.ERROR,
                   error?.error?.error
@@ -518,6 +522,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
             }
           );
       }
+    }
+  }
+
+  onDeleteClick() {
+    this.isDeleteClicked.next(true);
+  }
+
+  disableEnableRadio(){
+    if(this.isViewContentEditable){
+      this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].disable();
+    }
+    else{
+      this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
     }
   }
 }
