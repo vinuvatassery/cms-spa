@@ -253,6 +253,33 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.healthInsuranceForm.controls['groupPlanType'].setValue(
       healthInsurancePolicy.insuranceGroupPlanTypeCode
     );
+    if( healthInsurancePolicy.careassistPayingPremiumFlag === StatusFlag.Yes)
+    {
+      this.healthInsuranceForm.controls['premiumPaidThruDate'].setValue(
+        healthInsurancePolicy.premiumPaidThruDate != null? new Date(healthInsurancePolicy.premiumPaidThruDate): null
+      );
+
+        this.healthInsuranceForm.controls['nextPremiumDueDate'].setValue(
+          healthInsurancePolicy.nextPremiumDueDate != null? new Date(healthInsurancePolicy.nextPremiumDueDate): null
+        );
+
+      this.healthInsuranceForm.controls['premiumFrequencyCode'].setValue(
+        healthInsurancePolicy.premiumFrequencyCode
+      );
+      this.healthInsuranceForm.controls['paymentIdNbrSameAsInsuranceIdNbrFlag'].setValue(
+        healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag === StatusFlag.Yes ? true: healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag === StatusFlag.No? false:null
+      );
+      if(healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag === StatusFlag.Yes)
+      {
+        this.sameAsInsuranceIdFlag = true;
+      }
+      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(
+        healthInsurancePolicy.paymentIdNbr
+      );
+      this.healthInsuranceForm.controls['premiumAmt'].setValue(
+        healthInsurancePolicy.premiumAmt
+      );
+    }
     this.disableEnableRadio();
   }
 
@@ -370,17 +397,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
             this.healthInsuranceForm.controls[key].setValidators([Validators.required]);
             this.healthInsuranceForm.controls[key].updateValueAndValidity();
           });
-          // this.healthInsuranceForm.controls["nextPremiumDueDate"].setValidators([Validators.required]);
-          // this.healthInsuranceForm.controls["nextPremiumDueDate"].updateValueAndValidity();
-
-          // this.healthInsuranceForm.controls["premiumAmt"].setValidators([Validators.required]);
-          // this.healthInsuranceForm.controls["premiumAmt"].updateValueAndValidity();
-
-          // this.healthInsuranceForm.controls["premiumFrequencyCode"].setValidators([Validators.required]);
-          // this.healthInsuranceForm.controls["premiumFrequencyCode"].updateValueAndValidity();
-
-          // this.healthInsuranceForm.controls["paymentIdNbr"].setValidators([Validators.required]);
-          // this.healthInsuranceForm.controls["paymentIdNbr"].updateValueAndValidity();
         }
       }
   }
@@ -401,7 +417,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsurancePolicy.healthInsuranceTypeCode = this.ddlInsuranceType;
       if(this.ddlInsuranceType===HealthInsurancePlan.Veterans) return;
       this.healthInsurancePolicy.insuranceCarrierId =this.healthInsuranceForm.controls['insuranceCarrierName'].value;
-      
+
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;
       this.healthInsurancePolicy.clientMaximumId =
