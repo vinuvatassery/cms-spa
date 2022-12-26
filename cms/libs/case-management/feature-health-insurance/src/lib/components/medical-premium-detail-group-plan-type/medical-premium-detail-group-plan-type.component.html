@@ -11,7 +11,7 @@
         name="groupPlanType" id="groupPlanType_R" tabindex="2" />
       <kendo-label class="k-radio-label" text="Retirement Policy" for="groupPlanType_R"></kendo-label>
     </span>
-    <kendo-formerror *ngIf="!healthInsuranceForm.controls['groupPlanType'].valid">Advanced
+    <kendo-formerror *ngIf="!healthInsuranceForm.controls['groupPlanType'].valid&& isViewContentEditable==false">Advanced
       Group Plan Type is required.</kendo-formerror>
   </div>
 </div>

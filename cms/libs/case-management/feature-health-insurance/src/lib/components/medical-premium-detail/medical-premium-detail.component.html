@@ -152,7 +152,7 @@
                       text="No"
                     ></kendo-label>
                   </span>
-                  <kendo-formerror *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid">Paying premium flag is required.</kendo-formerror>
+                  <kendo-formerror *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">Paying premium flag is required.</kendo-formerror>
                 </div>
               </div>
             </div>
@@ -187,7 +187,7 @@
                 <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                   <span class="k-input-prefix custom-currencysymbol"> $ </span>
                   <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right" placeholder="00.00"
-                    formControlName="premiumAmt" #premiumAmt [fillMode]="formUiStyle.inputFillMode" name="premiumAmt">
+                    formControlName="premiumAmt" #premiumAmt [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" [disabled]="isViewContentEditable">
     
                   </kendo-numerictextbox>
                 </kendo-floatinglabel>

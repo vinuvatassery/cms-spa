@@ -633,10 +633,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     if(this.isViewContentEditable){
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].disable();
       this.healthInsuranceForm.controls["groupPlanType"].disable();
+      this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].disable();
     }
     else{
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
       this.healthInsuranceForm.controls["groupPlanType"].enable();
+      this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].enable();
     }
   }
 }
