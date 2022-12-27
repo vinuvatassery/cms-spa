@@ -33,8 +33,7 @@
         <span class="app-checkboxwidtext-wrapper">
         <input
           class="adjust-attr"
-          type="checkbox"
-          aria-labelledby="middleInitial"
+          type="checkbox" 
           id="middleInitial"
           name="chkmiddleName"
           formControlName="chkmiddleName"
@@ -90,8 +89,7 @@
           type="checkbox"
           class="adjust-attr"
           name="prmInsNotApplicable"
-          id="cardNotApplicable"
-          aria-labelledby="insuranceCardNotApplicable"
+          id="cardNotApplicable" 
           kendoCheckBox
           formControlName="prmInsNotApplicable"
           (change)="onInsuranceCardChecked($event)"
@@ -135,8 +133,7 @@
           type="checkbox"
           class="adjust-attr"
           id="idNotApplicable"
-          name="officialIdsNotApplicable"
-          aria-labelledby="officialIdNotApplicable"
+          name="officialIdsNotApplicable" 
           kendoCheckBox       
           formControlName="officialIdsNotApplicable"
           (change)="onOfficialIdChecked($event)"
@@ -182,8 +179,7 @@
           type="checkbox"
           class="adjust-attr"
           id="ssnNotApplicable"
-          name="ssnNotApplicable"       
-          aria-labelledby="ssnNotApplicable"
+          name="ssnNotApplicable"    
           kendoCheckBox
           formControlName="ssnNotApplicable"
           (change)="onSsnNotApplicableChecked($event)"
@@ -202,36 +198,33 @@
     <div class="flex-row gap-m">
       <div class="flex-col">
         <div class="component-list-h">
-          <span class="app-radiobtnwidtext-wrapper">
+          <span class="app-radiobtnwidtext-wrapper" role="group" aria-labelledby="registertovoteyes">
             <input
               type="radio"
               kendoRadioButton
               name="registerToVote"
-              value="Y"
-              aria-labelledby="registerToVoteYes"
-              id="register"
-              tabindex="1"
+              value="Y" 
+              id="registertovoteyes" 
               formControlName="registerToVote"  
               (change)="registerToVoteSelected($event)"          
             />
-            <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+            <kendo-label class="k-radio-label" for="registertovoteyes" text="Yes"></kendo-label>
           </span>
-          <span class="app-radiobtnwidtext-wrapper">
+          <span class="app-radiobtnwidtext-wrapper" role="group" aria-labelledby="registertovoteno">
             <input
               type="radio"
               kendoRadioButton
               value="N"
-              name="registerToVote"
-              aria-labelledby="registerToVoteNo"
-              id="register1"
-              tabindex="2"
+              name="registerToVote" 
+              id="registertovoteno"
+          
               formControlName="registerToVote"
               (change)="registerToVoteSelected($event)"   
             />
             <kendo-label
               class="k-radio-label"
               text="No"
-              for="register1"
+              for="registertovoteno"
             ></kendo-label>
             <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is required.</kendo-formerror>
           </span>

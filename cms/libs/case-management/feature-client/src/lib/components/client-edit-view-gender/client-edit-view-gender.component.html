@@ -9,10 +9,10 @@
         type="checkbox"
         kendoCheckBox
         [formControlName]="ControlPrefix + gender.lovCode"
-        id="{{ gender.lovCode }}"
+        id="{{ ControlPrefix + gender.lovCode }}"
         (change)="onCheckChange($event, gender.lovCode)"
       />
-      <label class="k-checkbox-label" for="{{ gender.lovCode }}"
+      <label class="k-checkbox-label" for="{{ ControlPrefix + gender.lovCode }}"
         >{{ gender.lovDesc }}
       </label>
 

@@ -6,8 +6,8 @@
   "
 >
   <li class="sections-heading">
-    <h5 class="text-capital">Section</h5>
-    <h5 class="text-capital">Completed Items</h5>
+    <h5 class="text-capital"      aria-label="Section" aria-hidden="true">Section</h5>
+    <h5 class="text-capital"  aria-label="Completed Items" aria-hidden="true">Completed Items</h5>
   </li>
   <li *ngFor="let route of routes$ | async as routes; let i = index"> 
       <div

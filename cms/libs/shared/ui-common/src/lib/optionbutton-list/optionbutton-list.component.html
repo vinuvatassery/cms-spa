@@ -4,17 +4,15 @@
             <input
             type="radio"
             kendoRadioButton
-            id="material.lovCode"
+            id="{{OptionControlerName + material.lovCode}}"
             [value]="material.lovCode"
-            [name]="OptionControlerName"             
-            aria-labelledby="needsMaterials"
-            tabindex="5"
+            [name]="OptionControlerName"  
             [formControlName]="OptionControlerName"
             (change)="onMaterialsRdoClicked($event)"/>
       
           <kendo-label
             class="k-radio-label"
-            for="material.lovCode"
+            for="{{OptionControlerName + material.lovCode}}"
             text="{{material.lovDesc}}" 
           ></kendo-label>
          

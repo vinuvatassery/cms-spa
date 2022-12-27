@@ -10,8 +10,7 @@
                 kendoRadioButton
                 formControlName="BirthGender"
                 [value]="gender.lovCode"
-                name="BirthGender"
-                aria-labelledby="BirthGender"
+                name="BirthGender" 
                 id="BirthGender{{ gender.lovCode }}"
                 (click)="onTransgenderRdoClicked(gender.lovCode)"
               />
@@ -27,6 +26,7 @@
                
                 <kendo-floatinglabel text="Enter Answer">
                   <kendo-textbox
+                  aria-label="Enter Answer"
                   [fillMode]="formUiStyle.inputFillMode"
                     [formControlName]="DescriptionField"
                     [disabled]="

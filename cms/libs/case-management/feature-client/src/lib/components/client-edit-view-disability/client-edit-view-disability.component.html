@@ -8,8 +8,6 @@
               id="material.lovCode"
               [value]="material.lovCode"
               [name]="OptionControlerName"             
-              aria-labelledby="needsMaterials"
-              tabindex="5"
               [formControlName]="OptionControlerName"
               (change)="onMaterialsRdoClicked($event)"/>
         
@@ -25,7 +23,9 @@
              <div class="flex-row">
               <div class="flex-col flex-col-4">
                 <kendo-floatinglabel text="Select Material">
-                  <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+                  <kendo-dropdownlist  
+                  aria-label="Select Material"
+                  [fillMode]="formUiStyle.dropDownFillMode"
                    [data]="dropdownInutLov | async"
                   textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                   [formControlName]="textControlerName"               
