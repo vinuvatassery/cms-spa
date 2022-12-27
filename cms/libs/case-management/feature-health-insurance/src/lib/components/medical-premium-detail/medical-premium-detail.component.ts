@@ -260,14 +260,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
       healthInsurancePolicy.aptcMonthlyAmt
     );
-    this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
-      healthInsurancePolicy.careassistPayingPremiumFlag
-    );
     this.healthInsuranceForm.controls['groupPlanType'].setValue(
       healthInsurancePolicy.insuranceGroupPlanTypeCode
     );
     if( healthInsurancePolicy.careassistPayingPremiumFlag === StatusFlag.Yes)
     {
+      this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
+        healthInsurancePolicy.careassistPayingPremiumFlag
+      );
       this.healthInsuranceForm.controls['premiumPaidThruDate'].setValue(
         healthInsurancePolicy.premiumPaidThruDate != null? new Date(healthInsurancePolicy.premiumPaidThruDate): null
       );
@@ -291,6 +291,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       );
       this.healthInsuranceForm.controls['premiumAmt'].setValue(
         healthInsurancePolicy.premiumAmt
+      );
+    }
+    else{
+      this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
+        StatusFlag.No
       );
     }
     if(this.ddlInsuranceType === HealthInsurancePlan.Medicare)
