@@ -93,6 +93,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   clientId!: any;
   metalLevelDefaultValue: any = {};
   insurancePlanNameDefaultValue: string | null = null;
+  insuranceEndDateValid:boolean = true;
 
   /** Constructor **/
   constructor(
@@ -362,6 +363,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   }
 
   private validateForm() {
+    debugger;
     const QualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceEndDate',
@@ -433,7 +435,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       });
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.Cobra) {
-      CobraPlanRequiredFields.forEach((key: string) => {
+      CobraPlanRequiredFields.forEach((key: string) => {       
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
         ]);
@@ -829,6 +831,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
       this.healthInsuranceForm.controls["groupPlanType"].enable();
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].enable();
+    }
+  }
+   startDateOnChange(startDate:Date){
+    if( this.healthInsuranceForm.controls['insuranceEndDate'].value !==null){
+      var endDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.healthInsuranceForm.controls['insuranceEndDate'].value
+        )
+      );
+     if (startDate > endDate) {
+         this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
+       }
+
     }
   }
 
