@@ -363,7 +363,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   }
 
   private validateForm() {
-    debugger;
     const QualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceEndDate',
