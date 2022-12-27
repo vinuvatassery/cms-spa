@@ -43,7 +43,7 @@ import { SsnPipe, PhonePipe } from '@cms/shared/ui-common';
 export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   currentDate = new Date();
   buttonText: string = 'Add';
- 
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() dialogTitle!: string;
@@ -354,7 +354,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
 
 
-  
+
 
   private conditionsInsideView() {
     //this.ddlInsuranceType = this.insuranceType;
@@ -525,12 +525,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       //this.healthInsurancePolicy.insurancePlanId = '86A1D4AD-7C34-41C8-A47F-0C2D9CA706E6';
       this.healthInsurancePolicy.clientMaximumId =
         'C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
-      
+
 
       this.healthInsurancePolicy.insuranceIdNbr =
         this.healthInsuranceForm.controls['insuranceIdNumber'].value;
       this.healthInsurancePolicy.insuranceGroupPlanTypeCode = this.healthInsuranceForm.controls['groupPlanType'].value;
-      
+
       this.healthInsurancePolicy.policyHolderFirstName = null;
       this.healthInsurancePolicy.policyHolderLastName = null;
       this.healthInsurancePolicy.metalLevelCode =
@@ -575,12 +575,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       {
         this.healthInsurancePolicy.careassistPayingPremiumFlag=this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value;
       }
-      this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
-      this.healthInsurancePolicy.premiumPaidThruDate = new Date();
-      this.healthInsurancePolicy.premiumFrequencyCode = 'string';
-      this.healthInsurancePolicy.nextPremiumDueDate = new Date();
-      this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = null;
-      this.healthInsurancePolicy.paymentIdNbr = 'string';
       if (
         this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
       ) {
@@ -649,7 +643,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsurancePolicy.oonPharmacy = 'string';
       this.healthInsurancePolicy.oonDrugs = 'string';
       this.healthInsurancePolicy.concurrencyStamp = 'string';
-      
+
     }
   }
   /** Internal event methods **/
