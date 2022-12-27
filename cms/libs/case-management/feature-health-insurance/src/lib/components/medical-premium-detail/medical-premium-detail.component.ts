@@ -532,14 +532,22 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsurancePolicy.priorityCode = 'p';
       this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
       this.healthInsurancePolicy.healthInsuranceTypeCode = this.ddlInsuranceType;
+
+      /* these field will be removed when the columns are allwed null from the database */ 
+      this.healthInsurancePolicy.premiumFrequencyCode="";
+      this.healthInsurancePolicy.insuranceFirstName="";
+      this.healthInsurancePolicy.insuranceLastName="";
+      this.healthInsurancePolicy.oonDrugs="";
+      this.healthInsurancePolicy.oonPharmacy="";
+      this.healthInsurancePolicy.clientMaximumId ='C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
+      /* End for default values */
+
       if(this.ddlInsuranceType===HealthInsurancePlan.Veterans) return;
       this.healthInsurancePolicy.insuranceCarrierId =this.healthInsuranceForm.controls['insuranceCarrierName'].value;
 
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;
-      //this.healthInsurancePolicy.insurancePlanId = '86A1D4AD-7C34-41C8-A47F-0C2D9CA706E6';
-      this.healthInsurancePolicy.clientMaximumId =
-        'C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
+      
 
 
       this.healthInsurancePolicy.insuranceIdNbr =
