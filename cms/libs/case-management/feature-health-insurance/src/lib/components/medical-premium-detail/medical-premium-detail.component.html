@@ -39,6 +39,7 @@
             formControlName ="insuranceStartDate"
             [disabled]="isViewContentEditable"
             formatPlaceholder="formatPattern"
+            placeholder=""
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
@@ -53,7 +54,8 @@
             [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
             [disabled]="isViewContentEditable"
             formControlName ="insuranceEndDate"
-            formatPlaceholder="formatPattern"        >
+            formatPlaceholder="formatPattern" 
+            placeholder=""       >
           </kendo-datepicker>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid">Insurance end date is required.</kendo-formerror>
@@ -109,7 +111,7 @@
        </div>
         <div
           class="flex-col mt-3"
-          *ngIf="InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan"
+          *ngIf="ddlInsuranceType !==InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan"
         >
           <div class="block-section">
             <div class="flex-row">
@@ -445,54 +447,4 @@
 </kendo-dialog-actions>
 
 
-<kendo-dialog *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Insurance Provider">
-
-<section class="k-dialog-body mb-2">
-  <p>
-    This feature is part of future scope of work for the ORCares project.
-  </p>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel add New Insurance Provider" look="outline"
-        (click)="addNewInsuranceProviderClose()">
-        Cancel
-      </button>
-      <button kendoButton      [primary]="true" aria-label="Add New Insurance Provider" (click)="addNewInsuranceProviderClose()">
-        Add
-      </button>
-    </div>
-  </div>
-</kendo-dialog-actions>
-
-</kendo-dialog>
-
-
-
-
-
-<kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Plan">
-
-<section class="k-dialog-body mb-2">
-  <p>
-    This feature is part of future scope of work for the ORCares project.
-  </p>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel Add New Insurance Plan" look="outline"
-        (click)="addNewInsurancePlanClose()">
-        Cancel
-      </button>
-      <button kendoButton      [primary]="true" aria-label="Add New Insurance Plan" (click)="addNewInsurancePlanClose()">
-        Add
-      </button>
-    </div>
-  </div>
-</kendo-dialog-actions>
-
-</kendo-dialog>
+  
