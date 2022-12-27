@@ -786,7 +786,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
               if (error) {
                 this.insurancePolicyFacade.ShowHideSnackBar(
                   SnackBarNotificationType.ERROR,
-                  error?.error?.error
+                  error
                 );
               }
             }
@@ -806,7 +806,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
               if (error) {
                 this.insurancePolicyFacade.ShowHideSnackBar(
                   SnackBarNotificationType.ERROR,
-                  error?.error?.error
+                  error
                 );
               }
             }
