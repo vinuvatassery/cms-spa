@@ -125,7 +125,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.viewSelection();
     this.disableEnableRadio();
     this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
-      if(this.sameAsInsuranceIdFlag === true)
+
+      if(this.healthInsuranceForm.controls['paymentIdNbrSameAsInsuranceIdNbrFlag'].value)
       {
         this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
       }
@@ -286,6 +287,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       {
         this.sameAsInsuranceIdFlag = true;
       }
+      else
+      {
+        this.sameAsInsuranceIdFlag = false;
+      }
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(
         healthInsurancePolicy.paymentIdNbr
       );
@@ -369,7 +374,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   }
 
   private validateForm() {
-    debugger;
     const QualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceEndDate',
@@ -441,7 +445,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       });
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.Cobra) {
-      CobraPlanRequiredFields.forEach((key: string) => {       
+      CobraPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
         ]);
@@ -573,7 +577,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
         }
         if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === StatusFlag.Yes)
       {
-
         this.healthInsurancePolicy.careassistPayingPremiumFlag= StatusFlag.Yes;
         this.healthInsurancePolicy.premiumPaidThruDate= this.healthInsuranceForm.controls["premiumPaidThruDate"].value === null? null : new Date(this.healthInsuranceForm.controls["premiumPaidThruDate"].value);
         this.healthInsurancePolicy.premiumFrequencyCode= this.healthInsuranceForm.controls["premiumFrequencyCode"].value;
