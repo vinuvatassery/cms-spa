@@ -4,48 +4,84 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 
+/** Providers **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
+/**Models */
+import { HealthcareProvider } from '../entities/healthcare-provider';
+
 @Injectable({ providedIn: 'root' })
 export class HealthcareProviderDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+              private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  loadHealthCareProviders() {
-    return of([
-      {
-        ClinicName: 'John Ade',
-        ProviderName: 'Beaverton Provider',
-        ProviderPhone: '(415) 555-2671',
-        ProviderAddress: '980 ADAMS DR APT 02 FRANKLIN DA 98760-8797',
-      },
-      {
-        ClinicName: 'Para Ade',
-        ProviderName: 'Provider Beaverton',
-        ProviderPhone: '(415) 555-2671',
-        ProviderAddress: '980 ADAMS DR APT 02 FRANKLIN DA 98760-8797',
-      },
-      {
-        ClinicName: 'John Ade',
-        ProviderName: 'Jat Provider',
-        ProviderPhone: '(415) 555-2671',
-        ProviderAddress: '980 ADAMS DR APT 02 FRANKLIN DA 98760-8797',
-      },
-      {
-        ClinicName: 'Jet Lee',
-        ProviderName: 'Beaverton Provider',
-        ProviderPhone: '(415) 555-2671',
-        ProviderAddress: '980 ADAMS DR APT 02 FRANKLIN DA 98760-8797',
-      },
-      {
-        ClinicName: 'John Ali',
-        ProviderName: 'Beaverton Provider',
-        ProviderPhone: '(415) 555-2671',
-        ProviderAddress: '980 ADAMS DR APT 02 FRANKLIN DA 98760-8797',
-      },
-    ]);
+
+  ///1
+  removeHealthCareProvider(ClientCaseEligibilityId : string,ProviderId : string)
+  {
+    return this.http.delete(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/providers`+
+      `/${ProviderId}`
+    );
   }
 
-  loadDdlStates() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+
+  ///2
+  loadProviderStatusStatus(clientCaseEligibilityId : string) {     
+    return this.http.get<HealthcareProvider[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers/${clientCaseEligibilityId}/provider-status`
+    );
+    
   }
+  
+  ///3
+  updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
+  {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/${nohealthCareProviderFlag}`     
+    ,null);
+  }
+
+
+
+  ///4
+  loadHealthCareProviders(ClientCaseEligibilityId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
+    return this.http.get<HealthcareProvider[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers?clientCaseEligibilityId=${ClientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+    
+  }
+
+  loadExistingHealthCareProvider(ClientCaseEligibilityId : string  ,providerId :string) {   
+      
+    return this.http.get<HealthcareProvider[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/providers/${providerId}`
+    );
+    
+  }
+
+
+    ///1
+    addExistingHealthCareProvider(existProviderData : any)
+    {
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}`+
+        `/case-management/healthcare-providers/${existProviderData?.clientCaseEligibilityId}/providers/${existProviderData?.providerId}/${existProviderData?.selectedProviderId}`,null
+      );
+    }
+  
+      //search for autocomplete
+      searchProviders(text :  string , clientCaseEligibilityId : string) {
+        return this.http.get<HealthcareProvider[]>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientCaseEligibilityId}/providers/search/${text}`  
+        );
+      }  
+ 
 }

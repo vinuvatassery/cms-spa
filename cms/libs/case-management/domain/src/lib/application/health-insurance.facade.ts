@@ -5,9 +5,12 @@ import { Observable, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
-
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Injectable({ providedIn: 'root' })
 export class HealthInsuranceFacade {
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+
   /** Private properties **/
   private ddlMedicalHealthInsurancePlansSubject = new BehaviorSubject<any>([]);
   private ddlMedicalHealthPalnPremiumFrequecySubject = new BehaviorSubject<any>(
@@ -19,6 +22,7 @@ export class HealthInsuranceFacade {
   private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
   private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
+  private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
@@ -33,9 +37,31 @@ export class HealthInsuranceFacade {
   medicalPremiumPayments$ = this.medicalPremiumPaymentsSubject.asObservable();
   healthInsuranceStatus$ = this.healthInsuranceStatusSubject.asObservable();
   medicalHealthPlans$ = this.medicalHealthPlansSubject.asObservable();
+  medicalHealthPolicy$ = this.medicalHealthPolicySubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) {}
+  constructor(private readonly contactDataService: ContactDataService,
+    private readonly loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly loaderService: LoaderService,
+    private configurationProvider: ConfigurationProvider) { }
+
+  ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.HideLoader();
+  }
+
+  ShowLoader() {
+    this.loaderService.show();
+  }
+
+  HideLoader() {
+    this.loaderService.hide();
+  }
 
   /** Public methods **/
   loadDdlMedicalHealthInsurancePlans(): void {
@@ -51,13 +77,26 @@ export class HealthInsuranceFacade {
     });
   }
 
-  loadMedicalHealthPlans(): void {
-    this.contactDataService.loadMedicalHealthPlans().subscribe({
-      next: (medicalHealthPlansResponse) => {
-        this.medicalHealthPlansSubject.next(medicalHealthPlansResponse);
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any): void {
+    this.ShowLoader();
+    this.contactDataService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize).subscribe({
+      next: (medicalHealthPlansResponse: any) => {
+        this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
+        if (medicalHealthPlansResponse) {
+          if (medicalHealthPlansResponse['clientInsurancePolicies'] == null) {
+            medicalHealthPlansResponse['clientInsurancePolicies'] = []
+          }
+          const gridView: any = {
+            data: medicalHealthPlansResponse['clientInsurancePolicies'],
+            total: medicalHealthPlansResponse?.totalCount,
+          };
+
+          this.medicalHealthPlansSubject.next(gridView);
+        }
+        this.HideLoader();
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -136,8 +175,11 @@ export class HealthInsuranceFacade {
     });
   }
 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  saveInsuranceFlags(insuranceFlags: any): Observable<any> {
+    return this.contactDataService.updateInsuranceFlags(insuranceFlags);
+  }
+
+  deleteInsurancePolicy(insurancePolicyId: any) {
+    return this.contactDataService.deleteInsurancePolicy(insurancePolicyId);
   }
 }

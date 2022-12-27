@@ -1,0 +1,17 @@
+<dvi [formGroup]="healthInsuranceForm">
+  <kendo-floatinglabel text="Metal Level">
+    <kendo-dropdownlist
+      [fillMode]="formUiStyle.dropDownFillMode"
+      formControlName="metalLevel"
+      [data]="MetalLevels"
+      textField="lovDesc"
+      valueField="lovCode"
+      [disabled]="isViewContentEditable"
+    >
+    <ng-template kendoDropDownListItemTemplate let-dataItem>
+        <span >{{ dataItem.lovDesc }}</span>
+      </ng-template>
+    </kendo-dropdownlist>
+  </kendo-floatinglabel>
+  <kendo-formerror *ngIf="!healthInsuranceForm.controls['metalLevel'].valid">Metal Level is required.</kendo-formerror>
+</dvi>

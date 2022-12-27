@@ -17,5 +17,7 @@ export enum LovType {
 	IncomeSource='INCOME_SOURCE_CODE',
   	Frequency='FREQUENCY_CODE',
   	IncomeType='INCOME_TYPE_CODE',
-  	ProofOfIncomeType='PROOF_INCOME_TYPE_CODE'
+  	ProofOfIncomeType='PROOF_INCOME_TYPE_CODE',
+    HealthInsuranceType ='HEALTH_INSURANCE_TYPE',
+    MetalLevel ='METAL_LEVEL'
   }

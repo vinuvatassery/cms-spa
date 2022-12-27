@@ -1,0 +1,30 @@
+<div [formGroup]="healthInsuranceForm">
+
+    <kendo-floatinglabel text="Insurance Plan Name" >   
+        <kendo-combobox   
+        [fillMode]="formUiStyle.dropDownFillMode" 
+        [disabled]="isViewContentEditable"   
+        #caseOwnr
+        formControlName="insurancePlanName"     
+        [data]="insurancePlans"   
+        textField="insurancePlanName" 
+        valueField="insurancePlanId"
+        [valuePrimitive]="true"       
+        [filterable]="true"     
+        [kendoDropDownFilter]="caseOwnerfilterSettings"      
+      >
+      </kendo-combobox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insurancePlanName'].valid">Insurance plan name is required.</kendo-formerror>
+      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
+        <span>Don’t see the Plan you’re looking for?</span>
+        <button
+          kendoButton
+          class="card-link-button ml-1 no-ul"
+          [disabled]="isViewContentEditable"
+          aria-label="add new insurance plan"
+        >
+          ADD NEW
+        </button>
+      </div>
+</div>

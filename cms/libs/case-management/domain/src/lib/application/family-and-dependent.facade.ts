@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
 import { of, Subject } from 'rxjs';
 /** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
 import { Dependent } from '../entities/dependent';
 import { ClientDependentGroupDesc} from '../enums/client-dependent-group.enum';
 import { DependentTypeCode } from '../enums/dependent-type.enum';
@@ -19,7 +19,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { dateFieldName, IntlService } from '@progress/kendo-angular-intl';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -45,7 +45,7 @@ export class FamilyAndDependentFacade {
   private dependentGetNewSubject = new Subject<any>();
   private dependentdeleteSubject = new Subject<any>();
   private dependentGetExistingSubject = new Subject<any>();
-
+  displaydateFormat = this.configurationProvider.appSettings.displaydateFormat;
   /** Public properties **/
   products$ = this.productsSubject.asObservable();
   
@@ -235,12 +235,16 @@ export class FamilyAndDependentFacade {
         Object.values(dependentSearchResponse).forEach((key) => {   
                    
           key.fullName = key.firstName + ' ' + key.lastName
-          key.ssn=  key.ssn =='' ? '' : 'xxx-xx-' +key.ssn.slice(-4);                   
-          key.dob = this.intl.formatDate(key.dob)
+          key.ssn=  (key.ssn =='' || key.ssn == null) ? '' : 'xxx-xx-' +key.ssn.slice(-4);
           
-          key.fullCustomName =key?.fullName + ' DOB '+key?.dob+' SSN '+key?.ssn      
+          const dateOB = new Date(key.dob)
+                          
+          key.dob = ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )
           
-          if(key?.clientId > 0)   
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)      
+          
+          debugger
+          if(key?.clientDependentId === '00000000-0000-0000-0000-000000000000')   
           {
               key.memberType = ClientDependentGroupDesc.Clients            
           }
