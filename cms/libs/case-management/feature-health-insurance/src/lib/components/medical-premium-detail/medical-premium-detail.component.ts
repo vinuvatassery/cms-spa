@@ -122,6 +122,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.loadDdlMedicalHealthPlanMetalLevel();
     this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
+    this.disableEnableRadio();
     this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
       if(this.sameAsInsuranceIdFlag === true)
       {
@@ -818,11 +819,15 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].disable();
       this.healthInsuranceForm.controls["groupPlanType"].disable();
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].disable();
+      this.healthInsuranceForm.controls["onQmbFlag"].disable();
+      this.healthInsuranceForm.controls["onLisFlag"].disable();
     }
     else{
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
       this.healthInsuranceForm.controls["groupPlanType"].enable();
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].enable();
+      this.healthInsuranceForm.controls["onQmbFlag"].enable();
+      this.healthInsuranceForm.controls["onLisFlag"].enable();
     }
   }
 
