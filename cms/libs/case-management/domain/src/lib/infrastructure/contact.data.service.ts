@@ -88,8 +88,13 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId: string, clientCaseEligibilityId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}`);
+  loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any) {
+    let params= new HttpParams();
+    params = params.append('clientId',clientId);
+    params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
+    params = params.append('skipCount',skip);
+    params = params.append('maxResultCount',pageSize);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/GetIncomeList`,{params:params});
   }
 
   loadDependentsProofofSchools() {
