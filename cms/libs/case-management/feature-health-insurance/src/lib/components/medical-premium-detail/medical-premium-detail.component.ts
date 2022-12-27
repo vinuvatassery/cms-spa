@@ -9,9 +9,13 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** Facades **/
-import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import { ClientDocument, ClientDocumentFacade, HealthInsuranceFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
+import { LoggingService } from 'libs/shared/util-core/src/lib/api/services/logging.service';
+import { NotificationSnackbarService } from 'libs/shared/util-core/src/lib/application/services/notification-snackbar-service';
+import { SnackBarNotificationType } from 'libs/shared/util-core/src/lib/enums/snack-bar-notification-type.enum';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -36,7 +40,10 @@ export class MedicalPremiumDetailComponent implements OnInit {
   constructor(
     private readonly healthFacade: HealthInsuranceFacade,
     private readonly lovFacade: LovFacade,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private readonly clientDocumentFacade: ClientDocumentFacade,
+    private readonly loggingService: LoggingService,
+    private readonly snackbarService: NotificationSnackbarService,
   ) {
     this.addPersonForm = this.fb.group({
       currentDate: new FormControl(new Date()),
@@ -48,7 +55,7 @@ export class MedicalPremiumDetailComponent implements OnInit {
       policyHolderFirstName: new FormControl('', Validators.maxLength(40)),
       policyHolderLastName: new FormControl('', Validators.maxLength(40)),
       persons: this.fb.array([]),
-      copyOfInsuranceCard: new FormControl(''),
+      copyOfInsuranceCard: new FormControl('', Validators.required),
       proofOfPremium: new FormControl(''),
       copyOfSummary: new FormControl(''),
     });
@@ -205,5 +212,35 @@ export class MedicalPremiumDetailComponent implements OnInit {
 
   public addNewInsurancePlanOpen(): void {
     this.isaddNewInsurancePlanOpen = true;
+  }
+
+  public handleFileSelected(event: any, fileType: string) {
+    let uploadedFile = event.files[0];
+    if (uploadedFile.rawFile && (uploadedFile.size/1024) < 25) {
+      let document: ClientDocument = {
+        // clientId: clientId,
+        // clientCaseId: clientCaseId,
+        // clientCaseEligibilityId: clientCaseEligibilityId,
+        // entityId: '',
+        // entityTypeCode: 'HOME_ADDRESS_PROOF',
+        documentName: uploadedFile.rawFile.name,
+        document: uploadedFile.rawFile
+      };
+
+      return this.clientDocumentFacade.uploadDocument(document)
+        .pipe(
+          catchError((err: any) => {
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+            if (!(err?.error ?? false)) {
+              this.loggingService.logException(err);
+            }
+            return of(false);
+          })
+        );
+    }
+    else {
+      this.addPersonForm.controls['copyOfInsuranceCard'].setValue('');
+    }
+    return of({});
   }
 }

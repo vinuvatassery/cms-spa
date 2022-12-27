@@ -46,7 +46,8 @@
         /> -->
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col mat-form-sm-b-space" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mat-form-sm-b-space"
+        *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <kendo-floatinglabel text="Insurance Carrier Name">
           <!-- <input
           [disabled]="isViewContentEditable"
@@ -136,13 +137,15 @@
               <h5>Wants help buying premiums?</h5>
               <div class="component-list-h">
                 <span class="app-radiobtnwidtext-wrapper">
-                  <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="buyingPremium" value="Yes"
-                    aria-labelledby="buyingPremiumYes" id="buyingPremiumYes" tabindex="3" formControlName="buyingPremium" />
+                  <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="buyingPremium"
+                    value="Yes" aria-labelledby="buyingPremiumYes" id="buyingPremiumYes" tabindex="3"
+                    formControlName="buyingPremium" />
                   <kendo-label class="k-radio-label" for="buyingPremiumYes" text="Yes"></kendo-label>
                 </span>
                 <span class="app-radiobtnwidtext-wrapper">
-                  <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="buyingPremium" text="Yes"
-                    aria-labelledby="buyingPremiumNo" id="buyingPremiumNo" tabindex="4" formControlName="buyingPremium" />
+                  <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="buyingPremium"
+                    text="Yes" aria-labelledby="buyingPremiumNo" id="buyingPremiumNo" tabindex="4"
+                    formControlName="buyingPremium" />
                   <kendo-label class="k-radio-label" for="buyingPremiumNo" text="No"></kendo-label>
                 </span>
               </div>
@@ -152,14 +155,14 @@
             <div class="flex-col flex-col-6">
               <kendo-floatinglabel text="Date Currently Paid through">
                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                formControlName="currentDate" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern">
+                  formControlName="currentDate" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern">
                 </kendo-datepicker>
               </kendo-floatinglabel>
             </div>
             <div class="flex-col flex-col-6">
               <kendo-floatinglabel text="Next Payment Premium Due Date">
                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                formControlName="currentDate" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern">
+                  formControlName="currentDate" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern">
                 </kendo-datepicker>
               </kendo-floatinglabel>
             </div>
@@ -249,12 +252,14 @@
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
             <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="othersCovered" value="Yes"
-              aria-labelledby="othersCoveredOnThePlanYes" for="othersCovered1" tabindex="9" formControlName="othersCovered" />
+              aria-labelledby="othersCoveredOnThePlanYes" for="othersCovered1" tabindex="9"
+              formControlName="othersCovered" />
             <kendo-label class="k-radio-label" for="othersCovered1" text="Yes"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
             <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="othersCovered" value="No"
-              aria-labelledby="othersCoveredOnThePlanNo" for="othersCovered2" formControlName="othersCovered" tabindex="10" />
+              aria-labelledby="othersCoveredOnThePlanNo" for="othersCovered2" formControlName="othersCovered"
+              tabindex="10" />
             <kendo-label class="k-radio-label" for="othersCovered2" text="No"></kendo-label>
           </span>
         </div>
@@ -311,8 +316,7 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date of birth">
                   <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                    [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
-                    formControlName="dob">
+                    [disabled]="isViewContentEditable" formatPlaceholder="formatPattern" formControlName="dob">
                   </kendo-datepicker>
                 </kendo-floatinglabel>
               </div>
@@ -340,8 +344,8 @@
           </span>
           <span class="app-radiobtnwidtext-wrapper">
             <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="clientPolicyHolder"
-            aria-labelledby="clientPolicyHolderNo" id="clientPolicyHolder2" tabindex="6" value="No"
-            formControlName="isClientPolicyHolder" />
+              aria-labelledby="clientPolicyHolderNo" id="clientPolicyHolder2" tabindex="6" value="No"
+              formControlName="isClientPolicyHolder" />
             <kendo-label class="k-radio-label" text="No" for="clientPolicyHolder2"></kendo-label>
           </span>
         </div>
@@ -349,8 +353,9 @@
       <div class="flex-col flex-col-6" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <kendo-floatinglabel text="Policy Holder First Name">
           <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"> </kendo-textbox>
-          <kendo-formerror *ngIf="addPersonForm.value.isClientPolicyHolder == 'No'">First Name is required.</kendo-formerror>
+            [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"> </kendo-textbox>
+          <kendo-formerror *ngIf="addPersonForm.value.isClientPolicyHolder == 'No'">First Name is
+            required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
@@ -358,22 +363,37 @@
           <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name"
             [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName">
           </kendo-textbox>
-          <kendo-formerror *ngIf="addPersonForm.value.isClientPolicyHolder == 'No'">Last Name is required.</kendo-formerror>
+          <kendo-formerror *ngIf="addPersonForm.value.isClientPolicyHolder == 'No'">Last Name is
+            required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mb-2 mt-2" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5 class="text-capital">Copy of Insurance Card</h5>
-        <kendo-upload [disabled]="isViewContentEditable" formControlName="copyOfInsuranceCard"> </kendo-upload>
+        <!-- <kendo-upload [disabled]="isViewContentEditable" formControlName="copyOfInsuranceCard"> </kendo-upload>
+        <kendo-formhint>Max file size 25MB</kendo-formhint> -->
+        <kendo-fileselect aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
+          [multiple]="false" (select)="handleFileSelected($event, 'copyInsurance')" #copyOfInsurance>
+        </kendo-fileselect>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="addPersonForm.value.copyOfInsuranceCard"> Copy of insurance card is required
+        </kendo-formerror>
       </div>
-      <div class="flex-col mb-2 mt-2" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mb-2 mt-2" *ngIf="addPersonForm.value.isClientPolicyHolder == 'Yes'">
         <h5 class="text-capital">Proof of premium amount</h5>
-        <kendo-upload [disabled]="isViewContentEditable" formControlName="proofOfPremium"> </kendo-upload>
+        <kendo-fileselect aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
+          [multiple]="false" (select)="handleFileSelected($event, 'proof')" #proofOfPremium>
+        </kendo-fileselect>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror
+          *ngIf="addPersonForm.value.isClientPolicyHolder == 'Yes' && addPersonForm.value.proofOfPremium"> Proof of
+          premium is required
+        </kendo-formerror>
       </div>
       <div class="flex-col mb-2" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
-        <kendo-upload [disabled]="isViewContentEditable" formControlName="copyOfSummary"> </kendo-upload>
+        <kendo-fileselect aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
+          [multiple]="false" (select)="handleFileSelected($event, 'summary')" #copyOfSummary>
+        </kendo-fileselect>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
       </div>
     </div>
