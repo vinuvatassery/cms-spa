@@ -61,6 +61,8 @@ export * from './lib/enums/address-type-code.enum';
 export * from './lib/enums/device-type-code.enum';
 export * from './lib/enums/priority-code.enum';
 export * from './lib/enums/insurance-plan.enum';
+export * from './lib/enums/parta-medicare-type.enum';
+export * from './lib/enums/partb-medicare-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
