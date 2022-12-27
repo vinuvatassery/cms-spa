@@ -13,7 +13,7 @@ export class DrugDataService {
 
   /** Public methods **/
   loadDdlPriorities() {
-    return of([{text:'Primary',value:'P'}, {text:'Secondary',value:'S'},{text:'Tertiary',value:'T'}]);
+    return of([{text:'Primary',value:'P',order:1}, {text:'Secondary',value:'S',order:2},{text:'Tertiary',value:'T',order:3}]);
   }
 
   loadPharmacies() {

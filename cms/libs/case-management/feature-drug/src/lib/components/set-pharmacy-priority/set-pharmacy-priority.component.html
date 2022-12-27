@@ -17,7 +17,7 @@
 
       <kendo-floatinglabel text="Priority">
 
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true"  (valueChange)="valueChange($event,1)" formControlName="priority1" textField="text" valueField="value" [data]="loadPrioritites">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true"  (valueChange)="valueChange($event,1)"  formControlName="priority1" textField="text" valueField="value" [data]="loadPrioritites">
         </kendo-dropdownlist>
 
       </kendo-floatinglabel>
@@ -40,7 +40,7 @@
 
       <kendo-floatinglabel text="Priority">
 
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true"  (valueChange)="valueChange($event,2)" formControlName="priority2" textField="text" valueField="value" [data]="loadPrioritites">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true"  (valueChange)="valueChange($event,2)"  formControlName="priority2" textField="text" valueField="value" [data]="priority2Data">
         </kendo-dropdownlist>
 
       </kendo-floatinglabel>

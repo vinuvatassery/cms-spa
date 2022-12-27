@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component,
+ Component,
   OnInit,
   ChangeDetectionStrategy,
   Output,
@@ -31,7 +31,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
   @Output() closeChangePriority = new EventEmitter();
   priority1:any;
   priority2:any;
-  priority3:any;
   public setPrioirityForm: FormGroup = new FormGroup({}) ;
 pharmcayPriority: PharmacyPriority={
   clientPharmacyId: '',
@@ -39,19 +38,27 @@ pharmcayPriority: PharmacyPriority={
   priorityCode: '',
 };
 loadPrioritites:any[]=[];
+priority2Data:any[]=[];
+priority1Data:any[]=[];
+
  savePrirorityObject = {
   clientPharmacyId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   clientId: 0,
   priorityCode: ""
 }
+public itemDisabled(itemArgs: { dataItem: any; index: number }) {
+  return itemArgs.dataItem.value === this.setPrioirityForm.controls['priority1']?.value // disable the 3rd item
+}
 savePrirorityObjectList:any[] =[];
-  /** Public properties **/
+  /** Public properties 
+   * **/
   ddlPriorities$ = this.drugPharmacyFacade.ddlPriorities$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   sessionId: any = "";
   clientId: any;
   clientPharmacyId:any;
   clientCaseId: any;
+  pharmacyPriorityList: any;
   clientCaseEligibilityId: string = "";
   isDisabled = false;
   priorityInfo = {} as PharmacyPriority;
@@ -65,6 +72,7 @@ savePrirorityObjectList:any[] =[];
     private workflowFacade: WorkflowFacade) {
       this.ddlPriorities$.subscribe(ddlist =>{
         this.loadPrioritites = ddlist;
+        this.priority2Data=ddlist;
       })
     }
 
@@ -77,25 +85,19 @@ savePrirorityObjectList:any[] =[];
     this.pharmacyPriorityFormChanged();
   }
   ngOnDestroy(): void {
-   // this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
   }
-
-
   /** Private methods **/
   private loadPriorities() {
     this.drugPharmacyFacade.loadDdlPriorities();
   }
   public valueChange(value: any,type:any): void {
-    debugger;
+    this.priority2Data=this.loadPrioritites.filter(m=>m.value!==value);
     if(type === 1){
-  const pharmacyPriority1:any = {}
-   //this.pharmacyPriority.priorityCode = this.priority1?.value;
-   //pharmacyPriority1.priorityCode = value.value;
+      const pharmacyPriority1:any ={}
     pharmacyPriority1.clientId = this.clientId
     pharmacyPriority1.priorityCode = this.setPrioirityForm.controls['priority1']?.value;
     pharmacyPriority1.clientPharmacyId = "89397EE3-0717-4457-A8C1-39881B77B241";
-    //pharmacyPriority1.priorityCode = this.setPrioirityForm.controls['priority1'].value;
     if(this.savePrirorityObjectList && this.savePrirorityObjectList.length > 0){
       const index = this.savePrirorityObjectList.findIndex(x=>x.priorityCode == 'P');
       if(index >= 0){
@@ -106,13 +108,11 @@ savePrirorityObjectList:any[] =[];
     }
     
     }else if(type == 2){
+     
       const pharmacyPriority2:any ={};
-     //pharmacyPriority2.priorityCode = value.value;
-      //this.pharmacyPriority.priorityCode = this.priority1?.value;
       pharmacyPriority2.priorityCode = this.setPrioirityForm.controls['priority2']?.value;
     pharmacyPriority2.clientId = this.clientId
     pharmacyPriority2.clientPharmacyId = "6952473A-080C-443B-A69E-D0FDA3CA5AB6";
-    //pharmacyPriority2.priorityCode = this.setPrioirityForm.controls['priority2'].value;
     if(this.savePrirorityObjectList && this.savePrirorityObjectList.length > 0){
       const index = this.savePrirorityObjectList.findIndex(x=>x.priorityCode == 'S');
       if(index >= 0){
@@ -127,8 +127,7 @@ savePrirorityObjectList:any[] =[];
   private buildForm() {
     this.setPrioirityForm = new FormGroup({
       priority1: new FormControl('', []),
-      priority2: new FormControl('', []),
-      priority3: new FormControl('', [])
+      priority2: new FormControl('', [])
   });
   }
   pharmacyPriority: any={};
@@ -143,8 +142,6 @@ savePrirorityObjectList:any[] =[];
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = 1000;
-          this.clientPharmacyId= '976a2c48-0ebf-4c77-b9c3-03355103d663'
-          //JSON.parse(session.sessionData).clientId;
           this.loadPharmacyPriority();
         }
       });
@@ -170,7 +167,6 @@ savePrirorityObjectList:any[] =[];
     if (isValid) {
       
       this.priorityInfo.clientId = 0;
-     // this.priorityInfo.clienPharmacyId = '';
       this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority1"].value;
       this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority2"].value;
       return this.drugPharmacyFacade.updatePharmacyPriority(this.priorityInfo);
@@ -225,11 +221,17 @@ savePrirorityObjectList:any[] =[];
     this.drugPharmacyFacade.loadPharmacyPriority( this.clientId).subscribe({
       next: (response:any) => {
         debugger;
+        this.pharmacyPriorityList = response;
         if(response!==null){
-         this.setPrioirityForm.controls["prioirity1"].setValue(response.priorityCode);
-          this.setPrioirityForm.controls["prioirity2"].setValue(response.priorityCode);
-          //this.prioirity1 = {text:'Primary',value:response[0]?.priorityCode};
-          
+         const priority1 = response.find((data: any) => data.priorityCode ='P');
+         if(priority1!==undefined){
+          this.setPrioirityForm.controls["priority1"].setValue(priority1.priorityCode);
+          this.valueChange(event,1);
+         }
+         const priority2 = response.find((data: any) => data.priorityCode ='S');
+         if(priority2!==undefined){
+          this.setPrioirityForm.controls["priority2"].setValue(priority2.priorityCode);
+         }
         }
       },
     })
@@ -240,10 +242,9 @@ savePrirorityObjectList:any[] =[];
   }
   onSavePriority()
   {
-    
+    debugger;
     this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList).subscribe((x:any) =>{
       console.log(x);
-      this.addSaveSubscription();
       if(x){
         this.onCloseChangePriorityClicked();
       }
