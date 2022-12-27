@@ -67,6 +67,7 @@
           formControlName ="medicarePartAStartDate"
           [disabled]="isViewContentEditable"
           formatPlaceholder="formatPattern"
+          placeholder=""
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
@@ -81,6 +82,7 @@
           formControlName ="medicarePartBStartDate"
           [disabled]="isViewContentEditable"
           formatPlaceholder="formatPattern"
+          placeholder=""
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
@@ -162,6 +164,8 @@
           formControlName ="insuranceStartDate"
           [disabled]="isViewContentEditable"
           formatPlaceholder="formatPattern"
+          placeholder=""
+          (valueChange)="startDateOnChange($event)"
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
@@ -176,7 +180,8 @@
           [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
           [disabled]="isViewContentEditable"
           formControlName ="insuranceEndDate"
-          formatPlaceholder="formatPattern"        >
+          formatPlaceholder="formatPattern"  
+          placeholder=""      >
         </kendo-datepicker>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid">Insurance end date is required.</kendo-formerror>
@@ -288,6 +293,7 @@
                     formControlName = "premiumPaidThruDate"
                     [disabled]="isViewContentEditable"
                     formatPlaceholder="formatPattern"
+                    placeholder=""
                   >
                   </kendo-datepicker>
                 </kendo-floatinglabel>
@@ -300,6 +306,7 @@
                     formControlName = "nextPremiumDueDate"
                     [disabled]="isViewContentEditable"
                     formatPlaceholder="formatPattern"
+                    placeholder=""
                   >
                   </kendo-datepicker>
                 </kendo-floatinglabel>
