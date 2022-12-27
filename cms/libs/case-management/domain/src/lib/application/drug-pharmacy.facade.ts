@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Data services **/
 import { DrugDataService } from '../infrastructure/drug.data.service';
@@ -181,6 +180,7 @@ export class DrugPharmacyFacade {
         if (response === true) {
           this.loadClientPharmacyList(clientId);
           this.addPharmacyResponseSubject.next(true);
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Added Successfully');
         }
         this.loaderService.hide();
       },
@@ -204,6 +204,7 @@ export class DrugPharmacyFacade {
         if (response === true) {
           this.loadClientPharmacyList(clientId);
           this.editPharmacyResponseSubject.next(true);
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Updated Successfully');
         }
         this.loaderService.hide();
       },
@@ -223,6 +224,7 @@ export class DrugPharmacyFacade {
         if (response === true) {
           this.loadClientPharmacyList(clientId);
           this.removePharmacyResponseSubject.next(true);
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Removed Successfully');
         }
         this.loaderService.hide();
       },
