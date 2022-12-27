@@ -3,7 +3,7 @@
     <div class="app-c-table">
       <kendo-grid [pageSize]="5" [pageable]="true"  [data]="clientpharmacies$ | async">
         <kendo-grid-column
-          field="pharmacyName"
+          field="pharmacyNameAndNumber"
           title="Pharmacy Name and Number"
           [width]="220"
         >

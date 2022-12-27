@@ -104,8 +104,8 @@ export class PharmacyListComponent implements OnInit {
     this.clientpharmacies$.subscribe({
       next: (pharmacies: ClientPharmacy[]) => {
         pharmacies.forEach((pharmacyData: any) => {
-          pharmacyData.PharmacyNameAndNumber =
-            pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
+          pharmacyData.pharmacyNameAndNumber =
+            pharmacyData.pharmacyName + ' #' + pharmacyData.pharmacyNumber;
         });
       },
       error: (err) => {
