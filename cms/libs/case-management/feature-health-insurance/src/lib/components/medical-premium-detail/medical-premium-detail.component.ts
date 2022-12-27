@@ -448,6 +448,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
     }
+    if(this.ddlInsuranceType === HealthInsurancePlan.Veterans){
+      this.medicareInsuranceInfoCheck=false;
+    }
     if (this.ddlInsuranceType === HealthInsurancePlan.OregonHealthPlan || this.medicareInsuranceInfoCheck) {
       OregonPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
