@@ -26,7 +26,7 @@
 
   </div>
 
-  <div   class="flex-row"  *ngIf="isOpenDdl && ddlInsuranceType === 'Medicare'">
+  <div   class="flex-row"  *ngIf="isOpenDdl && ddlInsuranceType === InsurancePlanTypes.Medicare">
     <div class="block-section">
     <div class="flex-col mt-3">
       <h5 class="text-capital">Medicare Info</h5>
@@ -142,10 +142,10 @@
             text="No"
           ></kendo-label>
         </span>
-        <kendo-formerror *ngIf="!healthInsuranceForm.controls['onLisFlag'].valid">On Low Income Subsidy (LIS) is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!healthInsuranceForm.controls['onLisFlag'].valid && isViewContentEditable==false">On Low Income Subsidy (LIS) is required.</kendo-formerror>
       </div>
     </div>
-    
+
   </div>
   </div>
 
@@ -207,10 +207,10 @@
       </div>
       <div
         class="flex-col"
-        *ngIf="ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'COBRA' && ddlInsuranceType !== 'Medicare'">
+        *ngIf="ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan && ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.Cobra && ddlInsuranceType !== InsurancePlanTypes.Medicare">
         <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit" [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
       </div>
-      <div class="flex-col mt-3"  *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && healthInsuranceForm.controls['insuranceCarrierName'].value">
+      <div class="flex-col mt-3"  *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && healthInsuranceForm.controls['insuranceCarrierName'].value">
         <h5 class="text-capital">Insurance Carrier Contact Info</h5>
         <div class="block-section">
           <p class="bold-text">Address</p>
@@ -311,18 +311,18 @@
                   </kendo-datepicker>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">Next payment premium due date is required.</kendo-formerror>
-    
+
               </div>
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                   <span class="k-input-prefix custom-currencysymbol"> $ </span>
                   <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right" placeholder="00.00"
                     formControlName="premiumAmt" #premiumAmt [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" [disabled]="isViewContentEditable">
-    
+
                   </kendo-numerictextbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid">Premium amount is required.</kendo-formerror>
-    
+
               </div>
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Premium Frequency">
@@ -342,10 +342,10 @@
               <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
                   <kendo-textbox [maxlength]="20" formControlName = "paymentIdNbr" [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" aria-label="payment id number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-    
+
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is required.</kendo-formerror>
-    
+
               </div>
               <div class="flex-col mt-2">
                 <span class="app-checkboxwidtext-wrapper">
@@ -368,12 +368,13 @@
         </div>
         <div
           class="flex-col mt-3"
-          *ngIf="ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'OREGON_HEALTH_PLAN' &&  ddlInsuranceType !== 'COBRA'" >
+          *ngIf="ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  && ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan  &&  ddlInsuranceType !== InsurancePlanTypes.Cobra && ddlInsuranceType !== InsurancePlanTypes.Medicare" >
           <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm" [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
-         
+        </div>
+        <div>
           <div
             class="flex-col"
-            *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' &&  ddlInsuranceType !== 'COBRA'">
+            *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
             <h5>Are others covered on the plan?</h5>
             <div class="component-list-h">
               <span class="app-radiobtnwidtext-wrapper">
@@ -412,7 +413,7 @@
           </div>
           <div
             class="flex-col mt-2"
-            *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' &&  ddlInsuranceType !== 'COBRA'">
+            *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
             <h5>Others covered on the plan(Select all that apply)</h5>
             <div class="component-list-h">
               <span class="app-checkboxwidtext-wrapper">
@@ -476,7 +477,7 @@
           <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
             <div
               class="flex-col"
-              *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN' && ddlInsuranceType !== 'COBRA'"
+              *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  && ddlInsuranceType !== InsurancePlanTypes.Cobra && ddlInsuranceType !== InsurancePlanTypes.Medicare"
             >
               <button
                 kendoButton
@@ -495,7 +496,7 @@
           </div>
           <div
             class="flex-col mb-2 mt-2"
-            *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'"
+            *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan "
           >
             <h5 class="text-capital">Copy of Insurance Card</h5>
             <kendo-upload [disabled]="isViewContentEditable"> </kendo-upload>
@@ -503,7 +504,7 @@
           </div>
           <div
             class="flex-col mb-2"
-            *ngIf="ddlInsuranceType !== 'OREGON_HEALTH_PLAN' && ddlInsuranceType !== 'QUALIFIED_HEALTH_PLAN' && ddlInsuranceType !== 'OFF_EXCHANGE_PLAN'"
+            *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan"
           >
             <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
             <kendo-upload [disabled]="isViewContentEditable"> </kendo-upload>
@@ -515,7 +516,7 @@
   </div>
 
 
- 
+
 </section>
 
 <kendo-dialog-actions>
@@ -575,4 +576,3 @@
 </kendo-dialog-actions>
 
 
-  
