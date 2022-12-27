@@ -12,6 +12,7 @@ export class HealthInsurancePolicyDataService {
   ) {}
 
   saveHealthInsurancePolicy(healthInsurancePolicy: healthInsurancePolicy) {
+    debugger;
     return this.http.post<healthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
       healthInsurancePolicy

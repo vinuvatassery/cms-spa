@@ -97,6 +97,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       paymentIdNbr:[''],
       paymentIdNbrSameAsInsuranceIdNbrFlag:[''],
       groupPlanType:[''],
+      medicareBeneficiaryIdNbr: [''],
+      medicareCoverageTypeCode:[''],
+      medicarePartAStartDate:[''],
+      medicarePartBStartDate:[''],
+      onQmbFlag:[''],
+      onLisFlag:['']
 
 
 

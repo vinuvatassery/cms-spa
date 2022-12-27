@@ -18,6 +18,8 @@ import {
   YesNoFlag,
   StatusFlag,
   HealthInsurancePlan,
+  PartBMedicareType,
+  PartAMedicareType
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -59,12 +61,16 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
   /** Public properties **/
   sameAsInsuranceIdFlag = false;
+  partAStartDateCheck = false;
+  partBDtartDateCheck = false;
+  medicareInsuranceInfoCheck = true;
   ddlMedicalHealthInsurancePlans$ =
   this.healthFacade.ddlMedicalHealthInsurancePlans$;
   carrierContactInfo= new CarrierContactInfo();
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
+  medicareCoverageTypeList$ = this.lovFacade.medicareCoverageType$;
 
   ddlMedicalHealthPlanMetalLevel$ =
     this.healthFacade.ddlMedicalHealthPlanMetalLevel$;
@@ -134,6 +140,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   private loadLovs() {
     this.lovFacade.getPremiumFrequencyLovs();
     this.lovFacade.getInsuranceTypeLovs();
+    this.lovFacade.getMedicareCoverageTypeLovs();
   }
   private validateFormMode() {
     if (this.dialogTitle === 'Add' || this.dialogTitle === 'View') {
@@ -220,10 +227,15 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     );
     this.onHealthInsuranceTypeChanged();
     this.healthInsuranceForm.controls['insuranceStartDate'].setValue(
-      new Date(healthInsurancePolicy.startDate)
+
+      healthInsurancePolicy.startDate != null ? new Date(healthInsurancePolicy.startDate): null
+
     );
+
     this.healthInsuranceForm.controls['insuranceEndDate'].setValue(
-      new Date(healthInsurancePolicy.endDate)
+
+      healthInsurancePolicy.endDate != null ? new Date(healthInsurancePolicy.endDate): null
+
     );
     this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(
       healthInsurancePolicy.insuranceIdNbr
@@ -280,8 +292,70 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
         healthInsurancePolicy.premiumAmt
       );
     }
+    if(this.ddlInsuranceType === HealthInsurancePlan.Medicare)
+    {
+      this.healthInsuranceForm.controls['medicareCoverageTypeCode'].setValue(healthInsurancePolicy.medicareCoverageTypeCode);
+      this.onMedicareCoverageTypeChanged();
+      this.healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].setValue(
+        healthInsurancePolicy.medicareBeneficiaryIdNbr
+      );
+
+      this.healthInsuranceForm.controls['medicarePartAStartDate'].setValue(
+        healthInsurancePolicy.medicarePartAStartDate != null ? new Date(healthInsurancePolicy.medicarePartAStartDate): null
+      );
+
+      this.healthInsuranceForm.controls['medicarePartBStartDate'].setValue(
+        healthInsurancePolicy.medicarePartBStartDate != null ? new Date(healthInsurancePolicy.medicarePartBStartDate): null
+      );
+      this.healthInsuranceForm.controls['onLisFlag'].setValue(
+        healthInsurancePolicy.onLisFlag
+      );
+
+      this.healthInsuranceForm.controls['onQmbFlag'].setValue(
+        healthInsurancePolicy.onQmbFlag === StatusFlag.Yes? true :  healthInsurancePolicy.onQmbFlag === StatusFlag.No ? false: null
+      );
+    }
+    if(this.medicareInsuranceInfoCheck)
+    {
+      this.healthInsuranceForm.controls['insuranceStartDate'].setValue(
+        healthInsurancePolicy.startDate != null ? new Date(healthInsurancePolicy.startDate): null
+      );
+      this.healthInsuranceForm.controls['insuranceEndDate'].setValue(
+        healthInsurancePolicy.endDate != null ? new Date(healthInsurancePolicy.endDate): null
+      );
+      this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(
+        healthInsurancePolicy.insuranceIdNbr
+      );
+      this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
+        healthInsurancePolicy.insuranceCarrierId
+      );
+      this.insuranceCarrierNameChange(
+        healthInsurancePolicy.insuranceCarrierId as string
+      );
+      this.healthInsuranceForm.controls['insurancePlanName'].setValue(
+        healthInsurancePolicy.insurancePlanId
+      );
+      this.insurancePlanNameDefaultValue = healthInsurancePolicy.insurancePlanId;
+      const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
+      this.metalLevelDefaultValue = metalLevel;
+      this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
+      this.healthInsuranceForm.controls['aptcFlag'].setValue(
+        healthInsurancePolicy.aptcFlag
+      );
+      this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
+        healthInsurancePolicy.aptcMonthlyAmt
+      );
+    }
     this.disableEnableRadio();
   }
+
+
+
+
+
+
+
+  
 
   private conditionsInsideView() {
     //this.ddlInsuranceType = this.insuranceType;
@@ -328,6 +402,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     ];
     const HelpWithPremiumRequiredFields:Array<string> =
     ['nextPremiumDueDate','premiumAmt','premiumFrequencyCode','paymentIdNbr'];
+    const MedicarePlanRequiredFields:Array<string> = [
+      'medicareBeneficiaryIdNbr',
+      'medicareCoverageTypeCode',
+      'onLisFlag']
     this.resetValidators();
     this.healthInsuranceForm.updateValueAndValidity();
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
@@ -370,7 +448,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
     }
-    if (this.ddlInsuranceType === HealthInsurancePlan.OregonHealthPlan) {
+    if (this.ddlInsuranceType === HealthInsurancePlan.OregonHealthPlan || this.medicareInsuranceInfoCheck) {
       OregonPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -387,7 +465,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       ]);
       this.healthInsuranceForm.controls['metalLevel'].updateValueAndValidity();
     }
-    if(this.ddlInsuranceType !== HealthInsurancePlan.OregonHealthPlan && this.ddlInsuranceType !== HealthInsurancePlan.Veterans && this.ddlInsuranceType !== HealthInsurancePlan.QualifiedHealthPlan && this.ddlInsuranceType !== HealthInsurancePlan.OffExchangePlan)
+    if(this.ddlInsuranceType !== HealthInsurancePlan.OregonHealthPlan && this.ddlInsuranceType !== HealthInsurancePlan.Veterans && this.ddlInsuranceType !== HealthInsurancePlan.QualifiedHealthPlan && this.ddlInsuranceType !== HealthInsurancePlan.OffExchangePlan && this.medicareInsuranceInfoCheck)
       {
         this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].setValidators([Validators.required]);
           this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].updateValueAndValidity();
@@ -399,6 +477,30 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
           });
         }
       }
+      if(this.ddlInsuranceType === HealthInsurancePlan.Medicare)
+    {
+      MedicarePlanRequiredFields.forEach((key: string) => {
+        this.healthInsuranceForm.controls[key].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      });
+
+      if(this.partAStartDateCheck)
+      {
+        this.healthInsuranceForm.controls['medicarePartAStartDate'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['medicarePartAStartDate'].updateValueAndValidity();
+      }
+      if(this.partBDtartDateCheck)
+      {
+        this.healthInsuranceForm.controls['medicarePartBStartDate'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['medicarePartBStartDate'].updateValueAndValidity();
+      }
+    }
   }
   private resetValidators() {
     Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
@@ -420,6 +522,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;
+      //this.healthInsurancePolicy.insurancePlanId = '86A1D4AD-7C34-41C8-A47F-0C2D9CA706E6';
       this.healthInsurancePolicy.clientMaximumId =
         'C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
       
@@ -432,17 +535,32 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsurancePolicy.policyHolderLastName = null;
       this.healthInsurancePolicy.metalLevelCode =
         this.healthInsuranceForm.controls['metalLevel'].value?.lovCode;
+        if( this.healthInsuranceForm.controls['insuranceStartDate'].value !== null)
+      {
         (this.healthInsurancePolicy.startDate = this.intl.parseDate(
           Intl.DateTimeFormat('en-US').format(
             this.healthInsuranceForm.controls['insuranceStartDate'].value
           )
         ));
-      this.healthInsurancePolicy.endDate = this.intl.parseDate(
-        Intl.DateTimeFormat('en-US').format(
-          this.healthInsuranceForm.controls['insuranceEndDate'].value
-        )
-      );
-      if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === StatusFlag.Yes)
+      }
+      else
+      {
+        this.healthInsurancePolicy.startDate = null
+      }
+
+        if(this.healthInsuranceForm.controls['insuranceEndDate'].value !== null)
+        {
+        this.healthInsurancePolicy.endDate = this.intl.parseDate(
+          Intl.DateTimeFormat('en-US').format(
+            this.healthInsuranceForm.controls['insuranceEndDate'].value
+          )
+        );
+        }
+        else
+        {
+          this.healthInsurancePolicy.endDate = null;
+        }
+        if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === StatusFlag.Yes)
       {
 
         this.healthInsurancePolicy.careassistPayingPremiumFlag= StatusFlag.Yes;
@@ -457,6 +575,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       {
         this.healthInsurancePolicy.careassistPayingPremiumFlag=this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value;
       }
+      this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
+      this.healthInsurancePolicy.premiumPaidThruDate = new Date();
+      this.healthInsurancePolicy.premiumFrequencyCode = 'string';
+      this.healthInsurancePolicy.nextPremiumDueDate = new Date();
+      this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = null;
+      this.healthInsurancePolicy.paymentIdNbr = 'string';
       if (
         this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
       ) {
@@ -469,12 +593,53 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
 
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
-      this.healthInsurancePolicy.medicareBeneficiaryIdNbr = 'string';
-      this.healthInsurancePolicy.medicareCoverageTypeCode = 'string';
-      this.healthInsurancePolicy.medicarePartAStartDate = new Date();
-      this.healthInsurancePolicy.medicarePartBStartDate = new Date();
-      this.healthInsurancePolicy.onQmbFlag = null;
-      this.healthInsurancePolicy.onLisFlag = null;
+
+      this.healthInsurancePolicy.medicareBeneficiaryIdNbr = this.healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].value;
+      this.healthInsurancePolicy.medicareCoverageTypeCode = this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value;
+      if(this.healthInsuranceForm.controls['medicarePartAStartDate'].value !== null)
+      {
+        (this.healthInsurancePolicy.medicarePartAStartDate = this.intl.parseDate(
+          Intl.DateTimeFormat('en-US').format(
+            this.healthInsuranceForm.controls['medicarePartAStartDate'].value
+          )
+        ));
+      }
+      else
+      {
+        this.healthInsurancePolicy.medicarePartAStartDate = null;
+      }
+      if(this.healthInsuranceForm.controls['medicarePartBStartDate'].value !== null)
+      {
+        (this.healthInsurancePolicy.medicarePartBStartDate =this.intl.parseDate(
+          Intl.DateTimeFormat('en-US').format(
+            this.healthInsuranceForm.controls['medicarePartBStartDate'].value
+          )
+        ));
+      }
+      else
+      {
+        this.healthInsurancePolicy.medicarePartBStartDate = null;
+      }
+      if( this.healthInsuranceForm.controls['onQmbFlag'].value === true)
+      {
+        this.healthInsurancePolicy.onQmbFlag = StatusFlag.Yes;
+      }
+      else if (this.healthInsuranceForm.controls['onQmbFlag'].value === false)
+      {
+        this.healthInsurancePolicy.onQmbFlag = StatusFlag.No;
+      }
+      else
+      {
+        this.healthInsurancePolicy.onQmbFlag = null;
+      }
+
+      if (
+        this.healthInsuranceForm.controls['onLisFlag'].value !== StatusFlag.Yes
+      ) {
+        this.healthInsurancePolicy.onLisFlag =this.healthInsuranceForm.controls['onLisFlag'].value;
+      }else{
+        this.healthInsurancePolicy.onLisFlag =StatusFlag.Yes;
+      }
       (this.healthInsurancePolicy.paymentGroupNumber = 0),
         (this.healthInsurancePolicy.insuranceFirstName = 'string');
       this.healthInsurancePolicy.insuranceLastName = 'string';
@@ -492,6 +657,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.ddlInsuranceType =
       this.healthInsuranceForm.controls['insuranceType'].value;
     this.isOpenDdl = true;
+    if (this.ddlInsuranceType === HealthInsurancePlan.Medicare)
+    {
+      this.medicareInsuranceInfoCheck = false;
+    }
+    else
+    {
+      this.medicareInsuranceInfoCheck = true;
+    }
   }
 
   onModalCloseClicked() {
@@ -572,6 +745,35 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       },
     });
   }
+  onMedicareCoverageTypeChanged()
+  {
+    if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("P") || this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("M"))
+    {
+      this.medicareInsuranceInfoCheck = true;
+    }
+    else
+    {
+      this.medicareInsuranceInfoCheck = false;
+    }
+    const PartAenum = Object.keys(PartAMedicareType)
+    if(PartAenum.includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value))
+    {
+      this.partAStartDateCheck = true;
+    }
+    else
+    {
+      this.partAStartDateCheck = false;
+    }
+    const PartBenum = Object.keys(PartBMedicareType)
+    if(PartBenum.includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value))
+    {
+      this.partBDtartDateCheck = true;
+    }
+    else
+    {
+      this.partBDtartDateCheck = false;
+    }
+  }
   save() {
     this.isSubmitted = true;
     this.validateForm();
@@ -581,7 +783,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       if (this.isEdit) {
         this.healthInsurancePolicy.clientInsurancePolicyId =
           this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
-        this.healthInsurancePolicy.creationTime = this.healthInsurancePolicyCopy.creationTime;
+        this.healthInsurancePolicy.creationTime =this.healthInsurancePolicyCopy.creationTime;
         this.insurancePolicyFacade
           .updateHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(
