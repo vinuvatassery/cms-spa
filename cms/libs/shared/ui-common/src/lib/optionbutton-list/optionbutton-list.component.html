@@ -7,6 +7,7 @@
             id="{{OptionControlerName + material.lovCode}}"
             [value]="material.lovCode"
             [name]="OptionControlerName"  
+            tabindex="0"
             [formControlName]="OptionControlerName"
             (change)="onMaterialsRdoClicked($event)"/>
       
@@ -24,6 +25,7 @@
               <kendo-floatinglabel [text]="textPlaceholderText">
                 <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
                  [data]="dropdownInutLov | async"
+                 [attr.aria-label]="textPlaceholderText"
                 textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                 [formControlName]="textControlerName"               
                 [disabled]="textFieldDisable">
