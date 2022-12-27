@@ -89,12 +89,7 @@ export class ContactDataService {
   }
 
   loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any) {
-    let params= new HttpParams();
-    params = params.append('clientId',clientId);
-    params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
-    params = params.append('skipCount',skip);
-    params = params.append('maxResultCount',pageSize);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/GetIncomeList`,{params:params});
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}/${skip}/${pageSize}`);
   }
 
   loadDependentsProofofSchools() {
