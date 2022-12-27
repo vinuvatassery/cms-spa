@@ -43,8 +43,7 @@ import { SsnPipe, PhonePipe } from '@cms/shared/ui-common';
 export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
   currentDate = new Date();
   buttonText: string = 'Add';
-  public isaddNewInsuranceProviderOpen = false;
-  public isaddNewInsurancePlanOpen = false;
+ 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() dialogTitle!: string;
@@ -407,6 +406,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       'medicareCoverageTypeCode',
       'onLisFlag']
     this.resetValidators();
+    this.healthInsuranceForm.markAllAsTouched();
     this.healthInsuranceForm.updateValueAndValidity();
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
       QualifiedHealthPlanRequiredFields.forEach((key: string) => {
@@ -682,21 +682,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     this.isToggleNewPerson = !this.isToggleNewPerson;
   }
 
-  public addNewInsuranceProviderClose(): void {
-    this.isaddNewInsuranceProviderOpen = false;
-  }
 
-  public addNewInsuranceProviderOpen(): void {
-    this.isaddNewInsuranceProviderOpen = true;
-  }
 
-  public addNewInsurancePlanClose(): void {
-    this.isaddNewInsurancePlanOpen = false;
-  }
 
-  public addNewInsurancePlanOpen(): void {
-    this.isaddNewInsurancePlanOpen = true;
-  }
   insuranceCarrierNameData(data: any) {
     if (this.isEdit) {
       this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
@@ -843,4 +831,5 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].enable();
     }
   }
+
 }

@@ -23,8 +23,32 @@
           class="card-link-button ml-1 no-ul"
           [disabled]="isViewContentEditable"
           aria-label="add new insurance plan"
+          (click)="addNewInsurancePlanOpen()"
         >
           ADD NEW
         </button>
       </div>
 </div>
+<kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Plan">
+
+<section class="k-dialog-body mb-2">
+  <p>
+    This feature is part of future scope of work for the ORCares project.
+  </p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" aria-label="Cancel Add New Insurance Plan" look="outline"
+        (click)="addNewInsurancePlanClose()">
+        Cancel
+      </button>
+      <button kendoButton      [primary]="true" aria-label="Add New Insurance Plan" (click)="addNewInsurancePlanClose()">
+        Add
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
+
+</kendo-dialog>
