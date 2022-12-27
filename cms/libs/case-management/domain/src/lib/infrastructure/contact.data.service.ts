@@ -88,8 +88,8 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId: string, clientCaseEligibilityId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}`);
+  loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}/${skip}/${pageSize}`);
   }
 
   loadDependentsProofofSchools() {

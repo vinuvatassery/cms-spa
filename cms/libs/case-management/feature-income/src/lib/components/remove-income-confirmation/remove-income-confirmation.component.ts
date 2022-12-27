@@ -14,7 +14,7 @@ export class RemoveIncomeConfirmationComponent {
   @Input() selectedIncome: any;
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
   @Output() closePopup: EventEmitter<boolean> = new EventEmitter();
-  
+  @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() deleteUpdateIncomeEvent = new EventEmitter<any>();
   sessionId!: string;
   clientId: any;
@@ -53,9 +53,9 @@ export class RemoveIncomeConfirmationComponent {
       this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId, this.clientCaseEligibilityId ).subscribe({
         next: (response: any) => {
           this.onRemoveIncomeConfirmationClosed();     
-          this.incomeFacade.loadIncomes(this.clientId, this.clientCaseEligibilityId);
           this.incomeFacade.HideLoader();
           this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully') 
+          this.sendDetailToIncomeList.next(true);
         },
         error: (err: any) => {
           this.incomeFacade.HideLoader();

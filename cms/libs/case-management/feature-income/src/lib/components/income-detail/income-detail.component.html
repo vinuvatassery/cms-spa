@@ -160,7 +160,8 @@
   <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
   <case-management-remove-income-confirmation 
   (closeModal)="onRemoveIncomeConfirmationClosed()" 
-  [selectedIncome]="selectedIncome"></case-management-remove-income-confirmation>
+  [selectedIncome]="selectedIncome"
+  (sendDetailToIncomeList)="incomeDeleteHandle($event)"></case-management-remove-income-confirmation>
 
   
 </kendo-dialog>
