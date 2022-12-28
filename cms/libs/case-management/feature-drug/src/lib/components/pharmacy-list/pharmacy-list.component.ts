@@ -93,11 +93,11 @@ export class PharmacyListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
+    // this.state = {
+    //   skip: this.gridSkipCount,
+    //   take: this.pageSizes[0]?.value,
+    //   sort: this.sort,
+    // };
     this.loadClientPharmacies();  
     this.actionResponseSubscription();
     this.editPharmacyItemSubscribe();
