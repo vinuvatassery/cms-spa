@@ -2,7 +2,9 @@
 <div class="flex-row">
   <div class="flex-col">
     <div class="app-c-table" *ngIf="!hasNoIncome">
-      <kendo-grid [data]="incomes$ | async">
+      <kendo-grid [data]="incomes$ | async"[pageSize]="state.take" [pageable]="true"
+      [sortable]="false" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
+      [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
         <kendo-grid-column
           field="incomeSourceCodeDesc"
           title="Income Source"
@@ -117,6 +119,29 @@
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
+         <!-- grid Pagination template -->
+         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+         let-currentPage="currentPage">
+         <div class="grid-custom-paginationtemplates d-flex">
+           <div class="d-flex align-items-center">
+             <label class="mr-1">Rows Per Page</label>
+             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+               [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"
+               (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+             <kendo-pager-info> </kendo-pager-info>
+             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+           </div>
+           <div class="d-flex">
+             <kendo-pager-input></kendo-pager-input>
+             <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+             <kendo-pager-next-buttons></kendo-pager-next-buttons>
+           </div>
+         </div>
+       </ng-template>
+       <!-- grid loader template -->
+       <ng-template kendoGridLoadingTemplate>
+         <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
       </kendo-grid>
     </div>
     <div
@@ -191,7 +216,7 @@
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>
-  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" [selectedIncome]="selectedIncome"> </case-management-income-detail>
+  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" [selectedIncome]="selectedIncome" (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"> </case-management-income-detail>
 </kendo-dialog>
 
 
@@ -199,7 +224,8 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()" 
-  [selectedIncome]="selectedIncome"></case-management-remove-income-confirmation>
+  [selectedIncome]="selectedIncome"
+  (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"></case-management-remove-income-confirmation>
 
   
 </kendo-dialog>

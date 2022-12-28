@@ -5,12 +5,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith,first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
-import { DrugPharmacyFacade,  WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, YesNoFlag, CompletionChecklist } from '@cms/case-management/domain';
+import { DrugPharmacyFacade, PriorityCode, WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, YesNoFlag, CompletionChecklist } from '@cms/case-management/domain';
 import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 /** Enums **/
-import {  NavigationType } from '@cms/case-management/domain';
+import { NavigationType } from '@cms/case-management/domain';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
-import { SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-drug-page',
@@ -31,6 +31,12 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     nonPreferredPharmacyFlag: '',
   };
   isBenefitsChanged = true;
+  clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
+  pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$
+  addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
+  editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
+  removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
+  selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   clientCaseEligibilityId: string = "";
   sessionId: any = "";
   clientId: any;
@@ -50,11 +56,12 @@ export class DrugPageComponent implements OnInit, OnDestroy {
  
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
+   
     private route: ActivatedRoute,
     private readonly incomeFacade: IncomeFacade,
     private drugPharmacyFacade: DrugPharmacyFacade,
-    private loggingService: LoggingService,
-    private loaderService: LoaderService,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
     private prescriptionDrugFacade :PrescriptionDrugFacade) { }
 
   /** Lifecycle Hooks **/
@@ -63,6 +70,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.loadSessionData();
     this.addSaveSubscription();
+    this.loadClientPharmacies();
     this.priscriptionDrugFormChanged();
     
   }
@@ -185,6 +193,43 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   
   onBenefitsValueChange() {
     this.isBenefitsChanged = !this.isBenefitsChanged;
+  }
+
+
+  /* Pharmacy */
+  private loadClientPharmacies() {
+    this.drugPharmacyFacade.loadClientPharmacyList(this.workflowFacade.clientId ?? 0);
+    this.clientpharmacies$.subscribe({
+      next: (pharmacies) => {
+        pharmacies.forEach((pharmacyData: any) => {
+          pharmacyData.PharmacyNameAndNumber =
+            pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
+        });
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  searchPharmacy(searchText: string) {
+    this.drugPharmacyFacade.searchPharmacies(searchText);
+  }
+
+  addPharmacy(vendorId: string) {
+    this.drugPharmacyFacade.addClientPharmacy(this.workflowFacade.clientId ?? 0, vendorId, PriorityCode.Primary);
+  }
+
+  editPharmacyInit(vendorId: string) {
+    this.drugPharmacyFacade.getPharmacyById(vendorId);
+  }
+
+  editPharmacy(data: any) {
+    this.drugPharmacyFacade.editClientPharmacy(this.workflowFacade.clientId ?? 0, data?.clientPharmacyId, data?.vendorId, PriorityCode.Primary);
+  }
+
+  removePharmacy(clientPharmacyId: string) {
+    this.drugPharmacyFacade.removeClientPharmacy(this.workflowFacade.clientId ?? 0, clientPharmacyId);
   }
 }
 

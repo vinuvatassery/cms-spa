@@ -17,7 +17,7 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
 
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
   @Output() insuranceCarrierNameData = new EventEmitter<any>();
-
+public isaddNewInsuranceProviderOpen =false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   CarrierNames: any = [];
   public caseOwnerfilterSettings: DropDownFilterSettings = {
@@ -56,5 +56,13 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
 
   public insuranceCarrierNameChangeValue(value: string): void {
     this.insuranceCarrierNameChange.emit(value);
+  }
+
+  public addNewInsuranceProviderClose(): void {
+    this.isaddNewInsuranceProviderOpen = false;
+  }
+
+  public addNewInsuranceProviderOpen(): void {
+    this.isaddNewInsuranceProviderOpen = true;
   }
 }

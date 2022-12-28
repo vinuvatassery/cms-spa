@@ -1,0 +1,17 @@
+<div [formGroup]="healthInsuranceForm">
+  <h5>Group Plan Type</h5>
+  <div class="component-list-h">
+    <span class="app-radiobtnwidtext-wrapper">
+      <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton formControlName="groupPlanType" value="E"
+        name="groupPlanType" id="groupPlanType_E" tabindex="1" />
+      <kendo-label class="k-radio-label" text="Employer Policy" for="groupPlanType_E"></kendo-label>
+    </span>
+    <span class="app-radiobtnwidtext-wrapper">
+      <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton formControlName="groupPlanType" value="R"
+        name="groupPlanType" id="groupPlanType_R" tabindex="2" />
+      <kendo-label class="k-radio-label" text="Retirement Policy" for="groupPlanType_R"></kendo-label>
+    </span>
+    <kendo-formerror *ngIf="!healthInsuranceForm.controls['groupPlanType'].valid&& isViewContentEditable==false">Advanced
+      Group Plan Type is required.</kendo-formerror>
+  </div>
+</div>

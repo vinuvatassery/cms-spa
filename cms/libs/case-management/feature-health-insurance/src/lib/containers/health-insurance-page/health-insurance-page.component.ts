@@ -82,16 +82,29 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       clientInsurancePolicyId: [''],
       insuranceType: [''],
       insuranceStartDate:[''],
-      insuranceEndDate:[''], 
+      insuranceEndDate:[''],
       insuranceIdNumber:[''],
       insuranceCarrierName:[''],
       metalLevel:[{}],
       insurancePlanName:[''],
-      wantHelpBuyingPremium:[''],
       aptcFlag:[''],
       aptcMonthlyAmt:[''],
-      
-      
+      careassistPayingPremiumFlag:[''],
+      premiumPaidThruDate:[''],
+      nextPremiumDueDate:[''],
+      premiumAmt:[''],
+      premiumFrequencyCode:[''],
+      paymentIdNbr:[''],
+      paymentIdNbrSameAsInsuranceIdNbrFlag:[''],
+      groupPlanType:[''],
+      medicareBeneficiaryIdNbr: [''],
+      medicareCoverageTypeCode:[''],
+      medicarePartAStartDate:[''],
+      medicarePartBStartDate:[''],
+      onQmbFlag:[''],
+      onLisFlag:['']
+
+
 
     });
 
@@ -159,6 +172,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
         this.patchInsurancePolicyFlags(policy);
         if (this.currentInsurance == 'Y') {
           this.showTable = true;
+        }
+        else{
+          this.showTable = false;
         }
         this.ref.detectChanges();
       }

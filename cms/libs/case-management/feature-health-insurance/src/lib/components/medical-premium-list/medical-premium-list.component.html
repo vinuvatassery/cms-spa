@@ -6,7 +6,7 @@
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
         <kendo-grid-column field="FullDetail" title="Full Detail" [width]="75">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
-              (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem.InsuranceType)"
+              (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
               aria-label="view medical premium">
               View
             </button></ng-template>
@@ -140,7 +140,7 @@
   <case-management-medical-premium-detail [dialogTitle]="dialogTitle"
     (isCloseInsuranceModal)="handleHealthInsuranceCloseClicked()"
     (editRedirect)="handleHealthInsuranceOpenClicked('edit')" [insuranceType]="insuranceType"
-    [healthInsuranceForm]="healthInsuranceForm"></case-management-medical-premium-detail>
+    [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)"></case-management-medical-premium-detail>
 </kendo-dialog>
 
 <!-- Change Priority Modal -->
@@ -164,7 +164,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding health insurance">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding health insurance" (click)="onDeleteConfirmCloseClicked()">
           Cancel
         </button>
         <button kendoButton class="k-error-button" aria-label="delete health insurance" (click)="deleteInsurancePolicy()">

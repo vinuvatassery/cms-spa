@@ -92,18 +92,18 @@
             </div>
           </div>
         </form>
-       
+
         <div *ngIf="showTable">
           <div class="flex-col">
             <h5 class="text-capital">Insurance Plans</h5>
           </div>
           <div class="flex-col">
-            <case-management-medical-premium-list 
+            <case-management-medical-premium-list
                 [healthInsuranceForm]="healthInsuranceForm" [closeDeleteModal]="closeDeleteModal" (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)" (deleteInsurancePlan)="delteInsurancePolicy($event)" >
           </case-management-medical-premium-list>
           </div>
         </div>
-        
+
       </div>
     </div>
   </section>

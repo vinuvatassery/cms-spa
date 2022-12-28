@@ -10,6 +10,9 @@ import { IncomeFacade, Income } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 
+import { State } from '@progress/kendo-data-query';
+
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -24,6 +27,12 @@ export class IncomeListComponent implements OnInit {
   @Input() clientId: any;
   @Input() clientCaseId: any;
  
+  @Output() loadIncomeListEvent = new EventEmitter<any>();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  public pageSizes = this.incomeFacade.gridPageSizes;
+  public gridSkipCount = this.incomeFacade.skipCount;
+  public state!: State;
+
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
@@ -106,6 +115,12 @@ export class IncomeListComponent implements OnInit {
     this.includeAddIncomeButtonAndFooterNote();
   }
 
+  ngOnChanges(){
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
+  }
   /** Private methods **/
   private loadIncomes() {
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse:any)=>{
@@ -161,4 +176,39 @@ onIncomeActionClicked(
   onRemoveIncomeConfirmationClosed() {
     this.isRemoveIncomeConfirmationPopupOpened = false;
 }
+  // updating the pagination infor based on dropdown selection
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadIncomeData();
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
+    this.loadIncomeData();
+  }
+  // Loading the grid data based on pagination
+  private loadIncomeData(): void {
+    this.LoadIncomeList(
+      this.state.skip ?? 0,
+      this.state.take ?? 0
+    );
+  }
+
+  LoadIncomeList(
+    skipcountValue: number,
+    maxResultCountValue: number
+  ) {
+    const gridDataRefinerValue = {
+      skipCount: skipcountValue,
+      pagesize: maxResultCountValue
+    };
+    this.loadIncomeListEvent.next(gridDataRefinerValue);
+  }
+
+  incomeDetailResponseHandle(event:any){
+    if(event){
+      this.loadIncomeData();
+    }
+  }
 }
