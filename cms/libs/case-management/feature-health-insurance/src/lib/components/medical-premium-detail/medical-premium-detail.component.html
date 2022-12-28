@@ -6,7 +6,7 @@
     : 'All fields are required unless otherwise stated.'
     }}
   </p>
-  <form [formGroup]="addPersonForm">
+  <form [formGroup]="insuranceForm">
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Health Insurance Type">
@@ -47,7 +47,7 @@
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mat-form-sm-b-space"
-        *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+        *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <kendo-floatinglabel text="Insurance Carrier Name">
           <!-- <input
           [disabled]="isViewContentEditable"
@@ -85,15 +85,15 @@
           </button>
         </div>
       </div>
-      <div class="flex-col  " *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col  " *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <kendo-floatinglabel text="Metal Level">
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlMedicalHealthPlanMetalLevel$ | async"
             [disabled]="isViewContentEditable">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col mt-1" *ngIf="  addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)' &&
-      addPersonForm.value.ddlInsuranceType == 'Qualified Health Plan'
+      <div class="flex-col mt-1" *ngIf="  insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)' &&
+      insuranceForm.value.ddlInsuranceType == 'Qualified Health Plan'
       ">
         <h5>Group Plan Type</h5>
         <div class="component-list-h">
@@ -109,7 +109,7 @@
           </span>
         </div>
       </div>
-      <div class="flex-col mt-3" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mt-3" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5 class="text-capital">Insurance Career Contact Info</h5>
         <div class="block-section">
           <p class="bold-text">Address</p>
@@ -130,7 +130,7 @@
           <p>(415) 555-2671</p>
         </div>
       </div>
-      <div class="flex-col mt-3" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mt-3" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <div class="block-section">
           <div class="flex-row">
             <div class="flex-col">
@@ -208,7 +208,7 @@
           </div>
         </div>
       </div>
-      <div class="flex-col mt-3" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mt-3" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5>Advanced Premium Tax Credit?</h5>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
@@ -237,7 +237,7 @@
             <kendo-label class="k-radio-label" text="Eligible, but not taking" for="advancedPremium4"></kendo-label>
           </span>
         </div>
-        <div class="block-section mt-2" *ngIf="addPersonForm.value.advancedPremium == 'Yes' ">
+        <div class="block-section mt-2" *ngIf="insuranceForm.value.advancedPremium == 'Yes' ">
           <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="monthly aptc amount"
               [fillMode]="formUiStyle.inputFillMode">
@@ -247,7 +247,7 @@
           </kendo-floatinglabel>
         </div>
       </div>
-      <div class="flex-col" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5>Are others covered on the plan?</h5>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
@@ -264,7 +264,7 @@
           </span>
         </div>
       </div>
-      <div class="flex-col mt-2" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mt-2" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5>Others covered on the plan(Select all that apply)</h5>
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
@@ -326,14 +326,14 @@
 
       </div>
       <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
-        <div class="flex-col" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+        <div class="flex-col" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
           <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
             aria-label="add new person">
             <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
           </button>
         </div>
       </div>
-      <div class="flex-col mt-3" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mt-3" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5>Is the client the policy holder?</h5>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
@@ -350,50 +350,57 @@
           </span>
         </div>
       </div>
-      <div class="flex-col flex-col-6" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col flex-col-6" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <kendo-floatinglabel text="Policy Holder First Name">
           <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
             [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"> </kendo-textbox>
-          <kendo-formerror *ngIf="addPersonForm.value.isClientPolicyHolder == 'No'">First Name is
+          <kendo-formerror *ngIf="insuranceForm.value.isClientPolicyHolder == 'No'">First Name is
             required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col flex-col-6" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col flex-col-6" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <kendo-floatinglabel text="Policy Holder Last Name">
           <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name"
             [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName">
           </kendo-textbox>
-          <kendo-formerror *ngIf="addPersonForm.value.isClientPolicyHolder == 'No'">Last Name is
+          <kendo-formerror *ngIf="insuranceForm.value.isClientPolicyHolder == 'No'">Last Name is
             required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col mb-2 mt-2" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mb-2 mt-2" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5 class="text-capital">Copy of Insurance Card</h5>
-        <!-- <kendo-upload [disabled]="isViewContentEditable" formControlName="copyOfInsuranceCard"> </kendo-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint> -->
-        <kendo-fileselect aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
-          [multiple]="false" (select)="handleFileSelected($event, 'copyInsurance')" #copyOfInsurance>
-        </kendo-fileselect>
+        <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
+          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
+          (remove)="handleFileRemoved(insuranceForm.value?.copyOfInsuranceCard?.documentId, 'copyInsurance')"
+          #copyOfInsurance [removeUrl]="uploadRemoveUrl" formControlName="copyOfInsuranceCard"
+          [restrictions]="uploadFileRestrictions.fileRestrictions" (upload)="onUploadClick($event, 'copyInsurance')">
+        </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="addPersonForm.value.copyOfInsuranceCard"> Copy of insurance card is required
+        <kendo-formerror *ngIf="insuranceForm.value.copyOfInsuranceCard"> Copy of insurance card is required
         </kendo-formerror>
       </div>
-      <div class="flex-col mb-2 mt-2" *ngIf="addPersonForm.value.isClientPolicyHolder == 'Yes'">
+      <div class="flex-col mb-2 mt-2" *ngIf="insuranceForm.value.isClientPolicyHolder == 'Yes'">
         <h5 class="text-capital">Proof of premium amount</h5>
-        <kendo-fileselect aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
-          [multiple]="false" (select)="handleFileSelected($event, 'proof')" #proofOfPremium>
-        </kendo-fileselect>
+        <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
+          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'proof')"
+          (remove)="handleFileRemoved(insuranceForm.value?.proofOfPremium?.documentId, 'proof')" #proofOfPremium
+          [removeUrl]="uploadRemoveUrl" formControlName="proofOfPremium"
+          [restrictions]="uploadFileRestrictions.fileRestrictions" (upload)="onUploadClick($event, 'copyInsurance')">
+        </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
-          *ngIf="addPersonForm.value.isClientPolicyHolder == 'Yes' && addPersonForm.value.proofOfPremium"> Proof of
+          *ngIf="insuranceForm.value.isClientPolicyHolder == 'Yes' && insuranceForm.value.proofOfPremium"> Proof of
           premium is required
         </kendo-formerror>
       </div>
-      <div class="flex-col mb-2" *ngIf="addPersonForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
+      <div class="flex-col mb-2" *ngIf="insuranceForm.value.ddlInsuranceType == 'Oregon Health Plan (OHP)'">
         <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
-        <kendo-fileselect aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
-          [multiple]="false" (select)="handleFileSelected($event, 'summary')" #copyOfSummary>
-        </kendo-fileselect>
+        <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
+          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
+          (remove)="handleFileRemoved(insuranceForm.value?.copyOfSummary?.documentId, 'summary')" #copyOfSummary
+          [removeUrl]="uploadRemoveUrl" formControlName="copyOfSummary"
+          [restrictions]="uploadFileRestrictions.fileRestrictions" (upload)="onUploadClick($event, 'copyInsurance')">
+        </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
       </div>
     </div>
@@ -416,7 +423,8 @@
         (click)="onModalCloseClicked()" aria-label="cancel adding medical premium">
         Cancel
       </button>
-      <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" aria-label="add new medical premium">
+      <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl"
+       aria-label="add new medical premium" (click)="saveChanges($event)">
         Add
       </button>
       <button kendoButton [primary]="true" *ngIf="isEditViewPopup" (click)="onModalCloseClicked()"
