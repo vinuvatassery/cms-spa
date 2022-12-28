@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -10,6 +10,10 @@ import { ContactDataService } from '../infrastructure/contact.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class IncomeFacade {
+
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+
   /** Private properties **/
   private ddlIncomeTypesSubject = new BehaviorSubject<any>([]);
   private ddlIncomeSourcesSubject = new BehaviorSubject<any>([]);
@@ -32,7 +36,8 @@ export class IncomeFacade {
   constructor(private readonly contactDataService: ContactDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService ) { }
+    private readonly loaderService: LoaderService,
+    private configurationProvider: ConfigurationProvider) { }
 
     ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {        
@@ -100,11 +105,24 @@ export class IncomeFacade {
     });
   }
 
-  loadIncomes(clientId:string,clientCaseEligibilityId:string): void {
+  loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any): void {
     this.ShowLoader();
-    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId).subscribe({
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize).subscribe({
       next: (incomesResponse: any) => {
-        this.incomesSubject.next(incomesResponse.clientIncomes);
+        if(incomesResponse.clientIncomes!=null){
+          const gridView: any = {
+            data: incomesResponse.clientIncomes,
+            total:incomesResponse.totalCount,
+          };
+          this.incomesSubject.next(gridView);
+        }
+        else{
+          const gridView: any = {
+            data: [],
+            total:incomesResponse.totalCount,
+          };
+          this.incomesSubject.next(gridView);
+        }
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependents);
         this.incomesResponseSubject.next(incomesResponse);
          this.HideLoader();

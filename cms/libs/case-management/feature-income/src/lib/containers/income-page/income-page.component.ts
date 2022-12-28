@@ -123,7 +123,14 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         return this.incomeFacade.save(this.noIncomeData);
       }
     }
-    return of(true)
+    else{
+      this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.noIncomeData.clientId = this.clientId
+      this.noIncomeData.noIncomeFlag = "N";
+      this.loaderService.show();
+      return this.incomeFacade.save(this.noIncomeData);
+    }
+    return of(false)
   }
 
   /** Internal event methods **/
@@ -137,11 +144,11 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods **/
-  private loadIncomes(clientId: string, clientCaseEligibilityId: string): void {
-    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId);
+  private loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any): void {
+    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize);
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
-      if (this.incomeData && this.incomeData?.noIncomeData) {
+      if (incomeresponse.noIncomeData!=null) {
         this.noIncomeFlag = true;
         this.noIncomeDetailsForm = new FormGroup({
           noIncomeClientSignedDate: new FormControl('', []),
@@ -232,9 +239,25 @@ export class IncomePageComponent implements OnInit, OnDestroy {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
-          this.loadIncomes(this.clientId, this.clientCaseEligibilityId);
+          const gridDataRefinerValue = {
+            skipCount: this.incomeFacade.skipCount,
+            pagesize: this.incomeFacade.gridPageSizes[0]?.value
+          };
+          this.loadIncomeListHandle(gridDataRefinerValue)
         }
       });
+  }
 
+  loadIncomeListHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize
+    };
+    this.loadIncomes(
+      this.clientId,
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount
+    );
   }
 }

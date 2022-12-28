@@ -73,7 +73,7 @@
             </form>
           </section>
           <section *ngIf="!hasNoIncome">
-            <case-management-income-list [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"></case-management-income-list>
+            <case-management-income-list [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
           </section>
           
         </div>

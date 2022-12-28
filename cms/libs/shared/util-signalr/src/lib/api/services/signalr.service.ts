@@ -32,12 +32,7 @@ export class SignalrService {
     private readonly oidcSecurityService: OidcSecurityService,
     private readonly configurationProvider: ConfigurationProvider
   ) {
-    //temporarily commented out to stop
-    //errors in UI console
-    //TO DO 
-    //uncomment after signalR implementation
-    // in API
-    //this.initialize();
+    this.initialize();
   }
 
   /** Private methods **/

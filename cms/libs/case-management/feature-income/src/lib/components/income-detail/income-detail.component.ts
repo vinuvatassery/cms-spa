@@ -205,16 +205,13 @@ export class IncomeDetailComponent implements OnInit {
           )
           .subscribe({
             next: (incomeResponse) => {
-              this.incomeFacade.loadIncomes(
-                this.clientId,
-                this.clientCaseEligibilityId
-              );
-              this.closeIncomeDetailPoup();
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Income created successfully.'
               );
+              this.sendDetailToIncomeList.next(true);
+              this.closeIncomeDetailPoup();
             },
             error: (err) => {
               this.incomeFacade.HideLoader();
@@ -242,16 +239,14 @@ export class IncomeDetailComponent implements OnInit {
           )
           .subscribe({
             next: (incomeResponse) => {
-              this.incomeFacade.loadIncomes(
-                this.clientId,
-                this.clientCaseEligibilityId
-              );
               this.closeIncomeDetailPoup();
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Income updated successfully.'
               );
+              this.sendDetailToIncomeList.next(true);
+              this.closeIncomeDetailPoup();
             },
             error: (err) => {
               this.incomeFacade.HideLoader();
@@ -376,5 +371,12 @@ export class IncomeDetailComponent implements OnInit {
   onRemoveIncomeConfirmationClosed() {
     this.closeIncomeDetailPoup();
     this.isRemoveIncomeConfirmationPopupOpened = false;
+  }
+
+  incomeDeleteHandle(event:any){
+    if(event){
+      this.sendDetailToIncomeList.next(true);
+      this.onRemoveIncomeConfirmationClosed();
+    }
   }
 }

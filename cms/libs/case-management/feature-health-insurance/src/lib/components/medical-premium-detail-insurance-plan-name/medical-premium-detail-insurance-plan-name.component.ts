@@ -18,6 +18,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() insurancePlans: Array<any> = [];
+  public isaddNewInsurancePlanOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   CarrierNames: any = [];
   public caseOwnerfilterSettings: DropDownFilterSettings = {
@@ -41,4 +42,12 @@ export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
     //   this.CarrierNames = data;
     // });
   }
+  public addNewInsurancePlanClose(): void {
+    this.isaddNewInsurancePlanOpen = false;
+  }
+
+  public addNewInsurancePlanOpen(): void {
+    this.isaddNewInsurancePlanOpen = true;
+  }
+
 }
