@@ -16,8 +16,8 @@
           >{{ Identity.lovDesc }}
         </label>
   
-        <div *ngIf="Identity.lovCode === 'NOT_LISTED'">
-          <span>
+        <div class="flex-row" *ngIf="Identity.lovCode === 'NOT_LISTED'">
+          <span class="flex-col flex-col-6">
             <kendo-floatinglabel text="Enter sexual orientation or sexual identity">
               <kendo-textbox
                 [formControlName]="DescriptionField"

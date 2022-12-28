@@ -16,8 +16,8 @@
         >{{ gender.lovDesc }}
       </label>
 
-      <div *ngIf="gender.lovCode === 'NOT_LISTED'">
-        <span>
+      <div class="flex-row" *ngIf="gender.lovCode === 'NOT_LISTED'">
+        <span class="flex-col flex-col-6">
           <kendo-floatinglabel text="Enter Gender">
             <kendo-textbox
               aria-label="enter gender"

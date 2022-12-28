@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     img {
-      max-height: 40px;
+      max-height: 35px;
     }
   }
   .global-search {
@@ -79,9 +79,10 @@
     .k-button.header-buttons {
       color: $app-primary-lighten;
       transition: ease-in all 0.3s;
+      border-radius: $border-radius-md;
       .k-icon,
       .material-icons {
-        color: $app-primary-lighten;
+        color: $black-3;
         font-size: $font-size-xx;
       }
       &:hover {
@@ -106,6 +107,7 @@
         font-family: $font-family-light;
         font-size: $font-size-m;
         z-index: 2;
+        line-height: 0px;
       }
     }
     .notification-list {
@@ -283,6 +285,9 @@ max-width: 400px;
     flex-direction: column;
     gap: $size-m;
     width: 100%;
+    .text-muted{
+      color: $inputlabelolor;
+    }
   }
   .k-dropdown-button {
     max-height: 30px;
@@ -293,6 +298,12 @@ max-width: 400px;
     }
   }
 }
+
+.app-c-tab{
+  .card-list{
+    max-width: 100%;
+  }
+}
 .notification-footer {
   display: flex;
   align-items: center;
@@ -300,6 +311,9 @@ max-width: 400px;
   padding: $size-xx;
   .material-icons {
     font-size: $font-size-xx;
+  }
+  .k-button{
+    letter-spacing: 0px;
   }
   .k-button {
     + .k-button {

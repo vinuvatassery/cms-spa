@@ -18,14 +18,14 @@
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceCarrierName'].valid">Insurance carrier name is required.</kendo-formerror>
       <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-        <span>Don’t see the Carrier you’re looking for?</span>
+        <span class="fontsize_twel">Don’t see the Carrier you’re looking for?</span>
         <button
           kendoButton
-          class="card-link-button ml-1 no-ul"
-          [disabled]="isViewContentEditable"
+          class="card-link-button ml-1 no-ul fontsize_twel"
+          [disabled]="isViewContentEditable" 
           aria-label="add new insurance carrier"
           (click)="addNewInsuranceProviderOpen()"
-        >
+        > 
           ADD NEW
         </button>
       </div>

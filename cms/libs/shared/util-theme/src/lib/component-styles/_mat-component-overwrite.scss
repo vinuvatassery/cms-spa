@@ -140,8 +140,8 @@
   &.header-search {
     // position: fixed;
     z-index: 9;
-    max-width: 475px;
-    width: 475px;
+    max-width: 500px;
+    width: 500px;
     // left: 50%;
     // top: 10px;
     // transform: translate(-50%, 0);
@@ -149,7 +149,9 @@
       min-width: 300px;
       max-width: 300px;
     }
-
+    .k-searchbar{
+      min-height: 36px;
+    }
   }
   kendo-multicolumncombobox > .k-button {
     display: none;
@@ -292,7 +294,7 @@
 
  .combotable_search_list{
 
- 
+
    .k-table-td,  .k-table-th{
     border-left: 0px;
     border-right: 0px;
@@ -300,6 +302,12 @@
     cursor: pointer;
     text-overflow: unset;
     white-space: normal;
+    &:first-child{
+      padding-left: 10px;
+    }
+    &:last-child{
+      padding-right: 6px;
+    }
     em{
       font-weight: 500;
       font-style: normal;
@@ -307,6 +315,9 @@
     .text-muted{
       color: rgba($black, 0.6);
     }
+  }
+  .k-table-th{
+    padding: 0px !important;
   }
   .k-table-td{
     border:0px;

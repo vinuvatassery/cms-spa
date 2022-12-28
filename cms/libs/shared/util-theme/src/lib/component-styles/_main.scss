@@ -76,7 +76,10 @@ li {
   max-height: calc(100vh - $header-height);
 }
 .app-l-inner-rapper {
-  padding: $size-xlg;
+  padding: $size-xxx;
+  .app-l-breadcrumb{
+    padding-left: 0px;
+  }
 }
 .border-box {
   padding: $size-xlg;

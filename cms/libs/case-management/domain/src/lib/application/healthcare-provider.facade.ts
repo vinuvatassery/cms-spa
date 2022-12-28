@@ -34,7 +34,7 @@ export class HealthcareProviderFacade {
   addExistingProvider$ = this.addExistingProviderSubject.asObservable();
   loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
-  public sortValue = 'fullName'
+  public sortValue = ' '
   public sortType = 'asc'
 
   public sort: SortDescriptor[] = [{
@@ -90,7 +90,7 @@ export class HealthcareProviderFacade {
   }
 
   loadProviderStatusStatus(clientCaseEligibilityId : string) : void {
-    this.ShowLoader();
+ 
     this.healthcareProviderDataService.loadProviderStatusStatus(clientCaseEligibilityId).subscribe({
       next: (providerStatusGetResponse) => {
         this.HideLoader();
@@ -103,13 +103,13 @@ export class HealthcareProviderFacade {
   }
 
   updateHealthCareProvidersFlagonCheck(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)  {
-    this.ShowLoader();
+  
    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
   }
 
   updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
   {
-    this.ShowLoader();
+ 
     return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
   }
 
@@ -134,6 +134,7 @@ export class HealthcareProviderFacade {
          this.HideLoader();    
       },
       error: (err) => {
+        this.HideLoader();   
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
@@ -151,7 +152,7 @@ export class HealthcareProviderFacade {
           this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);
          }         
       },
-      error: (err) => {
+      error: (err) => { 
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
@@ -161,10 +162,12 @@ export class HealthcareProviderFacade {
     this.ShowLoader();
     this.healthcareProviderDataService.addExistingHealthCareProvider(existProviderData).subscribe({
       next: (addExistingProviderGetResponse) => {
+        this.HideLoader();
         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
         this.addExistingProviderSubject.next(addExistingProviderGetResponse);
       },
       error: (err) => {  
+        this.HideLoader();
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
@@ -179,6 +182,7 @@ export class HealthcareProviderFacade {
         this.loadExistingProviderSubject.next(loadExistingProviderResponse);
       },
       error: (err) => {  
+        this.HideLoader();
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });

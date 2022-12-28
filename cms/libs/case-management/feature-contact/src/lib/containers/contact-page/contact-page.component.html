@@ -379,7 +379,7 @@
             </kendo-formerror>
           </kendo-formfield>
           </div>
-          <div class="flex-col flex-col-6 mt-3">
+          <div class="flex-col flex-col-6 mt-checkbox">
             <kendo-formfield>
             <span class="app-checkboxwidtext-wrapper">
               <input 
@@ -451,7 +451,7 @@
             </kendo-formerror>
           </kendo-formfield>
           </div>
-          <div class="flex-col flex-col-6 mt-3">
+          <div class="flex-col flex-col-6 mt-checkbox">
             <kendo-formfield>
             <span class="app-checkboxwidtext-wrapper">
               <input 
@@ -522,7 +522,7 @@
               </kendo-formerror>
             </kendo-formfield>
             </div>
-            <div class="flex-col flex-col-6 mt-3">
+            <div class="flex-col flex-col-6 mt-checkbox">
               <kendo-formfield>
               <span class="app-checkboxwidtext-wrapper">
                 <input 
@@ -608,7 +608,7 @@
               <kendo-formerror>Note is required</kendo-formerror>
             </kendo-formfield>
             </div>
-            <div class="flex-col flex-col-3 mt-3">
+            <div class="flex-col flex-col-3 mt-checkbox">
               <kendo-formfield>
               <span class="app-checkboxwidtext-wrapper">
                 <input 
@@ -675,7 +675,7 @@
               </kendo-formerror>
             </kendo-formfield>
             </div>
-            <div class="flex-col flex-col-6 mt-3">
+            <div class="flex-col flex-col-6 mt-checkbox">
               <kendo-formfield>
               <span class="app-checkboxwidtext-wrapper">
                 <input 
@@ -844,17 +844,18 @@
 
 <!-- Mail Address Validation Modal -->
 <kendo-dialog *ngIf="mailAddressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked('M')"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Mailing Address Validation">
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Mailing Address Validation">
   <section class="k-dialog-body mb-2">
     <div *ngIf="mailingAddressIsNotValid">
       <p >
         We cannot validate the address below. Please review and make edits if needed.
       </p>
-        <p class="mt-2 ml-3">
-          {{mailAddressEntered?.address1 | uppercase }} <br>
-          {{mailAddressEntered?.address2 | uppercase }} <br>
-          {{mailAddressEntered?.city | uppercase }}, {{mailAddressEntered?.state}} {{mailAddressEntered?.zip5}}
-        </p> 
+        <div class="mt-2 ml-3">
+        <p>  {{mailAddressEntered?.address1 | uppercase }}   </p>   
+       <p> {{mailAddressEntered?.address2 | uppercase }}   </p>  
+       <p>    {{mailAddressEntered?.city | uppercase }}, {{mailAddressEntered?.state}} {{mailAddressEntered?.zip5}}</p>
+       
+        </div> 
     </div>
    <div *ngIf="!mailingAddressIsNotValid">
     <p >
@@ -876,11 +877,11 @@
           />
           <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
         </span>
-        <p class="mt-2 ml-3">
-        {{mailAddressEntered?.address1 | uppercase }} <br>
-        {{mailAddressEntered?.address2 | uppercase }} <br>
-        {{mailAddressEntered?.city | uppercase }}, {{mailAddressEntered?.state}} {{mailAddressEntered?.zip5}}
-        </p>
+        <div class="mt-2 ml-3">
+      <p>  {{mailAddressEntered?.address1 | uppercase }} </p> 
+      <p> {{mailAddressEntered?.address2 | uppercase }} </p> 
+      <p>  {{mailAddressEntered?.city | uppercase }}, {{mailAddressEntered?.state}} {{mailAddressEntered?.zip5}}</p>
+        </div >
       </div>
       <div class="flex-col flex-col-6">
           <span>
@@ -895,11 +896,11 @@
           />
           <kendo-label for="choosenAddress" text="Suggested Address"></kendo-label>  
         </span>
-      <p class="mt-2 ml-3">
-          {{mailAddressSuggested?.address1}} <br>
-          {{mailAddressSuggested?.address2}} <br>
-          {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}-{{mailAddressSuggested?.zip4}}
-      </p>
+      <div class="mt-2 ml-3">
+        <p>   {{mailAddressSuggested?.address1}}</p>
+        <p>  {{mailAddressSuggested?.address2}} </p>
+        <p>  {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}-{{mailAddressSuggested?.zip4}}</p>
+      </div>
       </div>
     </div> 
   </kendo-formfield>    
