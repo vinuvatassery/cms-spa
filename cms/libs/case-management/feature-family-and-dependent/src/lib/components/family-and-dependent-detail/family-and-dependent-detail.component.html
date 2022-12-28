@@ -14,14 +14,15 @@
       </p>
       <div class="flex-row">
         <div class="flex-col">
-          <div class="k-auto-complete-box">
+          <div class="k-auto-complete-box field-label-hide">
             <span
               class="material-icons global-search-icon"
               aria-label="search member"
               aria-hidden="true"
               >search</span >
               <span *ngIf="showDependentSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
-            <kendo-autocomplete
+              <kendo-label text="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)">
+              <kendo-autocomplete
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="dependentSearch"           
               [value]="fullClientName"
@@ -50,7 +51,7 @@
                 </button>
               </ng-template>
             </kendo-autocomplete>      
-            
+            </kendo-label>
             <kendo-formerror *ngIf="(existFamilyMemberForm?.hasError('required','clientDependentId')&& existFamilyMemberForm?.hasError('required','clientId')) && isExistSubmitted">Dependent
               is required</kendo-formerror>
           </div>
@@ -62,6 +63,7 @@
             [data]="ddlRelationships$ | async"
             textField="lovDesc"
             valueField="lovCode" 
+            aria-labelledby="Relationship to Client"
             [valuePrimitive]="true"
             formControlName="existRelationshipCode">
             </kendo-dropdownlist>
@@ -180,7 +182,7 @@
             />
             <kendo-label
               class="k-radio-label"
-              [for]="enrolledInHealthInsurancePlanYes"
+              for="enrolledInHealthInsurancePlanYes"
               text="Yes"             
             ></kendo-label>
           </span>
@@ -190,12 +192,13 @@
               #enrolledInHealthInsurancePlanNo
               kendoRadioButton
               name="enrolledInInsuranceFlag"  
+              id="enrolledInHealthInsurancePlanNo"
               formControlName="enrolledInInsuranceFlag"
               value="N"
             />
             <kendo-label
               class="k-radio-label"
-              [for]="enrolledInHealthInsurancePlanNo"
+              for="enrolledInHealthInsurancePlanNo"
               text="No"            >
           </kendo-label>
          
