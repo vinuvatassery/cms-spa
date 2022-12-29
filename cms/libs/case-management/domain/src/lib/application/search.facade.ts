@@ -11,9 +11,11 @@ import { SearchDataService } from '../infrastructure/search.data.service';
 export class SearchFacade {
   /** Private properties **/
   private searchSubject = new BehaviorSubject<Search[]>([]);
+  private globalSearchedSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   search$ = this.searchSubject.asObservable();
+  globalSearched$ = this.globalSearchedSubject.asObservable();
 
   /** Constructor**/
   constructor(private readonly searchDataService: SearchDataService) {}
@@ -27,6 +29,17 @@ export class SearchFacade {
       error: (err) => {
         console.error('err', err);
       },
+    });
+  }
+  loadCaseBySearchText(text : string): void {
+    this.searchDataService.loadCaseBySearchText(text).subscribe({
+      next: (caseBySearchTextResponse) => {
+        this.globalSearchedSubject.next(caseBySearchTextResponse);
+      }
+      //,
+      // error: (err) => {
+      //   this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+      // },
     });
   }
 }
