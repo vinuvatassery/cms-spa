@@ -27,8 +27,11 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetPharmacyPriorityComponent implements OnInit {
+  /** Input properties  **/
+ // @Input() drugPharmacyFacade: DrugPharmacyFacade=new  DrugPharmacyFacade();
   /** Output properties  **/
   @Output() closeChangePriority = new EventEmitter();
+ // @Output() updatePharmacyPriority = new EventEmitter<any>();
   priority1:any;
   priority2:any;
   public setPrioirityForm: FormGroup = new FormGroup({}) ;
@@ -66,10 +69,12 @@ savePrirorityObjectList:any[] =[];
    private loadSessionSubscription!: Subscription;
    private saveClickSubscription !: Subscription;
   /** Constructor **/
-  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade,
+  constructor(
+     private readonly drugPharmacyFacade: DrugPharmacyFacade,
     private route: ActivatedRoute,
     private loaderService: LoaderService,
-    private workflowFacade: WorkflowFacade) {
+    private workflowFacade: WorkflowFacade,
+     private loggingService:LoggingService) {
       this.ddlPriorities$.subscribe(ddlist =>{
         this.loadPrioritites = ddlist;
         this.priority2Data=ddlist;
@@ -122,7 +127,6 @@ savePrirorityObjectList:any[] =[];
       }
     }
     }
-    console.log("valueChange", value);
   }
   private buildForm() {
     this.setPrioirityForm = new FormGroup({
@@ -132,12 +136,10 @@ savePrirorityObjectList:any[] =[];
   }
   pharmacyPriority: any={};
   loadSessionData() {
-    debugger;
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
-        debugger;
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
@@ -161,16 +163,13 @@ savePrirorityObjectList:any[] =[];
     });
   }
   private save() {
-    debugger;
     let isValid = true;
-    // TODO: validate the form
     if (isValid) {
-      
       this.priorityInfo.clientId = 0;
       this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority1"].value;
       this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority2"].value;
       return this.drugPharmacyFacade.updatePharmacyPriority(this.priorityInfo);
-      
+     
     }
 
     return of(false)
@@ -216,11 +215,9 @@ savePrirorityObjectList:any[] =[];
     }
   }
   private loadPharmacyPriority(): void {
-    debugger;
      this.isDisabled = false;
     this.drugPharmacyFacade.loadPharmacyPriority( this.clientId).subscribe({
       next: (response:any) => {
-        debugger;
         this.pharmacyPriorityList = response;
         if(response!==null){
          const priority1 = response.find((data: any) => data.priorityCode ='P');
@@ -234,6 +231,9 @@ savePrirorityObjectList:any[] =[];
          }
         }
       },
+      error: (error: any) => {
+        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+      }
     })
   }
   // /** Internal event methods **/
@@ -242,14 +242,13 @@ savePrirorityObjectList:any[] =[];
   }
   onSavePriority()
   {
-    debugger;
     this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList).subscribe((x:any) =>{
       console.log(x);
       if(x){
         this.onCloseChangePriorityClicked();
       }
     },(error:any) =>{
-          console.log(error);
+      this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
     });
 
   }
