@@ -278,11 +278,11 @@
             <label class="k-checkbox-label" id="othersCoverdSelect">Frank William (dependant)</label>
           </span>
         </div>
-        <div class="delete-covered-person">
+        <!-- <div class="delete-covered-person">
           <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="delete person">
             DELETE PERSON
           </button>
-        </div>
+        </div> -->
 
         <div formArrayName="persons">
           <div *ngFor="let person of persons.controls; let i=index">
@@ -291,7 +291,7 @@
                 <h5 class="mb-0">Person {{i+1}}</h5>
                 <button kendoButton class="card-link-button no-ul text-bold k-danger-link" (click)="removePerson(i)"
                   aria-label="remove person">
-                  Remove PERSON
+                  DELETE PERSON
                 </button>
               </div>
               <div class="flex-col">

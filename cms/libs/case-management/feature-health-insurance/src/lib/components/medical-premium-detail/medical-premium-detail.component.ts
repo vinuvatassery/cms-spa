@@ -288,7 +288,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
             }
             return of(false);
           })
-        );
+        ).subscribe();
     }
     else {
       this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'File size more than 25MB');
