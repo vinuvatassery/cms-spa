@@ -1,11 +1,11 @@
  
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, } from '@angular/core';
 /** External libraries **/
-import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
@@ -59,6 +59,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     private workflowFacade: WorkflowFacade,
     private lov: LovFacade,
     private route: ActivatedRoute,
+    private readonly elementRef: ElementRef,
     private readonly loaderService: LoaderService) { }
 
   /** Lifecycle hooks **/
@@ -133,6 +134,61 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     return of(false)
   }
 
+  private noIncomeDetailsFormChangeSubscription() {
+    this.noIncomeDetailsForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        startWith(null),
+        pairwise()
+      )
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
+      });
+  }
+
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.noIncomeDetailsForm.controls).forEach(key => {
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+          };
+          completedDataPoints.push(item);
+        }
+      }
+      else {
+        if (this.noIncomeDetailsForm?.get(key)?.value && this.noIncomeDetailsForm?.get(key)?.valid) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: StatusFlag.Yes
+          };
+
+          completedDataPoints.push(item);
+        }
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
+  }
+
+  private adjustAttributeChanged(activeDataPointName: string='', inactiveDataPointName: string='') {
+    const acitveData: CompletionChecklist = {
+      dataPointName: activeDataPointName,
+      status: StatusFlag.Yes 
+    };
+    const inactiveData: CompletionChecklist = {
+      dataPointName: inactiveDataPointName,
+      status: StatusFlag.No 
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([acitveData, inactiveData]);
+  }
+
   /** Internal event methods **/
   onIncomeNoteValueChange(event: any): void {
     this.incomeNoteCharachtersCount = event.length;
@@ -185,8 +241,14 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       });
       this.isNodateSignatureNoted = true;
       this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
+      this.noIncomeDetailsFormChangeSubscription();
+      this.adjustAttributeChanged('incomeFlag_no', 'incomeFlag_yes');
+    }
+    else{
+      this.adjustAttributeChanged('incomeFlag_yes', 'incomeFlag_no');
     }
   }
+
 
   public submitIncomeDetailsForm(): void {
     this.noIncomeDetailsForm.markAllAsTouched();
