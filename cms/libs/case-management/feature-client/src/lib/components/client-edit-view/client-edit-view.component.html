@@ -158,7 +158,7 @@
           format="MM-dd-yyyy"
           
           ></kendo-datepicker>
-      
+          <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Date of birth is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
