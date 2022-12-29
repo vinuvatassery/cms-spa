@@ -24,6 +24,13 @@ export class UserDataService {
       `/system-config/users/roleCode=${roleCode}`
     );  
   }  
+
+  searchUsersByRole(roleCode : string,text : string) {
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/users/roleCode=${roleCode}/text=${text}`
+    );  
+  }  
   
   loadUsers(): Observable<User[]> {
     return of([

@@ -5,39 +5,27 @@
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
-          type="radio"
-          kendoRadioButton
-          name="HIVManager"
-          aria-labelledby="currentlyHasHivManagerYes"
-          id="hivManager1"
-          tabindex="1"
-        />
+          type="radio"          kendoRadioButton          name="HIVManager"          aria-labelledby="currentlyHasHivManagerYes"
+          id="hivManager1"          tabindex="1"        />
         <kendo-label
-          class="k-radio-label"
-          for="hivManager1"
-          text="Yes"
-        ></kendo-label>
+          class="k-radio-label"          for="hivManager1"          text="Yes"        ></kendo-label>
       </span>
       <span class="app-radiobtnwidtext-wrapper">
         <input
-          type="radio"
-          kendoRadioButton
-          aria-labelledby="currentlyHasHivManagerNo"
-          name="HIVManager"
-          id="hivManager2"
-          tabindex="2"
-        />
+          type="radio"          kendoRadioButton          aria-labelledby="currentlyHasHivManagerNo"          name="HIVManager"
+          id="hivManager2"          tabindex="2"        />
         <kendo-label
-          class="k-radio-label"
-          for="hivManager2"
-          text="No"
-        ></kendo-label>
+          class="k-radio-label"          for="hivManager2"          text="No"        ></kendo-label>
       </span>
     </div>
   </section>
 
   <section>
-    <case-management-case-manager-list></case-management-case-manager-list>
+    <case-management-case-manager-list
+    [getCaseManagers$]="getCaseManagers$"
+    >
+
+    </case-management-case-manager-list>
   </section>
   <section>
     <h5 class="mt-1">Would you like one?</h5>

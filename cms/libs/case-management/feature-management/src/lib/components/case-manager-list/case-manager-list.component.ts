@@ -1,7 +1,6 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-/** Facades **/
-import { ManagementFacade } from '@cms/case-management/domain';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -11,18 +10,17 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseManagerListComponent implements OnInit {
+
+
+  /** Input properties **/
+  @Input()  getCaseManagers$ : any
+ 
   /** Public properties **/
-  managers$ = this.managerFacade.managers$;
-  public pageSize = 10;
-  public skip = 5;
-  public pageSizes = [
-    {text: '5', value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100}
-  ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
-  // actions: Array<any> = [{ text: 'Action' }];
+
+  editButtonEmitted = false;
+  removeButttonEmitted = false;
+ 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -30,7 +28,7 @@ export class CaseManagerListComponent implements OnInit {
       text: "Edit Case Manager",
       icon: "edit",
       click: (): void => {
-        // this.onOpenProviderClicked(true);
+        // this.onmanagerClicked(true);
       },
     },
    
@@ -39,12 +37,12 @@ export class CaseManagerListComponent implements OnInit {
       text: "Remove Case Manager",
       icon: "delete",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
+      //  this.onremoveManagerClicked()
       },
     },
   ];
   /** Constructor **/
-  constructor(private readonly managerFacade: ManagementFacade) {}
+  constructor() {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -53,6 +51,16 @@ export class CaseManagerListComponent implements OnInit {
 
   /** Private methods **/
   private loadManagers() {
-    this.managerFacade.loadManagers();
+   // this.managerFacade.loadManagers();
+  }
+
+  onManagerHover(dataItem : any)
+  {
+///
+  }
+
+  onOpenManagerSearchClicked(f : boolean)
+  {
+///
   }
 }
