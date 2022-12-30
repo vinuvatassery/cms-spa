@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Search } from '../entities/search';
 /** Data services **/
 import { SearchDataService } from '../infrastructure/search.data.service';
-import {  LoggingService, NotificationSnackbarService, SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
+import {  LoggingService, NotificationSnackbarService, SnackBarNotificationType,LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class SearchFacade {
@@ -17,11 +17,12 @@ export class SearchFacade {
   /** Public properties **/
   search$ = this.searchSubject.asObservable();
   globalSearched$ = this.globalSearchedSubject.asObservable();
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /** Constructor**/
   constructor(private readonly searchDataService: SearchDataService,private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService ,) {}
+    private readonly loaderService: LoaderService , private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
   ShowLoader()
@@ -50,6 +51,8 @@ export class SearchFacade {
       this.searchDataService.loadCaseByHeaderSearchText(text).subscribe({
       
         next: (caseBySearchTextResponse) => {
+          debugger;
+          //new Date(this.intl.formatDate(this.healthInsuranceForm.controls['premiumPaidThruDate'].value,this.dateFormat)); 
           this.globalSearchedSubject.next(caseBySearchTextResponse);
         }
         ,
