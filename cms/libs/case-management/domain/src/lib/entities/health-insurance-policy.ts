@@ -33,8 +33,7 @@ export class healthInsurancePolicy {
         onQmbFlag :string|null=null;
         onLisFlag :string|null=null;
         paymentGroupNumber:number|null=null;
-        insuranceFirstName :string|null=null;
-        insuranceLastName :string|null=null;
+        insuranceGenderCode :string|null=null;
         oonException:number|null=null;
         oonStartDate? :Date;
         oonEndDate? :Date;
