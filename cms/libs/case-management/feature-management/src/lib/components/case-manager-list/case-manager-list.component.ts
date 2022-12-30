@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -11,9 +11,12 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class CaseManagerListComponent implements OnInit {
 
+  /******* output events */
+  @Output() loadCasemanagersGridEvent =  new EventEmitter();
 
   /** Input properties **/
   @Input()  getCaseManagers$ : any
+  @Input() showAddNewManagerButton$ : any
  
   /** Public properties **/
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
@@ -51,7 +54,7 @@ export class CaseManagerListComponent implements OnInit {
 
   /** Private methods **/
   private loadManagers() {
-   // this.managerFacade.loadManagers();
+  this.loadCasemanagersGridEvent.emit()
   }
 
   onManagerHover(dataItem : any)

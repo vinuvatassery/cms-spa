@@ -19,7 +19,7 @@
           </ng-template> 
         </kendo-grid-column>     
         <kendo-grid-column    field="phone"  title="Phone"  [width]="100" ></kendo-grid-column>  
-        <kendo-grid-column          field="clientCaseId"          title="Option"    [width]="75" class="text-center"   [sticky]="true"  >
+        <kendo-grid-column          field="clientCaseId"          title="Option"    [width]="25" class="text-center"   [sticky]="true"  >
           <ng-template kendoGridCellTemplate let-manager let-clientCaseId="field">
             <kendo-dropdownbutton
               [data]="actions"
@@ -41,7 +41,7 @@
         </kendo-grid-column>      
       </kendo-grid>
     </div>
-    <div class="flex-row">
+    <div class="flex-row" *ngIf="showAddNewManagerButton$ | async">
       <div class="flex-col mt-1">
         <button
           kendoButton

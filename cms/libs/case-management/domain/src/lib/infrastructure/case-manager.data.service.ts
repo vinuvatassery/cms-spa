@@ -40,4 +40,19 @@ export class CaseManagerDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}/${userId}`,null
       );
     }
+
+    updateCaseManagerStatus(clientCaseId : string ,  hasManager :string, needManager : string)
+    {
+      return this.http.put(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}?hasManager=${hasManager}&needManager=${needManager}`,null
+      );
+    }
+
+    getCaseManagerStatus(clientCaseId : string)
+    {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}/manager-status`
+      );
+    }
+  
 }

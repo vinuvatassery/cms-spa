@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
 import { Observable, of, Subject } from 'rxjs';
+import { CaseManager } from '../entities/case-manager';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
 import { UserDefaultRoles } from '../enums/user-default-roles.enum';
@@ -14,11 +15,19 @@ export class CaseManagerFacade {
 /** Private properties **/
 private getManagerUsersSubject = new Subject<any>();
 private getCaseManagersSubject = new Subject<any>();
+private getCaseManagerHasManagerStatusSubject = new Subject<any>();
+private getCaseManagerNeedManagerStatusSubject = new Subject<any>();
+private showAddNewManagerButtonSubject = new Subject<boolean>();
+private updateCaseManagerNeedManagerStatusSubject = new Subject<any>();
 
 
 /** Public properties **/
 getManagerUsers$ = this.getManagerUsersSubject.asObservable();
 getCaseManagers$ = this.getCaseManagersSubject.asObservable();
+getCaseManagerHasManagerStatus$ = this.getCaseManagerHasManagerStatusSubject.asObservable();
+getCaseManagerNeedManagerStatus$ = this.getCaseManagerNeedManagerStatusSubject.asObservable();
+showAddNewManagerButton$ = this.showAddNewManagerButtonSubject.asObservable();
+updateCaseManagerNeedManagerStatus$ = this.updateCaseManagerNeedManagerStatusSubject.asObservable();
     
     /** Constructor **/
  constructor(private readonly userDataService: UserDataService,
@@ -76,7 +85,14 @@ getCaseManagers$ = this.getCaseManagersSubject.asObservable();
           dataPointName: 'hasHivCaseManager',
           status: (parseInt(getCaseManagersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
         }]; 
-
+        if(parseInt(getCaseManagersResponse["totalCount"]) > 0)
+        {          
+        this.showAddNewManagerButtonSubject.next(false);
+        }
+        else
+        {
+          this.showAddNewManagerButtonSubject.next(true);
+        }
         this.workflowFacade.updateChecklist(workFlowdata);
         this.getCaseManagersSubject.next(gridView);      
         this.HideLoader();  
@@ -87,5 +103,25 @@ getCaseManagers$ = this.getCaseManagersSubject.asObservable();
        },
      });
  }
+
+    getCaseManagerStatus(clientCaseId : string): void {
+      this.ShowLoader()
+      this.caseManagerDataService.getCaseManagerStatus(clientCaseId).subscribe({
+        next: (getManagerStatusResponse : any) => {          
+        this.getCaseManagerHasManagerStatusSubject.next(getManagerStatusResponse?.hasManager);
+        this.getCaseManagerNeedManagerStatusSubject.next(getManagerStatusResponse?.needManager);
+        this.HideLoader()
+      },
+        error: (err) => {
+            this.loggingService.logException(err)
+        },
+      }); 
+    }
+
+    
+    updateCaseManagerStatus(clientCaseId : string ,  hasManager :string, needManager : string) {
+      this.ShowLoader()
+        return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager, needManager)
+    }
     
 }

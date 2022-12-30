@@ -1,10 +1,11 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 /** External libraries **/
-import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade,  NavigationType, CaseManagerFacade } from '@cms/case-management/domain';
+import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-management-page',
@@ -20,8 +21,16 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   sessionId! : string;
   clientId ! : number
   clientCaseEligibilityId ! : string
+  hasManager! :string
+  needManager! : string
+
+  gridVisibleSubject = new Subject<boolean>();
+  showCaseManagers$ = this.gridVisibleSubject.asObservable();
 
   getCaseManagers$ = this.caseManagerFacade.getCaseManagers$;
+  getCaseManagerHasManagerStatus$=this.caseManagerFacade.getCaseManagerHasManagerStatus$;
+  getCaseManagerNeedManagerStatus$=this.caseManagerFacade.getCaseManagerNeedManagerStatus$;
+  showAddNewManagerButton$ = this.caseManagerFacade.showAddNewManagerButton$;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -52,11 +61,36 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
         .subscribe((session: any) => {      
          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
          this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-         this.clientId = JSON.parse(session.sessionData).clientId   
-         this.loadCaseManagers()    
+         this.clientId = JSON.parse(session.sessionData).clientId            
+         this.getCaseManagerStatus()
         });        
       } 
+  getCaseManagerStatus()
+  {
+    this.caseManagerFacade.getCaseManagerStatus(this.clientCaseId);
+    this.getCaseManagerHasManagerStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
+    ((x: boolean)=>
+    {   
+      //Currently has HIV Case Manager?
+      this.hasManager = (x ===true) ? StatusFlag.Yes : StatusFlag.No;
 
+      //show hide grid
+      this.gridVisibleSubject.next(x);
+    });
+
+    this.getCaseManagerNeedManagerStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
+    ((x: boolean)=>
+    {  
+      //Would you like one?
+      this.needManager = (x ===true) ? StatusFlag.Yes : StatusFlag.No;
+    });
+     
+  }
+  hasManagerChangeEvent(status : boolean)
+  {
+     //show hide grid
+     this.gridVisibleSubject.next(status);
+  }
   loadCaseManagers()
   {
     this.caseManagerFacade.loadCaseManagers(this.clientCaseId);
@@ -69,18 +103,21 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
+        this.workflowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Status Updated')  
         this.workflowFacade.navigate(navigationType);
       }
     });
   }
 
-  private save() {
-  
-    // TODO: validate the form
-    if (true) {
-    //  return this.managementFacade.save();
-    }
-
-    return of(false)
-  }
+  private save() {  
+     return  this.caseManagerFacade.updateCaseManagerStatus
+      (this.clientCaseId , this.hasManager , this.needManager)
+       .pipe
+      (
+       catchError((err: any) => {                     
+         this.workflowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+         return  of(false);
+       })  
+      )  
+     }
 }
