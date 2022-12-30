@@ -8,13 +8,13 @@
   <kendo-multicolumncombobox
     [data]="globalSearchResult$  | async"
     textField="clientFullName"
-    valueField="ssn"
+    valueField="clientId"
     [loading] = "showHeaderSearchInputLoader"
     [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search client Name, Member ID, or SSN"
     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
     [filterable]="true"
-    (filterChange)="onsearchTextChange($event)"
+    (filterChange)="onSearchTextChange($event)"
     (selectionChange)="onSelectChange($event)"> 
     <button kendoButton fillMode="clear" icon="image"></button>   
 
@@ -39,6 +39,8 @@
       </ng-template>
     </kendo-combobox-column>   
   </kendo-multicolumncombobox>
+
+  
 </div>
 
 <button kendoButton (click)="clickMobileHeaderSearchOpen()" title="Global Case search" class="header-mobilesearchbutton">  <span

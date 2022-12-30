@@ -19,6 +19,7 @@ export class SearchPageComponent implements OnInit {
   mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
+
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade,private router: Router) {
      
@@ -29,20 +30,28 @@ export class SearchPageComponent implements OnInit {
       this.globalSearchResult$.subscribe(data=>{
       this.showHeaderSearchInputLoader = false;
     })
+  
   }
   clickMobileHeaderSearchOpen(){
       this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
   }
   
-  onsearchTextChange(text : string)
-  {   
+  onSearchTextChange(selectedValue : string)
+  {  
     this.showHeaderSearchInputLoader = true;    
-      this.searchFacade.loadCaseByHeaderSearchText(text);     
+      this.searchFacade.loadCaseByHeaderSearchText(selectedValue);     
  
   }
-  onSelectChange(value:Event){
+  onSelectChange(selectedValue:any){
     //todo as part of client profile implementation
     //modify the id:103 dynamic from the selected value
-    this.router.navigateByUrl('case-management/cases/case360/103'); 
+    if(selectedValue !== undefined){
+      this.router.navigateByUrl('case-management/cases/case360/103'); 
+    }
   }
+
+  
 }
+
+
+
