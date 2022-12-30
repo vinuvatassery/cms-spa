@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { SearchFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { debounceTime,  distinctUntilChanged, Subject } from 'rxjs';
+import {  Subject } from 'rxjs';
 @Component({
   selector: 'case-management-search-page',
   templateUrl: './search-page.component.html',
@@ -25,26 +25,21 @@ export class SearchPageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    //this.loadSearch();
+      this.globalSearchResult$.subscribe(data=>{
+      this.showHeaderSearchInputLoader = false;
+    })
   }
   clickMobileHeaderSearchOpen(){
       this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
   }
-  /** Private methods **/
-  private loadSearch(): void {
-    this.showHeaderSearchInputLoader = true;
-    this.searchFacade.loadSearch();
-    this.showHeaderSearchInputLoader = false;
-
-  }
+  
   onsearchTextChange(text : string)
-  {    
-    this.showHeaderSearchInputLoader = true;  
-    if(text){     
-      //this.caseFacade.loadCaseBySearchText(text);
-      this.searchFacade.loadCaseBySearchText(text);     
-
-    } 
-    this.showHeaderSearchInputLoader = false;
+  {   
+    this.showHeaderSearchInputLoader = true;    
+      this.searchFacade.loadCaseByHeaderSearchText(text);     
+ 
+  }
+  OnSelectCase(){
+    debugger;
   }
 }
