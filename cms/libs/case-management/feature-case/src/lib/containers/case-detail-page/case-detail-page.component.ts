@@ -103,7 +103,14 @@ export class CaseDetailPageComponent implements OnInit {
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
   }
-
+  cancelApplication(){
+   if(this.workflowFacade.currentSession !== null){
+   var clientCaseId = JSON.parse(this.workflowFacade.currentSession.sessionData).ClientCaseId 
+   }
+  }
+  cancelDeletion(){
+    this.isShowDeleteConfirmPopup = false;
+  }
   /** Private Methods */
   private loadQueryParams() {
     const workflowType: string = WorkflowTypeCode.NewCase;

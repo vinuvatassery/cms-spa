@@ -146,10 +146,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel delete">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel delete"(click)="cancelDeletion()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="delete client’s data">
+        <button kendoButton class="k-error-button" aria-label="delete client’s data"(click)="cancelApplication()">
           Delete
         </button>
       </div>
