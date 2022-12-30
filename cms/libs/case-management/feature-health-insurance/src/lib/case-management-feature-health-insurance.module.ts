@@ -18,6 +18,11 @@ import { HealthInsurancePageComponent } from './containers/health-insurance-page
 import { CoPaysAndDeductiblesListComponent } from './components/co-pays-and-deductibles-list/co-pays-and-deductibles-list.component';
 import { CoPaysAndDeductiblesDetailComponent } from './components/co-pays-and-deductibles-detail/co-pays-and-deductibles-detail.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { MedicalPremiumDetailInsuranceCarrierNameComponent } from './components/medical-premium-detail-insurance-carrier-name/medical-premium-detail-insurance-carrier-name.component';
+import { MedicalPremiumDetailInsurancePlanNameComponent } from './components/medical-premium-detail-insurance-plan-name/medical-premium-detail-insurance-plan-name.component';
+import { MedicalPremiumDetailMetalLevelComponent } from './components/medical-premium-detail-metal-level/medical-premium-detail-metal-level.component';
+import { MedicalPremiumDetailAPTCComponent } from './components/medical-premium-detail-aptc/medical-premium-detail-aptc.component';
+import { MedicalPremiumDetailGroupPlanTypeComponent } from './components/medical-premium-detail-group-plan-type/medical-premium-detail-group-plan-type.component';
 
 @NgModule({
   imports: [
@@ -39,6 +44,11 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     HealthInsurancePageComponent,
     CoPaysAndDeductiblesListComponent,
     CoPaysAndDeductiblesDetailComponent,
+    MedicalPremiumDetailInsuranceCarrierNameComponent,
+    MedicalPremiumDetailInsurancePlanNameComponent,
+    MedicalPremiumDetailMetalLevelComponent,
+    MedicalPremiumDetailAPTCComponent,
+    MedicalPremiumDetailGroupPlanTypeComponent,
   ],
   exports: [
     MedicalInsuranceStatusListComponent,

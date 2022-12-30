@@ -21,7 +21,7 @@ public showInputLoader = false;
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
   @Output() newcaseSaveEvent = new EventEmitter<any>();
-  @Output() searchTextEvent = new EventEmitter<string>(); 
+  @Output() searchTextEvent = new EventEmitter<string>();   
 
   /** input properties **/
   @Input() caseSearchResults$! : any
@@ -98,6 +98,7 @@ public showInputLoader = false;
 
   /** Internal event methods **/
   onOpenProgramSelectionClicked() {
+    this.loaderService.show()
     this.isProgramSelectionOpened = true;
     this.formButtonDisabled = false;
     this.ref.markForCheck();
@@ -123,4 +124,5 @@ public showInputLoader = false;
       this.filterManager.next(text); 
     } 
   }
+
 }

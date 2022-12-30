@@ -1,0 +1,54 @@
+<div [formGroup]="healthInsuranceForm">
+
+    <kendo-floatinglabel text="Insurance Plan Name" >   
+        <kendo-combobox   
+        [fillMode]="formUiStyle.dropDownFillMode" 
+        [disabled]="isViewContentEditable"   
+        #caseOwnr
+        formControlName="insurancePlanName"     
+        [data]="insurancePlans"   
+        textField="insurancePlanName" 
+        valueField="insurancePlanId"
+        [valuePrimitive]="true"       
+        [filterable]="true"     
+        [kendoDropDownFilter]="caseOwnerfilterSettings"      
+      >
+      </kendo-combobox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insurancePlanName'].valid">Insurance plan name is required.</kendo-formerror>
+      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
+        <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
+        <button
+          kendoButton
+          class="card-link-button ml-1 no-ul fontsize_twel"
+          [disabled]="isViewContentEditable"
+          aria-label="add new insurance plan"
+          (click)="addNewInsurancePlanOpen()"
+        >
+          ADD NEW
+        </button>
+      </div>
+</div>
+<kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Plan">
+
+<section class="k-dialog-body mb-2">
+  <p>
+    This feature is part of future scope of work for the ORCares project.
+  </p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" aria-label="Cancel Add New Insurance Plan" look="outline"
+        (click)="addNewInsurancePlanClose()">
+        Cancel
+      </button>
+      <button kendoButton      [primary]="true" aria-label="Add New Insurance Plan" (click)="addNewInsurancePlanClose()">
+        Add
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
+
+</kendo-dialog>

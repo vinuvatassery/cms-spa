@@ -31,7 +31,7 @@
                 <span  >{{ dataItem.clientFullName }}</span>
               </ng-template>
             </kendo-combobox-column>
-            <kendo-combobox-column  [width]="62">
+            <kendo-combobox-column  [width]="100">
               <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
                 <span class=" text-muted"> <em>ID:</em> {{dataItem.clientId}}</span>
               </ng-template>
@@ -98,7 +98,7 @@
      [caseOwners]="caseOwners"
      [ddlPrograms]="ddlPrograms"
      [ddlCaseOrigins]="ddlCaseOrigins"   
-     [selectedProgram]="selectedProgram"   
+     [selectedProgram]="selectedProgram"       
      ></case-management-case-detailed-summary>
   </section>
   <kendo-dialog-actions>
@@ -116,7 +116,7 @@
           aria-label="save and continue"
           kendoButton
           [primary]="true"     
-          [disabled]="formButtonDisabled"    
+          [disabled]="formButtonDisabled || !parentForm.valid"    
         >
           Save & Continue
         </button>

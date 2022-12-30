@@ -5,10 +5,13 @@
         All fields are required unless otherwise stated. </p>
 </section>
 
-<div class="client-data-block" *ngIf="parentForm">
-    <div class="block-section">
+ 
 
-        <section>
+
+<div class="client-data-block " *ngIf="parentForm">
+    <div class="block-section">
+        
+        <section class="casedetailspage_inner">
             <case-management-case-detailed-summary 
                 [isProgramVIsible]="false"
                 [isSubmitted]="isSubmitted"
@@ -25,3 +28,4 @@
 
 
 </div>
+ 

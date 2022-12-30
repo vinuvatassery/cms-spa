@@ -5,10 +5,10 @@
   title="Send New Email "
 >
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
+    <p class="text-muted mb-1">
       Select an existing template or draft a custom email.
     </p>
-    <div class="flex-row">
+    <div class="flex-row pb-2">
       <div class="flex-col">
         <kendo-floatinglabel text="Letter Templates">
           <kendo-dropdownlist
@@ -46,14 +46,14 @@
             <!-- <input kendoTextBox aria-label="subject of email" /> -->
           </kendo-floatinglabel>
         </div>
-        <div class="flex-col">
+        <div class="flex-col mt-3">
           <p>
             Type the body of the email. The email header and footer generate
             from Admin settings. Click "Preview Email" to what the client will
             receive.
           </p>
         </div>
-        <div class="flex-col mt-3">
+        <div class="flex-col  ">
           <case-management-email-editor
             [dataEvent]="emailEditorValueEvent"
             (editorValue)="handleEmailEditor($event)"

@@ -35,8 +35,12 @@ export * from './lib/entities/client-case-eligibility-flag';
 export * from './lib/entities/client-document';
 export * from './lib/entities/income';
 export * from './lib/entities/no-income-data';
+export * from './lib/entities/client-pharmacy';
 export * from './lib/entities/prescription-drug';
-
+export * from './lib/entities/vendor';
+export * from './lib/entities/insurance-plan';
+export * from './lib/entities/health-insurance-policy';
+export * from './lib/entities/carrier-contact-info'
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -55,6 +59,10 @@ export * from './lib/enums/dependent-type.enum';
 export * from './lib/enums/client-dependent-group.enum';
 export * from './lib/enums/address-type-code.enum';
 export * from './lib/enums/device-type-code.enum';
+export * from './lib/enums/priority-code.enum';
+export * from './lib/enums/insurance-plan.enum';
+export * from './lib/enums/parta-medicare-type.enum';
+export * from './lib/enums/partb-medicare-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -79,6 +87,9 @@ export * from './lib/infrastructure/completion-status.data.service';
 export * from './lib/infrastructure/status-period.data.service';
 export * from './lib/infrastructure/client-document.data.service';
 export * from './lib/infrastructure/prescription-drug.data.service';
+export * from './lib/infrastructure/vendor.data.service';
+export * from './lib/infrastructure/insurance-plan.data.service';
+export * from './lib/infrastructure/health-insurance-policy.data.service';
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -109,3 +120,6 @@ export * from './lib/application/status-period.facade';
 export * from './lib/application/workflow.facade';
 export * from './lib/application/client-document-facade';
 export * from './lib/application/prescription-drug.facade';
+export * from './lib/application/vendor.facade';
+export * from './lib/application/insurance-plan.facade';
+export * from './lib/application/health-insurance-policy.facade';

@@ -30,12 +30,13 @@
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
               [filterable]="true"   
               (filterChange)="onsearchTextChange($event)"    
+              (close)="searchCloseEvent();"
                     
             >          
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
                 <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
                 <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
-                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
+                <span *ngIf="dataItem.ssn" class="pr-1" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
               </ng-template>
               <ng-template kendoAutoCompleteFooterTemplate>
                 <button
@@ -166,7 +167,7 @@
       </div>
       <div class="flex-col mb-3">
         <h5>Currently enrolled in client’s health insurance plan?</h5>
-        <div class="radio-column-list">
+        <div class="">
           <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"

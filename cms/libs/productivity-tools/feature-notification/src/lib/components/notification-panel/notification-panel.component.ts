@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'productivity-tools-notification-panel',
@@ -81,7 +82,8 @@ export class NotificationPanelComponent implements OnInit {
   /** Constructor **/
   constructor(
     private readonly notificationFacade: NotificationFacade,
-    private readonly todoFacade: TodoFacade
+    private readonly todoFacade: TodoFacade,
+    private loggingService : LoggingService
   ) {}
 
   /** Lifecycle hooks **/
@@ -99,7 +101,7 @@ export class NotificationPanelComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log('Error', err);
+        this.loggingService.logException(err)
       },
     });
   }
@@ -112,7 +114,7 @@ export class NotificationPanelComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log('Error', err);
+        this.loggingService.logException(err)
       },
     });
   }
