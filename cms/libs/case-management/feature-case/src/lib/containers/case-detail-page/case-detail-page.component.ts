@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
-import { forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, tap, first } from 'rxjs';
 
 /** Internal Libraries **/
 import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
@@ -25,9 +25,15 @@ export class CaseDetailPageComponent implements OnInit {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
+  private showConfirmationPopupSubscription !: Subscription;
+  private loadSessionSubscription!: Subscription;
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
+
+  clientCaseId:any;
+  clientId:any;
+  clientCaseStatusData:any={};
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
@@ -98,10 +104,13 @@ export class CaseDetailPageComponent implements OnInit {
     this.loadQueryParams();
     this.loadDdlCommonAction();
     this.addNavigationSubscription();
+    this.addConfirmationPopupSubscription();
+    this.loadSessionData();
   }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
+    this.showConfirmationPopupSubscription.unsubscribe();
   }
 
   /** Private Methods */
@@ -150,7 +159,9 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   onSaveLaterClicked() {
-    this.isShowSaveLaterPopup = true;
+    // this.isShowSaveLaterPopup = true;
+    debugger
+    this.workflowFacade.saveForLaterValidations(true);
   }
 
   onCloseDeleteConfirmClicked() {
@@ -236,4 +247,42 @@ export class CaseDetailPageComponent implements OnInit {
   openInnerLeftMenu() {
     this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
   }
+
+  private addConfirmationPopupSubscription(): void {
+    this.showConfirmationPopupSubscription = this.workflowFacade.saveForLaterConfirmationClicked$.subscribe((val) => {
+      if (val) {
+        this.isShowSaveLaterPopup = true;
+      }
+    });
+  }
+
+  loadSessionData() {
+    //this.loaderService.show();
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session !== null && session !== undefined && session.sessionData !== undefined) {
+          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+          this.clientId = JSON.parse(session.sessionData).clientId;
+          this.getCaseStatusDetails();
+        }
+      });
+  }
+
+  getCaseStatusDetails(){
+    this.loaderService.show();
+    this.caseFacade.getCaseStatusById(this.clientCaseId).subscribe({
+      next:(response:any)=>{
+      this.loaderService.hide();
+      this.clientCaseStatusData=response;
+      },
+      error:(err:any)=>{
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      }
+    })
+
+  }
+
 }

@@ -95,7 +95,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
           <!-- <input kendoTextBox /> -->
-          <kendo-textbox aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+          <kendo-textbox [disabled]="true" [(ngModel)]="clientCaseStatusData.assignedCwUserName" aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">

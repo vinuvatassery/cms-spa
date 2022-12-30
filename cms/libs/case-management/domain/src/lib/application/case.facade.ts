@@ -253,6 +253,10 @@ export class CaseFacade {
         caseData.caseStartDate =this.intl.formatDate(caseData.caseStartDate,this.dateFormat)   
         return  this.caseDataService.UpdateCase(caseData)
 
-    }
+  }
+
+  getCaseStatusById(clientCaseId : string ) {    
+     return  this.caseDataService.loadCasesStatusById(clientCaseId)
+  }
 
 }

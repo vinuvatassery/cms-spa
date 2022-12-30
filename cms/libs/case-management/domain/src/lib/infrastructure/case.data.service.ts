@@ -400,4 +400,11 @@ export class CaseDataService {
       caseData
     );
   }
+
+  loadCasesStatusById(clientCaseId : string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-case-status/${clientCaseId}`
+    );
+  }
 }

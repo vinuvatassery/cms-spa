@@ -3,7 +3,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, } from '@angular/core';
 /** External libraries **/
-import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { first, forkJoin, mergeMap, of, Subscription, Observable } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -22,6 +22,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
@@ -70,11 +72,15 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     this.loadFrequencies();
     this.loadProofOfIncomeTypes();
     this.addSaveSubscription();
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   /** Private methods **/
@@ -259,5 +265,42 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount
     );
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        debugger;
+        //this.workflowFacade.navigate(navigationType);
+       // this.HideLoader();
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        debugger;
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+        else{
+
+        }
+       
+      }
+    });
+  }
+
+  checkValidations(){
+    this.submitIncomeDetailsForm();
+    if(this.noIncomeDetailsForm.valid){
+      return true;
+    }
+    return false;
   }
 }

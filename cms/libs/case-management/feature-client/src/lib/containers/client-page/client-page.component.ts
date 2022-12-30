@@ -27,6 +27,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!:Subscription;
+  private saveForLaterClickSubscription !: Subscription;
 
    /** Public properties **/
   isValid:boolean=true;
@@ -59,11 +60,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadSessionData();
     this.addSaveSubscription();
+    this.addSaveForLaterSubscription();
     
   }
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
   }
 
   /** Private methods **/
@@ -776,5 +779,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   setApplicantName(name:any){
     this.applicantName =name;
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.saveAndUpdate()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        debugger;
+        //this.workflowFacade.navigate(navigationType);
+       // this.HideLoader();
+      }
+    });
   }
 }
