@@ -51,8 +51,6 @@ export class SearchFacade {
       this.searchDataService.loadCaseByHeaderSearchText(text).subscribe({
       
         next: (caseBySearchTextResponse) => {
-          debugger;
-          //new Date(this.intl.formatDate(this.healthInsuranceForm.controls['premiumPaidThruDate'].value,this.dateFormat)); 
           this.globalSearchedSubject.next(caseBySearchTextResponse);
         }
         ,

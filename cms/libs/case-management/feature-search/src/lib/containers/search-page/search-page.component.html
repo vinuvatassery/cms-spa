@@ -15,7 +15,7 @@
     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
     [filterable]="true"
     (filterChange)="onsearchTextChange($event)"
-    (valueChange)="OnSelectCase()"> 
+    (selectionChange)="onSelectChange($event)"> 
     <button kendoButton fillMode="clear" icon="image"></button>   
 
     <kendo-combobox-column>
@@ -30,7 +30,7 @@
     </kendo-combobox-column>
     <kendo-combobox-column   [width]="120">
       <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
+        <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM-dd-yyyy'}}</span>
       </ng-template>
     </kendo-combobox-column>
     <kendo-combobox-column  [width]="130">

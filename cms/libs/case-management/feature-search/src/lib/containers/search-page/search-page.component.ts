@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 /** Facades **/
 import { SearchFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -19,7 +20,7 @@ export class SearchPageComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
   /** Constructor **/
-  constructor(private readonly searchFacade: SearchFacade) {
+  constructor(private readonly searchFacade: SearchFacade,private router: Router) {
      
   }
 
@@ -39,7 +40,9 @@ export class SearchPageComponent implements OnInit {
       this.searchFacade.loadCaseByHeaderSearchText(text);     
  
   }
-  OnSelectCase(){
-    debugger;
+  onSelectChange(value:Event){
+    //todo as part of client profile implementation
+    //modify the id:103 dynamic from the selected value
+    this.router.navigateByUrl('case-management/cases/case360/103'); 
   }
 }
