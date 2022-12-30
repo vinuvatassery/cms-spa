@@ -525,6 +525,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsuranceForm.controls[key].updateValueAndValidity();
     });
   }
+  private resetData() {
+    Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
+      if(key !=='insuranceType' &&  key !=='clientInsurancePolicyId'){
+      this.healthInsuranceForm.controls[key].setValue(null);
+      this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      }
+    });
+  }
 
   private populateInsurancePolicy() {
     {
@@ -537,8 +545,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
 
       /* these field will be removed when the columns are allwed null from the database */ 
       this.healthInsurancePolicy.premiumFrequencyCode="";
-      this.healthInsurancePolicy.insuranceFirstName="";
-      this.healthInsurancePolicy.insuranceLastName="";
       this.healthInsurancePolicy.oonDrugs="";
       this.healthInsurancePolicy.oonPharmacy="";
       this.healthInsurancePolicy.clientMaximumId ='C8D095E5-5C5B-44A3-A6BA-379282AC1BFF';
@@ -649,10 +655,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       }else{
         this.healthInsurancePolicy.onLisFlag =StatusFlag.Yes;
       }
-      (this.healthInsurancePolicy.paymentGroupNumber = 0),
-        (this.healthInsurancePolicy.insuranceFirstName = 'string');
-      this.healthInsurancePolicy.insuranceLastName = 'string';
-      (this.healthInsurancePolicy.oonException = 0),
+      (this.healthInsurancePolicy.paymentGroupNumber = 0),        
+         (this.healthInsurancePolicy.oonException = 0),
         (this.healthInsurancePolicy.oonStartDate = new Date());
       this.healthInsurancePolicy.oonEndDate = new Date();
       this.healthInsurancePolicy.oonPharmacy = 'string';
@@ -662,7 +666,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     }
   }
   /** Internal event methods **/
-  onHealthInsuranceTypeChanged() {
+  onHealthInsuranceTypeChanged() { 
+    this.resetData();
+    this.resetValidators();
     this.ddlInsuranceType =
       this.healthInsuranceForm.controls['insuranceType'].value;
     this.isOpenDdl = true;
