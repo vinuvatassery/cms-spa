@@ -223,14 +223,6 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
 
   /** Internal Event Methods **/
-  onChangeCounterClick() {
-    this.updateCompletionStatus({
-      name: 'Income',
-      completed: 15,
-      total: 31,
-    });
-  }
-
   onIncomeValueChanged(event: any) {
     this.hasNoIncome = !this.hasNoIncome;
     if (this.hasNoIncome) {
@@ -240,9 +232,9 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         noIncomeNote: new FormControl('', []),
       });
       this.isNodateSignatureNoted = true;
-      this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
       this.noIncomeDetailsFormChangeSubscription();
       this.adjustAttributeChanged('incomeFlag_no', 'incomeFlag_yes');
+      this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
     }
     else{
       this.adjustAttributeChanged('incomeFlag_yes', 'incomeFlag_no');
@@ -288,6 +280,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));
       this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));
       this.noIncomeDetailsForm.controls['noIncomeNote'].setValue(incomeDetail.noIncomeNote);
+    }else{
+      this.noIncomeDetailsForm.controls['noIncomeNote'].setValue('');
     }
   }
 
