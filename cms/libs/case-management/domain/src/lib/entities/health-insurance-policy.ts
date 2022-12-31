@@ -44,11 +44,14 @@ export class healthInsurancePolicy {
         activeFlag: string | null = null;
         creationTime?: Date;
         othersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
+        proofOfPremium: any = null;
+        copyOfInsuranceCard: any = null;
+        copyOfSummary: any = null;
 }
 
 export class othersCoveredOnPlan {
-        relationship: string;
-        firstName: string;
-        lastName: string;
+        relationship: string = "";
+        firstName: string = "";
+        lastName: string = "";
         dob?: Date;
 }
