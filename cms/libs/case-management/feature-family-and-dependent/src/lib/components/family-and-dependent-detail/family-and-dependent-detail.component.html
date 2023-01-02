@@ -23,6 +23,7 @@
               <span *ngIf="showDependentSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
               <kendo-label text="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)">
               <kendo-autocomplete
+              aria-label="search member"
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="dependentSearch"           
               [value]="fullClientName"
@@ -63,7 +64,7 @@
             [data]="ddlRelationships$ | async"
             textField="lovDesc"
             valueField="lovCode" 
-            aria-labelledby="Relationship to Client"
+            aria-label="Relationship to Client"
             [valuePrimitive]="true"
             formControlName="existRelationshipCode">
             </kendo-dropdownlist>
@@ -122,6 +123,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
           <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" 
+          aria-label ="Relationship to Client"
           [data]="ddlRelationships$ | async"
           formControlName="relationshipCode"
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
@@ -151,7 +153,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">         
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+          <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
           formControlName="dob"           >
         </kendo-datepicker>
               </kendo-floatinglabel>
@@ -178,6 +180,7 @@
               name="enrolledInInsuranceFlag"             
               id="enrolledInHealthInsurancePlanYes"
               formControlName="enrolledInInsuranceFlag"
+              aria-labelledby="enrolledInHealthInsurancePlanYes"  
               value="Y"
             />
             <kendo-label
@@ -194,6 +197,7 @@
               name="enrolledInInsuranceFlag"  
               id="enrolledInHealthInsurancePlanNo"
               formControlName="enrolledInInsuranceFlag"
+              aria-labelledby="enrolledInHealthInsurancePlanNo"
               value="N"
             />
             <kendo-label

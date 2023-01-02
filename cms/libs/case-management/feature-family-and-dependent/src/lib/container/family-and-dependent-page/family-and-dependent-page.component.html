@@ -16,7 +16,8 @@
             kendoCheckBox
             (click)="onNoFamilyMemberClicked()" 
             id="clientsDoesNotHaveFamilyOrDependents"
-           [checked]="dependentStatus$ | async"           
+           [checked]="dependentStatus$ | async"   
+           aria-labelledby="clientsDoesNotHaveFamilyOrDependents"        
           />
           <label
             class="k-checkbox-label"

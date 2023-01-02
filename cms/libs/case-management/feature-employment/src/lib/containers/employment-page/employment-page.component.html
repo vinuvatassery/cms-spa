@@ -11,7 +11,8 @@
             kendoCheckBox 
             id="clientDoesNotHaveEmployment"
             (click)="onUnEmployedClicked()"
-            [checked]="employmentStatus$ | async"    
+            [checked]="employmentStatus$ | async"  
+            aria-labelledby="clientDoesNotHaveEmployment"  
           />
           <label class="k-checkbox-label" for="clientDoesNotHaveEmployment">Unemployed</label>
           </span>
