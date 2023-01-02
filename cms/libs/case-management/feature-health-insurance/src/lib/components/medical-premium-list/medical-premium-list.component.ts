@@ -5,7 +5,7 @@ import { State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
-import { HealthInsuranceFacade ,HealthInsurancePolicyFacade,WorkflowFacade} from '@cms/case-management/domain';
+import { CompletionChecklist, HealthInsuranceFacade ,HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -147,7 +147,13 @@ export class MedicalPremiumListComponent implements OnInit {
 
   loadHealthInsurancePlans() {
     this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
-
+      if(medicalHealthPolicy?.length > 0){
+        const item: CompletionChecklist = {
+          dataPointName: 'currentInsuranceFlag',
+          status: StatusFlag.Yes
+        };
+        this.workflowFacade.updateChecklist([item]);
+      }
     })
   }
 
