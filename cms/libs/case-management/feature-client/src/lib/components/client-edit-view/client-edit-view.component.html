@@ -297,38 +297,38 @@
   
     <div class="flex-row">
       <div class="flex-col flex-col-4">   
-        <kendo-floatinglabel text="Spoken language">
+        <kendo-floatinglabel text="Spoken Language">
           <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
            [data]="spokenWrittenLanguagelov$ | async"
             textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
             formControlName="spokenLanguage">
         </kendo-dropdownlist>  
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken language is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken Language is required.</kendo-formerror>
       </div>
     </div>
     <div class="flex-row">
       <div class="flex-col flex-col-4">    
-        <kendo-floatinglabel text="Written language">
+        <kendo-floatinglabel text="Written Language">
           <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
            [data]="spokenWrittenLanguagelov$ | async"
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
           formControlName="writtenLanguage">
         </kendo-dropdownlist>  
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written language is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written Language is required.</kendo-formerror>
       </div>
     </div>
     <div class="flex-row">
       <div class="flex-col flex-col-4">    
-        <kendo-floatinglabel text="English proficiency">
+        <kendo-floatinglabel text="English Proficiency">
           <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
            [data]="englishProficiencylov$ | async"
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
           formControlName="englishProficiency">
         </kendo-dropdownlist>  
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English proficiency is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English Proficiency is required.</kendo-formerror>
       </div>
     </div>
   </section>

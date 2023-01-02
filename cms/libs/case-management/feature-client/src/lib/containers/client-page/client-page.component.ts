@@ -235,8 +235,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               catchError((error:any)=>{
                 if(error){
                   this.loaderService.hide();      
-                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
-                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error});
                   return of(false);
                 }
                 return of(false);
@@ -289,16 +289,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     if(this.applicantInfo.client == undefined){
       this.applicantInfo.client = new Client;
     }
-      this.applicantInfo.client.firstName = this.appInfoForm.controls["firstName"].value;
+      this.applicantInfo.client.firstName = this.appInfoForm.controls["firstName"].value.trim()===''?null:this.appInfoForm.controls["firstName"].value;
       if(this.appInfoForm.controls["chkmiddleName"].value == true){
         this.applicantInfo.client.middleName =null;
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.Yes;
       }
       else{
-        this.applicantInfo.client.middleName = this.appInfoForm.controls["middleName"].value;
+        this.applicantInfo.client.middleName = this.appInfoForm.controls["middleName"].value.trim() === ''?null:this.appInfoForm.controls["middleName"].value.trim();
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
-      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value; 
+      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value.trim()===''?null:this.appInfoForm.controls["lastName"].value; 
       var dob =  this.appInfoForm.controls["dateOfBirth"].value;
       if(this.clientCaseEligibilityId != null){
         this.applicantInfo.client.dob = new Date(dob.getUTCFullYear(), dob.getUTCMonth(),dob.getUTCDate() + 1, 
@@ -319,7 +319,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.ssnNotApplicableFlag =StatusFlag.Yes;
       }
       else{
-        this.applicantInfo.client.ssn = this.appInfoForm.controls["ssn"].value;
+        this.applicantInfo.client.ssn = this.appInfoForm.controls["ssn"].value.trim()===''?null:this.appInfoForm.controls["ssn"].value;
         this.applicantInfo.client.ssnNotApplicableFlag =StatusFlag.No;
       } 
   }
@@ -342,23 +342,23 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }
         
         if(this.appInfoForm.controls["prmInsNotApplicable"].value){
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = '';
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = '';
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = null;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = null;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag = StatusFlag.Yes;
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = this.appInfoForm.controls["prmInsFirstName"].value
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = this.appInfoForm.controls["prmInsLastName"].value
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = this.appInfoForm.controls["prmInsFirstName"].value.trim()===''?null:this.appInfoForm.controls["prmInsFirstName"].value;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = this.appInfoForm.controls["prmInsLastName"].value.trim()===''?null:this.appInfoForm.controls["prmInsLastName"].value;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag = StatusFlag.No;
         }
         if(this.appInfoForm.controls["officialIdsNotApplicable"].value){
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = '';
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = '';
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = null;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = null;;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag = StatusFlag.Yes;
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = this.appInfoForm.controls["officialIdFirstName"].value
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = this.appInfoForm.controls["officialIdLastName"].value
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = this.appInfoForm.controls["officialIdFirstName"].value.trim()===''?null:this.appInfoForm.controls["officialIdFirstName"].value;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = this.appInfoForm.controls["officialIdLastName"].value.trim()===''?null:this.appInfoForm.controls["officialIdLastName"].value;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag = StatusFlag.No;
         }    
     
@@ -583,11 +583,12 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private validateForm(){
+    this.appInfoForm.markAllAsTouched();
     this.appInfoForm.updateValueAndValidity();
             this.appInfoForm.controls["firstName"].setValidators([Validators.required]);
             this.appInfoForm.controls["firstName"].updateValueAndValidity();
             this.appInfoForm.controls["dateOfBirth"].setErrors(null);
-        if(this.appInfoForm.controls["chkmiddleName"].value ){
+        if(this.appInfoForm.controls["chkmiddleName"].value  ){
               this.appInfoForm.controls["middleName"].removeValidators(Validators.required);;
               this.appInfoForm.controls["middleName"].updateValueAndValidity();
         }
