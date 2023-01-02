@@ -43,6 +43,7 @@ export class LovFacade {
   private lovMetalLevelSubject = new BehaviorSubject<Lov[]>([]);
   private lovPremiumFrequencySubject = new BehaviorSubject<Lov[]>([]);
   private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -68,6 +69,7 @@ export class LovFacade {
   metalLevellov$ = this.lovMetalLevelSubject.asObservable();
   premiumFrequencylov$ = this.lovPremiumFrequencySubject.asObservable();
   medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
+  caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
 
 
         /** Public methods **/
@@ -304,6 +306,18 @@ getMedicareCoverageTypeLovs(): void {
       console.error('err', err);
     },
   });
+}
+
+getCaseStatusLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.CaseStatusType).subscribe({
+    next: (lovCaseStatusResponse) => {
+      this.lovCaseStatusTypeSubject.next(lovCaseStatusResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
+    },
+  });
+
 }
 }
 

@@ -269,29 +269,23 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
-      mergeMap((navigationType: NavigationType) =>
-        forkJoin([of(navigationType), this.save()])
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
       ),
-    ).subscribe(([navigationType, isSaved]) => {
+    ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
-        debugger;
         //this.workflowFacade.navigate(navigationType);
-       // this.HideLoader();
+        this.loaderService.hide();
       }
     });
   }
 
   private addSaveForLaterValidationsSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        debugger;
         if(this.checkValidations()){
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
         }
-        else{
-
-        }
-       
       }
     });
   }

@@ -1,13 +1,13 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
 import { forkJoin, mergeMap, of, Subscription, tap, first } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -44,7 +44,7 @@ export class CaseDetailPageComponent implements OnInit {
   openedPreviewLetter = false;
   openedSaveForLater = false;
   openedSendLetterToPrint = false;
-  ddlCommonActions$ = this.caseFacade.ddlCommonActions$;
+  caseStatuses:[]=[];
   ScreenName = ScreenType.CaseDetailPage;
   popupClass = 'app-c-split-button';
   isShowSaveLaterPopup = false;
@@ -53,6 +53,8 @@ export class CaseDetailPageComponent implements OnInit {
   isShowSendNewLetterPopup = false;
   isInnerLeftMenuOpen = false;
   sessionId!: string;
+  currentStatusCode:string="";
+  isSubmitted:boolean=false;
   data: Array<any> = [
     {
       text: '',
@@ -95,7 +97,8 @@ export class CaseDetailPageComponent implements OnInit {
     private workflowFacade: WorkflowFacade,
     private loaderService: LoaderService,
     private loggingService : LoggingService,
-    private readonly snackbarService : NotificationSnackbarService
+    private readonly snackbarService : NotificationSnackbarService,
+    private lovFacade:LovFacade
   ) {
   }
 
@@ -106,11 +109,13 @@ export class CaseDetailPageComponent implements OnInit {
     this.addNavigationSubscription();
     this.addConfirmationPopupSubscription();
     this.loadSessionData();
+    this.getCaseStatusLov();
   }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
     this.showConfirmationPopupSubscription.unsubscribe();
+    this.loadSessionSubscription.unsubscribe();
   }
 
   /** Private Methods */
@@ -159,8 +164,7 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   onSaveLaterClicked() {
-    // this.isShowSaveLaterPopup = true;
-    debugger
+   
     this.workflowFacade.saveForLaterValidations(true);
   }
 
@@ -270,18 +274,49 @@ export class CaseDetailPageComponent implements OnInit {
       });
   }
 
-  getCaseStatusDetails(){
+  getCaseStatusDetails() {
     this.loaderService.show();
     this.caseFacade.getCaseStatusById(this.clientCaseId).subscribe({
-      next:(response:any)=>{
-      this.loaderService.hide();
-      this.clientCaseStatusData=response;
+      next: (response: any) => {
+        this.loaderService.hide();
+        this.clientCaseStatusData = response;
       },
-      error:(err:any)=>{
+      error: (err: any) => {
         this.loaderService.hide();
         this.loggingService.logException(err);
       }
     })
+  }
+
+  getCaseStatusLov() {
+    this.lovFacade.getCaseStatusLovs();
+    this.lovFacade.caseStatusType$.subscribe((statusResponse: any) => {
+      if (statusResponse.length > 0) {
+        this.caseStatuses = statusResponse.filter((x: any) => x.lovCode == CaseStatusCode.INCOMPLETE || x.lovCode == CaseStatusCode.REJECT)
+      }
+    })
+  }
+
+  updateCaseStatus() {
+    this.loaderService.show();
+    this.isSubmitted = true;
+    if (this.currentStatusCode != "") {
+      let caseData={
+        clientCaseId:this.clientCaseId,
+        caseStatusCode:this.currentStatusCode
+      }
+      this.caseFacade.updateCaseStatus(caseData).subscribe({
+        next:(casesResponse:any)=>{
+          this.loaderService.hide();
+          this.workflowFacade.saveForLater(true);
+          this.isShowSaveLaterPopup = false;
+        },
+        error:(err:any)=>{
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+        }
+      })
+    }
 
   }
 

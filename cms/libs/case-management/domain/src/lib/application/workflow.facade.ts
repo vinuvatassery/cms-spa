@@ -31,7 +31,7 @@ export class WorkflowFacade {
   private routesSubject = new BehaviorSubject<any>([]);
   private sessionSubject = new BehaviorSubject<any>([]);
   private sessionDataSubject = new Subject<any>();
-  private saveForLaterClickedSubject = new Subject<NavigationType>();
+  private saveForLaterClickedSubject = new Subject<boolean>();
   private saveForLaterValidationSubject = new Subject<boolean>();
   private saveForLaterConfirmationSubject = new Subject<boolean>();
   /** Public properties **/
@@ -88,9 +88,8 @@ export class WorkflowFacade {
     this.saveAndContinueClickedSubject.next(navigationType);
   }
 
-  saveForLater(navigationType: NavigationType) {
-    debugger
-    this.saveForLaterClickedSubject.next(navigationType);
+  saveForLater(data: boolean) {
+    this.saveForLaterClickedSubject.next(data);
   }
 
   saveForLaterValidations(validation: boolean) {

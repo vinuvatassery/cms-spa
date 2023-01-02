@@ -259,4 +259,8 @@ export class CaseFacade {
      return  this.caseDataService.loadCasesStatusById(clientCaseId)
   }
 
+  updateCaseStatus(caseData: any) {
+    return this.caseDataService.updateCaseStatus(caseData)
+
+  }
 }
