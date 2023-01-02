@@ -1,6 +1,6 @@
 <div class="flex-row">
-    <div class="flex-col flex-space-bw align-items-center">
-        <h5 class="title-md mb-0 text-capital">Drugs Purchased</h5>
+    <div class="flex-col flex-space-bw align-items-center"> 
+        <h2 class="title-md mb-0 text-bold">Drugs Purchased</h2>
         <span>
             <input type="checkbox" kendoCheckBox aria-labelledby="premiumsWithinLast12Months" id="premiums" />
             <label class="k-checkbox-label" for="premiums">Show only premiums within the last 12 months</label>
@@ -135,7 +135,7 @@
 
 <!-- Change Pharmacy Priority Modal -->
 <kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClikced()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    class="app-c-modal app-c-modal-md app-c-modal-np">
     <kendo-dialog-titlebar> Change Pharmacy Priority </kendo-dialog-titlebar>
     <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClikced()">
     </case-management-set-pharmacy-priority>

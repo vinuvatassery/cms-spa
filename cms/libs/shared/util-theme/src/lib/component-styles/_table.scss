@@ -26,7 +26,7 @@ $pagination-height : 48px;
     padding: $size-xl $size-xl;
     background-color: material-color($hive-neutral-palette, 700) !important;
     color: $white !important;
-    font-size: $font-size-m;
+    font-size: $font-size;
     font-family: $font-family-medium;
     white-space: normal;
     vertical-align: middle;
@@ -43,6 +43,12 @@ $pagination-height : 48px;
     border-left-color: material-color($hive-neutral-palette, 600) !important;
     border-right-color: material-color($hive-neutral-palette, 600) !important;
   }
+  .k-column-title {
+ 
+    text-overflow: unset;
+    white-space: normal;
+    line-height: 18px;
+}
   .k-grid-header {
     padding: $size-0 !important;
   }
@@ -63,7 +69,7 @@ $pagination-height : 48px;
   .k-footer-template {
     td,
     .k-grid-footer-sticky {
-      background-color: material-color($hive-neutral-palette, 900) !important;
+      background-color: $gridfootercolor !important;
       color: $white !important;
       border-left-color: material-color($hive-neutral-palette, 900) !important;
       border-right-color: material-color($hive-neutral-palette, 900) !important;
@@ -113,7 +119,7 @@ $pagination-height : 48px;
     }
     .k-header{
       .k-cell-inner > .k-link{
-        padding: 16px 24px;
+        padding: 12px 24px;
       }
     }
     .k-grid-header,
@@ -194,7 +200,7 @@ $pagination-height : 48px;
       .material-icons {
         position: absolute;
         left: $size-xx;
-        top: $size-xx * 2.7;
+        top: $size-xx * 2.6;
         z-index: 1;
         opacity: 0.5;
       }
@@ -237,7 +243,7 @@ $pagination-height : 48px;
     font-size: $font-size-s;
     position: relative;
     font-family: $font-family-medium;
-    + .sort-items {
+    
       padding-left: $size-xlg + 1;
       &:before {
         content: '';
@@ -249,7 +255,7 @@ $pagination-height : 48px;
         background: $black-3;
         border-radius: $border-radius-xl;
       }
-    }
+     
   }
   .mat-button,
   .k-button {
@@ -384,16 +390,34 @@ table,
   }
   .k-grid-column-menu {
     position: relative;
-    right: $size-xxxl + $size-s;
+    right: 30px;
     padding: $size-0;
     height: $size-xxxl;
     width: $size-xxxl;
     top: $size-0;
     display: flex;
+    border-radius: 2px;
+    margin-left: 5px;
+    &:active{
+      background: $white;
+      .k-icon{
+        color: $black;
+      }
+    }
+    &:hover{
+      background: rgba($black,0.5);
+   
+    }
+ 
   }
+
 }
 
-
+.k-grid-columnmenu-popup{
+  .k-columnmenu-item{
+    padding: $size-xx $size-xl;
+  }
+}
 
 // Table bottom pagination 
 
@@ -490,9 +514,23 @@ table,
   .k-pager-last, .k-pager-first{
     display: none;
   }
+  .k-picker-md{
+    font-size: $font-size;
+  }
 }
 
 .k-pager-wrap, .k-pager{
   background: $light-bgcolor;
   padding: 0px;
+}
+
+.case-360-tab{
+  > .k-tabstrip-items-wrapper{
+    .k-tabstrip-items {
+      .k-link{
+        padding: 8px 24px;
+      }
+    }
+
+  }
 }

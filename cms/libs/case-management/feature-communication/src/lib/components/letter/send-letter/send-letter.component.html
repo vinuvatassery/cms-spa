@@ -5,17 +5,17 @@
   (close)="onCloseNewLetterClicked()"
 >
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
+    <p class="text-muted mb-1">
       Select an existing template or draft a custom letter.
     </p>
-    <div class="flex-row">
+    <div class="flex-row pb-2">
       <div class="flex-col">
         <case-management-template-picker
           [data]="data"
           (openDdlLetterEvent)="handleOpenTemplateClicked()"
         ></case-management-template-picker>
       </div>
-      <div *ngIf="isOpenLetterTemplate">
+      <div *ngIf="isOpenLetterTemplate" class="mt-2">
         <div class="flex-col mb-2">
           <p class="text-capital text-bold">Mailing Address</p>
           <p>170 NORTH DR APT 23</p>
@@ -28,7 +28,7 @@
             will be printed with the letter.
           </p>
         </div>
-        <div class="flex-col mt-3">
+        <div class="flex-col">
           <case-management-letter-editor
             [dataEvent]="letterEditorValueEvent"
             (editorValue)="handleLetterEditor($event)"

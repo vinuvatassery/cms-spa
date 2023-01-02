@@ -1,16 +1,16 @@
 /** Angular **/
-import { OnInit } from '@angular/core';
+import { ElementRef, OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith,first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
-import { DrugPharmacyFacade,  WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, YesNoFlag, CompletionChecklist } from '@cms/case-management/domain';
-import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
+import { DrugPharmacyFacade, PriorityCode, WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
+import { FormGroup, FormControl, } from '@angular/forms';
 /** Enums **/
-import {  NavigationType } from '@cms/case-management/domain';
+import { NavigationType } from '@cms/case-management/domain';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
-import { SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-drug-page',
@@ -31,6 +31,12 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     nonPreferredPharmacyFlag: '',
   };
   isBenefitsChanged = true;
+  clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
+  pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$
+  addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
+  editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
+  removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
+  selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   clientCaseEligibilityId: string = "";
   sessionId: any = "";
   clientId: any;
@@ -50,11 +56,14 @@ export class DrugPageComponent implements OnInit, OnDestroy {
  
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
+   
     private route: ActivatedRoute,
     private readonly incomeFacade: IncomeFacade,
     private drugPharmacyFacade: DrugPharmacyFacade,
-    private loggingService: LoggingService,
-    private loaderService: LoaderService,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly elementRef: ElementRef,
     private prescriptionDrugFacade :PrescriptionDrugFacade) { }
 
   /** Lifecycle Hooks **/
@@ -63,6 +72,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.loadSessionData();
     this.addSaveSubscription();
+    this.loadClientPharmacies();
     this.priscriptionDrugFormChanged();
     
   }
@@ -70,6 +80,13 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
+    });
   }
 
   /** Private Methods **/
@@ -95,6 +112,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
       },
     })
   }
+
   private priscriptionDrugFormChanged() {
     this.prescriptionDrugForm.valueChanges
       .pipe(
@@ -107,6 +125,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
         this.updateFormCompleteCount(prev, curr);
       });
   }
+
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.prescriptionDrugForm.controls).forEach(key => {
@@ -135,6 +154,33 @@ export class DrugPageComponent implements OnInit, OnDestroy {
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
+
+  private adjustAttributeChanged(event: Event) {
+    const data: CompletionChecklist = {
+      dataPointName: (event.target as HTMLInputElement).name,
+      status: (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+  }
+
+  private adjustAttributeInit() {
+    const initialAjustment: CompletionChecklist[] = [];
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      const data: CompletionChecklist = {
+        dataPointName: control.name,
+        status: control.checked ? StatusFlag.Yes : StatusFlag.No
+      };
+
+      initialAjustment.push(data);
+    });
+
+    if (initialAjustment.length > 0) {
+      this.workflowFacade.updateBasedOnDtAttrChecklist(initialAjustment);
+    }
+  }
+
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
@@ -186,5 +232,57 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   onBenefitsValueChange() {
     this.isBenefitsChanged = !this.isBenefitsChanged;
   }
+
+
+  /* Pharmacy */
+  private loadClientPharmacies() {
+    this.drugPharmacyFacade.loadClientPharmacyList(this.workflowFacade.clientId ?? 0);
+    this.clientpharmacies$.subscribe({
+      next: (pharmacies) => {
+        if(pharmacies?.length > 0){
+          pharmacies?.forEach((pharmacyData: any) => {
+            pharmacyData.PharmacyNameAndNumber =
+              pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
+          });
+          this.updateWorkflowCount('pharmacy', true);
+        }
+      },
+      error: (err) => {
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.updateWorkflowCount('pharmacy', false);
+        console.log(err);
+      },
+    });
+  }
+
+  private updateWorkflowCount(dataPointName:string, isCompleted:boolean){
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: dataPointName,
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
+  }
+
+  searchPharmacy(searchText: string) {
+    this.drugPharmacyFacade.searchPharmacies(searchText);
+  }
+
+  addPharmacy(vendorId: string) {
+    this.drugPharmacyFacade.addClientPharmacy(this.workflowFacade.clientId ?? 0, vendorId, PriorityCode.Primary);
+  }
+
+  editPharmacyInit(vendorId: string) {
+    this.drugPharmacyFacade.getPharmacyById(vendorId);
+  }
+
+  editPharmacy(data: any) {
+    this.drugPharmacyFacade.editClientPharmacy(this.workflowFacade.clientId ?? 0, data?.clientPharmacyId, data?.vendorId, PriorityCode.Primary);
+  }
+
+  removePharmacy(clientPharmacyId: string) {
+    this.drugPharmacyFacade.removeClientPharmacy(this.workflowFacade.clientId ?? 0, clientPharmacyId);
+  }
+
 }
 

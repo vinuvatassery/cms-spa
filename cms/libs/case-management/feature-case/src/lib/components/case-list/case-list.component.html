@@ -40,7 +40,7 @@
 
 
     </ng-template>
-    <kendo-grid-column field="ClientName" title="Client Name" [width]="130">
+    <kendo-grid-column field="ClientName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
           routerLink="case360/{{ dataItem.ID }}">
@@ -48,20 +48,20 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Pronouns" title="Pronouns" [width]="110">
+    <kendo-grid-column field="Pronouns" title="Pronouns" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="ID" title="ID" [width]="70"></kendo-grid-column>
     <kendo-grid-column field="URN" title="URN" [width]="70"></kendo-grid-column>
-    <kendo-grid-column field="PreferredContact" title="Preferred Contact" [width]="120"></kendo-grid-column>
+    <kendo-grid-column field="PreferredContact" title="Preferred Contact" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="Status" title="Status" [width]="80"></kendo-grid-column>
     <kendo-grid-column field="Group" title="Group" [width]="80"></kendo-grid-column>
     <kendo-grid-column field="EligibilityStartDate" title="Eligibility Start Date" [width]="100"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-    <kendo-grid-column field="EligibilityEndDate" title="Eligibility End Date" [width]="100"
+    <kendo-grid-column field="EligibilityEndDate" title="Eligibility End Date" [width]="110"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-    <kendo-grid-column field="EligibilityEndDateOne" title="Eligibility End Date" [width]="100"
+    <kendo-grid-column field="EligibilityEndDateOne" title="Eligibility End Date" [width]="110"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-    <kendo-grid-column field="EligibilityEndDateTwo" title="Eligibility End Date" [width]="100"
+    <kendo-grid-column field="EligibilityEndDateTwo" title="Eligibility End Date" [width]="110"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
 
       

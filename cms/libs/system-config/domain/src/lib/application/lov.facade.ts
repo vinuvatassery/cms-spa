@@ -17,7 +17,7 @@ export class LovFacade {
     private loggingService : LoggingService
 
   ) { }
-  
+
   /** Private properties **/
   private lovSubject = new BehaviorSubject<Lov[]>([]);
   private lovcascadeSubject = new BehaviorSubject<Lov[]>([]);
@@ -41,6 +41,8 @@ export class LovFacade {
   private lovProofOfIncomeSubject = new BehaviorSubject<Lov[]>([]);
   private lovInsuranceTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovMetalLevelSubject = new BehaviorSubject<Lov[]>([]);
+  private lovPremiumFrequencySubject = new BehaviorSubject<Lov[]>([]);
+  private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -64,7 +66,9 @@ export class LovFacade {
   proofOfIncomelov$ = this.lovProofOfIncomeSubject.asObservable();
   insuranceTypelov$ = this.lovInsuranceTypeSubject.asObservable();
   metalLevellov$ = this.lovMetalLevelSubject.asObservable();
-  
+  premiumFrequencylov$ = this.lovPremiumFrequencySubject.asObservable();
+  medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
+
 
         /** Public methods **/
 
@@ -109,7 +113,7 @@ getCaseOriginLovs(): void {
       this.loggingService.logException(err)
     },
   });
-  
+
 }
 getPronounLovs(): void {
   this.lovDataService.getLovsbyType(LovType.Pronoun).subscribe({
@@ -120,7 +124,7 @@ getPronounLovs(): void {
       this.loggingService.logException(err)
     },
   });
-  
+
 }
 
 getMaterialLovs(): void {
@@ -132,7 +136,7 @@ getMaterialLovs(): void {
       console.error('err', err);
     },
   });
-  
+
 }
 getTransgenderLovs(): void {
   this.lovDataService.getLovsbyType(LovType.Transgender).subscribe({
@@ -184,7 +188,7 @@ getMaterialYesLovs(): void {
     },
   });
 }
-  
+
 getIncomeSourceLovs():void{
   this.lovDataService.getLovsbyType(LovType.IncomeSource).subscribe({
     next: (lovIncomeSourceResponse) => {
@@ -274,6 +278,27 @@ getMetalLevelLovs(): void {
   this.lovDataService.getLovsbyType(LovType.MetalLevel).subscribe({
     next: (lovResponse) => {
       this.lovMetalLevelSubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+
+getPremiumFrequencyLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.PremiumFrequency).subscribe({
+    next: (lovResponse) => {
+      this.lovPremiumFrequencySubject.next(lovResponse);
+    },
+    error: (err) => {
+      console.error('err', err);
+    },
+  });
+}
+getMedicareCoverageTypeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.MedicareCoverageType).subscribe({
+    next: (lovResponse) => {
+      this.lovMedicareCoverageTypeSubject.next(lovResponse);
     },
     error: (err) => {
       console.error('err', err);

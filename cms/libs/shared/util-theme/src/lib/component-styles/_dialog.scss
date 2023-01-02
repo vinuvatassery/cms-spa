@@ -39,7 +39,7 @@
       }
     }
     .k-dialog-buttongroup {
-      padding: $size-xlg $size-xxxl $size-xxx;
+      padding: $size-xlg $size-xxxl $size-xlg;
       border-width: 0;
       .k-button {
         min-width: 80px;
@@ -49,6 +49,9 @@
       }
       .justify-content-end {
         width: 100%;
+      }
+      .k-danger-link{
+        box-shadow: none;
       }
     }
   }

@@ -4,12 +4,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { PriorityCode } from '../enums/priority-code.enum';
+import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
 import { PharmacyPriority } from '../entities/pharmacy-priority';
-
 @Injectable({ providedIn: 'root' })
 export class DrugDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient,private readonly configurationProvider: ConfigurationProvider) {}
+  constructor(private readonly http: HttpClient,
+    private readonly configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadDdlPriorities() {
@@ -53,6 +55,7 @@ export class DrugDataService {
   loadClientPharmacies() {
     return of([
       {
+        clientPharmacyId:'123',
         PharmacyName: 'John Ade ',
         PharmcayId: 690,
         City: 'Beaverton',
@@ -63,6 +66,7 @@ export class DrugDataService {
       },
     ]);
   }
+
   loadtPharmacies() {
     return of([
       {
@@ -129,7 +133,7 @@ export class DrugDataService {
         Drug: "Lorem ipsum dolor set",
         NDC: 'NDC',
         Qty: 20,
-        RevDate : '20-5-2022',
+        RevDate: '20-5-2022',
         ClientGroup: 'GROUP I',
         PayType: 'Pay Type',
         TransType: 'Pay Type',
@@ -149,7 +153,7 @@ export class DrugDataService {
         Drug: "Lorem ipsum dolor set",
         NDC: 'NDC',
         Qty: 20,
-        RevDate : '20-5-2022',
+        RevDate: '20-5-2022',
         ClientGroup: 'GROUP I',
         PayType: 'Pay Type',
         TransType: 'Pay Type',
@@ -169,7 +173,7 @@ export class DrugDataService {
         Drug: "Lorem ipsum dolor set",
         NDC: 'NDC',
         Qty: 20,
-        RevDate : '20-5-2022',
+        RevDate: '20-5-2022',
         ClientGroup: 'GROUP I',
         PayType: 'Pay Type',
         TransType: 'Pay Type',
@@ -189,7 +193,7 @@ export class DrugDataService {
         Drug: "Lorem ipsum dolor set",
         NDC: 'NDC',
         Qty: 20,
-        RevDate : '20-5-2022',
+        RevDate: '20-5-2022',
         ClientGroup: 'GROUP I',
         PayType: 'Pay Type',
         TransType: 'Pay Type',
@@ -204,7 +208,31 @@ export class DrugDataService {
       },
     ]);
   }
-  savePharmacyPriorityService(pharmacyPriority: any) {
+
+  loadClientPharmacyList(clientId: number) {
+    return this.http.get<ClientPharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`);
+  }
+
+  searchPharmacies(searchText: string) {
+    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacy/search?searchText=${searchText}`);
+  }
+
+  getPharmacyById(vendorId: string) {
+    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies/${vendorId}`);
+  }
+
+  addClientPharmacy(clientId: number, pharmacy: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`, pharmacy);
+  }
+
+  editClientPharmacy(clientId: number, clientPharmacyId: string, pharmacy: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy/${clientPharmacyId}`, pharmacy);
+  }
+
+  removeClientPharmacy(clientId: number, clientPharmacyId: string) {
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy/${clientPharmacyId}`);
+  }
+ savePharmacyPriorityService(pharmacyPriority: any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
         `/case-management/pharmacy-priority/save-pharmacy`, pharmacyPriority

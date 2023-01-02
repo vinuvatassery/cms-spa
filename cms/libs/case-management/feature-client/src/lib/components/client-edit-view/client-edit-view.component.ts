@@ -541,6 +541,7 @@ private assignPronounModelToForm(){
     this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
   if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+      this.updateWorkflowPronounCount(true);
   if(pronoun.clientPronounCode ==='NOT_LISTED'){
       this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
       this.textboxDisable = false;
@@ -549,6 +550,15 @@ private assignPronounModelToForm(){
  })
     this.clientfacade.pronounListSubject.next(this.pronounList);     
 }
+}
+
+private updateWorkflowPronounCount(isCompleted:boolean){
+  const workFlowdata: CompletionChecklist[] = [{
+    dataPointName: 'pronoun',
+    status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+  }];
+
+  this.workflowFacade.updateChecklist(workFlowdata);
 }
 
   private adjustAttributeChanged(event: Event) { 
@@ -566,7 +576,7 @@ private assignPronounModelToForm(){
         distinctUntilChanged(),
         startWith(null), pairwise()
       )
-      .subscribe(([prev, curr]: [any, any]) => {
+      .subscribe(([prev, curr]: [any, any]) => {       
         this.updateFormCompleteCount(prev, curr);      
       });
       this.appInfoForm.statusChanges.subscribe(a=>{   

@@ -5,7 +5,7 @@ import { State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
-import { HealthInsuranceFacade ,HealthInsurancePolicyFacade,WorkflowFacade} from '@cms/case-management/domain';
+import { CompletionChecklist, HealthInsuranceFacade ,HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -94,7 +94,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
     if (this.closeDeleteModal) {
       this.onDeleteConfirmCloseClicked();
-      this.loadInsurancePolicies();
+      this.handleHealthInsuranceCloseClicked();
     }
   }
   /** Internal event methods **/
@@ -115,8 +115,11 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   /** External event methods **/
-  handleInsuranceType(insuranceType: string) {
-    this.insuranceType = insuranceType;
+  handleInsuranceType(dataItem: any) {
+    //this.insuranceType = insuranceType;
+    this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+    this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
+    this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
   }
 
   handleHealthInsuranceCloseClicked() {
@@ -144,7 +147,13 @@ export class MedicalPremiumListComponent implements OnInit {
 
   loadHealthInsurancePlans() {
     this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
-
+      if(medicalHealthPolicy?.length > 0){
+        const item: CompletionChecklist = {
+          dataPointName: 'currentInsuranceFlag',
+          status: StatusFlag.Yes
+        };
+        this.workflowFacade.updateChecklist([item]);
+      }
     })
   }
 
@@ -196,4 +205,10 @@ export class MedicalPremiumListComponent implements OnInit {
       this.onChangePriorityOpenClicked()
     }
   }
+  deleteButonClicked(deleteButonClicked:any){
+    if(deleteButonClicked){
+      this.onDeleteConfirmOpenClicked();
+    }
+  }
+
 }

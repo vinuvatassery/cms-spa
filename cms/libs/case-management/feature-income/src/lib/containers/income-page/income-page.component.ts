@@ -1,11 +1,11 @@
  
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, } from '@angular/core';
 /** External libraries **/
-import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
@@ -59,6 +59,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     private workflowFacade: WorkflowFacade,
     private lov: LovFacade,
     private route: ActivatedRoute,
+    private readonly elementRef: ElementRef,
     private readonly loaderService: LoaderService) { }
 
   /** Lifecycle hooks **/
@@ -123,7 +124,69 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         return this.incomeFacade.save(this.noIncomeData);
       }
     }
-    return of(true)
+    else{
+      this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.noIncomeData.clientId = this.clientId
+      this.noIncomeData.noIncomeFlag = "N";
+      this.loaderService.show();
+      return this.incomeFacade.save(this.noIncomeData);
+    }
+    return of(false)
+  }
+
+  private noIncomeDetailsFormChangeSubscription() {
+    this.noIncomeDetailsForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        startWith(null),
+        pairwise()
+      )
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
+      });
+  }
+
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.noIncomeDetailsForm.controls).forEach(key => {
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+          };
+          completedDataPoints.push(item);
+        }
+      }
+      else {
+        if (this.noIncomeDetailsForm?.get(key)?.value && this.noIncomeDetailsForm?.get(key)?.valid) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: StatusFlag.Yes
+          };
+
+          completedDataPoints.push(item);
+        }
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
+  }
+
+  private adjustAttributeChanged(activeDataPointName: string='', inactiveDataPointName: string='') {
+    const acitveData: CompletionChecklist = {
+      dataPointName: activeDataPointName,
+      status: StatusFlag.Yes 
+    };
+    const inactiveData: CompletionChecklist = {
+      dataPointName: inactiveDataPointName,
+      status: StatusFlag.No 
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([acitveData, inactiveData]);
   }
 
   /** Internal event methods **/
@@ -137,11 +200,11 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods **/
-  private loadIncomes(clientId: string, clientCaseEligibilityId: string): void {
-    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId);
+  private loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any): void {
+    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize);
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
-      if (this.incomeData && this.incomeData?.noIncomeData) {
+      if (incomeresponse.noIncomeData!=null) {
         this.noIncomeFlag = true;
         this.noIncomeDetailsForm = new FormGroup({
           noIncomeClientSignedDate: new FormControl('', []),
@@ -160,14 +223,6 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
 
   /** Internal Event Methods **/
-  onChangeCounterClick() {
-    this.updateCompletionStatus({
-      name: 'Income',
-      completed: 15,
-      total: 31,
-    });
-  }
-
   onIncomeValueChanged(event: any) {
     this.hasNoIncome = !this.hasNoIncome;
     if (this.hasNoIncome) {
@@ -177,9 +232,15 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         noIncomeNote: new FormControl('', []),
       });
       this.isNodateSignatureNoted = true;
+      this.noIncomeDetailsFormChangeSubscription();
+      this.adjustAttributeChanged('incomeFlag_no', 'incomeFlag_yes');
       this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
     }
+    else{
+      this.adjustAttributeChanged('incomeFlag_yes', 'incomeFlag_no');
+    }
   }
+
 
   public submitIncomeDetailsForm(): void {
     this.noIncomeDetailsForm.markAllAsTouched();
@@ -219,6 +280,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));
       this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));
       this.noIncomeDetailsForm.controls['noIncomeNote'].setValue(incomeDetail.noIncomeNote);
+    }else{
+      this.noIncomeDetailsForm.controls['noIncomeNote'].setValue('');
     }
   }
 
@@ -232,9 +295,25 @@ export class IncomePageComponent implements OnInit, OnDestroy {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
-          this.loadIncomes(this.clientId, this.clientCaseEligibilityId);
+          const gridDataRefinerValue = {
+            skipCount: this.incomeFacade.skipCount,
+            pagesize: this.incomeFacade.gridPageSizes[0]?.value
+          };
+          this.loadIncomeListHandle(gridDataRefinerValue)
         }
       });
+  }
 
+  loadIncomeListHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize
+    };
+    this.loadIncomes(
+      this.clientId,
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount
+    );
   }
 }

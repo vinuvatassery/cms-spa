@@ -14,7 +14,23 @@
             aria-hidden="true"
             >search</span
           >
-          <kendo-multicolumncombobox
+          <kendo-formfield>
+          <kendo-autocomplete
+          [fillMode]="formUiStyle.dropDownFillMode" 
+          [data]="pharmacySearchResult$ | async"     
+          [value]="selectedPharmacyForEdit" 
+          valueField ="vendorFullName"    
+          [filterable]="true"  
+          placeholder="Search Pharmacy Name/Number"
+          (filterChange)="searchPharmacies($event)"
+          > 
+          <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+            <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.vendorFullName}}</span>          
+          </ng-template>
+      </kendo-autocomplete>
+      <kendo-formerror>Pharmacy required</kendo-formerror>
+    </kendo-formfield>
+          <!-- <kendo-multicolumncombobox
           [fillMode]="formUiStyle.dropDownFillMode"
             [data]="pharmacies$ | async"
             textField="name"
@@ -32,7 +48,9 @@
                 <span class="text-muted">{{ dataItem.address }}</span>
               </ng-template>
             </kendo-combobox-column>
-          </kendo-multicolumncombobox>
+          </kendo-multicolumncombobox> -->
+
+
         </div>
       </div>
     </div>
@@ -56,6 +74,7 @@
         class="k-danger-link"
         *ngIf="isEditPharmacy"
         aria-label="remove pharmacy"
+        (click)="removePharmacy()"
       >
         Remove
       </button>
@@ -70,7 +89,12 @@
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="add or update pharmacy">
+      <button 
+      kendoButton 
+      [primary]="true" 
+      aria-label="add or update pharmacy"
+      (click)="addOrEditPharmacy()"
+      >
         {{ isEditPharmacy ? 'Update' : 'Add' }}
       </button>
     </div>
@@ -79,6 +103,29 @@
 
 <!-- Add New Pharmacy Modal -->
 <kendo-dialog
+  *ngIf="isOpenNewPharmacyClicked"
+  (close)="onCloseNewPharmacyClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  >
+    <kendo-dialog-titlebar> Add New Pharmacy </kendo-dialog-titlebar>
+    <section class="k-dialog-body mb-2">
+      <p>
+          This feature is part of a future scope of work for the ORCares project.
+      </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div class="justify-content-end">    
+            <button kendoButton [primary]="true"  aria-label="add new pharmacy"
+                (click)="onCloseNewPharmacyClicked()">
+                Ok
+            </button>
+        </div>
+    </div>
+</kendo-dialog-actions>
+</kendo-dialog>
+
+<!-- <kendo-dialog
   *ngIf="isOpenNewPharmacyClicked"
   (close)="onCloseNewPharmacyClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
@@ -92,7 +139,7 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel  text="Pharmacy Name and Number">
-          <!-- <input kendoTextBox aria-label="pharmacy name and number" /> -->
+ 
           <kendo-textbox   aria-label="pharmacy name and number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
        
         </kendo-floatinglabel>
@@ -172,4 +219,5 @@
       </div>
     </div>
   </kendo-dialog-actions>
-</kendo-dialog>
+</kendo-dialog> -->
+
