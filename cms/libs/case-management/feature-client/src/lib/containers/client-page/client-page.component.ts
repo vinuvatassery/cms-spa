@@ -234,6 +234,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             return this.clientFacade.update(this.applicantInfo).pipe(
               catchError((error:any)=>{
                 if(error){
+                  debugger;
                   this.loaderService.hide();      
                   this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
                   this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error});
@@ -250,8 +251,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               catchError((error:any)=>{
                 if(error){
                   this.loaderService.hide();      
-                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
-                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
                   return of(false);
                 }
                 return of(false);
