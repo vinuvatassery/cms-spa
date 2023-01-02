@@ -23,4 +23,7 @@ export class ClientDocumentFacade {
     removeDocument(documentId:string){
         return this.clientDocumentDataService.removeDocument(documentId);
     }
+    getClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId:string){
+        return this.clientDocumentDataService.getClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId);
+    }
 }

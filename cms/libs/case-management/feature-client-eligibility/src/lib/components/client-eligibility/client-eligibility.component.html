@@ -70,14 +70,15 @@
         <h4 class="mb-1 mt-0">Does the client meet income requirements?</h4>
         <span class="card-buttons-wrap mb-1">
           <span class="pr-3"
-            ><span class="text-bold">Family Size:</span> 4</span
+            ><span class="text-bold">Family Size:</span> {{income?.familySize}}</span
           >
           <span class="pr-3"
-            ><span class="text-bold">Monthly Income:</span> $1,153.00</span
+            ><span class="text-bold">Monthly Income:</span> ${{income?.totalIncome}}</span
           >
-          <span class="pr-3"><span class="text-bold">FPL:</span> 150%</span>
+          <span class="pr-3"><span class="text-bold">FPL:</span> {{income?.fpl}}%</span>
         </span>
-        <span class="card-buttons-wrap">
+        <span class="card-buttons-wrap" *ngFor="let doc of incomDocuments; let i = index">
+          
           <button
             kendoButton
             look="flat"
@@ -106,41 +107,10 @@
               >open_in_new</span
             >
           </button>
-          <a class="text-bold text-underline">Proof of Income 1</a>
-          <span class="text-muted">(2MB)</span>
+          <a class="text-bold text-underline">Proof of Income {{i+1}}</a>
+          <span class="text-muted">({{doc.documentSize}} kb)</span>
         </span>
-        <span class="card-buttons-wrap">
-          <button
-            kendoButton
-            look="flat"
-            aria-label="download file"
-            class="k-icon-button"
-            title="Download"
-          >
-            <span
-              class="material-icons"
-              aria-label="download file"
-              aria-hidden="true"
-              >file_download</span
-            >
-          </button>
-          <button
-            kendoButton
-            look="flat"
-            aria-label="open in new tab"
-            class="k-icon-button"
-            title="Open in new tab"
-          >
-            <span
-              class="material-icons"
-              aria-label="open in new tab"
-              aria-hidden="true"
-              >open_in_new</span
-            >
-          </button>
-          <a class="text-bold text-underline">Proof of Income 2</a>
-          <span class="text-muted">(2MB)</span>
-        </span>
+       
       </div>
       <div class="flex-col flex-col-4 text-right">
         <kendo-buttongroup selection="single">

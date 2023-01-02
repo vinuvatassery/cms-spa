@@ -33,7 +33,8 @@ export class IncomeFacade {
   dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService,
+  constructor(
+    private readonly contactDataService: ContactDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
@@ -105,6 +106,9 @@ export class IncomeFacade {
     });
   }
 
+  getIncomeEligibility(clientCaseEligibilityId: string, clientId: string){
+    return this.contactDataService.getIncomeEligibility(clientCaseEligibilityId,clientId);
+  }
   loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any): void {
     this.ShowLoader();
     this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize).subscribe({
