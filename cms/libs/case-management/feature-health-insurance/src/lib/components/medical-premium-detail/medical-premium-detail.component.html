@@ -12,6 +12,7 @@
       <kendo-floatinglabel text="Health Insurance Type">
         <!-- [(ngModel)]="ddlInsuranceType" -->
         <kendo-dropdownlist
+        aria-labelledby="insurance Type"
         [fillMode]="formUiStyle.dropDownFillMode"
           [data]="insuranceTypeList$ | async"
           (valueChange)="onHealthInsuranceTypeChanged()"
@@ -35,7 +36,7 @@
       <kendo-floatinglabel text="Medicare Benificiary ID Number">
         <kendo-textbox
         [disabled]="isViewContentEditable"
-        aria-label="lainsurance id number"
+        aria-labelledby="Medicare Benificiary ID Number"
         formControlName ="medicareBeneficiaryIdNbr"
         [maxlength]="20"
         [fillMode]="formUiStyle.inputFillMode">
@@ -46,6 +47,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Medicare Coverage Type">
         <kendo-dropdownlist
+        aria-labelledby="Medicare Coverage Type"
         [fillMode]="formUiStyle.dropDownFillMode"
           [data]="medicareCoverageTypeList$ | async"
           (valueChange)="onMedicareCoverageTypeChanged()"
@@ -64,6 +66,7 @@
         <kendo-datepicker
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
+          aria-labelledby="Medicare Part A Start Date"
           formControlName ="medicarePartAStartDate"
           [disabled]="isViewContentEditable"
           formatPlaceholder="formatPattern"
@@ -79,6 +82,7 @@
         <kendo-datepicker
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
+          aria-labelledby="Medicare Part B Start Date"
           formControlName ="medicarePartBStartDate"
           [disabled]="isViewContentEditable"
           formatPlaceholder="formatPattern"

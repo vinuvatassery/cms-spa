@@ -11,18 +11,18 @@
                 <input
                   type="radio"
                   kendoRadioButton
-                  aria-labelledby="currentlyHaveHealthInsuranceYes"
                   name="currentInsuranceFlag"
-                  id="haveInsurance1"
-                  tabindex="1"
-                  value="Y"
-                  [checked]="currentInsurance == 'Y'"
+                  aria-labelledby="currentlyHaveHealthInsuranceYes" 
+                  id="currentlyHaveHealthInsuranceYes" 
+                  class="form-control" 
                   formControlName="currentInsuranceFlag"
+                  value="Y"
+                  [checked]="currentInsurance == 'Y'" 
                   (change)="onCurrentInsuranceChange('Y')"
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="haveInsurance1"
+                  for="currentlyHaveHealthInsuranceYes"
                   text="Yes"
                 ></kendo-label>
               </span>
@@ -32,8 +32,7 @@
                   kendoRadioButton
                   aria-labelledby="currentlyHaveHealthInsuranceNo"
                   name="currentInsuranceFlag"
-                  id="haveInsurance2"
-                  tabindex="2"
+                  id="currentlyHaveHealthInsuranceNo" 
                   value="N"
                   [checked]="currentInsurance == 'N'"
                   formControlName="currentInsuranceFlag"
@@ -41,7 +40,7 @@
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="haveInsurance2"
+                  for="currentlyHaveHealthInsuranceNo"
                   text="No"
                 ></kendo-label>
               </span>
@@ -59,15 +58,14 @@
                   kendoRadioButton
                   aria-labelledby="eligibleForGroupPolicyYes"
                   name="groupPolicyEligibleFlag"
-                  id="policyEligibility1"
-                  tabindex="3"
+                  id="eligibleForGroupPolicyYes" 
                   value="Y"
                   [checked]="groupPolicyEligible == 'Y'"
                   formControlName="groupPolicyEligibleFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="policyEligibility1"
+                  for="eligibleForGroupPolicyYes"
                   text="Yes"
                 ></kendo-label>
               </span>
@@ -77,15 +75,14 @@
                   kendoRadioButton
                   aria-labelledby="eligibleForGroupPolicyNo"
                   name="groupPolicyEligibleFlag"
-                  id="policyEligibility2"
-                  tabindex="4"
+                  id="eligibleForGroupPolicyNo" 
                   value="N"
                   [checked]="groupPolicyEligible == 'N'"
                   formControlName="groupPolicyEligibleFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="policyEligibility2"
+                  for="eligibleForGroupPolicyNo"
                   text="No"
                 ></kendo-label>
               </span>
