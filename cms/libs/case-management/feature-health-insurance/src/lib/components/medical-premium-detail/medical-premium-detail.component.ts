@@ -375,9 +375,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].setValue(
         healthInsurancePolicy.isClientPolicyHolderFlag
       );
-      this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
-        healthInsurancePolicy.othersCoveredOnPlanFlag
-      );
       this.healthInsuranceForm.controls['policyHolderFirstName'].setValue(
         healthInsurancePolicy.policyHolderFirstName
       )
@@ -390,9 +387,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         StatusFlag.Yes
       );
     }
-    this.healthInsuranceForm.controls['othersCoveredOnPlan'].setValue(
-      healthInsurancePolicy.othersCoveredOnPlan
+    this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
+      healthInsurancePolicy.othersCoveredOnPlanFlag
     );
+    // this.healthInsuranceForm.controls['othersCoveredOnPlan'].setValue(
+    //   healthInsurancePolicy.othersCoveredOnPlan
+    // );
     this.disableEnableRadio();
   }
 
@@ -686,7 +686,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   onToggleNewPersonClicked() {
     let personForm = this.formBuilder.group({
-      relationship: new FormControl(''),
+      relationshipDescription: new FormControl(''),
       firstName: new FormControl('', Validators.maxLength(40)),
       lastName: new FormControl('', Validators.maxLength(40)),
       dob: new FormControl(''),

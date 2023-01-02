@@ -50,7 +50,7 @@ export class healthInsurancePolicy {
 }
 
 export class othersCoveredOnPlan {
-        relationship: string = "";
+        relationshipDescription: string = "";
         firstName: string = "";
         lastName: string = "";
         dob?: Date;

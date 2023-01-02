@@ -277,13 +277,15 @@
           <h5>Are others covered on the plan?</h5>
           <div class="component-list-h">
             <span class="app-radiobtnwidtext-wrapper">
-              <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="othersCovered"
-                aria-labelledby="othersCoveredOnThePlanYes" for="othersCovered1" tabindex="9" />
+              <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="othersCoveredOnPlanFlag"
+                aria-labelledby="othersCoveredOnThePlanYes" for="othersCovered1" tabindex="9" value="Y"
+                formControlName="othersCoveredOnPlanFlag" />
               <kendo-label class="k-radio-label" for="othersCovered1" text="Yes"></kendo-label>
             </span>
             <span class="app-radiobtnwidtext-wrapper">
-              <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="othersCovered"
-                aria-labelledby="othersCoveredOnThePlanNo" for="othersCovered2" tabindex="10" />
+              <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="othersCoveredOnPlanFlag"
+                aria-labelledby="othersCoveredOnThePlanNo" for="othersCovered2" tabindex="10" value="N"
+                formControlName="othersCoveredOnPlanFlag" />
               <kendo-label class="k-radio-label" for="othersCovered2" text="No"></kendo-label>
             </span>
           </div>
@@ -292,15 +294,10 @@
           *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
           <h5>Others covered on the plan(Select all that apply)</h5>
           <div class="component-list-h">
-            <span class="app-checkboxwidtext-wrapper">
+            <span class="app-checkboxwidtext-wrapper" *ngFor="let person of healthInsurancePolicyCopy.othersCoveredOnPlan">
               <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
-                aria-labelledby="othersCoverdSelect" id="othersCoverdSelect" />
-              <label class="k-checkbox-label" for="othersCoverdSelect">John Dio (spouse)</label>
-            </span>
-            <span class="app-checkboxwidtext-wrapper">
-              <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
-                aria-labelledby="othersCoverdSelect" form="othersCoverdSelect" />
-              <label class="k-checkbox-label" id="othersCoverdSelect">Frank William (dependant)</label>
+                aria-labelledby="othersCoverdSelect" id="othersCoverdSelect" name={{person.firstName}}{{-person.lastName}} />
+              <label class="k-checkbox-label" for="othersCoverdSelect">{{person.firstName}} {{person.lastName}} ({{person.relationshipDescription}})</label>
             </span>
           </div>
           <div formArrayName="othersCoveredOnPlan">
@@ -316,7 +313,7 @@
                 <div class="flex-col">
                   <kendo-floatinglabel text="Relationship to Client">
                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [disabled]="isViewContentEditable"
-                      [data]="relationshipList" formControlName="relationship">
+                      [data]="relationshipList" formControlName="relationshipDescription">
                     </kendo-dropdownlist>
                   </kendo-floatinglabel>
                 </div>
@@ -358,13 +355,13 @@
           <div class="component-list-h">
             <span class="app-radiobtnwidtext-wrapper">
               <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="isClientPolicyHolderFlag"
-                aria-labelledby="clientPolicyHolderYes" id="clientPolicyHolder1" tabindex="5" value="Yes"
+                aria-labelledby="clientPolicyHolderYes" id="clientPolicyHolder1" tabindex="5" value="Y"
                 formControlName="isClientPolicyHolderFlag" />
               <kendo-label class="k-radio-label" text="Yes" for="clientPolicyHolder1"></kendo-label>
             </span>
             <span class="app-radiobtnwidtext-wrapper">
               <input [disabled]="isViewContentEditable" type="radio" kendoRadioButton name="isClientPolicyHolderFlag"
-                aria-labelledby="clientPolicyHolderNo" id="clientPolicyHolder2" tabindex="6" value="No"
+                aria-labelledby="clientPolicyHolderNo" id="clientPolicyHolder2" tabindex="6" value="N"
                 formControlName="isClientPolicyHolderFlag" />
               <kendo-label class="k-radio-label" text="No" for="clientPolicyHolder2"></kendo-label>
             </span>
@@ -372,7 +369,7 @@
         </div>
         <div class="flex-row pl-3 mt-2">
           <div class="flex-col flex-col-6"
-            *ngIf="healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'No'">
+            *ngIf="healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'">
             <kendo-floatinglabel text="Policy Holder First Name">
               <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
                 [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"> </kendo-textbox>
@@ -381,7 +378,7 @@
             </kendo-floatinglabel>
           </div>
           <div class="flex-col flex-col-6"
-            *ngIf="healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'No'">
+            *ngIf="healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'">
             <kendo-floatinglabel text="Policy Holder Last Name">
               <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name"
                 [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName">
