@@ -1,7 +1,10 @@
 <div class="client-data-block">
   <h3>HIV Case Manager</h3>
   <section>
-    <h5 class="mt-1">Currently has HIV Case Manager?</h5>
+   
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">  <h5 class="mt-1">Currently has HIV Case Manager?</h5></legend>
+     
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
@@ -9,6 +12,7 @@
           kendoRadioButton
           name="CurrentlyhasHIVCaseManager" 
           id="currentlyHasHivManageYes" 
+          aria-labelledby="currentlyHasHivManageYes"
         />
         <kendo-label
           class="k-radio-label"
@@ -22,6 +26,7 @@
           kendoRadioButton 
           name="CurrentlyhasHIVCaseManager"
           id="currentlyHasHivManagerNo" 
+          aria-labelledby="currentlyHasHivManagerNo"
         />
         <kendo-label
           class="k-radio-label"
@@ -30,13 +35,16 @@
         ></kendo-label>
       </span>
     </div>
+    </fieldset>
   </section>
 
   <section>
     <case-management-case-manager-list></case-management-case-manager-list>
   </section>
   <section>
-    <h5 class="mt-1">Would you like one?</h5>
+   
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">  <h5 class="mt-1">Would you like one?</h5> </legend>
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
@@ -46,6 +54,7 @@
           kendoRadioButton
           name="Wouldyoulikeone" 
           id="WouldyoulikeoneYes" 
+          aria-labelledby="WouldyoulikeoneYes"
         />
         <kendo-label
           class="k-radio-label"
@@ -61,6 +70,7 @@
           kendoRadioButton 
           name="Wouldyoulikeone"
           id="WouldyoulikeoneNo" 
+          aria-labelledby="WouldyoulikeoneNo"
         />
         <kendo-label
           class="k-radio-label"
@@ -69,6 +79,7 @@
         ></kendo-label>
       </span>
     </div>
+    </fieldset>
     <div class="voterreg-info d-flex mt-1 align-items-center" *ngIf="isVisible === 1">
       <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>Case Manager Referral is send once the application is saved   </div>
   </section>

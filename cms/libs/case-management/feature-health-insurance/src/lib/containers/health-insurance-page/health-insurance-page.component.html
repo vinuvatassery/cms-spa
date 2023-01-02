@@ -5,8 +5,11 @@
       <div class="flex-row">
         <form [formGroup]="insuranceFlagForm">
           <div class="flex-col mb-1">
+            <fieldset class="k-form-fieldset">
+              <legend class="k-form-legend"><h5>Do they currently have health insurance?</h5></legend>
+             
             <div class="component-list-h">
-              <h5>Do they currently have health insurance?</h5>
+              
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
@@ -45,13 +48,15 @@
                 ></kendo-label>
               </span>
             </div>
+            </fieldset>
           </div>
           <div class="flex-col mb-1">
+
+            <fieldset class="k-form-fieldset">
+              <legend class="k-form-legend"><h5>Are they eligible for a group policy (through employer or spouse,
+                partner, or parent’s employer)?</h5></legend>
             <div class="component-list-h">
-              <h5>
-                Are they eligible for a group policy (through employer or spouse,
-                partner, or parent’s employer)?
-              </h5>
+              
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
@@ -87,6 +92,7 @@
                 ></kendo-label>
               </span>
             </div>
+            </fieldset>
           </div>
         </form>
 
