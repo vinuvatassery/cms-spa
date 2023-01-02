@@ -14,13 +14,13 @@ import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
 export class DrugPharmacyFacade {
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {      
-    debugger;  
+    
     if(type == SnackBarNotificationType.ERROR)
     {
        const err= subtitle;    
        this.loggingService.logException(err)
     }  
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.snackbarService.manageSnackBar(type,subtitle)
     this.HideLoader();   
   }
 
@@ -257,7 +257,6 @@ export class DrugPharmacyFacade {
     });
   }
   loadPharmacyPriority(clientId:any) {
-    debugger;
     return this.drugDataService.loadPharmacyPriority(clientId);
   }
 }
