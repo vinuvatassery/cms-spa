@@ -5,7 +5,8 @@
               <input
               type="radio"
               kendoRadioButton
-              id="material.lovCode"
+              attr.aria-labelledby="material{{material.lovCode}}"     
+              id="material{{material.lovCode}}"
               [value]="material.lovCode"
               [name]="OptionControlerName"             
               [formControlName]="OptionControlerName"
@@ -13,7 +14,7 @@
         
             <kendo-label
               class="k-radio-label"
-              for="material.lovCode"
+              for="material{{material.lovCode}}"
               text="{{material.lovDesc}}" 
             ></kendo-label>
            

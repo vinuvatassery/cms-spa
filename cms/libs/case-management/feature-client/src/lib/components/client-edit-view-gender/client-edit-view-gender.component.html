@@ -1,5 +1,10 @@
 <section [formGroup]="appInfoForm">
-  <h5>What is their gender? Select all that apply</h5>
+
+
+  <fieldset class="k-form-fieldset">
+    <legend class="k-form-legend">    
+      <h5>What is their gender? Select all that apply</h5>
+</legend>
   <div class="component-list-h">
     <span
       class="app-checkboxwidtext-wrapper"
@@ -9,6 +14,7 @@
         type="checkbox"
         kendoCheckBox
         [formControlName]="ControlPrefix + gender.lovCode"
+        attr.aria-labelledby="{{ ControlPrefix + gender.lovCode }}"     
         id="{{ ControlPrefix + gender.lovCode }}"
         (change)="onCheckChange($event, gender.lovCode)"
       />
@@ -39,4 +45,5 @@
       >Atleast one option is required.</kendo-formerror
     >
   </div>
+  </fieldset>
 </section>

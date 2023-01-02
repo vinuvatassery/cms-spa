@@ -5,7 +5,7 @@
       <input 
         type="checkbox"
          kendoCheckBox
-         
+         attr.aria-labelledby="pronouns{{pronoun.lovCode}}"      
         id="pronouns{{pronoun.lovCode}}"
         [formControlName]="pronoun.lovCode"
         (change)="onCheckChange($event,pronoun.lovCode)"

@@ -8,6 +8,7 @@
             [value]="material.lovCode"
             [name]="OptionControlerName"  
             tabindex="0"
+            attr.aria-labelledby="{{OptionControlerName + material.lovCode}}"     
             [formControlName]="OptionControlerName"
             (change)="onMaterialsRdoClicked($event)"/>
       
