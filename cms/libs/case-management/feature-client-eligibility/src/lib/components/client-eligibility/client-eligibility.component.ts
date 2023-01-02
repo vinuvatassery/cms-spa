@@ -8,13 +8,14 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'case-management-client-eligibility',
   templateUrl: './client-eligibility.component.html',
   styleUrls: ['./client-eligibility.component.scss'],
-  
+
 })
 export class ClientEligibilityComponent implements OnInit {
   /** Public properties **/
   isShowException = false;
   isOpenAcceptance = false;
   isOpenDeny = false;
+  isDenialLetter = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   sessionId: any = "";
   clientId: any;
@@ -27,11 +28,11 @@ export class ClientEligibilityComponent implements OnInit {
   constructor(private workflowFacade: WorkflowFacade,private route: ActivatedRoute
     ,private clientDocumentFacade:ClientDocumentFacade
     ,private incomeFacade:IncomeFacade
-    
+
     ) { }
 
   ngOnInit(): void {
-    
+
     this.loadSessionData();
   }
 
@@ -52,7 +53,7 @@ export class ClientEligibilityComponent implements OnInit {
           },(error) => {
               //this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
             })
-          
+
         }
       });
 
@@ -84,5 +85,21 @@ export class ClientEligibilityComponent implements OnInit {
 
   isOpenDenyClicked() {
     this.isOpenDeny = true;
+  }
+  handleClosAfterDeny(event:boolean) {
+    if(event)
+    {
+      this.isOpenDeny = false;
+      this.isDenialLetter = true;
+    }
+    else
+    {
+      this.isOpenDeny = false;
+      this.isDenialLetter = false;
+    }
+  }
+  DenialPopupClose()
+  {
+    this.isDenialLetter = false;
   }
 }

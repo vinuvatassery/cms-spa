@@ -49,7 +49,7 @@
             kendoButton
             aria-label="proof of address yes"
             [toggleable]="true"
-            
+
           >
             Yes
           </button>
@@ -78,7 +78,7 @@
           <span class="pr-3"><span class="text-bold">FPL:</span> {{income?.fpl}}%</span>
         </span>
         <span class="card-buttons-wrap" *ngFor="let doc of incomDocuments; let i = index">
-          
+
           <button
             kendoButton
             look="flat"
@@ -110,7 +110,7 @@
           <a class="text-bold text-underline">Proof of Income {{i+1}}</a>
           <span class="text-muted">({{doc.documentSize}} kb)</span>
         </span>
-       
+
       </div>
       <div class="flex-col flex-col-4 text-right">
         <kendo-buttongroup selection="single">
@@ -293,5 +293,28 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar> Deny application? </kendo-dialog-titlebar>
-  <case-management-reject-application></case-management-reject-application>
+  <case-management-reject-application  (isCloseDenyModal)="handleClosAfterDeny($event)" [clientCaseId]="clientCaseId"></case-management-reject-application>
 </kendo-dialog>
+
+
+<kendo-dialog *ngIf="isDenialLetter" (close)="DenialPopupClose()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Notifications and Messages">
+
+<section class="k-dialog-body mb-2">
+  <p>
+    This feature is part of future scope of work for the ORCares project.
+  </p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" aria-label="Cancel Add New Insurance Plan" look="outline"
+        (click)="DenialPopupClose()">
+        Cancel
+      </button>
+      <button kendoButton      [primary]="true" aria-label="Add New Insurance Plan" (click)="DenialPopupClose()">
+        Add
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
