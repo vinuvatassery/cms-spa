@@ -1,7 +1,7 @@
 <div class="flex-row">
   <div class="flex-col">
     <div class="app-c-table">
-      <kendo-grid [pageSize]="5" [pageable]="true"  [data]="clientpharmacies$ | async">
+      <kendo-grid [pageSize]="5" [data]="clientpharmacies$ | async">
         <kendo-grid-column
           field="pharmacyNameAndNumber"
           title="Pharmacy Name and Number"

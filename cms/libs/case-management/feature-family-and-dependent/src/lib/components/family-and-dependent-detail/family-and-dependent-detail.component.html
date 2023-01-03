@@ -170,8 +170,9 @@
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
       </div>
       <div class="flex-col mb-3">
-        <h5>Currently enrolled in client’s health insurance plan?</h5>
-        <div class="">
+        
+        <fieldset class="k-form-fieldset">
+          <legend class="k-form-legend">    <h5>Currently enrolled in client’s health insurance plan?</h5></legend>
           <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"
@@ -208,7 +209,7 @@
          
           </span>
           
-        </div>
+        </fieldset>
         <div class="flex-col">
           <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">Enrollment status is required</kendo-formerror>
           </div>

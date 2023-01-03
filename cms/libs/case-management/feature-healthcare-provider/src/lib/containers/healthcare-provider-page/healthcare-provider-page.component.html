@@ -11,10 +11,11 @@
             (click)="onProviderValueChanged()" 
             id="noHealthcareProvider"
             name="noHealthcareProvider"
+            aria-labelledby="noHealthcareProvider"
             [checked]="healthCareProvideGetFlag$ | async"   
           />
           <kendo-label   for="noHealthcareProvider"
-            >Client does not have a healthcare provider</kendo-label>
+            text="Client does not have a healthcare provider"></kendo-label>
           </span>
         </div>
         <div class="flex-col"  *ngIf="!isProvidersGridDisplay">

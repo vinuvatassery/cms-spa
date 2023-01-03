@@ -10,12 +10,13 @@
     </p>
     <div class="flex-row">
       <div class="flex-col">
-        <div class="k-auto-complete-box">
+        <div class="k-auto-complete-box field-label-hide">
           <span
             class="material-icons global-search-icon"
             aria-label="search member"
             aria-hidden="true"
             >search</span >
+            <kendo-label text="Search Provider Name">
               <span *ngIf="providerSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
             <kendo-autocomplete
             [fillMode]="formUiStyle.dropDownFillMode" 
@@ -35,6 +36,7 @@
             </ng-template>    
            
           </kendo-autocomplete>  
+          </kendo-label>
           <kendo-formerror *ngIf="(existHealthProvderForm?.hasError('required','providerId')) && isExistSubmitted">Provider
             is required</kendo-formerror>
       
