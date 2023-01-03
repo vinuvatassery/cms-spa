@@ -13,7 +13,6 @@ import { PrescriptionDrugDataService } from '../infrastructure/prescription-drug
 export class PrescriptionDrugFacade {
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {      
-    debugger;  
     if(type == SnackBarNotificationType.ERROR)
     {
        const err= subtitle;    
@@ -40,7 +39,6 @@ HideLoader()
   this.loaderService.hide();
 }
   updatePrescriptionDrug(prescriptionDrug: any, summaryBenefitFiles: any ): Observable<any> {
-    debugger;
     const formData: any = new FormData();
     for (var key in prescriptionDrug) {
         formData.append(key, prescriptionDrug[key]);
@@ -50,7 +48,6 @@ HideLoader()
   }
   
   loadPrescriptionDrug(clientCaseEligibilityId:any) {
-    debugger;
     return this.prescriptionDrugDataService.loadPrescriptionDrug(clientCaseEligibilityId);
   }
 }
