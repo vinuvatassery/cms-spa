@@ -18,7 +18,7 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
-
+import {kendoFileSelectDirective, KendoFileUploadDirective} from './directives/kendo-fileselectupload.directive'
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
@@ -37,7 +37,9 @@ import { PhonePipe } from './pipes/phone.pipe';
     GridLoaderComponent,
     OptionbuttonListComponent,
     SsnPipe,
-    PhonePipe
+    PhonePipe,
+    kendoFileSelectDirective,
+    KendoFileUploadDirective
   ],
   exports: [
     LoginStatusComponent,
@@ -53,7 +55,9 @@ import { PhonePipe } from './pipes/phone.pipe';
     GridLoaderComponent,
     OptionbuttonListComponent,
     SsnPipe,
-    PhonePipe
+    PhonePipe,
+    kendoFileSelectDirective,
+    KendoFileUploadDirective
   ],
 })
 export class SharedUiCommonModule {}

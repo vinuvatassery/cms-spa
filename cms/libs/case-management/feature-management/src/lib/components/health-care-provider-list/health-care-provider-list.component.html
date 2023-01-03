@@ -32,7 +32,7 @@
     <kendo-grid-column field="By" title="By" [width]="50" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" aria-labelledby="profile avathar">
+          [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avathar of anil kumar">
           <div mat-card-avatar="" class="app-c-avatar avatar-sm">
             <!-- <img
       src="../assets/images/avatar-1.png"
@@ -103,9 +103,9 @@
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex"> 
           <div class="d-flex align-items-center"> 
-            <label class="mr-1">Rows Per Page</label> 
+            <label class="mr-1" for="providerrowperpage">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-              [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
+              [valuePrimitive]="true" id="providerrowperpage" [(value)]="pageSize"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
   

@@ -4,7 +4,7 @@
         <div class="app-c-table">
 
             <kendo-grid [pageSize]="5" [pageable]="true"  [data]="StatusPeriod$ | async">
-                <ng-template kendoGridDetailTemplate let-dataItem>
+                <ng-template kendoGridDetailTemplate let-dataItem  title="Status Start">
                     <section *ngIf="dataItem.RamseelInfo">
                         <div class="flex-col flex-col-6 mt-2 p-0">
                             <h4>Ramsell Info</h4>
@@ -94,7 +94,7 @@
                 <kendo-grid-column field="by" title="By" [width]="50">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                            [popover]="onUserProfileDetailsHovered" showOn="hover" aria-labelledby="profile avathar">
+                            [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avathar of Anil Kumar">
                             <div mat-card-avatar="" class="app-c-avatar avatar-sm">
                                 <span class="profile-text-avatar">AK</span>
                             </div>

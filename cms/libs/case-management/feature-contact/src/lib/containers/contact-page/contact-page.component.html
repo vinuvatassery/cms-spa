@@ -276,9 +276,9 @@
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
-            <label class="k-checkbox-label" for="homeAddressProofUploaded" >Proof of home address</label>
+            <kendo-label class="k-checkbox-label" for="homeAddressProofUploaded" text="Proof of home address">
             <kendo-fileselect 
-            aria-label="proof of home address" 
+            aria-label="proof of home address"  
             name="upload proof"
             [disabled]="isNoProofOfHomeChecked"
             [restrictions]="fileUploadRestrictions" 
@@ -287,8 +287,10 @@
             (remove)="handleFileRemoved($event)"            
             [ngModel]="homeAddressProofFile"  
             [ngModelOptions]="{standalone: true}"
+            id="homeAddressProofUploaded"
             #homeAddressProofUploaded>
           </kendo-fileselect>
+        </kendo-label>
           <kendo-formhint>Max file size 25MB</kendo-formhint> 
           <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of home address is required
           </kendo-formerror>
