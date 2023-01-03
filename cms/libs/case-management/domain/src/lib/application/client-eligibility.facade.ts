@@ -56,4 +56,8 @@ export class ClientEligibilityFacade {
       },
     });
   }
+
+  getEligibility(clientCaseEligibilityId: string, clientId: string){
+    return this.clientEligibilityDataService.getEligibility(clientCaseEligibilityId,clientId);
+  }
 }

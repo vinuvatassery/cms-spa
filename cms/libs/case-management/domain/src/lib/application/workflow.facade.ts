@@ -382,6 +382,7 @@ export class WorkflowFacade {
 
 
   loadWorkFlowSessionData(sessionId: string): void {
+    this.ShowLoader();
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
         if (ddlsessionDataResponse) {
@@ -393,8 +394,10 @@ export class WorkflowFacade {
           }
         }
         this.sessionDataSubject.next(ddlsessionDataResponse);
+        this.HideLoader();
       },
       error: (err) => {
+        this.HideLoader();
         console.error('err', err);
       },
     });

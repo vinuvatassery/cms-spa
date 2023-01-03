@@ -1,14 +1,15 @@
 /** Angular **/
-import { Component,OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { Component,OnInit, ChangeDetectionStrategy ,ChangeDetectorRef} from '@angular/core';
+import { first, forkJoin, mergeMap } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { WorkflowFacade,ClientDocumentFacade,IncomeFacade } from '@cms/case-management/domain';
+import { WorkflowFacade,ClientDocumentFacade,ClientEligibilityFacade,ClientDocumnetEntityType } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
+import { LoaderService} from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-client-eligibility',
   templateUrl: './client-eligibility.component.html',
   styleUrls: ['./client-eligibility.component.scss'],
-  
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientEligibilityComponent implements OnInit {
   /** Public properties **/
@@ -20,13 +21,18 @@ export class ClientEligibilityComponent implements OnInit {
   clientId: any;
   clientCaseEligibilityId: string = "";
   clientCaseId: any;
-  income: any;
+  eligibility: any;
   incomDocuments: any = [];
+  oregonDocuments: any = [];
+  HIVDocuments: any = [];  
 
   /** Constructor **/
-  constructor(private workflowFacade: WorkflowFacade,private route: ActivatedRoute
+  constructor(
+    private cdr: ChangeDetectorRef
+    ,private readonly loaderService: LoaderService
+    ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
     ,private clientDocumentFacade:ClientDocumentFacade
-    ,private incomeFacade:IncomeFacade
+    ,private clientEligibilityFacade:ClientEligibilityFacade
     
     ) { }
 
@@ -47,7 +53,9 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientId = sessionData.clientId;
 
           this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId).subscribe((data: any) => {
-           this.incomDocuments=data.filter((m:any)=>m.entityTypeCode==='Income');
+           this.incomDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.Income);
+           this.oregonDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.HomeAddressProof);
+           this.HIVDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.HivVerification);
             this.getIncomeEligibility();
           },(error) => {
               //this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
@@ -58,12 +66,27 @@ export class ClientEligibilityComponent implements OnInit {
 
   }
   getIncomeEligibility() {
-    this.incomeFacade.getIncomeEligibility(this.clientCaseEligibilityId,this.clientId).subscribe((data: any) => {
-    this.income=data;
+    this.loaderService.show()
+    this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId,this.clientId).subscribe((data: any) => {
+    this.eligibility=data;
+    this.cdr.detectChanges();
+    this.loaderService.hide();
      },(error:any) => {
-         //this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+      this.loaderService.hide();
        })
   }
+
+ formatBytes(bytes:any, decimals = 2) {
+    if (!+bytes) return '0 Bytes'
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+}
 
   /** Internal event methods **/
   onToggleExceptionClicked() {

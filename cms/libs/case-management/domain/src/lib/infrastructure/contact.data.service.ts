@@ -91,9 +91,6 @@ export class ContactDataService {
   loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}/${skip}/${pageSize}`);
   }
-  getIncomeEligibility(clientCaseEligibilityId: string, clientId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/eligibility/${clientCaseEligibilityId}/${clientId}`);
-  }
 
   loadDependentsProofofSchools() {
     return of([

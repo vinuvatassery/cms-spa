@@ -106,9 +106,6 @@ export class IncomeFacade {
     });
   }
 
-  getIncomeEligibility(clientCaseEligibilityId: string, clientId: string){
-    return this.contactDataService.getIncomeEligibility(clientCaseEligibilityId,clientId);
-  }
   loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any): void {
     this.ShowLoader();
     this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize).subscribe({
