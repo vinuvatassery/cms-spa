@@ -152,6 +152,7 @@ export class IncomeFacade {
   }
 
   saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
+    
     const formData: any = new FormData();
     for (var key in clientIncome) {
       if (key == "incomeStartDate" || key == 'incomeEndDate') {

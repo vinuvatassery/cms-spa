@@ -39,9 +39,16 @@ HideLoader()
 {
   this.loaderService.hide();
 }
-  updatePrescriptionDrug(prescriptionDrug: any): Observable<any> {
-    return this.prescriptionDrugDataService.updatePrescriptionDrugService(prescriptionDrug);
+  updatePrescriptionDrug(prescriptionDrug: any, summaryBenefitFiles: any ): Observable<any> {
+    debugger;
+    const formData: any = new FormData();
+    for (var key in prescriptionDrug) {
+        formData.append(key, prescriptionDrug[key]);
+    }
+    formData.append('SummaryBenefitFiles', summaryBenefitFiles);
+    return this.prescriptionDrugDataService.updatePrescriptionDrugService(formData);
   }
+  
   loadPrescriptionDrug(clientCaseEligibilityId:any) {
     debugger;
     return this.prescriptionDrugDataService.loadPrescriptionDrug(clientCaseEligibilityId);

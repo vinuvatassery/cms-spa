@@ -5,6 +5,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith,first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
+import {  UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { DrugPharmacyFacade, PriorityCode, WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
 import { FormGroup, FormControl, } from '@angular/forms';
 /** Enums **/
@@ -19,6 +20,12 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrugPageComponent implements OnInit, OnDestroy {
+  public uploadRemoveUrl = 'removeUrl';
+  public uploadedBenfitSummaryFile: any[] = [];
+  summaryBenefitFiles: any;
+  summaryBenefitValidator: boolean = false;
+  public uploadFileRestrictions: UploadFileRistrictionOptions =
+  new UploadFileRistrictionOptions();
   /** Public properties **/
   public prescriptionDrugForm :FormGroup = new FormGroup({
     hivFlag: new FormControl('', []),
@@ -27,6 +34,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
  // prescriptionDrugForm!: FormGroup;
   prescriptionDrug: PrescriptionDrug={
     clientCaseEligibilityId: '',
+    clientId:'',
+    clientCaseId:'',
     hivPositiveFlag: '',
     nonPreferredPharmacyFlag: '',
   };
@@ -218,9 +227,11 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     if (isValid) {
       
       this.prescriptionInfo.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.prescriptionInfo.clientId = this.clientId;
+      this.prescriptionInfo.clientCaseId = this.clientCaseId;
       this.prescriptionInfo.hivPositiveFlag= this.prescriptionDrugForm.controls["hivFlag"].value;
       this.prescriptionInfo.nonPreferredPharmacyFlag= this.prescriptionDrugForm.controls["nonPrefFlag"].value;
-      return this.prescriptionDrugFacade.updatePrescriptionDrug(this.prescriptionInfo);
+      return this.prescriptionDrugFacade.updatePrescriptionDrug(this.prescriptionInfo,this.summaryBenefitFiles);
       
     }
 
@@ -232,7 +243,16 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   onBenefitsValueChange() {
     this.isBenefitsChanged = !this.isBenefitsChanged;
   }
+  handleFileSelected(event: any) {
+    this.summaryBenefitFiles = event.files[0].rawFile;
+    this.summaryBenefitValidator = false;
+    console.log(this.summaryBenefitFiles);
+  }
 
+  handleFileRemoved(event: any) {
+    this.summaryBenefitFiles = null;
+    console.log(this.summaryBenefitFiles);
+  }
 
   /* Pharmacy */
   private loadClientPharmacies() {
