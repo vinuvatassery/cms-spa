@@ -34,13 +34,14 @@
         <input
           class="adjust-attr"
           type="checkbox" 
-          id="middleInitial"
+          id="nomiddleInitial"
           name="chkmiddleName"
+          aria-labelledby="nomiddleInitial"
           formControlName="chkmiddleName"
           kendoCheckBox     
           (change)="onMiddleNameChecked($event)"    
         />
-        <label class="k-checkbox-label" for="middleInitial">No Middle Initial</label>
+        <label class="k-checkbox-label" for="nomiddleInitial">No Middle Initial</label>
         </span>
         
       </div>
@@ -89,12 +90,13 @@
           type="checkbox"
           class="adjust-attr"
           name="prmInsNotApplicable"
-          id="cardNotApplicable" 
+          id="primaryInsuranceNotApplicable" 
+          aria-labelledby="primaryInsuranceNotApplicable"
           kendoCheckBox
           formControlName="prmInsNotApplicable"
           (change)="onInsuranceCardChecked($event)"
         />
-        <label class="k-checkbox-label" for="cardNotApplicable"
+        <label class="k-checkbox-label" for="primaryInsuranceNotApplicable"
           >Not Applicable</label
         >
         </span>
@@ -132,14 +134,15 @@
         <input
           type="checkbox"
           class="adjust-attr"
-          id="idNotApplicable"
+          id="officialIdsNotApplicable"
           name="officialIdsNotApplicable" 
-          kendoCheckBox       
+          kendoCheckBox    
+          aria-labelledby="officialIdsNotApplicable"   
           formControlName="officialIdsNotApplicable"
           (change)="onOfficialIdChecked($event)"
          
         />
-        <label class="k-checkbox-label" for="idNotApplicable"
+        <label class="k-checkbox-label" for="officialIdsNotApplicable"
           >Not Applicable</label
         >
         </span>
@@ -149,6 +152,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker  
+          aria-label="Date of Birth"  
           [fillMode]="formUiStyle.dateInputFillMode"
           [max]="currentDate"
           formControlName="dateOfBirth"
@@ -181,6 +185,7 @@
           id="ssnNotApplicable"
           name="ssnNotApplicable"    
           kendoCheckBox
+          aria-labelledby="ssnNotApplicable"   
           formControlName="ssnNotApplicable"
           (change)="onSsnNotApplicableChecked($event)"
         />
@@ -204,7 +209,7 @@
               type="radio"
               kendoRadioButton
               name="registerToVote"
-              value="Y" 
+              value="Y"  
               id="registertovoteyes" 
               formControlName="registerToVote"  
               (change)="registerToVoteSelected($event)"   
