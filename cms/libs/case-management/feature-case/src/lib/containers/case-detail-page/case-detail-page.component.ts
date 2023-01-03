@@ -4,10 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
-import { forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, tap,first } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType,CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -25,6 +25,7 @@ export class CaseDetailPageComponent implements OnInit {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
+  private loadSessionSubscription !:Subscription;
   public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
@@ -47,6 +48,9 @@ export class CaseDetailPageComponent implements OnInit {
   isShowSendNewLetterPopup = false;
   isInnerLeftMenuOpen = false;
   sessionId!: string;
+  clientCaseId:any;
+  case$ = this.caseFacade.getCase$;
+  showDelete:boolean=true;
   data: Array<any> = [
     {
       text: '',
@@ -98,19 +102,49 @@ export class CaseDetailPageComponent implements OnInit {
     this.loadQueryParams();
     this.loadDdlCommonAction();
     this.addNavigationSubscription();
+    this.loadCase();   
+    this.getCase();
   }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
   }
   cancelClientCase(){
-    debugger;
-   if(this.workflowFacade.currentSession !== null){
-   var clientCaseId = JSON.parse(this.workflowFacade.currentSession.sessionData).ClientCaseId 
-   }
-   this.caseFacade.cancelCase(clientCaseId).subscribe(data=>{
-    debugger;
+    this.caseFacade.cancelCase(this.clientCaseId).subscribe(data=>{
    })
+  }
+  getCase(){ 
+    this.case$.subscribe((caseData:any)=>{  
+      debugger;   
+      this.clientCaseId = caseData.clientCaseId;
+      if(caseData.caseStatusCode ===CaseStatusCode.NEW || 
+        caseData.caseStatusCode === CaseStatusCode.INCOMPLETE || 
+        caseData.caseStatusCode === CaseStatusCode.REVIEW){
+        this.showDelete = true;
+      }
+      else{
+        this.showDelete = false;
+      }
+    })
+     
+  }
+  private loadCase()
+  {     
+   this.sessionId = this.route.snapshot.queryParams['sid'];    
+   this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription =this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+    .subscribe((session: any) => {      
+     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId     
+     this.caseFacade.loadCasesById(this.clientCaseId);      
+    });        
+  } 
+  hideButton(type:any){
+    if(type===ButtonType.DELETE_APPLICATION &&  !this.showDelete){
+    return false;
+    }
+    else {
+      return true;
+    }
   }
   cancelDeletion(){
     this.isShowDeleteConfirmPopup = false;
