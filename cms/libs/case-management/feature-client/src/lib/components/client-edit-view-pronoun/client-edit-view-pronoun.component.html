@@ -1,3 +1,4 @@
+ 
 <div class="component-list-h" [formGroup]="appInfoForm">
     
     <span class="app-checkboxwidtext-wrapper"     
@@ -8,13 +9,12 @@
         aria-labelledby="pronounsSheHerHers"
         id="pronounsSheHerHers"
         [formControlName]="pronoun.lovCode"
-        (change)="onCheckChange($event,pronoun.lovCode)"
-        
-      />
-      <label class="k-checkbox-label"
-        >{{pronoun.lovDesc}}</label
-      >
-   
+        (change)="onCheckChange($event,pronoun.lovCode)"/>
+          <kendo-label
+          class="k-checkbox-label"
+          for="{{pronoun.lovCode}}"
+          text="{{pronoun.lovDesc}}" 
+        ></kendo-label>
       <div class="flex-row" *ngIf = "pronoun.lovCode ==='NOT_LISTED'">
         <span class="flex-col flex-col-6">
           <kendo-floatinglabel text="Enter Pronouns" >
@@ -33,3 +33,4 @@
     <hr />
   
   </div>
+ 

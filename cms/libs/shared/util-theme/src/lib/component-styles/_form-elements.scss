@@ -853,6 +853,16 @@ kendo-timepicker {
     border-color: $app-primary;
     background-color: $app-primary;
   }
+
+  &.k-invalid  , &.ng-invalid.ng-touched  , &.ng-invalid.ng-dirty   {
+    border-color: $error-color-1;
+    + .k-checkbox-label  + .k-checkbox-label,   + .k-checkbox-label {
+      color: $error-color-1;
+    }
+  }
+
+  
+
 }
 .k-checkbox-label {
   cursor: default;
@@ -866,9 +876,18 @@ kendo-timepicker {
     border-color: $app-primary;
     color: $app-primary;
   }
+  &.k-invalid  , &.ng-invalid.ng-touched  , &.ng-invalid.ng-dirty   {
+    border-color: $error-color-1;
+    + .k-radio-label  + .k-radio-label,   + .k-radio-label {
+      color: $error-color-1;
+    }
+  }
 }
 
 
 .mt-checkbox{
   margin-top: 24px;
 }
+
+
+

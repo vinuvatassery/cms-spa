@@ -32,8 +32,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  @Output() ValidateFields = new EventEmitter<FormGroup>();
  @Output() PronounChanges = new EventEmitter<any>();
  @Output() ApplicantNameChange = new EventEmitter<any>();
-  
-
 
   /** Public properties **/
   public currentDate = new Date(); 

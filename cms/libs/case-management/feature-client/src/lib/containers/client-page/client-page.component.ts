@@ -639,15 +639,27 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-          }          
+          }       
+          debugger;   
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           this.pronounList.forEach((pronoun:any) => {
             if(this.appInfoForm.controls[pronoun.lovCode].value ===true){
               this.appInfoForm.controls['pronouns'].setErrors(null);
             }
-            
           });
+          if(this.appInfoForm.controls['pronouns'].valid){
+            this.pronounList.forEach((pronoun:any) => {             
+                this.appInfoForm.controls[pronoun.lovCode].removeValidators(Validators.requiredTrue);
+                this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+            });
+          }
+          if(!this.appInfoForm.controls['pronouns'].valid){
+            this.pronounList.forEach((pronoun:any) => {   
+                this.appInfoForm.controls[pronoun.lovCode].setValidators(Validators.requiredTrue);
+                this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+            });
+          }
           this.appInfoForm.controls['materialInAlternateFormatCode'].setValidators(Validators.required);
           this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
             if( this.appInfoForm.controls['materialInAlternateFormatCode'].value  !=='' ||

@@ -90,6 +90,24 @@ export class ClientEditViewPronounComponent implements OnInit {
     }
 
     this.updateWorkflowCount(this.countOfSelection > 0);
+
+    this.pronounList.forEach((pronoun:any) => {
+      if(this.appInfoForm.controls[pronoun.lovCode].value ===true){
+        this.appInfoForm.controls['pronouns'].setErrors(null);
+      }
+    });
+    if(this.appInfoForm.controls['pronouns'].valid){
+      this.pronounList.forEach((pronoun:any) => {             
+          this.appInfoForm.controls[pronoun.lovCode].removeValidators(Validators.requiredTrue);
+          this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+      });
+    }
+    if(!this.appInfoForm.controls['pronouns'].valid){
+      this.pronounList.forEach((pronoun:any) => {   
+          this.appInfoForm.controls[pronoun.lovCode].setValidators(Validators.requiredTrue);
+          this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+      });
+    }
    }
    onChange(event:any){
     if(event ===""){
