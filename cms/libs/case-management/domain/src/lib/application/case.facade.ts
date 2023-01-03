@@ -255,4 +255,12 @@ export class CaseFacade {
 
     }
 
+    cancelCase(clientCaseId : any) 
+    { 
+          const caseData = { 
+            clientCaseId  : clientCaseId          
+          }      
+          return  this.caseDataService.cancelCase(caseData)
+    }
+
 }

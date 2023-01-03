@@ -103,10 +103,14 @@ export class CaseDetailPageComponent implements OnInit {
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
   }
-  cancelApplication(){
+  cancelClientCase(){
+    debugger;
    if(this.workflowFacade.currentSession !== null){
    var clientCaseId = JSON.parse(this.workflowFacade.currentSession.sessionData).ClientCaseId 
    }
+   this.caseFacade.cancelCase(clientCaseId).subscribe(data=>{
+    debugger;
+   })
   }
   cancelDeletion(){
     this.isShowDeleteConfirmPopup = false;

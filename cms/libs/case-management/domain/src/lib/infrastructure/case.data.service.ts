@@ -400,4 +400,9 @@ export class CaseDataService {
       caseData
     );
   }
+  cancelCase(caseData: any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cancel-case`,caseData
+    );
+  }
 }

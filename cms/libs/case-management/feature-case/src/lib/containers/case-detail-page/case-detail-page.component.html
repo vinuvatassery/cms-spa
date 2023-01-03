@@ -139,8 +139,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete application?">
   <section class="k-dialog-body mb-2">
     <p>
-      All progress will be lost and the client’s data will be permanently
-      deleted from the system.
+      All progress will be lost and the client’s data will be removed from the system.
     </p>
   </section>
   <kendo-dialog-actions>
@@ -149,7 +148,7 @@
         <button kendoButton [primary]="true" look="outline" aria-label="cancel delete"(click)="cancelDeletion()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="delete client’s data"(click)="cancelApplication()">
+        <button kendoButton class="k-error-button" aria-label="delete client’s data"(click)="cancelClientCase()">
           Delete
         </button>
       </div>
