@@ -105,6 +105,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       onLisFlag:[''],
       othersCoveredOnPlanFlag: [''],
       othersCoveredOnPlan: this.formBuilder.array([]),
+      newOthersCoveredOnPlan: this.formBuilder.array([]),
       isClientPolicyHolderFlag: [''],
       policyHolderFirstName: [''],
       policyHolderLastName: [''],

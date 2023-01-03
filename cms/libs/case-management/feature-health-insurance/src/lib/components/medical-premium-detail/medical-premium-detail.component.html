@@ -293,15 +293,22 @@
         <div class="flex-col mt-3"
           *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
           <h5>Others covered on the plan(Select all that apply)</h5>
-          <div class="component-list-h">
-            <span class="app-checkboxwidtext-wrapper" *ngFor="let person of healthInsurancePolicyCopy.othersCoveredOnPlan">
-              <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
-                aria-labelledby="othersCoverdSelect" id="othersCoverdSelect" name={{person.firstName}}{{-person.lastName}} />
-              <label class="k-checkbox-label" for="othersCoverdSelect">{{person.firstName}} {{person.lastName}} ({{person.relationshipDescription}})</label>
-            </span>
-          </div>
-          <div formArrayName="othersCoveredOnPlan">
+          <div class="component-list-h" formArrayName="othersCoveredOnPlan">
             <div *ngFor="let person of othersCoveredOnPlan.controls; let i=index">
+              <div class="flex-row pl-3 mt-2" [formGroupName]="i">
+                <span class="app-checkboxwidtext-wrapper">
+                  <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
+                    formControlName="enrolledInInsuranceFlag" (change)="updateEnrollStatus($event, i)"
+                    aria-labelledby="othersCoverdSelect" id="othersCoverdSelect" [checked]="person.value.enrolledInInsuranceFlag=='Y'? true: false"
+                    name={{person.value.firstName}}{{-person.value.lastName}} />
+                  <label class="k-checkbox-label" for="othersCoverdSelect">{{person.value.firstName}}
+                    {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div formArrayName="newOthersCoveredOnPlan">
+            <div *ngFor="let person of newOthersCoveredOnPlan.controls; let i=index">
               <div class="flex-row pl-3 mt-2" [formGroupName]="i">
                 <div class="flex-col d-flex align-iems-center justify-content-between">
                   <h5 class="mb-0">Person {{i+1}}</h5>

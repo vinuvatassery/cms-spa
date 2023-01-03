@@ -54,4 +54,5 @@ export class othersCoveredOnPlan {
         firstName: string = "";
         lastName: string = "";
         dob?: Date;
+        enrolledInInsuranceFlag: string = "";
 }

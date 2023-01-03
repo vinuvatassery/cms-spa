@@ -108,6 +108,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     return this.healthInsuranceForm.get("othersCoveredOnPlan") as FormArray;
   }
 
+  get newOthersCoveredOnPlan(): FormArray {
+    return this.healthInsuranceForm.get("newOthersCoveredOnPlan") as FormArray;
+  }
+
   /** Constructor **/
   constructor(
     private readonly healthFacade: HealthInsuranceFacade,
@@ -390,10 +394,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
       healthInsurancePolicy.othersCoveredOnPlanFlag
     );
-    // this.healthInsuranceForm.controls['othersCoveredOnPlan'].setValue(
-    //   healthInsurancePolicy.othersCoveredOnPlan
-    // );
+    let personsGroup = healthInsurancePolicy.othersCoveredOnPlan.map(pe => this.formBuilder.group(pe));
+    let personForm = this.formBuilder.array(personsGroup);
+    this.healthInsuranceForm.setControl('othersCoveredOnPlan', personForm);
     this.disableEnableRadio();
+  }
+
+  updateEnrollStatus(event: any, i: number) {
+    this.othersCoveredOnPlan.controls[i].patchValue({ 'enrolledInInsuranceFlag': event.target.checked ? 'Y' : 'N' });
   }
 
   private conditionsInsideView() {
@@ -573,8 +581,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['insuranceIdNumber'].value;
       this.healthInsurancePolicy.insuranceGroupPlanTypeCode = this.healthInsuranceForm.controls['groupPlanType'].value;
 
-      this.healthInsurancePolicy.policyHolderFirstName = null;
-      this.healthInsurancePolicy.policyHolderLastName = null;
       this.healthInsurancePolicy.metalLevelCode =
         this.healthInsuranceForm.controls['metalLevel'].value?.lovCode;
       if (this.healthInsuranceForm.controls['insuranceStartDate'].value !== null) {
@@ -657,6 +663,20 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonPharmacy = 'string';
       this.healthInsurancePolicy.oonDrugs = 'string';
       this.healthInsurancePolicy.concurrencyStamp = 'string';
+      this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
+      this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
+      if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
+        this.healthInsurancePolicy.othersCoveredOnPlan.push(this.healthInsuranceForm.value.newOthersCoveredOnPlan);
+      }
+      this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;
+      if (this.healthInsurancePolicy.isClientPolicyHolderFlag == 'N') {
+        this.healthInsurancePolicy.policyHolderFirstName = this.healthInsuranceForm.value.policyHolderFirstName;
+        this.healthInsurancePolicy.policyHolderLastName = this.healthInsuranceForm.value.policyHolderLastName;
+      }
+      else {
+        this.healthInsurancePolicy.policyHolderFirstName = "";
+        this.healthInsurancePolicy.policyHolderLastName = "";
+      }
     }
   }
   /** Internal event methods **/
@@ -690,12 +710,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       firstName: new FormControl('', Validators.maxLength(40)),
       lastName: new FormControl('', Validators.maxLength(40)),
       dob: new FormControl(''),
+      enrolledInInsuranceFlag: new FormControl('Y'),
     });
-    this.othersCoveredOnPlan.push(personForm);
+    this.newOthersCoveredOnPlan.push(personForm);
   }
 
   removePerson(i: number) {
-    this.othersCoveredOnPlan.removeAt(i);
+    this.newOthersCoveredOnPlan.removeAt(i);
   }
 
   insuranceCarrierNameData(data: any) {
