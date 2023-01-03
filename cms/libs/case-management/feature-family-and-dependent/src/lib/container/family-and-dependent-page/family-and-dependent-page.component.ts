@@ -43,6 +43,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag  
@@ -68,10 +70,14 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.lovFacade.getRelationShipsLovs(); 
     this.loadCase()   
     this.addSaveSubscription();    
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe(); 
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   /** Private Methods **/
@@ -202,6 +208,33 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   {
     data.parentClientId =   this.clientId 
     this.familyAndDependentFacade.AddExistingDependent(data);
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate(['/case-management/cases/case360/100'])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations(){
+    return true;
   }
  
 }

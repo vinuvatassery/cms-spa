@@ -280,6 +280,7 @@ export class CaseDetailPageComponent implements OnInit {
       next: (response: any) => {
         this.loaderService.hide();
         this.clientCaseStatusData = response;
+        this.currentStatusCode=response.caseStatusCode
       },
       error: (err: any) => {
         this.loaderService.hide();

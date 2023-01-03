@@ -9,7 +9,7 @@ import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, N
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
@@ -61,7 +61,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     private workflowFacade: WorkflowFacade,
     private lov: LovFacade,
     private route: ActivatedRoute,
-    private readonly loaderService: LoaderService) { }
+    private readonly loaderService: LoaderService,
+    private router: Router) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -274,8 +275,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
-        //this.workflowFacade.navigate(navigationType);
         this.loaderService.hide();
+        this.router.navigate(['/case-management/cases/case360/100'])
       }
     });
   }
