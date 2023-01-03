@@ -16,6 +16,7 @@ export class ClientEligibilityComponent implements OnInit {
   isShowException = false;
   isOpenAcceptance = false;
   isOpenDeny = false;
+  isDenialLetter = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   sessionId: any = "";
   clientId: any;
@@ -37,7 +38,7 @@ export class ClientEligibilityComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    
+
     this.loadSessionData();
   }
 
@@ -60,7 +61,7 @@ export class ClientEligibilityComponent implements OnInit {
           },(error) => {
               //this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
             })
-          
+
         }
       });
 
@@ -107,5 +108,21 @@ export class ClientEligibilityComponent implements OnInit {
 
   isOpenDenyClicked() {
     this.isOpenDeny = true;
+  }
+  handleClosAfterDeny(event:boolean) {
+    if(event)
+    {
+      this.isOpenDeny = false;
+      this.isDenialLetter = true;
+    }
+    else
+    {
+      this.isOpenDeny = false;
+      this.isDenialLetter = false;
+    }
+  }
+  DenialPopupClose()
+  {
+    this.isDenialLetter = false;
   }
 }

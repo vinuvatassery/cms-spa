@@ -128,12 +128,12 @@ export class CaseDataService {
     ]);
   }
 
-  loadCaseBySearchText(text : string) {     
+  loadCaseBySearchText(text : string) {
       return this.http.get<ClientCase[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
         `/case-management/client-case/SearchText=${text}`
-      );   
-  
+      );
+
   }
 
   loadCasesForAuthuser(): Observable<Case[]> {
@@ -360,8 +360,8 @@ export class CaseDataService {
 
   loadDdlSendLetters() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  } 
-   
+  }
+
 
     loadCasesById(clientCaseId : string) {
       return this.http.get<ClientCase[]>(
@@ -369,10 +369,10 @@ export class CaseDataService {
         `/case-management/client-case/${clientCaseId}`
       );
     }
-  
+
 
   loadDdlPrograms() {
-        
+
     return this.http.get<Program[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/client-case/programs`
@@ -399,5 +399,9 @@ export class CaseDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case`,
       caseData
     );
+  }
+  updateCaseStatus(clientCase: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/client-case-status`, clientCase);
+
   }
 }
