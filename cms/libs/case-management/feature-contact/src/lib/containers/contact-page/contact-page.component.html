@@ -19,9 +19,13 @@
               [maxlength]="100"
               formControlName="address1"
               > </kendo-textbox>
-            </kendo-floatinglabel>
-            <kendo-formerror> 
-              Address line 1 is required</kendo-formerror>
+            </kendo-floatinglabel>           
+            <kendo-formerror *ngIf="maillingAddress?.address1?.errors?.required">
+              Address line 1 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="maillingAddress?.address1?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -36,6 +40,9 @@
               formControlName="address2"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="maillingAddress?.address2?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -50,7 +57,12 @@
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>City is required</kendo-formerror>
+            <kendo-formerror *ngIf="maillingAddress?.city?.errors?.required">
+              City is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="maillingAddress?.city?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -82,7 +94,12 @@
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Zip is required</kendo-formerror>
+            <kendo-formerror *ngIf="maillingAddress?.zip?.errors?.required">
+              Zip is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="maillingAddress?.zip?.errors?.pattern">
+              Not a valid zip code format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3 mt-04" *ngIf="showMailAddressValidationLoader$ | async">
@@ -134,7 +151,12 @@
               formControlName="address1"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Address line 1 is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
+              Address line 1 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address1?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -149,7 +171,12 @@
               formControlName="address2"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Address line 1 is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address2?.errors?.required">
+              Address line 2 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address2?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -164,7 +191,12 @@
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>City is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
+              City is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.city?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -197,7 +229,12 @@
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Zip is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.zip?.errors?.required">
+              Zip is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.zip?.errors?.pattern">
+              Not a valid zip code format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3 mt-04" *ngIf="showHomeAddressValidationLoader$ | async">

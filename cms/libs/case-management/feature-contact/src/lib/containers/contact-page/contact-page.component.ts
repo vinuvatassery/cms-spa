@@ -290,18 +290,18 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private buildContactInfoForm() {
     this.contactInfoForm = new FormGroup({
       maillingAddress: new FormGroup({
-        address1: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        address2: new FormControl('', { updateOn: 'blur' }),
-        city: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        address1: new FormControl('', { validators: [Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')], updateOn: 'blur' }),
+        address2: new FormControl('', { validators: [Validators.pattern('^[A-Za-z0-9 ]+')], updateOn: 'blur' }),
+        city: new FormControl('', { validators: [Validators.required, Validators.pattern('^[A-Za-z0-9 ]+')], updateOn: 'blur' }),
         state: new FormControl('OR', { validators: Validators.required, updateOn: 'blur' }),
-        zip: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        zip: new FormControl('', { validators: [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')], updateOn: 'blur' }),
       }),
       homeAddress: new FormGroup({
-        address1: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        address2: new FormControl('', { updateOn: 'blur' }),
-        city: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        address1: new FormControl('', { validators: [Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')], updateOn: 'blur' }),
+        address2: new FormControl('', { validators: [Validators.pattern('^[A-Za-z0-9 ]+')], updateOn: 'blur' }),
+        city: new FormControl('', { validators: [Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')], updateOn: 'blur' }),
         state: new FormControl('OR', { validators: Validators.required, }),
-        zip: new FormControl('', { validators: [Validators.required, Validators.pattern('^[0-9]{5}(-[0-9]{4})?$')], updateOn: 'blur' }),
+        zip: new FormControl('', { validators: [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')], updateOn: 'blur' }),
         county: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
         homelessFlag: new FormControl(false, { validators: Validators.required }),
         noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required }),
@@ -390,6 +390,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       .pipe(
         startWith(null),
         pairwise(),
+        filter(()=>(this.contactInfoForm.get('maillingAddress') as FormGroup).valid),
         mergeMap(([prev, curr]: [any, any]) =>
           forkJoin([of(prev), of(curr), this.validateMailAddress(prev, curr, AddressTypeCode.Mail)]))
       ).subscribe(([prev, curr, validationResp]: [any, any, AddressValidation | null]) => {
@@ -419,15 +420,20 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       .pipe(
         startWith(null),
         pairwise(),
-        filter(([prev, curr]: [any, any]) =>
-          curr['homelessFlag'] !== true
+        filter(([prev, curr]: [any, any]) =>{
+          const address = (this.contactInfoForm.get('homeAddress') as FormGroup).controls;
+          return address['address1']?.valid 
+          && address['address2']?.valid 
+          && address['city']?.valid 
+          && address['zip']?.valid
+          && curr['homelessFlag'] !== true
           && curr['sameAsMailingAddressFlag'] !== true
           && curr['address1'] && curr['city'] && curr['state'] && curr['zip']
           && (prev == null
             || (prev['address1'] !== curr['address1'] || prev['address2'] !== curr['address2']
               || prev['city'] !== curr['city'] || prev['state'] !== curr['state']
               || prev['zip'] !== curr['zip']))
-        ),
+           }),
         mergeMap(([prev, curr]: [any, any]) =>
           forkJoin([of(prev), of(curr), this.validateMailAddress(prev, curr, AddressTypeCode.Home)]))
       ).subscribe(([prev, curr, response]: [any, any, AddressValidation | null]) => {
@@ -1218,4 +1224,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     return (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup).controls as any;
   }
 
+  get homeAddress(){
+    return (this.contactInfoForm.get('homeAddress') as FormGroup).controls as any;
+
+  }
+  get maillingAddress(){
+  return (this.contactInfoForm.get('maillingAddress') as FormGroup).controls as any;
+  }
 }
