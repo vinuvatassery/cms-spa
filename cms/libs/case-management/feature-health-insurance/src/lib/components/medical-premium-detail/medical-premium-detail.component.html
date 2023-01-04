@@ -299,7 +299,8 @@
                 <span class="app-checkboxwidtext-wrapper">
                   <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
                     formControlName="enrolledInInsuranceFlag" (change)="updateEnrollStatus($event, i)"
-                    aria-labelledby="othersCoverdSelect" id="othersCoverdSelect" [checked]="person.value.enrolledInInsuranceFlag=='Y'? true: false"
+                    aria-labelledby="othersCoverdSelect" id="othersCoverdSelect"
+                    [checked]="person.value.enrolledInInsuranceFlag=='Y'? true: false"
                     name={{person.value.firstName}}{{-person.value.lastName}} />
                   <label class="k-checkbox-label" for="othersCoverdSelect">{{person.value.firstName}}
                     {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
@@ -399,9 +400,10 @@
           *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan ">
           <h5 class="text-capital">Copy of Insurance Card</h5>
           <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
-            [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
-            (remove)="handleFileRemoved(healthInsuranceForm.value?.copyOfInsuranceCard?.documentId, 'copyInsurance')"
-            #copyOfInsurance [removeUrl]="uploadRemoveUrl" formControlName="copyOfInsuranceCard"
+            [multiple]="false" [autoUpload]="false"
+            (select)="handleFileSelected($event, 'copyInsurance')"
+            (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance')" #copyOfInsurance [removeUrl]="uploadRemoveUrl"
+            [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
             [restrictions]="uploadFileRestrictions.fileRestrictions">
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
@@ -413,8 +415,8 @@
           <h5 class="text-capital">Proof of premium amount</h5>
           <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
             [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'proof')"
-            (remove)="handleFileRemoved(healthInsuranceForm.value?.proofOfPremium?.documentId, 'proof')" #proofOfPremium
-            [removeUrl]="uploadRemoveUrl" formControlName="proofOfPremium"
+            (remove)="handleFileRemoved(proofOfPremiumFiles, 'proof')" #proofOfPremium [removeUrl]="uploadRemoveUrl"
+            [(ngModel)]="proofOfPremiumFiles" [ngModelOptions]="{standalone: true}"
             [restrictions]="uploadFileRestrictions.fileRestrictions">
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
@@ -430,8 +432,8 @@
           <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
           <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
             [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
-            (remove)="handleFileRemoved(healthInsuranceForm.value?.copyOfSummary?.documentId, 'summary')" #copyOfSummary
-            [removeUrl]="uploadRemoveUrl" formControlName="copyOfSummary"
+            (remove)="handleFileRemoved(copyOfSummaryFiles, 'summary')" #copyOfSummary [removeUrl]="uploadRemoveUrl"
+            [(ngModel)]="copyOfSummaryFiles" [ngModelOptions]="{standalone: true}"
             [restrictions]="uploadFileRestrictions.fileRestrictions">
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>

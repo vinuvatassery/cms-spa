@@ -4,9 +4,9 @@ import { Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { NotificationSnackbarService,SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
+import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService } from '@cms/shared/util-core';
 import { healthInsurancePolicy } from '../entities/health-insurance-policy';
-import{HealthInsurancePolicyDataService} from '../infrastructure/health-insurance-policy.data.service';
+import { HealthInsurancePolicyDataService } from '../infrastructure/health-insurance-policy.data.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -21,47 +21,56 @@ export class HealthInsurancePolicyFacade {
   healthInsurancePolicy$ = this.healthInsurancePolicySubject.asObservable();
 
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {
-    if(type == SnackBarNotificationType.ERROR)
-    {
-       const err= subtitle;
-       this.loggingService.logException(err)
+  ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.HideLoader();
 
   }
 
   /** Constructor**/
-  constructor( private readonly notificationSnackbarService : NotificationSnackbarService,
-    private loggingService : LoggingService,private readonly loaderService: LoaderService,
-   private healthInsurancePolicyService:HealthInsurancePolicyDataService) {}
+  constructor(private readonly notificationSnackbarService: NotificationSnackbarService,
+    private loggingService: LoggingService, private readonly loaderService: LoaderService,
+    private healthInsurancePolicyService: HealthInsurancePolicyDataService) { }
 
   /** Public methods **/
-  ShowLoader()
-  {
+  ShowLoader() {
     this.loaderService.show();
   }
 
-  HideLoader()
-  {
+  HideLoader() {
     this.loaderService.hide();
   }
 
-  saveHealthInsurancePolicy(healthInsurancePolicy:healthInsurancePolicy) {
-      return this.healthInsurancePolicyService.saveHealthInsurancePolicy(healthInsurancePolicy);
+  saveHealthInsurancePolicy(healthInsurancePolicy: any, files: any) {
+    const formData: any = new FormData();
+    for (var key in healthInsurancePolicy) {
+      formData.append(key, healthInsurancePolicy[key]);
+    }
+    for (var file in files) {
+      formData.append(file, files[file]);
+    }
+    return this.healthInsurancePolicyService.saveHealthInsurancePolicy(formData);
   }
-  updateHealthInsurancePolicy(healthInsurancePolicy:healthInsurancePolicy) {
-    return this.healthInsurancePolicyService.updateHealthInsurancePolicy(healthInsurancePolicy);
-}
+  updateHealthInsurancePolicy(healthInsurancePolicy: any, files: any) {
+    const formData: any = new FormData();
+    for (var key in healthInsurancePolicy) {
+      formData.append(key, healthInsurancePolicy);
+    }
+    for (var file in files) {
+      formData.append(file, files[file]);
+    }
+    return this.healthInsurancePolicyService.updateHealthInsurancePolicy(formData);
+  }
 
-  getCarrierContactInfo(carrierId:any)
-  {
+  getCarrierContactInfo(carrierId: any) {
     return this.healthInsurancePolicyService.getCarrierContactInfo(carrierId);
   }
 
-  getHealthInsurancePolicyById(clientInsurancePolicyId:string): void {
+  getHealthInsurancePolicyById(clientInsurancePolicyId: string): void {
     this.healthInsurancePolicyService.getHealthInsurancePolicyById(clientInsurancePolicyId).subscribe({
       next: (response) => {
         this.healthInsurancePolicySubject.next(response);
