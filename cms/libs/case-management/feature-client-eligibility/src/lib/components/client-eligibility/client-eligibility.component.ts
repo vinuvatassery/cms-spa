@@ -25,7 +25,7 @@ export class ClientEligibilityComponent implements OnInit {
   eligibility: any;
   incomDocuments: any = [];
   oregonDocuments: any = [];
-  HIVDocuments: any = [];  
+  HIVDocuments: any = [];
 
   /** Constructor **/
   constructor(
@@ -34,7 +34,7 @@ export class ClientEligibilityComponent implements OnInit {
     ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
     ,private clientDocumentFacade:ClientDocumentFacade
     ,private clientEligibilityFacade:ClientEligibilityFacade
-    
+
     ) { }
 
   ngOnInit(): void {
@@ -121,7 +121,7 @@ export class ClientEligibilityComponent implements OnInit {
       this.isDenialLetter = false;
     }
   }
-  DenialPopupClose()
+  denialPopupClose()
   {
     this.isDenialLetter = false;
   }

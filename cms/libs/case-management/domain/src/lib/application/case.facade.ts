@@ -255,7 +255,7 @@ export class CaseFacade {
 
     }
 
-  UpdateCaseStatus(ClientCase:any)
+  updateCaseStatus(ClientCase:any)
   {
     return  this.caseDataService.updateCaseStatus(ClientCase)
   }

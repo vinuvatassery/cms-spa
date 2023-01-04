@@ -40,7 +40,7 @@ export class WorkflowFacade {
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
-  clientCaseEligibilityId: string | undefined; 
+  clientCaseEligibilityId: string | undefined;
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
@@ -54,17 +54,17 @@ export class WorkflowFacade {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     public intl: IntlService,
     private configurationProvider : ConfigurationProvider ) { }
-  
+
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.HideLoader();
   }
 
   ShowLoader()
@@ -100,11 +100,11 @@ export class WorkflowFacade {
       assignedCwUserId: newCaseFormData?.controls["caseOwnerId"].value,
       caseOriginCode: newCaseFormData?.controls["caseOriginCode"].value,
       caseStartDate: newCaseFormData?.controls["applicationDate"].value
-    }      
- 
+    }
+
    sessionData.caseStartDate = this.intl.parseDate(Intl.DateTimeFormat('en-US').format(sessionData.caseStartDate))
-    
-    sessionData.caseStartDate =  this.intl.formatDate(sessionData.caseStartDate,this.dateFormat)   
+
+    sessionData.caseStartDate =  this.intl.formatDate(sessionData.caseStartDate,this.dateFormat)
     this.workflowService.createNewSession(sessionData)
       .subscribe({
         next: (sessionResp: any) => {
@@ -116,11 +116,11 @@ export class WorkflowFacade {
               },
             });
           }
-          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')  
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')
           this.HideLoader();
         },
         error: (err: any) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
 
       });
@@ -134,7 +134,7 @@ export class WorkflowFacade {
           forkJoin(
             [
               of(wfMaster),
-              this.workflowService.loadWorkflow(sessionId)             
+              this.workflowService.loadWorkflow(sessionId)
             ])
         ),
       ).subscribe({
@@ -143,11 +143,11 @@ export class WorkflowFacade {
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
-          this.sessionSubject.next(this.currentSession);          
+          this.sessionSubject.next(this.currentSession);
           this.HideLoader();
         },
         error: (err: any) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       })
   }
@@ -398,8 +398,8 @@ export class WorkflowFacade {
       },
       error: (err) => {
         this.HideLoader();
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
-} 
+}

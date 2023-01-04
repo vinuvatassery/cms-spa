@@ -1,7 +1,6 @@
-import { CaseStatusCode } from './../../../../../domain/src/lib/enums/case-status-code';
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit,Input,Output, EventEmitter} from '@angular/core';
-import {CaseFacade} from '@cms/case-management/domain';
+import {CaseFacade,CaseStatusCode} from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
@@ -29,7 +28,7 @@ export class RejectApplicationComponent implements OnInit {
   UpdateCaseStatus()
   {
     this.loaderService.show();
-    this.caseFacade.UpdateCaseStatus(this.caseStatus).subscribe({
+    this.caseFacade.updateCaseStatus(this.caseStatus).subscribe({
       next: (data) => {
         this.caseFacade.ShowHideSnackBar(
           SnackBarNotificationType.SUCCESS,
