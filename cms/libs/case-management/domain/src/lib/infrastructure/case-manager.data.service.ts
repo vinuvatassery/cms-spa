@@ -11,6 +11,7 @@ import { Program } from '../entities/program';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../entities/client-case';
+import { LoginUser } from 'libs/system-config/domain/src/lib/entities/login-user';
 
 @Injectable({ providedIn: 'root' })
 export class CaseManagerDataService {
@@ -54,5 +55,12 @@ export class CaseManagerDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}/manager-status`
       );
     }
+
+    loadSelectedCaseManagerData(assignedCaseManagerId: string , clientCaseId : string) {     
+      return this.http.get<LoginUser[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}/manager-data/${assignedCaseManagerId}`
+      );   
+  
+  }
   
 }

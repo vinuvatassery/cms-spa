@@ -41,9 +41,17 @@
 
   <section *ngIf="showCaseManagers$ | async">
     <case-management-case-manager-list
+    [selectedCaseManagerDetails$]="selectedCaseManagerDetails$"
+    [getManagerUsers$]="getManagerUsers$"
     [getCaseManagers$]="getCaseManagers$"
     [showAddNewManagerButton$]="showAddNewManagerButton$"
-    (loadCasemanagersGridEvent)="loadCaseManagers()">
+    [assignCaseManagerStatus$]="assignCaseManagerStatus$"
+    [removeCaseManager$]="removeCaseManager$"
+    (loadCasemanagersGridEvent)="loadCaseManagers()"
+    (deleteCasemanagersGridEvent)="removecaseManagerHandler($event)"
+    (searchTextEvent)="searchTextEventHandler($event)"
+    (getExistingCaseManagerEvent)="getExistingCaseManagerEventHandler($event)"
+    (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)">
     </case-management-case-manager-list>
   </section>
 

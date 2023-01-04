@@ -19,6 +19,9 @@ private getCaseManagerHasManagerStatusSubject = new Subject<any>();
 private getCaseManagerNeedManagerStatusSubject = new Subject<any>();
 private showAddNewManagerButtonSubject = new Subject<boolean>();
 private updateCaseManagerNeedManagerStatusSubject = new Subject<any>();
+private removeCaseManagerSubject = new Subject<any>();
+private selectedCaseManagerDetailsSubject = new Subject<any>();
+private assignCaseManagerSubject = new Subject<any>();
 
 
 /** Public properties **/
@@ -28,6 +31,9 @@ getCaseManagerHasManagerStatus$ = this.getCaseManagerHasManagerStatusSubject.asO
 getCaseManagerNeedManagerStatus$ = this.getCaseManagerNeedManagerStatusSubject.asObservable();
 showAddNewManagerButton$ = this.showAddNewManagerButtonSubject.asObservable();
 updateCaseManagerNeedManagerStatus$ = this.updateCaseManagerNeedManagerStatusSubject.asObservable();
+removeCaseManager$ = this.removeCaseManagerSubject.asObservable();
+selectedCaseManagerDetails$ = this.selectedCaseManagerDetailsSubject.asObservable();
+assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
     
     /** Constructor **/
  constructor(private readonly userDataService: UserDataService,
@@ -62,6 +68,9 @@ updateCaseManagerNeedManagerStatus$ = this.updateCaseManagerNeedManagerStatusSub
   searchUsersByRole(text : string): void {
      this.userDataService.searchUsersByRole(UserDefaultRoles.CACaseManager ,text).subscribe({
        next: (getManagerUsersResponse) => {
+        Object.values(getManagerUsersResponse).forEach((key) => {   
+          key.fullCustomName = key.fullName +' '+ key.pOrNbr  + ' '+ key.phoneNbr
+        });
         this.getManagerUsersSubject.next(getManagerUsersResponse);
       },
         error: (err) => {
@@ -123,5 +132,48 @@ updateCaseManagerNeedManagerStatus$ = this.updateCaseManagerNeedManagerStatusSub
       this.ShowLoader()
         return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager, needManager)
     }
+
+    removeCaseManager(clientCaseId : string): void {
+      this.ShowLoader()
+      this.caseManagerDataService.removeCaseManager(clientCaseId).subscribe({
+        next: (removeManagerResponse) => {
+         this.removeCaseManagerSubject.next(removeManagerResponse);
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Removed')    
+       },
+         error: (err) => {
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+         },
+       });
+   }
+
+
+   
+   loadSelectedCaseManagerData(assignedCaseManagerId: string ,clientCaseId : string): void {
+    this.ShowLoader()
+    this.caseManagerDataService.loadSelectedCaseManagerData(assignedCaseManagerId,clientCaseId).subscribe({
+      next: (selectedCaseManagerDetailsResponse) => {
+       this.selectedCaseManagerDetailsSubject.next(selectedCaseManagerDetailsResponse);    
+       this.HideLoader()   
+     },
+       error: (err) => {
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+       },
+     });
+ }
+
+
+
+  assignCaseManager(clientCaseId : string, assignedCaseManagerId : string): void {
+  this.ShowLoader()
+  this.caseManagerDataService.assignCaseManager(clientCaseId,assignedCaseManagerId).subscribe({
+    next: (assignCaseManagerResponse) => {
+     this.assignCaseManagerSubject.next(assignCaseManagerResponse);
+     this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Assiged Successfully')    
+   },
+     error: (err) => {
+      this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+     },
+   });
+ }
     
 }

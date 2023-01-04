@@ -30,7 +30,7 @@
               aria-label="more actions"
             >             
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-clientCaseId="clientCaseId">
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(manager.clientCaseId);">
+                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId);">
                   <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
               </button>                
@@ -41,14 +41,16 @@
         </kendo-grid-column>      
       </kendo-grid>
     </div>
-    <div class="flex-row" *ngIf="showAddNewManagerButton$ | async">
-      <div class="flex-col mt-1">
+    <div class="flex-row" 
+    
+    >
+      <div class="flex-col mt-1" *ngIf="showAddNewManagerButton$ | async">
         <button
           kendoButton
           [primary]="true"
           icon="add"
-          (click)="onOpenManagerSearchClicked(false)"
-          aria-label="add healthcare provider"
+          (click)="onOpenManagerSearchClicked('','',false)"
+          aria-label="add case manager provider"
         >
           MANAGER
         </button>
@@ -60,64 +62,39 @@
 
 
 <!-- Search Provider  Modal -->
-<!-- <kendo-dialog
+<kendo-dialog
   *ngIf="editformVisible$ | async"
-  (close)="onCloseProviderSearchClicked()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np"
+  (close)="onCloseCsManagerSearchClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar
-    >{{ isEditSearchHealthProvider ? 'Edit Health Care Provider' : 'Add Health Care Provider' }}
+    >{{ isEditSearchCaseManagerProvider ? 'Edit Case Manager' : 'Add Case Manager' }}
   </kendo-dialog-titlebar>
-  <case-management-health-care-provider-search 
-    [existingProviderData]="existingProviderData"
-    [selectedCustomProviderName]="selectedCustomProviderName"
-    [prvId]="prvSelectedId" 
-    [healthCareProviderSearchList$]="healthCareProviderSearchList$"
-    [addExistingProvider$]="addExistingProvider$"
-    [loadExistingProvider$]="loadExistingProvider$"
-   (deleteProviderEvent)="handlePrvRemove($event)"
-    [isEditSearchHealthProviderValue]="isEditSearchHealthProvider"
-    (closeProviderSearchEvent)="onCloseProviderSearchClicked()"
-    (businessLogicEvent) = "onOpenBusinessLogicClicked()"
+  <case-management-case-manager-search 
+    [caseManagerSearchList$]="getManagerUsers$"
+    [existingCaseManagerData]="existingCaseManagerData"
+    [selectedCustomCaseManagerName]="selectedCustomCaseManagerName"
+    [selectedCaseManagerId]="selectedCaseManagerId"   
+    [isEditSearchCaseManagerValue]="isEditSearchCaseManagerProvider"
+    (deleteCaseManagerEvent)="handleManagerRemove($event)"
+    (closeCaseManagerSearchEvent)="onCloseCsManagerSearchClicked()"   
     (searchTextEvent)="searchTextEventHandleer($event)"
-    (addExistingProviderEvent)="addExistingProviderEventHandler($event)"
-  ></case-management-health-care-provider-search>
-</kendo-dialog> -->
+    (addExistingCaseManagerEvent)="addExistingCaseManagerEventEventHandler($event)"
+  ></case-management-case-manager-search>
+</kendo-dialog>
 
 
 
 <!-- Delete Modal -->
-<!-- <kendo-dialog
-  *ngIf="false"  
+<kendo-dialog
+  *ngIf="showDeleteConfirmation"  
+  (close)="onDeleteConfirmCloseClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
- <case-management-health-care-provider-remove-confirmation
+ <case-management-case-manager-remove-confirmation
+ (deleteConfimEvent)="onDeleteConfirmHandle($event)">
+ </case-management-case-manager-remove-confirmation>
+</kendo-dialog>
 
- >
- </case-management-health-care-provider-remove-confirmation>
-</kendo-dialog> -->
 
 
-<!-- Business Logic Modal -->
-<!-- <kendo-dialog  *ngIf="false"   class="app-c-modal app-c-modal-sm app-c-modal-np"
-><kendo-dialog-titlebar >Add New Healthcare Provider </kendo-dialog-titlebar>
-  <section class="k-dialog-body mb-2">
-    <p>
-      This feature is part of future scope of work for the ORCares project   
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          aria-label="cancel adding health provider"        
-        >
-          OK
-        </button>        
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog> -->

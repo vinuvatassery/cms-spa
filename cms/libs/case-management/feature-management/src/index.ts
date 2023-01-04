@@ -13,3 +13,5 @@ export * from './lib/components/health-care-provider-list/health-care-provider-l
 export * from './lib/components/re-assign-case-manager/re-assign-case-manager.component';
 export * from './lib/components/un-assign-case-manager/un-assign-case-manager.component';
 export * from './lib/components/viral-load/viral-load.component';
+export * from './lib/components/hiv-case-manager-card/hiv-case-manager-card.component';
+export * from './lib/components/remove-case-manager-confirmation/remove-case-manager-confirmation.component';

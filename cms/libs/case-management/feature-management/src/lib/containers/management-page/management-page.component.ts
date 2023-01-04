@@ -6,6 +6,7 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscriptio
 import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'case-management-management-page',
@@ -31,6 +32,10 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   getCaseManagerHasManagerStatus$=this.caseManagerFacade.getCaseManagerHasManagerStatus$;
   getCaseManagerNeedManagerStatus$=this.caseManagerFacade.getCaseManagerNeedManagerStatus$;
   showAddNewManagerButton$ = this.caseManagerFacade.showAddNewManagerButton$;
+  getManagerUsers$ = this.caseManagerFacade.getManagerUsers$;
+  selectedCaseManagerDetails$= this.caseManagerFacade.selectedCaseManagerDetails$;
+  assignCaseManagerStatus$ = this.caseManagerFacade.assignCaseManagerStatus$;
+  removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -120,4 +125,31 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
        })  
       )  
      }
+
+ removecaseManagerHandler(deleteCaseManagerCaseId : string)
+  {    
+    this.caseManagerFacade.removeCaseManager(deleteCaseManagerCaseId)
+  }
+
+  searchTextEventHandler(text : string)
+  {
+   this.caseManagerFacade.searchUsersByRole(text);
+  }
+
+  getExistingCaseManagerEventHandler(assignedCaseManagerId : string)
+   {        
+    if(assignedCaseManagerId)
+    {
+    this.caseManagerFacade.loadSelectedCaseManagerData(assignedCaseManagerId,this.clientCaseId)
+    }
+   }
+
+
+   assignCaseManagerEventHandler(event : any)
+   {       
+    if(event?.assignedcaseManagerId)
+    {
+    this.caseManagerFacade.assignCaseManager(this.clientCaseId ,event?.assignedcaseManagerId)
+    }
+   }
 }
