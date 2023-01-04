@@ -45,7 +45,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="Option" title="Option" [width]="75" [sticky]="true" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action"
+            <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More option" class="TableActionPopup app-dropdown-action"
               buttonClass="k-icon-button" aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 
