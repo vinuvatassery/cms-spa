@@ -239,12 +239,10 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   handleFileSelected(event: any) {
     this.summaryBenefitFiles = event.files[0].rawFile;
     this.summaryBenefitValidator = false;
-    console.log(this.summaryBenefitFiles);
   }
 
   handleFileRemoved(event: any) {
     this.summaryBenefitFiles = null;
-    console.log(this.summaryBenefitFiles);
   }
 
   /* Pharmacy */
