@@ -3,22 +3,45 @@
   display: flex;
   width: 100%;
   min-width: 100%;
-  gap: $size-xxx;
+  gap: $size-xlg1;
   @media (max-width: $breakpoint-xlg) {
     flex-direction: column;
   }
   .app-l-client-left {
     width: 100%;
+    max-width: 100%;
     @media (max-width: $breakpoint-xlg) {
       max-width: 100%;
     }
   }
   .app-l-client-right {
-    max-width: 225px;
-    width: 225px;
+    max-width: 200px;
+    width: 200px;
+    min-width: 200px;
     @media (max-width: $breakpoint-xlg) {
       width: 100%;
       max-width: 100%;
+    }
+  }
+
+  &.due-notification-on{
+    .app-l-client-left {
+      // width: 100%;
+      width: calc(100% - 219px);
+      max-width: 100%;
+      @media (max-width: $breakpoint-xlg) {
+        width: 100%;
+        max-width: 100% !important;
+      }
+    }
+    .app-l-client-right {
+      max-width: 200px;
+      width: 200px;
+      min-width: 200px;
+      @media (max-width: $breakpoint-xlg) {
+        width: 100%;
+        max-width: 100%;
+      }
     }
   }
 }
@@ -26,6 +49,7 @@
 /* Case Tabs*/
 .client-tab-section {
   position: relative;
+  margin-top: $size-xx;
   .tab-over-icon-btn {
     position: absolute;
     right: $size-xlg;
@@ -35,6 +59,20 @@
     align-items: center;
     opacity: 0.8;
     gap: $size-l;
+    .small-i-btn {
+      &.k-button{
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+
+}
+
+.maintitle_withicon{
+  span{
+    font-size: inherit;
+    vertical-align: top;
   }
 }
 /* Add client details wrapper*/
@@ -44,7 +82,7 @@
   max-width: calc(100vw - 300px);
   min-width: 100%;
   @media (max-width: $breakpoint-xlg) {
-    flex-direction: column;
+    // flex-direction: column;
   }
   /* Case Navigation */
   .add-client_left,
@@ -52,33 +90,46 @@
     width: 100%;
     max-width: 300px;
     border-right: 1px solid $theme-border;
-    max-height: calc(100vh - 70px);
-    min-height: calc(100vh - 70px);
+    max-height: calc(100vh - $header-height);
+    min-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
     .kendo-list-base {
       padding-top: $size-0 !important;
       .kendo-list-items {
-        font-family: $font-family-medium;
         justify-content: space-between;
         display: flex;
         flex-direction: row;
         align-items: center;
         transition: ease-in all 0.4s;
         padding: ($size-xx + $size-s) $size-xlg;
+        position: relative;
         cursor: pointer;
         .material-icons {
-          font-size: $font-size-xx;
+          font-size: $font-size-xlg;
           color: material-color($hive-success-palette, 500);
+          position: absolute;
+          right: 14px;
+          top: 8px;
         }
         &:hover,
         &:active,
         &:focus,
         &.active-item {
-          background: material-color($hive-success-palette, 100);
+          background: material-color($hive-success-palette, 50);
           border-radius: $size-0;
+          &.case-menu-disabled{
+            opacity: 1;
+          }
+        }
+        &.case-menu-disabled{
+          cursor: default;
+          pointer-events: none;
+          opacity: .4;
+          user-select: none;
         }
       }
+  
     }
     .section-completed {
       background: material-color($hive-success-palette, 100);
@@ -128,9 +179,7 @@
       padding: $size-xlg;
     }
     @media (max-width: $breakpoint-xlg) {
-      max-width: 100%;
-      max-height: 300px;
-      min-height: inherit;
+      max-width: 250px; 
     }
   }
   .inner-split_left {
@@ -150,7 +199,7 @@
     width: 100%;
     padding: $size-0 $size-xlg $size-xxx $size-xxx;
     padding-top: $size-0;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
     .client-data-block {
@@ -161,7 +210,7 @@
         background: $white;
         width: $size-s;
         position: absolute;
-        left: -2px;
+        left: -4px;
         top: $size-0;
         content: '';
       }
@@ -171,18 +220,28 @@
         position: relative;
         z-index: 1;
         padding-bottom: $size-xlg;
+        font-family: $font-family-bold;
+        font-size: $font-size-xlg;
+      }
+      h5{
+        margin: 20px 0px 8px;
+        &.text-capital{
+          margin-top: 8px;
+        }
       }
       section {
         padding-left: $size-xxx;
       }
+ 
     }
     .client-data-block-empty {
       height: 200px;
     }
-    @media (max-width: $breakpoint-xlg) {
-      max-width: 100%;
-      max-height: calc(100vh - 370px);
-    }
+     @media (max-width: $breakpoint-sm) {
+      padding: $size-0 ;
+      // max-width: 100%;
+      //  max-height: calc(100vh - 370px);
+      }
     .app-l-breadcrumb {
       padding: $size-0 !important;
       min-height: 32px !important;
@@ -192,6 +251,9 @@
         background: $white;
         z-index: 6;
         padding: $size-xlg $size-0 $size-xlg !important;
+        @media (max-width: $breakpoint-xlg) {
+          padding: $size-xlg  $size-xlg !important;
+        }
       }
     }
   }
@@ -359,9 +421,17 @@
 }
 
 .multiSelectSearchPopup {
-  padding: $size-0 $size-xlg $size-xlg;
+  // padding: $size-0 $size-xlg $size-xlg;
   max-width: 400px;
   width: 400px;
+  .input-search{
+    position: relative;
+    padding: 0px 10px;
+    .material-icons{
+      left: 18px;
+      top: 28px;
+    }
+  }
   .k-ripple-focus {
     border-color: $theme-border !important;
     &:before {
@@ -388,7 +458,7 @@
 
 
 .info-banners{
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 5px;
 }
@@ -400,4 +470,68 @@
           top: auto !important;
       }
   }
+}
+
+ 
+.k-list-item.k-selected, .k-selected.k-list-optionlabel{
+  color: material-color($hive-primary-palette, 400);
+}
+
+.k-list-item.k-selected:hover, 
+.k-selected.k-list-optionlabel:hover, 
+.k-list-item.k-selected.k-hover, 
+.k-selected.k-hover.k-list-optionlabel{
+  color: material-color($hive-primary-palette, 400);
+}
+
+
+.createcase-mobile-menu-btn{
+  background: transparent;
+  border: 0px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
+  transition: .2s;
+  display: none;
+  // position: fixed;
+  // left: 0;
+  // top: 10px; 
+  background: $white;
+  .material-icons{
+    color: $app-primary;
+  }
+  &:hover{
+    background:material-color($hive-primary-palette, 50) ;
+  }
+}
+
+.add-button-top {
+  position: fixed;
+  right: 14px;
+  top: 82px;
+  z-index: 9;
+}
+
+.healthcaresearchinput{
+  .k-animation-container{
+    left: 0 !important;
+    width: 600px !important;
+    height: auto !important;
+    min-width: 600px !important;
+    right: 0;
+    margin: auto;
+    max-width: 800px;
+  }
+}
+
+.fontsize_twel{
+  font-size: $font-size-s;
+}
+
+.casedetailspage_inner{
+  max-width: 500px;
 }

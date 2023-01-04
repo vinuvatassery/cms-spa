@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { LovFacade } from '@cms/system-config/domain';
 
@@ -9,20 +9,11 @@ import { LovFacade } from '@cms/system-config/domain';
   styleUrls: ['./lov-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LovPageComponent implements OnInit {
+export class LovPageComponent  {
   /** Public properties **/
   lovs$ = this.lovFacade.lovs$;
 
   /** Constructor **/
   constructor(private readonly lovFacade: LovFacade) {}
-
-  /** Lifecycle hooks **/
-  ngOnInit() {
-    this.loadLovs();
-  }
-
-  /** Private methods **/
-  private loadLovs(): void {
-    this.lovFacade.loadLovs();
-  }
+ 
 }

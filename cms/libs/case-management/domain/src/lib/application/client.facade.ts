@@ -1,10 +1,14 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of,Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { ApplicantInfo } from '../entities/applicant-info';
 /** Data services **/
 import { ClientDataService } from '../infrastructure/client.data.service';
+import { SnackBar } from '@cms/shared/ui-common';
+import { NotificationSnackbarService,SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
+
 
 @Injectable({ providedIn: 'root' })
 export class ClientFacade {
@@ -25,7 +29,10 @@ export class ClientFacade {
   private rdoDressedorBathedSubject = new BehaviorSubject<any[]>([]);
   private rdoConcentrationSubject = new BehaviorSubject<any[]>([]);
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
-  private specialHandlingsSubject = new BehaviorSubject<any>([]);
+  private specialHandlingsSubject = new BehaviorSubject<any>([]);  
+  appInfoFormSubject = new BehaviorSubject<any>([]);
+  applicationInfoSubject = new BehaviorSubject<any>([]);
+  pronounListSubject = new  BehaviorSubject<any>([]);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -45,11 +52,52 @@ export class ClientFacade {
   rdoConcentration$ = this.rdoConcentrationSubject.asObservable();
   rdoErrands$ = this.rdoErrandsSubject.asObservable();
   specialHandlings$ = this.specialHandlingsSubject.asObservable();
+  appInfoForm$ = this.appInfoFormSubject.asObservable();
+  applicantInfo$ = this.applicationInfoSubject.asObservable();
+  pronounList$ = this.pronounListSubject.asObservable();
+
+  snackbarMessage!: SnackBar;
+  snackbarSubject = new Subject<SnackBar>();
+  clientFacadesnackbar$ = this.snackbarSubject.asObservable();
+
+  // handleSnackBar(title : string , subtitle : string ,type : string )
+  // {    
+  //   const snackbarMessage: SnackBar = {
+  //     title: title,
+  //     subtitle: subtitle,
+  //     type: type,
+  //   };
+  //   this.snackbarSubject.next(snackbarMessage);
+  // }
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();
+       
+  }
 
   /** Constructor**/
-  constructor(private readonly clientDataService: ClientDataService) {}
+  constructor(private readonly clientDataService: ClientDataService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private loggingService : LoggingService,
+    private readonly loaderService: LoaderService) {}
 
   /** Public methods **/
+  ShowLoader()
+  {
+    this.loaderService.show();
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
+
   loadDdlCaseOrigin(): void {
     this.clientDataService.loadDdlCaseOrigin().subscribe({
       next: (ddlCaseOriginsResponse) => {
@@ -238,9 +286,13 @@ export class ClientFacade {
       },
     });
   }
-
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  save(applicantInfo:ApplicantInfo) {
+      return this.clientDataService.save(applicantInfo);
+  }
+  load(clientCaseId:any,eligibilityId:any) {
+      return this.clientDataService.load(clientCaseId,eligibilityId);
+  }
+  update(applicantInfo:ApplicantInfo) {
+    return this.clientDataService.update(applicantInfo);
   }
 }

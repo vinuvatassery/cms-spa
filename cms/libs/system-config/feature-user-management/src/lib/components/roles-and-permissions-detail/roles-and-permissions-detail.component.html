@@ -1,6 +1,18 @@
+<div  >
+
+
 <div class="role-details-header">
   <section class="app-l-breadcrumb py-0 fixed-top-breadcrumb">
+    <div class="d-flex align-items-center">
+ 
+    <button class="createcase-mobile-menu-btn" (click)="openInnerLeftMenu()"> <span class="material-icons">
+      list
+    </span>
+  </button>
+
     <common-bread-crumb></common-bread-crumb>
+
+    </div>
     <div class="breadcrumb-right">
       <button
         kendoButton
@@ -22,7 +34,7 @@
   <kendo-textbox     
   class="add-new-input"
   placeholder="New User Role"
-  aria-label="new user role" fillMode="outline"> </kendo-textbox>
+  aria-label="new user role" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
    
   <p>
     Select which modules this role will have access to for each program, then
@@ -30,7 +42,7 @@
     Productivity Tools module.
   </p>
 </div>
-<div class="inner-split-wrapper" kendoRippleContainer>
+<div class="inner-split-wrapper" [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}" kendoRippleContainer>
   <!-- Roles Navigation Menu Section -->
   <div class="inner-split_left roles-navigation">
     <ul class="kendo-list-base with-heading-label">
@@ -50,6 +62,10 @@
       </li>
       <li class="kendo-list-items">System Configuration</li>
     </ul>
+    <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
+      menu_open
+      </span>
+    </button>
   </div>
   <div class="inner-split_right roles-navigation-right pt-3">
     <!-- CAREAssist Modules Block -->
@@ -63,7 +79,7 @@
           <div class="header-content small-dropdown-form">
             <h3>Clients</h3>
             <kendo-floatinglabel text="role permission">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRolePermission">
               </kendo-dropdownlist>
             </kendo-floatinglabel>
           </div>
@@ -477,7 +493,7 @@
           <div class="header-content small-dropdown-form">
             <h3>Financial Management</h3>
             <kendo-floatinglabel text="role permission">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"  [data]="ddlRolePermission">
               </kendo-dropdownlist>
             </kendo-floatinglabel>
           </div>
@@ -796,7 +812,7 @@
                       <!-- <span class="amount-prefix">$</span> -->
                       <kendo-textbox    kendoTextBox
                       aria-label="max approval amount"
-                        class="mw-100" fillMode="outline"> 
+                        class="mw-100" [fillMode]="formUiStyle.inputFillMode"> 
                         <ng-template kendoTextBoxPrefixTemplate>
                           <span class="amount-prefix">$</span>
                         </ng-template></kendo-textbox>
@@ -891,7 +907,7 @@
                       <!-- <span class="amount-prefix">$</span> -->
                       <kendo-textbox    kendoTextBox
                       aria-label="max approval amount"
-                        class="mw-100" fillMode="outline"> 
+                        class="mw-100" [fillMode]="formUiStyle.inputFillMode"> 
                         <ng-template kendoTextBoxPrefixTemplate>
                           <span class="amount-prefix">$</span>
                         </ng-template></kendo-textbox>
@@ -982,7 +998,7 @@
                     
                       <kendo-textbox    kendoTextBox
                       aria-label="max approval amount"
-                        class="mw-100" fillMode="outline">
+                        class="mw-100" [fillMode]="formUiStyle.inputFillMode">
                         <ng-template kendoTextBoxPrefixTemplate>
                           <span class="amount-prefix">$</span>
                         </ng-template>
@@ -1128,7 +1144,7 @@
           <div class="header-content small-dropdown-form">
             <h3>System Configuration</h3>
             <kendo-floatinglabel text="role permission">
-              <kendo-dropdownlist fillMode="outline" [data]="ddlRolePermission">
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRolePermission">
               </kendo-dropdownlist>
             </kendo-floatinglabel>
           </div>
@@ -1861,4 +1877,7 @@
       <h2>Shared Sections Modules</h2>
     </section>
   </div>
+
+</div>
+
 </div>

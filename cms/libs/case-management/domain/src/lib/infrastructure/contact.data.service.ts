@@ -1,39 +1,32 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ContactInfo } from '../entities/contact';
+import { Income } from '../entities/income';
+import { urlToHttpOptions } from 'url';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
+
+
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  loadEmployers() {
-    return of([
-      {
-        NameofEmployer: 'John Cena',
-        DateofHire: '01-01-2022',
-      },
-    ]);
-  }
-
-  loadMedicalHealthPlans() {
-    return of([
-      {
-        InsuranceType: 'Qualified Health Plan',
-        Priority: 'Primary',
-        CarrierName: 'Uma Health',
-        PlanName: 'Super Great Plan',
-        PremiumPaid: '$500.00',
-        Frequency: 'Monthly',
-        StartDate: '10-10-2021',
-        EndDate: '10-10-2021',
-        SmsTextOk: 'Yes',
-      },
-    ]);
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any) {
+    let params = new HttpParams();
+    params = params.append('clientId',clientId);
+    params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
+    params = params.append('skipCount',skipCount);
+    params = params.append('maxResultCount',pageSize);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
   }
 
   loadDdlMedicalHealthPlanMetalLevel() {
@@ -61,79 +54,42 @@ export class ContactDataService {
   }
 
   loadDdlIncomeTypes() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['Work', 'Self-employment', 'Unemployment Insurance', 'Supplemental Security Income (SSI)',
+      'Social Security Disability Insurance (SSDI)',
+      ' Pension/Retirement/Veterans Benefits',
+      'Short/Long-term Disability',
+      'Alimony/Child Support',
+      'Rental Income',
+      'Other Income',
+
+    ]);
   }
 
   loadDdlIncomeSources() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of([
+      'Client',
+      'Other Family member'
+    ]);
   }
 
   loadDdlFrequencies() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['Once',
+      'Daily',
+      'Weekly',
+      'Bi-weekly',
+      'Semi-monthly',
+      'Monthly',
+      'Quarterly',
+      'Annually',
+      'YTD']);
   }
 
   loadDdlProofOfIncomeTypes() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes() {
-    return of([
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-      {
-        IncomeSource: 'Income Source',
-        IncomeType: 'Income Type',
-        Amount: '$1000.00',
-        Frequency: 'Bi-Weekly',
-        IncomeStart: '01-01-2022',
-        IncomeEnd: '01-01-2022',
-        ProofofIncome: 'document.pdf',
-        FinancialJustification: 'Lorem Ipsum',
-        MonthlyIncome: '$1000.00',
-      },
-    ]);
+  loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}/${skip}/${pageSize}`);
   }
 
   loadDependentsProofofSchools() {
@@ -147,7 +103,7 @@ export class ContactDataService {
   }
 
   loadDdlStates() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+    return of(['AL', 'AK', 'AZ', 'AR', 'NM']);
   }
 
   loadDdlCountries() {
@@ -453,5 +409,83 @@ export class ContactDataService {
         serviceDescription: 'Lorem ipsum description',
       },
     ]);
+  }
+
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
+    return this.http.get<ContactInfo>(this.getUrl(clientId, clientCaseEligibilityId));
+  }
+
+  createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    const fd = new FormData();
+    if (contactInfo?.homeAddressProof?.document) {
+      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
+    }
+    this.FormData_append_object(fd, contactInfo);
+
+    return this.http.post(this.getUrl(clientId, clientCaseEligibilityId)
+      , fd, { reportProgress: true, });
+  }
+
+  updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    const fd = new FormData();
+    if (contactInfo?.homeAddressProof?.document) {
+      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
+    }
+    this.FormData_append_object(fd, contactInfo);
+
+    return this.http.put(this.getUrl(clientId, clientCaseEligibilityId)
+      , fd, { reportProgress: true, });
+  }
+
+  /** Private methods **/
+  private getUrl(clientId: number, clientCaseEligibilityId: string) {
+
+    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
+  }
+
+  saveIncome(clientIncome: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+  }
+
+  updateNoIncomeData(noIncomeData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
+  }
+
+  FormData_append_object(fd: FormData, obj: any, key?: any) {
+    var i, k;
+    for (i in obj) {
+      k = key ? key + '[' + i + ']' : i;
+      if (obj[i] instanceof File) {
+        continue;
+      }
+      else if (typeof obj[i] == 'object') {
+        this.FormData_append_object(fd, obj[i], k);
+      }
+      else {
+        fd.append(k, obj[i]);
+        console.log(obj[i])
+      }
+    }
+  }
+
+  editIncome(clientIncome: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+
+  }
+
+  deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}/${clientId}/${clientCaseEligibilityId}`,);
+  }
+
+  loadIncomeDetailsService(clientIncomeId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}`,);
+
+  }
+  updateInsuranceFlags(insuranceFlagsData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
+  }
+
+  deleteInsurancePolicy(insurancePolicyId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
   }
 }

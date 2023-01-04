@@ -1,51 +1,197 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { SortDescriptor } from '@progress/kendo-data-query';
+import { Subject } from 'rxjs';
+import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
+import { StatusFlag } from '../enums/status-flag.enum';
+
 /** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
 /** Data services **/
 import { HealthcareProviderDataService } from '../infrastructure/healthcare-provider.data.service';
+import { WorkflowFacade } from './workflow.facade';
 
 @Injectable({ providedIn: 'root' })
 export class HealthcareProviderFacade {
   /** Private properties **/
-  private ddlStatesSubject = new BehaviorSubject<any>([]);
-  private healthCareProvidersSubject = new BehaviorSubject<any>([]);
+  private ddlStatesSubject =  new Subject<any>();
+  private healthCareProvidersSubject = new Subject<any>();
+  private healthCareProvideRemoveSubject = new Subject<any>();
+  private healthCareProvideUpdateFlagSubject = new Subject<any>();
+  private healthCareProvideGetFlagSubject = new Subject<any>();
+  private healthCareProviderSearchSubject = new Subject<any>();
+  private addExistingProviderSubject = new Subject<any>();
+  private loadExistingProviderSubject = new Subject<any>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   healthCareProviders$ = this.healthCareProvidersSubject.asObservable();
+  removeHealthProvider$ = this.healthCareProvideRemoveSubject.asObservable();
+  updateHealthProvider$ = this.healthCareProvideUpdateFlagSubject.asObservable();
+  healthCareProvideGetFlag$ = this.healthCareProvideGetFlagSubject.asObservable();
+  healthCareProviderSearchList$ = this.healthCareProviderSearchSubject.asObservable();
+  addExistingProvider$ = this.addExistingProviderSubject.asObservable();
+  loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
+  public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
+  public sortValue = ' '
+  public sortType = 'asc'
+
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
 
   /** Constructor**/
   constructor(
-    private readonly healthcareProviderDataService: HealthcareProviderDataService
+    private readonly healthcareProviderDataService: HealthcareProviderDataService,
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService ,
+    private readonly loaderService: LoaderService,
+    private workflowFacade: WorkflowFacade ,private configurationProvider : ConfigurationProvider 
   ) {}
 
+  ShowLoader()
+  {
+    this.loaderService.show();
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
+  }
+
   /** Public methods **/
-  loadHealthCareProviders(): void {
-    this.healthcareProviderDataService.loadHealthCareProviders().subscribe({
-      next: (healthCareProvidersResponse) => {
-        this.healthCareProvidersSubject.next(healthCareProvidersResponse);
+  removeHealthCareProviders(ClientCaseEligibilityId : string , ProviderId : string): void {
+    this.ShowLoader();
+    this.healthcareProviderDataService.removeHealthCareProvider(ClientCaseEligibilityId,ProviderId)
+    .subscribe({
+      next: (removeHealthCareProvidersResponse) => {        
+        if(removeHealthCareProvidersResponse == true)
+        {     
+         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic Removed Successfully')  
+        } 
+        this.healthCareProvideRemoveSubject.next(removeHealthCareProvidersResponse);       
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)      
       },
     });
   }
 
-  loadDdlStates(): void {
-    this.healthcareProviderDataService.loadDdlStates().subscribe({
-      next: (ddlStatesResponse) => {
-        this.ddlStatesSubject.next(ddlStatesResponse);
+  loadProviderStatusStatus(clientCaseEligibilityId : string) : void {
+ 
+    this.healthcareProviderDataService.loadProviderStatusStatus(clientCaseEligibilityId).subscribe({
+      next: (providerStatusGetResponse) => {
+        this.HideLoader();
+        this.healthCareProvideGetFlagSubject.next(providerStatusGetResponse);
       },
-      error: (err) => {
-        console.error('err', err);
+      error: (err) => {  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  updateHealthCareProvidersFlagonCheck(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)  {
+  
+   return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
   }
+
+  updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
+  {
+ 
+    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
+  }
+
+  loadHealthCareProviders(clientCaseEligibilityId : string,skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+    this.ShowLoader();
+    this.healthcareProviderDataService.loadHealthCareProviders(clientCaseEligibilityId, skipcount ,maxResultCount  ,sort , sortType).subscribe({
+      next: (healthCareProvidersResponse : any) => {        
+        if(healthCareProvidersResponse)
+        {      
+          const gridView = {
+            data : healthCareProvidersResponse["items"] ,        
+            total:  healthCareProvidersResponse["totalCount"]  
+          };      
+
+          this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
+          this.healthCareProvidersSubject.next(gridView);
+         }
+         this.HideLoader();    
+      },
+      error: (err) => {
+        this.HideLoader();   
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.updateWorkflowCount(false);   
+      },
+    });
+  }
+
+
+ searchHealthCareProviders(text : string , clientCaseEligibilityId : string): void {  
+    this.healthcareProviderDataService.searchProviders(text,clientCaseEligibilityId).subscribe({
+      next: (healthCareProvidersSearchResponse) => {        
+        if(healthCareProvidersSearchResponse)
+        {            
+          Object.values(healthCareProvidersSearchResponse).forEach((key) => {   
+                    key.selectedCustomProvider = key.fullName+' '+key.clinicName+' '+key.address
+          });
+          this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);
+         }         
+      },
+      error: (err) => { 
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
+
+  addExistingHealthCareProvider(existProviderData :any) : void {
+    this.ShowLoader();
+    this.healthcareProviderDataService.addExistingHealthCareProvider(existProviderData).subscribe({
+      next: (addExistingProviderGetResponse) => {
+        this.HideLoader();
+        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
+        this.addExistingProviderSubject.next(addExistingProviderGetResponse);
+      },
+      error: (err) => {  
+        this.HideLoader();
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
+
+
+  loadExistingHealthCareProvider(ClientCaseEligibilityId : string  ,providerId :string) : void {
+    this.ShowLoader();
+    this.healthcareProviderDataService.loadExistingHealthCareProvider(ClientCaseEligibilityId   ,providerId ).subscribe({
+      next: (loadExistingProviderResponse) => {
+        this.HideLoader();
+        this.loadExistingProviderSubject.next(loadExistingProviderResponse);
+      },
+      error: (err) => {  
+        this.HideLoader();
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
+
+  private updateWorkflowCount(isCompleted:boolean){
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'health_care_provider',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
+  }
+ 
 }

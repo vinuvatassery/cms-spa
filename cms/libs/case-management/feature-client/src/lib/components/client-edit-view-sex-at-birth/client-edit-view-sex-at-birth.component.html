@@ -1,0 +1,49 @@
+<section [formGroup]="appInfoForm">
+  <h5 class="mt-3">What is their sex assigned at birth?</h5>
+  <div class="component-list-h">
+    <span *ngFor="let gender of Genders; let i = index">
+        <div class="flex-row">
+          <div class="flex-col flex-col-12">
+            <span class="app-radiobtnwidtext-wrapper">
+              <input
+                type="radio"
+                kendoRadioButton
+                formControlName="BirthGender"
+                [value]="gender.lovCode"
+                name="BirthGender"
+                aria-labelledby="BirthGender"
+                id="BirthGender{{ gender.lovCode }}"
+                (click)="onTransgenderRdoClicked(gender.lovCode)"
+              />
+  
+              <kendo-label
+                class="k-radio-label"
+                for="BirthGender{{ gender.lovCode }}"
+                text="{{ gender.lovDesc }}"
+              ></kendo-label>
+              <div class="flex-row" *ngIf="gender.lovCode === 'NOT_LISTED'">
+                <div class="flex-col flex-col-6">
+
+               
+                <kendo-floatinglabel text="Enter Answer">
+                  <kendo-textbox
+                  [fillMode]="formUiStyle.inputFillMode"
+                    [formControlName]="DescriptionField"
+                    [disabled]="
+                      appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'
+                    "
+                  ></kendo-textbox>
+                </kendo-floatinglabel>
+                <kendo-formerror
+                  *ngIf="!appInfoForm.controls[DescriptionField].valid"
+                  >Sex assigned at birth is required.</kendo-formerror
+                >
+              </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </span>
+      <kendo-formerror *ngIf="!appInfoForm.controls['BirthGender']?.valid">Atleast one option is required.</kendo-formerror>
+  </div>
+</section>

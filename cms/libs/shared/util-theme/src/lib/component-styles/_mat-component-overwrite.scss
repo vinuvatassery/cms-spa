@@ -4,9 +4,19 @@
   &.k-calendar-infinite {
     max-width: 350px;
   }
+  .k-calendar-navigation{
+    li{
+      &:hover{
+        // background-color: material-color($hive-primary-palette, 100) !important;
+        color: $app-primary !important;
+      }
+    }
+  }
+ 
 }
 .k-calendar .k-footer .k-nav-today,
-.k-calendar .k-calendar-header .k-today {
+.k-calendar .k-calendar-header .k-today
+{
   color: $app-primary !important;
   font-family: $font-family-medium;
   border: 1px solid $app-primary;
@@ -17,10 +27,11 @@
   justify-content: center;
 }
 .k-calendar .k-content .k-today,
-.k-calendar .k-calendar-content .k-today {
+.k-calendar .k-calendar-content .k-today,
+.k-calendar .k-content .k-selected.k-today  {
   color: $app-primary !important;
   span {
-    background-color: material-color($hive-primary-palette, 100);
+    background-color: material-color($hive-primary-palette, 100) !important;
     border: 1px solid $app-primary;
     font-family: $font-family-medium;
     color: $app-primary !important;
@@ -30,7 +41,8 @@
 .k-calendar td:hover .k-link,
 .k-calendar td.k-state-hover .k-link,
 .k-calendar .k-calendar-td:hover .k-link,
-.k-calendar .k-calendar-td.k-state-hover .k-link {
+.k-calendar .k-calendar-td.k-state-hover .k-link,
+.k-calendar .k-calendar-td.k-selected   {
   background-color: $app-primary !important;
   border: 1px solid $app-primary;
   font-family: $font-family-medium;
@@ -82,6 +94,23 @@
   }
 }
 /*Global Search*/
+
+.header-mobilesearchbutton{
+  display: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  text-align: center;
+  padding: 7px;
+  color: $app-primary;
+  position: absolute;
+  right: 152px;
+  top: 13px;
+  .material-icons{
+    font-size: 24px;
+  }
+}
+
 .global-search {
   position: relative;
   .global-search-icon {
@@ -91,10 +120,12 @@
     z-index: 1;
     color: material-color($hive-neutral-palette, 800);
   }
-  .k-input-md .k-input-inner, .k-picker-md .k-input-inner{
+  .k-input-md .k-input-inner,
+  .k-picker-md .k-input-inner {
     padding-left: 38px;
+    font-size: $font-size;
   }
-  .k-icon-button{
+  .k-icon-button {
     min-height: 36px;
   }
   .global-search-list {
@@ -107,16 +138,63 @@
     padding: $size-xlg;
   }
   &.header-search {
-    position: fixed;
+    // position: fixed;
     z-index: 9;
-    max-width: 475px;
-    width: 475px;
-    left: 50%;
-    top: 10px;
-    transform: translate(-50%, 0);
+    max-width: 500px;
+    width: 500px;
+    // left: 50%;
+    // top: 10px;
+    // transform: translate(-50%, 0);
     @media (max-width: $breakpoint-xlg) {
       min-width: 300px;
       max-width: 300px;
+    }
+    .k-searchbar{
+      min-height: 36px;
+    }
+  }
+  kendo-multicolumncombobox > .k-button {
+    display: none;
+  } 
+}
+.hidedropicon  kendo-combobox > .k-button {
+  display: none ;
+}
+
+.input-inline-loader{
+  position: absolute;
+  right: 8px;
+  background: #fff;
+  top: 8px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  z-index: 2;
+}
+
+.inline-search-loader{
+  position: relative;
+  .input-inline-loader{
+    top: 28px;
+  }
+}
+// New case search
+.search-case {
+  .case-search-footer {
+    .k-table-body {
+      .k-table {
+        border-color: rgb(0 0 0 / 0%);
+        &.k-table-list .k-table-row {
+          cursor: pointer;
+        }
+      }
+    }
+    .k-table-footer {
+      .k-table-td {
+        padding: 0px;
+        border-bottom: 0px;
+      }
     }
   }
 }
@@ -200,3 +278,54 @@
     border: 1px solid $theme-border;
   }
 }
+
+ .amount-with-symbol{
+  .k-input-prefix{
+    font-size: 16px;
+    &.custom-currencysymbol{
+      bottom: 2px;
+    }
+  }
+ }
+
+ .k-menu-popup{
+  margin-right: 15px;
+ }
+
+ .combotable_search_list{
+
+
+   .k-table-td,  .k-table-th{
+    border-left: 0px;
+    border-right: 0px;
+    padding: 8px 4px;
+    cursor: pointer;
+    text-overflow: unset;
+    white-space: normal;
+    &:first-child{
+      padding-left: 10px;
+    }
+    &:last-child{
+      padding-right: 6px;
+    }
+    em{
+      font-weight: 500;
+      font-style: normal;
+    }
+    .text-muted{
+      color: rgba($black, 0.6);
+    }
+  }
+  .k-table-th{
+    padding: 0px !important;
+  }
+  .k-table-td{
+    border:0px;
+    color: $black;
+  }
+ 
+ }
+
+ .k-no-data, .k-nodata{
+  min-height: 40px;
+ }

@@ -11,9 +11,7 @@ describe('SlotListComponent', () => {
       declarations: [ SlotListComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SlotListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

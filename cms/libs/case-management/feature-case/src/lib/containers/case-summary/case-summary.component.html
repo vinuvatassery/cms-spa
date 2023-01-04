@@ -1,0 +1,31 @@
+<!-- Main Title Section -->
+<section class="app-l-mainTittle">
+    <h2>Update Case</h2>
+    <p class="mt-2 mb-2">
+        All fields are required unless otherwise stated. </p>
+</section>
+
+ 
+
+
+<div class="client-data-block " *ngIf="parentForm">
+    <div class="block-section">
+        
+        <section class="casedetailspage_inner">
+            <case-management-case-detailed-summary 
+                [isProgramVIsible]="false"
+                [isSubmitted]="isSubmitted"
+                [parentForm]="parentForm" 
+                [caseSearchResults$]="caseSearchResults$"
+                [caseOwners]="caseOwners$"
+                [ddlPrograms]="ddlPrograms$" 
+                [ddlCaseOrigins]="ddlCaseOrigins$" 
+                [selectedProgram]="selectedProgram"
+                [selectedCase]="case$">               
+            </case-management-case-detailed-summary>
+        </section>
+    </div>
+
+
+</div>
+ 

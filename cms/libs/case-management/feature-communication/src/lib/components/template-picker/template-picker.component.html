@@ -1,7 +1,7 @@
-<div class="mb-3">
+<div class=" ">
 <kendo-floatinglabel text="Letter Templates">
   <kendo-dropdownlist
-  fillMode="outline"
+  [fillMode]="formUiStyle.dropDownFillMode"
     [data]="ddlTemplates"
     textField="value"
     valueField="key"

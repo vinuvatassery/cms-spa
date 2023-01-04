@@ -1,23 +1,15 @@
 /** Angular **/
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { Router } from '@angular/router';
+import {  Component, OnInit,  ChangeDetectionStrategy,
+   ChangeDetectorRef,  Output,  EventEmitter,  Input,} from '@angular/core';
+import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
+import { ProgramCode } from '@cms/case-management/domain';
+ 
 /** Internal Libraries **/
-import { CaseFacade, ScreenFlowType } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-
-
+import { debounceTime,  distinctUntilChanged, Subject } from 'rxjs';
+import { LoaderService } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
@@ -25,81 +17,112 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewCaseComponent implements OnInit {
-  currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
-  
+public showInputLoader = false;
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
+  @Output() newcaseSaveEvent = new EventEmitter<any>();
+  @Output() searchTextEvent = new EventEmitter<string>();   
 
-  /** Public properties **/
-  caseSearchResults$ = this.caseFacade.caseSearched$;
-  caseOwners$ = this.caseFacade.caseOwners$;
-  ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+  /** input properties **/
+  @Input() caseSearchResults$! : any
+  @Input() caseOwners ! : any
+  @Input() ddlPrograms! : any
+  @Input() ddlCaseOrigins! : any
+  @Input() formButtonDisabled! : boolean
+
+    /** Public properties **/
+  parentForm! : FormGroup;
   isProgramSelectionOpened = false;
   selectedProgram!: any;
-
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  filterManager: Subject<string> = new Subject<string>();
+  showSearchresult! : false
+ 
+  isSubmitted! : boolean ;
   /** Constructor**/
-  constructor(
-    private readonly router: Router,
-    private readonly caseFacade: CaseFacade,
-    private readonly ref: ChangeDetectorRef
-  ) {}
+  constructor(   
+    private readonly ref: ChangeDetectorRef, 
+    private formBuilder: FormBuilder,
+    private loaderService: LoaderService,
+    public intl: IntlService
+  ) {
+ 
+    this.filterManager
+    .pipe(   
+    debounceTime(500),
+    distinctUntilChanged()
+    )      
+    .subscribe(
+      
+      (text) => 
+      {
+        if(text)
+        {
+        this.searchTextEvent.emit(text)
+        this.showInputLoader = false;  
+ 
+        } 
+      }
+      
+      );    
+      this.showInputLoader = false;  
+   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCaseBySearchText();
-    this.loadCaseOwners();
-    this.loadDdlPrograms();
-    this.loadDdlCaseOrigins();
+    this.setDefaultProgram();  
+    this.registerFormData();
   }
-
-  /** Private methods **/
-  private loadCaseBySearchText() {
-    this.caseFacade.loadCaseBySearchText();
-  }
-
-  private loadCaseOwners() {
-    this.caseFacade.loadCaseOwners();
-  }
-
-  private loadDdlPrograms() {
-    this.caseFacade.loadDdlPrograms();
-    this.ddlPrograms$.subscribe({
+  private setDefaultProgram() {   
+    this.ddlPrograms.subscribe({
       next: (programs: any) => {
         this.selectedProgram = programs.filter(
-          (data: any) => data.default === true
+          (data: any) => data.programCode == ProgramCode.DefaultProgram
         )[0];
-      },
-      error: (err: any) => {
-        console.log('Err', err);
-      },
-    });
+      }
+    });  
+  }
+  private registerFormData()
+  {
+    
+    this.parentForm = this.formBuilder.group({
+      applicationDate: [new Date(), Validators.required],
+      caseOriginCode: ['', Validators.required],
+      caseOwnerId: ['', Validators.required],
+      programId: [{ value: this.selectedProgram?.programId, disabled: true }, [Validators.required]] ,
+      concurrencyStamp : ['']  
+      });
+    
   }
 
-  private loadDdlCaseOrigins() {
-    this.caseFacade.loadDdlCaseOrigins();
-  }
 
   /** Internal event methods **/
   onOpenProgramSelectionClicked() {
+    this.loaderService.show()
     this.isProgramSelectionOpened = true;
+    this.formButtonDisabled = false;
     this.ref.markForCheck();
   }
 
-  onCreateCaseClicked() {
-    this.router.navigate(['case-management/case-detail'], {
-      queryParams: {
-        screenFlowType: ScreenFlowType.NewCase,
-        programId: this.selectedProgram.key,
-      },
-    });
+  onSubmit() {     
+    this.parentForm.markAllAsTouched();
+    this.isSubmitted = true;    
+    this.newcaseSaveEvent.emit(this.parentForm);
+
   }
 
   onCloseProgramSelectionClicked() {
     this.isCreateNewCasePopupOpened.emit();
     this.isProgramSelectionOpened = false;
   }
+
+  onsearchTextChange(text : string)
+  {    
+
+    if(text){ 
+      this.showInputLoader = true;  
+      this.filterManager.next(text); 
+    } 
+  }
+
 }

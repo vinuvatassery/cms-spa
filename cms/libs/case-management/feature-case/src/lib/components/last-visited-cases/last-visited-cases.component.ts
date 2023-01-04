@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { CaseFacade, ScreenFlowType } from '@cms/case-management/domain';
+import { CaseFacade, WorkflowTypeCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-last-visited-cases',
@@ -28,11 +28,11 @@ export class LastVisitedCasesComponent implements OnInit {
     this.caseFacade.loadLastVisitedCases();
   }
 
-  getQueryParams(_case: any): object {
+  getQueryParams(caseDetail: any): object {
     return {
-      screenFlowType: ScreenFlowType.ExistingCase,
-      caseId: _case.id,
-      programId: _case.programId,
+      type: WorkflowTypeCode.NewCase,
+      sid: caseDetail.id,
+      eid: caseDetail.programId,
     };
   }
 }

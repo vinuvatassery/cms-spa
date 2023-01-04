@@ -1,0 +1,42 @@
+<section [formGroup]="appInfoForm">
+    <h5>What is their sexual orientation or sexual identity? (Select all that apply)</h5>
+    <div class="component-list-h">
+      <span
+        class="app-checkboxwidtext-wrapper"
+        *ngFor="let Identity of SexulaIdentities; let i = index"
+      >
+        <input
+          type="checkbox"
+          kendoCheckBox
+          [formControlName]="ControlPrefix + Identity.lovCode"
+          id="sex{{ Identity.lovCode }}"
+          (change)="onCheckChange($event, Identity.lovCode)"
+        />
+        <label class="k-checkbox-label" for="sex{{ Identity.lovCode }}"
+          >{{ Identity.lovDesc }}
+        </label>
+  
+        <div class="flex-row" *ngIf="Identity.lovCode === 'NOT_LISTED'">
+          <span class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Enter sexual orientation or sexual identity">
+              <kendo-textbox
+                [formControlName]="DescriptionField"
+                [fillMode]="formUiStyle.inputFillMode"
+                [disabled]="
+                  !appInfoForm.controls[ControlPrefix + Identity.lovCode].value
+                "
+              >
+              </kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!appInfoForm.controls[DescriptionField].valid"
+              >Sexual orientation or sexual identity is required.</kendo-formerror
+            >
+          </span>
+        </div>
+      </span>
+      <kendo-formerror *ngIf="!appInfoForm.controls['SexulaIdentityGroup']?.valid">
+        Atleast one option is required.
+        </kendo-formerror>
+    </div>
+  </section>
+  

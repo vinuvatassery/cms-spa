@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'case-management-hiv-verification-request',
   templateUrl: './hiv-verification-request.component.html',
@@ -14,7 +14,7 @@ export class HivVerificationRequestComponent {
   /** Public properties **/
   isSendRequest = false;
   isResendRequest = false;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Internal event methods **/
   onSendRequestClicked() {
     this.isSendRequest = true;

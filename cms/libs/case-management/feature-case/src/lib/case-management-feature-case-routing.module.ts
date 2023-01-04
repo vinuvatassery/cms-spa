@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CasePageComponent } from './containers/case-page/case-page.component';
 import { Case360PageComponent } from './containers/case360-page/case360-page.component';
+import { CaseSummaryComponent } from './containers/case-summary/case-summary.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,14 @@ const routes: Routes = [
       title: null,
     }, 
   },
+  {
+    path: 'case-summary',
+    component: CaseSummaryComponent,
+    data: {
+      title: null,
+    }, 
+  },
+  
 ];
 
 @NgModule({

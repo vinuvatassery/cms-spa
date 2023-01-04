@@ -1,34 +1,35 @@
 <section class="k-dialog-body">
-  <div class="flex-row">
-    <div class="flex-col flex-col-9">
-      <kendo-floatinglabel text="Lifetime Period">
-        <kendo-textbox fillMode="outline" >
-        </kendo-textbox>
-      </kendo-floatinglabel>
+    <div class="flex-row">
+      <div class="flex-col flex-col-9">
+        <kendo-floatinglabel text="Lifetime Period">
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col flex-col-3 pt-3 pl-0 text-bold">Months</div>
+      <div class="flex-col flex-col-9">
+        <kendo-floatinglabel text="Effective Date">
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" [(ngModel)]="currentDate" format="dd/mm/yyyy" formatPlaceholder="formatPattern">
+          </kendo-datepicker>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Comments">
+          <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Comments" [rows]="5" [cols]="40">
+          </kendo-textarea>
+          <kendo-formhint class="justify-content-end">0/100</kendo-formhint>
+        </kendo-floatinglabel>
+      </div>
     </div>
-    <div class="flex-col flex-col-3 pt-3 pl-0 text-bold">Months</div>
-    <div class="flex-col flex-col-9">
-      <kendo-floatinglabel text="Effective Date">
-        <kendo-datepicker [fillMode]="fillMode" [(ngModel)]="currentDate" format="dd/mm/yyyy" formatPlaceholder="formatPattern">
-        </kendo-datepicker>
-      </kendo-floatinglabel>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="cancel" [primary]="true" look="outline">
+          Cancel
+        </button>
+        <button kendoButton aria-label="update" [primary]="true">Update</button>
+      </div>
     </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="Comments">
-        <kendo-textarea [fillMode]="fillMode" name="Comments" [rows]="5" [cols]="40">
-        </kendo-textarea>
-        <kendo-formhint class="justify-content-end">0/100</kendo-formhint>
-      </kendo-floatinglabel>
-    </div>
-  </div>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div class="justify-content-end">
-      <button kendoButton aria-label="cancel" [primary]="true" look="outline">
-        Cancel
-      </button>
-      <button kendoButton aria-label="update" [primary]="true">Update</button>
-    </div>
-  </div>
-</kendo-dialog-actions>
+  </kendo-dialog-actions>
+  

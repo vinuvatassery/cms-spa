@@ -11,9 +11,7 @@ describe('GenderListComponent', () => {
       declarations: [ GenderListComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GenderListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

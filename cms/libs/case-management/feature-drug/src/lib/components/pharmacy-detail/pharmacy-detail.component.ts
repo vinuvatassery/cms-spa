@@ -7,9 +7,11 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** Facades **/
-import { DrugPharmacyFacade } from '@cms/case-management/domain';
-
+import { Pharmacy } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { Observable } from 'rxjs';
 @Component({
   selector: 'case-management-pharmacy-detail',
   templateUrl: './pharmacy-detail.component.html',
@@ -19,49 +21,55 @@ import { DrugPharmacyFacade } from '@cms/case-management/domain';
 export class PharmacyDetailComponent implements OnInit {
   /** Input properties **/
   @Input() isEditPharmacy!: boolean;
-  @Input() selectedPharmacy!: any;
+  @Input() selectedPharmacy: any;
+  @Input() pharmacySearchResult$!: Observable<Pharmacy>;
 
   /** Output properties  **/
   @Output() closePharmacyEvent = new EventEmitter();
-
+  @Output() searchPharmacyEvent = new EventEmitter<string>();
+  @Output() addPharmacyEvent = new EventEmitter<string>();
+  @Output() editPharmacyEvent = new EventEmitter<string>();
+  @Output() removePharmacyEvent = new EventEmitter<string>();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Public properties **/
-  pharmacies$ = this.drugPharmacyFacade.pharmacies$;
-  ddlStates$ = this.drugPharmacyFacade.ddlStates$;
+  // pharmacies$ = this.drugPharmacyFacade.pharmacies$;
+  // ddlStates$ = this.drugPharmacyFacade.ddlStates$;
   isOpenNewPharmacyClicked = false;
   filteredSelectedPharmacy!: any;
+  pharmacyForm!: FormGroup;
+  selectedPharmacyForEdit!: string;
+  selectedPharmacyId!: string | null;
 
   /** Constructor **/
-  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade) {}
+  constructor() { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadPharmacies();
-    this.loadDdlStates();
+    if (this.isEditPharmacy) {
+      this.selectedPharmacyForEdit = this.selectedPharmacy?.vendorFullName ?? '';
+      this.selectedPharmacyId = this.selectedPharmacy?.vendorId;
+    }
   }
 
   /** Private methods **/
-  private loadPharmacies() {
-    this.drugPharmacyFacade.loadPharmacies();
-    this.pharmacies$.subscribe({
-      next: (pharmacies) => {
-        if (this.isEditPharmacy) {
-          this.filteredSelectedPharmacy = pharmacies.filter((pharmacy: any) => {
-            return (
-              this.selectedPharmacy.PharmacyNameAndNumber.indexOf(
-                pharmacy.name
-              ) !== -1
-            );
-          })[0];
-        }
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+  searchPharmacies(searchText: string) {
+    this.selectedPharmacyId = null;
+    this.searchPharmacyEvent.emit(searchText);
   }
 
-  private loadDdlStates() {
-    this.drugPharmacyFacade.loadDdlStates();
+  removePharmacy() {
+
+  }
+
+  addOrEditPharmacy() {
+    if (this.selectedPharmacyId) {
+      if (this.isEditPharmacy) {
+        this.editPharmacyEvent.emit(this.selectedPharmacyId ?? '');
+      }
+      else {
+        this.addPharmacyEvent.emit(this.selectedPharmacyId ?? '');
+      }
+    }
   }
 
   /** Internal event methods **/
@@ -76,5 +84,9 @@ export class PharmacyDetailComponent implements OnInit {
 
   onClosePharmacyClicked() {
     this.closePharmacyEvent.emit();
+  }
+
+  onSearchTemplateClick(pharmacy: Pharmacy) {
+    this.selectedPharmacyId = pharmacy.vendorId ?? null;
   }
 }

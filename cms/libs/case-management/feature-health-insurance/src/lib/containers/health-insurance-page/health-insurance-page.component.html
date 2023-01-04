@@ -3,85 +3,107 @@
   <section>
     <div class="block-section">
       <div class="flex-row">
-        <div class="flex-col mb-1">
-          <div class="component-list-h">
-            <h5>Do they currently have health insurance?</h5>
-            <span class="d-inline-block mr-2">
-              <input
-                type="radio"
-                kendoRadioButton
-                aria-labelledby="currentlyHaveHealthInsuranceYes"
-                name="haveInsurance"
-                id="haveInsurance1"
-                tabindex="1"
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="haveInsurance1"
-                text="Yes"
-              ></kendo-label>
-            </span>
-            <span class="d-inline-block mr-2">
-              <input
-                type="radio"
-                kendoRadioButton
-                aria-labelledby="currentlyHaveHealthInsuranceNo"
-                name="haveInsurance"
-                id="haveInsurance2"
-                tabindex="2"
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="haveInsurance2"
-                text="No"
-              ></kendo-label>
-            </span>
+        <form [formGroup]="insuranceFlagForm">
+          <div class="flex-col mb-1">
+            <div class="component-list-h">
+              <h5>Do they currently have health insurance?</h5>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="currentlyHaveHealthInsuranceYes"
+                  name="currentInsuranceFlag"
+                  id="haveInsurance1"
+                  tabindex="1"
+                  value="Y"
+                  [checked]="currentInsurance == 'Y'"
+                  formControlName="currentInsuranceFlag"
+                  (change)="onCurrentInsuranceChange('Y')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="haveInsurance1"
+                  text="Yes"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="currentlyHaveHealthInsuranceNo"
+                  name="currentInsuranceFlag"
+                  id="haveInsurance2"
+                  tabindex="2"
+                  value="N"
+                  [checked]="currentInsurance == 'N'"
+                  formControlName="currentInsuranceFlag"
+                  (change)="onCurrentInsuranceChange('N')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="haveInsurance2"
+                  text="No"
+                ></kendo-label>
+              </span>
+            </div>
+          </div>
+          <div class="flex-col mb-1">
+            <div class="component-list-h">
+              <h5>
+                Are they eligible for a group policy (through employer or spouse,
+                partner, or parent’s employer)?
+              </h5>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="eligibleForGroupPolicyYes"
+                  name="groupPolicyEligibleFlag"
+                  id="policyEligibility1"
+                  tabindex="3"
+                  value="Y"
+                  [checked]="groupPolicyEligible == 'Y'"
+                  formControlName="groupPolicyEligibleFlag"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="policyEligibility1"
+                  text="Yes"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="eligibleForGroupPolicyNo"
+                  name="groupPolicyEligibleFlag"
+                  id="policyEligibility2"
+                  tabindex="4"
+                  value="N"
+                  [checked]="groupPolicyEligible == 'N'"
+                  formControlName="groupPolicyEligibleFlag"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="policyEligibility2"
+                  text="No"
+                ></kendo-label>
+              </span>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="showTable">
+          <div class="flex-col">
+            <h5 class="text-capital">Insurance Plans</h5>
+          </div>
+          <div class="flex-col">
+            <case-management-medical-premium-list
+                [healthInsuranceForm]="healthInsuranceForm" [closeDeleteModal]="closeDeleteModal" (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)" (deleteInsurancePlan)="delteInsurancePolicy($event)" >
+          </case-management-medical-premium-list>
           </div>
         </div>
-        <div class="flex-col mb-1">
-          <div class="component-list-h">
-            <h5>
-              Are they eligible for a group policy (through employer or spouse,
-              partner, or parent’s employer)?
-            </h5>
-            <span class="d-inline-block mr-2">
-              <input
-                type="radio"
-                kendoRadioButton
-                aria-labelledby="eligibleForGroupPolicyYes"
-                name="policyEligibility"
-                id="policyEligibility1"
-                tabindex="3"
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="policyEligibility1"
-                text="Yes"
-              ></kendo-label>
-            </span>
-            <span class="d-inline-block mr-2">
-              <input
-                type="radio"
-                kendoRadioButton
-                aria-labelledby="eligibleForGroupPolicyNo"
-                name="policyEligibility"
-                id="policyEligibility2"
-                tabindex="4"
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="policyEligibility2"
-                text="No"
-              ></kendo-label>
-            </span>
-          </div>
-        </div>
-        <div class="flex-col">
-          <h5 class="text-capital">Insurance Plans</h5>
-        </div>
-        <div class="flex-col">
-          <case-management-medical-premium-list></case-management-medical-premium-list>
-        </div>
+
       </div>
     </div>
   </section>

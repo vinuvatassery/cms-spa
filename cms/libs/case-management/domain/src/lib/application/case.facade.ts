@@ -1,12 +1,21 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
+
+import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Case } from '../entities/case';
+
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
-import { ScreenRouteDataService } from '../infrastructure/screen-route.data.service';
+import { SnackBar } from '@cms/shared/ui-common';
+import { SortDescriptor } from '@progress/kendo-data-query';
+
+  
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -16,16 +25,15 @@ export class CaseFacade {
   private recentCaseSubject = new BehaviorSubject<Case[]>([]);
   private caseSearchedSubject = new BehaviorSubject<any>([]);
   private lastVisitedCasesSubject = new BehaviorSubject<any>([]);
-  private caseOwnersSubject = new BehaviorSubject<any>([]);
   private ddlProgramsSubject = new BehaviorSubject<any>([]);
-  private ddlCaseOriginsSubject = new BehaviorSubject<any>([]);
   private ddlFamilyAndDependentEPSubject = new BehaviorSubject<any>([]);
   private ddlIncomeEPSubject = new BehaviorSubject<any>([]);
   private ddlEmploymentEPSubject = new BehaviorSubject<any>([]);
   private ddlGridColumnsSubject = new BehaviorSubject<any>([]);
   private ddlCommonActionsSubject = new BehaviorSubject<any>([]);
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
-  private routesSubject = new BehaviorSubject<any>([]);
+  private updateCaseSubject = new Subject<any>();
+  private getCaseSubject = new Subject<any>();
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -33,21 +41,55 @@ export class CaseFacade {
   recentCases$ = this.recentCaseSubject.asObservable();
   caseSearched$ = this.caseSearchedSubject.asObservable();
   lastVisitedCases$ = this.lastVisitedCasesSubject.asObservable();
-  caseOwners$ = this.caseOwnersSubject.asObservable();
-  ddlPrograms$ = this.ddlProgramsSubject.asObservable();
-  ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
+  ddlPrograms$ = this.ddlProgramsSubject.asObservable(); 
   ddlFamilyAndDependentEP$ = this.ddlFamilyAndDependentEPSubject.asObservable();
   ddlIncomeEP$ = this.ddlIncomeEPSubject.asObservable();
   ddlEmploymentEP$ = this.ddlEmploymentEPSubject.asObservable();
   ddlGridColumns$ = this.ddlGridColumnsSubject.asObservable();
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
-  routes$ = this.routesSubject.asObservable();
+  updateCase$ = this.updateCaseSubject.asObservable();
+  getCase$ = this.getCaseSubject.asObservable(); 
 
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
+  public sortValue = '';
+  public sortType = 'asc';
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
   constructor(
     private readonly caseDataService: CaseDataService,
-    private readonly routeService: ScreenRouteDataService
-  ) {}
+    private loggingService : LoggingService,
+    private readonly loaderService: LoaderService ,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    public intl: IntlService, 
+    private configurationProvider : ConfigurationProvider,
+ 
+  ) { }
+ 
+  ShowLoader()
+  {
+    this.loaderService.show();
+  }
+
+  HideLoader()
+  {
+    this.loaderService.hide();
+  }
+
+  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.HideLoader();   
+  }
 
   /** Public methods **/
   loadCases(): void {
@@ -61,13 +103,13 @@ export class CaseFacade {
     });
   }
 
-  loadCaseBySearchText(): void {
-    this.caseDataService.loadCaseBySearchText().subscribe({
+  loadCaseBySearchText(text : string): void {
+    this.caseDataService.loadCaseBySearchText(text).subscribe({
       next: (caseBySearchTextResponse) => {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -105,23 +147,6 @@ export class CaseFacade {
     });
   }
 
-  loadRoutes(
-    screen_flow_type_code: string,
-    program_id: number,
-    case_id?: number
-  ) {
-    this.routeService
-      .load(screen_flow_type_code, program_id, case_id)
-      .subscribe({
-        next: (data) => {
-          this.routesSubject.next(data);
-        },
-        error: (err) => {
-          console.log('Error', err);
-        },
-      });
-  }
-
   loadDdlGridColumns(): void {
     this.caseDataService.loadDdlGridColumns().subscribe({
       next: (ddlGridColumnsResponse) => {
@@ -143,22 +168,23 @@ export class CaseFacade {
       },
     });
   }
-
+  loadCasesById(clientCaseId : string)
+  {
+    this.ShowLoader();
+    this.caseDataService.loadCasesById(clientCaseId).subscribe({    
+      next: (ddlcaseGetResponse) => {      
+        this.getCaseSubject.next(ddlcaseGetResponse);
+        this.HideLoader();
+      },
+      error: (err) => {
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+      },
+    });
+  }
   loadDdlSendLetters(): void {
     this.caseDataService.loadDdlSendLetters().subscribe({
       next: (ddlSendLettersResponse) => {
         this.ddlSendLettersSubject.next(ddlSendLettersResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
-  loadCaseOwners(): void {
-    this.caseDataService.loadCaseOwners().subscribe({
-      next: (caseOwnersResponse) => {
-        this.caseOwnersSubject.next(caseOwnersResponse);
       },
       error: (err) => {
         console.error('err', err);
@@ -177,16 +203,6 @@ export class CaseFacade {
     });
   }
 
-  loadDdlCaseOrigins(): void {
-    this.caseDataService.loadDdlCaseOrigins().subscribe({
-      next: (ddlCaseOriginsResponse) => {
-        this.ddlCaseOriginsSubject.next(ddlCaseOriginsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
 
   loadDdlFamilyAndDependentEP(): void {
     this.caseDataService.loadDdlFamilyAndDependentEP().subscribe({
@@ -222,5 +238,21 @@ export class CaseFacade {
       },
     });
   }
+
+
+  UpdateCase(existingCaseFormData : FormGroup ,clientCaseId : string ) 
+  {   
+       this.ShowLoader();
+        const caseData = { 
+          clientCaseId  : clientCaseId,
+          assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
+          caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
+          caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
+          concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
+        }    
+        caseData.caseStartDate =this.intl.formatDate(caseData.caseStartDate,this.dateFormat)   
+        return  this.caseDataService.UpdateCase(caseData)
+
+    }
 
 }

@@ -15,10 +15,7 @@
   </section>
   <section class="app-l-wrapper">
     <table class="table">
-      <tr *ngFor="let lov of lovs$ | async">
-        <td>{{ lov.id }}</td>
-        <td>{{ lov.name }}</td>
-        <td>{{ lov.description }}</td>
+      <tr *ngFor="let lov of lovs$ | async">       
       </tr>
     </table>
   </section>

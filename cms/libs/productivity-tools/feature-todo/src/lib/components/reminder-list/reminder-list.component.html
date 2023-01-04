@@ -9,7 +9,7 @@
         >search</span
       >
       <kendo-floatinglabel text="Search Reminders">
-        <kendo-textbox aria-label="search reminder"   [fillMode]="fillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="search reminder"   [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
         <!-- <input kendoTextBox aria-label="search reminder" /> -->
       </kendo-floatinglabel>
     </div>
@@ -131,10 +131,7 @@
               </button>
             </div> -->
           </ng-template>
-        </kendo-dropdownbutton>
-        <common-notification-snack-bar
-          [data$]="snackbar$"
-        ></common-notification-snack-bar>
+        </kendo-dropdownbutton>      
       </div>
     </div>
     <div class="due-item-blocks canyon-item-block">

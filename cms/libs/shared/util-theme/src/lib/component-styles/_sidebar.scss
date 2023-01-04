@@ -8,15 +8,15 @@ cms-sidenav {
 }
 .app-l-sidebar {
   border-color: $theme-border;
-  width: 220px;
+  width: $app-leftmenu-width;
   transition: ease-in all 0.3s;
   .drawer-inner-container {
     transition: ease-in all 0.3s;
     background-color: $app-primary;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
-    width: 220px;
+    width: $app-leftmenu-width;
     height: 100%;
   }
   .sidebar-hamburger {
@@ -24,28 +24,34 @@ cms-sidenav {
     align-items: center;
     justify-content: flex-end;
     .sidebar-hamburger_button {
-      width: $sidebar-width;
+      width: 100%;
       min-width: $sidebar-width;
       height: $size-xxxx + $size-xlg;
       background: $app-primary;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       box-shadow: none;
       cursor: pointer;
       transition: ease-in all 0.3s;
       border: $size-0;
       &:hover {
         opacity: 1;
-        transition: ease-in all 0.3s;
+        .material-icons {
+          margin-right: 3px;
+          opacity: 1;
+        }
       }
       .material-icons {
+        transition: ease-in all 0.2s;
+        position: relative;
         color: $white;
         font-size: $font-size-xxx;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0;
+        opacity: 0.9;
       }
       .sidebar-hamburger_icon-right {
         display: none;
@@ -67,6 +73,12 @@ cms-sidenav {
       &.active-item {
         background-color: $app-primary-darken;
         transition: ease-in all 0.3s;
+      
+      }
+      &.active-item {
+       .sidebar-menu_label{
+        font-family: $font-family-bold;
+       }
       }
       .sidebar-menu_icon {
         color: $white;
@@ -76,13 +88,15 @@ cms-sidenav {
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: ease-in all 0.3s;
       }
       .sidebar-menu_label {
         color: $white;
         transition: ease-in all 0.3s;
-        font-size: $font-size-m;
+        font-size: $font-size;
         white-space: nowrap;
         cursor: pointer;
+        letter-spacing: .5px;
         .sidebar-menu_label-badge {
           background: material-color($hive-warn-palette, 500);
           color: $white !important;
@@ -120,7 +134,7 @@ cms-sidenav {
       display: none;
     }
     .sidebar-last-visited-cases {
-      padding: $size-xxx;
+      padding: $size-xlg1;
       color: $white;
       border-top: 1px solid $app-primary-darken;
       .last-visited-cases_header {
@@ -171,18 +185,43 @@ cms-sidenav {
           background: $white;
           color: $app-primary-font-color;
         }
+        .last-visited-case-details {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
       }
     }
   }
   &.menuToggled {
     overflow: visible;
     position: relative;
-    z-index: 4;
+    z-index: 7;
     width: 50px;
     .drawer-inner-container {
       width: 55px;
       transition: ease-in all 0.3s;
+      .sidebar-hamburger {
+        &:hover {
+          .material-icons {
+            margin-right: 0px;
+            opacity: 1;
+          }
+        }
+        .material-icons {
+          transition: ease-in all 0.2s;
+          margin-right: 3px;
+          opacity: 0.8;
+        }
+      }
+
       .sidebar-menu {
+        .sidebar-menu_icon {
+      
+          width: 55px;
+          min-width: 55px;
+  
+        }
         .sidebar-menu_items {
           &:hover {
             .sidebar-menu_label {
@@ -202,19 +241,23 @@ cms-sidenav {
                 display: block !important;
                 position: absolute;
                 left: $sidebar-width;
-                padding: $size-l $size-xx $size-l $size-l;
+                padding: $size-xl;
                 white-space: nowrap;
                 transition: ease-in all 0.3s;
                 width: auto;
-                background: $white;
-                border-radius: $size-0 $size-l $size-l $size-0;
+                background: $app-primary;
+                border-radius:$border-radius-sm;
+                box-shadow: $button-box-shadow;
                 .sidebar-sub-menu_items {
-                  padding: $size-l $size-xx !important;
-                  background: $black-3;
+                  padding: $size-xx $size-xlg1 !important;
+                  background: transparent;
                   border-radius: $border-radius-sm;
                   white-space: nowrap;
                   transition: ease-in all 0.3s;
-                  margin-bottom: $size-s;
+                  margin-bottom: $size-s; 
+                  &:hover{
+                    background: $app-primary-darken;
+                  }
                 }
               }
               .sidebar-menu_items {
@@ -233,9 +276,13 @@ cms-sidenav {
       }
       .sidebar-hamburger_icon-right {
         display: flex !important;
+        
+   
       }
       .sidebar-hamburger_icon-left {
-        display: none !important;
+        // display: none !important;
+        transform: rotate(180deg);
+     
       }
       .sidebar-last-visited-cases-container {
         .active-menu-toggled {
@@ -273,7 +320,7 @@ cms-sidenav {
             top: $header-height;
             background: $app-primary;
             height: 100%;
-            max-height: calc(100% - 70px);
+            max-height: calc(100% - $header-height);
             overflow: auto;
             border-left: 1px solid material-color($hive-primary-palette, 100);
           }
@@ -283,9 +330,9 @@ cms-sidenav {
   }
 }
 
-.activeCase{
-  .last-visited-case{
-    background: $white!important;
+.activeCase {
+  .last-visited-case {
+    background: $white !important;
     color: $app-primary-font-color;
   }
 }

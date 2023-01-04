@@ -1,28 +1,48 @@
-<div class="global-search header-search">
+<div class="global-search header-search combotable_search_list" [ngClass]="{'mobileheader-searchshow': mobileHeaderSearchOpen}">
   <span
     class="material-icons global-search-icon"
     aria-label="search"
     aria-hidden="true"
-    >search</span
-  >
+    >search</span>
+    <span *ngIf="showHeaderSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
   <kendo-multicolumncombobox
     [data]="search$ | async"
     textField="name"
     valueField="id"
-    fillMode="outline"
+    [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Case Name, Member ID or SSN"
-  >
+    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }">
+    <!-- (close)="$event.preventDefault(); " -->
  
     <button kendoButton fillMode="clear" icon="image"></button>
+   
  
- 
-    <kendo-combobox-column [width]="250" >
+    <kendo-combobox-column  >
       <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-        <span class="pr-1">{{ dataItem.name }}</span>
-        <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
-        <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
-        <span class="text-muted">SSN {{ dataItem.ssn }}</span>
+        <span>{{ dataItem.name }}</span>
+ 
+      </ng-template>
+    </kendo-combobox-column>
+    <kendo-combobox-column   [width]="65">
+      <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+        <span class="text-muted"><em>ID:</em> {{ dataItem.id }}</span>
+      </ng-template>
+    </kendo-combobox-column>
+    <kendo-combobox-column   [width]="120">
+      <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+        <span class="text-muted"> <em>DOB:</em> {{ dataItem.dob }}</span>
+      </ng-template>
+    </kendo-combobox-column>
+    <kendo-combobox-column   [width]="135">
+      <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+        <span class="text-muted"><em>SSN:</em> {{ dataItem.ssn }}</span>
       </ng-template>
     </kendo-combobox-column>
   </kendo-multicolumncombobox>
 </div>
+
+<button kendoButton (click)="clickMobileHeaderSearchOpen()" title="Global Case search" class="header-mobilesearchbutton">  <span
+  class="material-icons"
+  aria-label="search"
+  aria-hidden="true"
+  >search</span> </button>

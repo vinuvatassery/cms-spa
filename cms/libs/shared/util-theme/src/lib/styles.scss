@@ -1,4 +1,11 @@
 @charset "UTF-8";
 
+
+/*Importing Fonts*/
+@import './themes/common-theming-files/material-icons';
+@import './themes/common-theming-files/app-fonts';
+
+
+
 /* Importing Default Theme Style*/
 @import 'themes/blue-theme';

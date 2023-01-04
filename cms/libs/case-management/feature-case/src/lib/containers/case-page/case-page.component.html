@@ -1,5 +1,9 @@
-<common-bread-crumb></common-bread-crumb>
+
+
+
+ 
 <div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+  <common-bread-crumb></common-bread-crumb>
   <button
     aria-label="new case"
     kendoButton
@@ -12,23 +16,23 @@
   </button>
   <!-- Main Title Section -->
   <section class="app-l-mainTittle">
-    <h2>
+    <h1 class="maintitle_withicon text-bold">
       <span
         aria-label="cases"
-        class="material-icons sidebar-menu_icon"
+        class="material-icons sidebar-menu_icon "
         aria-hidden="true"
       >
         people
       </span>
       Cases
-    </h2>
+    </h1>
   </section>
 
   <!-- Page Content Section -->
-  <section class="app-l-client-wrapper" kendoRippleContainer>
+  <section class="app-l-client-wrapper " [ngClass]="{'due-notification-on': selectedTab !== caseScreenTab.CER_TRACKING}" kendoRippleContainer>
     <!-- Left Tab Section -->
     <div class="app-l-client-left">
-      <kendo-tabstrip class="app-c-tab" (tabSelect)="onTabSelected($event)">
+      <kendo-tabstrip class="app-c-tab" [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" (tabSelect)="onTabSelected($event)">
         <kendo-tabstrip-tab title="My Cases" [selected]="selectedTab === caseScreenTab.MY_CASES">
           <ng-template kendoTabContent>
             <case-management-case-list
@@ -73,11 +77,19 @@
     *ngIf="isNewCaseDialogClicked"
     (close)="handleNewCaseDialogClosed()"
     title="Search Case"
-    class="app-c-modal app-c-modal-md app-c-modal-top"
+    class="app-c-modal app-c-modal-lg app-c-modal-top"
     kendoTooltip
   >
     <case-management-new-case
       (isCreateNewCasePopupOpened)="handleNewCaseDialogClosed()"
+      (newcaseSaveEvent) = "newcaseSaved($event)"
+      [caseSearchResults$]="caseSearchResults$"
+      [caseOwners]="caseOwners$"
+      [ddlPrograms]="ddlPrograms$"
+      [ddlCaseOrigins]="ddlCaseOrigins$"
+      [formButtonDisabled] = "formButtonDisabled"
+      (searchTextEvent)="handleSearchTextChange($event)"
     ></case-management-new-case>
   </kendo-dialog>
 </div>
+

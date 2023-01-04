@@ -5,6 +5,7 @@
 }
 .app-c-modal {
   z-index: 999999;
+  overflow-x: auto;
   .k-dialog-close {
     padding: $size-xl;
   }
@@ -29,8 +30,8 @@
       .k-window-actions {
         margin: 0;
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 10px;
+        right: 10px;
         .k-icon {
           font-size: $font-size-xlg;
           color: material-color($hive-neutral-palette, 600);
@@ -38,7 +39,7 @@
       }
     }
     .k-dialog-buttongroup {
-      padding: $size-xlg $size-xxxl $size-xxx;
+      padding: $size-xlg $size-xxxl $size-xlg;
       border-width: 0;
       .k-button {
         min-width: 80px;
@@ -48,6 +49,9 @@
       }
       .justify-content-end {
         width: 100%;
+      }
+      .k-danger-link{
+        box-shadow: none;
       }
     }
   }
@@ -102,38 +106,45 @@
       width: 700px;
       max-width: 700px;
       height: auto !important;
+      top: 50px;
       @media (max-width: $breakpoint-sm) {
         width: 100%;
       }
     }
     justify-content: flex-start;
-    top: 50px;
+    // top: 50px;
   }
   &-md {
     .k-dialog {
       width: 550px;
       max-width: 550px;
       height: auto !important;
+      top: 50px;
       @media (max-width: $breakpoint-sm) {
         width: 100%;
       }
     }
     justify-content: flex-start;
-    top: 50px;
+    // top: 50px;
   }
   &-sm {
     .k-dialog {
       width: 400px;
       max-width: 400px;
       height: auto !important;
+      top: 50px;
       @media (max-width: $breakpoint-sm) {
         width: 100%;
       }
     }
     justify-content: flex-start;
-    top: 50px;
+    // top: 50px;
   }
   &-np {
+    .k-dialog {
+      top: 50px;
+    }
+
     .k-content {
       padding: 1px;
     }
@@ -152,7 +163,7 @@
   }
   &-top {
     justify-content: flex-start;
-    top: 50px;
+    // top: 50px;
   }
 
   &-wid-md-full {
@@ -182,3 +193,12 @@
     }
   }
 }
+
+
+
+@media only screen  and (max-height: 500px)  {
+  .app-c-modal .k-dialog .k-dialog-buttongroup {
+  
+}
+ 
+  }

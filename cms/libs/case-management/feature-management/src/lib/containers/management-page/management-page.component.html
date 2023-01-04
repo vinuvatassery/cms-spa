@@ -3,7 +3,7 @@
   <section>
     <h5 class="mt-1">Currently has HIV Case Manager?</h5>
     <div class="component-list-h">
-      <span class="d-inline-block mr-2">
+      <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
           kendoRadioButton
@@ -18,7 +18,7 @@
           text="Yes"
         ></kendo-label>
       </span>
-      <span class="d-inline-block mr-2">
+      <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
           kendoRadioButton
@@ -42,7 +42,7 @@
   <section>
     <h5 class="mt-1">Would you like one?</h5>
     <div class="component-list-h">
-      <span class="d-inline-block mr-2">
+      <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
           [value]="1" 
@@ -59,7 +59,7 @@
           text="Yes"
         > </kendo-label>
       </span>
-      <span class="d-inline-block mr-2">
+      <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"        [value]="0" 
           [(ngModel)]="isVisible" 
@@ -76,7 +76,7 @@
         ></kendo-label>
       </span>
     </div>
-    <div class="voterreg-info d-flex mt-1" *ngIf="isVisible === 1">
+    <div class="voterreg-info d-flex mt-1 align-items-center" *ngIf="isVisible === 1">
       <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>Case Manager Referral is send once the application is saved   </div>
   </section>
 </div>

@@ -1,19 +1,20 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact } from '../entities/contact';
+import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
+import { LovFacade, ZipCodeFacade } from '@cms/system-config/domain'
+import { catchError, of } from 'rxjs';
+import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
   /** Private properties **/
   private ddlStatesSubject = new BehaviorSubject<any>([]);
   private ddlCountriesSubject = new BehaviorSubject<any>([]);
-  private ddlRelationshipsSubject = new BehaviorSubject<any>([]);
   private ddlPreferredContactMethodsSubject = new BehaviorSubject<any>([]);
   private ddlAddressTypesSubject = new BehaviorSubject<any>([]);
   private ddlPhoneTypesSubject = new BehaviorSubject<any>([]);
@@ -23,11 +24,11 @@ export class ContactFacade {
   private addressesSubject = new BehaviorSubject<any>([]);
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
+  private showloaderOnCounty = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   ddlCountries$ = this.ddlCountriesSubject.asObservable();
-  ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   ddlPreferredContactMethods$ =
     this.ddlPreferredContactMethodsSubject.asObservable();
   ddlAddressTypes$ = this.ddlAddressTypesSubject.asObservable();
@@ -38,40 +39,38 @@ export class ContactFacade {
   address$ = this.addressesSubject.asObservable();
   phoneNumbers$ = this.phoneNumbersSubject.asObservable();
   emailAddress$ = this.emailAddressesSubject.asObservable();
+  showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService) {}
+  constructor(
+    private readonly contactDataService: ContactDataService,
+    private readonly loggingService: LoggingService,
+    private readonly snackbarService: NotificationSnackbarService,
+    private readonly zipCodeFacade: ZipCodeFacade
+  ) { }
 
   /** Public methods **/
   loadDdlStates(): void {
-    this.contactDataService.loadDdlStates().subscribe({
+    this.zipCodeFacade.getStates().subscribe({
       next: (ddlStatesResponse) => {
         this.ddlStatesSubject.next(ddlStatesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
 
-  loadDdlCountries(): void {
-    this.contactDataService.loadDdlCountries().subscribe({
+  loadDdlCounties(stateCode: string): void {
+    this.showloaderOnCounty.next(true);
+    this.zipCodeFacade.getCounties(stateCode).subscribe({
       next: (ddlCountriesResponse) => {
         this.ddlCountriesSubject.next(ddlCountriesResponse);
+        this.showloaderOnCounty.next(false);
       },
       error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
-  loadDdlRelationships(): void {
-    this.contactDataService.loadDdlRelationships().subscribe({
-      next: (ddlRelationshipsResponse) => {
-        this.ddlRelationshipsSubject.next(ddlRelationshipsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
+        this.showloaderOnCounty.next(false);
       },
     });
   }
@@ -84,7 +83,7 @@ export class ContactFacade {
         );
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -95,7 +94,7 @@ export class ContactFacade {
         this.addressesSubject.next(addressesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -106,7 +105,7 @@ export class ContactFacade {
         this.ddlAddressTypesSubject.next(ddlAddressTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -117,7 +116,7 @@ export class ContactFacade {
         this.phoneNumbersSubject.next(phoneNumbersResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -128,7 +127,7 @@ export class ContactFacade {
         this.ddlPhoneTypesSubject.next(ddlPhoneTypesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -139,7 +138,7 @@ export class ContactFacade {
         this.emailAddressesSubject.next(emailAddressesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -152,7 +151,7 @@ export class ContactFacade {
         );
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -163,13 +162,37 @@ export class ContactFacade {
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
+    return this.contactDataService.loadContactInfo(clientId, clientCaseEligibilityId);
+  }
+
+  createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.contactDataService.createContactInfo(clientId, clientCaseEligibilityId, contactInfo)
+      .pipe(
+        catchError((err: any) => {
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+          if (!(err?.error ?? false)) {
+            this.loggingService.logException(err);
+          }
+          return of(false);
+        })
+      );
+  }
+
+  updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
+    return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo).pipe(
+      catchError((err: any) => {
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+        }
+        return of(false);
+      })
+    );
   }
 }

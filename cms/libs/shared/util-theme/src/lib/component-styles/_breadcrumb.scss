@@ -40,7 +40,9 @@
     cursor: pointer;
     padding: $size-0;
     margin: $size-0;
-    &.k-state-disabled {
+    font-size: $font-size-s;
+
+    &.k-state-disabled, &.k-disabled {
       color: $black-3 !important;
     }
     &:hover,
@@ -65,8 +67,9 @@
     align-items: center;
     font-family: $font-family-bold;
     margin-bottom: $size-0;
+    line-height: normal;
     &.title-md {
-      font-size: $font-size-xlg !important;
+      font-size: $font-size-xx !important;
     }
     .material-icons {
       margin-right: $size-xx;
@@ -109,7 +112,7 @@
     margin: $size-xx $size-0;
     .title-client-info {
       font-family: $font-family;
-      padding-right: $size-xxx;
+      margin-right: $size-xxx;
     }
   }
 }

@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'case-management-remove-pharmacy',
@@ -7,4 +7,22 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./remove-pharmacy.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RemovePharmacyComponent {}
+export class RemovePharmacyComponent {
+  /** Input properties **/
+  @Input() clientPharmacyId!: string;
+
+  /** Output properties **/
+  @Output() removeConfimEvent = new EventEmitter<any>();
+
+    /** public properties **/
+  onRemoveOrCancelClick(isDelete : boolean)
+  {  
+    const deleteConfirmParams =
+    {
+      isDelete : isDelete ,
+      clientPharmacyId : this.clientPharmacyId
+    }
+
+    this.removeConfimEvent.emit(deleteConfirmParams);
+  }
+}

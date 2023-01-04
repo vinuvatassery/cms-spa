@@ -13,11 +13,15 @@ import { DeleteConfirmationComponent } from './delete-confirmation/delete-confir
 import { NotificationSnackBarComponent } from './notification-snack-bar/notification-snack-bar.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { UserProfileCardComponent } from './user-profile-card/user-profile-card.component';
+import { LoaderComponent } from './loader/loader.component';
+import { GridLoaderComponent } from './loader/grid-loader.component';
+import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
+import { SsnPipe } from './pipes/ssn.pipe';
+import { PhonePipe } from './pipes/phone.pipe';
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
- 
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
     LoginStatusComponent,
@@ -29,6 +33,11 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
     DeleteConfirmationComponent,
     AccountSettingsComponent,
     UserProfileCardComponent,
+    LoaderComponent,
+    GridLoaderComponent,
+    OptionbuttonListComponent,
+    SsnPipe,
+    PhonePipe
   ],
   exports: [
     LoginStatusComponent,
@@ -40,7 +49,11 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
     DeleteConfirmationComponent,
     AccountSettingsComponent,
     UserProfileCardComponent,
+    LoaderComponent,
+    GridLoaderComponent,
+    OptionbuttonListComponent,
+    SsnPipe,
+    PhonePipe
   ],
- 
 })
-export class SharedUiCommonModule { }
+export class SharedUiCommonModule {}

@@ -1,10 +1,16 @@
+ 
+
 /** Angular **/
-import { OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, } from '@angular/core';
+/** External libraries **/
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { CaseDetailsFacade, CompletionStatusFacade, IncomeFacade } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
-import { DateInputFillMode, DateInputRounded, DateInputSize } from '@progress/kendo-angular-dateinputs';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
+import { LovFacade } from '@cms/system-config/domain';
+import { ActivatedRoute } from '@angular/router';
+import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-income-page',
@@ -13,124 +19,301 @@ import { DateInputFillMode, DateInputRounded, DateInputSize } from '@progress/ke
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomePageComponent implements OnInit, OnDestroy {
-  /** Public Methods **/
+
+  /** Private properties **/
+  private saveClickSubscription !: Subscription;  /** Public Methods **/
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
-
-
-
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  isNodateSignatureNoted = false;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() isEditValue!: boolean;
-  currentDate = new Date();
+  todaysDate = new Date();
+  noIncomeData = new NoIncomeData();
   /** Public properties **/
   incomeTypes$ = this.incomeFacade.ddlIncomeTypes$;
   incomeSources$ = this.incomeFacade.ddlIncomeSources$;
   frequencies$ = this.incomeFacade.ddlFrequencies$;
   proofOfIncomeTypes$ = this.incomeFacade.ddlProofOfIncomdeTypes$;
   hasNoProofOfIncome = false;
-  tareaJustificationCounter!: string;
-  tareaJustification = '';
-  tareaJustificationCharachtersCount!: number;
-  tareaJustificationMaxLength = 300;
-
+  incomeNoteCounter!: string;
+  incomeNote = '';
+  incomeNoteCharachtersCount!: number;
+  incomeNoteMaxLength = 300;
+  sessionId: any = "";
+  clientId: any;
+  clientCaseEligibilityId: string = "";
+  clientCaseId: any;
+  incomeData: any = {};
+  noIncomeFlag: boolean = false;
+  private loadSessionSubscription!: Subscription;
+  public noIncomeDetailsForm: FormGroup = new FormGroup({
+    noIncomeClientSignedDate: new FormControl('', []),
+    noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+    noIncomeNote: new FormControl('', []),
+  });
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
     private completionStatusFacade: CompletionStatusFacade,
-    private caseDetailsFacade: CaseDetailsFacade) { }
+    private workflowFacade: WorkflowFacade,
+    private lov: LovFacade,
+    private route: ActivatedRoute,
+    private readonly elementRef: ElementRef,
+    private readonly loaderService: LoaderService) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadSessionData();
     this.loadIncomeTypes();
-    this.tareaJustificationWordCount();
+    this.incomeNoteWordCount();
     this.loadIncomeSources();
     this.loadFrequencies();
     this.loadProofOfIncomeTypes();
-    this.saveClickSubscribed();
+    this.addSaveSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.saveClickSubscription.unsubscribe();
+    this.loadSessionSubscription.unsubscribe();
   }
 
   /** Private methods **/
-  private tareaJustificationWordCount() {
-    this.tareaJustificationCharachtersCount = this.tareaJustification
-      ? this.tareaJustification.length
+  private incomeNoteWordCount() {
+    this.incomeNoteCharachtersCount = this.incomeNote
+      ? this.incomeNote.length
       : 0;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+    this.incomeNoteCounter = `${this.incomeNoteCharachtersCount}/${this.incomeNoteMaxLength}`;
   }
 
   private loadIncomeTypes() {
-    this.incomeFacade.loadDdlIncomeTypes();
+    this.lov.getIncomeTypeLovs();
   }
 
   private loadIncomeSources() {
-    this.incomeFacade.loadDdlIncomeSources();
+    this.lov.getIncomeSourceLovs();
   }
 
   private loadFrequencies() {
-    this.incomeFacade.loadDdlFrequencies();
+    this.lov.getIncomeFrequencyLovs();
   }
 
   private loadProofOfIncomeTypes() {
     this.incomeFacade.loadDdlProofOfIncomeTypes();
   }
 
+  private addSaveSubscription(): void {
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      mergeMap((navigationType: NavigationType) =>
+        forkJoin([of(navigationType), this.save()])
+      ),
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.workflowFacade.navigate(navigationType);
+      }
+    });
+  }
+
+  private save() {
+    if(this.hasNoIncome){
+      let isValid = true;
+      this.submitIncomeDetailsForm();
+      if (this.noIncomeDetailsForm.valid && isValid) {
+        this.loaderService.show();
+        return this.incomeFacade.save(this.noIncomeData);
+      }
+    }
+    else{
+      this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.noIncomeData.clientId = this.clientId
+      this.noIncomeData.noIncomeFlag = "N";
+      this.loaderService.show();
+      return this.incomeFacade.save(this.noIncomeData);
+    }
+    return of(false)
+  }
+
+  private noIncomeDetailsFormChangeSubscription() {
+    this.noIncomeDetailsForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        startWith(null),
+        pairwise()
+      )
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
+      });
+  }
+
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.noIncomeDetailsForm.controls).forEach(key => {
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+          };
+          completedDataPoints.push(item);
+        }
+      }
+      else {
+        if (this.noIncomeDetailsForm?.get(key)?.value && this.noIncomeDetailsForm?.get(key)?.valid) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: StatusFlag.Yes
+          };
+
+          completedDataPoints.push(item);
+        }
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
+  }
+
+  private adjustAttributeChanged(activeDataPointName: string='', inactiveDataPointName: string='') {
+    const acitveData: CompletionChecklist = {
+      dataPointName: activeDataPointName,
+      status: StatusFlag.Yes 
+    };
+    const inactiveData: CompletionChecklist = {
+      dataPointName: inactiveDataPointName,
+      status: StatusFlag.No 
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([acitveData, inactiveData]);
+  }
+
   /** Internal event methods **/
-  onTareaJustificationValueChange(event: any): void {
-    this.tareaJustificationCharachtersCount = event.length;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+  onIncomeNoteValueChange(event: any): void {
+    this.incomeNoteCharachtersCount = event.length;
+    this.incomeNoteCounter = `${this.incomeNoteCharachtersCount}/${this.incomeNoteMaxLength}`;
   }
 
   onProofOfIncomeValueChanged() {
     this.hasNoProofOfIncome = !this.hasNoProofOfIncome;
   }
-  /** Private properties **/
-  private saveClickSubscription !: Subscription;
-
-
-
-  // /** Lifecycle Hooks **/
-  // ngOnInit() {
-  //   this.loadIncomes();
-  //   this.saveClickSubscribed();
-  // }
-
-  ngOnDestroy(): void {
-    this.saveClickSubscription.unsubscribe();
-  }
 
   /** Private Methods **/
-  private loadIncomes(): void {
-    this.incomeFacade.loadIncomes();
+  private loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any): void {
+    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize);
+    this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
+      this.incomeData = incomeresponse;
+      if (incomeresponse.noIncomeData!=null) {
+        this.noIncomeFlag = true;
+        this.noIncomeDetailsForm = new FormGroup({
+          noIncomeClientSignedDate: new FormControl('', []),
+          noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+          noIncomeNote: new FormControl('', []),
+        });
+        this.isNodateSignatureNoted = true;
+        this.hasNoIncome = true;
+        this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
+      }
+    })
   }
 
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
-  private saveClickSubscribed(): void {
-    this.saveClickSubscription = this.caseDetailsFacade.saveAndContinueClicked.subscribe(() => {
-      this.incomeFacade.saveIncome().subscribe((response: boolean) => {
-        if(response){
-          this.caseDetailsFacade.navigateToNextCaseScreen.next(true);
-        }
-      })
-    });
-  }
-
   /** Internal Event Methods **/
-  onChangeCounterClick() {
-    this.updateCompletionStatus({
-      name: 'Income',
-      completed: 15,
-      total: 31,
-    });
-  }
-
   onIncomeValueChanged(event: any) {
     this.hasNoIncome = !this.hasNoIncome;
+    if (this.hasNoIncome) {
+      this.noIncomeDetailsForm = new FormGroup({
+        noIncomeClientSignedDate: new FormControl('', []),
+        noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+        noIncomeNote: new FormControl('', []),
+      });
+      this.isNodateSignatureNoted = true;
+      this.noIncomeDetailsFormChangeSubscription();
+      this.adjustAttributeChanged('incomeFlag_no', 'incomeFlag_yes');
+      this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
+    }
+    else{
+      this.adjustAttributeChanged('incomeFlag_yes', 'incomeFlag_no');
+    }
   }
 
 
+  public submitIncomeDetailsForm(): void {
+    this.noIncomeDetailsForm.markAllAsTouched();
+    if (this.hasNoIncome) {
+      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators([
+        Validators.required,
+      ]);
+      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValidators([
+        Validators.required,
+      ]);
+      this.noIncomeDetailsForm.controls['noIncomeNote'].setValidators([
+        Validators.required,
+      ]);
+      this.noIncomeDetailsForm.controls[
+        'noIncomeClientSignedDate'
+      ].updateValueAndValidity();
+      this.noIncomeDetailsForm.controls[
+        'noIncomeSignatureNotedDate'
+      ].updateValueAndValidity();
+      this.noIncomeDetailsForm.controls[
+        'noIncomeNote'
+      ].updateValueAndValidity();
+      // this.onDoneClicked();
+      if (this.noIncomeDetailsForm.valid) {
+        this.noIncomeData.noIncomeFlag = this.hasNoIncome == true ? "Y" : "N";
+        this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+        this.noIncomeData.clientId = this.clientId
+        this.noIncomeData.noIncomeClientSignedDate = this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value;
+        this.noIncomeData.noIncomeSignatureNotedDate = this.noIncomeDetailsForm.get("noIncomeSignatureNotedDate")?.value;
+        this.noIncomeData.noIncomeNote = this.noIncomeDetailsForm.get("noIncomeNote")?.value;
+      }
+    }
+  }
+
+  setIncomeDetailFormValue(incomeDetail: any) {
+    if (incomeDetail) {
+      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));
+      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));
+      this.noIncomeDetailsForm.controls['noIncomeNote'].setValue(incomeDetail.noIncomeNote);
+    }else{
+      this.noIncomeDetailsForm.controls['noIncomeNote'].setValue('');
+    }
+  }
+
+  loadSessionData() {
+    //this.loaderService.show();
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session !== null && session !== undefined && session.sessionData !== undefined) {
+          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+          this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+          this.clientId = JSON.parse(session.sessionData).clientId;
+          const gridDataRefinerValue = {
+            skipCount: this.incomeFacade.skipCount,
+            pagesize: this.incomeFacade.gridPageSizes[0]?.value
+          };
+          this.loadIncomeListHandle(gridDataRefinerValue)
+        }
+      });
+  }
+
+  loadIncomeListHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize
+    };
+    this.loadIncomes(
+      this.clientId,
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount
+    );
+  }
 }

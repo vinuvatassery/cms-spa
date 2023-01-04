@@ -10,82 +10,72 @@
     <div class="block-section pt-1">
       <div class="flex-row">
         <div class="flex-col mb-1">
-          <input
-            type="checkbox"
-            kendoCheckBox
-            (change)="onIncomeValueChanged($event)"
-            aria-labelledby="clientDoesNotRecieveAnyIncome"
-            name="client does ot recieve any income"
-            id="clientDoesNotRecieveAnyIncome"
-          />
-          <label class="k-checkbox-label" for="clientDoesNotRecieveAnyIncome"
-            >Client does not receive any income</label
-          >
+          <span>
+            <input class="adjust-attr" type="checkbox" kendoCheckBox [(ngModel)]="noIncomeFlag" (change)="onIncomeValueChanged($event)"
+              aria-labelledby="clientDoesNotRecieveAnyIncome" name="client does ot recieve any income"
+              id="clientDoesNotRecieveAnyIncome" />
+            <label class="k-checkbox-label" for="clientDoesNotRecieveAnyIncome">Client does not receive any
+              income</label>
+          </span>
         </div>
         <div class="flex-col">
-        
 
-          <section class="k-dialog-body" *ngIf="hasNoIncome">
-             
-            <div class="flex-row">
-         
-              <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Date Client Signed">
-                  <kendo-datepicker
-                   [fillMode]="fillMode"
-                    format="MM-dd-yyyy"
-                    [(ngModel)]="currentDate"
-                    formatPlaceholder="formatPattern"
-                    aria-label="Date Client Signed"
-                    name="Date Client Signed"
-                    [tabIndex]="5"
-                  >
-                  </kendo-datepicker>
-                </kendo-floatinglabel>
+
+          <section  *ngIf="hasNoIncome">
+            <form [formGroup]="noIncomeDetailsForm">
+              <div class="flex-row">
+
+                <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Date Client Signed">
+                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" [max]="todaysDate"
+                      formatPlaceholder="formatPattern" aria-label="Date Client Signed" name="Date Client Signed"
+                      formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate>
+                    </kendo-datepicker>
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid"> Date Client
+                    Signed is required
+                  </kendo-formerror>
+                </div>
+                <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Date Signature Noted">
+                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" [disabled]="isNodateSignatureNoted" format="MM-dd-yyyy" [max]="todaysDate"
+                      formatPlaceholder="formatPattern" aria-label="Date Signature Noted" name="Date Signature Noted"
+                      formControlName="noIncomeSignatureNotedDate" #noIncomeSignatureNotedDate>
+                    </kendo-datepicker>
+                  </kendo-floatinglabel>
+                  <!-- <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['dateSignatureNoted'].valid"> Date
+                    Signature Noted is required </kendo-formerror> -->
+
+                </div>
+
+
+
+                <div class="flex-col">
+                  <kendo-floatinglabel
+                    text="What resources do they use to meet basic needs such as food, housing, transportation, etc..,">
+                    <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #incomeNotes resizable="auto"
+                      [maxlength]="incomeNoteMaxLength" [value]="incomeNote"
+                      (valueChange)="onIncomeNoteValueChange($event)" aria-label="income note"
+                      name="income-note" formControlName="noIncomeNote">
+                      <kendo-textarea-suffix class="justify-content-end">
+                        <span class="tareajustificationcounter">{{
+                          incomeNoteCounter
+                          }}</span>
+                      </kendo-textarea-suffix>
+                    </kendo-textarea>
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeNote'].valid"> income
+                    note is required
+                  </kendo-formerror>
+                </div>
               </div>
-              <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Date Signature Noted">
-                  <kendo-datepicker
-                  [fillMode]="fillMode"
-                    format="MM-dd-yyyy"
-                    [(ngModel)]="currentDate"
-                    formatPlaceholder="formatPattern"
-                    aria-label="Date Signature Noted"
-                    name="Date Signature Noted"
-                    [tabIndex]="6"
-                  >
-                  </kendo-datepicker>
-                </kendo-floatinglabel>
-              </div>
-              
-         
-        
-              <div class="flex-col">
-                <kendo-floatinglabel text="WHat resources do they use to meet basic needs such as food, housing, transportation, etc..,">
-                  <kendo-textarea
-                  [fillMode]="fillMode"
-                    #tareaJustifications
-                    resizable="auto"
-                    [maxlength]="tareaJustificationMaxLength"
-                    [value]="tareaJustification"
-                    (valueChange)="onTareaJustificationValueChange($event)"
-                    aria-label="income note"
-                    name="income-note"
-                    [tabIndex]="10"
-                  >
-                    <kendo-textarea-suffix class="justify-content-end">
-                      <span class="tareajustificationcounter">{{
-                        tareaJustificationCounter
-                      }}</span>
-                    </kendo-textarea-suffix>
-                  </kendo-textarea>
-                </kendo-floatinglabel>
-              </div>
-            </div>
+
+            </form>
           </section>
-          <case-management-income-list
-            [hasNoIncome]="hasNoIncome"
-          ></case-management-income-list>
+          <section *ngIf="!hasNoIncome">
+            <case-management-income-list [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
+          </section>
+          
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { VerificationPageComponent } from './containers/verification-page/verifi
 
 const routes: Routes = [
   {
-    path: 'hiv-verification',
+    path: '',
     component: VerificationPageComponent,
   },
 ];

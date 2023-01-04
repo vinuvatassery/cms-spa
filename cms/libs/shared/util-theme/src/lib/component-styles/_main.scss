@@ -50,17 +50,20 @@ li {
 /* End main reset style*/
 
 /* Start layout styles*/
+.branding-logo{
+  height: 38px;
+}
 .app-l-container {
   position: relative;
   top: $header-height !important;
   background: $white;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - $header-height);
   display: flex;
 }
 .app-l-body {
   transition: ease-in all 0.2s;
   width: 100%;
-  max-height: calc(100vh - 70px);
+  max-height: calc(100vh - $header-height);
   overflow: auto;
   overflow-x: hidden;
 }
@@ -70,10 +73,13 @@ li {
 .app-l-body-container {
   width: 100%;
   overflow-y: auto;
-  max-height: calc(100vh - 70px);
+  max-height: calc(100vh - $header-height);
 }
 .app-l-inner-rapper {
-  padding: $size-xlg;
+  padding: $size-xxx;
+  .app-l-breadcrumb{
+    padding-left: 0px;
+  }
 }
 .border-box {
   padding: $size-xlg;

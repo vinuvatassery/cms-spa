@@ -1,1178 +1,471 @@
-<section kendoRippleContainer>
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Enter First Name" class="k-form">
-        <!-- <input kendoTextBox aria-label="enter first name" /> -->
-        <kendo-textbox aria-label="enter first name"   [fillMode]="fillMode">
-      </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Middle Initial (Optional)">
-        <kendo-textbox    [disabled]="!isMiddleNameChecked" aria-label="middle initial" [fillMode]="fillMode">
+<form [formGroup]="appInfoForm" *ngIf="appInfoForm">
+  <section kendoRippleContainer>
+    <div class="flex-row" >
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Enter First Name" class="k-form">
+          <!-- <input kendoTextBox aria-label="enter first name" /> -->
+          <kendo-textbox  aria-label="enter first name"  
+            showErrorIcon="initial"
+            formControlName="firstName"  
+            [maxlength]="lengthRestrictForty"
+            [fillMode]="formUiStyle.inputFillMode">         
         </kendo-textbox>
-        <!-- <input
-          kendoTextBox
-       
-          aria-label="middle initial"
-        /> -->
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4 mt-3">
-      <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        aria-labelledby="middleInitial"
-        id="middleInitial"
-        kendoCheckBox
-        [(ngModel)]="isMiddleNameChecked"
-      />
-      <label class="k-checkbox-label" for="middleInitial">Middle Initial</label>
-      </span>
-    </div>
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Last Name">
-        <kendo-textbox aria-label="last name" [fillMode]="fillMode">   </kendo-textbox>
-        <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
-      </kendo-floatinglabel>
-    </div>
-  </div>
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="First Name on Primary Insurance Card">
-        <kendo-textbox aria-label="first name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="fillMode">   </kendo-textbox>
-        <!-- <input
-          kendoTextBox
-          [disabled]="isInsuranceCardChecked"
-          aria-label="first name on primary insurance card"
-        /> -->
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Last Name on Primary Insurance Card">
-        <kendo-textbox aria-label="last name on primary insurance card"  [disabled]="isInsuranceCardChecked" [fillMode]="fillMode">   </kendo-textbox>
-        <!-- <input
-          kendoTextBox
-          [disabled]="isInsuranceCardChecked"
-          aria-label="last name on primary insurance card"
-        /> -->
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4 mt-3">
-      <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        id="cardNotApplicable"
-        aria-labelledby="insuranceCardNotApplicable"
-        kendoCheckBox
-        [(ngModel)]="isInsuranceCardChecked"
-      />
-      <label class="k-checkbox-label" for="cardNotApplicable"
-        >Not Applicable</label
-      >
-      </span>
-    </div>
-  </div>
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="First Name on Official ID">
-        <kendo-textbox aria-label="first name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="fillMode">   </kendo-textbox>
-        <!-- <input
-          kendoTextBox
-          [disabled]="isOfficialIdChecked"
-          aria-label="first name on official id"
-        /> -->
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Last Name on Official ID">
-        <!-- <input
-          kendoTextBox
-          [disabled]="isOfficialIdChecked"
-          aria-label="last name on official id"
-        /> -->
-        <kendo-textbox aria-label="last name on official id"  [disabled]="isOfficialIdChecked" [fillMode]="fillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4 mt-3">
-      <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        id="idNotApplicable"
-        aria-labelledby="officialIdNotApplicable"
-        kendoCheckBox
-        [(ngModel)]="isOfficialIdChecked"
-      />
-      <label class="k-checkbox-label" for="idNotApplicable"
-        >Not Applicable</label
-      >
-      </span>
-    </div>
-  </div>
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Date of Birth">
-        <kendo-datepicker  
-        [fillMode]="fillMode"
-        [value]="currentDate"></kendo-datepicker>
-        <!-- <kendo-datepicker    id="datepicker">
-        </kendo-datepicker> -->
-      </kendo-floatinglabel>
-    </div>
-  </div>
-  <!-- <script>
-     $(document).ready(function () {
-            var datepicker = $("#datepicker").kendoDatePicker().data("kendoDatePicker");
-            console.log(datepicker, "asas------------------------");
-     });
-    </script> -->
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Social Security Number">
-        <kendo-textbox aria-label="social security number"  [disabled]="isSSNChecked" [fillMode]="fillMode">   </kendo-textbox>
-
-        <!-- <input
-          kendoTextBox
-          [disabled]="isSSNChecked"
-          aria-label="social security number"
-        /> -->
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4 mt-3">
-      <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        id="ssnNotApplicable"
-        aria-labelledby="ssnNotApplicable"
-        kendoCheckBox
-        [(ngModel)]="isSSNChecked"
-      />
-      <label class="k-checkbox-label" for="ssnNotApplicable"
-        >Not Applicable</label
-      >
-    </span>
-    </div>
-  </div>
-</section>
-<section class="mb-3">
-  <h5>Register to vote ?</h5>
-  <div class="flex-row gap-m">
-    <div class="flex-col">
-      <div class="component-list-h">
-        <span class="app-radiobtnwidtext-wrapper">
-          <input
-            type="radio"
-            [value]="1" 
-            [(ngModel)]="isVisible" 
-      
-            kendoRadioButton
-            name="register"
-            aria-labelledby="registerToVoteYes"
-            id="register"
-            tabindex="1"
-            [checked]="isSelected"
-          />
-          <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-        </span>
-        <span class="app-radiobtnwidtext-wrapper">
-          <input
-            type="radio"
-            kendoRadioButton
-            [value]="0" 
-            [(ngModel)]="isVisible" 
-            name="register"
-            aria-labelledby="registerToVoteNo"
-            id="register1"
-            tabindex="2"
-            [checked]="isSelected"
-          />
-          <kendo-label
-            class="k-radio-label"
-            text="No"
-            for="register1"
-          ></kendo-label>
-        </span>
-        <div class="voterreg-info d-flex" *ngIf="isVisible === 1">
-          <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>This application will  send voter registeration collaterial via letter or email once the applicaiton is saved  with the necessary contact information</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<section>
-  <h5>What pronouns do they use? (check all that apply)</h5>
-  <div class="component-list-h">
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="pronounsSheHerHers"
-        id="pronounsSheHerHers"
-      />
-      <label class="k-checkbox-label" for="pronounsSheHerHers"
-        >She/Her/Hers</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="pronounsHeHimHis"
-        id="pronounsHeHimHis"
-      />
-      <label class="k-checkbox-label" for="pronounsHeHimHis">He/Him/His</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="pronounsTheyThemTheirs"
-        id="pronounsTheyThemTheirs"
-      />
-      <label class="k-checkbox-label" for="pronounsTheyThemTheirs"
-        >They/Them/Theirs</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="pronounsElla"
-        id="pronounsElla"
-      />
-      <label class="k-checkbox-label" for="pronounsElla">Ella</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="pronounsÉl"
-        id="pronounsÉl"
-      />
-      <label class="k-checkbox-label" for="pronounsÉl">Él</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="pronounsElles"
-        id="pronounsElles"
-      />
-      <label class="k-checkbox-label" for="pronounsElles">Elles</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="noPronounsUseTheirName"
-        id="noPronounsUseTheirName"
-      />
-      <label class="k-checkbox-label" for="noPronounsUseTheirName"
-        >No pronouns, use their name</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        [(ngModel)]="isPronounsChecked"
-        id="notListedPleaseSpecify"
-        aria-labelledby="notListedPleaseSpecify"
-      />
-      <label class="k-checkbox-label" for="notListedPleaseSpecify"
-        >Not listed, please specify:</label
-      >
-      <kendo-floatinglabel text="Enter Pronouns" >
-        <kendo-textbox aria-label="enter pronouns"  [disabled]="!isPronounsChecked" [fillMode]="fillMode">   </kendo-textbox>
-        <!-- <input
-          kendoTextBox
-          [disabled]="!isPronounsChecked"
-          aria-label="enter pronouns"
-        /> -->
-      </kendo-floatinglabel>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="dontKnowWhatTheQuestionIs"
-        id="dontKnow1"
-      />
-      <label class="k-checkbox-label" for="dontKnow1"
-        >Don’t know what this question is asking</label
-      >
-    </span>
-    <span class="option-with-check app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        id="dontWantToAnswer"
-        aria-labelledby="dontWantToAnswer"
-      />
-      <label class="k-checkbox-label" for="dontWantToAnswer"
-        >Don’t want to answer</label
-      >
-    </span>
-  </div>
-  <div class="flex-row mb-4">
-    <div class="flex-col flex-col-8">
-      <kendo-floatinglabel text="How do they describe their gender? Optional">
-        <kendo-textbox aria-label="how do they describe their gender"  [disabled]="isDescribeGenderChecked" [fillMode]="fillMode">   </kendo-textbox>
-
-        <!-- <input
-          kendoTextBox
-          [disabled]="isDescribeGenderChecked"
-          aria-label="how do they describe their gender"
-        /> -->
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4 pt-3">
-      <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        [(ngModel)]="isDescribeGenderChecked"
-        aria-labelledby="describeGenderNotApplicable"
-        id="genderNotApplicable"
-      />
-      <label class="k-checkbox-label" for="genderNotApplicable"
-        >Not Applicable</label
-      >
-      </span>
-    </div>
-  </div>
-</section>
-<section>
-  <h5>What is their gender? Select all that apply</h5>
-  <div class="component-list-h">
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="womanOrGirl"
-        id="womanOrGirl"
-      />
-      <label class="k-checkbox-label" for="womanOrGirl">Woman or Girl</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="manOrBoy"
-        id="manOrBoy"
-      />
-      <label class="k-checkbox-label" for="manOrBoy">Man or Boy</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="agenderOrNoGender"
-        id="agenderOrNoGender"
-      />
-      <label class="k-checkbox-label" for="agenderOrNoGender"
-        >Agender or No Gender</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="feminineLearning"
-        id="feminineLearning"
-      />
-      <label class="k-checkbox-label" for="feminineLearning"
-        >Feminine leaning</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="masculineLearning"
-        id="masculineLearning"
-      />
-      <label class="k-checkbox-label" for="masculineLearning"
-        >Masculine Learning</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="nonBinary"
-        id="nonBinary"
-      />
-      <label class="k-checkbox-label" for="nonBinary">Non-binary</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="questioning"
-        id="questioning"
-      />
-      <label class="k-checkbox-label" for="questioning">Questioning</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        [(ngModel)]="isGenderChecked"
-        aria-labelledby="genderNotListedPleaseSpecify"
-        id="genderNotListedPleaseSpecify"
-      />
-      <label class="k-checkbox-label" for="genderNotListedPleaseSpecify"
-        >Not listed, please specify:</label
-      >
-      <kendo-floatinglabel text="Enter Gender" >
-        <!-- <input
-          kendoTextBox
-          [disabled]="!isGenderChecked"
-          aria-label="enter gender"
-        /> -->
-        <kendo-textbox aria-label="enter gender"  [disabled]="!isGenderChecked" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="dontKnow3"
-        id="dontKnow3"
-      />
-      <label class="k-checkbox-label" for="dontKnow3">Don't know</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="dontKnowWhatTheQuestionIs"
-        id="dontKnow4"
-      />
-      <label class="k-checkbox-label" for="dontKnow4"
-        >Don't know what this question is asking</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="dontWantToAnswer1"
-        id="dontWantToAnswer1"
-      />
-      <label class="k-checkbox-label" for="dontWantToAnswer1"
-        >Don't want to answer</label
-      >
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">Are they transgender?</h5>
-  <div
-    class="component-list-h"
-    *ngFor="let transgender of rdoTransgenders$ | async"
-  >
-    <span>
-      <div class="flex-row">
-        <div class="flex-col flex-col-8">
-          <span class="app-radiobtnwidtext-wrapper"> 
-          <input
-            type="radio"
-            kendoRadioButton
-            id="{{ transgender.id }}"
-            value="{{ transgender.value }}"
-            name="transgender"
-            (click)="onTransgenderRdoClicked($event)"
-            aria-labelledby="transgender"
-            tabindex="3"
-          />
-
-          <kendo-label
-            class="k-radio-label"
-            text="{{ transgender.value }}"
-          ></kendo-label>
-
-          <kendo-floatinglabel
-            *ngIf="transgender.id === 3"
-            text="Enter Answer"
-            
-          >
-            <!-- <input
-              kendoTextBox
-              [disabled]="isTransTextBoxDisabled"
-              aria-label="transgender"
-            /> -->
-        <kendo-textbox aria-label="transgender"  [disabled]="isTransTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-
-          </kendo-floatinglabel>
-          </span>
-        </div>
-      </div>
-    </span>
-  </div>
-  <div class="flex-row mt-1">
-    <div class="flex-col flex-col-8">
-      <kendo-floatinglabel
-        text="How do they describe their sexual orientation or sexual identity?"
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isDescribeOrientaionChecked"
-          aria-label="how do they describe their sexual orientation or sexual identity"
-        /> -->
-        <kendo-textbox aria-label="how do they describe their sexual orientation or sexual identity"  [disabled]="isDescribeOrientaionChecked" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-4 mt-3">
-      <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        aria-labelledby="sexualOrientationNotApplicable"
-        id="notApplicable"
-        kendoCheckBox
-        [(ngModel)]="isDescribeOrientaionChecked"
-      />
-      <label class="k-checkbox-label" for="notApplicable">Not Applicable</label>
-      </span>
-    </div>
-  </div>
-</section>
-<section>
-  <h5>
-    What is their sexual orientation or sexual identity? (Select all that apply)
-  </h5>
-  <div class="component-list-h">
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        aria-labelledby="sameGenderLoving"
-        id="sameGenderLoving"
-        kendoCheckBox
-      />
-      <label class="k-checkbox-label" for="sameGenderLoving"
-        >Same-gender loving</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="lesbian"
-        id="lesbian"
-      />
-      <label class="k-checkbox-label" for="lesbian">Lesbian</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input type="checkbox" kendoCheckBox aria-labelledby="gay" id="gay" />
-      <label class="k-checkbox-label" for="gay">Gay</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="bisexual"
-        id="bisexual"
-      />
-      <label class="k-checkbox-label" for="bisexual">Bisexual</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="straight"
-        id="straight"
-      />
-      <label class="k-checkbox-label" for="straight">Straight</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="pansexual"
-        id="pansexual"
-      />
-      <label class="k-checkbox-label" for="pansexual">Pansexual</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="asexual"
-        id="asexual"
-      />
-      <label class="k-checkbox-label" for="asexual">Asexual</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input type="checkbox" kendoCheckBox aria-labelledby="queer" id="queer" />
-      <label class="k-checkbox-label" for="queer">Queer</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        [(ngModel)]="isOrientationChecked"
-        aria-labelledby="notListedPleaseSpecify1"
-        id="notListedPleaseSpecify1"
-      />
-      <label class="k-checkbox-label" for="notListedPleaseSpecify1"
-        >Not listed, please specify:</label
-      >
-      <kendo-floatinglabel
-        text="Enter sexual orientation or sexual identity"
         
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="!isOrientationChecked"
-          aria-label="sexual orientation"
-        /> -->
-        <kendo-textbox aria-label="sexual orientation"  [disabled]="!isOrientationChecked" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="dontKnow5"
-        id="dontKnow5"
-      />
-      <label class="k-checkbox-label" for="dontKnow5">Don't know</label>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="dontKnowWhatTheQuestionIs"
-        id="dontKnow6"
-      />
-      <label class="k-checkbox-label" for="dontKnow6"
-        >Don't know what this question is asking</label
-      >
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="dontWantToAnswer2"
-        id="dontWantToAnswer2"
-      />
-      <label class="k-checkbox-label" for="dontWantToAnswer2"
-        >Don't want to answer</label
-      >
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">What is their sex assigned at birth? Optional</h5>
-  <div
-    class="component-list-h"
-    *ngFor="let sexAssigned of rdoSexAssigned$ | async"
-  >
-    <span>
-      <div class="flex-row">
-        <div class="flex-col flex-col-8">
-          <span class="app-radiobtnwidtext-wrapper">
-          <input
-            type="radio"
-            kendoRadioButton
-            id="{{ sexAssigned.id }}"
-            value="{{ sexAssigned.value }}"
-            name="transgender"
-            (click)="onSexAssignedRdoClicked($event)"
-            aria-labelledby="sexAssignedAtBirth"
-            tabindex="4"
-          />
-
-          <kendo-label
-            class="k-radio-label"
-            text="{{ sexAssigned.value }}"
-          ></kendo-label>
-
-          <kendo-floatinglabel
-            *ngIf="sexAssigned.id === 4"
-            text="Enter sex assigned at birth"
-            
-          >
-            <!-- <input
-              kendoTextBox
-              [disabled]="isSexAssignedTextBoxDisabled"
-              aria-label="sex assigned at birth"
-            /> -->
-        <kendo-textbox aria-label="sex assigned at birth"  [disabled]="isSexAssignedTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-
-          </kendo-floatinglabel>
-          </span>
-        </div>
+        <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
+        <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
+     
+        </kendo-floatinglabel>
       </div>
-    </span>
-  </div>
-  <div class="flex-row mt-1">
-    <div class="flex-col flex-col-10">
-      <kendo-floatinglabel
-        text="Race, ethnicity, tribal affiliation, country of origin, or ancestry"
-      >
-        <kendo-textarea
-        [fillMode]="fillMode"
-          #tareaRaceAndEthinicities
-          resizable="auto"
-          [maxlength]="tareaRaceAndEthinicityMaxLength"
-          [value]="tareaRaceAndEthinicity"
-          (valueChange)="onTareaRaceAndEthinicityChanged($event)"
-          aria-label="describe race and ethnicity"
-        >
-          <kendo-textarea-suffix class="justify-content-end" >
-            <span class="tareacounter">{{
-              tareaRaceAndEthinicityCounter
-            }}</span>
-          </kendo-textarea-suffix>
-        </kendo-textarea>
-      </kendo-floatinglabel>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h5 class="mt-3 mb-0">
-    Which options describe their Racial or Ethnic Identity? (Select all that
-    apply)
-  </h5>
-  <div class="flex-row">
-    <div class="flex-col">
-      <kendo-floatinglabel
-        text="Racial or Ethnic Identities"
-        class="k-multiselect-wrapper"
-      >
-      <span unselectable="on" class="k-button-icon k-icon k-i-arrow-s multi-dropdown-icon"   aria-label="dropdown arrow"
-      aria-hidden="true"></span>
-        <!-- <span
-          class="material-icons multi-dropdown-icon"
-          aria-label="dropdown arrow"
-          aria-hidden="true"
-        >
-          arrow_drop_down
-        </span> -->
-        <kendo-multiselect
-          [checkboxes]="true"
-          [clearButton]="false"
-          [autoClose]="false"
-         
-          [fillMode]="fillMode"
-          [data]="racialIdentityOptions"
-          [textField]="'racialName'"
-          [valueField]="'racialName'"
-          [popupSettings]="{ popupClass: popupClassMultiSelect, animate: true }"
-        >
-          <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
-            <div class="input-search">
-              <span
-                class="material-icons"
-                aria-label="search racial identity"
-                aria-hidden="true"
-                >search</span
+        <!-- [disabled]="isMiddleNameChecked" -->
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Middle Initial (Optional)">
+          <kendo-textbox   aria-label="middle initial" 
+              [fillMode]="formUiStyle.inputFillMode" 
+              formControlName="middleName"
+              [maxlength]="lengthRestrictThirty"           
               >
-              <kendo-floatinglabel text="Search">
-                <!-- <input kendoTextBox aria-label="search racial identity" /> -->
-                  <kendo-textbox aria-label="search racial identity" [fillMode]="fillMode">   </kendo-textbox>
-
-              </kendo-floatinglabel>
-            </div>
-          </ng-template>
-          <ng-template kendoMultiSelectItemTemplate let-dataItem>
-            <span class="app-checkboxwidtext-wrapper">
+          </kendo-textbox>
+        
+          <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle initial is required.</kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col flex-col-4 mt-checkbox">
+        <span class="app-checkboxwidtext-wrapper">
+        <input
+          class="adjust-attr"
+          type="checkbox"
+          aria-labelledby="middleInitial"
+          id="middleInitial"
+          name="chkmiddleName"
+          formControlName="chkmiddleName"
+          kendoCheckBox     
+          (change)="onMiddleNameChecked($event)"    
+        />
+        <label class="k-checkbox-label" for="middleInitial">No Middle Initial</label>
+        </span>
+        
+      </div>
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Last Name">
+          <kendo-textbox aria-label="last name" 
+              [fillMode]="formUiStyle.inputFillMode" 
+              formControlName="lastName"
+              [maxlength]="lengthRestrictForty">
+          </kendo-textbox>
+          <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
+          <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
+        </kendo-floatinglabel>
+      </div>
+    </div>
+   <!-- [disabled]="isInsuranceCardChecked" -->
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="First Name on Primary Insurance Card">
+          <kendo-textbox aria-label="first name on primary insurance card"  
+              [fillMode]="formUiStyle.inputFillMode"
+              formControlName="prmInsFirstName"
+              [maxlength]="lengthRestrictForty"
+              >
+          </kendo-textbox>
+        
+          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsFirstName'].valid && !this.appInfoForm.controls['prmInsFirstName'].disabled">First name on primary insurance card is required.</kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
+      <!-- [disabled]="isInsuranceCardChecked" -->
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Last Name on Primary Insurance Card">
+          <kendo-textbox aria-label="last name on primary insurance card"  
+              [fillMode]="formUiStyle.inputFillMode" 
+              formControlName="prmInsLastName"
+              [maxlength]="lengthRestrictForty"
+              >   
+          </kendo-textbox>
+        
+          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled" >Last name on primary insurance card is required.</kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col flex-col-4 mt-checkbox">
+        <span class="app-checkboxwidtext-wrapper">
+        <input
+          type="checkbox"
+          class="adjust-attr"
+          name="prmInsNotApplicable"
+          id="cardNotApplicable"
+          aria-labelledby="insuranceCardNotApplicable"
+          kendoCheckBox
+          formControlName="prmInsNotApplicable"
+          (change)="onInsuranceCardChecked($event)"
+        />
+        <label class="k-checkbox-label" for="cardNotApplicable"
+          >Not Applicable</label
+        >
+        </span>
+      </div>
+    </div>
+    <div class="flex-row">
+      <!-- [disabled]="isOfficialIdChecked" -->
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="First Name on Official ID">
+          <kendo-textbox aria-label="first name on official id"  
+            [fillMode]="formUiStyle.inputFillMode" 
+            formControlName="officialIdFirstName"
+            [maxlength]="lengthRestrictForty"
+            >   
+          </kendo-textbox>
+      
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First name on official id is required.</kendo-formerror>
+      </div>
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Last Name on Official ID">
+          <!-- [disabled]="isOfficialIdChecked" -->
+          <kendo-textbox aria-label="last name on official id"  
+            [fillMode]="formUiStyle.inputFillMode" 
+            formControlName="officialIdLastName"
+            [maxlength]="lengthRestrictForty"
+            >   
+          </kendo-textbox>
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last name on official id is required.</kendo-formerror>
+      </div>
+      <div class="flex-col flex-col-4 mt-checkbox">
+         <!-- (change)="onOfficialIdChecked($event)" -->
+        <span class="app-checkboxwidtext-wrapper">
+        <input
+          type="checkbox"
+          class="adjust-attr"
+          id="idNotApplicable"
+          name="officialIdsNotApplicable"
+          aria-labelledby="officialIdNotApplicable"
+          kendoCheckBox       
+          formControlName="officialIdsNotApplicable"
+          (change)="onOfficialIdChecked($event)"
+         
+        />
+        <label class="k-checkbox-label" for="idNotApplicable"
+          >Not Applicable</label
+        >
+        </span>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Date of Birth">
+          <kendo-datepicker  
+          [fillMode]="formUiStyle.dateInputFillMode"
+          [max]="currentDate"
+          formControlName="dateOfBirth"
+          format="MM-dd-yyyy"
+          
+          ></kendo-datepicker>
+      
+        </kendo-floatinglabel>
+      </div>
+    </div>
+   
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Social Security Number">
+          <kendo-textbox aria-label="social security number"  
+            [fillMode]="formUiStyle.inputFillMode" 
+            formControlName="ssn"
+            [maxlength]="maxLengthSsn"
+            [value]="appInfoForm.controls['ssn'].value | ssn"
+            >   </kendo-textbox>
+  
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
+      </div>
+      <div class="flex-col flex-col-4 mt-checkbox">
+        <span class="app-checkboxwidtext-wrapper">
+        <input
+          type="checkbox"
+          class="adjust-attr"
+          id="ssnNotApplicable"
+          name="ssnNotApplicable"       
+          aria-labelledby="ssnNotApplicable"
+          kendoCheckBox
+          formControlName="ssnNotApplicable"
+          (change)="onSsnNotApplicableChecked($event)"
+        />
+        <label class="k-checkbox-label" for="ssnNotApplicable"
+          >Not Applicable</label 
+        >
+      </span>
+      </div>
+    </div>
+  
+  </section>
+   
+  <section class="mb-3">
+    <h5>Register to vote ?</h5>
+    <div class="flex-row gap-m">
+      <div class="flex-col">
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper">
             <input
-              type="checkbox"
-              kendoCheckBox
-              aria-labelledby="racialName"
-              id="racialName"
+              type="radio"
+              kendoRadioButton
+              name="registerToVote"
+              value="Y"
+              aria-labelledby="registerToVoteYes"
+              id="register"
+              tabindex="1"
+              formControlName="registerToVote"  
+              (change)="registerToVoteSelected($event)"          
             />
-            <label class="k-checkbox-label" for="racialName">{{
-              dataItem.racialName
-            }}</label>
-            </span>
-          </ng-template>
-        </kendo-multiselect>
-      </kendo-floatinglabel>
+            <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input
+              type="radio"
+              kendoRadioButton
+              value="N"
+              name="registerToVote"
+              aria-labelledby="registerToVoteNo"
+              id="register1"
+              tabindex="2"
+              formControlName="registerToVote"
+              (change)="registerToVoteSelected($event)"   
+            />
+            <kendo-label
+              class="k-radio-label"
+              text="No"
+              for="register1"
+            ></kendo-label>
+            <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is required.</kendo-formerror>
+          </span>
+          <div class="voterreg-info d-flex" *ngIf="isVisible">
+            <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>This application will  send voter registeration collaterial via letter or email once the applicaiton is saved  with the necessary contact information</p>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
-<section>
-  <h5 class="mb-0">
-    If they selected multiple, is there one they think of as their primary
-    racial or ethnic identity?
-  </h5>
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Primary identity">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlPrimaryIdentities$ | async">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
+  </section>
+  <div></div>
+  <section  >
+    <h5>What pronouns do they use? (check all that apply)</h5>
+    <div class="component-list-h"  >
+      
+      <case-management-client-edit-view-pronoun 
+              [appInfoForm]="appInfoForm"
+              (PronounChanges)="setChangedPronoun($event)"
+              [checkBoxValid] ="checkBoxValid"
+              [textboxDisable]="textboxDisable">
+      </case-management-client-edit-view-pronoun>  
+      <hr />
+  
+      <!-- <common-checkbox-list>
+  
+      </common-checkbox-list> -->   
+      
+    </div>  
+  </section>
+  
+  
+  <case-management-client-edit-view-gender [appInfoForm]="appInfoForm"></case-management-client-edit-view-gender>
+  
+  <case-management-client-edit-view-transgender [appInfoForm]="appInfoForm"></case-management-client-edit-view-transgender>
+  
+  <case-management-client-edit-view-sexual-identity [appInfoForm]="appInfoForm"></case-management-client-edit-view-sexual-identity>
+  
+  <case-management-client-edit-view-sex-at-birth [appInfoForm]="appInfoForm"></case-management-client-edit-view-sex-at-birth>
+  
+  <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm" [raceAndEthnicityPrimaryData]="raceAndEthnicityPrimaryData" [raceAndEthnicityPrimaryNotListed]="raceAndEthnicityPrimaryNotListed" (RaceAndEthnicityData)="setRaceAndEthnicityData($event)" (RaceAndEthnicityChange)="raceAndEthnicityChange($event)"></case-management-client-edit-view-race-and-ethnicity>
+  <section>
+    <h5>
+      Needs materials in alternate format (Braille, large print, audio recordings,
+      etc.)?
+    </h5>
+    <div class="component-list-h">
+  
+  
+      <common-optionbutton-list
+            [appInfoForm]="appInfoForm"
+            [rdoInputlov]="rdoMaterials$"
+            [dropdownInutLov]="materialsyeslov$"
+            [optionButtonValid]="materialOptionButtonValid"
+            [textFieldDisable] ="yesMaterialDisable"
+            [OptionControlerName] ="'materialInAlternateFormatCode'"
+            [textControlerName]="'materialInAlternateFormatDesc'"
+            [textFieldType]="'dropDown'"
+            [textFieldAfter]="'YES'"
+            [textPlaceholderText]="'Select formats'"
+            [textValidationMessage]="'Material is required.'">    
+      </common-optionbutton-list>   
     </div>
-  </div>
-</section>
-<section>
-  <h5>
-    Needs materials in alternate format (Braille, large print, audio recordings,
-    etc.)?
-  </h5>
-  <div class="component-list-h">
-    
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let materials of rdoMaterials$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ materials.id }}"
-        value="{{ materials.value }}"
-        name="rdoMaterialFormat"
-        (click)="onMaterialsRdoClicked($event)"
-        aria-labelledby="needsMaterials"
-        tabindex="5"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ materials.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="materials.id === 1"
-        text="Enter formats"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isMaterialsTextBoxDisabled"
-          aria-label="enter formats"
-        /> -->
-        <kendo-textbox aria-label="enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </span>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="needsPrintedMaterialInLargerFont"
-        id="needsPrintedMaterial"
-      />
-      <label class="k-checkbox-label" for="needsPrintedMaterial"
-        >Client needs printed material in larger font</label
-      >
-    </span>
-  </div>
-
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Spoken language">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlSpokenLanguages$ | async">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
+  
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">   
+        <kendo-floatinglabel text="Spoken language">
+          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+           [data]="spokenWrittenLanguagelov$ | async"
+            textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+            formControlName="spokenLanguage">
+        </kendo-dropdownlist>  
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken language is required.</kendo-formerror>
+      </div>
     </div>
-  </div>
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="Written language">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlWrittenLanguages$ | async">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">    
+        <kendo-floatinglabel text="Written language">
+          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+           [data]="spokenWrittenLanguagelov$ | async"
+          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+          formControlName="writtenLanguage">
+        </kendo-dropdownlist>  
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written language is required.</kendo-formerror>
+      </div>
     </div>
-  </div>
-  <div class="flex-row">
-    <div class="flex-col flex-col-4">
-      <kendo-floatinglabel text="English proficiency">
-        <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlEnglishProficiencies$ | async">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">    
+        <kendo-floatinglabel text="English proficiency">
+          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
+           [data]="englishProficiencylov$ | async"
+          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+          formControlName="englishProficiency">
+        </kendo-dropdownlist>  
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English proficiency is required.</kendo-formerror>
+      </div>
     </div>
-  </div>
-</section>
-<section>
-  <h5>Needs interpreter?</h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let interpreter of rdoInterpreters$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ interpreter.id }}"
-        value="{{ interpreter.value }}"
-        name="rdoInterpreter"
-        (click)="onInterpreterRdoClicked($event)"
-        aria-labelledby="needsInterpreter"
-        tabindex="6"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ interpreter.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="interpreter.id === 1"
-        text="Type of interpreter"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isInterpreterTextBoxDisabled"
-          aria-label="type of interpreter"
-        /> -->
-        <kendo-textbox aria-label="type of interpreter" [disabled]="isInterpreterTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">Deaf or serious difficulty hearing?</h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let deaf of rdoDeafs$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ deaf.id }}"
-        value="{{ deaf.value }}"
-        name="rdoHearingDifficulty"
-        (click)="onDeafRdoClicked($event)"
-        aria-labelledby="difficultyInHearing"
-        tabindex="7"
-      />
-      <kendo-label class="k-radio-label" text="{{ deaf.value }}"></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="deaf.id === 1"
-        text="Age this condition began"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isDeafTextBoxDisabled"
-          aria-label="age this condition began"
-        /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isDeafTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">
-    Blind or serious difficulty seeing, even when wearing glasses?
-  </h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let blind of rdoBlinds$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ blind.id }}"
-        value="{{ blind.value }}"
-        name="rdoSeeingDifficulty"
-        (click)="onBlindRdoClicked($event)"
-        aria-labelledby="difficultyInSeeing"
-        tabindex="8"
-      />
-      <kendo-label class="k-radio-label" text="{{ blind.value }}"></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="blind.id === 1"
-        text="Age this condition began"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isBlindTextBoxDisabled"
-          aria-label="age this condition began"
-        /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isBlindTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">Any limiting physical, mental, or emotional conditions?</h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
-        id="conditions"
-        tabindex="9"
-      />
-      <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-    </span>
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
-        tabindex="10"
-        id="conditions1"
-      />
-      <kendo-label class="k-radio-label" text="No"></kendo-label>
-    </span>
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
-        id="conditions2"
-        tabindex="11"
-      />
-      <kendo-label class="k-radio-label" text="Don't know"></kendo-label>
-    </span>
-    <span class="app-radiobtnwidtext-wrapper">
-      <input
-        type="radio"
-        kendoRadioButton
-        name="rdoEmotionalConditions"
-        aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer"
-        tabindex="12"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="Don’t want to answer"
-      ></kendo-label>
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">Serious difficulty walking or climbing stairs?</h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let walking of rdoWalked$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ walking.id }}"
-        value="{{ walking.value }}"
-        name="rdoClimbingStairs"
-        (click)="onWalkingRdoClicked($event)"
-        aria-labelledby="difficultyInWalking"
-        tabindex="13"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ walking.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="walking.id === 1"
-        text="Age this condition began"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isWalkingTextBoxDisabled"
-          aria-label="age this condition began"
-        /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isWalkingTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">Difficulty dressing or bathing?</h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let dressingorbathing of rdoDressedorBathed$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ dressingorbathing.id }}"
-        value="{{ dressingorbathing.value }}"
-        name="rdoDifficultyDressing"
-        (click)="onDressingorBathingRdoClicked($event)"
-        aria-labelledby="difficultyInDressing"
-        tabindex="14"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ dressingorbathing.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="dressingorbathing.id === 1"
-        text="Age this condition began"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isDressingorBathingTextBoxDisabled"
-          aria-label="age this condition began"
-        /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isDressingorBathingTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">
-    Serious difficulty concentrating, remembering, or making decisions due to a
-    physical, mental, or emotional condition?
-  </h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let concentration of rdoConcentration$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ concentration.id }}"
-        value="{{ concentration.value }}"
-        name="rdoEmotionalCondition"
-        (click)="onConcentrationRdoClicked($event)"
-        aria-labelledby="difficultyInConcentrating"
-        tabindex="15"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ concentration.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="concentration.id === 1"
-        text="Age this condition began"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isConcentrationTextBoxDisabled"
-          aria-label="age this condition began"
-        /> -->
-
-        <kendo-textbox aria-label="age this condition began" [disabled]="isConcentrationTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div>
-</section>
-<section>
-  <h5 class="mt-3">
-    Serious difficulty doing errands alone due to a physical, mental, or
-    emotional condition?
-  </h5>
-  <div class="component-list-h">
-    <span class="app-radiobtnwidtext-wrapper" *ngFor="let errands of rdoErrands$ | async">
-      <input
-        type="radio"
-        kendoRadioButton
-        id="{{ errands.id }}"
-        value="{{ errands.value }}"
-        name="rdoDifficultyEmotional"
-        (click)="onErrandsRdoClicked($event)"
-        aria-labelledby="difficultyInDoingErrands"
-        tabindex="16"
-      />
-      <kendo-label
-        class="k-radio-label"
-        text="{{ errands.value }}"
-      ></kendo-label>
-      <kendo-floatinglabel
-        *ngIf="errands.id === 1"
-        text="Age this condition began"
-        
-      >
-        <!-- <input
-          kendoTextBox
-          [disabled]="isErrandsTextBoxDisabled"
-          aria-label="age this condition began"
-        /> -->
-        <kendo-textbox aria-label="age this condition began" [disabled]="isErrandsTextBoxDisabled" [fillMode]="fillMode">   </kendo-textbox>
-
-      </kendo-floatinglabel>
-    </span>
-  </div>
-</section>
+  </section>
+  
+  
+  <section>
+  
+    <h5>Needs interpreter?</h5>
+    <common-optionbutton-list
+          [appInfoForm]="appInfoForm"
+          [rdoInputlov]="rdoMaterials$"
+          [optionButtonValid]="interpreterOptionButtonValid"
+          [textFieldDisable] ="interpreterTypeInputDisable"
+          [OptionControlerName] ="'interpreterCode'"
+          [textControlerName]="'interpreterType'"
+          [textFieldType]="'textField'"
+          [textFieldAfter]="'YES'"
+          [textPlaceholderText]="'Type of interpreter'"
+          [textValidationMessage]="'Type is required.'"
+          [textFieldMaxLimit]="50">
+    </common-optionbutton-list>
+  </section>
+  <section>
+    <h5 class="mt-3">Deaf or serious difficulty hearing?</h5>
+      <common-optionbutton-list
+            [appInfoForm]="appInfoForm"
+            [rdoInputlov]="rdoMaterials$"
+            [optionButtonValid]="deafOrHearingOptionButtonValid"
+            [textFieldDisable] ="startAgeDeafOrHearingInputDisable"
+            [OptionControlerName] ="'deafOrHearingCode'"
+            [textControlerName]="'startAgeDeafOrHearing'"
+            [textFieldType]="'numericField'"
+            [textFieldAfter]="'YES'"
+            [textPlaceholderText]="'Age this condition began'"
+            [textValidationMessage]="'Age is required.'"
+            [textFieldMaxLimit]="9999">
+      </common-optionbutton-list> 
+  </section>
+  <section>
+    <h5 class="mt-3">
+      Blind or serious difficulty seeing, even when wearing glasses?
+    </h5>
+    <common-optionbutton-list
+        [appInfoForm]="appInfoForm"
+        [rdoInputlov]="rdoMaterials$"
+        [optionButtonValid]="blindOrSeriousDiffOptionButtonValid"
+        [textFieldDisable] ="startAgeBlindSeeingInputDisable"
+        [OptionControlerName] ="'blindSeeingCode'"
+        [textControlerName]="'startAgeBlindSeeing'"
+        [textFieldType]="'numericField'"
+        [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age is required.'"
+        [textFieldMaxLimit]="9999">
+    </common-optionbutton-list>    
+  </section>
+  <section>
+    <h5 class="mt-3">Any limiting physical, mental, or emotional conditions?</h5>
+    <common-optionbutton-list
+        [appInfoForm]="appInfoForm"
+        [rdoInputlov]="rdoMaterials$"
+        [optionButtonValid]="physicalMentaDiffOptionButtonValid"
+        [OptionControlerName] ="'limitingConditionCode'">
+    </common-optionbutton-list>  
+  </section>
+  <section>
+    <h5 class="mt-3">Serious difficulty walking or climbing stairs?</h5>
+    <common-optionbutton-list
+        [appInfoForm]="appInfoForm"
+        [rdoInputlov]="rdoMaterials$"
+        [optionButtonValid]="walkingOrClimbingOptionButtonValid"
+        [textFieldDisable] ="startAgeWalkingClimbingDifficultyInputDisable"
+        [OptionControlerName] ="'walkingClimbingDifficultyCode'"
+        [textControlerName]="'startAgeWalkingClimbingDifficulty'"
+        [textFieldType]="'numericField'"
+        [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age is required.'"
+        [textFieldMaxLimit]="9999">
+    </common-optionbutton-list>   
+  </section>
+  <section>
+    <h5 class="mt-3">Difficulty dressing or bathing?</h5>
+    <common-optionbutton-list
+        [appInfoForm]="appInfoForm"
+        [rdoInputlov]="rdoMaterials$"
+        [optionButtonValid]="dressingOrBathOptionButtonValid"
+        [textFieldDisable] ="startAgeDressingBathingDifficultyInputDisable"
+        [OptionControlerName] ="'dressingBathingDifficultyCode'"
+        [textControlerName]="'startAgeDressingBathingDifficulty'"
+        [textFieldType]="'numericField'"
+        [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age is required.'"
+        [textFieldMaxLimit]="9999">
+    </common-optionbutton-list>  
+  
+  </section>
+  <section>
+    <h5 class="mt-3">
+      Serious difficulty concentrating, remembering, or making decisions due to a
+      physical, mental, or emotional condition?
+    </h5>
+    <common-optionbutton-list
+        [appInfoForm]="appInfoForm"
+        [rdoInputlov]="rdoMaterials$"
+        [optionButtonValid]="concentrateAndRememberDiffOptionButtonValid"
+        [textFieldDisable] ="startAgeConcentratingDifficultyInputDisable"
+        [OptionControlerName] ="'concentratingDifficultyCode'"
+        [textControlerName]="'startAgeConcentratingDifficulty'"
+        [textFieldType]="'numericField'"
+        [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age is required.'"
+        [textFieldMaxLimit]="9999">
+    </common-optionbutton-list>
+  </section>
+  <section>
+    <h5 class="mt-3">
+      Serious difficulty doing errands alone due to a physical, mental, or
+      emotional condition?
+    </h5>
+    <common-optionbutton-list
+        [appInfoForm]="appInfoForm"
+        [rdoInputlov]="rdoMaterials$"
+        [optionButtonValid]="seriesDiffOptionButtonValid"
+        [textFieldDisable] ="startAgeErrandsDifficultyInputDisable"
+        [OptionControlerName] ="'errandsDifficultyCode'"
+        [textControlerName]="'startAgeErrandsDifficulty'"
+        [textFieldType]="'numericField'"
+        [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age is required.'"
+        [textFieldMaxLimit]="9999">
+    </common-optionbutton-list>
+  
+  </section>
+  
+  
+  </form>

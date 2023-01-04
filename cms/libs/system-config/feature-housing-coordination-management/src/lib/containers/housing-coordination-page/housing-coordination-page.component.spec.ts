@@ -11,9 +11,7 @@ describe('HousingCoordinationPageComponent', () => {
       declarations: [ HousingCoordinationPageComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(HousingCoordinationPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

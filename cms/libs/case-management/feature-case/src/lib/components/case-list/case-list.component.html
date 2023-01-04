@@ -2,7 +2,7 @@
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel text="All Columns">
-      <kendo-dropdownlist [fillMode]="fillMode" [data]="ddlGridColumns$ | async">
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlGridColumns$ | async">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
@@ -10,7 +10,7 @@
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
       <!-- <input kendoTextBox /> -->
-      <kendo-textbox aria-label="Search" rounded="medium" [fillMode]="fillMode"> </kendo-textbox>
+      <kendo-textbox aria-label="Search" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
@@ -26,7 +26,7 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
+  <kendo-grid [pageSize]="5" [pageable]="true"  [loading]="isGridLoaderShow" [sortable]="true" [groupable]="false" [reorderable]="true"
     [resizable]="true" [columnMenu]="{ filter: true }" [data]="cases">
     <ng-template kendoGridColumnMenuTemplate let-service="service">
       <span class="k-icon k-i-x" (click)="service.close()"
@@ -40,7 +40,7 @@
 
 
     </ng-template>
-    <kendo-grid-column field="ClientName" title="Client Name" [width]="130">
+    <kendo-grid-column field="ClientName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
           routerLink="case360/{{ dataItem.ID }}">
@@ -48,52 +48,52 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Pronouns" title="Pronouns" [width]="110">
+    <kendo-grid-column field="Pronouns" title="Pronouns" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="ID" title="ID" [width]="70"></kendo-grid-column>
     <kendo-grid-column field="URN" title="URN" [width]="70"></kendo-grid-column>
-    <kendo-grid-column field="PreferredContact" title="Preferred Contact" [width]="120"></kendo-grid-column>
+    <kendo-grid-column field="PreferredContact" title="Preferred Contact" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="Status" title="Status" [width]="80"></kendo-grid-column>
     <kendo-grid-column field="Group" title="Group" [width]="80"></kendo-grid-column>
     <kendo-grid-column field="EligibilityStartDate" title="Eligibility Start Date" [width]="100"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-    <kendo-grid-column field="EligibilityEndDate" title="Eligibility End Date" [width]="100"
+    <kendo-grid-column field="EligibilityEndDate" title="Eligibility End Date" [width]="110"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-    <kendo-grid-column field="EligibilityEndDateOne" title="Eligibility End Date" [width]="100"
+    <kendo-grid-column field="EligibilityEndDateOne" title="Eligibility End Date" [width]="110"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-    <kendo-grid-column field="EligibilityEndDateTwo" title="Eligibility End Date" [width]="100"
+    <kendo-grid-column field="EligibilityEndDateTwo" title="Eligibility End Date" [width]="110"
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
+
+      
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
-      <div class="grid-custom-paginationtemplates d-flex">
-
-        <div class="d-flex align-items-center">
-          <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
+      <div class="grid-custom-paginationtemplates d-flex"> 
+        <div class="d-flex align-items-center"> 
           <label class="mr-1">Rows Per Page</label> 
-          <kendo-dropdownlist fillMode="outline" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-            [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
 
         </div>
-        <div class="d-flex">
-
-          <kendo-pager-input></kendo-pager-input>
-
-          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-
+        <div class="d-flex"> 
+          <kendo-pager-input></kendo-pager-input> 
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons> 
           <kendo-pager-next-buttons></kendo-pager-next-buttons>
-        </div>
-
+        </div> 
       </div>
     </ng-template>
-    <!-- <ng-template kendoPagerTemplate   let-totalPages="totalPages" let-currentPage="currentPage">
-      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-      <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
-      <kendo-pager-next-buttons></kendo-pager-next-buttons>
-      <kendo-pager-info></kendo-pager-info>
-      Current page: {{currentPage}} - {{totalPages}}
-    
-   </ng-template> -->
+
+     <ng-template kendoGridLoadingTemplate>
+       <common-grid-loader-component></common-grid-loader-component>
+      </ng-template>
+
+
+      <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+      </ng-template>
+ 
   </kendo-grid>
 </div>

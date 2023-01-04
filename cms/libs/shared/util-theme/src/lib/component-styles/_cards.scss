@@ -50,6 +50,10 @@
   }
 }
 /* Card in popover */
+.use-profile-card-wrapper{
+  max-width: 320px;
+  min-width: 280px;
+}
 .k-popover {
   border: 1px solid $theme-border;
   background: $white;
@@ -67,6 +71,9 @@
         opacity: 0.6;
         margin-right: 10px;
         font-size: 20px;
+      }
+      a{
+        word-break: break-all;
       }
     }
   }
@@ -90,6 +97,9 @@
   }
   .k-popover-actions {
     margin-top: $size-0;
+  }
+  .app-card-bottom-buttons{
+    padding: 0px 0px $size-xlg 0px;
   }
 }
 
@@ -142,6 +152,16 @@
       display: flex;
       justify-content: flex-end;
       gap: $size-xx;
+    }
+
+  }
+}
+
+.card-list{
+  .card-list_items{
+    .k-button-solid-primary.k-icon-button{
+      box-shadow: none;
+      max-height: 40px;
     }
   }
 }

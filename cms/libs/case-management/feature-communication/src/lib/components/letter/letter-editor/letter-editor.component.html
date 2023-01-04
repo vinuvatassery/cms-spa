@@ -33,7 +33,7 @@
             text="Search"
             class="medium-input-form sms-variable-search_input"
           >
-          <kendo-textbox aria-label="input a variable"  fillMode="outline">   </kendo-textbox>
+          <kendo-textbox aria-label="input a variable"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
             <!-- <input kendoTextBox aria-label="input a variable" /> -->
           </kendo-floatinglabel>
         </div>
@@ -103,7 +103,9 @@
 
       <kendo-toolbar-dropdownlist
         kendoEditorFontSize
+     
         aria-label="font size"
+        
       ></kendo-toolbar-dropdownlist>
 
       <kendo-toolbar-buttongroup>
@@ -163,6 +165,7 @@
       <ng-template kendoPanelBarContent>
         <div class="attachment-item-list" kendoTooltip>
           <a class="attachment-item_name">attachment-doc.pdf</a>
+          <div>
           <span class="attachment-item_size">(2MB)</span>
           <button
             kendoButton
@@ -178,9 +181,12 @@
             >
           </button>
         </div>
+        </div>
         <div class="attachment-item-list" kendoTooltip>
           <a class="attachment-item_name">attachment-doc-01.pdf</a>
+          <div>
           <span class="attachment-item_size">(1.5MB)</span>
+          
           <button
             kendoButton
             class="attachment-item_remove k-icon-button small-i-btn"
@@ -194,9 +200,11 @@
               >close</span
             >
           </button>
+          </div>
         </div>
         <div class="attachment-item-list" kendoTooltip>
           <a class="attachment-item_name">attachment-doc-new.pdf</a>
+          <div>
           <span class="attachment-item_size">(1MB)</span>
           <button
             kendoButton
@@ -211,6 +219,7 @@
               >close</span
             >
           </button>
+          </div>
         </div>
       </ng-template>
     </kendo-panelbar-item>

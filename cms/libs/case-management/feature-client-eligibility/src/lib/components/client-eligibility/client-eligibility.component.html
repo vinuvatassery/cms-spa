@@ -1,4 +1,4 @@
-<section class="app-l-mainTittle" kendoTooltip>
+<section class="app-l-mainTittle case-reviewsection" kendoTooltip>
   <h2>Application Review - Anthony Hopkins</h2>
   <p class="mt-1 mb-3">
     Please indicate whether the applicant meets the eligibility criteria below.
@@ -49,6 +49,7 @@
             kendoButton
             aria-label="proof of address yes"
             [toggleable]="true"
+            
           >
             Yes
           </button>
@@ -264,7 +265,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Exception Note">
           <kendo-textarea
-          fillMode="outline"
+          [fillMode]="formUiStyle.inputFillMode"
             aria-label="exception note description"
             name="Exception Note"
             [rows]="5"

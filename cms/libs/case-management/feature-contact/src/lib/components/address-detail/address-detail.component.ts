@@ -7,11 +7,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { ContactFacade } from '@cms/case-management/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'case-management-address-detail',
@@ -22,9 +18,7 @@ import {
 export class AddressDetailComponent implements OnInit {
  
   public currentDate = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
  
   /** Input properties**/
   @Input() isEditValue!: boolean;
@@ -56,7 +50,7 @@ export class AddressDetailComponent implements OnInit {
 
   /** Private methods **/
   private loadDdlCountries() {
-    this.contactFacade.loadDdlCountries();
+    //this.contactFacade.loadDdlCountries();
   }
 
   private loadDdlAddressType() {

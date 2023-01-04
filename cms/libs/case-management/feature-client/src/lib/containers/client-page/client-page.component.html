@@ -1,7 +1,9 @@
 <!-- Main Title Section -->
+
 <section class="app-l-mainTittle">
-  <h2>New Application - Anthony Hopkins</h2>
-  <p class="mt-1 mb-2">
+
+  <h2>New Application - {{applicantName}}</h2>
+  <p class="mt-2 mb-2">
     Please complete all fields for this application, then click “Start” to go
     through the eligibility checklist. All items must be addressed before
     starting the application review.
@@ -11,6 +13,14 @@
 <div class="client-data-block">
   <h3>Applicant Info</h3>
   <div class="block-section">
-    <case-management-client-edit-view></case-management-client-edit-view>
+    <case-management-client-edit-view
+    (AppInfoChanged)="updatePageCount($event)"
+    (AdjustAttrChanged)="updateAdjustmentAttrCount($event)"
+    (ValidateFields)="setAppInfoForm($event)"
+    (PronounChanges)="setChangedPronoun($event)"
+    (ApplicantNameChange)="setApplicantName($event)"
+    ></case-management-client-edit-view>
   </div>
+  <!-- <common-notification-snack-bar [data$]="clientFacadesnackbar$"> </common-notification-snack-bar> -->
 </div>
+

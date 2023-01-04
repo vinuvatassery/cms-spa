@@ -1,14 +1,12 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade  } from '@cms/case-management/domain';
+
+import {  LovFacade } from '@cms/system-config/domain';
 /** facades **/
 import { TodoFacade } from '@cms/productivity-tools/domain';
-import {
-  DateInputSize,
-  DateInputRounded,
-  DateInputFillMode,
-} from '@progress/kendo-angular-dateinputs';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'productivity-tools-todo-detail',
@@ -23,18 +21,18 @@ export class TodoDetailComponent implements OnInit {
   search$ = this.todoFacade.search$;
   tareaCustomTodoMaxLength = 100;
   tareaCustomTodoCharactersCount!: number;
-  ddlCaseOrigins$ = this.caseFacade.ddlCaseOrigins$;
+  ddlCaseOrigins$ = this.lovFacade.lovs$;
   tareaCustomTodoCounter!: string;
   tareaCustomTodoDescription = '';
  
 
   /** Constructor **/
-  constructor(private readonly todoFacade: TodoFacade,private readonly caseFacade: CaseFacade,) {}
+  constructor(private readonly todoFacade: TodoFacade,
+    private readonly caseFacade: CaseFacade,
+    private readonly lovFacade: LovFacade) {}
   
   public date = new Date();
-  public size: DateInputSize = 'medium';
-  public rounded: DateInputRounded = 'full';
-  public fillMode: DateInputFillMode = 'outline';
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadTodosearch();

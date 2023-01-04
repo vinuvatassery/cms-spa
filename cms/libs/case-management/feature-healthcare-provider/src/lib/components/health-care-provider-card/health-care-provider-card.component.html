@@ -1,0 +1,60 @@
+ 
+<div class="app-popover-header use-profile-card-wrapper">
+ 
+    <div class="app-c-avatar avatar-lg">     
+      <span class="profile-text-avatar"></span>
+    </div>
+    <div *ngIf="gridHoverDataItem.isClinic===false">
+      <h5>{{gridHoverDataItem.providerName}} <span class="text-muted"></span></h5>
+      <p></p>
+    </div>
+
+    <div *ngIf="gridHoverDataItem.isClinic===true">
+      <h5>{{gridHoverDataItem.clinicName}} <span class="text-muted"></span></h5>
+      <p></p>
+    </div>
+  </div>
+  <div class="app-popover-body">
+    <h5 class="app-card-heading">Name on Check</h5>
+    <p class="app-card-details">
+      {{gridHoverDataItem.checkName}}
+     
+    </p>
+    <h5 class="app-card-heading">Contact</h5>
+    <p class="app-card-details">
+      <span class="material-icons" aria-label="email" aria-hidden="true"
+        >email</span
+      >
+      <a href="mailto:aj.com"> {{gridHoverDataItem.emailAddress}}</a>
+    </p>
+    <p class="app-card-details">
+      <span class="material-icons" aria-label="phone" aria-hidden="true"
+        >phone</span
+      >
+      {{gridHoverDataItem.primaryPhone}}
+    </p>
+    <p class="app-card-details">
+      <span class="material-icons" aria-label="fax" aria-hidden="true"
+        >print</span
+      >
+      {{gridHoverDataItem.fax}}
+    </p>
+    <div class="app-card-details align-items-fstart">
+      <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span >
+      <div> 
+        <p>  {{gridHoverDataItem.address1}} </p>
+
+        <p> {{gridHoverDataItem.address2}} </p>
+        <p> {{gridHoverDataItem.city+' '+gridHoverDataItem.stateCode+' '+gridHoverDataItem.zip}} </p>
+      </div> 
+
+    </div>
+    <h5 class="app-card-heading app-cardcommenthead">Comments</h5>
+    <p class="app-card-details">       
+       {{gridHoverDataItem.comment}} 
+    </p>
+   <div class="app-card-bottom-buttons">
+    <a   fillMode ="clear" kendoButton   themeColor="primary" href="mailto:gridHoverDataItem.emailAddress"> Send Email</a>
+   </div>
+  </div>
+  

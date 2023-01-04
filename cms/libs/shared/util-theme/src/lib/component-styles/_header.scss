@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     img {
-      max-height: 40px;
+      max-height: 35px;
     }
   }
   .global-search {
@@ -25,6 +25,29 @@
     @media (max-width: $breakpoint-xlg) {
       min-width: 300px;
       max-width: 300px;
+    }
+  }
+  .headermenu-leftmostsection{
+    display: flex;
+    gap: 10px;
+    .mobile-menu-icon{
+      background: transparent;
+      border: 0px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      align-items: center;
+      justify-content: center;
+      transition: .2s;
+      display: none;
+      .material-icons{
+        color: $app-primary;
+      }
+      &:hover{
+        background:material-color($hive-primary-palette, 50) ;
+      }
     }
   }
 }
@@ -56,9 +79,10 @@
     .k-button.header-buttons {
       color: $app-primary-lighten;
       transition: ease-in all 0.3s;
+      border-radius: $border-radius-md;
       .k-icon,
       .material-icons {
-        color: $app-primary-lighten;
+        color: $black-3;
         font-size: $font-size-xx;
       }
       &:hover {
@@ -83,6 +107,7 @@
         font-family: $font-family-light;
         font-size: $font-size-m;
         z-index: 2;
+        line-height: 0px;
       }
     }
     .notification-list {
@@ -104,10 +129,28 @@
         border-radius: $border-radius-xlg;
       }
     }
+
+    .topright-profile {
+      > .k-button{
+        padding: 0px;
+        border-radius: 50%;
+      }
+      .k-animation-container-shown{
+        top: 70.5px;
+      }
+      .k-menu-group-md .k-menu-link {
+        padding: 0;
+        padding-inline-end: 0;
+    }
+    .k-menu-group, .k-menu-item.k-focus{
+      background: $white;
+    }
+    }
   }
 }
 .notification-inner {
-  width: 400px;
+  width: 100%;
+  max-width: 100%;
 }
 .user-setting-dropdown {
   min-width: 250px;
@@ -205,7 +248,9 @@
 }
 /*Notifications*/
 .card-list {
-  min-width: 400px;
+width: 100%;
+min-width: 10px;
+max-width: 400px;
   padding: $size-xx 0;
   padding-bottom: $size-0;
   max-height: 65vh;
@@ -240,6 +285,9 @@
     flex-direction: column;
     gap: $size-m;
     width: 100%;
+    .text-muted{
+      color: $inputlabelolor;
+    }
   }
   .k-dropdown-button {
     max-height: 30px;
@@ -250,6 +298,12 @@
     }
   }
 }
+
+.app-c-tab{
+  .card-list{
+    max-width: 100%;
+  }
+}
 .notification-footer {
   display: flex;
   align-items: center;
@@ -257,6 +311,9 @@
   padding: $size-xx;
   .material-icons {
     font-size: $font-size-xx;
+  }
+  .k-button{
+    letter-spacing: 0px;
   }
   .k-button {
     + .k-button {

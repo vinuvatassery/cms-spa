@@ -5,7 +5,7 @@
         >search</span
       >
       <kendo-floatinglabel text="Search" class="pb-0">
-        <kendo-textbox fillMode="outline" >
+        <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
@@ -91,19 +91,51 @@
   >
     EID Lifetime Period
   </li>
-  <li class="kendo-list-items">Housing Actual Levels</li>
-  <li class="kendo-list-items">Income Inclusions & Exclusions</li>
-  <li class="kendo-list-items">Region Assignment</li>
-  <li class="kendo-list-items">PS/FMR/ZIP</li>
-  <li class="kendo-list-items">Service Providers</li>
+  <li class="kendo-list-items"
+  [routerLinkActive]="['active-item']"
+    routerLink="/system-config/housing-acuity-level"
+  >Housing Acuity Levels</li>
+  <li class="kendo-list-items"
+  [routerLinkActive]="['active-item']"
+  routerLink="/system-config/income-inclusions-exlusions"
+  >Income Inclusions & Exclusions</li>
+  <li class="kendo-list-items"
+  [routerLinkActive]="['active-item']"
+  routerLink="/system-config/region-assignment"
+  >Region Assignment</li>
+  <li class="kendo-list-items"
+  [routerLinkActive]="['active-item']"
+  routerLink="/system-config/ps-fmr-zip"
+  >PS/FMR/ZIP</li>
+  <li class="kendo-list-items"
+  [routerLinkActive]="['active-item']"
+  routerLink="/system-config/service-provider"
+  >Service Providers</li>
   <li class="sections-heading bold-text text-capital mt-1 pl-2">Financials</li>
-  <li class="kendo-list-items">Funds</li>
-  <li class="kendo-list-items">Expense Types</li>
-  <li class="kendo-list-items">Income Types</li>
-  <li class="kendo-list-items">Index</li>
-  <li class="kendo-list-items">PCA Codes</li>
+
+  <li class="kendo-list-items"
+  [routerLinkActive]="['active-item']"
+  routerLink="/system-config/funds">Funds</li>
+
+  <li class="kendo-list-items"  [routerLinkActive]="['active-item']"
+    routerLink="/system-config/expende-types">Expense Types</li>
+
+  <li class="kendo-list-items"   [routerLinkActive]="['active-item']"
+  routerLink="/system-config/income-types">Income Types</li>
+
+  <li class="kendo-list-items"   [routerLinkActive]="['active-item']"
+  routerLink="/system-config/index">Index</li>
+
+  <li class="kendo-list-items"   [routerLinkActive]="['active-item']"
+  routerLink="/system-config/pca-codes">PCA Codes</li>
+
   <li class="sections-heading bold-text text-capital mt-1 pl-2">
     Communication
   </li>
-  <li class="kendo-list-items">Email Templates</li>
+  <li class="kendo-list-items" [routerLinkActive]="['active-item']"
+  routerLink="/system-config/email-template">Email Templates</li>
+  <li class="kendo-list-items" [routerLinkActive]="['active-item']"
+  routerLink="/system-config/letter-template">letter Templates</li>
+  <li class="kendo-list-items" [routerLinkActive]="['active-item']"
+  routerLink="/system-config/sms-text-template">SMS Text Templates</li>
 </ul>

@@ -11,9 +11,7 @@ describe('PronounsDetailComponent', () => {
       declarations: [ PronounsDetailComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PronounsDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -5,14 +5,14 @@
   title="Send New SMS Text"
 >
   <section class="k-dialog-body">
-    <p class="text-muted">
+    <p class="text-muted mb-1">
       Select an existing template or draft custom text messages.
     </p>
-    <div class="flex-row">
+    <div class="flex-row pb-2">
       <div class="flex-col">
         <kendo-floatinglabel text="SMS Template">
           <kendo-dropdownlist
-          fillMode="outline"
+          [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlTemplates"
             textField="value"
             valueField="key"
@@ -27,7 +27,7 @@
           aria-label="send messages to"
         >
           <kendo-dropdownlist
-          fillMode="outline"
+          [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlMessageRecipients$ | async"
             textField="value"
             valueField="key"
@@ -41,7 +41,7 @@
     </div>
   </section>
   <kendo-dialog-actions *ngIf="isOpenMessageTemplate">
-    <div class="justify-content-between">
+    <div class="justify-content-between bigbtn-wrapper">
       <div class="w100">
         <button
           kendoButton

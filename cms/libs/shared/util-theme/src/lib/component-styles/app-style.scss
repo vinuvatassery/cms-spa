@@ -1,22 +1,42 @@
+/*Custom app variables*/
+@import '../themes/common-theming-files/app-variables';
+
+/*Custom grid col based styles for reponsive*/
+@import 'grid/flex-grid';
+
+/*Kendo Style CSS File Import*/
 @import 'kendo-style-imports';
+
+/*Component based styles*/
 @import 'scrollbar';
 @import 'form-elements';
-@import 'main';
 @import 'button';
-@import 'grid/flex-grid';
-@import 'header';
 @import 'sidebar';
 @import 'typography';
 @import 'floating-action';
 @import 'table';
 @import 'dialog';
 @import 'tab';
-@import 'mat-component-overwrite';
-@import 'notification';
-@import 'custom-style';
+@import 'header';
 @import 'breadcrumb';
 @import 'editor';
 @import 'expansion-panel';
+
+/*Common styles*/
+@import 'main';
+@import 'custom-style';
+
+/*Overding Mat or Kendo CSS styles*/
+@import 'mat-component-overwrite';
+
+/*Work stream based styles*/
+@import 'notification';
 @import 'productivity-tools';
 @import 'system-configuration';
+
+/*helper styles*/
 @import 'helpers';
+
+
+/*responsive css styles*/
+@import 'responsive-custom-style';

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
-
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-letter-editor',
   templateUrl: './letter-editor.component.html',
@@ -22,7 +22,7 @@ import { CommunicationFacade } from '@cms/case-management/domain';
 export class LetterEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
-
+ 
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
 
@@ -34,7 +34,7 @@ export class LetterEditorComponent implements OnInit {
   letterEditorValue!: any;
   isSearchOpened = true;
   isShowPopupClicked = false;
-
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 
@@ -96,4 +96,5 @@ export class LetterEditorComponent implements OnInit {
   onSearchclosed() {
     this.isSearchOpened = false;
   }
+  
 }
