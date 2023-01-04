@@ -82,8 +82,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       },
       error: (error: any) => {
         this.loaderService.hide();      
-        this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
-        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+        this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
+        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
       },
 
     });
@@ -216,9 +216,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
              
             }
           } ,
-        error: error => {       
-          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error?.error?.error)  
-          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error})
+        error: error => {  
+          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error)  
+          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error})
         }
       });
 
@@ -234,10 +234,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             return this.clientFacade.update(this.applicantInfo).pipe(
               catchError((error:any)=>{
                 if(error){
-                  debugger;
                   this.loaderService.hide();      
                   this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
-                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error});
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
                   return of(false);
                 }
                 return of(false);
@@ -639,8 +638,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-          }       
-          debugger;   
+          }  
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           this.pronounList.forEach((pronoun:any) => {
