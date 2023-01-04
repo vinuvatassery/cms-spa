@@ -2,7 +2,7 @@
   <section kendoRippleContainer>
     <div class="flex-row" >
       <div class="flex-col flex-col-4">
-        <kendo-floatinglabel text="Enter First Name" class="k-form">
+        <kendo-floatinglabel text=" First Name" class="k-form">
           <!-- <input kendoTextBox aria-label="enter first name" /> -->
           <kendo-textbox  aria-label="enter first name"  
             showErrorIcon="initial"
@@ -18,7 +18,7 @@
       </div>
         <!-- [disabled]="isMiddleNameChecked" -->
       <div class="flex-col flex-col-4">
-        <kendo-floatinglabel text="Middle Initial (Optional)">
+        <kendo-floatinglabel text="Middle Initial">
           <kendo-textbox   aria-label="middle initial" 
               [fillMode]="formUiStyle.inputFillMode" 
               formControlName="middleName"
@@ -158,7 +158,7 @@
           format="MM-dd-yyyy"
           
           ></kendo-datepicker>
-      
+          <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
