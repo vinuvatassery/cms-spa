@@ -154,10 +154,10 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
         if (isSaved == true) {    
           this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
           if(this.isProvidersGridDisplay === true)
-              {
-                this.updateWorkFlowStatus();
-              }   
-          }
+            {
+              this.updateWorkFlowStatus();
+            }   
+        }
       });       
   }
 

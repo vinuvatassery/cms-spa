@@ -4,12 +4,12 @@ import {
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, WorkflowFacade,
-   UserDefaultRoles, NavigationType  } from '@cms/case-management/domain';
+   UserDefaultRoles, NavigationType, CompletionChecklist, StatusFlag  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 /**external libraries */
-import { catchError, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -61,10 +61,10 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     this.loadFormdata();
     this.addSaveSubscription();
     /** methods for case child form **/
-    this.registerFormData()
-    this.addSaveForLaterSubscription();
+    this.registerFormData();
+    this.addFormChangeSubscription();
+ 	this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
-   
   } 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
@@ -137,7 +137,52 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
       else return of(false)
     }
 
-    private addSaveForLaterSubscription(): void {
+    /*Private methods*/
+ private addFormChangeSubscription() {
+  this.parentForm.valueChanges
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      startWith(null), 
+      pairwise()
+    )
+    .subscribe(([prev, curr]: [any, any]) => {
+      this.updateFormCompleteCount(prev, curr);      
+    });
+}
+
+private updateFormCompleteCount(prev: any, curr: any) {
+  let completedDataPoints: CompletionChecklist[] = [];
+  Object.keys(this.parentForm.controls).forEach(key => {
+    if (prev && curr) {
+      if (prev[key] !== curr[key]) {
+        let item: CompletionChecklist = {
+          dataPointName: key,
+          status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+        };
+        console.log(key);
+        completedDataPoints.push(item);
+      }
+    }
+    else {
+      if (this.parentForm?.get(key)?.value && this.parentForm?.get(key)?.valid) {
+        let item: CompletionChecklist = {
+          dataPointName: key,
+          status: StatusFlag.Yes
+        };
+
+        completedDataPoints.push(item);
+      }
+    }
+  });
+
+  if (completedDataPoints.length > 0) {
+    console.log(completedDataPoints);
+   this.workFlowFacade.updateChecklist(completedDataPoints);
+  }
+}
+
+private addSaveForLaterSubscription(): void {
       this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
         mergeMap((statusResponse: boolean) =>
           forkJoin([of(statusResponse), this.updateCase()])

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-client-edit-view-pronoun',
   templateUrl: './client-edit-view-pronoun.component.html',
@@ -27,10 +28,13 @@ export class ClientEditViewPronounComponent implements OnInit {
    public formUiStyle : UIFormStyle = new UIFormStyle();  
    //textboxDisable:boolean=true;
 
+   private countOfSelection=0;   
+
      /** Construtor **/
    constructor(
     private formBuilder: FormBuilder,
-     private readonly lovFacade : LovFacade
+     private readonly lovFacade : LovFacade,
+     private readonly workflowFacade : WorkflowFacade
    ) {
     this.appInfoForm = this.formBuilder.group({Pronoun: [''],});
    }
@@ -54,6 +58,15 @@ export class ClientEditViewPronounComponent implements OnInit {
       
  });
  }
+
+ private updateWorkflowCount(isCompleted:boolean){
+  const workFlowdata: CompletionChecklist[] = [{
+    dataPointName: 'pronoun',
+    status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+  }];
+
+  this.workflowFacade.updateChecklist(workFlowdata);
+}
    onCheckChange(event:any,lovCode:any) { 
     if(event.target.checked && lovCode ==='NOT_LISTED'){
       if(this.appInfoForm.controls['pronoun'].value === null ||
@@ -70,8 +83,13 @@ export class ClientEditViewPronounComponent implements OnInit {
     } 
     if(event.target.checked){
       this.appInfoForm.controls['pronouns'].setErrors(null);
+      this.countOfSelection++;
     }
-   
+    else{
+      this.countOfSelection = this.countOfSelection > 0 ?  --this.countOfSelection: this.countOfSelection;
+    }
+
+    this.updateWorkflowCount(this.countOfSelection > 0);
    }
    onChange(event:any){
     if(event ===""){

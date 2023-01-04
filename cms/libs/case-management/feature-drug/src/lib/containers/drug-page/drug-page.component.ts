@@ -1,15 +1,15 @@
 /** Angular **/
-import { OnInit } from '@angular/core';
+import { ElementRef, OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith,first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
-import { DrugPharmacyFacade, PriorityCode, WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, YesNoFlag, CompletionChecklist } from '@cms/case-management/domain';
-import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
+import { DrugPharmacyFacade, PriorityCode, WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
+import { FormGroup, FormControl, } from '@angular/forms';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
-import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -58,14 +58,15 @@ export class DrugPageComponent implements OnInit, OnDestroy {
  
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
-   
     private route: ActivatedRoute,
     private readonly incomeFacade: IncomeFacade,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly elementRef: ElementRef,
     private prescriptionDrugFacade :PrescriptionDrugFacade,
-    private router :Router) { }
+ 	  private router :Router) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -85,6 +86,13 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.loadSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
+    });
   }
 
   /** Private Methods **/
@@ -110,6 +118,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
       },
     })
   }
+
   private priscriptionDrugFormChanged() {
     this.prescriptionDrugForm.valueChanges
       .pipe(
@@ -122,6 +131,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
         this.updateFormCompleteCount(prev, curr);
       });
   }
+
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.prescriptionDrugForm.controls).forEach(key => {
@@ -150,6 +160,33 @@ export class DrugPageComponent implements OnInit, OnDestroy {
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
+
+  private adjustAttributeChanged(event: Event) {
+    const data: CompletionChecklist = {
+      dataPointName: (event.target as HTMLInputElement).name,
+      status: (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+  }
+
+  private adjustAttributeInit() {
+    const initialAjustment: CompletionChecklist[] = [];
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      const data: CompletionChecklist = {
+        dataPointName: control.name,
+        status: control.checked ? StatusFlag.Yes : StatusFlag.No
+      };
+
+      initialAjustment.push(data);
+    });
+
+    if (initialAjustment.length > 0) {
+      this.workflowFacade.updateBasedOnDtAttrChecklist(initialAjustment);
+    }
+  }
+
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
@@ -208,15 +245,29 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.drugPharmacyFacade.loadClientPharmacyList(this.workflowFacade.clientId ?? 0);
     this.clientpharmacies$.subscribe({
       next: (pharmacies) => {
-        pharmacies.forEach((pharmacyData: any) => {
-          pharmacyData.PharmacyNameAndNumber =
-            pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
-        });
+        if(pharmacies?.length > 0){
+          pharmacies?.forEach((pharmacyData: any) => {
+            pharmacyData.PharmacyNameAndNumber =
+              pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
+          });
+          this.updateWorkflowCount('pharmacy', true);
+        }
       },
       error: (err) => {
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.updateWorkflowCount('pharmacy', false);
         console.log(err);
       },
     });
+  }
+
+  private updateWorkflowCount(dataPointName:string, isCompleted:boolean){
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: dataPointName,
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
   }
 
   searchPharmacy(searchText: string) {

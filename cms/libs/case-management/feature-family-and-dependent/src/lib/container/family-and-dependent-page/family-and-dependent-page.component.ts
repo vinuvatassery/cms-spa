@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
 import {  NavigationType } from '@cms/case-management/domain';
 
@@ -147,6 +147,16 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
        })  
       )  
      }
+
+     private updateWorkFlowStatus() 
+     {
+       const workFlowdata: CompletionChecklist[] = [{
+         dataPointName: 'family_dependents',
+         status: StatusFlag.Yes 
+       }];
+   
+       this.workFlowFacade.updateChecklist(workFlowdata);
+     }
     
   /** Internal event methods **/
   onNoFamilyMemberClicked() {      
@@ -156,7 +166,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     (this.clientCaseEligibilityId,this.familyStatus).subscribe((isSaved) => {         
       if (isSaved == true) {    
         this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')        
-                
+        if(this.isFamilyGridDisplay === true)
+        {
+          this.updateWorkFlowStatus();
+        }              
       }
     });    
    
