@@ -6,7 +6,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, filter, Observable, catchError, tap } from 'rxjs';
 
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, PreferredContactLov,CaseFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriedsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, PreferredContactLov } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from '@cms/case-management/domain';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade, Lov } from '@cms/system-config/domain';
@@ -78,8 +78,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private route: ActivatedRoute,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
-    private readonly caseFacade: CaseFacade
+    private readonly clientDocumentFacade: ClientDocumentFacade
   ) { }
 
   /** Lifecycle hooks **/
@@ -130,8 +129,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
     this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
       if (resp) {
-        var clientCaseId = JSON.parse(resp.sessionData).ClientCaseId 
-        this.caseFacade.loadCasesById(clientCaseId);
         this.loadContactInfo();
         this.loaderService.hide();
       }

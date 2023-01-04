@@ -104,8 +104,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       this.clientId = JSON.parse(session.sessionData).clientId; 
       this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
       if(this.clientCaseId !== undefined && this.clientCaseId  !==null){
-        this.applicantInfo.clientCaseId = this.clientCaseId
-        this.caseFacade.loadCasesById(this.clientCaseId);   
+        this.applicantInfo.clientCaseId = this.clientCaseId   
         this.applicantInfo.workFlowSessionId = this.sessionId;      
         if(this.clientCaseEligibilityId !=undefined && this.clientCaseEligibilityId != null){        
           if(  this.applicantInfo.client === undefined){
