@@ -42,15 +42,12 @@ export class SearchPageComponent implements OnInit {
       this.searchFacade.loadCaseByHeaderSearchText(selectedValue);     
  
   }
-  onSelectChange(selectedValue:any){
-    //todo as part of client profile implementation
-    //modify the id:103 dynamic from the selected value
+  onSelectChange(selectedValue:any){ 
     if(selectedValue !== undefined){
-      this.router.navigateByUrl('case-management/cases/case360/103'); 
+      this.router.navigateByUrl(`case-management/cases/case360/${selectedValue.clientId}`); 
     }
   }
 
-  
 }
 
 
