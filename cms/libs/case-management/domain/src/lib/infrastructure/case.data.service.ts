@@ -402,7 +402,7 @@ export class CaseDataService {
   }
   cancelCase(caseData: any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cancel-case`,caseData
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/cancel`,caseData
     );
   }
 }
