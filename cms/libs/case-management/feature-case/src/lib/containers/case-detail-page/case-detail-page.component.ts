@@ -114,8 +114,7 @@ export class CaseDetailPageComponent implements OnInit {
    })
   }
   getCase(){ 
-    this.case$.subscribe((caseData:any)=>{  
-      debugger;   
+    this.case$.subscribe((caseData:any)=>{   
       this.clientCaseId = caseData.clientCaseId;
       if(caseData.caseStatusCode ===CaseStatusCode.NEW || 
         caseData.caseStatusCode === CaseStatusCode.INCOMPLETE || 
