@@ -7,8 +7,7 @@ export class kendoFileSelectDirective {
 
   constructor(public renderer: Renderer2, public hostElement: ElementRef) { }
 
-  ngOnInit() {
-    debugger;
+  ngOnInit() { 
     const ariaLabel = this.hostElement.nativeElement.getAttribute('aria-label');
     const inputElement = this.hostElement.nativeElement.children[0].children[0].children[0];
     this.renderer.setAttribute(inputElement, 'aria-label', ariaLabel);
@@ -25,8 +24,7 @@ export class KendoFileUploadDirective {
 
   constructor(public renderer: Renderer2, public hostElement: ElementRef) { }
 
-  ngOnInit() {
-    debugger;
+  ngOnInit() { 
     const ariaLabel = this.hostElement.nativeElement.getAttribute('aria-label');
     const inputElement = this.hostElement.nativeElement.children[0].children[0].children[0];
     this.renderer.setAttribute(inputElement, 'aria-label', ariaLabel);

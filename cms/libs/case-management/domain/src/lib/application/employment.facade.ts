@@ -22,11 +22,10 @@ export class EmploymentFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = ''
-  public sortType = 'asc'
+  public sortValue = 'employerName'
+  public sortType = ''
   public sort: SortDescriptor[] = [{
-    field: this.sortValue,
-    dir: 'asc'
+    field: this.sortValue, 
   }];
 
   /** Private properties **/
