@@ -25,7 +25,7 @@ export class RejectApplicationComponent implements OnInit {
     this.caseStatus.clientCaseId = this.clientCaseId;
     this.caseStatus.caseStatusCode = CaseStatusCode.REJECT;
   }
-  UpdateCaseStatus()
+  updateCaseStatus()
   {
     this.loaderService.show();
     this.caseFacade.updateCaseStatus(this.caseStatus).subscribe({
