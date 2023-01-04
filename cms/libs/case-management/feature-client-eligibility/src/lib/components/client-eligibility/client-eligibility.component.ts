@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component,OnInit, ChangeDetectionStrategy ,ChangeDetectorRef} from '@angular/core';
-import { first, forkJoin, mergeMap } from 'rxjs';
+import { first } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { WorkflowFacade,ClientDocumentFacade,ClientEligibilityFacade,ClientDocumnetEntityType } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
@@ -76,18 +76,6 @@ export class ClientEligibilityComponent implements OnInit {
       this.loaderService.hide();
        })
   }
-
- formatBytes(bytes:any, decimals = 2) {
-    if (!+bytes) return '0 Bytes'
-
-    const k = 1024
-    const dm = decimals < 0 ? 0 : decimals
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
-}
 
   /** Internal event methods **/
   onToggleExceptionClicked() {

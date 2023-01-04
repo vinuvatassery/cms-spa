@@ -40,7 +40,7 @@
             >
           </button>
           <a class="text-bold text-underline">{{doc.documentName}}</a>
-          <span class="text-muted">({{formatBytes(doc.documentSize)}})</span>
+          <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
       </div>
       <div class="flex-col flex-col-4 text-right">
@@ -108,7 +108,7 @@
             >
           </button>
           <a class="text-bold text-underline">{{doc.documentName}}</a>
-          <span class="text-muted">({{formatBytes(doc.documentSize)}})</span>
+          <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
 
       </div>
@@ -169,7 +169,7 @@
             >
           </button>
           <a class="text-bold text-underline">{{doc.documentName}}</a>
-          <span class="text-muted">({{formatBytes(doc.documentSize)}})</span>
+          <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
       </div>
       <div class="flex-col flex-col-4 text-right">

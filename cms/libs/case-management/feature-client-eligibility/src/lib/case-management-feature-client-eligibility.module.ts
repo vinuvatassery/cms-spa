@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 /** Modules **/
 import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { CaseManagementFeatureClientEligibilityRoutingModule } from './case-management-feature-client-eligibility-routing.module';
 /** Components  **/
 import { AcceptApplicationComponent } from './components/accept-application/accept-application.component';
@@ -24,6 +25,7 @@ import { ClientEligibilityComponent } from './components/client-eligibility/clie
 @NgModule({
   imports: [
     CommonModule,
+    SharedUiCommonModule,
     SharedUiTpaModule,
     CaseManagementDomainModule,
     CaseManagementFeatureClientEligibilityRoutingModule,

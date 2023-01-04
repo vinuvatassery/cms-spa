@@ -18,6 +18,7 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
+import { FileSizePipe } from './pipes/fileSize.pipe';
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
@@ -37,7 +38,8 @@ import { PhonePipe } from './pipes/phone.pipe';
     GridLoaderComponent,
     OptionbuttonListComponent,
     SsnPipe,
-    PhonePipe
+    PhonePipe,
+    FileSizePipe
   ],
   exports: [
     LoginStatusComponent,
@@ -53,7 +55,8 @@ import { PhonePipe } from './pipes/phone.pipe';
     GridLoaderComponent,
     OptionbuttonListComponent,
     SsnPipe,
-    PhonePipe
+    PhonePipe,
+    FileSizePipe
   ],
 })
 export class SharedUiCommonModule {}
