@@ -19,6 +19,9 @@
             [data]="caseSearchResults$ | async"
             textField="name"
             valueField="id"
+            autofocusfield
+            id="searchcaseornew"
+            #searchcaseornew
             [loading] = "showInputLoader"
             placeholder="Search Case Name, Member ID or SSN"
             [fillMode]="formUiStyle.dropDownFillMode"
