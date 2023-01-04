@@ -18,7 +18,7 @@ export class SearchDataService {
   loadCaseByHeaderSearchText(text : string) {     
     return this.http.get<ClientCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-header/SearchText=${text}`
+      `/case-management/client-search/SearchText=${text}`
     );   
 
 }
