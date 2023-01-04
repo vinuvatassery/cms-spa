@@ -34,7 +34,7 @@ export class HealthcareProviderFacade {
   addExistingProvider$ = this.addExistingProviderSubject.asObservable();
   loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
-  public sortValue = 'fullName'
+  public sortValue = ' '
   public sortType = 'asc'
 
   public sort: SortDescriptor[] = [{
@@ -90,7 +90,7 @@ export class HealthcareProviderFacade {
   }
 
   loadProviderStatusStatus(clientCaseEligibilityId : string) : void {
-    this.ShowLoader();
+ 
     this.healthcareProviderDataService.loadProviderStatusStatus(clientCaseEligibilityId).subscribe({
       next: (providerStatusGetResponse) => {
         this.HideLoader();
@@ -103,13 +103,13 @@ export class HealthcareProviderFacade {
   }
 
   updateHealthCareProvidersFlagonCheck(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)  {
-    this.ShowLoader();
+  
    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
   }
 
   updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
   {
-    this.ShowLoader();
+ 
     return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
   }
 
@@ -119,22 +119,20 @@ export class HealthcareProviderFacade {
       next: (healthCareProvidersResponse : any) => {        
         if(healthCareProvidersResponse)
         {      
-            const gridView = {
-              data : healthCareProvidersResponse["items"] ,        
-              total:  healthCareProvidersResponse["totalCount"]  
-              };       
-          const workFlowdata: CompletionChecklist[] = [{
-            dataPointName: 'health_care_provider',
-            status: (parseInt(healthCareProvidersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
-          }];
+          const gridView = {
+            data : healthCareProvidersResponse["items"] ,        
+            total:  healthCareProvidersResponse["totalCount"]  
+          };      
 
-          this.workflowFacade.updateChecklist(workFlowdata);
+          this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
           this.healthCareProvidersSubject.next(gridView);
          }
          this.HideLoader();    
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.HideLoader();   
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.updateWorkflowCount(false);   
       },
     });
   }
@@ -151,7 +149,7 @@ export class HealthcareProviderFacade {
           this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);
          }         
       },
-      error: (err) => {
+      error: (err) => { 
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
@@ -161,10 +159,12 @@ export class HealthcareProviderFacade {
     this.ShowLoader();
     this.healthcareProviderDataService.addExistingHealthCareProvider(existProviderData).subscribe({
       next: (addExistingProviderGetResponse) => {
+        this.HideLoader();
         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
         this.addExistingProviderSubject.next(addExistingProviderGetResponse);
       },
       error: (err) => {  
+        this.HideLoader();
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
@@ -179,9 +179,19 @@ export class HealthcareProviderFacade {
         this.loadExistingProviderSubject.next(loadExistingProviderResponse);
       },
       error: (err) => {  
+        this.HideLoader();
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
+  }
+
+  private updateWorkflowCount(isCompleted:boolean){
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'health_care_provider',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
   }
  
 }

@@ -140,5 +140,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   // unemployment checkbox click
   onUnEmployedClicked() {
     this.isEmployedGridDisplay = !this.isEmployedGridDisplay;
+    if(this.isEmployedGridDisplay === true){
+      this.employmentFacade.updateWorkFlowCount(StatusFlag.Yes);
+    }
   }
 }

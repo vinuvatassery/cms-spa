@@ -3,7 +3,7 @@
   <div class="component-list-h">
     <span *ngFor="let gender of Genders; let i = index">
         <div class="flex-row">
-          <div class="flex-col flex-col-8">
+          <div class="flex-col flex-col-12">
             <span class="app-radiobtnwidtext-wrapper">
               <input
                 type="radio"
@@ -21,7 +21,10 @@
                 for="BirthGender{{ gender.lovCode }}"
                 text="{{ gender.lovDesc }}"
               ></kendo-label>
-              <div *ngIf="gender.lovCode === 'NOT_LISTED'">
+              <div class="flex-row" *ngIf="gender.lovCode === 'NOT_LISTED'">
+                <div class="flex-col flex-col-6">
+
+               
                 <kendo-floatinglabel text="Enter Answer">
                   <kendo-textbox
                   [fillMode]="formUiStyle.inputFillMode"
@@ -35,6 +38,7 @@
                   *ngIf="!appInfoForm.controls[DescriptionField].valid"
                   >Sex assigned at birth is required.</kendo-formerror
                 >
+              </div>
               </div>
             </span>
           </div>

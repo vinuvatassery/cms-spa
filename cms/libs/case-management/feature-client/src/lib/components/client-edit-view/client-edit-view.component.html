@@ -29,7 +29,7 @@
           <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle initial is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col flex-col-4 mt-3">
+      <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
         <input
           class="adjust-attr"
@@ -84,7 +84,7 @@
           <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled" >Last name on primary insurance card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col flex-col-4 mt-3">
+      <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
         <input
           type="checkbox"
@@ -128,7 +128,7 @@
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last name on official id is required.</kendo-formerror>
       </div>
-      <div class="flex-col flex-col-4 mt-3">
+      <div class="flex-col flex-col-4 mt-checkbox">
          <!-- (change)="onOfficialIdChecked($event)" -->
         <span class="app-checkboxwidtext-wrapper">
         <input
@@ -176,7 +176,7 @@
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
       </div>
-      <div class="flex-col flex-col-4 mt-3">
+      <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
         <input
           type="checkbox"
