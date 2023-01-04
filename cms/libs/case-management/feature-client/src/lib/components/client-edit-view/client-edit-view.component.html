@@ -20,6 +20,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Middle Initial (Optional)">
           <kendo-textbox   aria-label="middle initial" 
+          showErrorIcon="initial"
               [fillMode]="formUiStyle.inputFillMode" 
               formControlName="middleName"
               [maxlength]="lengthRestrictThirty"           
@@ -48,6 +49,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name">
           <kendo-textbox aria-label="last name" 
+          showErrorIcon="initial"
               [fillMode]="formUiStyle.inputFillMode" 
               formControlName="lastName"
               [maxlength]="lengthRestrictForty">
@@ -167,7 +169,8 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Social Security Number">
-          <kendo-textbox aria-label="social security number"  
+          <kendo-textbox aria-label="social security number" 
+          showErrorIcon="initial" 
             [fillMode]="formUiStyle.inputFillMode" 
             formControlName="ssn"
             [maxlength]="maxLengthSsn"
