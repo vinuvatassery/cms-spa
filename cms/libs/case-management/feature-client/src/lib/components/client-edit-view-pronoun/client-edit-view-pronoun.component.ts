@@ -68,19 +68,17 @@ export class ClientEditViewPronounComponent implements OnInit {
   this.workflowFacade.updateChecklist(workFlowdata);
 }
    onCheckChange(event:any,lovCode:any) { 
-    if(event.target.checked && lovCode ==='NOT_LISTED'){
-      if(this.appInfoForm.controls['pronoun'].value === null ||
-       this.appInfoForm.controls['pronoun'].value ===""){
-      this.appInfoForm.controls['pronoun'].setErrors({'incorrect': true});
-      }
+    if(!this.appInfoForm.controls['NOT_LISTED'].value){
+      this.appInfoForm.controls['pronoun'].removeValidators(Validators.required);
+      this.appInfoForm.controls['pronoun'].updateValueAndValidity();
+    }    
+     if(event.target.checked && lovCode ==='NOT_LISTED'){  
       this.textboxDisable = false;      
     }
    
-    if(!event.target.checked && lovCode ==='NOT_LISTED') {
-      this.appInfoForm.controls['pronoun'].setErrors(null);
-      this.appInfoForm.controls['pronoun'].updateValueAndValidity();
-      this.textboxDisable = true;
-    } 
+     if(!event.target.checked && lovCode ==='NOT_LISTED') {  
+       this.textboxDisable = true;
+     } 
     if(event.target.checked){
       this.appInfoForm.controls['pronouns'].setErrors(null);
       this.countOfSelection++;

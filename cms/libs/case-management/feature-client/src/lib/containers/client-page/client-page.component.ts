@@ -647,9 +647,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             }
           });
           if(this.appInfoForm.controls['pronouns'].valid){
-            this.pronounList.forEach((pronoun:any) => {             
-                this.appInfoForm.controls[pronoun.lovCode].removeValidators(Validators.requiredTrue);
-                this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+            this.pronounList.forEach((pronounCode:any) => {             
+                this.appInfoForm.controls[pronounCode.lovCode].removeValidators(Validators.requiredTrue);
+                this.appInfoForm.controls[pronounCode.lovCode].updateValueAndValidity();
+                if(pronounCode.lovCode ==='NOT_LISTED' && this.appInfoForm.controls[pronounCode.lovCode].value){
+                  this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
+                  this.appInfoForm.controls['pronoun'].updateValueAndValidity();
+                }               
             });
           }
           if(!this.appInfoForm.controls['pronouns'].valid){
