@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
-import { ScreenType } from '@cms/case-management/domain';
+import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 /**  Facades **/
 import { IncomeFacade, Income } from '@cms/case-management/domain';
 /** Entities **/
@@ -107,7 +107,7 @@ export class IncomeListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly incomeFacade: IncomeFacade) {}
+  constructor(private readonly incomeFacade: IncomeFacade, private readonly workflowFacade: WorkflowFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -127,6 +127,15 @@ export class IncomeListComponent implements OnInit {
       this.incomesTotal=incomeresponse;
     })
     this.incomeFacade.HideLoader();
+
+    this.incomes$.subscribe({
+      next:(income:any) => {
+        this.updateWorkFlowStatus(income?.total > 0);
+      },
+      error:()=>{
+        this.updateWorkFlowStatus(false);
+      }
+    })
   }
 // Grid More action clicl function
 onIncomeActionClicked(
@@ -149,6 +158,15 @@ onIncomeActionClicked(
     } else {
       this.isAddIncomeButtonAndFooterNoteDisplay = true;
     }
+  }
+  private updateWorkFlowStatus(isCompleted:boolean) 
+  {
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'income',
+      status: isCompleted ? StatusFlag.Yes :StatusFlag.No 
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
   }
 
   /** Internal event methods **/
