@@ -31,10 +31,8 @@ export class KendoFileUploadDirective {
 @Directive({
   selector:'[autofocusfield]'
 })
-export class FormFieldAutoFocus implements AfterViewInit{
-
-  constructor(private elementRef: ElementRef){}
-
+export class FormFieldAutoFocus implements AfterViewInit{ 
+  constructor(public elementRef: ElementRef){} 
   ngAfterViewInit(){
     debugger;
     setTimeout(()=>{                           // <<<---using ()=> syntax
@@ -50,7 +48,7 @@ export class FormFieldAutoFocus implements AfterViewInit{
 })
 export class TextFieldFormFieldAutoFocus implements AfterViewInit{
 
-  constructor(private elementRef: ElementRef){}
+  constructor(public elementRef: ElementRef){}
 
   ngAfterViewInit(){
     setTimeout(()=>{                           // <<<---using ()=> syntax
@@ -65,7 +63,7 @@ export class TextFieldFormFieldAutoFocus implements AfterViewInit{
 })
 export class DropDownFieldFormFieldAutoFocus implements AfterViewInit{
 
-  constructor(private elementRef: ElementRef){}
+  constructor(public elementRef: ElementRef){}
 
   ngAfterViewInit(){ 
     setTimeout(()=>{
