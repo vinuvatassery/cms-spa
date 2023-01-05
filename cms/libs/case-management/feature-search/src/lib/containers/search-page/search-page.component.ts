@@ -44,7 +44,7 @@ export class SearchPageComponent implements OnInit {
   }
   onSelectChange(selectedValue:any){ 
     if(selectedValue !== undefined){
-      this.router.navigateByUrl(`case-management/cases/case360/${selectedValue.clientId}`); 
+      this.router.navigateByUrl(`case-management/cases/case360/${selectedValue.clientCaseId}`); 
     }
   }
 
