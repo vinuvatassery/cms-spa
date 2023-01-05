@@ -10,6 +10,7 @@ import { forkJoin, mergeMap, of, Subscription, tap,first } from 'rxjs';
 import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType,CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Router } from '@angular/router';
 
 
 
@@ -93,7 +94,8 @@ export class CaseDetailPageComponent implements OnInit {
     private workflowFacade: WorkflowFacade,
     private loaderService: LoaderService,
     private loggingService : LoggingService,
-    private readonly snackbarService : NotificationSnackbarService
+    private readonly snackbarService : NotificationSnackbarService,
+    private router: Router
   ) {
   }
 
@@ -110,8 +112,32 @@ export class CaseDetailPageComponent implements OnInit {
     this.navigationSubscription.unsubscribe();
   }
   cancelClientCase(){
-    this.caseFacade.cancelCase(this.clientCaseId).subscribe(data=>{
-   })
+    this.loaderService.show()    
+    this.caseFacade.cancelCase(this.clientCaseId) .subscribe(
+      (response: any) => {
+        this.caseFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'client case canceled successfully.'
+        ); 
+        this.onCloseDeleteConfirmClicked();  
+        this.loaderService.hide() 
+        this.router.navigateByUrl(`dashboard`); 
+      },
+      (error: any) => {
+        if (error) {
+          this.caseFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          this.loggingService.logException(
+            {
+              name:SnackBarNotificationType.ERROR,
+              message:error
+            });
+          this.loaderService.hide()    
+        }
+      }
+    );
   }
   getCase(){ 
     this.case$.subscribe((caseData:any)=>{   
