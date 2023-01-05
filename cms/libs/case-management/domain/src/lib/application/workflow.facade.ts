@@ -64,7 +64,7 @@ export class WorkflowFacade {
        this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();
+    this.hideLoader();
   }
 
   ShowLoader()
@@ -72,7 +72,7 @@ export class WorkflowFacade {
     this.loaderService.show();
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }
@@ -117,7 +117,7 @@ export class WorkflowFacade {
             });
           }
           this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')
-          this.HideLoader();
+          this.hideLoader();
         },
         error: (err: any) => {
           this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -144,7 +144,7 @@ export class WorkflowFacade {
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
           this.sessionSubject.next(this.currentSession);
-          this.HideLoader();
+          this.hideLoader();
         },
         error: (err: any) => {
           this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -394,10 +394,10 @@ export class WorkflowFacade {
           }
         }
         this.sessionDataSubject.next(ddlsessionDataResponse);
-        this.HideLoader();
+        this.hideLoader();
       },
       error: (err) => {
-        this.HideLoader();
+        this.hideLoader();
         this.loggingService.logException(err);
       },
     });

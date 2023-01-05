@@ -41,7 +41,7 @@ export class ClientDocumentDataService {
     }
     getClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
         return this.http.get<ClientDocument>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/${clientCaseEligibilityId}`
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/eligibility-documents/${clientCaseEligibilityId}`
         );
       }
 }

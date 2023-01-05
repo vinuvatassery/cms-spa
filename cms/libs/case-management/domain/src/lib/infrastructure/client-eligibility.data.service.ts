@@ -25,6 +25,6 @@ export class ClientEligibilityDataService {
   }
 
   getEligibility(clientCaseEligibilityId: string, clientId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case-eligibility/${clientCaseEligibilityId}/${clientId}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-eligibility/clientCaseEligibilityId=${clientCaseEligibilityId}&clientId=${clientId}`);
   }
 }

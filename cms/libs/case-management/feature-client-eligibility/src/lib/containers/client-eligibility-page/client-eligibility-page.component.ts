@@ -5,6 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'case-management-client-eligibility-page',
   templateUrl: './client-eligibility-page.component.html',
   styleUrls: ['./client-eligibility-page.component.scss'],
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEligibilityPageComponent {}
