@@ -28,7 +28,7 @@ import {
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
-import { LovFacade, LovType } from '@cms/system-config/domain';
+import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, first } from 'rxjs';
 import { LoaderService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
@@ -215,16 +215,18 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   private loadHealthInsuranceProofCodes() {
     this.lovFacade.getLovsbyParent(LovType.HEALTHINSURANCEPROOF, 'HI');
-    this.lovFacade.ovcascade$.subscribe((x: any) => {
-      if (x.lovCode == 'CIC') {
-        this.cICTypeCode = x.lovCode;
-      }
-      else if (x.lovCode == 'POP') {
-        this.pOPTypeCode = x.lovCode;
-      }
-      else if (x.lovCode == 'CSB') {
-        this.cOSTypeCode = x.lovCode;
-      }
+    this.lovFacade.ovcascade$.subscribe((resp: Array<Lov>) => {
+      resp.forEach((x: Lov) => {
+        if (x.lovCode == 'CIC') {
+          this.cICTypeCode = x.lovCode;
+        }
+        else if (x.lovCode == 'POP') {
+          this.pOPTypeCode = x.lovCode;
+        }
+        else if (x.lovCode == 'CSB') {
+          this.cOSTypeCode = x.lovCode;
+        }
+      });
     })
   }
 
