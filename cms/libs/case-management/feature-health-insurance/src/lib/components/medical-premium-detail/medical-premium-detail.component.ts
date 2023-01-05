@@ -28,7 +28,7 @@ import {
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, LovType } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, first } from 'rxjs';
 import { LoaderService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
@@ -103,6 +103,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   relationshipList: any = [];
   sessionId: any;
+  cICTypeCode: string = "";
+  pOPTypeCode: string = "";
+  cOSTypeCode: string = "";
 
   get othersCoveredOnPlan(): FormArray {
     return this.healthInsuranceForm.get("othersCoveredOnPlan") as FormArray;
@@ -143,6 +146,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.viewSelection();
     this.loadRelationshipLov();
     this.disableEnableRadio();
+    this.loadHealthInsuranceProofCodes();
     this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
       if (this.healthInsuranceForm.controls['paymentIdNbrSameAsInsuranceIdNbrFlag'].value) {
         this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
@@ -207,6 +211,21 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (!Array.isArray(data)) return;
       this.relationshipList = data.map((x: any) => x.lovDesc);
     });
+  }
+
+  private loadHealthInsuranceProofCodes() {
+    this.lovFacade.getLovsbyParent(LovType.HEALTHINSURANCEPROOF, 'HI');
+    this.lovFacade.ovcascade$.subscribe((x: any) => {
+      if (x.lovCode == 'CIC') {
+        this.cICTypeCode = x.lovCode;
+      }
+      else if (x.lovCode == 'POP') {
+        this.pOPTypeCode = x.lovCode;
+      }
+      else if (x.lovCode == 'CSB') {
+        this.cOSTypeCode = x.lovCode;
+      }
+    })
   }
 
   private viewSelection() {
@@ -397,28 +416,31 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     let personsGroup = healthInsurancePolicy.othersCoveredOnPlan.map(pe => this.formBuilder.group(pe));
     let personForm = this.formBuilder.array(personsGroup);
     this.healthInsuranceForm.setControl('othersCoveredOnPlan', personForm);
-    if (!!healthInsurancePolicy.copyOfInsuranceCard) {
+    if (!!healthInsurancePolicy.copyOfInsuranceCardFile) {
       this.copyOfInsuranceCardFiles = {
-        name: healthInsurancePolicy.copyOfInsuranceCard.documentName,
-        src: healthInsurancePolicy.copyOfInsuranceCard.documentPath,
-        uid: healthInsurancePolicy.copyOfInsuranceCard.clientDocumentId,
-        size: healthInsurancePolicy.copyOfInsuranceCard?.documentSize,
+        documentName: healthInsurancePolicy.copyOfInsuranceCardFile.documentName,
+        documentPath: healthInsurancePolicy.copyOfInsuranceCardFile.documentPath,
+        clientDocumentId: healthInsurancePolicy.copyOfInsuranceCardFile.clientDocumentId,
+        documentSize: healthInsurancePolicy.copyOfInsuranceCardFile?.documentSize,
+        documentTypeCode: healthInsurancePolicy.copyOfInsuranceCardFile?.documentTypeCode
       };
     }
-    if (!!healthInsurancePolicy.proofOfPremium) {
+    if (!!healthInsurancePolicy.proofOfPremiumFile) {
       this.proofOfPremiumFiles = {
-        name: healthInsurancePolicy.proofOfPremium.documentName,
-        src: healthInsurancePolicy.proofOfPremium.documentPath,
-        uid: healthInsurancePolicy.proofOfPremium.clientDocumentId,
-        size: healthInsurancePolicy.proofOfPremium.documentSize,
+        documentName: healthInsurancePolicy.proofOfPremiumFile.documentName,
+        documentPath: healthInsurancePolicy.proofOfPremiumFile.documentPath,
+        clientDocumentId: healthInsurancePolicy.proofOfPremiumFile.clientDocumentId,
+        documentSize: healthInsurancePolicy.proofOfPremiumFile?.documentSize,
+        documentTypeCode: healthInsurancePolicy.proofOfPremiumFile?.documentTypeCode
       };
     }
-    if (!!healthInsurancePolicy.copyOfSummary) {
+    if (!!healthInsurancePolicy.copyOfSummaryFile) {
       this.copyOfSummaryFiles = {
-        name: healthInsurancePolicy.copyOfSummary.documentName,
-        src: healthInsurancePolicy.copyOfSummary.documentPath,
-        uid: healthInsurancePolicy.copyOfSummary.clientDocumentId,
-        size: healthInsurancePolicy.copyOfSummary.documentSize,
+        documentName: healthInsurancePolicy.copyOfSummaryFile.documentName,
+        documentPath: healthInsurancePolicy.copyOfSummaryFile.documentPath,
+        clientDocumentId: healthInsurancePolicy.copyOfSummaryFile.clientDocumentId,
+        documentSize: healthInsurancePolicy.copyOfSummaryFile?.documentSize,
+        documentTypeCode: healthInsurancePolicy.copyOfSummaryFile?.documentTypeCode
       };
     }
     this.disableEnableRadio();
@@ -823,9 +845,24 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
         this.healthInsurancePolicy.creationTime = this.healthInsurancePolicyCopy.creationTime;
         let files = {
-          copyOfInsurance: this.copyOfInsuranceCardFiles,
-          proofPremium: this.proofOfPremiumFiles,
-          copyOfsummary: this.copyOfSummaryFiles 
+          copyOfInsuranceCardFile: {
+            document: this.copyOfInsuranceCardFiles.document,
+            documentTypeCode: this.cICTypeCode,
+            documentSize: this.copyOfInsuranceCardFiles.documentSize,
+            documentName: this.copyOfInsuranceCardFiles.documentName
+          },
+          proofOfPremiumFile: {
+            document: this.proofOfPremiumFiles.document,
+            documentTypeCode: this.pOPTypeCode,
+            documentSize: this.proofOfPremiumFiles.documentSize,
+            documentName: this.proofOfPremiumFiles.documentName
+          },
+          copyOfSummaryFile: {
+            document: this.copyOfSummaryFiles.document,
+            documentTypeCode: this.cOSTypeCode,
+            documentSize: this.copyOfSummaryFiles.documentSize,
+            documentName: this.copyOfSummaryFiles.documentName
+          }
         }
         this.insurancePolicyFacade
           .updateHealthInsurancePolicy(this.healthInsurancePolicy, files)
@@ -848,9 +885,24 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           );
       } else {
         let files = {
-          copyOfInsurance: this.copyOfInsuranceCardFiles,
-          proofPremium: this.proofOfPremiumFiles,
-          copyOfsummary: this.copyOfSummaryFiles 
+          copyOfInsuranceCardFile: {
+            document: this.copyOfInsuranceCardFiles.document,
+            documentTypeCode: this.cICTypeCode,
+            documentSize: this.copyOfInsuranceCardFiles.documentSize,
+            documentName: this.copyOfInsuranceCardFiles.documentName
+          },
+          proofOfPremiumFile: {
+            document: this.proofOfPremiumFiles.document,
+            documentTypeCode: this.pOPTypeCode,
+            documentSize: this.proofOfPremiumFiles.documentSize,
+            documentName: this.proofOfPremiumFiles.documentName
+          },
+          copyOfSummaryFile: {
+            document: this.copyOfSummaryFiles.document,
+            documentTypeCode: this.cOSTypeCode,
+            documentSize: this.copyOfSummaryFiles.documentSize,
+            documentName: this.copyOfSummaryFiles.documentName
+          }
         }
         this.insurancePolicyFacade
           .saveHealthInsurancePolicy(this.healthInsurancePolicy, files)
@@ -915,19 +967,31 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   public handleFileSelected(event: any, fileType: string) {
     if (fileType == 'proof') {
-      this.proofOfPremiumFiles = event.files[0];
+      this.proofOfPremiumFiles = {
+        document: event.files[0],
+        documentSize: event.files[0].size,
+        documentName: event.files[0].name
+      }
     }
     else if (fileType == 'summary') {
-      this.copyOfSummaryFiles = event.files[0];
+      this.copyOfSummaryFiles = {
+        document: event.files[0],
+        documentSize: event.files[0].size,
+        documentName: event.files[0].name
+      }
     }
     else if (fileType == 'copyInsurance') {
-      this.copyOfInsuranceCardFiles = event.files[0];
+      this.copyOfInsuranceCardFiles = {
+        document: event.files[0],
+        documentSize: event.files[0].size,
+        documentName: event.files[0].name
+      }
     }
   }
 
   public handleFileRemoved(document: any, fileType: string) {
-    if (!!document.uid) {
-      this.clientDocumentFacade.removeDocument(document.uid ?? '').subscribe({
+    if (!!document.clientDocumentId) {
+      this.clientDocumentFacade.removeDocument(document.clientDocumentId ?? '').subscribe({
         next: (response) => {
           if (response === true) {
             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Document Removed Successfully!");

@@ -44,9 +44,9 @@ export class healthInsurancePolicy {
         activeFlag: string | null = null;
         creationTime?: Date;
         othersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
-        proofOfPremium: any = null;
-        copyOfInsuranceCard: any = null;
-        copyOfSummary: any = null;
+        proofOfPremiumFile: any = null;
+        copyOfInsuranceCardFile: any = null;
+        copyOfSummaryFile: any = null;
 }
 
 export class othersCoveredOnPlan {
