@@ -22,7 +22,9 @@
               formControlName="pronoun"
               [disabled]="textboxDisable"
               [fillMode]="formUiStyle.inputFillMode"
-              (valueChange)="onChange($event)">               
+              (valueChange)="onChange($event)"
+              [maxlength]="50"
+              >               
             </kendo-textbox>        
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!appInfoForm.controls['pronoun'].valid ">Pronoun is required.</kendo-formerror>
