@@ -7,7 +7,7 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Name of Employer">
-        <kendo-textbox formControlName="empName"  #empName aria-label="name of employer" 
+        <kendo-textbox formControlName="empName" textFieldautofocus  #empName aria-label="name of employer" 
           [fillMode]="formUiStyle.inputFillMode" [maxlength]="empNameMaxValue"> </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!empDetailsForm.controls['empName'].valid && employerFormSubmitted">Employer name is required

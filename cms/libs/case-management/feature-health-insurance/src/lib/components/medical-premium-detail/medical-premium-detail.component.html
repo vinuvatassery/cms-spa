@@ -12,6 +12,7 @@
       <kendo-floatinglabel text="Health Insurance Type">
         <!-- [(ngModel)]="ddlInsuranceType" -->
         <kendo-dropdownlist
+        dropdownFieldautofocus
         aria-label="Health Insurance Type"
         [fillMode]="formUiStyle.dropDownFillMode"
           [data]="insuranceTypeList$ | async"

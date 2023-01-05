@@ -23,6 +23,7 @@
               <span *ngIf="showDependentSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
               <kendo-label text="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)">
               <kendo-autocomplete
+              autofocusfield
               aria-label="search member"
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="dependentSearch"           
@@ -122,7 +123,7 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
-          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" 
+          <kendo-dropdownlist dropdownFieldautofocus  [fillMode]="formUiStyle.dropDownFillMode" 
           aria-label ="Relationship to Client"
           [data]="ddlRelationships$ | async"
           formControlName="relationshipCode"

@@ -19,7 +19,7 @@ import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 // directive
-import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus } from './directives/kendo-fileselectupload.directive'
+import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-fileselectupload.directive'
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
@@ -42,7 +42,8 @@ import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, 
     kendoFileSelectDirective,
     KendoFileUploadDirective,
     FormFieldAutoFocus, 
-    TextFieldFormFieldAutoFocus
+    TextFieldFormFieldAutoFocus,
+    DropDownFieldFormFieldAutoFocus
   ],
   exports: [
     LoginStatusComponent,
@@ -62,7 +63,8 @@ import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, 
     kendoFileSelectDirective,
     KendoFileUploadDirective,
     FormFieldAutoFocus, 
-    TextFieldFormFieldAutoFocus
+    TextFieldFormFieldAutoFocus,
+    DropDownFieldFormFieldAutoFocus
   ],
 })
 export class SharedUiCommonModule {}

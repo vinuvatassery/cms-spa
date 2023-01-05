@@ -40,7 +40,7 @@ export class FormFieldAutoFocus implements AfterViewInit{
 
 
 @Directive({
-  selector:'[textFieldautofocusfield]'
+  selector:'[textFieldautofocus]'
 })
 export class TextFieldFormFieldAutoFocus implements AfterViewInit{
 
@@ -53,5 +53,18 @@ export class TextFieldFormFieldAutoFocus implements AfterViewInit{
   }
 }
 
+@Directive({
+  selector:'[dropdownFieldautofocus]'
+})
+export class DropDownFieldFormFieldAutoFocus implements AfterViewInit{
+
+  constructor(private elementRef: ElementRef){}
+
+  ngAfterViewInit(){ 
+    setTimeout(()=>{
+      this.elementRef.nativeElement.focus(); 
+  }, 300); 
+  }
+}
 
 
