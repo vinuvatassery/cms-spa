@@ -25,12 +25,12 @@ export class SearchFacade {
     private readonly loaderService: LoaderService , private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }
@@ -43,7 +43,7 @@ export class SearchFacade {
        this.loggingService.logException(err)
     }  
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.hideLoader();   
   }
 
   loadCaseBySearchText(text : string): void {
