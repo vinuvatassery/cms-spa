@@ -119,23 +119,20 @@ export class HealthcareProviderFacade {
       next: (healthCareProvidersResponse : any) => {        
         if(healthCareProvidersResponse)
         {      
-            const gridView = {
-              data : healthCareProvidersResponse["items"] ,        
-              total:  healthCareProvidersResponse["totalCount"]  
-              };       
-          const workFlowdata: CompletionChecklist[] = [{
-            dataPointName: 'health_care_provider',
-            status: (parseInt(healthCareProvidersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
-          }];
+          const gridView = {
+            data : healthCareProvidersResponse["items"] ,        
+            total:  healthCareProvidersResponse["totalCount"]  
+          };      
 
-          this.workflowFacade.updateChecklist(workFlowdata);
+          this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
           this.healthCareProvidersSubject.next(gridView);
          }
          this.HideLoader();    
       },
       error: (err) => {
         this.HideLoader();   
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.updateWorkflowCount(false);   
       },
     });
   }
@@ -186,6 +183,15 @@ export class HealthcareProviderFacade {
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
+  }
+
+  private updateWorkflowCount(isCompleted:boolean){
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'health_care_provider',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
   }
  
 }

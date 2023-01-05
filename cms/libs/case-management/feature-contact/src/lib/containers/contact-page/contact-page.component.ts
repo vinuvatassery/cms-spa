@@ -1082,19 +1082,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private uploadAddressProof() {
+  private updateHomeAddressProofCount(isCompleted:boolean) 
+  {
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'homeAddress_proof',
+      status: StatusFlag.Yes 
+    }];
 
-    const document: ClientDocument = {
-      document: this.uploadedHomeAddressProof,
-      clientId: this.workflowFacade.clientId,
-      clientCaseId: this.workflowFacade.clientCaseId,
-      clientCaseEligibilityId: this.workflowFacade.clientCaseEligibilityId,
-      entityId: '',
-      entityTypeCode: 'HomeAddress',
-      documentTypeCode: 'PDF',
-      documentTemplateId: '',
-    }
-
+    this.workflowFacade.updateChecklist(workFlowdata);
   }
 
   private closeValidationPopup(type: string) {
@@ -1146,6 +1141,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   handleFileSelected(e: SelectEvent) {
     this.uploadedHomeAddressProof = e.files[0].rawFile;
     this.showAddressProofRequiredValidation = false;
+    this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {
@@ -1158,6 +1154,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
               this.uploadedHomeAddressProof = undefined;
               this.showAddressProofRequiredValidation = true;
               this.loadContactInfo();
+              this.updateHomeAddressProofCount(false);
             }
       },
       error: (err) => {
