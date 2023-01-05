@@ -76,13 +76,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         next:([navigationType, isSaved]) =>{
           if (isSaved) {
               this.loaderService.hide();                 
-              this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
+              this.clientFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
               this.workFlowFacade.navigate(navigationType);          
         }    
       },
       error: (error: any) => {
         this.loaderService.hide();      
-        this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
+        this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
         this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
       },
 
@@ -217,7 +217,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             }
           } ,
         error: error => {  
-          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error)  
+          this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR ,error)  
           this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error})
         }
       });
@@ -235,7 +235,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               catchError((error:any)=>{
                 if(error){
                   this.loaderService.hide();      
-                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
+                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
                   this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
                   return of(false);
                 }
@@ -250,7 +250,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               catchError((error:any)=>{
                 if(error){
                   this.loaderService.hide();      
-                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error);
+                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
                   this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
                   return of(false);
                 }
