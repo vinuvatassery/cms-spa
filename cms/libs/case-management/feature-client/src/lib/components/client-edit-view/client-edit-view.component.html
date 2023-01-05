@@ -198,7 +198,7 @@
   </section>
    
   <section class="mb-3">
-    <h5>Register to vote ?</h5>
+    <h5>Register to vote?</h5>
     <div class="flex-row gap-m">
       <div class="flex-col">
         <div class="component-list-h">
@@ -209,12 +209,13 @@
               name="registerToVote"
               value="Y"
               aria-labelledby="registerToVoteYes"
-              id="register"
+              id="registerYes"
               tabindex="1"
               formControlName="registerToVote"  
               (change)="registerToVoteSelected($event)"          
             />
-            <kendo-label class="k-radio-label" text="Yes"></kendo-label>
+           
+            <kendo-label class="k-radio-label" text="Yes"  for ="registerYes"></kendo-label>       
           </span>
           <span class="app-radiobtnwidtext-wrapper">
             <input
@@ -223,7 +224,7 @@
               value="N"
               name="registerToVote"
               aria-labelledby="registerToVoteNo"
-              id="register1"
+              id="registerNo"
               tabindex="2"
               formControlName="registerToVote"
               (change)="registerToVoteSelected($event)"   
@@ -231,7 +232,7 @@
             <kendo-label
               class="k-radio-label"
               text="No"
-              for="register1"
+              for="registerNo"
             ></kendo-label>
             <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is required.</kendo-formerror>
           </span>
