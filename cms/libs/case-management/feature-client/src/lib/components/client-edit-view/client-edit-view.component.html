@@ -25,7 +25,7 @@
               [maxlength]="lengthRestrictThirty"           
               >
           </kendo-textbox>
-        
+          <kendo-formerror *ngIf="appInfoForm.controls['middleName']?.value?.length>30 ">Middle Name should not more than thirty character.</kendo-formerror>
           <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle initial is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -80,7 +80,7 @@
               [maxlength]="lengthRestrictForty"
               >   
           </kendo-textbox>
-        
+          <kendo-formerror *ngIf="appInfoForm.controls['prmInsLastName']?.value?.length>40 ">Last Name should not more than thirty character.</kendo-formerror>
           <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled" >Last name on primary insurance card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -114,7 +114,8 @@
           </kendo-textbox>
       
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First name on official id is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled ">First name on official id is required.</kendo-formerror>
+        <kendo-formerror *ngIf="appInfoForm.controls['officialIdFirstName']?.value?.length>40 ">Official Id First Name should not more than forty character.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Official ID">
@@ -127,6 +128,7 @@
           </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last name on official id is required.</kendo-formerror>
+        <kendo-formerror *ngIf="appInfoForm.controls['officialIdLastName']?.value?.length>40 ">Official Id Last Name should not more than forty character.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
          <!-- (change)="onOfficialIdChecked($event)" -->
@@ -142,6 +144,10 @@
           (change)="onOfficialIdChecked($event)"
          
         />
+       <!-- <div *ngIf="appInfoForm.controls['officialIdsNotApplicable'].Checked">
+        appInfoForm.controls['officialIdFirstName'].clear
+        appInfoForm.controls['officialIdLastName'].clear
+       </div> -->
         <label class="k-checkbox-label" for="idNotApplicable"
           >Not Applicable</label
         >
