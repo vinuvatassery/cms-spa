@@ -19,7 +19,7 @@ import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 // directive
-import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-fileselectupload.directive'
+import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
