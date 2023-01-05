@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, StatusFlag, WorkflowFacade,PronounCode } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-client-edit-view-pronoun',
   templateUrl: './client-edit-view-pronoun.component.html',
@@ -68,15 +68,15 @@ export class ClientEditViewPronounComponent implements OnInit {
   this.workflowFacade.updateChecklist(workFlowdata);
 }
    onCheckChange(event:any,lovCode:any) { 
-    if(!this.appInfoForm.controls['NOT_LISTED'].value){
+    if(!this.appInfoForm.controls[PronounCode.NotListed].value){
       this.appInfoForm.controls['pronoun'].removeValidators(Validators.required);
       this.appInfoForm.controls['pronoun'].updateValueAndValidity();
     }    
-     if(event.target.checked && lovCode ==='NOT_LISTED'){  
+     if(event.target.checked && lovCode ===PronounCode.NotListed){  
       this.textboxDisable = false;      
     }
    
-     if(!event.target.checked && lovCode ==='NOT_LISTED') {  
+     if(!event.target.checked && lovCode ===PronounCode.NotListed) {  
        this.textboxDisable = true;
      } 
     if(event.target.checked){
