@@ -301,7 +301,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         city: new FormControl('', { validators: [Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')], updateOn: 'blur' }),
         state: new FormControl('OR', { validators: Validators.required, }),
         zip: new FormControl('', { validators: [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')], updateOn: 'blur' }),
-        county: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        county: new FormControl('', { updateOn: 'blur' }),
         homelessFlag: new FormControl(false, { validators: Validators.required }),
         noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required }),
         sameAsMailingAddressFlag: new FormControl(false, { validators: Validators.required }),
@@ -372,11 +372,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private save() {
     this.contactInfoForm.markAllAsTouched();
-    const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined)
+    const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined));
+    const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.fileUploadRestrictions?.maxFileSize ?? 0);
     if(isAddressProofRequired){
       this.showAddressProofRequiredValidation = true;
     }
-    else if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation) {
+    else if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile) {
       this.loaderService.show()
       return this.saveContactInfo();
     }
@@ -841,8 +842,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private setVisibilityByNoHomeAddressProofFlag(isChecked: boolean) {
     this.isNoProofOfHomeChecked = isChecked;
-    if(this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined){
-      this.showAddressProofRequiredValidation = !isChecked
+    if(isChecked){
+      this.showAddressProofRequiredValidation = false;
     }
   }
 
@@ -1066,12 +1067,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }
 
       homeAddressGroup?.controls['city']?.enable();
-      homeAddressGroup?.controls['state']?.enable();
-      homeAddressGroup?.controls['address1']?.reset();
-      homeAddressGroup?.controls['address2']?.reset();
-      homeAddressGroup?.controls['city']?.reset();
-      homeAddressGroup?.controls['state']?.reset();
-      homeAddressGroup?.controls['zip']?.reset();
+      homeAddressGroup?.controls['state']?.setValue('OR');
+      // homeAddressGroup?.controls['address1']?.reset();
+      // homeAddressGroup?.controls['address2']?.reset();
+      // homeAddressGroup?.controls['city']?.reset();
+      // homeAddressGroup?.controls['state']?.reset();
+      // homeAddressGroup?.controls['zip']?.reset();
     }
   }
 
@@ -1150,14 +1151,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   handleFileRemoved(e: SelectEvent) {
-    if(this.homeAddressProofFile[0]?.uid){
+    if(this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid){
     this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
       next: (response) => {
           if(response === true){
               this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,"Home Address Proof Removed Successfully!")
               this.homeAddressProofFile = undefined;
               this.uploadedHomeAddressProof = undefined;
-              this.showAddressProofRequiredValidation = true;
+              //this.showAddressProofRequiredValidation = true;
               this.loadContactInfo();
               this.updateHomeAddressProofCount(false);
             }
@@ -1170,7 +1171,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   else{
     this.homeAddressProofFile = undefined;
     this.uploadedHomeAddressProof = undefined;
-    this.showAddressProofRequiredValidation = true;
+    //this.showAddressProofRequiredValidation = true;
   }
   
   }

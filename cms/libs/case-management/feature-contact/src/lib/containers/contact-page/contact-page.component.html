@@ -206,6 +206,7 @@
             <kendo-floatinglabel text="State">
               <kendo-dropdownlist 
               aria-label="State" 
+              [disabled]="true"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlStates$ | async"
               formControlName="state"              
