@@ -35,7 +35,7 @@ export class SearchFacade {
     this.loaderService.hide();
   }
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -46,16 +46,16 @@ export class SearchFacade {
     this.HideLoader();   
   }
 
-  loadCaseByHeaderSearchText(text : string): void {
+  loadCaseBySearchText(text : string): void {
     if(text){
-      this.searchDataService.loadCaseByHeaderSearchText(text).subscribe({
+      this.searchDataService.loadCaseBySearchText(text).subscribe({
       
         next: (caseBySearchTextResponse) => {
           this.globalSearchedSubject.next(caseBySearchTextResponse);
         }
         ,
         error: (err) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
       });
     }

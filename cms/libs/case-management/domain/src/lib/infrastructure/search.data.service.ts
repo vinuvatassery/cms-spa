@@ -15,10 +15,10 @@ export class SearchDataService {
 
   /** Public methods **/
   
-  loadCaseByHeaderSearchText(text : string) {     
+  loadCaseBySearchText(text : string) {     
     return this.http.get<ClientCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-search/SearchText=${text}`
+      `/case-management/clients/search/key=${text}`
     );   
 
 }

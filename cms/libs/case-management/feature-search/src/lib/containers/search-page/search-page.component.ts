@@ -39,7 +39,7 @@ export class SearchPageComponent implements OnInit {
   onSearchTextChange(selectedValue : string)
   {  
     this.showHeaderSearchInputLoader = true;    
-      this.searchFacade.loadCaseByHeaderSearchText(selectedValue);     
+      this.searchFacade.loadCaseBySearchText(selectedValue);     
  
   }
   onSelectChange(selectedValue:any){ 
