@@ -63,7 +63,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     /** methods for case child form **/
     this.registerFormData();
     this.addFormChangeSubscription();
- 	this.addSaveForLaterSubscription();
+ 	  this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
   } 
   ngOnDestroy(): void {
@@ -190,7 +190,7 @@ private addSaveForLaterSubscription(): void {
       ).subscribe(([statusResponse, isSaved]) => {
         if (isSaved) {
           this.loaderService.hide();
-          this.router.navigate(['/case-management/cases/case360/100'])
+          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
         }
       });
     }
@@ -206,6 +206,8 @@ private addSaveForLaterSubscription(): void {
     }
   
     checkValidations(){
-      return true;
+      this.parentForm.updateValueAndValidity()
+      return this.parentForm.valid;
+     
     }
 }

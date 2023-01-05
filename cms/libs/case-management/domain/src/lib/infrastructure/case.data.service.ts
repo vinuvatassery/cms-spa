@@ -404,13 +404,13 @@ export class CaseDataService {
   loadCasesStatusById(clientCaseId : string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/client-case/client-case-status/${clientCaseId}`
+      `/case-management/client-case/status/${clientCaseId}`
     );
   }
   
   updateCaseStatus(caseData: any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/client-case-status`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/status`,
       caseData
     );
   }

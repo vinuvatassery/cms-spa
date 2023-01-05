@@ -309,7 +309,7 @@ getMedicareCoverageTypeLovs(): void {
 }
 
 getCaseStatusLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.CaseStatusType).subscribe({
+  this.lovDataService.getLovsbyType(LovType.CaseStatus).subscribe({
     next: (lovCaseStatusResponse) => {
       this.lovCaseStatusTypeSubject.next(lovCaseStatusResponse);
     },

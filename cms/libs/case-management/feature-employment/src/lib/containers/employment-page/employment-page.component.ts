@@ -159,7 +159,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.router.navigate(['/case-management/cases/case360/100'])
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
       }
     });
   }
