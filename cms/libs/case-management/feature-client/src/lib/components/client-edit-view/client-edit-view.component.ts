@@ -991,7 +991,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         this.loaderService.hide();
-        this.loggerService.error(err);
+        this.loggingService.logException(err);
       }
     })
   }

@@ -4,10 +4,9 @@ import {
   OnInit,
   Input,
   Output,
-  EventEmitter,
-  OnChanges,
-  ChangeDetectorRef,
+  EventEmitter
 } from '@angular/core';
+import { Router } from '@angular/router';
 @Component({
   selector: 'case-management-duplicate-client-found',
   templateUrl: './duplicate-client-found.component.html',
@@ -21,7 +20,7 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   @Output() closeModalClick = new EventEmitter<any>();
   ssn: string = '';
-  constructor() {
+  constructor(private router:Router) {
 
   }
 
@@ -35,6 +34,7 @@ export class DuplicateClientFoundComponent implements OnInit {
   }
 
   onDuplicateFoundClick() {
+    this.router.navigate([`/case-management/cases/case360/${this.matchingClientInfo.clientId}`])
     this.closeModalClick.next(true);
   }
 
