@@ -44,7 +44,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
       private workflowFacade: WorkflowFacade ) {}
 
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
       if(type == SnackBarNotificationType.ERROR)
       {
@@ -52,15 +52,15 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
         this.loggingService.logException(err)
       }  
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.HideLoader();   
+        this.hideLoader();   
   }
     
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
     
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }
@@ -80,7 +80,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
   }
 
   loadCaseManagers(clientCaseId : string): void {
-    this.ShowLoader()
+    this.showLoader()
     this.caseManagerDataService.loadCaseManagers(clientCaseId).subscribe({
       next: (getCaseManagersResponse : any) => {
        
@@ -104,22 +104,22 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
         }
         this.workflowFacade.updateChecklist(workFlowdata);
         this.getCaseManagersSubject.next(gridView);      
-        this.HideLoader();  
+        this.hideLoader();  
         }      
      },
        error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
        },
      });
  }
 
     getCaseManagerStatus(clientCaseId : string): void {
-      this.ShowLoader()
+      this.showLoader()
       this.caseManagerDataService.getCaseManagerStatus(clientCaseId).subscribe({
         next: (getManagerStatusResponse : any) => {          
         this.getCaseManagerHasManagerStatusSubject.next(getManagerStatusResponse?.hasManager);
         this.getCaseManagerNeedManagerStatusSubject.next(getManagerStatusResponse?.needManager);
-        this.HideLoader()
+        this.hideLoader()
       },
         error: (err) => {
             this.loggingService.logException(err)
@@ -129,19 +129,19 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
 
     
     updateCaseManagerStatus(clientCaseId : string ,  hasManager :string, needManager : string) {
-      this.ShowLoader()
+      this.showLoader()
         return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager, needManager)
     }
 
     removeCaseManager(clientCaseId : string): void {
-      this.ShowLoader()
+      this.showLoader()
       this.caseManagerDataService.removeCaseManager(clientCaseId).subscribe({
         next: (removeManagerResponse) => {
          this.removeCaseManagerSubject.next(removeManagerResponse);
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Removed')    
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Removed')    
        },
          error: (err) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
          },
        });
    }
@@ -149,14 +149,14 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
 
    
    loadSelectedCaseManagerData(assignedCaseManagerId: string ,clientCaseId : string): void {
-    this.ShowLoader()
+    this.showLoader()
     this.caseManagerDataService.loadSelectedCaseManagerData(assignedCaseManagerId,clientCaseId).subscribe({
       next: (selectedCaseManagerDetailsResponse) => {
        this.selectedCaseManagerDetailsSubject.next(selectedCaseManagerDetailsResponse);    
-       this.HideLoader()   
+       this.hideLoader()   
      },
        error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
        },
      });
  }
@@ -164,14 +164,14 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
 
 
   assignCaseManager(clientCaseId : string, assignedCaseManagerId : string): void {
-  this.ShowLoader()
+  this.showLoader()
   this.caseManagerDataService.assignCaseManager(clientCaseId,assignedCaseManagerId).subscribe({
     next: (assignCaseManagerResponse) => {
      this.assignCaseManagerSubject.next(assignCaseManagerResponse);
-     this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Assiged Successfully')    
+     this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Assiged Successfully')    
    },
      error: (err) => {
-      this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
      },
    });
  }

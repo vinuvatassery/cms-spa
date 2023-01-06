@@ -18,6 +18,7 @@ export class CaseManagerListComponent implements OnInit {
   @Output() searchTextEvent = new EventEmitter<string>(); 
   @Output() getExistingCaseManagerEvent= new EventEmitter<string>(); 
   @Output() addExistingCaseManagerEvent= new EventEmitter<string>(); 
+  @Output() loadUserImageEvent =  new EventEmitter<string>();
 
   /** Input properties **/
   @Input()  getCaseManagers$ : any
@@ -26,6 +27,8 @@ export class CaseManagerListComponent implements OnInit {
   @Input() selectedCaseManagerDetails$ : any
   @Input() assignCaseManagerStatus$ : any
   @Input() removeCaseManager$: any
+  @Input() userImage$: any
+
   /** Public properties **/
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   selectedCustomCaseManagerName! : string;
@@ -41,6 +44,7 @@ export class CaseManagerListComponent implements OnInit {
   deleteCaseManagerCaseId! : string
   isEditSearchCaseManagerProvider = false;
   selectedCaseManagerId! : string;
+  gridHoverDataItem! : any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -51,6 +55,7 @@ export class CaseManagerListComponent implements OnInit {
         if(this.editButtonEmitted == false)
         {
           this.editButtonEmitted = true;
+          this.deleteCaseManagerCaseId = clientCaseId
          this.onOpenManagerSearchClicked(clientCaseId , caseManagerId ,true);
         }
       },
@@ -84,8 +89,9 @@ export class CaseManagerListComponent implements OnInit {
 
   onManagerHover(dataItem : any)
   {
-///
+   this.gridHoverDataItem=dataItem    
   }
+  
 
   onOpenManagerSearchClicked(clientCaseId : string,caseManagerId: string,isEdit : boolean) {
     this.selectedCustomCaseManagerName="";
@@ -191,6 +197,12 @@ export class CaseManagerListComponent implements OnInit {
        }
     });
    
+  }
+
+
+  loadUserImageEventHandler(caseManagerId : string)
+  {    
+   this.loadUserImageEvent.emit(caseManagerId)
   }
 
 }

@@ -123,7 +123,7 @@ export class CaseManagerSearchComponent implements OnInit
 
   onsearchTextChange(text : string)
   {     
-       if(text.length > 1)
+       if(text.length > 0)
        {
          this.caseSearchInputLoader = true;
          this.filterManager.next(text); 

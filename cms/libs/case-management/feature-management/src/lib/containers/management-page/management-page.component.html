@@ -41,6 +41,7 @@
 
   <section *ngIf="showCaseManagers$ | async">
     <case-management-case-manager-list
+    [userImage$]="userImage$"
     [selectedCaseManagerDetails$]="selectedCaseManagerDetails$"
     [getManagerUsers$]="getManagerUsers$"
     [getCaseManagers$]="getCaseManagers$"
@@ -51,11 +52,12 @@
     (deleteCasemanagersGridEvent)="removecaseManagerHandler($event)"
     (searchTextEvent)="searchTextEventHandler($event)"
     (getExistingCaseManagerEvent)="getExistingCaseManagerEventHandler($event)"
-    (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)">
+    (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
+    (loadUserImageEvent)="getCaseManagerImage($event)">
     </case-management-case-manager-list>
   </section>
 
-  <section>
+  <section *ngIf="hasManager==='N'">
     <h5 class="mt-1">Would you like one?</h5>
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">

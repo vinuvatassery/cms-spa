@@ -1,5 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { LoginUser } from '../entities/login-user';
@@ -35,6 +36,7 @@ export class UserManagementFacade {
   private clientProfilePSMFRZIPSubject = new BehaviorSubject<any>([]);
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
+  private userImageSubject = new Subject<any>();
  
   /** Public properties **/
   users$ = this.userSubject.asObservable();
@@ -62,11 +64,24 @@ export class UserManagementFacade {
   clientProfilPSMFRZIP$ = this.clientProfilePSMFRZIPSubject.asObservable();
   clientProfilServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
   usersByRole$ = this.usersByRoleSubject.asObservable();
+  userImage$ = this.userImageSubject.asObservable();
   
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService) {}
 
   /** Public methods **/
+  getUserImage(userId : string): void {    
+    this.userDataService.getUserImage(userId).subscribe({
+      next: (userImageResponse : any) => {        
+        this.userImageSubject.next(userImageResponse);
+      },
+      error: (err) => {        
+        console.error('err', err);
+      },
+    });
+  }
+
+
   getUsersByRole(rolecode : string): void {
     this.userDataService.getUsersByRole(rolecode).subscribe({
       next: (usersByRoleResponse) => {

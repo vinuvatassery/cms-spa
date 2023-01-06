@@ -31,6 +31,14 @@ export class UserDataService {
       `/system-config/users/roleCode=${roleCode}/text=${text}`
     );  
   }  
+
+  
+  getUserImage(userId : string) { 
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/users/${userId}/image`, {responseType: 'text'}
+    );  
+  }  
   
   loadUsers(): Observable<User[]> {
     return of([

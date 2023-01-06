@@ -1,8 +1,11 @@
 <!-- User Card Profile Details Popover -->
 <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
-    <!-- <case-management-health-care-provider-card  
-    ></case-management-health-care-provider-card> -->
+   <case-management-hiv-case-manager-card  
+   [gridHoverDataItem]="gridHoverDataItem"
+   [userImage$]="userImage$"
+   (loadUserImageEvent)="loadUserImageEventHandler($event)"
+    ></case-management-hiv-case-manager-card> 
   </ng-template>
 </kendo-popover>
 

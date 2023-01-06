@@ -7,6 +7,7 @@ import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag } from '
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { threadId } from 'worker_threads';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-management-page',
@@ -36,6 +37,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   selectedCaseManagerDetails$= this.caseManagerFacade.selectedCaseManagerDetails$;
   assignCaseManagerStatus$ = this.caseManagerFacade.assignCaseManagerStatus$;
   removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
+  userImage$ = this.userManagementFacade.userImage$;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -43,7 +45,8 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private caseManagerFacade: CaseManagerFacade,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private userManagementFacade : UserManagementFacade) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -151,5 +154,13 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
     {
     this.caseManagerFacade.assignCaseManager(this.clientCaseId ,event?.assignedcaseManagerId)
     }
+   }
+
+   getCaseManagerImage(assignedCaseManagerId : string)
+   {    
+       if(assignedCaseManagerId)
+       {
+       this.userManagementFacade.getUserImage(assignedCaseManagerId);
+       }
    }
 }

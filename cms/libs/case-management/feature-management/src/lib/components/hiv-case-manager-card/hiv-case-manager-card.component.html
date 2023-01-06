@@ -1,37 +1,31 @@
  
 <div class="app-popover-header use-profile-card-wrapper">
  
-    <div class="app-c-avatar avatar-lg">     
-      <span class="profile-text-avatar"></span>
-    </div>
-    <div *ngIf="gridHoverDataItem.isClinic===false">
-      <h5>{{gridHoverDataItem.providerName}} <span class="text-muted"></span></h5>
+    <div>     
+      <span ><img [src]="userImage$ | async" [attr.width]="'30px'" [attr.height]="'30px'"/></span>
+    </div> 
+    <div >
+      <h5>{{gridHoverDataItem.caseManagerName}} ({{gridHoverDataItem.pNumber}}) <span class="text-muted"></span></h5>
       <p></p>
-    </div>
-
-    <div *ngIf="gridHoverDataItem.isClinic===true">
-      <h5>{{gridHoverDataItem.clinicName}} <span class="text-muted"></span></h5>
+      {{gridHoverDataItem.domainCode}} <span class="text-muted"></span>
+      <p></p>
+     {{gridHoverDataItem.assisterGroup}} <span class="text-muted"></span>
       <p></p>
     </div>
   </div>
-  <div class="app-popover-body">
-    <h5 class="app-card-heading">Name on Check</h5>
-    <p class="app-card-details">
-      {{gridHoverDataItem.checkName}}
-     
-    </p>
+  <div class="app-popover-body">    
     <h5 class="app-card-heading">Contact</h5>
     <p class="app-card-details">
       <span class="material-icons" aria-label="email" aria-hidden="true"
         >email</span
       >
-      <a href="mailto:aj.com"> {{gridHoverDataItem.emailAddress}}</a>
+      <a href="mailto:aj.com"> {{gridHoverDataItem.email}}</a>
     </p>
     <p class="app-card-details">
       <span class="material-icons" aria-label="phone" aria-hidden="true"
         >phone</span
       >
-      {{gridHoverDataItem.primaryPhone}}
+      {{gridHoverDataItem.phone}}
     </p>
     <p class="app-card-details">
       <span class="material-icons" aria-label="fax" aria-hidden="true"
@@ -45,14 +39,10 @@
         <p>  {{gridHoverDataItem.address1}} </p>
 
         <p> {{gridHoverDataItem.address2}} </p>
-        <p> {{gridHoverDataItem.city+' '+gridHoverDataItem.stateCode+' '+gridHoverDataItem.zip}} </p>
+        <p> {{gridHoverDataItem.address3}} </p>
       </div> 
 
-    </div>
-    <h5 class="app-card-heading app-cardcommenthead">Comments</h5>
-    <p class="app-card-details">       
-       {{gridHoverDataItem.comment}} 
-    </p>
+    </div>    
    <div class="app-card-bottom-buttons">
     <a   fillMode ="clear" kendoButton   themeColor="primary" href="mailto:gridHoverDataItem.emailAddress"> Send Email</a>
    </div>
