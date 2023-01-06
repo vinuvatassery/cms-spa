@@ -94,7 +94,7 @@
         position: absolute;
         right: -5px;
         top: -3px;
-        background: material-color($hive-warn-palette, 500);
+        background: $badge-alets;
         color: $white !important;
         border-radius: $border-radius-xlg;
         padding: $size-m;
@@ -104,8 +104,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: $font-family-light;
-        font-size: $font-size-m;
+        font-family: $font-family-bold;
+        font-size: $font-size;
         z-index: 2;
         line-height: 0px;
       }
@@ -285,9 +285,9 @@ max-width: 400px;
     flex-direction: column;
     gap: $size-m;
     width: 100%;
-    .text-muted{
-      color: $inputlabelolor;
-    }
+    // .text-muted{
+    //   color: $inputlabelolor;
+    // }
   }
   .k-dropdown-button {
     max-height: 30px;

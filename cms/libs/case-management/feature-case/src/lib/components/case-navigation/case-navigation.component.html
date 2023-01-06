@@ -5,12 +5,12 @@
     !isApplicationReviewOpened && (isSendLetterProfileOpened$ | async) === false
   "
 >
-  <div class="sections-heading">
-    <h5 class="text-capital">Section</h5>
-    <h5 class="text-capital">Completed Items</h5>
-  </div>
-  <div *ngFor="let route of routes$ | async as routes; let i = index"> 
-      <li
+  <li class="sections-heading">
+    <h5 class="text-capital"      aria-label="Section" aria-hidden="true">Section</h5>
+    <h5 class="text-capital"  aria-label="Completed Items" aria-hidden="true">Completed Items</h5>
+  </li>
+  <li *ngFor="let route of routes$ | async as routes; let i = index"> 
+      <div
       *ngIf="i != routes?.length-1"
       [ngClass]="{ 'kendo-list-items':true,
       'section-completed':route.completedDatapointsCount === route.requiredDatapointsCount && route.requiredDatapointsCount !== 0,
@@ -20,9 +20,9 @@
       [workflowProcessId] = "route.processId"
       [completionStatus$]="completeStaus$"
       ></page-completion-status>
-      </li>
-  </div>
-  <div class="sections-heading sh-top-border" *ngIf="review"> 
+      </div>
+    </li>
+  <li class="sections-heading sh-top-border" *ngIf="review"> 
     <span>{{ review.title }}</span>
     <button
       aria-label="start review"
@@ -33,7 +33,7 @@
     >
       Start
     </button>
-  </div>
+  </li>
 </ul>
 
 <!-- Case Section List for application review -->
@@ -43,13 +43,13 @@
     isApplicationReviewOpened && (isSendLetterProfileOpened$ | async) === false && review
   "
 >
-  <div
+  <li
     class="sections-heading heading-as-menu"
     (click)="onApplicationReviewClosed()"
   >
     <span class="material-icons">arrow_back</span>
     <h5 class="pl-1 text-normal">Back to application</h5>
-  </div>
+</li>
   <li class="kendo-list-items">
     <span>{{ review.title }}</span> 
     <span>
@@ -61,6 +61,6 @@
   </li>
 </ul>
 
-<ul class="kendo-list-base" *ngIf="isSendLetterProfileOpened$ | async">
+<div class="kendo-list-base" *ngIf="isSendLetterProfileOpened$ | async">
   <case-management-send-letter-profile></case-management-send-letter-profile>
-</ul>
+</div>

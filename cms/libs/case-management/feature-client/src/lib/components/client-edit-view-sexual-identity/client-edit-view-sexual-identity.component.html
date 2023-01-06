@@ -1,5 +1,9 @@
 <section [formGroup]="appInfoForm">
-    <h5>What is their sexual orientation or sexual identity? (Select all that apply)</h5>
+  <fieldset class="k-form-fieldset">
+    <legend class="k-form-legend">    
+      <h5>What is their sexual orientation or sexual identity? (Select all that apply)</h5>
+</legend>
+
     <div class="component-list-h">
       <span
         class="app-checkboxwidtext-wrapper"
@@ -10,6 +14,7 @@
           kendoCheckBox
           [formControlName]="ControlPrefix + Identity.lovCode"
           id="sex{{ Identity.lovCode }}"
+          attr.aria-labelledby="sex{{ Identity.lovCode }}" 
           (change)="onCheckChange($event, Identity.lovCode)"
         />
         <label class="k-checkbox-label" for="sex{{ Identity.lovCode }}"
@@ -20,6 +25,7 @@
           <span class="flex-col flex-col-6">
             <kendo-floatinglabel text="Enter sexual orientation or sexual identity">
               <kendo-textbox
+              aria-label="Enter sexual orientation or sexual identity"
                 [formControlName]="DescriptionField"
                 [fillMode]="formUiStyle.inputFillMode"
                 [disabled]="
@@ -38,5 +44,6 @@
         Atleast one option is required.
         </kendo-formerror>
     </div>
+    </fieldset>
   </section>
   

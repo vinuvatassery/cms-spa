@@ -19,6 +19,9 @@ import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
+// directive
+import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
+
 
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
@@ -39,7 +42,12 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
     OptionbuttonListComponent,
     SsnPipe,
     PhonePipe,
-    FileSizePipe
+    FileSizePipe,
+    kendoFileSelectDirective,
+    KendoFileUploadDirective,
+    FormFieldAutoFocus, 
+    TextFieldFormFieldAutoFocus,
+    DropDownFieldFormFieldAutoFocus
   ],
   exports: [
     LoginStatusComponent,
@@ -56,7 +64,12 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
     OptionbuttonListComponent,
     SsnPipe,
     PhonePipe,
-    FileSizePipe
+    FileSizePipe,
+    kendoFileSelectDirective,
+    KendoFileUploadDirective,
+    FormFieldAutoFocus, 
+    TextFieldFormFieldAutoFocus,
+    DropDownFieldFormFieldAutoFocus
   ],
 })
 export class SharedUiCommonModule {}

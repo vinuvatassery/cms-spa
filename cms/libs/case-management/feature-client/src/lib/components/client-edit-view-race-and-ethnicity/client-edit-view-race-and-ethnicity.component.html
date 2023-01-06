@@ -117,7 +117,7 @@
                   <input
                     type="checkbox"
                     kendoCheckBox
-                    aria-labelledby="lovDesc"
+                    attr.aria-labelledby="{{dataItem.lovDesc}}" 
                     [id]="dataItem.lovDesc"
                   />
                   <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
@@ -141,6 +141,7 @@
         <div class="flex-col flex-col-4">
           <kendo-floatinglabel text="Primary identity">
             <kendo-dropdownlist
+              aria-label="RaceAndEthnicityPrimary"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="raceAndEthnicityPrimaryData"
               formControlName="RaceAndEthnicityPrimary"
