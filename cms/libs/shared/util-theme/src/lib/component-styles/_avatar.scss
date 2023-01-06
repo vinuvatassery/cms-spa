@@ -11,7 +11,7 @@
     width: $size-xxxx + $size-m;
     height: $size-xxxx + $size-m;
     border-radius: $border-radius-xlg;
-    background-color: $app-primary-lighten;
+    background-color: $app-primary;
     text-align: center;
     display: flex;
     align-items: center;
@@ -24,7 +24,7 @@
     line-height: $size-xxxx + $size-l;
     padding-top: $size-s;
     &:hover {
-      background: $app-primary !important;
+      background: $app-primary-variant !important;
     }
   }
   &.avatar-lg {

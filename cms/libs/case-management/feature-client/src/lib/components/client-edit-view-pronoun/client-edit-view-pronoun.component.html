@@ -6,19 +6,22 @@
       <input 
         type="checkbox"
          kendoCheckBox
-        aria-labelledby="pronounsSheHerHers"
-        id="pronounsSheHerHers"
+         attr.aria-labelledby="pronouns{{pronoun.lovCode}}"      
+        id="pronouns{{pronoun.lovCode}}"
         [formControlName]="pronoun.lovCode"
-        (change)="onCheckChange($event,pronoun.lovCode)"/>
-          <kendo-label
-          class="k-checkbox-label"
-          for="{{pronoun.lovCode}}"
-          text="{{pronoun.lovDesc}}" 
-        ></kendo-label>
+        (change)="onCheckChange($event,pronoun.lovCode)"
+        
+      />
+      <label class="k-checkbox-label"
+      for="pronouns{{pronoun.lovCode}}"
+        >{{pronoun.lovDesc}}</label
+      >
+   
       <div class="flex-row" *ngIf = "pronoun.lovCode ==='NOT_LISTED'">
         <span class="flex-col flex-col-6">
           <kendo-floatinglabel text="Enter Pronouns" >
-            <kendo-textbox aria-label="enter pronouns"              
+            <kendo-textbox 
+            aria-label="enter pronouns"              
               formControlName="pronoun"
               [disabled]="textboxDisable"
               [fillMode]="formUiStyle.inputFillMode"

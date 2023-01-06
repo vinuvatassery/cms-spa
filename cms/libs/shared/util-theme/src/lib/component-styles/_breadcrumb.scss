@@ -87,7 +87,9 @@
       display: flex;
       align-items: center;
       &.icon-filled {
-        color: material-color($hive-warn-palette, 500);
+        // color: material-color($hive-warn-palette, 800);
+        color: #BD3900;
+         
       }
       .material-icons {
         margin-right: 0;
@@ -102,7 +104,7 @@
       &:hover {
         cursor: pointer;
         .material-icons {
-          background: material-color($hive-warn-palette, 100);
+          background: material-color($hive-warn-palette, 50);
           transition: ease-in all 0.2s;
         }
       }

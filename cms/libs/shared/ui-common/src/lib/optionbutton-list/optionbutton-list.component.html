@@ -4,17 +4,16 @@
             <input
             type="radio"
             kendoRadioButton
-            id="material.lovCode"
+            id="{{OptionControlerName + material.lovCode}}"
             [value]="material.lovCode"
-            [name]="OptionControlerName"             
-            aria-labelledby="needsMaterials"
-            tabindex="5"
+            [name]="OptionControlerName"   
+            attr.aria-labelledby="{{OptionControlerName + material.lovCode}}"     
             [formControlName]="OptionControlerName"
             (change)="onMaterialsRdoClicked($event)"/>
       
           <kendo-label
             class="k-radio-label"
-            for="material.lovCode"
+            for="{{OptionControlerName + material.lovCode}}"
             text="{{material.lovDesc}}" 
           ></kendo-label>
          
@@ -26,6 +25,7 @@
               <kendo-floatinglabel [text]="textPlaceholderText">
                 <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
                  [data]="dropdownInutLov | async"
+                 [attr.aria-label]="textPlaceholderText"
                 textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                 [formControlName]="textControlerName"               
                 [disabled]="textFieldDisable">

@@ -1,8 +1,10 @@
 // /*Global Search*/
-.k-input-md, .k-picker-md{
+.k-input-md,
+.k-picker-md {
   font-size: $font-size;
 }
-.k-input-md .k-input-inner, .k-picker-md .k-input-inner {
+.k-input-md .k-input-inner,
+.k-picker-md .k-input-inner {
   padding: 10px 16px;
 }
 .k-rounded-md {
@@ -21,6 +23,8 @@
   display: flex;
   flex-direction: column;
   gap: $size-s;
+  border: 0px;
+  padding: 0px;
 }
 
 .k-combobox {
@@ -46,6 +50,10 @@
     }
   }
 }
+.k-form-fieldset {
+  padding: 0px;
+  border: 0px;
+}
 // ************************************************** /*  Info Banners */************************************************************
 
 /*Info Banners*/
@@ -63,27 +71,27 @@
     background: $app-primary;
     color: $white;
     padding: $size-xx $size-xx;
-    a{
+    a {
       color: $white;
     }
   }
   &.red-banner {
     background: material-color($hive-error-palette, 100);
     color: material-color($hive-error-palette, 900);
-    a{
+    a {
       color: $white;
     }
   }
   &.canyon-banner {
     background: material-color($hive-canyon-palette, 100);
     color: material-color($hive-canyon-palette, 900);
-    a{
+    a {
       color: $white;
     }
   }
   &.orange-banner {
     background: material-color($hive-warn-palette, 200);
-    a{
+    a {
       color: $white;
     }
   }
@@ -118,17 +126,17 @@
   }
 }
 
-.k-numerictextbox{
+.k-numerictextbox {
   &.k-input {
-  .k-button {
-    &.k-icon-button {
-      background: transparent;
-      position: relative;
-      right: auto;
-      top: auto;
-      z-index: 1;
+    .k-button {
+      &.k-icon-button {
+        background: transparent;
+        position: relative;
+        right: auto;
+        top: auto;
+        z-index: 1;
+      }
     }
-  }
   }
 }
 // .k-input {
@@ -183,16 +191,13 @@
     color: $error-color-1 !important;
   }
 
-  &.k-invalid + .k-label, 
- .k-invalid + .k-label, 
- .ng-invalid.ng-touched + .k-label, 
- .ng-invalid.ng-dirty + .k-label{
-  color: $error-color-1 !important;
+  &.k-invalid + .k-label,
+  .k-invalid + .k-label,
+  .ng-invalid.ng-touched + .k-label,
+  .ng-invalid.ng-dirty + .k-label {
+    color: $error-color-1 !important;
+  }
 }
- 
-}
-
-
 
 .k-input-outline,
 .k-picker-outline {
@@ -240,15 +245,12 @@
     &.ng-invalid.ng-dirty {
       border-color: $error-color-1 !important;
     }
-
-
   }
-  &.k-invalid, 
-  &.ng-invalid.ng-touched, 
-  &.ng-invalid.ng-dirty{
+  &.k-invalid,
+  &.ng-invalid.ng-touched,
+  &.ng-invalid.ng-dirty {
     border-color: $error-color-1 !important;
-}
-  
+  }
 }
 
 .input-icon-left {
@@ -274,14 +276,13 @@
 .k-input-outline,
 .k-picker-outline {
   border-color: rgba(0, 0, 0, 0.12);
-  &:hover{
-
+  &:hover {
   }
-  &:focus, &:focus-within{
+  &:focus,
+  &:focus-within {
     border: 1px solid $app-primary !important;
   }
 }
-
 
 .k-floating-label-container > .k-label {
   font-size: 14px;
@@ -306,7 +307,7 @@
 }
 .k-floating-label-container .k-picker-outline.k-focus + .k-label,
 .k-floating-label-container .k-input-outline.k-focus + .k-label,
-.k-floating-label-container.k-focus > .k-label{
+.k-floating-label-container.k-focus > .k-label {
   color: $app-primary;
 }
 .k-disabled + .k-label,
@@ -328,7 +329,7 @@
 .k-form-field-error .k-label {
   color: $error-color-1;
   line-height: 12px;
-  padding:$size-m $size-l;
+  padding: $size-m $size-l;
 }
 
 // .k-textbox-container,
@@ -546,7 +547,7 @@
 .radio-column-list {
   display: flex;
   gap: $size-xxx;
-  .app-radiobtnwidtext-wrapper{
+  .app-radiobtnwidtext-wrapper {
     width: auto;
   }
 }
@@ -587,12 +588,10 @@
     margin-bottom: $size-0;
   }
 }
-.k-list-ul{
-  .k-list-group-item{
-   
+.k-list-ul {
+  .k-list-group-item {
     // border-bottom: 1px solid $black-e;
   }
-
 }
 // ************************************************** /* Search-input */************************************************************
 
@@ -773,10 +772,10 @@ kendo-timepicker {
 
 .k-input:disabled,
 .k-input[disabled],
-.k-picker-outline[disabled], 
+.k-picker-outline[disabled],
 .k-picker-outline.k-disabled,
 .k-input.k-disabled {
-  background:material-color($hive-neutral-palette, 50) !important;
+  background: material-color($hive-neutral-palette, 50) !important;
   border-color: material-color($hive-neutral-palette, 50) !important;
   border: 1px solid material-color($hive-neutral-palette, 50) !important;
   opacity: 1;
@@ -817,18 +816,18 @@ kendo-timepicker {
     &.mw-100 {
       max-width: 100px;
     }
-    .k-input-prefix{
+    .k-input-prefix {
       position: relative;
-      top: auto;  
+      top: auto;
     }
   }
   // .k-label {
   //   display: none;
   // }
-  .k-input-inner{
+  .k-input-inner {
     text-align: right;
   }
-  &.k-floating-label-container.k-empty > .k-label{
+  &.k-floating-label-container.k-empty > .k-label {
     left: 24px;
   }
 }
@@ -839,9 +838,13 @@ kendo-timepicker {
   display: inline-block;
   margin: 6px;
   width: 100%;
-  > .k-label{
+  > .k-label {
     display: inline;
   }
+}
+
+.mt-checkbox {
+  margin-top: 24px;
 }
 
 .k-checkbox {
@@ -854,15 +857,39 @@ kendo-timepicker {
     background-color: $app-primary;
   }
 
-  &.k-invalid  , &.ng-invalid.ng-touched  , &.ng-invalid.ng-dirty   {
+  &.k-invalid,
+  &.ng-invalid.ng-touched,
+  &.ng-invalid.ng-dirty {
     border-color: $error-color-1;
-    + .k-checkbox-label  + .k-checkbox-label,   + .k-checkbox-label {
+    + .k-checkbox-label + .k-checkbox-label,
+    + .k-checkbox-label {
       color: $error-color-1;
+
+      &:hover,
+      &:focus {
+        &::after {
+          background: rgba($error-color-1, 0.2);
+        }
+      }
     }
   }
 
-  
-
+  &:hover,
+  &:focus {
+    &::after {
+      opacity: 0.5;
+      background: rgba($app-primary, 0.2);
+      z-index: 0;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+  }
+  &:focus {
+    &::after {
+      opacity: 0.6;
+      background: rgba($app-primary, 0.3);
+    }
+  }
 }
 .k-checkbox-label {
   cursor: default;
@@ -876,18 +903,38 @@ kendo-timepicker {
     border-color: $app-primary;
     color: $app-primary;
   }
-  &.k-invalid  , &.ng-invalid.ng-touched  , &.ng-invalid.ng-dirty   {
+
+  &.k-invalid,
+  &.ng-invalid.ng-touched,
+  &.ng-invalid.ng-dirty {
     border-color: $error-color-1;
-    + .k-radio-label  + .k-radio-label,   + .k-radio-label {
+    + .k-radio-label + .k-radio-label,
+    + .k-radio-label {
       color: $error-color-1;
+    }
+
+    &:hover,
+    &:focus {
+      &::after {
+        background: rgba($error-color-1, 0.2);
+      }
+    }
+  }
+
+  &:hover,
+  &:focus {
+    &::after {
+      opacity: 0.5;
+      background: rgba($app-primary, 0.2);
+      z-index: 0;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+  }
+  &:focus {
+    &::after {
+      opacity: 0.6;
+      background: rgba($app-primary, 0.3);
     }
   }
 }
-
-
-.mt-checkbox{
-  margin-top: 24px;
-}
-
-
-

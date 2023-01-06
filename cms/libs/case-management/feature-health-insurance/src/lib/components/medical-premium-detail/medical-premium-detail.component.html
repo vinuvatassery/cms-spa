@@ -12,6 +12,8 @@
       <kendo-floatinglabel text="Health Insurance Type">
         <!-- [(ngModel)]="ddlInsuranceType" -->
         <kendo-dropdownlist
+        dropdownFieldautofocus
+        aria-label="Health Insurance Type"
         [fillMode]="formUiStyle.dropDownFillMode"
           [data]="insuranceTypeList$ | async"
           (valueChange)="onHealthInsuranceTypeChanged()"
@@ -35,7 +37,7 @@
       <kendo-floatinglabel text="Medicare Benificiary ID Number">
         <kendo-textbox
         [disabled]="isViewContentEditable"
-        aria-label="lainsurance id number"
+        aria-label="Medicare Benificiary ID Number"
         formControlName ="medicareBeneficiaryIdNbr"
         [maxlength]="20"
         [fillMode]="formUiStyle.inputFillMode">
@@ -46,6 +48,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Medicare Coverage Type">
         <kendo-dropdownlist
+        aria-label ="Medicare Coverage Type"
         [fillMode]="formUiStyle.dropDownFillMode"
           [data]="medicareCoverageTypeList$ | async"
           (valueChange)="onMedicareCoverageTypeChanged()"
@@ -64,6 +67,7 @@
         <kendo-datepicker
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
+          aria-label ="Medicare Part A Start Date"
           formControlName ="medicarePartAStartDate"
           [disabled]="isViewContentEditable"
           formatPlaceholder="formatPattern"
@@ -79,6 +83,7 @@
         <kendo-datepicker
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
+          aria-label ="Medicare Part B Start Date"
           formControlName ="medicarePartBStartDate"
           [disabled]="isViewContentEditable"
           formatPlaceholder="formatPattern"
@@ -96,7 +101,7 @@
           kendoCheckBox
           aria-labelledby="qmb"
           id="qmb"
-          formControlName = "onQmbFlag"
+          formControlName = "onQmbFlag" 
         />
         <label class="k-checkbox-label" for="sameAsInsuranceId"
           >On Qualified Medicare Beneficiary (QMB)</label
@@ -104,7 +109,9 @@
       </span>
     </div>
     <div class="flex-col">
-      <h5>On Low Income Subsidy (LIS)?</h5>
+     
+      <fieldset class="k-form-fieldset">
+        <legend class="k-form-legend">  <h5>On Low Income Subsidy (LIS)?</h5> </legend>
       <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
           <input
@@ -114,8 +121,7 @@
             name="onLisFlag"
             aria-labelledby="LowIncomeSusidyYes"
             formControlName ="onLisFlag"
-            id="LowIncomeSusidyYes"
-            tabindex="3"
+            id="LowIncomeSusidyYes" 
             value="Y"
           />
          <kendo-label
@@ -133,7 +139,7 @@
             aria-labelledby="LowIncomeSusidyNo"
             formControlName ="onLisFlag"
             id="LowIncomeSusidyNo"
-            tabindex="4"
+            
             value="N"
           />
           <kendo-label
@@ -144,6 +150,7 @@
         </span>
         <kendo-formerror *ngIf="!healthInsuranceForm.controls['onLisFlag'].valid && isViewContentEditable==false">On Low Income Subsidy (LIS) is required.</kendo-formerror>
       </div>
+      </fieldset>
     </div>
 
   </div>
@@ -159,6 +166,7 @@
       <kendo-floatinglabel text="Insurance Start Date">
         <!-- [(ngModel)]="currentDate" -->
         <kendo-datepicker
+        aria-label ="Insurance Start Date"
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           formControlName ="insuranceStartDate"
@@ -175,6 +183,7 @@
       <!-- [(ngModel)]="currentDate" -->
       <kendo-floatinglabel text="Insurance End Date">
         <kendo-datepicker
+        aria-label ="Insurance End Date"
         [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
@@ -241,8 +250,10 @@
         >
           <div class="block-section">
             <div class="flex-row">
-              <div class="flex-col">
-                <h5>Do they want CareAssist to pay for health insurance premiums?</h5>
+              <div class="flex-col"> 
+                <fieldset class="k-form-fieldset">
+                  <legend class="k-form-legend"><h5>Do they want CareAssist to pay for health insurance premiums?</h5></legend>
+                 
                 <div class="component-list-h">
                   <span class="app-radiobtnwidtext-wrapper">
                     <input
@@ -253,7 +264,7 @@
                       aria-labelledby="buyingPremiumYes"
                       formControlName = "careassistPayingPremiumFlag"
                       id="buyingPremiumYes"
-                      tabindex="3"
+                      
                       value="Y"
                     />
                    <kendo-label
@@ -271,7 +282,7 @@
                       aria-labelledby="buyingPremiumNo"
                       formControlName = "careassistPayingPremiumFlag"
                       id="buyingPremiumNo"
-                      tabindex="4"
+                      
                       value="N"
                     />
                     <kendo-label
@@ -282,6 +293,7 @@
                   </span>
                   <kendo-formerror *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">Paying premium flag is required.</kendo-formerror>
                 </div>
+                </fieldset>
               </div>
             </div>
             <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
@@ -294,6 +306,7 @@
                     [disabled]="isViewContentEditable"
                     formatPlaceholder="formatPattern"
                     placeholder=""
+                    aria-label="Date Currently Paid through"
                   >
                   </kendo-datepicker>
                 </kendo-floatinglabel>
@@ -307,6 +320,7 @@
                     [disabled]="isViewContentEditable"
                     formatPlaceholder="formatPattern"
                     placeholder=""
+                    aria-label="Next Payment Premium Due Date"
                   >
                   </kendo-datepicker>
                 </kendo-floatinglabel>
@@ -327,6 +341,7 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Premium Frequency">
                   <kendo-dropdownlist
+                  aria-label="Premium Frequency" 
                   [fillMode]="formUiStyle.dropDownFillMode"
                     [disabled]="isViewContentEditable"
                     [data]="premiumFrequencyList$ | async"
@@ -375,7 +390,9 @@
           <div
             class="flex-col"
             *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
-            <h5>Are others covered on the plan?</h5>
+           
+            <fieldset class="k-form-fieldset">
+              <legend class="k-form-legend">  <h5>Are others covered on the plan?</h5> </legend>
             <div class="component-list-h">
               <span class="app-radiobtnwidtext-wrapper">
                 <input
@@ -384,12 +401,11 @@
                   kendoRadioButton
                   name="othersCovered"
                   aria-labelledby="othersCoveredOnThePlanYes"
-                  for="othersCovered1"
-                  tabindex="9"
+                  id="othersCoveredOnThePlanYes" 
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="othersCovered1"
+                  for="othersCoveredOnThePlanYes"
                   text="Yes"
                 ></kendo-label>
               </span>
@@ -400,31 +416,33 @@
                   kendoRadioButton
                   name="othersCovered"
                   aria-labelledby="othersCoveredOnThePlanNo"
-                  for="othersCovered2"
-                  tabindex="10"
+                  id="othersCoveredOnThePlanNo" 
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="othersCovered2"
+                  for="othersCoveredOnThePlanNo"
                   text="No"
                 ></kendo-label>
               </span>
             </div>
+            </fieldset>
           </div>
           <div
             class="flex-col mt-2"
             *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
-            <h5>Others covered on the plan(Select all that apply)</h5>
+           
+            <fieldset class="k-form-fieldset">
+              <legend class="k-form-legend">  <h5>Others covered on the plan(Select all that apply)</h5></legend>
             <div class="component-list-h">
               <span class="app-checkboxwidtext-wrapper">
                 <input
                   [disabled]="isViewContentEditable"
                   type="checkbox"
                   kendoCheckBox
-                  aria-labelledby="othersCoverdSelect"
-                  id="othersCoverdSelect"
+                  aria-labelledby="othersCoverdSelect1"
+                  id="othersCoverdSelect1"
                 />
-                <label class="k-checkbox-label" for="othersCoverdSelect"
+                <label class="k-checkbox-label" for="othersCoverdSelect1"
                   >John Dio (spouse)</label
                 >
               </span>
@@ -433,14 +451,15 @@
                   [disabled]="isViewContentEditable"
                   type="checkbox"
                   kendoCheckBox
-                  aria-labelledby="othersCoverdSelect"
-                  form="othersCoverdSelect"
+                  aria-labelledby="othersCoverdSelect2"
+                  form="othersCoverdSelect2"
                 />
-                <label class="k-checkbox-label" id="othersCoverdSelect"
+                <label class="k-checkbox-label" id="othersCoverdSelect2"
                   >Frank William (dependant)</label
                 >
               </span>
             </div>
+            </fieldset>
             <div class="flex-row pl-3 mt-2" *ngIf="isToggleNewPerson">
               <div class="flex-col d-flex align-iems-center justify-content-between">
                 <h5 class="mb-0">Person 1</h5>
@@ -455,6 +474,7 @@
               <div class="flex-col">
                 <kendo-floatinglabel text="Relationship to Client">
                   <kendo-dropdownlist
+                  aria-label="Relationship to Client"
                   [fillMode]="formUiStyle.dropDownFillMode"
                     [disabled]="isViewContentEditable"
                     [data]="ddlMedicalHealthInsurancePlans$ | async"
