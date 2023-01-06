@@ -11,12 +11,10 @@ import {  LoggingService, NotificationSnackbarService, SnackBarNotificationType,
 @Injectable({ providedIn: 'root' })
 export class SearchFacade {
   /** Private properties **/
-  private searchSubject = new BehaviorSubject<Search[]>([]);
-  private globalSearchedSubject = new BehaviorSubject<any>([]);
+  private clientSearchSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
-  search$ = this.searchSubject.asObservable();
-  globalSearched$ = this.globalSearchedSubject.asObservable();
+  clientSearch$ = this.clientSearchSubject.asObservable();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /** Constructor**/
@@ -51,7 +49,7 @@ export class SearchFacade {
       this.searchDataService.loadCaseBySearchText(text).subscribe({
       
         next: (caseBySearchTextResponse) => {
-          this.globalSearchedSubject.next(caseBySearchTextResponse);
+          this.clientSearchSubject.next(caseBySearchTextResponse);
         }
         ,
         error: (err) => {
@@ -60,7 +58,7 @@ export class SearchFacade {
       });
     }
     else{
-      this.globalSearchedSubject.next(null);
+      this.clientSearchSubject.next(null);
     }
   }
 }

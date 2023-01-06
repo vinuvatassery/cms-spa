@@ -14,8 +14,7 @@ import {  Subject } from 'rxjs';
 export class SearchPageComponent implements OnInit {
   /** Public properties **/
   showHeaderSearchInputLoader = false;
-  search$ = this.searchFacade.search$;
-  globalSearchResult$ = this.searchFacade.globalSearched$;;
+  clientSearchResult$ = this.searchFacade.clientSearch$;;
   mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
@@ -27,7 +26,7 @@ export class SearchPageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-      this.globalSearchResult$.subscribe(data=>{
+      this.clientSearchResult$.subscribe(data=>{
       this.showHeaderSearchInputLoader = false;
     })
   
