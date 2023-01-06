@@ -108,12 +108,10 @@ savePrirorityObjectList:any[] =[];
     });
   }
   loadSessionData() {
-    debugger;
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
-        debugger;
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientId = JSON.parse(session.sessionData).clientId;
@@ -142,12 +140,10 @@ savePrirorityObjectList:any[] =[];
     });
   }
   private save() {
-    debugger;
     let isValid = true;
     if (isValid) {
       return this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList);
     }
-
     return of(false)
   }
   private pharmacyPriorityFormChanged() {
