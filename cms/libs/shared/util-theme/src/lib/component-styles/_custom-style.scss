@@ -107,7 +107,7 @@
         cursor: pointer;
         .material-icons {
           font-size: $font-size-xlg;
-          color: material-color($hive-success-palette, 500);
+          color: material-color($hive-success-palette, 900);
           position: absolute;
           right: 14px;
           top: 8px;
@@ -159,7 +159,7 @@
         }
         h5,
         .material-icons {
-          color: material-color($hive-neutral-palette, 600);
+          color: material-color($hive-neutral-palette, 900);
         }
         &:hover {
           cursor: pointer;

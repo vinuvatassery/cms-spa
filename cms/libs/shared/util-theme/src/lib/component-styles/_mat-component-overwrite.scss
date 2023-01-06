@@ -152,7 +152,10 @@
     .k-searchbar{
       min-height: 36px;
     }
+ 
   }
+
+
   kendo-multicolumncombobox > .k-button {
     display: none;
   } 
@@ -160,7 +163,11 @@
 .hidedropicon  kendo-combobox > .k-button {
   display: none ;
 }
-
+.field-label-hide{
+  .k-label{
+    display: none;
+  }
+}
 .input-inline-loader{
   position: absolute;
   right: 8px;

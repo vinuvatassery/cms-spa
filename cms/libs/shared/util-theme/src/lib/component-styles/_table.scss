@@ -416,6 +416,9 @@ table,
 .k-grid-columnmenu-popup{
   .k-columnmenu-item{
     padding: $size-xx $size-xl;
+    &.k-selected{
+      color: $app-primary;
+    }
   }
 }
 
