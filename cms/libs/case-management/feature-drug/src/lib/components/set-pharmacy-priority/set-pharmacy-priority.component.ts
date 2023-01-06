@@ -3,7 +3,7 @@ import {
  Component,
   OnInit,
   ChangeDetectionStrategy,
-  Output,
+  Output, Input,
   EventEmitter,
 } from '@angular/core';
 import {
@@ -11,12 +11,12 @@ import {
   FormControl
 } from '@angular/forms'
 /** Enums **/
-import {  NavigationType } from '@cms/case-management/domain';
+import {  ClientPharmacy, NavigationType } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
 
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, pairwise, startWith,first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, pairwise, startWith,first, forkJoin, mergeMap, of, Subscription, Observable } from 'rxjs';
 /** Facades **/
 import { DrugPharmacyFacade, WorkflowFacade,StatusFlag,CompletionChecklist, PharmacyPriority} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
@@ -28,10 +28,9 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class SetPharmacyPriorityComponent implements OnInit {
   /** Input properties  **/
- // @Input() drugPharmacyFacade: DrugPharmacyFacade=new  DrugPharmacyFacade();
+  @Input() clientpharmacies$!: Observable<any>;
   /** Output properties  **/
   @Output() closeChangePriority = new EventEmitter();
- // @Output() updatePharmacyPriority = new EventEmitter<any>();
   priority1:any;
   priority2:any;
   public setPrioirityForm: FormGroup = new FormGroup({}) ;
@@ -41,11 +40,10 @@ pharmcayPriority: PharmacyPriority={
   priorityCode: '',
 };
 loadPrioritites:any[]=[];
-priority2Data:any[]=[];
-priority1Data:any[]=[];
+copyLoadPrioritites:any[]=[];
 
  savePrirorityObject = {
-  clientPharmacyId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  clientPharmacyId: "",
   clientId: 0,
   priorityCode: ""
 }
@@ -53,8 +51,7 @@ public itemDisabled(itemArgs: { dataItem: any; index: number }) {
   return itemArgs.dataItem.value === this.setPrioirityForm.controls['priority1']?.value // disable the 3rd item
 }
 savePrirorityObjectList:any[] =[];
-  /** Public properties 
-   * **/
+  /** Public properties  **/
   ddlPriorities$ = this.drugPharmacyFacade.ddlPriorities$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   sessionId: any = "";
@@ -77,7 +74,7 @@ savePrirorityObjectList:any[] =[];
      private loggingService:LoggingService) {
       this.ddlPriorities$.subscribe(ddlist =>{
         this.loadPrioritites = ddlist;
-        this.priority2Data=ddlist;
+        this.copyLoadPrioritites = ddlist;
       })
     }
 
@@ -85,6 +82,7 @@ savePrirorityObjectList:any[] =[];
   ngOnInit(): void {
     this.buildForm();
     this.loadSessionData();
+    this.loadclientpharmacies();
     this.loadPriorities();
     this.addSaveSubscription();
     this.pharmacyPriorityFormChanged();
@@ -96,38 +94,26 @@ savePrirorityObjectList:any[] =[];
   private loadPriorities() {
     this.drugPharmacyFacade.loadDdlPriorities();
   }
-  public valueChange(value: any,type:any): void {
-    this.priority2Data=this.loadPrioritites.filter(m=>m.value!==value);
-    if(type === 1){
-      const pharmacyPriority1:any ={}
-    pharmacyPriority1.clientId = this.clientId
-    pharmacyPriority1.priorityCode = this.setPrioirityForm.controls['priority1']?.value;
-    pharmacyPriority1.clientPharmacyId = "89397EE3-0717-4457-A8C1-39881B77B241";
-    if(this.savePrirorityObjectList && this.savePrirorityObjectList.length > 0){
-      const index = this.savePrirorityObjectList.findIndex(x=>x.priorityCode == 'P');
-      if(index >= 0){
-        this.savePrirorityObjectList.splice(index,0,pharmacyPriority1);
-      }
-    }else{
-      this.savePrirorityObjectList.push(pharmacyPriority1);
-    }
-    
-    }else if(type == 2){
-     
-      const pharmacyPriority2:any ={};
-      pharmacyPriority2.priorityCode = this.setPrioirityForm.controls['priority2']?.value;
-    pharmacyPriority2.clientId = this.clientId
-    pharmacyPriority2.clientPharmacyId = "6952473A-080C-443B-A69E-D0FDA3CA5AB6";
-    if(this.savePrirorityObjectList && this.savePrirorityObjectList.length > 0){
-      const index = this.savePrirorityObjectList.findIndex(x=>x.priorityCode == 'S');
-      if(index >= 0){
-        this.savePrirorityObjectList.splice(index,0,pharmacyPriority2);
-      }else {
-        this.savePrirorityObjectList.push(pharmacyPriority2);
-      }
-    }
-    }
+ 
+  public valueChange(value: any,index:any): void {
+   this.savePrirorityObjectList[index].priorityCode = value;
+     this.copyLoadPrioritites=this.loadPrioritites.filter(m=>m.value!==value);
+ 
   }
+  private loadClientPharmacies() {
+    this.clientpharmacies$.subscribe({
+      next: (pharmacies: ClientPharmacy[]) => {
+        pharmacies.forEach((pharmacyData: any) => {
+          pharmacyData.pharmacyNameAndNumber =
+            pharmacyData.pharmacyName + ' #' + pharmacyData.pharmacyNumber;
+        });
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
   private buildForm() {
     this.setPrioirityForm = new FormGroup({
       priority1: new FormControl('', []),
@@ -136,18 +122,30 @@ savePrirorityObjectList:any[] =[];
   }
   pharmacyPriority: any={};
   loadSessionData() {
+    debugger;
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
+        debugger;
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+          this.clientId = JSON.parse(session.sessionData).clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-          this.clientId = 1000;
+          //this.clientId = 1000;
           this.loadPharmacyPriority();
         }
       });
 
+  }
+  private loadclientpharmacies(){
+    this.clientpharmacies$.subscribe(list =>{
+      this.savePrirorityObjectList = list;
+      // this.savePrirorityObjectList.forEach(x =>{
+      //   x.defaultItem="";
+      // })
+
+    })
   }
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
@@ -163,12 +161,13 @@ savePrirorityObjectList:any[] =[];
     });
   }
   private save() {
+    debugger;
     let isValid = true;
     if (isValid) {
       this.priorityInfo.clientId = 0;
       this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority1"].value;
       this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority2"].value;
-      return this.drugPharmacyFacade.updatePharmacyPriority(this.priorityInfo);
+      return this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList);
      
     }
 
@@ -219,17 +218,6 @@ savePrirorityObjectList:any[] =[];
     this.drugPharmacyFacade.loadPharmacyPriority( this.clientId).subscribe({
       next: (response:any) => {
         this.pharmacyPriorityList = response;
-        if(response!==null){
-         const priority1 = response.find((data: any) => data.priorityCode ='P');
-         if(priority1!==undefined){
-          this.setPrioirityForm.controls["priority1"].setValue(priority1.priorityCode);
-          this.valueChange(event,1);
-         }
-         const priority2 = response.find((data: any) => data.priorityCode ='S');
-         if(priority2!==undefined){
-          this.setPrioirityForm.controls["priority2"].setValue(priority2.priorityCode);
-         }
-        }
       },
       error: (error: any) => {
         this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
