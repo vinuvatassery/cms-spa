@@ -24,7 +24,8 @@ export class ClientEditViewPronounComponent implements OnInit {
    pronounList: any = []; 
    saveClickSubscription!:Subscription;
    pronounLovs$= this.lovFacade.pronounslov$;
-   showNotListedRequired:boolean=false;
+   showNotListedRequired:boolean=false;   
+   maxLengthFifty =50;
    public formUiStyle : UIFormStyle = new UIFormStyle();  
    //textboxDisable:boolean=true;
 
