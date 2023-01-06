@@ -6,7 +6,7 @@
   </p>
   <div class="flex-row">
     <div class="flex-col">
-      <div class="autoSelect-search mat-form-no-b-space">
+      <div class="autoSelect-search mat-form-no-b-space field-label-hide">
         <div class="global-search">
           <span
             class="material-icons global-search-icon"
@@ -15,7 +15,9 @@
             >search</span
           >
           <kendo-formfield>
+            <kendo-label text="Search Pharmacy Name/Number"> 
           <kendo-autocomplete
+          autofocusfield
           [fillMode]="formUiStyle.dropDownFillMode" 
           [data]="pharmacySearchResult$ | async"     
           [value]="selectedPharmacyForEdit" 
@@ -28,6 +30,7 @@
             <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.vendorFullName}}</span>          
           </ng-template>
       </kendo-autocomplete>
+    </kendo-label>
       <kendo-formerror>Pharmacy required</kendo-formerror>
     </kendo-formfield>
           <!-- <kendo-multicolumncombobox
