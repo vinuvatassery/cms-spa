@@ -22,7 +22,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>           
             <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.required">
-              Address line 1 is required
+              Address Line 1 is required
             </kendo-formerror>
             <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.pattern">
               Special characters are not allowed
@@ -153,7 +153,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
-              Address line 1 is required
+              Address Line 1 is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homeAddress?.address1?.errors?.pattern">
               Special characters are not allowed
@@ -173,7 +173,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.address2?.errors?.required">
-              Address line 2 is required
+              Address Line 2 is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homeAddress?.address2?.errors?.pattern">
               Special characters are not allowed
@@ -289,7 +289,7 @@
               aria-labelledby="homeAddress_homelessFlag"
               formControlName="homelessFlag"
                />
-              <label class="k-checkbox-label" for="homeAddress_homelessFlag">Houseless</label>
+              <label class="k-checkbox-label" for="homeAddress_homelessFlag">Unhoused</label>
             </span>
           </kendo-formfield>
           </div>
@@ -815,7 +815,7 @@
               formControlName="contactName"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Contacts name is required</kendo-formerror>
+            <kendo-formerror>Contact's Name is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -835,7 +835,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Contact's relationship to client is required</kendo-formerror>
+            <kendo-formerror>Contact's Relationship to Client is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -868,7 +868,7 @@
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
              <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">
-              Contact's phone number is required
+              Contact's Phone Number is required
             </kendo-formerror>
             <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.pattern">
               Not a valid phone number format 
