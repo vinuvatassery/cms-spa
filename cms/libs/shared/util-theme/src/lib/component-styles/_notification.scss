@@ -31,7 +31,7 @@
     color: $white;
   }
   &.badge-warn {
-    background: material-color($hive-warn-palette, 900);
+    background: $badge-alets;
     color: $white;
   }
   &.badge-warn-light {

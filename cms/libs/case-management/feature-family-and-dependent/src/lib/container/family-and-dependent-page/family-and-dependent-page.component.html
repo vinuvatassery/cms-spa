@@ -14,10 +14,10 @@
           <input
             type="checkbox"
             kendoCheckBox
-            (click)="onNoFamilyMemberClicked()"
-            aria-labelledby="clientDoesNotHaveFamilyOrDependents"
+            (click)="onNoFamilyMemberClicked()" 
             id="clientsDoesNotHaveFamilyOrDependents"
-           [checked]="dependentStatus$ | async"           
+           [checked]="dependentStatus$ | async"   
+           aria-labelledby="clientsDoesNotHaveFamilyOrDependents"        
           />
           <label
             class="k-checkbox-label"

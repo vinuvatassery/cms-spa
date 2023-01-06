@@ -1,8 +1,10 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 /** Facades **/
 import { SearchFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {  Subject } from 'rxjs';
 @Component({
   selector: 'case-management-search-page',
   templateUrl: './search-page.component.html',
@@ -11,25 +13,41 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class SearchPageComponent implements OnInit {
   /** Public properties **/
- showHeaderSearchInputLoader = false;
-  search$ = this.searchFacade.search$;
+  showHeaderSearchInputLoader = false;
+  clientSearchResult$ = this.searchFacade.clientSearch$;;
   mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  filterManager: Subject<string> = new Subject<string>();
+
   /** Constructor **/
-  constructor(private readonly searchFacade: SearchFacade) {}
+  constructor(private readonly searchFacade: SearchFacade,private router: Router) {
+     
+  }
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.loadSearch();
+      this.clientSearchResult$.subscribe(data=>{
+      this.showHeaderSearchInputLoader = false;
+    })
+  
   }
   clickMobileHeaderSearchOpen(){
       this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
   }
-  /** Private methods **/
-  private loadSearch(): void {
-    this.showHeaderSearchInputLoader = true;
-    this.searchFacade.loadSearch();
-    this.showHeaderSearchInputLoader = false;
-
+  
+  onSearchTextChange(selectedValue : string)
+  {  
+    this.showHeaderSearchInputLoader = true;    
+      this.searchFacade.loadCaseBySearchText(selectedValue);     
+ 
   }
+  onSelectChange(selectedValue:any){ 
+    if(selectedValue !== undefined){
+      this.router.navigateByUrl(`case-management/cases/case360/${selectedValue.clientCaseId}`); 
+    }
+  }
+
 }
+
+
+

@@ -14,6 +14,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 1">
               <kendo-textbox 
+              textFieldautofocus
               aria-label="address line 1" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
@@ -128,13 +129,13 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check1" 
+              id="sameAsMailingAddressFlag" 
               kendoCheckBox 
-              aria-labelledby="sameAsMailingAddressFlag" 
-              id="check1"
+         
+            
               formControlName="sameAsMailingAddressFlag"
                />
-              <label class="k-checkbox-label" for="check1">Same as Mailing Address</label>
+              <label class="k-checkbox-label" for="sameAsMailingAddressFlag">Same as Mailing Address</label>
 
             </span>
           </kendo-formfield>
@@ -282,13 +283,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check2" 
+              id="homeAddress_homelessFlag" 
               name="homeAddress_homelessFlag"
               kendoCheckBox 
-              aria-labelledby="houseless"
+              aria-labelledby="homeAddress_homelessFlag"
               formControlName="homelessFlag"
                />
-              <label class="k-checkbox-label" for="check2">Houseless</label>
+              <label class="k-checkbox-label" for="homeAddress_homelessFlag">Houseless</label>
             </span>
           </kendo-formfield>
           </div>
@@ -301,69 +302,67 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check3" 
+              id="noHomeAddressProofFlag" 
+              kendoCheckBox 
+              aria-labelledby="noHomeAddressProofFlag"
               name="homeAddress_proofFlag"
-              kendoCheckBox
-              aria-labelledby="proofOfHomeAddress" 
               formControlName="noHomeAddressProofFlag"              
                 />
-              <label class="k-checkbox-label" for="check3">No proof of home address or residency</label>
+              <label class="k-checkbox-label" for="noHomeAddressProofFlag">No proof of home address or residency</label>
             </span>
           </kendo-formfield>
           </div>
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
+            <!-- <kendo-label class="k-checkbox-label" for="homeAddressProofUploaded" text="Proof of home address"> -->
             <kendo-fileselect 
-            aria-label="proof of home address" 
+            aria-label="proof of home address"  
             name="upload proof"
             [disabled]="isNoProofOfHomeChecked"
             [restrictions]="fileUploadRestrictions" 
             [multiple]="false"   
             (select)="handleFileSelected($event)" 
             (remove)="handleFileRemoved($event)"            
-            [ngModel]="homeAddressProofFile" 
+            [ngModel]="homeAddressProofFile"  
             [ngModelOptions]="{standalone: true}"
+            id="homeAddressProofUploaded"
             #homeAddressProofUploaded>
           </kendo-fileselect>
+        <!-- </kendo-label> -->
           <kendo-formhint>Max file size 25MB</kendo-formhint> 
           <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of home address is required
           </kendo-formerror>
           </div>
         </div>
+        <fieldset class="k-form-fieldset">  
         <div class="flex-row mt-2">
           <div class="flex-col mat-split-list mt-2">
-            <h5 class="text-capital">How stable is your housing?</h5>
+            <legend class="k-form-legend"> <h5 class="text-capital">How stable is your housing?</h5></legend> 
           </div>
         </div>
-          <div class="flex-row ml-1">
+          <div class="flex-row ml-1"> 
             <kendo-formfield>
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="housingStabilityCode"
-                  aria-labelledby="stable or permanent"
-                  id="StableOrPermanent"
-                  tabindex="1"
+                  name="housingStabilityCode" 
+                  id="StableOrPermanent" 
                   class="form-control" 
+                  aria-labelledby="StableOrPermanent"
                   formControlName="housingStabilityCode"
                   value="STABLE_PERMANENT"
                 />
-                <kendo-label
-                  class="k-radio-label"
-                  text="Stable/Permanent"
-                  for="StableOrPermanent"
-                ></kendo-label>
+                <kendo-label   class="k-radio-label"   text="Stable/Permanent"  for="StableOrPermanent"  > &nbsp;</kendo-label>
               </span>
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="housingStabilityCode"
+                  name="housingStabilityCode" 
+                  id="temporary" 
                   aria-labelledby="temporary"
-                  id="temporary"
-                  tabindex="1"
                   class="form-control" 
                   formControlName="housingStabilityCode"
                   value="TEMP"
@@ -380,8 +379,7 @@
                   kendoRadioButton
                   name="housingStabilityCode"
                   aria-labelledby="unstable"
-                  id="unstable"
-                  tabindex="1"
+                  id="unstable" 
                   class="form-control" 
                   formControlName="housingStabilityCode"
                   value="UNSTABLE"
@@ -394,7 +392,8 @@
               </span>
               <kendo-formerror>How stable is your housing is required</kendo-formerror>
           </kendo-formfield>
-        </div>   
+        </div>
+        </fieldset>   
       </div>
       <!-- Contact Phone Details-->
       <div class="block-section" formGroupName="homePhone">
@@ -425,13 +424,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check4"   
+              id="homePhone_applicableFlag"   
               name="homePhone_applicableFlag"           
               kendoCheckBox
-              aria-labelledby="homePhone applicableFlag"
+              aria-labelledby="homePhone_applicableFlag"
               formControlName="applicableFlag" 
                 />
-              <label class="k-checkbox-label" for="check4">Not Applicable</label>
+              <label class="k-checkbox-label"  for="homePhone_applicableFlag">Not Applicable</label>
             </span>
           </kendo-formfield>
           </div>
@@ -442,13 +441,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check5" 
               kendoCheckBox 
-              id="check5" 
-              aria-labelledby="detailedMessageOk" 
+              aria-labelledby="detailMsgConsentFlag4"
+              id="detailMsgConsentFlag4"  
               formControlName="detailMsgConsentFlag"
               />
-              <label class="k-checkbox-label" for="check5">Detailed Messages OK</label>
+              <label class="k-checkbox-label" for="detailMsgConsentFlag4">Detailed Messages OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -457,12 +455,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check6" 
-              kendoCheckBox 
-              aria-labelledby="smsTextOk"
+              id="smsTextConsentFlag1" 
+              aria-labelledby="smsTextConsentFlag1"
+              kendoCheckBox  
               formControlName="smsTextConsentFlag"
               />
-              <label class="k-checkbox-label" for="check6">SMS Text OK</label>
+              <label class="k-checkbox-label" for="smsTextConsentFlag1">SMS Text OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -474,7 +472,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Cell Phone">
               <kendo-maskedtextbox 
-              aria-labelledby="noCellPhoneCheck" 
+      
               aria-label="Cell Phone"
               [disabled]="isNoCellPhoneChecked" 
               [maxlength]="10"
@@ -497,13 +495,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check7" 
-              name="cellPhone_applicableFlag"              
-              kendoCheckBox              
-              aria-labelledby="cellPhone"
+              id="cellPhone_applicableFlag" 
+              name="cellPhone_applicableFlag"   
+              aria-labelledby="cellPhone_applicableFlag"           
+              kendoCheckBox   
               formControlName="applicableFlag"
                 />
-              <label class="k-checkbox-label" for="check7">Not Applicable</label>
+              <label class="k-checkbox-label" for="cellPhone_applicableFlag">Not Applicable</label>
             </span>
           </kendo-formfield>
           </div>
@@ -514,12 +512,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check8" 
+              id="detailMsgConsentFlag1" 
+              aria-labelledby="detailMsgConsentFlag1"   
               kendoCheckBox 
-              aria-labelledby="detailedMessageOk"
               formControlName="detailMsgConsentFlag"
               />
-              <label class="k-checkbox-label" for="check8">Detailed Messages OK</label>
+              <label class="k-checkbox-label" for="detailMsgConsentFlag1">Detailed Messages OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -528,12 +526,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check9" 
+              id="smsTextConsentFlag2" 
               kendoCheckBox 
-              aria-labelledby="smsTextOk"
+              aria-labelledby="smsTextConsentFlag2"   
               formControlName="smsTextConsentFlag"
               />
-              <label class="k-checkbox-label" for="check9">SMS Text OK</label>
+              <label class="k-checkbox-label" for="smsTextConsentFlag2">SMS Text OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -568,13 +566,13 @@
                 <input 
                 class="adjust-attr"
                 type="checkbox" 
-                id="check10" 
+                id="workPhone_applicableFlag" 
                 name="workPhone_applicableFlag"
-                kendoCheckBox                
-                aria-labelledby="noWorkPhone" 
+                kendoCheckBox                 
                 formControlName="applicableFlag"
+                aria-labelledby="workPhone_applicableFlag"   
                 />
-                <label class="k-checkbox-label" for="check10">Not Applicable</label>
+                <label class="k-checkbox-label" for="workPhone_applicableFlag">Not Applicable</label>
               </span>
             </kendo-formfield>
             </div>
@@ -585,12 +583,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check11" 
-                kendoCheckBox 
-                aria-labelledby="detailedMessageOk" 
+                id="detailMsgConsentFlag2" 
+                kendoCheckBox  
+                aria-labelledby="detailMsgConsentFlag2"   
                 formControlName="detailMsgConsentFlag"
                 />
-                <label class="k-checkbox-label" for="check11">Detailed Messages OK</label>
+                <label class="k-checkbox-label" for="detailMsgConsentFlag2">Detailed Messages OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -599,12 +597,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check12" 
-                kendoCheckBox 
-                aria-labell="smsTextOk" 
+                id="smsTextConsentFlag3" 
+                kendoCheckBox  
+                aria-labelledby="smsTextConsentFlag3"  
                 formControlName="smsTextConsentFlag"
                 />
-                <label class="k-checkbox-label" for="check12">SMS Text OK</label>
+                <label class="k-checkbox-label" for="smsTextConsentFlag3">SMS Text OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -654,13 +652,13 @@
                 <input 
                 class="adjust-attr"
                 type="checkbox" 
-                id="check13" 
+                id="otherPhone_applicableFlag" 
                 name="otherPhone_applicableFlag"
-                kendoCheckBox                
-                aria-labelledby="otherPhoneCheck" 
+                kendoCheckBox                 
                 formControlName="applicableFlag"
+                aria-labelledby="otherPhone_applicableFlag"  
                 />
-                <label class="k-checkbox-label" for="check13">Not Applicable</label>
+                <label class="k-checkbox-label" for="otherPhone_applicableFlag">Not Applicable</label>
               </span>
             </kendo-formfield>
             </div>
@@ -671,12 +669,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check14" 
+                id="detailMsgConsentFlag3" 
                 kendoCheckBox 
-                aria-labelledby="detailedMessageOk" 
                 formControlName="detailMsgConsentFlag"
+                aria-labelledby="detailMsgConsentFlag3"  
                 />
-                <label class="k-checkbox-label" for="check14">Detailed Messages OK</label>
+                <label class="k-checkbox-label" for="detailMsgConsentFlag3">Detailed Messages OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -685,12 +683,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check15" 
-                kendoCheckBox 
-                aria-labelledby="smsTextOk" 
+                id="smsTextConsentFlag4" 
+                kendoCheckBox   
                 formControlName="smsTextConsentFlag"
+                aria-labelledby="smsTextConsentFlag4"  
                 />
-                <label class="k-checkbox-label" for="check15">SMS Text OK</label>
+                <label class="k-checkbox-label" for="smsTextConsentFlag4">SMS Text OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -721,14 +719,13 @@
                 <input 
                 class="adjust-attr"
                 type="checkbox" 
-                id="check16" 
+                id="email_applicableFlag" 
                 name="email_applicableFlag"
-                kendoCheckBox 
-                aria-label="emailNotApplicable" 
+                kendoCheckBox  
                 formControlName="applicableFlag" 
-
+                aria-labelledby="email_applicableFlag"  
                 />
-                <label class="k-checkbox-label" for="check16">Not Applicable</label>
+                <label class="k-checkbox-label" for="email_applicableFlag">Not Applicable</label>
               </span>
             </kendo-formfield>
             </div>
@@ -739,12 +736,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check17" 
-                kendoCheckBox 
-                aria-labelledby="detailedMessageOk"
+                id="detailedMessageOk" 
+                kendoCheckBox  
                 formControlName="detailMsgFlag"
+                aria-labelledby="detailedMessageOk"  
                 />
-                <label class="k-checkbox-label" for="check17" id="detailedMessageOk">Detailed Messages OK</label>
+                <label class="k-checkbox-label" for="detailedMessageOk"  >Detailed Messages OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -753,12 +750,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check18" 
-                kendoCheckBox 
-                aria-labelledby="goPapperlessAndSendViaEmail" 
+                id="gopaperless" 
+                kendoCheckBox  
                 formControlName="paperlessFlag"
+                aria-labelledby="gopaperless"  
                 />
-                <label class="k-checkbox-label" for="check18">Go paperless and send important notices via email, when
+                <label class="k-checkbox-label" for="gopaperless">Go paperless and send important notices via email, when
                   possible</label>
               </span>
             </kendo-formfield>
@@ -771,6 +768,7 @@
               <kendo-formfield>
               <kendo-floatinglabel text="Preferred Contact">
                 <kendo-dropdownlist 
+                aria-labelledby="Preferred Contact" 
                 [fillMode]="formUiStyle.dropDownFillMode" 
                 [data]="preferredContactMethods"
                 [disabled]="preferredContactMethods.length === 0"
@@ -795,13 +793,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check19" 
+              id="noFriendOrFamilyContactFlag" 
               name="familyAndFriendsContact_noFriendOrFamilyContactFlag"
-              kendoCheckBox              
-              aria-labelledby="noFriendsOrFamily" 
+              kendoCheckBox       
               formControlName="noFriendOrFamilyContactFlag"
+              aria-labelledby="noFriendOrFamilyContactFlag" 
               />
-              <label class="k-checkbox-label" for="check19">No friend or family contact</label>
+              <label class="k-checkbox-label" for="noFriendOrFamilyContactFlag">No friend or family contact</label>
             </span>
           </kendo-formfield>
           </div>
@@ -826,6 +824,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Contact's Relationship to Client">
               <kendo-dropdownlist 
+              aria-label="Contact's Relationship to Client" 
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="ddlRelationships$ | async"
               [disabled]="isNoFriendsOrFamilyChecked"
@@ -908,14 +907,14 @@
           <span>
           <input
           type="radio"
-          id="chosenAddress" 
-          name="chosenAddress" 
-          aria-labelledby="address entered"
+          id="chosenmailAddressEntered" 
+          name="chosenAddress"  
           value="addressEntered" 
           formControlName="chosenAddress"             
           kendoRadioButton
+          aria-labelledby="chosenmailAddressEntered" 
           />
-          <kendo-label for="chosenAddress" text="Address Entered"></kendo-label> 
+          <kendo-label for="chosenmailAddressEntered" text="Address Entered"></kendo-label> 
         </span>
         <div class="mt-2 ml-3">
       <p>  {{mailAddressEntered?.address1 | uppercase }} </p> 
@@ -927,14 +926,14 @@
           <span>
           <input
           type="radio"
-          id="chosenAddress"
+          id="chosenmailAddressSuggested"
           name="chosenAddress"
-          aria-labelledby="address suggested"
+          aria-labelledby="chosenmailAddressSuggested"
           value="addressSuggested"
           formControlName="chosenAddress"
           kendoRadioButton
           />
-          <kendo-label for="chosenAddress" text="Suggested Address"></kendo-label>  
+          <kendo-label for="chosenmailAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
       <div class="mt-2 ml-3">
         <p>   {{mailAddressSuggested?.address1}}</p>
@@ -986,14 +985,14 @@
           <span>
           <input
           type="radio"
-          id="chosenAddress" 
-          name="chosenAddress" 
-          aria-labelledby="address entered"
+          id="chosenhomeAddressEntered" 
+          name="chosenAddress"           
           value="addressEntered" 
           formControlName="chosenAddress"             
           kendoRadioButton
+          aria-labelledby="chosenhomeAddressEntered" 
           />
-          <kendo-label for="chosenAddress" text="Address Entered"></kendo-label> 
+          <kendo-label for="chosenhomeAddressEntered" text="Address Entered"></kendo-label> 
         </span>
         <p class="mt-2 ml-3">
         {{homeAddressEntered?.address1 | uppercase }} <br>
@@ -1005,14 +1004,14 @@
           <span>
           <input
           type="radio"
-          id="chosenAddress"
+          id="chosenhomeAddressSuggested"
           name="chosenAddress"
-          aria-labelledby="address suggested"
+          aria-labelledby="chosenhomeAddressSuggested"
           value="addressSuggested"
           formControlName="chosenAddress"
           kendoRadioButton
           />
-          <kendo-label for="chosenAddress" text="Suggested Address"></kendo-label>  
+          <kendo-label for="chosenhomeAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
       <p class="mt-2 ml-3">
           {{homeAddressSuggested?.address1}} <br>

@@ -6,18 +6,22 @@
   <section>
     <div class="flex-row">
       <div class="flex-col">
-        <div class="global-search mat-form-no-b-space search-case">
+        <div class="global-search field-label-hide mat-form-no-b-space search-case">
           <span
             class="material-icons global-search-icon"
             aria-label="search case"
             aria-hidden="true"
             >search</span
           >
+          <kendo-label text="Search Case Name, Member ID or SSN">
           <span *ngIf="showInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
           <kendo-multicolumncombobox         
             [data]="caseSearchResults$ | async"
             textField="name"
             valueField="id"
+            autofocusfield
+            id="searchcaseornew"
+            #searchcaseornew
             [loading] = "showInputLoader"
             placeholder="Search Case Name, Member ID or SSN"
             [fillMode]="formUiStyle.dropDownFillMode"
@@ -70,6 +74,7 @@
               </div>
             </ng-template>
           </kendo-multicolumncombobox>
+        </kendo-label>
         </div>
       </div>
     </div>
