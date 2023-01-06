@@ -4,7 +4,6 @@
   <p class="text-muted mb-2">Select the priority for each pharmacy below.</p>
 
   <div class="flex-row" *ngFor="let pharmacy of savePrirorityObjectList; let i=index">
-<!-- {{clientpharmacies$ | async | json}} -->
     <div class="flex-col flex-col-6" >
 
       <h5 class="mb-0">{{pharmacy?.pharmacyNameAndNumber}} </h5>
@@ -17,7 +16,7 @@
 
       <kendo-floatinglabel text="Priority">
 
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true"  (valueChange)="valueChange($event,i)" [textField]="'text'" [valueField]="'value'" [data]="copyLoadPrioritites">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"  (valueChange)="valueChange($event,i)" textField="text" valueField="value" [data]="copyLoadPrioritites">
         </kendo-dropdownlist>
 
       </kendo-floatinglabel>

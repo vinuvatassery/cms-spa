@@ -108,8 +108,8 @@ savePrirorityObjectList:any[] =[];
             pharmacyData.pharmacyName + ' #' + pharmacyData.pharmacyNumber;
         });
       },
-      error: (err) => {
-        console.log(err);
+      error: (error: any) => {
+        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
       },
     });
   }
@@ -231,7 +231,6 @@ savePrirorityObjectList:any[] =[];
   onSavePriority()
   {
     this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList).subscribe((x:any) =>{
-      console.log(x);
       if(x){
         this.onCloseChangePriorityClicked();
       }
