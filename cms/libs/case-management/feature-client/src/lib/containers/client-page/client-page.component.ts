@@ -664,66 +664,106 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           }
           this.appInfoForm.controls['materialInAlternateFormatCode'].setValidators(Validators.required);
           this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
-            if( this.appInfoForm.controls['materialInAlternateFormatCode'].value  !=='' ||
+            if( this.appInfoForm.controls['materialInAlternateFormatCode'].value  !=='' &&
                 this.appInfoForm.controls['materialInAlternateFormatCode'].value !== null){
                 this.appInfoForm.controls['materialInAlternateFormatCode'].setErrors(null);
                 this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
-              }     
+                if( this.appInfoForm.controls['materialInAlternateFormatCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['materialInAlternateFormatDesc'].setValidators(Validators.required);
+                  this.appInfoForm.controls['materialInAlternateFormatDesc'].updateValueAndValidity();
+                }
+                
+              }    
           this.appInfoForm.controls['interpreterCode'].setValidators(Validators.required);
           this.appInfoForm.controls['interpreterCode'].updateValueAndValidity();
-           if( this.appInfoForm.controls['interpreterCode'].value  !=='' ||
+           if( this.appInfoForm.controls['interpreterCode'].value  !=='' &&
                 this.appInfoForm.controls['interpreterCode'].value !== null){
                 this.appInfoForm.controls['interpreterCode'].setErrors(null);
                 this.appInfoForm.controls['interpreterCode'].updateValueAndValidity();
+                if( this.appInfoForm.controls['interpreterCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['interpreterType'].setValidators(Validators.required);
+                  this.appInfoForm.controls['interpreterType'].updateValueAndValidity();
+                }
+                
            } 
            this.appInfoForm.controls['deafOrHearingCode'].setValidators(Validators.required);
            this.appInfoForm.controls['deafOrHearingCode'].updateValueAndValidity();
-           if( this.appInfoForm.controls['deafOrHearingCode'].value  !=='' ||
+           if( this.appInfoForm.controls['deafOrHearingCode'].value  !=='' &&
                 this.appInfoForm.controls['deafOrHearingCode'].value !== null){
                 this.appInfoForm.controls['deafOrHearingCode'].setErrors(null);
                 this.appInfoForm.controls['deafOrHearingCode'].updateValueAndValidity();
+                if( this.appInfoForm.controls['deafOrHearingCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['startAgeDeafOrHearing'].setValidators(Validators.required);
+                  this.appInfoForm.controls['startAgeDeafOrHearing'].updateValueAndValidity();
+                }
+                
             } 
            this.appInfoForm.controls['blindSeeingCode'].setValidators(Validators.required);
            this.appInfoForm.controls['blindSeeingCode'].updateValueAndValidity();
-            if( this.appInfoForm.controls['blindSeeingCode'].value  !=='' ||
+            if( this.appInfoForm.controls['blindSeeingCode'].value  !=='' &&
                 this.appInfoForm.controls['blindSeeingCode'].value !== null){
                 this.appInfoForm.controls['blindSeeingCode'].setErrors(null);
                 this.appInfoForm.controls['blindSeeingCode'].updateValueAndValidity();
+                if( this.appInfoForm.controls['blindSeeingCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['startAgeBlindSeeing'].setValidators(Validators.required);
+                  this.appInfoForm.controls['startAgeBlindSeeing'].updateValueAndValidity();
+                }
+                
             } 
             this.appInfoForm.controls['limitingConditionCode'].setValidators(Validators.required);
             this.appInfoForm.controls['limitingConditionCode'].updateValueAndValidity();
-            if( this.appInfoForm.controls['limitingConditionCode'].value  !=='' ||
+            if( this.appInfoForm.controls['limitingConditionCode'].value  !=='' &&
                 this.appInfoForm.controls['limitingConditionCode'].value !== null){
                 this.appInfoForm.controls['limitingConditionCode'].setErrors(null);
                 this.appInfoForm.controls['limitingConditionCode'].updateValueAndValidity();
               } 
              this.appInfoForm.controls['walkingClimbingDifficultyCode'].setValidators(Validators.required);
              this.appInfoForm.controls['walkingClimbingDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['walkingClimbingDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['walkingClimbingDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['walkingClimbingDifficultyCode'].value !== null){
                   this.appInfoForm.controls['walkingClimbingDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['walkingClimbingDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['walkingClimbingDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeWalkingClimbingDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeWalkingClimbingDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
               this.appInfoForm.controls['dressingBathingDifficultyCode'].setValidators(Validators.required);
               this.appInfoForm.controls['dressingBathingDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['dressingBathingDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['dressingBathingDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['dressingBathingDifficultyCode'].value !== null){
                   this.appInfoForm.controls['dressingBathingDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['dressingBathingDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['dressingBathingDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeDressingBathingDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeDressingBathingDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
               this.appInfoForm.controls['concentratingDifficultyCode'].setValidators(Validators.required);
               this.appInfoForm.controls['concentratingDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['concentratingDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['concentratingDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['concentratingDifficultyCode'].value !== null){
                   this.appInfoForm.controls['concentratingDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['concentratingDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['concentratingDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeConcentratingDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeConcentratingDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
               this.appInfoForm.controls['errandsDifficultyCode'].setValidators(Validators.required);
               this.appInfoForm.controls['errandsDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['errandsDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['errandsDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['errandsDifficultyCode'].value !== null){
                   this.appInfoForm.controls['errandsDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['errandsDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['errandsDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeErrandsDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeErrandsDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
 
               this.appInfoForm.controls['spokenLanguage'].setValidators(Validators.required);              
