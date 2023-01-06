@@ -45,7 +45,7 @@ export class RemoveIncomeConfirmationComponent {
   }
   /** Internal event methods **/
 
-  // click on remove employer confirmation
+  // click on Delete employer confirmation
   removeIncome() {
     // this.incomeFacade.showLoader();
     if (this.selectedIncome) {

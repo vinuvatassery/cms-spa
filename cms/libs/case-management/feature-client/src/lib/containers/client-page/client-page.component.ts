@@ -583,6 +583,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
 
   private validateForm(){
+    this.appInfoForm.markAllAsTouched();
     this.appInfoForm.updateValueAndValidity();
             this.appInfoForm.controls["firstName"].setValidators([Validators.required]);
             this.appInfoForm.controls["firstName"].updateValueAndValidity();
