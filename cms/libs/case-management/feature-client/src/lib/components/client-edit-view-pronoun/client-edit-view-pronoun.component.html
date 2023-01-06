@@ -1,3 +1,4 @@
+ 
 <div class="component-list-h" [formGroup]="appInfoForm">
     
     <span class="app-checkboxwidtext-wrapper"     
@@ -24,14 +25,17 @@
               formControlName="pronoun"
               [disabled]="textboxDisable"
               [fillMode]="formUiStyle.inputFillMode"
-              (valueChange)="onChange($event)">               
+              (valueChange)="onChange($event)"
+              [maxlength]="maxLengthFifty"
+              >               
             </kendo-textbox>        
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!appInfoForm.controls['pronoun'].valid ">Pronoun is required.</kendo-formerror>
         </span>     
     </div>
     </span>
-    <kendo-formerror *ngIf="!appInfoForm.controls['pronouns'].valid">Atleast one option is required.</kendo-formerror>
+    <kendo-formerror *ngIf="!appInfoForm.controls['pronouns'].valid">At least one Pronoun must be selected.</kendo-formerror>
     <hr />
   
   </div>
+ 
