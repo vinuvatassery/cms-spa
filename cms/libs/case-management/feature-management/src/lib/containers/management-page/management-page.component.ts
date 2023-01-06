@@ -64,7 +64,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
 
   private save() {
     let isValid = true;
-    // TODO: validate the form
+    // TODO:Validation functionality is pending as the Save and Other related work is not in Sprint 2.2 scope.
     if (isValid) {
       return this.managementFacade.save();
     }
@@ -96,6 +96,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   }
 
   checkValidations(){
+    // TO DO:Validation functionality is pending as the Save and Other related work is not in Sprint 2.2 scope.
     return true;
   }
 

@@ -247,6 +247,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   }
 
   checkValidations(){
+    // As no validation is there for the Family and dependent Checkbox,returning true to complete save for later process.
     return true;
   }
  

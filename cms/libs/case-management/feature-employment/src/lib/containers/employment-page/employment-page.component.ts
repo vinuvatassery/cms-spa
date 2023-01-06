@@ -175,6 +175,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   }
 
   checkValidations(){
+    // As no validation is there for the Employement Checkbox,returning true to complete save for later process.
     return true;
   }
 

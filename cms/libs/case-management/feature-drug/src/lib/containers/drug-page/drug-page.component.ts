@@ -314,7 +314,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
 
   checkValidations(){
-    return true;
+    return this.prescriptionDrugForm.valid;
   }
 }
 

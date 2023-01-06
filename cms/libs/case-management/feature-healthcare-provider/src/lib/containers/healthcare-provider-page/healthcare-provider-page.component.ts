@@ -221,6 +221,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   }
 
   checkValidations(){
+    // As no validation is there for the Health Care Provider Checkbox,returning true to complete save for later process.
     return true;
   }
 
