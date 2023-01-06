@@ -14,14 +14,17 @@
       </p>
       <div class="flex-row">
         <div class="flex-col">
-          <div class="k-auto-complete-box">
+          <div class="k-auto-complete-box field-label-hide">
             <span
               class="material-icons global-search-icon"
               aria-label="search member"
               aria-hidden="true"
               >search</span >
               <span *ngIf="showDependentSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
-            <kendo-autocomplete
+              <kendo-label text="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)">
+              <kendo-autocomplete
+              autofocusfield
+              aria-label="search member"
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="dependentSearch"           
               [value]="fullClientName"
@@ -50,7 +53,7 @@
                 </button>
               </ng-template>
             </kendo-autocomplete>      
-            
+            </kendo-label>
             <kendo-formerror *ngIf="(existFamilyMemberForm?.hasError('required','clientDependentId')&& existFamilyMemberForm?.hasError('required','clientId')) && isExistSubmitted">Dependent
               is required</kendo-formerror>
           </div>
@@ -62,6 +65,7 @@
             [data]="ddlRelationships$ | async"
             textField="lovDesc"
             valueField="lovCode" 
+            aria-label="Relationship to Client"
             [valuePrimitive]="true"
             formControlName="existRelationshipCode">
             </kendo-dropdownlist>
@@ -119,7 +123,8 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
-          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" 
+          <kendo-dropdownlist dropdownFieldautofocus  [fillMode]="formUiStyle.dropDownFillMode" 
+          aria-label ="Relationship to Client"
           [data]="ddlRelationships$ | async"
           formControlName="relationshipCode"
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
@@ -149,7 +154,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">         
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+          <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
           formControlName="dob"           >
         </kendo-datepicker>
               </kendo-floatinglabel>
@@ -166,8 +171,9 @@
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
       </div>
       <div class="flex-col mb-3">
-        <h5>Currently enrolled in client’s health insurance plan?</h5>
-        <div class="">
+        
+        <fieldset class="k-form-fieldset">
+          <legend class="k-form-legend">    <h5>Currently enrolled in client’s health insurance plan?</h5></legend>
           <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"
@@ -176,11 +182,12 @@
               name="enrolledInInsuranceFlag"             
               id="enrolledInHealthInsurancePlanYes"
               formControlName="enrolledInInsuranceFlag"
+              aria-labelledby="enrolledInHealthInsurancePlanYes"  
               value="Y"
             />
             <kendo-label
               class="k-radio-label"
-              [for]="enrolledInHealthInsurancePlanYes"
+              for="enrolledInHealthInsurancePlanYes"
               text="Yes"             
             ></kendo-label>
           </span>
@@ -190,18 +197,20 @@
               #enrolledInHealthInsurancePlanNo
               kendoRadioButton
               name="enrolledInInsuranceFlag"  
+              id="enrolledInHealthInsurancePlanNo"
               formControlName="enrolledInInsuranceFlag"
+              aria-labelledby="enrolledInHealthInsurancePlanNo"
               value="N"
             />
             <kendo-label
               class="k-radio-label"
-              [for]="enrolledInHealthInsurancePlanNo"
+              for="enrolledInHealthInsurancePlanNo"
               text="No"            >
           </kendo-label>
          
           </span>
           
-        </div>
+        </fieldset>
         <div class="flex-col">
           <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">Enrollment status is required</kendo-formerror>
           </div>

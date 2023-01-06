@@ -36,7 +36,7 @@ export class EmployerDetailComponent implements OnInit{
 
   public empDetailsForm: FormGroup = new FormGroup({
     empName: new FormControl('', []),
-    empHireDate: new FormControl(new Date(), []),
+    empHireDate: new FormControl('', []),
   });
   
   // constructor
@@ -53,7 +53,7 @@ export class EmployerDetailComponent implements OnInit{
       this.empDetailsForm.reset();
       this.empDetailsForm = new FormGroup({
         empName: new FormControl( ''),
-        empHireDate: new FormControl(new Date()),
+        empHireDate: new FormControl(''),
       });
  
     } else{

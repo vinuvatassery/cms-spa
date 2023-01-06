@@ -131,9 +131,9 @@
                   <div class="flex-col flex-space-bw align-items-center mb-1">
                     <h2 class="title-md mb-0 text-bold">Family & Dependents</h2>
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold">EP:&nbsp;</span>
+                      <span class="text-bold" for="FamilyAndDependentEP">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlFamilyAndDependentEP$ | async">
+                        <kendo-dropdownlist  aria-label="FamilyAndDependentEP" [fillMode]="formUiStyle.dropDownFillMode" #FamilyAndDependentEP [data]="ddlFamilyAndDependentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -158,9 +158,9 @@
                         Viewing data from previous EP</span>
                     </h2>
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold">EP:&nbsp;</span>
+                      <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlIncomeEP$ | async">
+                        <kendo-dropdownlist  aria-label="incomeEP" #incomeEP [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlIncomeEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -179,9 +179,9 @@
                   <div class="flex-col flex-space-bw align-items-center mb-1">
                     <h2 class="title-md mb-0 text-bold">Employment</h2>
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold">EP:&nbsp;</span>
+                      <span class="text-bold" for="eemploymentep">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
+                        <kendo-dropdownlist #eemploymentep  aria-label="Eemploymentep" [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>

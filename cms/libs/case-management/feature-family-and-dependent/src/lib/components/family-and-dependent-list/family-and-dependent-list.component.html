@@ -81,7 +81,8 @@
           [data]=  "actions"
           icon="more-vertical"
           class="TableActionPopup app-dropdown-action"
-          buttonClass="k-icon-button"          
+          buttonClass="k-icon-button"   
+          title="More option"       
           aria-label="more actions"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }"
         >
@@ -100,9 +101,9 @@
     let-currentPage="currentPage">
     <div class="grid-custom-paginationtemplates d-flex"> 
       <div class="d-flex align-items-center">    
-        <label class="mr-1">Rows Per Page</label> 
+        <label class="mr-1" for="RowsPerPage" >Rows Per Page</label> 
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-          [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
+          [valuePrimitive]="true" [(value)]="state.take" aria-label="Rows Per Page" id="RowsPerPage" ></kendo-dropdownlist>
         <kendo-pager-info> </kendo-pager-info>
         <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
 
