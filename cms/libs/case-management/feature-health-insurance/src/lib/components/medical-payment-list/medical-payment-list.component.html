@@ -6,10 +6,10 @@
       <input
         type="checkbox"
         kendoCheckBox
-        aria-labelledby="premiumsWithinLast12Months"
-        id="premiums"
+        aria-labelledby="PaymentspremiumsWithinLast12Months"
+        id="PaymentspremiumsWithinLast12Months"
       />
-      <label class="k-checkbox-label" for="premiums"
+      <label class="k-checkbox-label" for="PaymentspremiumsWithinLast12Months"
         >Show only premiums within the last 12 months</label
       >
     </span>
@@ -107,9 +107,9 @@
                 let-currentPage="currentPage">
                 <div class="grid-custom-paginationtemplates d-flex"> 
                   <div class="d-flex align-items-center"> 
-                    <label class="mr-1">Rows Per Page</label> 
+                    <label class="mr-1" for="RowsPerPage">Rows Per Page</label> 
                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-                      [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
+                      [valuePrimitive]="true" [(value)]="pageSize" aria-label="Rows Per Page" id="RowsPerPage" ></kendo-dropdownlist>
                     <kendo-pager-info> </kendo-pager-info>
                     <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
           
