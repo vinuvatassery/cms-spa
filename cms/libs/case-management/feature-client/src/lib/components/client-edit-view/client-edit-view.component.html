@@ -6,7 +6,8 @@
           <!-- <input kendoTextBox aria-label="enter first name" /> -->
           <kendo-textbox  aria-label="enter first name"  
             showErrorIcon="initial"
-            formControlName="firstName"  
+            formControlName="firstName" 
+            (blur)="searchDuplicateClient()" 
             [maxlength]="lengthRestrictForty"
             [fillMode]="formUiStyle.inputFillMode">         
         </kendo-textbox>
@@ -50,6 +51,7 @@
           <kendo-textbox aria-label="last name" 
               [fillMode]="formUiStyle.inputFillMode" 
               formControlName="lastName"
+              (blur)="searchDuplicateClient()" 
               [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
@@ -123,6 +125,7 @@
             [fillMode]="formUiStyle.inputFillMode" 
             formControlName="officialIdLastName"
             [maxlength]="lengthRestrictForty"
+            
             >   
           </kendo-textbox>
         </kendo-floatinglabel>
@@ -156,7 +159,7 @@
           [max]="currentDate"
           formControlName="dateOfBirth"
           format="MM-dd-yyyy"
-          
+          (blur)="searchDuplicateClient()" 
           ></kendo-datepicker>
       
         </kendo-floatinglabel>
@@ -169,12 +172,14 @@
           <kendo-textbox aria-label="social security number"  
             [fillMode]="formUiStyle.inputFillMode" 
             formControlName="ssn"
+            (blur)="searchDuplicateClient()" 
             [maxlength]="maxLengthSsn"
             [value]="appInfoForm.controls['ssn'].value | ssn"
             >   </kendo-textbox>
   
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
+        <kendo-formerror *ngIf=" !appInfoForm.controls['ssn'].valid && ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">This SSN matches another client. Please update before proceeding</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
@@ -466,6 +471,9 @@
     </common-optionbutton-list>
   
   </section>
-  
-  
   </form>
+
+  <kendo-dialog *ngIf="showDuplicatePopup" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="onDuplicatPopupCloseClick()">
+    <kendo-dialog-titlebar>Possible Duplicate Found</kendo-dialog-titlebar>
+    <case-management-duplicate-client-found [currentClientInfo]="currentClient" [matchingClientInfo]="matchingClient" (closeModalClick)="onDuplicatPopupCloseClick()"> </case-management-duplicate-client-found>
+  </kendo-dialog>

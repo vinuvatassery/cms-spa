@@ -1,0 +1,18 @@
+.duplicate-threecolumn-item{
+    display: grid;
+    grid-template-columns: 70px .9fr 1.1fr;
+ 
+        h5, p{
+            margin: 0px;
+            padding: 6px 6px 6px 0px;
+            &.text-bold{
+                padding: 6px 6px 6px 0px;
+            }
+            &:last-child{
+                border-left: 1px solid #ccc;
+                margin: 0px;
+                padding: 6px 6px 6px 28px;
+            }
+        }
+}
+ 

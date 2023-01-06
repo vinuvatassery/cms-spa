@@ -295,4 +295,8 @@ export class ClientFacade {
   update(applicantInfo:ApplicantInfo) {
     return this.clientDataService.update(applicantInfo);
   }
+
+  searchDuplicateClient(clientData:any){
+    return this.clientDataService.searchDuplicateClient(clientData);
+  }
 }
