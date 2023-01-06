@@ -67,6 +67,8 @@ export * from './lib/enums/partb-medicare-type.enum';
 export * from './lib/enums/client-document-entity-type.enum';
 export * from './lib/enums/case-status-code.enum';
 export * from './lib/enums/group-code.enum';
+export * from './lib/enums/accepted-case-status-code.enum';
+
 
 
 /** Data services **/

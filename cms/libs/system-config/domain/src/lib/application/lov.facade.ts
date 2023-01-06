@@ -6,6 +6,8 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Lov } from '../entities/lov';
 import { LovType } from '../enums/lov-types.enum';
+import {AcceptedCaseStatusCode} from '@cms/case-management/domain';
+
 /** Data services **/
 import { LovDataService } from '../infrastructure/lov.data.service';
 
@@ -312,7 +314,9 @@ getMedicareCoverageTypeLovs(): void {
 getCaseStatusLovs(): void {
   this.lovDataService.getLovsbyType(LovType.CaseStatus).subscribe({
     next: (lovResponse) => {
-      this.lovCaseStatusSubject.next(lovResponse);
+      const acceptedCaseStatusCodes = Object.keys(AcceptedCaseStatusCode)
+      const filteredLov = lovResponse.filter((item:any) => acceptedCaseStatusCodes.includes(item.lovCode))
+      this.lovCaseStatusSubject.next(filteredLov);
     },
     error: (err) => {
       console.error('err', err);

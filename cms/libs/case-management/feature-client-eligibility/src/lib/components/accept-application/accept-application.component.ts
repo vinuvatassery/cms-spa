@@ -22,6 +22,7 @@ export class AcceptApplicationComponent implements OnInit {
 
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Public properties **/
+  buttonText: string = ' Initiate Benefits';
   caseOwner:any
   caseOwnersObject! : any
   ddlAcceptApplications$ = this.clientEligibilityFacade.ddlAcceptApplications$;
@@ -34,6 +35,9 @@ export class AcceptApplicationComponent implements OnInit {
   isSave= false;
   @Input() clientCaseId: string = '';
   @Input() clientCaseEligibilityId: string = '';
+  @Output() isCloseModalEvent = new EventEmitter();
+  @Input() isEdit!: boolean;
+
 
   /** Constructor **/
   constructor(
@@ -49,6 +53,10 @@ export class AcceptApplicationComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if (this.isEdit)
+    {
+      this.buttonText = "Update";
+    }
     this.buildForm();
     this.loadDdlAcceptApplications();
     this.loadLovs();
@@ -74,26 +82,43 @@ export class AcceptApplicationComponent implements OnInit {
       assignedCwUser:['']
     });
 
+    this.eligibilityForm.controls['caseStatusCode'].setValue(CaseStatusCode.ACCEPT);
+
   }
   save()
   {
     this.isSave = true
     if (this.eligibilityForm.valid) {
       this.populateEligibility();
+      // this.acceptedApplication.caseStatusCode = 'ACCEPT';
+      // this.acceptedApplication.clientCaseId = '58744eaf-6bbc-491c-968e-5dd04e98c68e';
       this.loaderService.show();
     this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication).subscribe({
       next: (data) => {
-        this.clientEligibilityFacade.ShowHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          'Eligibility added successfully.'
-        );
-        this.loaderService.hide();
-        this.router.navigate(['/case-management/case-detail/application-eligibility/send-letter'], {
-          // queryParams: {
-          //   sid: sessionResp?.workflowSessionId,
-          //   eid: sessionData?.entityId
-          // },
-        });
+        if(!this.isEdit)
+        {
+          this.clientEligibilityFacade.ShowHideSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            'Eligibility added successfully.'
+          );
+          this.loaderService.hide();
+          this.router.navigate(['/case-management/case-detail/application-eligibility/send-letter'], {
+            // queryParams: {
+            //   sid: sessionResp?.workflowSessionId,
+            //   eid: sessionData?.entityId
+            // },
+            queryParamsHandling: "preserve"
+          });
+        }
+        else
+        {
+          this.clientEligibilityFacade.ShowHideSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            'Eligibility updated successfully.'
+          );
+          this.loaderService.hide();
+          this.onCancel();
+        }
       },
       error: (err) => {
         if (err){
@@ -153,13 +178,29 @@ export class AcceptApplicationComponent implements OnInit {
         this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(enddate));
       }
     }
+    else if (this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value !== CaseStatusCode.ACCEPT)
+    {
+      if(this.eligibilityForm.controls['eligibilityStartDate'].value)
+      {
+        this.eligibilityForm.controls['eligibilityEndDate'].setValue(null);
+      }
+    }
   }
   loaddata()
   {
     this.loaderService.show();
     this.clientEligibilityFacade.getAcceptedApplication(this.clientCaseId,this.clientCaseEligibilityId).subscribe({
       next: (data:any) => {
-        this.acceptedApplication.assignedCwUserId = data.assignedCwUserId;
+        if(!this.isEdit)
+        {
+          this.acceptedApplication.assignedCwUserId = data.assignedCwUserId;
+        }
+        else
+        {
+          this.acceptedApplication.assignedCwUserId = data.assignedCwUserId;
+          this.bindValues(data);
+        }
+
         this.getCaseOwners();
         this.loaderService.hide();
       },
@@ -187,4 +228,25 @@ export class AcceptApplicationComponent implements OnInit {
       }
     });
   }
+
+  onCancel()
+  {
+    this.isCloseModalEvent.emit();
+  }
+  bindValues(acceptedApplication: AcceptedApplication)
+  {
+    this.eligibilityForm.controls['caseStatusCode'].setValue(
+      acceptedApplication.caseStatusCode
+    );
+    this.eligibilityForm.controls['groupCode'].setValue(
+      acceptedApplication.groupCode
+    );
+    this.eligibilityForm.controls['eligibilityStartDate'].setValue(
+      new Date (acceptedApplication.eligibilityStartDate)
+    );
+    this.eligibilityForm.controls['eligibilityEndDate'].setValue(
+      new Date(acceptedApplication.eligibilityEndDate)
+    );
+  }
+
 }

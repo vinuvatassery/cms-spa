@@ -1,8 +1,11 @@
 <div  [formGroup]="eligibilityForm">
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    Set Status, Group, and Eligibility Period. You’ll be prompted to send an
-    approval or pending notice after you click “Initiate Benefits.”
+    {{
+      isEdit
+        ? 'Edit Status, Group, and Eligibility Period as needed. Click “Update” to commit the changes.'
+        : 'Set Status, Group, and Eligibility Period. You’ll be prompted to send anapproval or pending notice after you click “Initiate Benefits.”'
+    }}
   </p>
   <div class="flex-row">
     <div class="flex-col">
@@ -58,7 +61,7 @@
       <kendo-formerror *ngIf="!eligibilityForm.controls['eligibilityEndDate'].valid && isSave">Eligibility end date is required.</kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="">
+      <kendo-floatinglabel text="Assigned Case Worker">
         <!-- <input kendoTextBox aria-label="assigned case worker" /> -->
         <kendo-textbox aria-label="assigned case worker" [disabled]="true"
         [fillMode]="formUiStyle.inputFillMode"
@@ -78,6 +81,7 @@
         aria-label="cancel send letter"
         [primary]="true"
         look="outline"
+        (click)="onCancel()"
       >
         Cancel
       </button>
@@ -87,7 +91,7 @@
         aria-label="initiate benefits"
         (click)="save()"
       >
-        Initiate Benefits
+       {{buttonText}}
       </button>
     </div>
   </div>
