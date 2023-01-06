@@ -8,5 +8,6 @@ export enum CaseStatusCode {
     REJECT = "REJECT" ,
     RESTRICTED = "RESTRICTED",
     DISENROLLED = "DISENROLLED" ,
-    WAITLIST = "WAITLIST"
+    WAITLIST = "WAITLIST",
+    CANCELLED="CANCELLED"
 }

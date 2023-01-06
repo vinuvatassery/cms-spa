@@ -113,7 +113,7 @@ export class CaseDetailPageComponent implements OnInit {
   }
   cancelClientCase(){
     this.loaderService.show()    
-    this.caseFacade.cancelCase(this.clientCaseId) .subscribe(
+    this.caseFacade.cancelCase(this.clientCaseId,CaseStatusCode.CANCELLED) .subscribe(
       (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
