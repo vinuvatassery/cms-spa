@@ -315,12 +315,19 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     if (isValidOtherPhone === true) {
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.enable();
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.enable();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.setValidators(Validators.required);
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.updateValueAndValidity();
     }
     else {
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.disable();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.reset();
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.reset();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.reset();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.removeValidators(Validators.required);
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.updateValueAndValidity();
     }
 
     if (isValidEmail === true) {
@@ -386,7 +393,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }),
       otherPhone: new FormGroup({
         phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')] }),
-        otherPhoneNote: new FormControl(''),
+        otherPhoneNote: new FormControl({value:'', disabled: true}),
         applicableFlag: new FormControl(''),
         detailMsgConsentFlag: new FormControl({value:'', disabled: true}),
         smsTextConsentFlag: new FormControl({value:'', disabled: true}),
@@ -888,17 +895,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private setVisibilityByNoEmailCheckbox(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('email.email')?.disable();
-      // this.contactInfoForm?.get('email.detailMsgFlag')?.disable();
-      // this.contactInfoForm?.get('email.paperlessFlag')?.disable();
-      // this.contactInfoForm?.get('email.detailMsgFlag')?.disable();
       this.contactInfoForm?.get('email.email')?.reset();
-      //this.contactInfoForm?.get('email.paperlessFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('email.email')?.enable();
-      //this.contactInfoForm?.get('email.detailMsgFlag')?.enable();
-      //this.contactInfoForm?.get('email.paperlessFlag')?.enable();
     }
   }
 
@@ -912,71 +913,44 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private setVisibilityByHomePhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('homePhone.phoneNbr')?.disable();
-     // this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.disable();
-      //this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('homePhone.phoneNbr')?.reset();
-      //this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.reset();
-      //this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('homePhone.phoneNbr')?.enable();
-      //this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.enable();
-      //this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.enable();
     }
   }
 
   private setVisibilityByCellPhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('cellPhone.phoneNbr')?.disable();
-      //this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.disable();
-      //this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('cellPhone.phoneNbr')?.reset();
-      //this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.reset();
-      //this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('cellPhone.phoneNbr')?.enable();
-      //this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.enable();
-      //this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.enable();
     }
   }
 
   private setVisibilityByWorkPhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('workPhone.phoneNbr')?.disable();
-      //this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.disable();
-      //this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('workPhone.phoneNbr')?.reset();
-      //this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.reset();
-      //this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('workPhone.phoneNbr')?.enable();
-      //this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.enable();
-      //this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.enable();
     }
   }
 
   private setVisibilityByOtherPhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.disable();
-      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
-      //this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
-      //this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.reset();
-      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.reset();
-      //this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.reset();
-      //this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.enable();
-      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
-      //this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.enable();
-      //this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.enable();
     }
   }
 
@@ -1130,11 +1104,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       homeAddressGroup?.controls['city']?.enable();
       homeAddressGroup?.controls['state']?.setValue('OR');
-      // homeAddressGroup?.controls['address1']?.reset();
-      // homeAddressGroup?.controls['address2']?.reset();
-      // homeAddressGroup?.controls['city']?.reset();
-      // homeAddressGroup?.controls['state']?.reset();
-      // homeAddressGroup?.controls['zip']?.reset();
     }
   }
 
@@ -1219,7 +1188,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Home Address Proof Removed Successfully!")
             this.homeAddressProofFile = undefined;
             this.uploadedHomeAddressProof = undefined;
-            //this.showAddressProofRequiredValidation = true;
             this.loadContactInfo();
             this.updateHomeAddressProofCount(false);
           }
@@ -1232,7 +1200,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     else {
       this.homeAddressProofFile = undefined;
       this.uploadedHomeAddressProof = undefined;
-      //this.showAddressProofRequiredValidation = true;
     }
 
   }
@@ -1244,8 +1211,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         clientId: this.workflowFacade.clientId,
         clientCaseId: this.workflowFacade.clientCaseId,
         clientCaseEligibilityId: this.workflowFacade.clientCaseEligibilityId,
-        // entityId: '',
-        // entityTypeCode: 'HOME_ADDRESS_PROOF',
         documentName: this.uploadedHomeAddressProof.name,
         document: this.uploadedHomeAddressProof
       };
