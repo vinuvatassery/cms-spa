@@ -31,8 +31,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
   @Input() clientpharmacies$!: Observable<any>;
   /** Output properties  **/
   @Output() closeChangePriority = new EventEmitter();
-  priority1:any;
-  priority2:any;
   public setPrioirityForm: FormGroup = new FormGroup({}) ;
 pharmcayPriority: PharmacyPriority={
   clientPharmacyId: '',
@@ -46,9 +44,6 @@ copyLoadPrioritites:any[]=[];
   clientPharmacyId: "",
   clientId: 0,
   priorityCode: ""
-}
-public itemDisabled(itemArgs: { dataItem: any; index: number }) {
-  return itemArgs.dataItem.value === this.setPrioirityForm.controls['priority1']?.value // disable the 3rd item
 }
 savePrirorityObjectList:any[] =[];
   /** Public properties  **/
@@ -80,7 +75,6 @@ savePrirorityObjectList:any[] =[];
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.buildForm();
     this.loadSessionData();
     this.loadclientpharmacies();
     this.loadPriorities();
@@ -113,14 +107,6 @@ savePrirorityObjectList:any[] =[];
       },
     });
   }
-
-  private buildForm() {
-    this.setPrioirityForm = new FormGroup({
-      priority1: new FormControl('', []),
-      priority2: new FormControl('', [])
-  });
-  }
-  pharmacyPriority: any={};
   loadSessionData() {
     debugger;
     this.sessionId = this.route.snapshot.queryParams['sid'];
@@ -132,7 +118,6 @@ savePrirorityObjectList:any[] =[];
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientId = JSON.parse(session.sessionData).clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-          //this.clientId = 1000;
           this.loadPharmacyPriority();
         }
       });
@@ -141,10 +126,6 @@ savePrirorityObjectList:any[] =[];
   private loadclientpharmacies(){
     this.clientpharmacies$.subscribe(list =>{
       this.savePrirorityObjectList = list;
-      // this.savePrirorityObjectList.forEach(x =>{
-      //   x.defaultItem="";
-      // })
-
     })
   }
   private addSaveSubscription(): void {
@@ -164,11 +145,7 @@ savePrirorityObjectList:any[] =[];
     debugger;
     let isValid = true;
     if (isValid) {
-      this.priorityInfo.clientId = 0;
-      this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority1"].value;
-      this.priorityInfo.priorityCode= this.setPrioirityForm.controls["priority2"].value;
       return this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList);
-     
     }
 
     return of(false)
