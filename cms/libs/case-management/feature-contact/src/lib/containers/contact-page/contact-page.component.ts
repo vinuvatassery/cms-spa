@@ -119,7 +119,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.emailApplicableFlagChangeSubscription();
     this.noFriendsOrFamilyChangeSubscription();
     this.homeAddressProofFlagChangeSubscription();
-    this.contactRelationshipChangeSubscription(); 
+    this.contactRelationshipChangeSubscription();
   }
 
   private loadCurrentSession() {
@@ -239,25 +239,26 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     const workPhone = (this.contactInfoForm.get('workPhone') as FormGroup)?.controls['phoneNbr'];
     const otherPhone = (this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['phoneNbr'];
     const email = (this.contactInfoForm.get('email') as FormGroup)?.controls['email'];
-    const homePhoneIsNotApplicable = (this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false;
-    const cellPhoneIsNotApplicable = (this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false;
-    const workPhoneIsNotApplicable = (this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false
-    const otherPhoneIsNotApplicable = (this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false;
-    const emailIsNotApplicable = (this.contactInfoForm.get('email') as FormGroup)?.controls['applicableFlag']?.value ?? false;
+    const isValidHomePhone = homePhone?.value && homePhone?.valid && !((this.contactInfoForm.get('homePhone') as FormGroup)?.controls['applicableFlag']?.value ?? false);
+    const isValidCellPhone = cellPhone?.value && cellPhone?.valid && !((this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false);
+    const isValidWorkPhone = workPhone?.value && workPhone?.valid && !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false);
+    const isValidOtherPhone = otherPhone?.value && otherPhone?.valid && !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false);
+    const isValidEmail = email?.value && email?.valid && !((this.contactInfoForm.get('email') as FormGroup)?.controls['applicableFlag']?.value ?? false);
 
-    if (homePhone?.value && homePhone.valid && !homePhoneIsNotApplicable) {
+    this.setMessageConsentVisibility(isValidHomePhone, isValidCellPhone, isValidWorkPhone, isValidOtherPhone, isValidEmail);
+    if (isValidHomePhone) {
       preferredContact.push(this.formatPhoneNumber(homePhone?.value ?? ''));
     }
-    if (cellPhone?.value && cellPhone.valid && !cellPhoneIsNotApplicable) {
+    if (isValidCellPhone) {
       preferredContact.push(this.formatPhoneNumber(cellPhone?.value ?? ''));
     }
-    if (workPhone?.value && workPhone.valid && !workPhoneIsNotApplicable) {
+    if (isValidWorkPhone) {
       preferredContact.push(this.formatPhoneNumber(workPhone?.value));
     }
-    if (otherPhone?.value && otherPhone.valid && !otherPhoneIsNotApplicable) {
+    if (isValidOtherPhone) {
       preferredContact.push(this.formatPhoneNumber(otherPhone?.value ?? ''));
     }
-    if (email?.value && email.valid && !emailIsNotApplicable) {
+    if (isValidEmail) {
       preferredContact.push(email?.value ?? '');
     }
     this.preferredContactMethods = preferredContact;
@@ -273,6 +274,64 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     else {
       this.contactInfoForm?.get('email.preferredContactMethod')?.removeValidators(Validators.required);
       this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
+    }
+  }
+
+  private setMessageConsentVisibility(isValidHomePhone: boolean, isValidCellPhone: boolean, isValidWorkPhone: boolean, isValidOtherPhone: boolean, isValidEmail: boolean,) {
+  
+    if (isValidHomePhone === true) {
+      this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.enable();
+      this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.enable();
+    }
+    else {
+      this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.disable();
+      this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.disable();
+      this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.reset();
+      this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.reset();
+    }
+
+    if (isValidCellPhone === true) {
+      this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.enable();
+      this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.enable();
+    }
+    else {
+      this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.disable();
+      this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.disable();
+      this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.reset();
+      this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.reset();
+    }
+
+    if (isValidWorkPhone === true) {
+      this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.enable();
+      this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.enable();
+    }
+    else {
+      this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.disable();
+      this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.disable();
+      this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.reset();
+      this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.reset();
+    }
+
+    if (isValidOtherPhone === true) {
+      this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.enable();
+      this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.enable();
+    }
+    else {
+      this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
+      this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.disable();
+      this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.reset();
+      this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.reset();
+    }
+
+    if (isValidEmail === true) {
+      this.contactInfoForm?.get('email.detailMsgFlag')?.enable();
+      this.contactInfoForm?.get('email.paperlessFlag')?.enable();
+    }
+    else {
+      this.contactInfoForm?.get('email.detailMsgFlag')?.disable();
+      this.contactInfoForm?.get('email.paperlessFlag')?.disable();
+      this.contactInfoForm?.get('email.detailMsgFlag')?.reset();
+      this.contactInfoForm?.get('email.paperlessFlag')?.reset();
     }
   }
 
@@ -308,43 +367,43 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         housingStabilityCode: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
       }),
       homePhone: new FormGroup({
-        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')], updateOn: 'blur' }),
+        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')]}),
         applicableFlag: new FormControl(''),
-        detailMsgConsentFlag: new FormControl('', { updateOn: 'blur' }),
-        smsTextConsentFlag: new FormControl('', { updateOn: 'blur' }),
+        detailMsgConsentFlag: new FormControl({value:'', disabled: true}),
+        smsTextConsentFlag: new FormControl({value:'', disabled: true}),
       }),
       cellPhone: new FormGroup({
-        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')], updateOn: 'blur' }),
+        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')]}),
         applicableFlag: new FormControl(''),
-        detailMsgConsentFlag: new FormControl('', { updateOn: 'blur' }),
-        smsTextConsentFlag: new FormControl('', { updateOn: 'blur' }),
+        detailMsgConsentFlag: new FormControl({value:'', disabled: true}),
+        smsTextConsentFlag: new FormControl({value:'', disabled: true}),
       }),
       workPhone: new FormGroup({
-        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')], updateOn: 'blur' }),
+        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')] }),
         applicableFlag: new FormControl(''),
-        detailMsgConsentFlag: new FormControl('', { updateOn: 'blur' }),
-        smsTextConsentFlag: new FormControl('', { updateOn: 'blur' }),
+        detailMsgConsentFlag: new FormControl({value:'', disabled: true}),
+        smsTextConsentFlag: new FormControl({value:'', disabled: true}),
       }),
       otherPhone: new FormGroup({
-        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')], updateOn: 'blur' }),
-        otherPhoneNote: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        phoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')] }),
+        otherPhoneNote: new FormControl(''),
         applicableFlag: new FormControl(''),
-        detailMsgConsentFlag: new FormControl('', { updateOn: 'blur' }),
-        smsTextConsentFlag: new FormControl('', { updateOn: 'blur' }),
+        detailMsgConsentFlag: new FormControl({value:'', disabled: true}),
+        smsTextConsentFlag: new FormControl({value:'', disabled: true}),
       }),
       email: new FormGroup({
-        email: new FormControl('', { validators: [Validators.email, Validators.pattern('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[A-Za-z]{2,20}')], updateOn: 'blur' }),
+        email: new FormControl('', { validators: [Validators.email, Validators.pattern('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[A-Za-z]{2,20}')] }),
         applicableFlag: new FormControl(''),
-        detailMsgFlag: new FormControl('', { updateOn: 'blur' }),
-        paperlessFlag: new FormControl('', { updateOn: 'blur' }),
-        preferredContactMethod: new FormControl('', { updateOn: 'blur' }),
+        detailMsgFlag: new FormControl({value:'', disabled: true}),
+        paperlessFlag: new FormControl({value:'', disabled: true}),
+        preferredContactMethod: new FormControl(''),
       }),
       familyAndFriendsContact: new FormGroup({
         noFriendOrFamilyContactFlag: new FormControl(''),
-        contactName: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
+        contactName: new FormControl('', { validators: Validators.required }),
         contactRelationshipCode: new FormControl('', { validators: Validators.required, }),
-        otherDesc: new FormControl('', { validators: Validators.required, updateOn: 'blur' }),
-        contactPhoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')], updateOn: 'blur' }),
+        otherDesc: new FormControl('', { validators: Validators.required }),
+        contactPhoneNbr: new FormControl('', { validators: [Validators.required, Validators.pattern('[0-9]+')] }),
       }),
     });
   }
@@ -374,7 +433,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.contactInfoForm.markAllAsTouched();
     const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined));
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.fileUploadRestrictions?.maxFileSize ?? 0);
-    if(isAddressProofRequired){
+    if (isAddressProofRequired) {
       this.showAddressProofRequiredValidation = true;
     }
     else if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile) {
@@ -390,7 +449,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       .pipe(
         startWith(null),
         pairwise(),
-        filter(()=>(this.contactInfoForm.get('mailingAddress') as FormGroup).valid),
+        filter(() => (this.contactInfoForm.get('mailingAddress') as FormGroup).valid),
         mergeMap(([prev, curr]: [any, any]) =>
           forkJoin([of(prev), of(curr), this.validateMailAddress(prev, curr, AddressTypeCode.Mail)]))
       ).subscribe(([prev, curr, validationResp]: [any, any, AddressValidation | null]) => {
@@ -420,20 +479,20 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       .pipe(
         startWith(null),
         pairwise(),
-        filter(([prev, curr]: [any, any]) =>{
+        filter(([prev, curr]: [any, any]) => {
           const address = (this.contactInfoForm.get('homeAddress') as FormGroup).controls;
-          return address['address1']?.valid 
-          && address['address2']?.valid 
-          && address['city']?.valid 
-          && address['zip']?.valid
-          && curr['homelessFlag'] !== true
-          && curr['sameAsMailingAddressFlag'] !== true
-          && curr['address1'] && curr['city'] && curr['state'] && curr['zip']
-          && (prev == null
-            || (prev['address1'] !== curr['address1'] || prev['address2'] !== curr['address2']
-              || prev['city'] !== curr['city'] || prev['state'] !== curr['state']
-              || prev['zip'] !== curr['zip']))
-           }),
+          return address['address1']?.valid
+            && address['address2']?.valid
+            && address['city']?.valid
+            && address['zip']?.valid
+            && curr['homelessFlag'] !== true
+            && curr['sameAsMailingAddressFlag'] !== true
+            && curr['address1'] && curr['city'] && curr['state'] && curr['zip']
+            && (prev == null
+              || (prev['address1'] !== curr['address1'] || prev['address2'] !== curr['address2']
+                || prev['city'] !== curr['city'] || prev['state'] !== curr['state']
+                || prev['zip'] !== curr['zip']))
+        }),
         mergeMap(([prev, curr]: [any, any]) =>
           forkJoin([of(prev), of(curr), this.validateMailAddress(prev, curr, AddressTypeCode.Home)]))
       ).subscribe(([prev, curr, response]: [any, any, AddressValidation | null]) => {
@@ -829,20 +888,23 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private setVisibilityByNoEmailCheckbox(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('email.email')?.disable();
-      this.contactInfoForm?.get('email.detailMsgFlag')?.disable();
-      this.contactInfoForm?.get('email.detailMsgFlag')?.reset();
+      // this.contactInfoForm?.get('email.detailMsgFlag')?.disable();
+      // this.contactInfoForm?.get('email.paperlessFlag')?.disable();
+      // this.contactInfoForm?.get('email.detailMsgFlag')?.disable();
       this.contactInfoForm?.get('email.email')?.reset();
+      //this.contactInfoForm?.get('email.paperlessFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('email.email')?.enable();
-      this.contactInfoForm?.get('email.detailMsgFlag')?.enable();
+      //this.contactInfoForm?.get('email.detailMsgFlag')?.enable();
+      //this.contactInfoForm?.get('email.paperlessFlag')?.enable();
     }
   }
 
   private setVisibilityByNoHomeAddressProofFlag(isChecked: boolean) {
     this.isNoProofOfHomeChecked = isChecked;
-    if(isChecked){
+    if (isChecked) {
       this.showAddressProofRequiredValidation = false;
     }
   }
@@ -850,51 +912,51 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private setVisibilityByHomePhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('homePhone.phoneNbr')?.disable();
-      this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.disable();
-      this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.disable();
+     // this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.disable();
+      //this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('homePhone.phoneNbr')?.reset();
-      this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.reset();
-      this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.reset();
+      //this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.reset();
+      //this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('homePhone.phoneNbr')?.enable();
-      this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.enable();
-      this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.enable();
+      //this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.enable();
+      //this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.enable();
     }
   }
 
   private setVisibilityByCellPhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('cellPhone.phoneNbr')?.disable();
-      this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.disable();
-      this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.disable();
+      //this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.disable();
+      //this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('cellPhone.phoneNbr')?.reset();
-      this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.reset();
-      this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.reset();
+      //this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.reset();
+      //this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('cellPhone.phoneNbr')?.enable();
-      this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.enable();
-      this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.enable();
+      //this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.enable();
+      //this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.enable();
     }
   }
 
   private setVisibilityByWorkPhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('workPhone.phoneNbr')?.disable();
-      this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.disable();
-      this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.disable();
+      //this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.disable();
+      //this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('workPhone.phoneNbr')?.reset();
-      this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.reset();
-      this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.reset();
+      //this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.reset();
+      //this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('workPhone.phoneNbr')?.enable();
-      this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.enable();
-      this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.enable();
+      //this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.enable();
+      //this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.enable();
     }
   }
 
@@ -902,19 +964,19 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     if (isChecked) {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.disable();
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
-      this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
-      this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.disable();
+      //this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
+      //this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.disable();
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.reset();
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.reset();
-      this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.reset();
-      this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.reset();
+      //this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.reset();
+      //this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.reset();
       this.loadPreferredContactMethod();
     }
     else {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.enable();
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
-      this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.enable();
-      this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.enable();
+      //this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.enable();
+      //this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.enable();
     }
   }
 
@@ -1088,11 +1150,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateHomeAddressProofCount(isCompleted:boolean) 
-  {
+  private updateHomeAddressProofCount(isCompleted: boolean) {
     const workFlowData: CompletionChecklist[] = [{
       dataPointName: 'homeAddress_proof',
-      status: StatusFlag.Yes 
+      status: StatusFlag.Yes
     }];
 
     this.workflowFacade.updateChecklist(workFlowData);
@@ -1115,7 +1176,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   /** Internal event methods **/
   homeAddressProofFlagChangeSubscription() {
     (this.contactInfoForm.get('homeAddress') as FormGroup)?.controls['noHomeAddressProofFlag']?.valueChanges.subscribe(value => {
-    this.setVisibilityByNoHomeAddressProofFlag(value);
+      this.setVisibilityByNoHomeAddressProofFlag(value);
 
     });
   }
@@ -1151,29 +1212,29 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   handleFileRemoved(e: SelectEvent) {
-    if(this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid){
-    this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
-      next: (response) => {
-          if(response === true){
-              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,"Home Address Proof Removed Successfully!")
-              this.homeAddressProofFile = undefined;
-              this.uploadedHomeAddressProof = undefined;
-              //this.showAddressProofRequiredValidation = true;
-              this.loadContactInfo();
-              this.updateHomeAddressProofCount(false);
-            }
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
-  else{
-    this.homeAddressProofFile = undefined;
-    this.uploadedHomeAddressProof = undefined;
-    //this.showAddressProofRequiredValidation = true;
-  }
-  
+    if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
+      this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
+        next: (response) => {
+          if (response === true) {
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Home Address Proof Removed Successfully!")
+            this.homeAddressProofFile = undefined;
+            this.uploadedHomeAddressProof = undefined;
+            //this.showAddressProofRequiredValidation = true;
+            this.loadContactInfo();
+            this.updateHomeAddressProofCount(false);
+          }
+        },
+        error: (err) => {
+          this.loggingService.logException(err);
+        },
+      });
+    }
+    else {
+      this.homeAddressProofFile = undefined;
+      this.uploadedHomeAddressProof = undefined;
+      //this.showAddressProofRequiredValidation = true;
+    }
+
   }
 
 
@@ -1224,11 +1285,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     return (this.contactInfoForm.get('familyAndFriendsContact') as FormGroup).controls as any;
   }
 
-  get homeAddress(){
+  get homeAddress() {
     return (this.contactInfoForm.get('homeAddress') as FormGroup).controls as any;
 
   }
-  get mailingAddress(){
-  return (this.contactInfoForm.get('mailingAddress') as FormGroup).controls as any;
+  get mailingAddress() {
+    return (this.contactInfoForm.get('mailingAddress') as FormGroup).controls as any;
   }
 }

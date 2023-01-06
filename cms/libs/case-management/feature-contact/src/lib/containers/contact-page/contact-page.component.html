@@ -135,7 +135,7 @@
             
               formControlName="sameAsMailingAddressFlag"
                />
-              <label class="k-checkbox-label" for="sameAsMailingAddressFlag">Same as Mailing Address</label>
+              <label class="k-checkbox-label" for="check1">Same as mailing address</label>
 
             </span>
           </kendo-formfield>
@@ -411,7 +411,7 @@
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
-              Home phone is required
+              Home Phone Number or Not Applicable selection is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -482,7 +482,7 @@
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
-              Cell phone is required
+              Cell Phone Number or Not Applicable selection is required
             </kendo-formerror>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -553,7 +553,7 @@
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
-                Work phone is required
+                Work Phone Number or Not Applicable selection is required
               </kendo-formerror>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
@@ -625,7 +625,7 @@
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
-                Other phone is required
+                Other Phone Number or Not Applicable selection is required
               </kendo-formerror>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
