@@ -168,10 +168,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel permanent delete">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel discard changes" (click)="cancelDiscard()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label=" permanent delete">
+        <button kendoButton class="k-error-button" aria-label="discard changes" (click)="discardChanges()">
           Discard
         </button>
       </div>

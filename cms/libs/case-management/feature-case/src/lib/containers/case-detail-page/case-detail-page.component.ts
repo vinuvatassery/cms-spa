@@ -140,7 +140,7 @@ export class CaseDetailPageComponent implements OnInit {
     );
   }
   getCase(){ 
-    this.case$.subscribe((caseData:any)=>{   
+    this.case$.subscribe((caseData:any)=>{ 
       this.clientCaseId = caseData.clientCaseId;
       if(caseData.caseStatusCode ===CaseStatusCode.NEW || 
         caseData.caseStatusCode === CaseStatusCode.INCOMPLETE || 
@@ -173,6 +173,13 @@ export class CaseDetailPageComponent implements OnInit {
   }
   cancelDeletion(){
     this.isShowDeleteConfirmPopup = false;
+  }
+  cancelDiscard(){
+    this.isShowDiscardConfirmPopup = false;
+  }
+  discardChanges(){
+    this.isShowDiscardConfirmPopup = false;
+    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
   }
   /** Private Methods */
   private loadQueryParams() {
