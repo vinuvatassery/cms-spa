@@ -1,8 +1,9 @@
 /** Angular **/
 import {  Component, OnInit,  ChangeDetectionStrategy,
-   ChangeDetectorRef,  Output,  EventEmitter,  Input,} from '@angular/core';
+   ChangeDetectorRef,  Output,  EventEmitter,  Input, ViewChild, AfterViewInit} from '@angular/core';
 import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
 import { ProgramCode } from '@cms/case-management/domain';
+import {   ComboBoxComponent   } from '@progress/kendo-angular-dropdowns';
  
 /** Internal Libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -16,7 +17,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
   styleUrls: ['./new-case.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewCaseComponent implements OnInit {
+export class NewCaseComponent implements OnInit  {
 public showInputLoader = false;
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
@@ -29,6 +30,8 @@ public showInputLoader = false;
   @Input() ddlPrograms! : any
   @Input() ddlCaseOrigins! : any
   @Input() formButtonDisabled! : boolean
+  @ViewChild('searchcaseornew')
+  private searchcaseornew: any ;
 
     /** Public properties **/
   parentForm! : FormGroup;
@@ -71,8 +74,9 @@ public showInputLoader = false;
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.setDefaultProgram();  
-    this.registerFormData();
+    this.registerFormData(); 
   }
+ 
   private setDefaultProgram() {   
     this.ddlPrograms.subscribe({
       next: (programs: any) => {
