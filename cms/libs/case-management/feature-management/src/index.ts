@@ -15,3 +15,4 @@ export * from './lib/components/un-assign-case-manager/un-assign-case-manager.co
 export * from './lib/components/viral-load/viral-load.component';
 export * from './lib/components/hiv-case-manager-card/hiv-case-manager-card.component';
 export * from './lib/components/remove-case-manager-confirmation/remove-case-manager-confirmation.component';
+export * from './lib/components/case-manager-search/case-manager-search.component';

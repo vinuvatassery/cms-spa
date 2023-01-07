@@ -1,17 +1,18 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
+
 /** Entities **/
-import { Case } from '../entities/case';
-import { Program } from '../entities/program';
+import { LoginUser } from '@cms/system-config/domain';
 
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../entities/client-case';
-import { LoginUser } from 'libs/system-config/domain/src/lib/entities/login-user';
+
+
+
 
 @Injectable({ providedIn: 'root' })
 export class CaseManagerDataService {

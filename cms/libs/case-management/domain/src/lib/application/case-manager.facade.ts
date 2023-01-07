@@ -116,9 +116,28 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
     getCaseManagerStatus(clientCaseId : string): void {
       this.showLoader()
       this.caseManagerDataService.getCaseManagerStatus(clientCaseId).subscribe({
-        next: (getManagerStatusResponse : any) => {          
-        this.getCaseManagerHasManagerStatusSubject.next(getManagerStatusResponse?.hasManager);
-        this.getCaseManagerNeedManagerStatusSubject.next(getManagerStatusResponse?.needManager);
+        next: (getManagerStatusResponse : any) => {    
+          let hasManager! : any;
+          let needManager! : any;
+          if(getManagerStatusResponse?.hasManager === StatusFlag.Yes)  
+          {
+            hasManager =true;
+          }
+          else  if(getManagerStatusResponse?.hasManager === StatusFlag.No)  
+          {
+            hasManager =false;
+          }   
+          
+          if(getManagerStatusResponse?.needManager === StatusFlag.Yes)  
+          {
+            needManager =true;
+          }
+          else  if(getManagerStatusResponse?.needManager === StatusFlag.No)  
+          {
+            needManager =false;
+          }   
+        this.getCaseManagerHasManagerStatusSubject.next(hasManager);
+        this.getCaseManagerNeedManagerStatusSubject.next(needManager);
         this.hideLoader()
       },
         error: (err) => {
@@ -174,6 +193,15 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
      },
    });
+ }
+
+ updateWorkFlow(statusData : boolean)
+ {
+  const workFlowdata: CompletionChecklist[] = [{
+    dataPointName: 'wouldYouLikeOne',
+    status: statusData === true ? StatusFlag.Yes : StatusFlag.No 
+  }]; 
+  this.workflowFacade.updateChecklist(workFlowdata);
  }
     
 }

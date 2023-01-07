@@ -1,8 +1,5 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
-
-import { first } from 'rxjs';
-
 @Component({
   selector: 'case-management-hiv-case-manager-card',
   templateUrl: './hiv-case-manager-card.component.html',
@@ -18,8 +15,6 @@ export class HivCaseManagerCardComponent implements OnInit{
 
  imageData! : any
 
-
-
  /** Lifecycle hooks **/
  ngOnInit(): void {
   this.loadUserImage();
@@ -27,19 +22,7 @@ export class HivCaseManagerCardComponent implements OnInit{
 
    loadUserImage()
    {    
-    this.loadUserImageEvent.emit(this.gridHoverDataItem?.caseManagerId)
-    this.onImageLoad();
+    this.loadUserImageEvent.emit(this.gridHoverDataItem?.caseManagerId)   
    }
-
-   onImageLoad()
-   {     
-     this.userImage$.pipe()
-     .subscribe((userImage : any) =>
-     {      
-              
-        this.imageData = userImage;
-        
-     });
-    
-   }
+  
 }

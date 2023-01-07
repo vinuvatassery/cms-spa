@@ -25,9 +25,17 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId ! : string
   hasManager! :string
   needManager! : string
+  hasManagerValidation =false;
+  needManagerValidation =false;
 
   gridVisibleSubject = new Subject<boolean>();
   showCaseManagers$ = this.gridVisibleSubject.asObservable();
+
+  hasManagerValidationSubject = new Subject<boolean>();
+  hasManagerValidation$ = this.hasManagerValidationSubject.asObservable();
+
+  needManagerValidationSubject = new Subject<boolean>();
+  needManagerValidation$ = this.needManagerValidationSubject.asObservable();
 
   getCaseManagers$ = this.caseManagerFacade.getCaseManagers$;
   getCaseManagerHasManagerStatus$=this.caseManagerFacade.getCaseManagerHasManagerStatus$;
@@ -91,11 +99,24 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
     {  
       //Would you like one?
       this.needManager = (x ===true) ? StatusFlag.Yes : StatusFlag.No;
+      this.caseManagerFacade.updateWorkFlow(true)
     });
      
   }
-  hasManagerChangeEvent(status : boolean)
+
+  handlehasManagerRadioChange($event : any)
   {
+    this.validate();
+  }
+
+  handleNeedManagerRadioChange($event : any)
+  {
+    this.caseManagerFacade.updateWorkFlow(true)
+    this.validate();
+  }
+
+  hasManagerChangeEvent(status : boolean)
+  {    
      //show hide grid
      this.gridVisibleSubject.next(status);
   }
@@ -118,15 +139,51 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   }
 
   private save() {  
-     return  this.caseManagerFacade.updateCaseManagerStatus
-      (this.clientCaseId , this.hasManager , this.needManager)
-       .pipe
-      (
-       catchError((err: any) => {                     
-         this.workflowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
-         return  of(false);
-       })  
-      )  
+       if(this.validate() === true)
+        {
+        return  this.caseManagerFacade.updateCaseManagerStatus
+          (this.clientCaseId , this.hasManager , this.needManager)
+          .pipe
+          (
+          catchError((err: any) => {                     
+            this.workflowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+            return  of(false);
+          })  
+          )  
+        }
+        else
+        {
+          return of(false);
+        }
+     }
+
+     private validate() : boolean
+     {      
+      let status =false      
+      if(this.hasManager === undefined)
+      {
+        this.hasManagerValidation = true;
+      }
+      if(this.hasManager === StatusFlag.Yes)
+      {
+        this.hasManagerValidation = false;
+        status = true;
+      }
+      
+      else if((this.hasManager === StatusFlag.No) && (this.needManager === StatusFlag.No || this.needManager === StatusFlag.Yes))
+      {
+        this.needManagerValidation = false;
+        this.hasManagerValidation = false;
+        status = true;
+      }
+      else if((this.hasManager === StatusFlag.No) && this.needManager === undefined)
+      {
+        this.needManagerValidation = true;
+        this.hasManagerValidation = false;
+      }
+      this.hasManagerValidationSubject.next(this.hasManagerValidation)
+      this.needManagerValidationSubject.next(this.needManagerValidation)
+      return status;
      }
 
  removecaseManagerHandler(deleteCaseManagerCaseId : string)
