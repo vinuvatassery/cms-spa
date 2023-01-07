@@ -1,3 +1,8 @@
 .delete-covered-person {
     text-align: right;
 }
+.file-uploads {
+    ::ng-deep .k-upload .k-actions {
+        display: none;
+      }
+}

@@ -396,44 +396,41 @@
             </kendo-floatinglabel>
           </div>
         </div>
-        <div class="flex-col mb-2 mt-2"
+        <div class="flex-col mb-2 mt-2 file-uploads"
           *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan ">
           <h5 class="text-capital">Copy of Insurance Card</h5>
           <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
-            [multiple]="false" [autoUpload]="false"
-            (select)="handleFileSelected($event, 'copyInsurance')"
-            (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance')" #copyOfInsurance [removeUrl]="uploadRemoveUrl"
-            [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
+            [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
+            (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance')" #copyOfInsurance
+            [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
             [restrictions]="uploadFileRestrictions.fileRestrictions">
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="healthInsuranceForm.value.copyOfInsuranceCard"> Copy of insurance card is required
           </kendo-formerror>
         </div>
-        <div class="flex-col mb-2 mt-2"
+        <div class="flex-col mb-2 mt-2  file-uploads"
           *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan ">
           <h5 class="text-capital">Proof of premium amount</h5>
           <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
             [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'proof')"
             (remove)="handleFileRemoved(proofOfPremiumFiles, 'proof')" #proofOfPremium [removeUrl]="uploadRemoveUrl"
-            [(ngModel)]="proofOfPremiumFiles" [ngModelOptions]="{standalone: true}"
+            [ngModel]="proofOfPremiumFiles" [ngModelOptions]="{standalone: true}"
             [restrictions]="uploadFileRestrictions.fileRestrictions">
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror
             *ngIf="healthInsuranceForm.value.isClientPolicyHolder == 'Yes' && healthInsuranceForm.value.proofOfPremium">
-            Proof
-            of
-            premium is required
+            Proof of premium is required
           </kendo-formerror>
         </div>
-        <div class="flex-col mb-2"
+        <div class="flex-col mb-2  file-uploads"
           *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan ">
           <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
           <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
             [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
             (remove)="handleFileRemoved(copyOfSummaryFiles, 'summary')" #copyOfSummary [removeUrl]="uploadRemoveUrl"
-            [(ngModel)]="copyOfSummaryFiles" [ngModelOptions]="{standalone: true}"
+            [ngModel]="copyOfSummaryFiles" [ngModelOptions]="{standalone: true}"
             [restrictions]="uploadFileRestrictions.fileRestrictions">
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>

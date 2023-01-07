@@ -45,8 +45,20 @@ export class healthInsurancePolicy {
         creationTime?: Date;
         othersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
         proofOfPremiumFile: any = null;
+        proofOfPremiumFileName: string = "";
+        proofOfPremiumFileSize: number | null = null;
+        proofOfPremiumFileTypeCode: string = "";
+        proofOfPremiumFileId: string = "";
         copyOfInsuranceCardFile: any = null;
+        copyOfInsuranceCardFileName: string = "";
+        copyOfInsuranceCardFileSize: number | null = null;
+        copyOfInsuranceCardFileTypeCode: string = "";
+        copyOfInsuranceCardFileId: string = "";
         copyOfSummaryFile: any = null;
+        copyOfSummaryFileName: string = "";
+        copyOfSummaryFileSize: number | null = null;
+        copyOfSummaryFileTypeCode: string = "";
+        copyOfSummaryFileId: string = "";
 }
 
 export class othersCoveredOnPlan {

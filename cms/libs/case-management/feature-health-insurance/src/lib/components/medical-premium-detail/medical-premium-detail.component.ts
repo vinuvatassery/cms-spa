@@ -664,7 +664,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (
         this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
       ) {
-        this.healthInsurancePolicy.aptcNotTakingFlag = this.healthInsuranceForm.controls['aptcFlag'].value;
+        this.healthInsurancePolicy.aptcNotTakingFlag = '';
+        this.healthInsurancePolicy.aptcFlag = !!this.healthInsuranceForm.controls['aptcFlag'].value ? this.healthInsuranceForm.controls['aptcFlag'].value : '';
       } else {
         this.healthInsurancePolicy.aptcFlag = StatusFlag.Yes;
         this.healthInsurancePolicy.aptcMonthlyAmt = this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
@@ -698,7 +699,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (
         this.healthInsuranceForm.controls['onLisFlag'].value !== StatusFlag.Yes
       ) {
-        this.healthInsurancePolicy.onLisFlag = this.healthInsuranceForm.controls['onLisFlag'].value;
+        this.healthInsurancePolicy.onLisFlag = !!this.healthInsuranceForm.controls['onLisFlag'].value ? this.healthInsuranceForm.controls['onLisFlag'].value : '';
       } else {
         this.healthInsurancePolicy.onLisFlag = StatusFlag.Yes;
       }
@@ -846,28 +847,23 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsurancePolicy.clientInsurancePolicyId =
           this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
         this.healthInsurancePolicy.creationTime = this.healthInsurancePolicyCopy.creationTime;
-        let files = {
-          copyOfInsuranceCardFile: {
-            document: this.copyOfInsuranceCardFiles.document,
-            documentTypeCode: this.cICTypeCode,
-            documentSize: this.copyOfInsuranceCardFiles.documentSize,
-            documentName: this.copyOfInsuranceCardFiles.documentName
-          },
-          proofOfPremiumFile: {
-            document: this.proofOfPremiumFiles.document,
-            documentTypeCode: this.pOPTypeCode,
-            documentSize: this.proofOfPremiumFiles.documentSize,
-            documentName: this.proofOfPremiumFiles.documentName
-          },
-          copyOfSummaryFile: {
-            document: this.copyOfSummaryFiles.document,
-            documentTypeCode: this.cOSTypeCode,
-            documentSize: this.copyOfSummaryFiles.documentSize,
-            documentName: this.copyOfSummaryFiles.documentName
-          }
-        }
+        this.healthInsurancePolicy.copyOfInsuranceCardFile = this.copyOfInsuranceCardFiles.document;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles.documentName;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.copyOfInsuranceCardFiles.documentSize;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileTypeCode = this.cICTypeCode;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.copyOfInsuranceCardFiles.documentId;
+        this.healthInsurancePolicy.proofOfPremiumFile = this.proofOfPremiumFiles.document;
+        this.healthInsurancePolicy.proofOfPremiumFileName = this.proofOfPremiumFiles.documentName;
+        this.healthInsurancePolicy.proofOfPremiumFileSize = this.proofOfPremiumFiles.documentSize;
+        this.healthInsurancePolicy.proofOfPremiumFileTypeCode = this.pOPTypeCode;
+        this.healthInsurancePolicy.proofOfPremiumFileId = this.proofOfPremiumFiles.documentId;
+        this.healthInsurancePolicy.copyOfSummaryFile = this.copyOfSummaryFiles.document;
+        this.healthInsurancePolicy.copyOfSummaryFileName = this.copyOfSummaryFiles.documentName;
+        this.healthInsurancePolicy.copyOfSummaryFileSize = this.copyOfSummaryFiles.documentSize;
+        this.healthInsurancePolicy.copyOfSummaryFileTypeCode = this.cOSTypeCode;
+        this.healthInsurancePolicy.copyOfSummaryFileId = this.copyOfSummaryFiles.documentId;
         this.insurancePolicyFacade
-          .updateHealthInsurancePolicy(this.healthInsurancePolicy, files)
+          .updateHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(
             (data: any) => {
               this.insurancePolicyFacade.ShowHideSnackBar(
@@ -875,6 +871,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
                 'Insurance plan updated successfully.'
               );
               this.onModalCloseClicked();
+              this.insurancePolicyFacade.HideLoader();
             },
             (error: any) => {
               if (error) {
@@ -882,32 +879,29 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
                   SnackBarNotificationType.ERROR,
                   error
                 );
+                this.insurancePolicyFacade.HideLoader();
               }
             }
           );
       } else {
-        let files = {
-          copyOfInsuranceCardFile: {
-            document: this.copyOfInsuranceCardFiles.document,
-            documentTypeCode: this.cICTypeCode,
-            documentSize: this.copyOfInsuranceCardFiles.documentSize,
-            documentName: this.copyOfInsuranceCardFiles.documentName
-          },
-          proofOfPremiumFile: {
-            document: this.proofOfPremiumFiles.document,
-            documentTypeCode: this.pOPTypeCode,
-            documentSize: this.proofOfPremiumFiles.documentSize,
-            documentName: this.proofOfPremiumFiles.documentName
-          },
-          copyOfSummaryFile: {
-            document: this.copyOfSummaryFiles.document,
-            documentTypeCode: this.cOSTypeCode,
-            documentSize: this.copyOfSummaryFiles.documentSize,
-            documentName: this.copyOfSummaryFiles.documentName
-          }
-        }
+        this.healthInsurancePolicy.creationTime = new Date();
+        this.healthInsurancePolicy.copyOfInsuranceCardFile = this.copyOfInsuranceCardFiles.document.rawFile;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles.documentName;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.copyOfInsuranceCardFiles.documentSize;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileTypeCode = this.cICTypeCode;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.copyOfInsuranceCardFiles.documentId;
+        this.healthInsurancePolicy.proofOfPremiumFile = this.proofOfPremiumFiles.document.rawFile;
+        this.healthInsurancePolicy.proofOfPremiumFileName = this.proofOfPremiumFiles.documentName;
+        this.healthInsurancePolicy.proofOfPremiumFileSize = this.proofOfPremiumFiles.documentSize;
+        this.healthInsurancePolicy.proofOfPremiumFileTypeCode = this.pOPTypeCode;
+        this.healthInsurancePolicy.proofOfPremiumFileId = this.proofOfPremiumFiles.documentId;
+        this.healthInsurancePolicy.copyOfSummaryFile = this.copyOfSummaryFiles.document.rawFile;
+        this.healthInsurancePolicy.copyOfSummaryFileName = this.copyOfSummaryFiles.documentName;
+        this.healthInsurancePolicy.copyOfSummaryFileSize = this.copyOfSummaryFiles.documentSize;
+        this.healthInsurancePolicy.copyOfSummaryFileTypeCode = this.cOSTypeCode;
+        this.healthInsurancePolicy.copyOfSummaryFileId = this.copyOfSummaryFiles.documentId;
         this.insurancePolicyFacade
-          .saveHealthInsurancePolicy(this.healthInsurancePolicy, files)
+          .saveHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(
             (data: any) => {
               this.insurancePolicyFacade.ShowHideSnackBar(
@@ -915,6 +909,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
                 'Insurance plan updated successfully.'
               );
               this.onModalCloseClicked();
+              this.insurancePolicyFacade.HideLoader();
             },
             (error: any) => {
               if (error) {
@@ -922,6 +917,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
                   SnackBarNotificationType.ERROR,
                   error
                 );
+                this.insurancePolicyFacade.HideLoader();
               }
             }
           );

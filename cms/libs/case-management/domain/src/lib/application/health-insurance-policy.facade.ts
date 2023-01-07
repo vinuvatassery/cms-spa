@@ -45,23 +45,17 @@ export class HealthInsurancePolicyFacade {
     this.loaderService.hide();
   }
 
-  saveHealthInsurancePolicy(healthInsurancePolicy: any, files: any) {
+  saveHealthInsurancePolicy(healthInsurancePolicy: any) {
     const formData: any = new FormData();
     for (var key in healthInsurancePolicy) {
       formData.append(key, healthInsurancePolicy[key]);
     }
-    for (var file in files) {
-      formData.append(file, files[file]);
-    }
     return this.healthInsurancePolicyService.saveHealthInsurancePolicy(formData);
   }
-  updateHealthInsurancePolicy(healthInsurancePolicy: any, files: any) {
+  updateHealthInsurancePolicy(healthInsurancePolicy: any) {
     const formData: any = new FormData();
     for (var key in healthInsurancePolicy) {
       formData.append(key, healthInsurancePolicy);
-    }
-    for (var file in files) {
-      formData.append(file, files[file]);
     }
     return this.healthInsurancePolicyService.updateHealthInsurancePolicy(formData);
   }
