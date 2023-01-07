@@ -6,7 +6,6 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscriptio
 import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { threadId } from 'worker_threads';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
