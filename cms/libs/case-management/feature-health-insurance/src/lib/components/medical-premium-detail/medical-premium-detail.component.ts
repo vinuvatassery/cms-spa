@@ -101,6 +101,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   insurancePlanNameDefaultValue: string | null = null;
   insuranceEndDateValid: boolean = true;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  relationshipDescriptionList: any = [];
   relationshipList: any = [];
   sessionId: any;
   cICTypeCode: string = "";
@@ -209,7 +210,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   private loadRelationshipLov() {
     this.RelationshipLovs$.subscribe((data: any) => {
       if (!Array.isArray(data)) return;
-      this.relationshipList = data.map((x: any) => x.lovDesc);
+      this.relationshipList = data;
+      this.relationshipDescriptionList = data.map((x: any) => x.lovDesc);
     });
   }
 
@@ -245,6 +247,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.buttonText = 'Add';
         this.isDeleteEnabled = false;
         this.isViewContentEditable = false;
+        this.resetForm();
+        // this.healthInsuranceForm.controls['othersCoveredOnPlan'].setValue([]);
         break;
       case 'Edit':
         this.isEdit = true;
@@ -665,7 +669,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
       ) {
         this.healthInsurancePolicy.aptcNotTakingFlag = '';
-        this.healthInsurancePolicy.aptcFlag = !!this.healthInsuranceForm.controls['aptcFlag'].value ? this.healthInsuranceForm.controls['aptcFlag'].value : '';
+        this.healthInsurancePolicy.aptcFlag = this.healthInsuranceForm.controls['aptcFlag'].value;
       } else {
         this.healthInsurancePolicy.aptcFlag = StatusFlag.Yes;
         this.healthInsurancePolicy.aptcMonthlyAmt = this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
@@ -699,7 +703,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (
         this.healthInsuranceForm.controls['onLisFlag'].value !== StatusFlag.Yes
       ) {
-        this.healthInsurancePolicy.onLisFlag = !!this.healthInsuranceForm.controls['onLisFlag'].value ? this.healthInsuranceForm.controls['onLisFlag'].value : '';
+        this.healthInsurancePolicy.onLisFlag = this.healthInsuranceForm.controls['onLisFlag'].value;
       } else {
         this.healthInsurancePolicy.onLisFlag = StatusFlag.Yes;
       }
@@ -715,6 +719,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
       this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
       if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
+        this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
+          x.relationshipCode = this.relationshipList.filter(
+            (y: any) => y.lovDesc == x.relationshipDescription)[0].lovCode;
+        });
         this.healthInsurancePolicy.othersCoveredOnPlan.push(this.healthInsuranceForm.value.newOthersCoveredOnPlan);
       }
       this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;
@@ -756,6 +764,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   onToggleNewPersonClicked() {
     let personForm = this.formBuilder.group({
       relationshipDescription: new FormControl(''),
+      relationshipCode: new FormControl(''),
       firstName: new FormControl('', Validators.maxLength(40)),
       lastName: new FormControl('', Validators.maxLength(40)),
       dob: new FormControl(''),
@@ -847,21 +856,21 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsurancePolicy.clientInsurancePolicyId =
           this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
         this.healthInsurancePolicy.creationTime = this.healthInsurancePolicyCopy.creationTime;
-        this.healthInsurancePolicy.copyOfInsuranceCardFile = this.copyOfInsuranceCardFiles.document;
-        this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles.documentName;
-        this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.copyOfInsuranceCardFiles.documentSize;
+        this.healthInsurancePolicy.copyOfInsuranceCardFile = this.copyOfInsuranceCardFiles?.document;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles?.documentName;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.copyOfInsuranceCardFiles?.documentSize;
         this.healthInsurancePolicy.copyOfInsuranceCardFileTypeCode = this.cICTypeCode;
-        this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.copyOfInsuranceCardFiles.documentId;
-        this.healthInsurancePolicy.proofOfPremiumFile = this.proofOfPremiumFiles.document;
-        this.healthInsurancePolicy.proofOfPremiumFileName = this.proofOfPremiumFiles.documentName;
-        this.healthInsurancePolicy.proofOfPremiumFileSize = this.proofOfPremiumFiles.documentSize;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.copyOfInsuranceCardFiles?.documentId;
+        this.healthInsurancePolicy.proofOfPremiumFile = this.proofOfPremiumFiles?.document;
+        this.healthInsurancePolicy.proofOfPremiumFileName = this.proofOfPremiumFiles?.documentName;
+        this.healthInsurancePolicy.proofOfPremiumFileSize = this.proofOfPremiumFiles?.documentSize;
         this.healthInsurancePolicy.proofOfPremiumFileTypeCode = this.pOPTypeCode;
-        this.healthInsurancePolicy.proofOfPremiumFileId = this.proofOfPremiumFiles.documentId;
-        this.healthInsurancePolicy.copyOfSummaryFile = this.copyOfSummaryFiles.document;
-        this.healthInsurancePolicy.copyOfSummaryFileName = this.copyOfSummaryFiles.documentName;
-        this.healthInsurancePolicy.copyOfSummaryFileSize = this.copyOfSummaryFiles.documentSize;
+        this.healthInsurancePolicy.proofOfPremiumFileId = this.proofOfPremiumFiles?.documentId;
+        this.healthInsurancePolicy.copyOfSummaryFile = this.copyOfSummaryFiles?.document;
+        this.healthInsurancePolicy.copyOfSummaryFileName = this.copyOfSummaryFiles?.documentName;
+        this.healthInsurancePolicy.copyOfSummaryFileSize = this.copyOfSummaryFiles?.documentSize;
         this.healthInsurancePolicy.copyOfSummaryFileTypeCode = this.cOSTypeCode;
-        this.healthInsurancePolicy.copyOfSummaryFileId = this.copyOfSummaryFiles.documentId;
+        this.healthInsurancePolicy.copyOfSummaryFileId = this.copyOfSummaryFiles?.documentId;
         this.insurancePolicyFacade
           .updateHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(
@@ -885,21 +894,21 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           );
       } else {
         this.healthInsurancePolicy.creationTime = new Date();
-        this.healthInsurancePolicy.copyOfInsuranceCardFile = this.copyOfInsuranceCardFiles.document.rawFile;
-        this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles.documentName;
-        this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.copyOfInsuranceCardFiles.documentSize;
+        this.healthInsurancePolicy.copyOfInsuranceCardFile = this.copyOfInsuranceCardFiles?.document.rawFile;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles?.documentName;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.copyOfInsuranceCardFiles?.documentSize;
         this.healthInsurancePolicy.copyOfInsuranceCardFileTypeCode = this.cICTypeCode;
-        this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.copyOfInsuranceCardFiles.documentId;
-        this.healthInsurancePolicy.proofOfPremiumFile = this.proofOfPremiumFiles.document.rawFile;
-        this.healthInsurancePolicy.proofOfPremiumFileName = this.proofOfPremiumFiles.documentName;
-        this.healthInsurancePolicy.proofOfPremiumFileSize = this.proofOfPremiumFiles.documentSize;
+        this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.copyOfInsuranceCardFiles?.documentId;
+        this.healthInsurancePolicy.proofOfPremiumFile = this.proofOfPremiumFiles?.document?.rawFile;
+        this.healthInsurancePolicy.proofOfPremiumFileName = this.proofOfPremiumFiles?.documentName;
+        this.healthInsurancePolicy.proofOfPremiumFileSize = this.proofOfPremiumFiles?.documentSize;
         this.healthInsurancePolicy.proofOfPremiumFileTypeCode = this.pOPTypeCode;
-        this.healthInsurancePolicy.proofOfPremiumFileId = this.proofOfPremiumFiles.documentId;
-        this.healthInsurancePolicy.copyOfSummaryFile = this.copyOfSummaryFiles.document.rawFile;
-        this.healthInsurancePolicy.copyOfSummaryFileName = this.copyOfSummaryFiles.documentName;
-        this.healthInsurancePolicy.copyOfSummaryFileSize = this.copyOfSummaryFiles.documentSize;
+        this.healthInsurancePolicy.proofOfPremiumFileId = this.proofOfPremiumFiles?.documentId;
+        this.healthInsurancePolicy.copyOfSummaryFile = this.copyOfSummaryFiles?.document.rawFile;
+        this.healthInsurancePolicy.copyOfSummaryFileName = this.copyOfSummaryFiles?.documentName;
+        this.healthInsurancePolicy.copyOfSummaryFileSize = this.copyOfSummaryFiles?.documentSize;
         this.healthInsurancePolicy.copyOfSummaryFileTypeCode = this.cOSTypeCode;
-        this.healthInsurancePolicy.copyOfSummaryFileId = this.copyOfSummaryFiles.documentId;
+        this.healthInsurancePolicy.copyOfSummaryFileId = this.copyOfSummaryFiles?.documentId;
         this.insurancePolicyFacade
           .saveHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(
@@ -936,6 +945,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].disable();
       this.healthInsuranceForm.controls["onQmbFlag"].disable();
       this.healthInsuranceForm.controls["onLisFlag"].disable();
+      this.healthInsuranceForm.controls["othersCoveredOnPlanFlag"].disable();
+      this.healthInsuranceForm.controls["othersCoveredOnPlan"].disable();
+      this.healthInsuranceForm.controls["isClientPolicyHolderFlag"].disable();
     }
     else {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
@@ -943,6 +955,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].enable();
       this.healthInsuranceForm.controls["onQmbFlag"].enable();
       this.healthInsuranceForm.controls["onLisFlag"].enable();
+      this.healthInsuranceForm.controls["othersCoveredOnPlanFlag"].enable();
+      this.healthInsuranceForm.controls["othersCoveredOnPlan"].enable();
+      this.healthInsuranceForm.controls["isClientPolicyHolderFlag"].enable();
     }
   }
   startDateOnChange(startDate: Date) {
@@ -968,21 +983,24 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.proofOfPremiumFiles = {
         document: event.files[0],
         documentSize: event.files[0].size,
-        documentName: event.files[0].name
+        documentName: event.files[0].name,
+        documentId: event.files[0].uid
       }
     }
     else if (fileType == 'summary') {
       this.copyOfSummaryFiles = {
         document: event.files[0],
         documentSize: event.files[0].size,
-        documentName: event.files[0].name
+        documentName: event.files[0].name,
+        documentId: event.files[0].uid
       }
     }
     else if (fileType == 'copyInsurance') {
       this.copyOfInsuranceCardFiles = {
         document: event.files[0],
         documentSize: event.files[0].size,
-        documentName: event.files[0].name
+        documentName: event.files[0].name,
+        documentId: event.files[0].uid
       }
     }
   }

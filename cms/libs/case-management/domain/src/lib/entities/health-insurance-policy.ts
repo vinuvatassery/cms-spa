@@ -63,6 +63,7 @@ export class healthInsurancePolicy {
 
 export class othersCoveredOnPlan {
         relationshipDescription: string = "";
+        relationshipCode: string = "";
         firstName: string = "";
         lastName: string = "";
         dob?: Date;
