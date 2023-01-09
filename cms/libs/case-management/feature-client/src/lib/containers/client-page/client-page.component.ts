@@ -92,12 +92,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   private loadSessionData()
   {  
+    debugger
    this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
-   this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {     
+   this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+    .subscribe((session: any) => {  
+      debugger   
       this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
       this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
@@ -134,7 +136,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   } 
 
   private loadApplicantInfo(){   
-    if(  this.applicantInfo.client == undefined){
+    if(this.applicantInfo.client == undefined){
       this.applicantInfo.client = new Client;
     }
 

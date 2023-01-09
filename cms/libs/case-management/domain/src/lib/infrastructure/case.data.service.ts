@@ -400,4 +400,9 @@ export class CaseDataService {
       caseData
     );
   }
+
+  getSessionInfoByCaseId(clientCaseId:any){
+  return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/SessionSearch/${clientCaseId}`);
+  }
 }

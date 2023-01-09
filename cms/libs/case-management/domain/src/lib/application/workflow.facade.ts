@@ -382,8 +382,10 @@ export class WorkflowFacade {
 
 
   loadWorkFlowSessionData(sessionId: string): void {
+    debugger
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
+        debugger
         if (ddlsessionDataResponse) {
           const sessionData = JSON.parse(ddlsessionDataResponse?.sessionData);
           if (ddlsessionDataResponse) {
