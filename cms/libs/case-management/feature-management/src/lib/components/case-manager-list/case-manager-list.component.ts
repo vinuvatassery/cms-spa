@@ -147,8 +147,7 @@ export class CaseManagerListComponent implements OnInit {
 
   handleManagerRemove(caseManagerCaseId : any)
   {    
-    this. onCloseCsManagerSearchClicked();
-    //this.deleteCaseManagerCaseId = caseManagerCaseId
+    this. onCloseCsManagerSearchClicked();    
     this.onremoveManagerClicked();
   }
   onCloseCsManagerSearchClicked()
