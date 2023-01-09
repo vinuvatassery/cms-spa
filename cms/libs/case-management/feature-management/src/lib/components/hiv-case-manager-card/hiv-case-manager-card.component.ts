@@ -14,6 +14,7 @@ export class HivCaseManagerCardComponent implements OnInit{
  @Output() loadUserImageEvent =  new EventEmitter<string>();
 
  imageData! : any
+ imageLoaderVisible =true;
 
  /** Lifecycle hooks **/
  ngOnInit(): void {
@@ -25,4 +26,8 @@ export class HivCaseManagerCardComponent implements OnInit{
     this.loadUserImageEvent.emit(this.gridHoverDataItem?.caseManagerId)   
    }
   
+   onLoad()
+   {    
+    this.imageLoaderVisible = false;
+   }
 }

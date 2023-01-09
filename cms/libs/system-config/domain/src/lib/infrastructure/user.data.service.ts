@@ -37,7 +37,7 @@ export class UserDataService {
   getUserImage(userId : string) { 
     return this.http.get(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-      `/system-config/users/${userId}/image`, {responseType: 'text'}
+      `/system-config/users/${userId}/profile-photo`, {responseType: 'text'}
     );  
   }  
   
