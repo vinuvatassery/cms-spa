@@ -4,7 +4,10 @@ import { first,Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { WorkflowFacade,ClientDocumentFacade,ClientEligibilityFacade,ClientDocumnetEntityType } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService} from '@cms/shared/util-core';
+import { LoaderService,
+  LoggingService,
+  NotificationSnackbarService,
+  SnackBarNotificationType} from '@cms/shared/util-core';
 import {FormGroup,FormBuilder} from '@angular/forms';
 @Component({
   selector: 'case-management-client-eligibility',
@@ -37,7 +40,9 @@ export class ClientEligibilityComponent implements OnInit {
     ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
     ,private clientDocumentFacade:ClientDocumentFacade
     ,private clientEligibilityFacade:ClientEligibilityFacade,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly loggingService: LoggingService
     ) {
       this.eligibilityForm = this.formBuilder.group({});
      }
@@ -45,6 +50,14 @@ export class ClientEligibilityComponent implements OnInit {
   ngOnInit(): void {
 
     this.loadSessionData();
+  }
+
+  showSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle);
   }
 
   loadSessionData() {
@@ -86,9 +99,7 @@ export class ClientEligibilityComponent implements OnInit {
   viewOrDonwloadFile(type:string,clientDocumentId:string,documentName:string) {
     this.loaderService.show()
     this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
-      console.log(data);
       const fileUrl = window.URL.createObjectURL(data);
-      
       if(type==='download'){
         const downloadLink = document.createElement('a');
         downloadLink.href = fileUrl;
@@ -100,7 +111,8 @@ export class ClientEligibilityComponent implements OnInit {
       this.loaderService.hide();
      },(error) => {
       this.loaderService.hide();
-       })
+       this.showSnackBar(SnackBarNotificationType.ERROR, error)
+     })
   }
   
   answerClick(type:string,answer:string){
