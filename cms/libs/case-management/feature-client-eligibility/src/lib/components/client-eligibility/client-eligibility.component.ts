@@ -57,6 +57,7 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientCaseId = sessionData.ClientCaseId;
           this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
           this.clientId = sessionData.clientId;
+          this.eligibilityForm.controls['clientCaseEligibilityId'].setValue(this.clientCaseEligibilityId);
 
           this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId).subscribe((data: any) => {
            this.incomDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.Income);

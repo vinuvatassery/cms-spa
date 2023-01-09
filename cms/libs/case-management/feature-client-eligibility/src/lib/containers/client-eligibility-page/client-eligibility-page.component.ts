@@ -17,6 +17,7 @@ import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
+  SnackBarNotificationType
 } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationType } from '@cms/case-management/domain';
@@ -53,6 +54,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
   }
   private buildForm() {
     this.eligibilityForm = this.formBuilder.group({
+      clientCaseEligibilityId: [''],
       homeAddressProofChecklistId: ['E85074D6-6BA2-4F7C-8CE8-120FE5C9DBFE'],
       homeAddressProof: [''],
       incomeChecklistId: ['06FEDE81-4784-48A9-99FB-3151E0FB98CB'],
@@ -60,30 +62,42 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle);
+  }
+
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
-      .pipe(
-        mergeMap((navigationType: NavigationType) =>
-          forkJoin([of(navigationType), this.save()])
-        )
-      )
-      .subscribe(([navigationType, isSaved]:any) => {
-        if (isSaved) {
-          this.workflowFacade.navigate(navigationType);
-        }
+      .subscribe((data:any) => {
+        this.save();
       });
   }
 
   private save() {
-    debugger
+   
     if (this.eligibilityForm.valid) {
-      // this.ShowLoader();
-      // let caseEligibilityFlagsData = this.insuranceFlagForm.value;
-      // caseEligibilityFlagsData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
-      // caseEligibilityFlagsData["clientId"] = this.clientId;
-      return of(false);
-
+      
+      const ChecklistAnswers = [];
+      const clientCaseEligibilityId=this.eligibilityForm.controls['clientCaseEligibilityId'].value;
+      ChecklistAnswers.push({clientCaseEligibilityId,EligibilityChecklistId:this.eligibilityForm.controls['homeAddressProofChecklistId'].value,Answer:this.eligibilityForm.controls['homeAddressProof'].value});
+      ChecklistAnswers.push({clientCaseEligibilityId,EligibilityChecklistId:this.eligibilityForm.controls['incomeChecklistId'].value,Answer:this.eligibilityForm.controls['income'].value});
+      this.loaderService.show();
+      this.eligibilityChecklistAnswerFacade.saveEligibilityChecklistAnswer(ChecklistAnswers).subscribe(
+        data => {
+          if(data===true){
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Eligibility checklist save successfully");
+            this.loaderService.hide();
+          }
+        },
+        error => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+          this.loaderService.hide();
+        }
+       );
     }
-    return of(false)
   }
 }
