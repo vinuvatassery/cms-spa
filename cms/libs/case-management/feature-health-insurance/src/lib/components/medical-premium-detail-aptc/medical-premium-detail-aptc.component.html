@@ -1,5 +1,8 @@
 <div [formGroup]="healthInsuranceForm">
-<h5>Advanced Premium Tax Credit?</h5>
+
+<fieldset class="k-form-fieldset">
+  <legend class="k-form-legend"><h5>Advanced Premium Tax Credit?</h5></legend>
+ 
       <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
           <input
@@ -9,13 +12,13 @@
             value="Y"
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditYes"
-            id="aptcFlagY"
+            id="advancedPremiumTaxCreditYes"
             [checked]="aptcFlagValue=='Y'"
           />
           <kendo-label
             class="k-radio-label"
             text="Yes"
-            for="aptcFlagY"
+            for="advancedPremiumTaxCreditYes"
           ></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
@@ -26,13 +29,13 @@
             value="N"
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditNo"
-            id="aptcFlagN"
+            id="advancedPremiumTaxCreditNo"
             [checked]="aptcFlagValue=='N'"
           />
           <kendo-label
             class="k-radio-label"
             text="No"
-            for="aptcFlagN"
+            for="advancedPremiumTaxCreditNo"
           ></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
@@ -43,13 +46,13 @@
             value="U"
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditUnknown"
-            id="aptcFlagU"
+            id="advancedPremiumTaxCreditUnknown"
             [checked]="aptcFlagValue=='U'"
           />
           <kendo-label
             class="k-radio-label"
             text="Unknown"
-            for="aptcFlagU"
+            for="advancedPremiumTaxCreditUnknown"
           ></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
@@ -60,17 +63,19 @@
             value="E"
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditEligibleButNotTaking"
-            id="aptcFlagE"
+            id="advancedPremiumTaxCreditEligibleButNotTaking"
             [checked]="aptcFlagValue=='E'"
           />
           <kendo-label
             class="k-radio-label"
             text="Eligible, but not taking"
-            for="aptcFlagE"
+            for="advancedPremiumTaxCreditEligibleButNotTaking"
           ></kendo-label>
         </span>
         <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcFlag'].valid && isViewContentEditable==false)">Advanced Premium Tax Credit is required.</kendo-formerror>
       </div>
+  
+      </fieldset>
       <div class="block-section mt-2" *ngIf="healthInsuranceForm.controls['aptcFlag'].value==='Y'">
         <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
           <kendo-textbox  aria-label="monthly aptc amount"

@@ -8,14 +8,14 @@
           <input
             type="checkbox"
             kendoCheckBox
-            (click)="onProviderValueChanged()"
-            aria-labelledby="clientDoesNotHaveHealthcareProvider"
+            (click)="onProviderValueChanged()" 
             id="noHealthcareProvider"
+            name="noHealthcareProvider"
+            aria-labelledby="noHealthcareProvider"
             [checked]="healthCareProvideGetFlag$ | async"   
           />
-          <label class="k-checkbox-label" for="noHealthcareProvider"
-            >Client does not have a healthcare provider</label
-          >
+          <kendo-label   for="noHealthcareProvider"
+            text="Client does not have a healthcare provider"></kendo-label>
           </span>
         </div>
         <div class="flex-col"  *ngIf="!isProvidersGridDisplay">
