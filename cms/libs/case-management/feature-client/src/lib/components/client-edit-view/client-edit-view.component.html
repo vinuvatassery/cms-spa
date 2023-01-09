@@ -204,7 +204,7 @@
   </section>
 <section>
   <fieldset class="k-form-fieldset">
-    <legend class="k-form-legend">  <h5>Register to vote ?</h5> </legend>
+    <legend class="k-form-legend">  <h5>Register to vote?</h5> </legend>
    
     <div class="flex-row gap-m">
       <div class="flex-col">
@@ -241,7 +241,7 @@
             <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is required.</kendo-formerror>
           </span>
           <div class="voterreg-info d-flex" *ngIf="isVisible">
-            <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>This application will  send voter registeration collaterial via letter or email once the applicaiton is saved  with the necessary contact information</p>
+            <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>The applicant will be sent voter registration collateral via letter or email once the application is saved with necessary contact information</p>
           </div>
         </div>
       </div>
@@ -290,7 +290,6 @@
             [appInfoForm]="appInfoForm"
             [rdoInputlov]="rdoMaterials$"
             [dropdownInutLov]="materialsyeslov$"
-            [optionButtonValid]="materialOptionButtonValid"
             [textFieldDisable] ="yesMaterialDisable"
             [OptionControlerName] ="'materialInAlternateFormatCode'"
             [textControlerName]="'materialInAlternateFormatDesc'"
@@ -303,38 +302,38 @@
     </fieldset>
     <div class="flex-row">
       <div class="flex-col flex-col-4">   
-        <kendo-floatinglabel text="Spoken language">
+        <kendo-floatinglabel text="Spoken Language">
           <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
            [data]="spokenWrittenLanguagelov$ | async"
             textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
             formControlName="spokenLanguage">
         </kendo-dropdownlist>  
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken language is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken Language is required.</kendo-formerror>
       </div>
     </div>
     <div class="flex-row">
       <div class="flex-col flex-col-4">    
-        <kendo-floatinglabel text="Written language">
+        <kendo-floatinglabel text="Written Language">
           <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
            [data]="spokenWrittenLanguagelov$ | async"
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
           formControlName="writtenLanguage">
         </kendo-dropdownlist>  
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written language is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written Language is required.</kendo-formerror>
       </div>
     </div>
     <div class="flex-row">
       <div class="flex-col flex-col-4">    
-        <kendo-floatinglabel text="English proficiency">
+        <kendo-floatinglabel text="English Proficiency">
           <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
            [data]="englishProficiencylov$ | async"
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
           formControlName="englishProficiency">
         </kendo-dropdownlist>  
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English proficiency is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English Proficiency is required.</kendo-formerror>
       </div>
     </div>
   </section>
@@ -347,7 +346,6 @@
     <common-optionbutton-list
           [appInfoForm]="appInfoForm"
           [rdoInputlov]="rdoMaterials$"
-          [optionButtonValid]="interpreterOptionButtonValid"
           [textFieldDisable] ="interpreterTypeInputDisable"
           [OptionControlerName] ="'interpreterCode'"
           [textControlerName]="'interpreterType'"
@@ -366,7 +364,6 @@
       <common-optionbutton-list
             [appInfoForm]="appInfoForm"
             [rdoInputlov]="rdoMaterials$"
-            [optionButtonValid]="deafOrHearingOptionButtonValid"
             [textFieldDisable] ="startAgeDeafOrHearingInputDisable"
             [OptionControlerName] ="'deafOrHearingCode'"
             [textControlerName]="'startAgeDeafOrHearing'"
@@ -389,7 +386,6 @@
     <common-optionbutton-list
         [appInfoForm]="appInfoForm"
         [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="blindOrSeriousDiffOptionButtonValid"
         [textFieldDisable] ="startAgeBlindSeeingInputDisable"
         [OptionControlerName] ="'blindSeeingCode'"
         [textControlerName]="'startAgeBlindSeeing'"
@@ -408,7 +404,6 @@
     <common-optionbutton-list
         [appInfoForm]="appInfoForm"
         [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="physicalMentaDiffOptionButtonValid"
         [OptionControlerName] ="'limitingConditionCode'">
     </common-optionbutton-list>  
     </fieldset>
@@ -421,7 +416,6 @@
     <common-optionbutton-list
         [appInfoForm]="appInfoForm"
         [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="walkingOrClimbingOptionButtonValid"
         [textFieldDisable] ="startAgeWalkingClimbingDifficultyInputDisable"
         [OptionControlerName] ="'walkingClimbingDifficultyCode'"
         [textControlerName]="'startAgeWalkingClimbingDifficulty'"
@@ -440,7 +434,6 @@
     <common-optionbutton-list
         [appInfoForm]="appInfoForm"
         [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="dressingOrBathOptionButtonValid"
         [textFieldDisable] ="startAgeDressingBathingDifficultyInputDisable"
         [OptionControlerName] ="'dressingBathingDifficultyCode'"
         [textControlerName]="'startAgeDressingBathingDifficulty'"
@@ -462,7 +455,6 @@
     <common-optionbutton-list
         [appInfoForm]="appInfoForm"
         [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="concentrateAndRememberDiffOptionButtonValid"
         [textFieldDisable] ="startAgeConcentratingDifficultyInputDisable"
         [OptionControlerName] ="'concentratingDifficultyCode'"
         [textControlerName]="'startAgeConcentratingDifficulty'"
@@ -485,7 +477,6 @@
     <common-optionbutton-list
         [appInfoForm]="appInfoForm"
         [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="seriesDiffOptionButtonValid"
         [textFieldDisable] ="startAgeErrandsDifficultyInputDisable"
         [OptionControlerName] ="'errandsDifficultyCode'"
         [textControlerName]="'startAgeErrandsDifficulty'"

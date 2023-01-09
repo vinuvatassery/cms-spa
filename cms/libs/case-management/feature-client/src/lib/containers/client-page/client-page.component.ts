@@ -9,7 +9,7 @@ import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibil
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
-import { NavigationType } from '@cms/case-management/domain';
+import { NavigationType,PronounCode } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
@@ -76,14 +76,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         next:([navigationType, isSaved]) =>{
           if (isSaved) {
               this.loaderService.hide();                 
-              this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
+              this.clientFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
               this.workFlowFacade.navigate(navigationType);          
         }    
       },
       error: (error: any) => {
         this.loaderService.hide();      
-        this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
-        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+        this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
+        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
       },
 
     });
@@ -216,9 +216,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
              
             }
           } ,
-        error: error => {       
-          this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR ,error?.error?.error)  
-          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error})
+        error: error => {  
+          this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR ,error)  
+          this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error})
         }
       });
 
@@ -235,8 +235,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               catchError((error:any)=>{
                 if(error){
                   this.loaderService.hide();      
-                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
-                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
                   return of(false);
                 }
                 return of(false);
@@ -250,8 +250,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               catchError((error:any)=>{
                 if(error){
                   this.loaderService.hide();      
-                  this.clientFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error?.error?.error);
-                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
+                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
                   return of(false);
                 }
                 return of(false);
@@ -289,16 +289,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     if(this.applicantInfo.client == undefined){
       this.applicantInfo.client = new Client;
     }
-      this.applicantInfo.client.firstName = this.appInfoForm.controls["firstName"].value;
+      this.applicantInfo.client.firstName = this.appInfoForm.controls["firstName"].value.trim()===''?null:this.appInfoForm.controls["firstName"].value;
       if(this.appInfoForm.controls["chkmiddleName"].value == true){
         this.applicantInfo.client.middleName =null;
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.Yes;
       }
       else{
-        this.applicantInfo.client.middleName = this.appInfoForm.controls["middleName"].value;
+        this.applicantInfo.client.middleName = this.appInfoForm.controls["middleName"].value.trim() === ''?null:this.appInfoForm.controls["middleName"].value.trim();
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
-      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value; 
+      this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value.trim()===''?null:this.appInfoForm.controls["lastName"].value; 
       var dob =  this.appInfoForm.controls["dateOfBirth"].value;
       if(this.clientCaseEligibilityId != null){
         this.applicantInfo.client.dob = new Date(dob.getUTCFullYear(), dob.getUTCMonth(),dob.getUTCDate() + 1, 
@@ -309,7 +309,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
       }
       this.applicantInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
-      if (this.applicantInfo.client.genderAtBirthCode==='NOT_LISTED') {
+      if (this.applicantInfo.client.genderAtBirthCode===PronounCode.NotListed) {
         this.applicantInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;
       }
 
@@ -319,7 +319,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.ssnNotApplicableFlag =StatusFlag.Yes;
       }
       else{
-        this.applicantInfo.client.ssn = this.appInfoForm.controls["ssn"].value;
+        this.applicantInfo.client.ssn = this.appInfoForm.controls["ssn"].value.trim()===''?null:this.appInfoForm.controls["ssn"].value;
         this.applicantInfo.client.ssnNotApplicableFlag =StatusFlag.No;
       } 
   }
@@ -334,7 +334,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }    
         
            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
-           if (this.appInfoForm.controls["Transgender"].value==='NOT_LISTED') {
+           if (this.appInfoForm.controls["Transgender"].value===PronounCode.NotListed) {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
            }
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
@@ -342,23 +342,23 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }
         
         if(this.appInfoForm.controls["prmInsNotApplicable"].value){
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = '';
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = '';
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = null;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = null;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag = StatusFlag.Yes;
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = this.appInfoForm.controls["prmInsFirstName"].value
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = this.appInfoForm.controls["prmInsLastName"].value
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName = this.appInfoForm.controls["prmInsFirstName"].value.trim()===''?null:this.appInfoForm.controls["prmInsFirstName"].value;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName = this.appInfoForm.controls["prmInsLastName"].value.trim()===''?null:this.appInfoForm.controls["prmInsLastName"].value;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag = StatusFlag.No;
         }
         if(this.appInfoForm.controls["officialIdsNotApplicable"].value){
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = '';
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = '';
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = null;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = null;;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag = StatusFlag.Yes;
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = this.appInfoForm.controls["officialIdFirstName"].value
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = this.appInfoForm.controls["officialIdLastName"].value
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName = this.appInfoForm.controls["officialIdFirstName"].value.trim()===''?null:this.appInfoForm.controls["officialIdFirstName"].value;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName = this.appInfoForm.controls["officialIdLastName"].value.trim()===''?null:this.appInfoForm.controls["officialIdLastName"].value;
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag = StatusFlag.No;
         }    
     
@@ -471,7 +471,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)     
       if(existingPronoun === null || existingPronoun === undefined){
           var clientPronoun = new ClientPronoun();
-          if(pronoun.lovCode=='NOT_LISTED') {
+          if(pronoun.lovCode===PronounCode.NotListed) {
                     clientPronoun.otherDesc = this.appInfoForm.controls["pronoun"].value;
                     clientPronoun.clientPronounCode =pronoun.lovCode;
                     clientPronoun.clientId = this.clientId;
@@ -483,7 +483,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientPronounList.push(clientPronoun);
         }
         else{
-          if(pronoun.lovCode=='NOT_LISTED') {
+          if(pronoun.lovCode===PronounCode.NotListed) {
             const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);          
             this.applicantInfo.clientPronounList[index].clientPronounCode = pronoun.lovCode;
             this.applicantInfo.clientPronounList[index].otherDesc = this.appInfoForm.controls["pronoun"].value;
@@ -506,7 +506,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
          let clientGender = new ClientGender();
          clientGender.clientGenderCode =control;
          clientGender.clientId = this.clientId;
-         if(clientGender.clientGenderCode==='NOT_LISTED'){
+         if(clientGender.clientGenderCode===PronounCode.NotListed){
            clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
          }
          const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
@@ -530,7 +530,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       if (RaceAndEthnicityPrimary.lovCode===el.lovCode)
         clientRace.isPrimaryFlag = StatusFlag.Yes;
       clientRace.clientId = this.clientId;
-      if (el.lovCode === 'NOT_LISTED')
+      if (el.lovCode === PronounCode.NotListed)
         clientRace.raceDesc = this.appInfoForm.controls['RaceAndEthnicityNotListed'].value;
       this.applicantInfo.clientRaceList.push(clientRace)
     });
@@ -557,7 +557,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         const clientSexualIdentity = new ClientSexualIdentity();
         clientSexualIdentity.clientSexualIdentityCode = control;
         clientSexualIdentity.clientId = this.clientId;
-        if (clientSexualIdentity.clientSexualIdentityCode === 'NOT_LISTED') {
+        if (clientSexualIdentity.clientSexualIdentityCode === PronounCode.NotListed) {
           clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexulaIdentityDescription'].value;
         }
 
@@ -588,7 +588,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.appInfoForm.controls["firstName"].setValidators([Validators.required]);
             this.appInfoForm.controls["firstName"].updateValueAndValidity();
             this.appInfoForm.controls["dateOfBirth"].setErrors(null);
-        if(this.appInfoForm.controls["chkmiddleName"].value ){
+        if(this.appInfoForm.controls["chkmiddleName"].value  ){
               this.appInfoForm.controls["middleName"].removeValidators(Validators.required);;
               this.appInfoForm.controls["middleName"].updateValueAndValidity();
         }
@@ -638,77 +638,132 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-          }          
+          }  
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           this.pronounList.forEach((pronoun:any) => {
             if(this.appInfoForm.controls[pronoun.lovCode].value ===true){
               this.appInfoForm.controls['pronouns'].setErrors(null);
             }
-            
           });
+          if(this.appInfoForm.controls['pronouns'].valid){
+            this.pronounList.forEach((pronounCode:any) => {             
+                this.appInfoForm.controls[pronounCode.lovCode].removeValidators(Validators.requiredTrue);
+                this.appInfoForm.controls[pronounCode.lovCode].updateValueAndValidity();
+                if(pronounCode.lovCode ===PronounCode.NotListed && this.appInfoForm.controls[pronounCode.lovCode].value){
+                  this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
+                  this.appInfoForm.controls['pronoun'].updateValueAndValidity();
+                }               
+            });
+          }
+          if(!this.appInfoForm.controls['pronouns'].valid){
+            this.pronounList.forEach((pronoun:any) => {   
+                this.appInfoForm.controls[pronoun.lovCode].setValidators(Validators.requiredTrue);
+                this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+            });
+          }
           this.appInfoForm.controls['materialInAlternateFormatCode'].setValidators(Validators.required);
           this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
-            if( this.appInfoForm.controls['materialInAlternateFormatCode'].value  !=='' ||
+            if( this.appInfoForm.controls['materialInAlternateFormatCode'].value  !=='' &&
                 this.appInfoForm.controls['materialInAlternateFormatCode'].value !== null){
                 this.appInfoForm.controls['materialInAlternateFormatCode'].setErrors(null);
                 this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
-              }     
+                if( this.appInfoForm.controls['materialInAlternateFormatCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['materialInAlternateFormatDesc'].setValidators(Validators.required);
+                  this.appInfoForm.controls['materialInAlternateFormatDesc'].updateValueAndValidity();
+                }
+                
+              }    
           this.appInfoForm.controls['interpreterCode'].setValidators(Validators.required);
           this.appInfoForm.controls['interpreterCode'].updateValueAndValidity();
-           if( this.appInfoForm.controls['interpreterCode'].value  !=='' ||
+           if( this.appInfoForm.controls['interpreterCode'].value  !=='' &&
                 this.appInfoForm.controls['interpreterCode'].value !== null){
                 this.appInfoForm.controls['interpreterCode'].setErrors(null);
                 this.appInfoForm.controls['interpreterCode'].updateValueAndValidity();
+                if( this.appInfoForm.controls['interpreterCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['interpreterType'].setValidators(Validators.required);
+                  this.appInfoForm.controls['interpreterType'].updateValueAndValidity();
+                }
+                
            } 
            this.appInfoForm.controls['deafOrHearingCode'].setValidators(Validators.required);
            this.appInfoForm.controls['deafOrHearingCode'].updateValueAndValidity();
-           if( this.appInfoForm.controls['deafOrHearingCode'].value  !=='' ||
+           if( this.appInfoForm.controls['deafOrHearingCode'].value  !=='' &&
                 this.appInfoForm.controls['deafOrHearingCode'].value !== null){
                 this.appInfoForm.controls['deafOrHearingCode'].setErrors(null);
                 this.appInfoForm.controls['deafOrHearingCode'].updateValueAndValidity();
+                if( this.appInfoForm.controls['deafOrHearingCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['startAgeDeafOrHearing'].setValidators(Validators.required);
+                  this.appInfoForm.controls['startAgeDeafOrHearing'].updateValueAndValidity();
+                }
+                
             } 
            this.appInfoForm.controls['blindSeeingCode'].setValidators(Validators.required);
            this.appInfoForm.controls['blindSeeingCode'].updateValueAndValidity();
-            if( this.appInfoForm.controls['blindSeeingCode'].value  !=='' ||
+            if( this.appInfoForm.controls['blindSeeingCode'].value  !=='' &&
                 this.appInfoForm.controls['blindSeeingCode'].value !== null){
                 this.appInfoForm.controls['blindSeeingCode'].setErrors(null);
                 this.appInfoForm.controls['blindSeeingCode'].updateValueAndValidity();
+                if( this.appInfoForm.controls['blindSeeingCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                  this.appInfoForm.controls['startAgeBlindSeeing'].setValidators(Validators.required);
+                  this.appInfoForm.controls['startAgeBlindSeeing'].updateValueAndValidity();
+                }
+                
             } 
             this.appInfoForm.controls['limitingConditionCode'].setValidators(Validators.required);
             this.appInfoForm.controls['limitingConditionCode'].updateValueAndValidity();
-            if( this.appInfoForm.controls['limitingConditionCode'].value  !=='' ||
+            if( this.appInfoForm.controls['limitingConditionCode'].value  !=='' &&
                 this.appInfoForm.controls['limitingConditionCode'].value !== null){
                 this.appInfoForm.controls['limitingConditionCode'].setErrors(null);
                 this.appInfoForm.controls['limitingConditionCode'].updateValueAndValidity();
               } 
              this.appInfoForm.controls['walkingClimbingDifficultyCode'].setValidators(Validators.required);
              this.appInfoForm.controls['walkingClimbingDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['walkingClimbingDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['walkingClimbingDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['walkingClimbingDifficultyCode'].value !== null){
                   this.appInfoForm.controls['walkingClimbingDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['walkingClimbingDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['walkingClimbingDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeWalkingClimbingDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeWalkingClimbingDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
               this.appInfoForm.controls['dressingBathingDifficultyCode'].setValidators(Validators.required);
               this.appInfoForm.controls['dressingBathingDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['dressingBathingDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['dressingBathingDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['dressingBathingDifficultyCode'].value !== null){
                   this.appInfoForm.controls['dressingBathingDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['dressingBathingDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['dressingBathingDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeDressingBathingDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeDressingBathingDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
               this.appInfoForm.controls['concentratingDifficultyCode'].setValidators(Validators.required);
               this.appInfoForm.controls['concentratingDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['concentratingDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['concentratingDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['concentratingDifficultyCode'].value !== null){
                   this.appInfoForm.controls['concentratingDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['concentratingDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['concentratingDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeConcentratingDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeConcentratingDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
               this.appInfoForm.controls['errandsDifficultyCode'].setValidators(Validators.required);
               this.appInfoForm.controls['errandsDifficultyCode'].updateValueAndValidity();
-              if( this.appInfoForm.controls['errandsDifficultyCode'].value  !=='' ||
+              if( this.appInfoForm.controls['errandsDifficultyCode'].value  !=='' &&
                   this.appInfoForm.controls['errandsDifficultyCode'].value !== null){
                   this.appInfoForm.controls['errandsDifficultyCode'].setErrors(null);
                   this.appInfoForm.controls['errandsDifficultyCode'].updateValueAndValidity();
+                  if( this.appInfoForm.controls['errandsDifficultyCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
+                    this.appInfoForm.controls['startAgeErrandsDifficulty'].setValidators(Validators.required);
+                    this.appInfoForm.controls['startAgeErrandsDifficulty'].updateValueAndValidity();
+                  }
+                  
               } 
 
               this.appInfoForm.controls['spokenLanguage'].setValidators(Validators.required);              
