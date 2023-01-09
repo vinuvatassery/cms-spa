@@ -12,6 +12,7 @@ import {
 } from '@angular/forms'
 /** Enums **/
 import {  ClientPharmacy, NavigationType } from '@cms/case-management/domain';
+import { Lov, LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarNotificationType,LoggingService,LoaderService } from '@cms/shared/util-core';
 
@@ -37,8 +38,8 @@ pharmcayPriority: PharmacyPriority={
   clientId: 0,
   priorityCode: '',
 };
-loadPrioritites:any[]=[];
-copyLoadPrioritites:any[]=[];
+ loadPrioritites:any[]=[];
+ copyLoadPrioritites:any[]=[];
 
  savePrirorityObject = {
   clientPharmacyId: "",
@@ -49,6 +50,7 @@ savePrirorityObjectList:any[] =[];
   /** Public properties  **/
   ddlPriorities$ = this.drugPharmacyFacade.ddlPriorities$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  pharmacyPriority$: Lov[] = [];
   sessionId: any = "";
   clientId: any;
   clientPharmacyId:any;
@@ -66,17 +68,16 @@ savePrirorityObjectList:any[] =[];
     private route: ActivatedRoute,
     private loaderService: LoaderService,
     private workflowFacade: WorkflowFacade,
+    private lov: LovFacade,
      private loggingService:LoggingService) {
-      this.ddlPriorities$.subscribe(ddlist =>{
-        this.loadPrioritites = ddlist;
-        this.copyLoadPrioritites = ddlist;
-      })
+    
     }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadSessionData();
     this.loadclientpharmacies();
+    this.lov.getPriorityLovs();
     this.loadPriorities();
     this.addSaveSubscription();
     this.pharmacyPriorityFormChanged();
@@ -86,12 +87,16 @@ savePrirorityObjectList:any[] =[];
   }
   /** Private methods **/
   private loadPriorities() {
-    this.drugPharmacyFacade.loadDdlPriorities();
+    this.lov.pharmacyPrioritylov$.subscribe((priorityLov: Lov[]) => {
+      this.copyLoadPrioritites = priorityLov;
+      this.loadPrioritites = priorityLov;
+    });
   }
  
-  public valueChange(value: any,index:any): void {
+
+  public onChangePrirority(value: any,index:any): void {
    this.savePrirorityObjectList[index].priorityCode = value;
-     this.copyLoadPrioritites=this.loadPrioritites.filter(m=>m.value!==value);
+     this.copyLoadPrioritites=this.loadPrioritites.filter(m=>m.lovCode!=value);
  
   }
   private loadClientPharmacies() {
@@ -133,6 +138,7 @@ savePrirorityObjectList:any[] =[];
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
+        debugger;
         this.loaderService.hide();
         this.drugPharmacyFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities saved sucessfully')
         this.workflowFacade.navigate(navigationType);
@@ -203,8 +209,11 @@ savePrirorityObjectList:any[] =[];
   }
   onSavePriority()
   {
+    this.loaderService.show();
     this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList).subscribe((x:any) =>{
       if(x){
+        this.loaderService.hide();
+        this.drugPharmacyFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities saved sucessfully')
         this.onCloseChangePriorityClicked();
       }
     },(error:any) =>{

@@ -136,18 +136,6 @@ export class DrugPharmacyFacade {
       },
     });
   }
-
-  loadDdlPriorities(): void {
-    this.drugDataService.loadDdlPriorities().subscribe({
-      next: (ddlPrioritiesResponse) => {
-        this.ddlPrioritiesSubject.next(ddlPrioritiesResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
   save(): Observable<boolean> {
     //TODO: save api call   
     return of(true);

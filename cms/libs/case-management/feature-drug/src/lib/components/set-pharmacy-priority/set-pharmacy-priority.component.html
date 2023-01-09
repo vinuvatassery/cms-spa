@@ -11,14 +11,18 @@
       <p>{{pharmacy?.city}},{{pharmacy?.state}}</p>
 
     </div>
-
+   
     <div class="flex-col flex-col-6">
 
       <kendo-floatinglabel text="Priority">
 
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"  (valueChange)="valueChange($event,i)" textField="text" valueField="value" [data]="copyLoadPrioritites">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="onChangePrirority($event,i)" [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"  
+        
+            textField="lovDesc"
+            valueField="lovCode" 
+            [data]="copyLoadPrioritites">
         </kendo-dropdownlist>
-
+ 
       </kendo-floatinglabel>
 
     </div>

@@ -13,11 +13,7 @@ export class DrugDataService {
   constructor(private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider) { }
 
-  /** Public methods **/
-  loadDdlPriorities() {
-    return of([{text:'Primary',value:'P',order:1}, {text:'Secondary',value:'S',order:2},{text:'Tertiary',value:'T',order:3}]);
-  }
-
+  // /** Public methods **//
   loadPharmacies() {
     return of([
       {
