@@ -110,6 +110,7 @@ export class CaseDetailPageComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
+    this.loadSessionSubscription .unsubscribe();
   }
   cancelClientCase(){
     this.loaderService.show()    
