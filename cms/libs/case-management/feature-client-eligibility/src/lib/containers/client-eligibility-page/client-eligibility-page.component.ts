@@ -59,6 +59,8 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
       homeAddressProof: [''],
       incomeChecklistId: ['06FEDE81-4784-48A9-99FB-3151E0FB98CB'],
       income: [''],
+      HivVerificationChecklistId: ['762C5BB4-6B1F-4F97-8791-B713A78B3CAD'],
+      HivVerification: [''],
     });
   }
 
@@ -78,13 +80,12 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
   }
 
   private save() {
-   
     if (this.eligibilityForm.valid) {
-      
       const ChecklistAnswers = [];
       const clientCaseEligibilityId=this.eligibilityForm.controls['clientCaseEligibilityId'].value;
       ChecklistAnswers.push({clientCaseEligibilityId,EligibilityChecklistId:this.eligibilityForm.controls['homeAddressProofChecklistId'].value,Answer:this.eligibilityForm.controls['homeAddressProof'].value});
       ChecklistAnswers.push({clientCaseEligibilityId,EligibilityChecklistId:this.eligibilityForm.controls['incomeChecklistId'].value,Answer:this.eligibilityForm.controls['income'].value});
+      ChecklistAnswers.push({clientCaseEligibilityId,EligibilityChecklistId:this.eligibilityForm.controls['HivVerificationChecklistId'].value,Answer:this.eligibilityForm.controls['HivVerification'].value});
       this.loaderService.show();
       this.eligibilityChecklistAnswerFacade.saveEligibilityChecklistAnswer(ChecklistAnswers).subscribe(
         data => {

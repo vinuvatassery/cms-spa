@@ -185,10 +185,10 @@
       </div>
       <div class="flex-col flex-col-4 text-right">
         <kendo-buttongroup selection="single">
-          <button kendoButton aria-label="proof of hiv yes" [toggleable]="true">
+          <button kendoButton aria-label="proof of hiv yes" [toggleable]="true" (click)="answerClick('HivVerification','Yes')">
             Yes
           </button>
-          <button kendoButton aria-label="proof of hiv no" [toggleable]="true">
+          <button kendoButton aria-label="proof of hiv no" [toggleable]="true" (click)="answerClick('HivVerification','No')">
             No
           </button>
         </kendo-buttongroup>
