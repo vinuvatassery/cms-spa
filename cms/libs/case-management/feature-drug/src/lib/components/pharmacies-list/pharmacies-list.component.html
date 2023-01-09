@@ -2,8 +2,8 @@
   <div class="flex-col flex-space-bw align-items-center"> 
     <h2 class="title-md mb-0 text-bold">Premium Payments</h2>
     <span>
-      <input type="checkbox" kendoCheckBox aria-labelledby="premiumsWithinLast12Months" id="premiums" />
-      <label class="k-checkbox-label" for="premiums">Show historical</label>
+      <input type="checkbox" kendoCheckBox aria-labelledby="PremiumShowhistorical" id="PremiumShowhistorical" />
+      <label class="k-checkbox-label" for="PremiumShowhistorical">Show historical</label>
     </span>
   </div>
   <div class="flex-col mt-1">
@@ -22,7 +22,7 @@
         <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered" showOn="hover" aria-labelledby="profile avathar">
+              [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avathar of Ahith Kumar">
               <div mat-card-avatar="" class="app-c-avatar avatar-sm">
                 <!-- <img
           src="../assets/images/avatar-1.png"
@@ -48,9 +48,9 @@
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex"> 
           <div class="d-flex align-items-center"> 
-            <label class="mr-1">Rows Per Page</label> 
+            <label class="mr-1" for="pharmacieslistrowperpage">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
+            [valueField]="'value'" [valuePrimitive]="true" #pharmacieslistrowperpage id="pharmacieslistrowperpage" [(value)]="state.take"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
   

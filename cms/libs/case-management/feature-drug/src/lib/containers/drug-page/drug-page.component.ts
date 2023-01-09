@@ -5,6 +5,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith,first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Facades **/
+import {  UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { DrugPharmacyFacade, PriorityCode, WorkflowFacade,IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
 import { FormGroup, FormControl, } from '@angular/forms';
 /** Enums **/
@@ -19,6 +20,12 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrugPageComponent implements OnInit, OnDestroy {
+  public uploadRemoveUrl = 'removeUrl';
+  public uploadedBenfitSummaryFile: any[] = [];
+  summaryBenefitFiles: any;
+  summaryBenefitValidator: boolean = false;
+  public uploadFileRestrictions: UploadFileRistrictionOptions =
+  new UploadFileRistrictionOptions();
   /** Public properties **/
   public prescriptionDrugForm :FormGroup = new FormGroup({
     hivFlag: new FormControl('', []),
@@ -27,6 +34,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
  // prescriptionDrugForm!: FormGroup;
   prescriptionDrug: PrescriptionDrug={
     clientCaseEligibilityId: '',
+    clientId:'',
+    clientCaseId:'',
     hivPositiveFlag: '',
     nonPreferredPharmacyFlag: '',
   };
@@ -68,7 +77,6 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
-    debugger;
     this.buildForm();
     this.loadSessionData();
     this.addSaveSubscription();
@@ -92,18 +100,15 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   /** Private Methods **/
 
   private buildForm() {
-    debugger;
     this.prescriptionDrugForm = new FormGroup({
       hivFlag: new FormControl(''),
       nonPrefFlag: new FormControl('')
     });
   }
   private loadPrescriptionDrug(): void {
-    debugger;
      this.isDisabled = false;
     this.prescriptionDrugFacade.loadPrescriptionDrug( this.clientCaseEligibilityId).subscribe({
       next: response => {
-        debugger;
         if(response!==null){
           this.prescriptionDrugForm.controls["hivFlag"].setValue(response.hivPositiveFlag);
           this.prescriptionDrugForm.controls["nonPrefFlag"].setValue(response.nonPreferredPharmacyFlag);
@@ -196,12 +201,10 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
 
   loadSessionData() {
-    debugger;
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
-        debugger;
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
@@ -212,15 +215,16 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   }
   private save() {
-    debugger;
     let isValid = true;
     // TODO: validate the form
     if (isValid) {
       
       this.prescriptionInfo.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.prescriptionInfo.clientId = this.clientId;
+      this.prescriptionInfo.clientCaseId = this.clientCaseId;
       this.prescriptionInfo.hivPositiveFlag= this.prescriptionDrugForm.controls["hivFlag"].value;
       this.prescriptionInfo.nonPreferredPharmacyFlag= this.prescriptionDrugForm.controls["nonPrefFlag"].value;
-      return this.prescriptionDrugFacade.updatePrescriptionDrug(this.prescriptionInfo);
+      return this.prescriptionDrugFacade.updatePrescriptionDrug(this.prescriptionInfo,this.summaryBenefitFiles);
       
     }
 
@@ -232,7 +236,14 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   onBenefitsValueChange() {
     this.isBenefitsChanged = !this.isBenefitsChanged;
   }
+  handleFileSelected(event: any) {
+    this.summaryBenefitFiles = event.files[0].rawFile;
+    this.summaryBenefitValidator = false;
+  }
 
+  handleFileRemoved(event: any) {
+    this.summaryBenefitFiles = null;
+  }
 
   /* Pharmacy */
   private loadClientPharmacies() {

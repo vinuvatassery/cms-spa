@@ -27,6 +27,7 @@ import { ClientEligibilityComponent } from './components/client-eligibility/clie
     CommonModule,
     SharedUiCommonModule,
     SharedUiTpaModule,
+    SharedUiCommonModule,
     CaseManagementDomainModule,
     CaseManagementFeatureClientEligibilityRoutingModule,
   ],

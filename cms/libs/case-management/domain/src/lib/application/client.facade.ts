@@ -60,16 +60,7 @@ export class ClientFacade {
   snackbarSubject = new Subject<SnackBar>();
   clientFacadesnackbar$ = this.snackbarSubject.asObservable();
 
-  // handleSnackBar(title : string , subtitle : string ,type : string )
-  // {    
-  //   const snackbarMessage: SnackBar = {
-  //     title: title,
-  //     subtitle: subtitle,
-  //     type: type,
-  //   };
-  //   this.snackbarSubject.next(snackbarMessage);
-  // }
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -77,7 +68,7 @@ export class ClientFacade {
        this.loggingService.logException(err)
     }  
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();
+    this.hideLoader();
        
   }
 
@@ -88,12 +79,12 @@ export class ClientFacade {
     private readonly loaderService: LoaderService) {}
 
   /** Public methods **/
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }
