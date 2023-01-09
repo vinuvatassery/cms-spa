@@ -67,11 +67,12 @@
        >  
      </kendo-numerictextbox>
     </kendo-floatinglabel>
-   <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{textValidationMessage}}</kendo-formerror>        
-</div></div>
+    <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{textValidationMessage}}</kendo-formerror>        
+  </div>
+</div>
   </div>  
     </span>  
-    <kendo-formerror *ngIf="!appInfoForm.controls[OptionControlerName].valid">Atleast one option is required.</kendo-formerror>
+    <kendo-formerror *ngIf="!appInfoForm.controls[OptionControlerName].valid">At least one Option must be selected.</kendo-formerror>
   </div>
 
 
