@@ -82,7 +82,7 @@
             kendoButton
             class="k-danger-link"
             *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
-            aria-label="remove family member"
+            aria-label="delete family member"
             (click)="onFormDeleteclick()"
           >
             Remove
@@ -90,9 +90,7 @@
         </div>
         <div class="justify-content-end">
           <button
-            kendoButton
-            [primary]="false"
-            look="outline"
+          kendoButton [primary]="true"  look="outline"
             aria-label="cancel editing family member"
             (click)="onFamilyMemberClosed()"
           >
@@ -155,7 +153,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">         
           <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
-          formControlName="dob"           >
+          formControlName="dob"  placeholder="">
         </kendo-datepicker>
               </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','dob') && isSubmitted">Date of Birth
@@ -165,7 +163,8 @@
         <kendo-floatinglabel text="Social Security Number (optional)">
           <kendo-maskedtextbox aria-label="social security number optional" 
            [fillMode]="formUiStyle.inputFillMode"
-           formControlName="ssn"   [mask]="ssnMaskFormat" 
+           [maskOnFocus]="true"
+           formControlName="ssn"   [mask]="ssnMaskFormat"   
            >   </kendo-maskedtextbox> 
         </kendo-floatinglabel>
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
@@ -225,7 +224,7 @@
           kendoButton 
           class="k-danger-link"
           *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
-          aria-label="remove family member"
+          aria-label="delete family member"
           (click)="onFormDeleteclick()" type="button"
         >
           DELETE
@@ -233,8 +232,7 @@
       </div>
       <div class="justify-content-end">
         <button
-          kendoButton         
-          look="outline"
+        kendoButton [primary]="true"  look="outline"
           aria-label="cancel adding family member"
           (click)="onFamilyMemberClosed()"
         >
