@@ -49,16 +49,19 @@ export class healthInsurancePolicy {
         proofOfPremiumFileSize: number | null = null;
         proofOfPremiumFileTypeCode: string = "";
         proofOfPremiumFileId: string = "";
+        proofOfPremiumFilePath: string = "";
         copyOfInsuranceCardFile: any = null;
         copyOfInsuranceCardFileName: string = "";
         copyOfInsuranceCardFileSize: number | null = null;
         copyOfInsuranceCardFileTypeCode: string = "";
         copyOfInsuranceCardFileId: string = "";
+        copyOfInsuranceCardFilePath: string = "";
         copyOfSummaryFile: any = null;
         copyOfSummaryFileName: string = "";
         copyOfSummaryFileSize: number | null = null;
         copyOfSummaryFileTypeCode: string = "";
         copyOfSummaryFileId: string = "";
+        copyOfSummaryFilePath: string = "";
 }
 
 export class othersCoveredOnPlan {
