@@ -43,5 +43,12 @@ export class ClientDocumentDataService {
         return this.http.get<ClientDocument>(
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/eligibility-documents/${clientCaseEligibilityId}`
         );
-      }
+    }
+
+    getClientDocumentsViewDownload(clientDocumentId: string) {
+        return this.http.get(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/view-download/${clientDocumentId}`
+         , {
+            responseType: 'blob'} );
+    }
 }

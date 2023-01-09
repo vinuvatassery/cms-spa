@@ -92,6 +92,8 @@ export * from './lib/infrastructure/prescription-drug.data.service';
 export * from './lib/infrastructure/vendor.data.service';
 export * from './lib/infrastructure/insurance-plan.data.service';
 export * from './lib/infrastructure/health-insurance-policy.data.service';
+export * from './lib/infrastructure/eligibility-checklist-answer.data.service';
+
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -125,3 +127,5 @@ export * from './lib/application/prescription-drug.facade';
 export * from './lib/application/vendor.facade';
 export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
+export * from './lib/application/eligibility-checklist-answer.facade';
+

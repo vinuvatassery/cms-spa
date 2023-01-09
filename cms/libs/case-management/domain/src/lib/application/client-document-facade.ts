@@ -26,4 +26,7 @@ export class ClientDocumentFacade {
     getClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId:string){
         return this.clientDocumentDataService.getClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId);
     }
+    getClientDocumentsViewDownload(clientDocumentId:string){
+        return this.clientDocumentDataService.getClientDocumentsViewDownload(clientDocumentId);
+    }
 }

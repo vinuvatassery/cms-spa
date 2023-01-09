@@ -1,10 +1,11 @@
 /** Angular **/
-import { Component,OnInit, ChangeDetectionStrategy ,ChangeDetectorRef} from '@angular/core';
-import { first } from 'rxjs';
+import { Component,OnInit, ChangeDetectionStrategy ,ChangeDetectorRef,Input} from '@angular/core';
+import { first,Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { WorkflowFacade,ClientDocumentFacade,ClientEligibilityFacade,ClientDocumnetEntityType } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService} from '@cms/shared/util-core';
+import {FormGroup,FormBuilder} from '@angular/forms';
 @Component({
   selector: 'case-management-client-eligibility',
   templateUrl: './client-eligibility.component.html',
@@ -12,6 +13,8 @@ import { LoaderService} from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientEligibilityComponent implements OnInit {
+  @Input() eligibilityForm: FormGroup;
+  
   /** Public properties **/
   isShowException = false;
   isOpenAcceptance = false;
@@ -33,9 +36,11 @@ export class ClientEligibilityComponent implements OnInit {
     ,private readonly loaderService: LoaderService
     ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
     ,private clientDocumentFacade:ClientDocumentFacade
-    ,private clientEligibilityFacade:ClientEligibilityFacade
-
-    ) { }
+    ,private clientEligibilityFacade:ClientEligibilityFacade,
+    private formBuilder: FormBuilder
+    ) {
+      this.eligibilityForm = this.formBuilder.group({});
+     }
 
   ngOnInit(): void {
 
@@ -76,6 +81,31 @@ export class ClientEligibilityComponent implements OnInit {
       this.loaderService.hide();
        })
   }
+
+  viewOrDonwloadFile(type:string,clientDocumentId:string,documentName:string) {
+    this.loaderService.show()
+    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
+      console.log(data);
+      const fileUrl = window.URL.createObjectURL(data);
+      
+      if(type==='download'){
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileUrl;
+        downloadLink.download = documentName;
+        downloadLink.click();
+      }else{
+        window.open(fileUrl, "_blank");
+      }
+      this.loaderService.hide();
+     },(error) => {
+      this.loaderService.hide();
+       })
+  }
+  
+  answerClick(type:string,answer:string){
+    this.eligibilityForm.controls[type]?.setValue(answer);
+  }
+
 
   /** Internal event methods **/
   onToggleExceptionClicked() {
