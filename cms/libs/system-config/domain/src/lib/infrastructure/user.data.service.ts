@@ -25,6 +25,7 @@ export class UserDataService {
     );  
   }  
 
+  //text should be either name or P#
   searchUsersByRole(roleCode : string,text : string) {
     return this.http.get<LoginUser[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
