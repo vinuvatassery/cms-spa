@@ -1,6 +1,6 @@
 <ul class="sidebar-menu" aria-label="sidebar menu">
   <li
-    aria-label="sidebar menu item"
+    aria-label="sidebar menu item home"
     class="sidebar-menu_items"
     [routerLinkActive]="['active-item']"
     [routerLink]="['/dashboard']"
@@ -13,14 +13,15 @@
     >
       home
     </span>
-    <label class="sidebar-menu_label" aria-label="home">Home</label>
+    <span class="sidebar-menu_label" aria-label="home" aria-hidden="true" >Home</span>
   </li>
   <li
+  aria-label="sidebar menu item cases"
     class="sidebar-menu_items"
     [routerLinkActive]="['active-item']"
     [routerLink]="['/case-management/cases']"
     (click)="onSubMenuClicked('Cases')"
-    aria-label="sidebar menu item"
+ 
   >
     <span
       class="material-icons sidebar-menu_icon"
@@ -29,13 +30,14 @@
     >
       people
     </span>
-    <label class="sidebar-menu_label" aria-label="cases">Cases</label>
+    <span class="sidebar-menu_label"    aria-label="cases"  aria-hidden="true" >Cases</span>
   </li>
   <li
+  aria-label="sidebar menu item Productivity Tools"
     class="sidebar-menu_items with-sub-menu"
     [routerLinkActive]="['active-item']"
     (click)="onSubMenuClicked('Productivity Tools')"
-    aria-label="sidebar menu item"
+ 
   >
     <span class="sub-menu-item">
       <span
@@ -45,20 +47,21 @@
       >
         task
       </span>
-      <label class="sidebar-menu_label" aria-label="productivity tools"
+      <span class="sidebar-menu_label"      aria-label="productivity tools"    aria-hidden="true"
         >Productivity Tools <span class="sidebar-menu_label-badge">22</span>
-      </label>
+      </span>
     </span>
     <ul
       class="sidebar-sub-menu"
       *ngIf="isProductivityMenuActivated"
-      aria-label="sidebar sub menu"
+      aria-label="sidebar sub menu item Productivity Tools"
     >
       <li
+      aria-label="sub menu item Productivity Tools/ Pending Approvals"
         class="sidebar-sub-menu_items"
         [routerLinkActive]="['active-item']"
         [routerLink]="['/productivity-tools/approval']"
-        aria-label="sidebar sub menu item"
+      
       >
         Pending Approvals (12)
       </li>
@@ -66,7 +69,7 @@
         class="sidebar-sub-menu_items"
         [routerLinkActive]="['active-item']"
         [routerLink]="['/productivity-tools/todo-items']"
-        aria-label="sidebar sub menu item"
+        aria-label="sub menu item Productivity Tools/To Do Items "
       >
         To Do Items (7)
       </li>
@@ -74,7 +77,7 @@
         class="sidebar-sub-menu_items"
         [routerLinkActive]="['active-item']"
         [routerLink]="['/productivity-tools/todo-items']"
-        aria-label="sidebar sub menu item"
+        aria-label="sub menu item Productivity Tools/Direct Messages"
       >
         Direct Messages (3)
       </li>
@@ -85,7 +88,7 @@
     [routerLinkActive]="['active-item']"
     [routerLink]="['/financial-management/vendor']"
     (click)="onSubMenuClicked('Financial Management')"
-    aria-label="sidebar menu item"
+    aria-label="sidebar menu item Financial Management"
   >
     <span
       class="material-icons sidebar-menu_icon"
@@ -94,8 +97,8 @@
     >
       monetization_on
     </span>
-    <label class="sidebar-menu_label" aria-label="financial management"
-      >Financial Management</label
+    <span class="sidebar-menu_label" aria-label="financial management"    aria-hidden="true"
+      >Financial Management</span
     >
   </li>
   <li
@@ -103,7 +106,7 @@
     [routerLinkActive]="['active-item']"
     [routerLink]="['/system-config/users']"
     (click)="onSubMenuClicked('System Config')"
-    aria-label="sidebar menu item"
+    aria-label="sidebar menu item settings"
   >
     <span
       class="material-icons sidebar-menu_icon"
@@ -112,8 +115,8 @@
     >
       settings
     </span>
-    <label class="sidebar-menu_label" aria-label="system configuration"
-      >System Configuration</label
+    <span class="sidebar-menu_label" aria-label="system configuration"    aria-hidden="true"
+      >System Configuration</span
     >
   </li>
 </ul>

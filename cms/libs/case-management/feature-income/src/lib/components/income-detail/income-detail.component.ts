@@ -189,7 +189,7 @@ export class IncomeDetailComponent implements OnInit {
       incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
       incomeData['clientId'] = this.clientId;
       incomeData['clientCaseId'] = this.clientCaseId;
-
+ 
       if (this.incomeTypesOther == 'O') {
         incomeData.otherDesc =  this.IncomeDetailsForm.controls['otherDesc'].value;
       } else{

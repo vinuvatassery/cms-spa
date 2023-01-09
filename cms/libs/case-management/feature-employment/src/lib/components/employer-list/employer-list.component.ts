@@ -65,13 +65,14 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.addEmployerButtonDisplay();
     this.loadEmployments();
+    
   }
 
   ngOnChanges(): void {
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: this.sort, 
     };
     this.loadEmployments();
   }
@@ -99,8 +100,8 @@ export class EmployerListComponent implements OnInit, OnChanges {
   }
 
   public dataStateChange(stateData: any): void {
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field;
+    this.sort = stateData.sort; 
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.loadEmployments();
