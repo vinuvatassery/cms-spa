@@ -135,7 +135,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
   showDuplicatePopup: boolean = false;
   currentClient: any = {};
   matchingClient: any = {};
-  ssnDuplicateFound:boolean=false;
+  ssnDuplicateFound: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -145,7 +145,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     private configurationProvider: ConfigurationProvider,
     public intl: IntlService,
     private loaderService: LoaderService,
-    private loggingService:LoggingService,) { }
+    private loggingService: LoggingService,) { }
 
   /** Lifecycle hooks **/
 
@@ -947,7 +947,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
   }
 
   searchDuplicateClient() {
-    this.ssnDuplicateFound=false;
+    this.ssnDuplicateFound = false;
     this.appInfoForm.controls['ssn'].setErrors(null);
     this.appInfoForm.controls['ssn'].updateValueAndValidity();
     let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
@@ -970,22 +970,21 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       next: (response: any) => {
         if (response != null) {
           this.currentClient = data;
+          this.currentClient["clientCaseId"] = this.applicantInfo.clientCaseId;
           this.matchingClient = response;
           if (this.applicantInfo.client != undefined) {
             if (response.clientId != this.applicantInfo.client.clientId) {
               this.showDuplicatePopup = true
-              this.ref.detectChanges();
             }
           }
           else {
-           
             this.showDuplicatePopup = true
-            this.ref.detectChanges();
           }
-          if (response.ssn == data.ssn){
-            this.ssnDuplicateFound=true;
-            this.appInfoForm.controls['ssn'].setErrors({'incorrect': true});
+          if (response.ssn == data.ssn) {
+            this.ssnDuplicateFound = true;
+            this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
           }
+          this.ref.detectChanges();
         }
         this.loaderService.hide();
       },

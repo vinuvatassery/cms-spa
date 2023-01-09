@@ -263,4 +263,12 @@ export class CaseFacade {
     return this.caseDataService.updateCaseStatus(caseData)
 
   }
+
+  cancelCase(clientCaseId : any,status:any) 
+  { 
+        const caseData = { 
+          clientCaseId  : clientCaseId          
+        }      
+        return  this.caseDataService.cancelCase(caseData,status)
+  }
 }

@@ -414,4 +414,10 @@ export class CaseDataService {
       caseData
     );
   }
+
+  cancelCase(caseData: any,status:any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/status=${status}`,caseData
+    );
+  }
 }

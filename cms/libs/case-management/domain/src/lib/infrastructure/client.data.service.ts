@@ -358,7 +358,7 @@ export class ClientDataService {
 
     searchDuplicateClient(clientData: any) {  
       return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/duplicate-client`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client/duplicate`,
       clientData,
     )}
     

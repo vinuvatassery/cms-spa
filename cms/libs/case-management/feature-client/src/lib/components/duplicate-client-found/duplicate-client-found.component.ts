@@ -6,6 +6,8 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
+import { CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
+import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
 @Component({
   selector: 'case-management-duplicate-client-found',
@@ -20,7 +22,10 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   @Output() closeModalClick = new EventEmitter<any>();
   ssn: string = '';
-  constructor(private router:Router) {
+  constructor(private router: Router,
+    private caseFacade: CaseFacade,
+    private loaderService: LoaderService,
+    private loggingService: LoggingService) {
 
   }
 
@@ -34,8 +39,18 @@ export class DuplicateClientFoundComponent implements OnInit {
   }
 
   onDuplicateFoundClick() {
-    this.router.navigate([`/case-management/cases/case360/${this.matchingClientInfo.clientId}`])
-    this.closeModalClick.next(true);
+    this.loaderService.show();
+    this.caseFacade.cancelCase(this.currentClientInfo.clientCaseId, CaseStatusCode.CANCELLED).subscribe({
+      next: (response: any) => {
+        this.router.navigate([`/case-management/cases/case360/${this.matchingClientInfo.clientId}`])
+        this.closeModalClick.next(true);
+        this.loaderService.hide();
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      }
+    })
   }
 
   onNotaDuplicateClick() {
