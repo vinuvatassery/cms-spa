@@ -18,11 +18,9 @@ export class NotificationSnackbarService {
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
         if(type == SnackBarNotificationType.ERROR)
         {
-          debugger;
           const err= subtitle;
           if(err?.error?.ruleSetsExecuted != undefined)
           {
-            debugger;
             subtitleText = "Validation Failed";
           }
           else

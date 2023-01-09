@@ -96,6 +96,9 @@
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
+  <case-management-accept-application  (isCloseModalEvent)="onCloseEligibilityInfoClicked()" [isEdit]="isEdit"  [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-accept-application>
+</kendo-dialog>
+  <!-- <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
       Edit Status, Group, and Eligibility Period as needed. Click “Update” to
@@ -137,7 +140,6 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
           <kendo-textbox aria-label="Sara John" [disabled]="true" value="Sara John"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-          <!-- <input kendoTextBox  value="Sara John" /> -->
         </kendo-floatinglabel>
       </div>
     </div>
@@ -164,4 +166,4 @@
       </div>
     </div>
   </kendo-dialog-actions>
-</kendo-dialog>
+</kendo-dialog> -->
