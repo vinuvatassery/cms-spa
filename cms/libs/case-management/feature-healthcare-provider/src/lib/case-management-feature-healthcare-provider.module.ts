@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /** Modules **/
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
-import { CaseManagementDomainModule } from '@cms/case-management/domain';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { CaseManagementDomainModule } from '@cms/case-management/domain'; 
 import { CaseManagementFeatureHealthcareProviderRoutingModule } from './case-management-feature-healthcare-provider-routing.module';
 /** Components **/
 import { HealthcareProviderPageComponent } from './containers/healthcare-provider-page/healthcare-provider-page.component';
@@ -13,11 +14,11 @@ import { RemoveHealthCareProviderConfirmationComponent } from './components/remo
 import { HealthCareProviderSearchComponent } from './components/health-care-provider-search/health-care-provider-search.component';
 import { HealthCareProviderCardComponent } from './components/health-care-provider-card/health-care-provider-card.component';
 
-
 @NgModule({
   imports: [
     CommonModule,
     SharedUiTpaModule,
+    SharedUiCommonModule,
     CaseManagementDomainModule,
     CaseManagementFeatureHealthcareProviderRoutingModule,
   ],

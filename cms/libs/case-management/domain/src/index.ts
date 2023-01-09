@@ -64,6 +64,7 @@ export * from './lib/enums/insurance-plan.enum';
 export * from './lib/enums/parta-medicare-type.enum';
 export * from './lib/enums/partb-medicare-type.enum';
 export * from './lib/enums/case-status-code.enum';
+export * from './lib/enums/pronoun-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
