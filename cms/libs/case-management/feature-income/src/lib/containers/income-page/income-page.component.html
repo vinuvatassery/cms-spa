@@ -21,7 +21,7 @@
         <div class="flex-col">
 
 
-          <section  *ngIf="hasNoIncome">
+          <div  *ngIf="hasNoIncome">
             <form [formGroup]="noIncomeDetailsForm">
               <div class="flex-row">
 
@@ -71,10 +71,10 @@
               </div>
 
             </form>
-          </section>
-          <section *ngIf="!hasNoIncome">
+          </div>
+          <div *ngIf="!hasNoIncome">
             <case-management-income-list [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
-          </section>
+          </div>
           
         </div>
       </div>
