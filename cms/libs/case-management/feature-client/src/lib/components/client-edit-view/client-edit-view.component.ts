@@ -93,6 +93,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
+  ageMinLimit=0;
+  ageMaxLimit=9999;
 
 
   textboxDisable!:boolean;
