@@ -140,7 +140,9 @@
     </div>
     <div class="flex-row mt-2" *ngIf="isBenefitsChanged">
       <div class="flex-col flex-col-10">
-        <kendo-upload> </kendo-upload>
+        <kendo-upload aria-label="upload proof" name="upload proof" 
+            [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
+             [ngModel]="uploadedBenfitSummaryFile" [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl"> </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
       </div>
     </div>
