@@ -8,6 +8,7 @@ export * from './lib/entities/user';
 export * from './lib/entities/address-validation';
 export * from './lib/entities/state';
 export * from './lib/entities/counties';
+export * from './lib/entities/login-user';
 
 /** Data services **/
 export * from './lib/infrastructure/lov.data.service';

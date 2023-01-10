@@ -1,82 +1,114 @@
 <div class="client-data-block">
   <h3>HIV Case Manager</h3>
   <section>
+   
     <h5 class="mt-1">Currently has HIV Case Manager?</h5>
+     
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
-          type="radio"
-          kendoRadioButton
-          name="HIVManager"
+          type="radio"          
+          kendoRadioButton      
+          name="HIVManager"  
           aria-labelledby="currentlyHasHivManagerYes"
-          id="hivManager1"
-          tabindex="1"
-        />
+          id="hivManager1"  
+          tabindex="1"  
+          [(ngModel)]="hasManager"   
+          value="Y"  
+          (click)="hasManagerChangeEvent(true)" 
+          (change)="handlehasManagerRadioChange($event)" />
         <kendo-label
-          class="k-radio-label"
-          for="hivManager1"
-          text="Yes"
-        ></kendo-label>
+          class="k-radio-label"  
+          for="hivManager1"        
+          text="Yes"       
+          ></kendo-label>
       </span>
       <span class="app-radiobtnwidtext-wrapper">
         <input
-          type="radio"
-          kendoRadioButton
-          aria-labelledby="currentlyHasHivManagerNo"
+          type="radio"  
+          kendoRadioButton  
+          aria-labelledby="currentlyHasHivManagerNo"    
           name="HIVManager"
-          id="hivManager2"
-          tabindex="2"
-        />
+          id="hivManager2"    
+          tabindex="2"    
+          [(ngModel)]="hasManager"   
+          value="N"   
+          (click)="hasManagerChangeEvent(false)" 
+          (change)="handlehasManagerRadioChange($event)" />
         <kendo-label
-          class="k-radio-label"
-          for="hivManager2"
-          text="No"
-        ></kendo-label>
+          class="k-radio-label"    
+          for="hivManager2"       
+          text="No"></kendo-label>
       </span>
     </div>
+    <div class="flex-col">
+      <kendo-formerror *ngIf="hasManagerValidation$ | async">Response Required</kendo-formerror>
+      </div>
   </section>
 
-  <section>
-    <case-management-case-manager-list></case-management-case-manager-list>
+  <section *ngIf="showCaseManagers$ | async">
+    <case-management-case-manager-list
+    [userImage$]="userImage$"
+    [selectedCaseManagerDetails$]="selectedCaseManagerDetails$"
+    [getManagerUsers$]="getManagerUsers$"
+    [getCaseManagers$]="getCaseManagers$"
+    [showAddNewManagerButton$]="showAddNewManagerButton$"
+    [assignCaseManagerStatus$]="assignCaseManagerStatus$"
+    [removeCaseManager$]="removeCaseManager$"
+    (loadCasemanagersGridEvent)="loadCaseManagers()"
+    (deleteCasemanagersGridEvent)="removecaseManagerHandler($event)"
+    (searchTextEvent)="searchTextEventHandler($event)"
+    (getExistingCaseManagerEvent)="getExistingCaseManagerEventHandler($event)"
+    (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
+    (loadUserImageEvent)="getCaseManagerImage($event)">
+    </case-management-case-manager-list>
   </section>
-  <section>
+
+  <section *ngIf="hasManager==='N'">
     <h5 class="mt-1">Would you like one?</h5>
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
-          type="radio"
-          [value]="1" 
+          type="radio"        
           [(ngModel)]="isVisible" 
           kendoRadioButton
-          name="HIVManager"
-          aria-labelledby="currentlyHasHivManagerYes"
-          id="hivManager2"
+          name="HIVNeedManager"
+          aria-labelledby="currentlyNeedHivManagerYes"
+          id="hivManager3"
           tabindex="1"
+          [(ngModel)]="needManager"   
+          value="Y" 
+          (change)="handleNeedManagerRadioChange($event)"
         />
         <kendo-label
           class="k-radio-label"
-          for="hivManager2"
+          for="hivManager3"
           text="Yes"
         > </kendo-label>
       </span>
       <span class="app-radiobtnwidtext-wrapper">
         <input
-          type="radio"        [value]="0" 
-          [(ngModel)]="isVisible" 
+          type="radio"     
           kendoRadioButton
-          aria-labelledby="currentlyHasHivManagerNo"
-          name="HIVManager"
+          aria-labelledby="currentlyNeedHivManagerNo"
+          name="HIVNeedManager"
           id="hivManager4"
           tabindex="2"
+          [(ngModel)]="needManager"   
+          value="N" 
+          (change)="handleNeedManagerRadioChange($event)"
         />
         <kendo-label
           class="k-radio-label"
-          for="hivManager4"
+          for="WouldyoulikeoneNo"
           text="No"
         ></kendo-label>
       </span>
     </div>
-    <div class="voterreg-info d-flex mt-1 align-items-center" *ngIf="isVisible === 1">
+    <div class="flex-col">
+      <kendo-formerror *ngIf="needManagerValidation$ | async">Response Required</kendo-formerror>
+      </div>
+    <div class="voterreg-info d-flex mt-1  align-items-center" *ngIf="needManager === 'Y'">
       <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>Case Manager Referral is send once the application is saved   </div>
   </section>
 </div>

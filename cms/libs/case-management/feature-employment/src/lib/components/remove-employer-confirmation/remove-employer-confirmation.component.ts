@@ -44,7 +44,7 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
   }
   /** Internal event methods **/
 
-  // click on remove employer confirmation
+  // click on Delete employer confirmation
   removeEmployer() {
     this.employmentFacade.showLoader()
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
