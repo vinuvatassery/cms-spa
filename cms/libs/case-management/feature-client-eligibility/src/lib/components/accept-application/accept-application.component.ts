@@ -95,7 +95,7 @@ export class AcceptApplicationComponent implements OnInit {
       next: (data) => {
         if(!this.isEdit)
         {
-          this.clientEligibilityFacade.ShowHideSnackBar(
+          this.clientEligibilityFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Eligibility added successfully.'
           );
@@ -106,7 +106,7 @@ export class AcceptApplicationComponent implements OnInit {
         }
         else
         {
-          this.clientEligibilityFacade.ShowHideSnackBar(
+          this.clientEligibilityFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Eligibility updated successfully.'
           );
@@ -117,7 +117,7 @@ export class AcceptApplicationComponent implements OnInit {
       error: (err) => {
         if (err){
           this.loaderService.hide();
-          this.clientEligibilityFacade.ShowHideSnackBar(
+          this.clientEligibilityFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
             err
           );
@@ -201,7 +201,7 @@ export class AcceptApplicationComponent implements OnInit {
       error: (err) => {
         if (err){
           this.loaderService.hide();
-          this.clientEligibilityFacade.ShowHideSnackBar(
+          this.clientEligibilityFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
             err
           );

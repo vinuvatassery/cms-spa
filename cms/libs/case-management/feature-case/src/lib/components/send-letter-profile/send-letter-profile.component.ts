@@ -86,7 +86,7 @@ export class SendLetterProfileComponent implements OnInit {
       error: (err) => {
         if (err){
           this.loaderService.hide();
-          this.clientEligibilityFacade.ShowHideSnackBar(
+          this.clientEligibilityFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
             err
           );

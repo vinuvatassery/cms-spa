@@ -27,7 +27,7 @@ export class ClientEligibilityFacade {
   ) {}
 
   /** Public methods **/
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -35,7 +35,7 @@ export class ClientEligibilityFacade {
        this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();
+    this.hideLoader();
   }
   loadDdlAcceptApplications(): void {
     this.clientEligibilityDataService.loadDdlAcceptApplications().subscribe({
@@ -69,12 +69,12 @@ export class ClientEligibilityFacade {
       },
     });
   }
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }

@@ -15,7 +15,7 @@ export class EligibilityChecklistAnswerFacade {
     private readonly loaderService: LoaderService,
     private configurationProvider: ConfigurationProvider) { }
 
-  ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
       this.loggingService.logException(err)

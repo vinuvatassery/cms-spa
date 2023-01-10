@@ -35,7 +35,7 @@ export class ClientEligibilityComponent implements OnInit {
   eligibility: any;
   incomDocuments: any = [];
   oregonDocuments: any = [];
-  HIVDocuments: any = [];
+  hivDocuments: any = [];
 
   /** Constructor **/
   constructor(
@@ -80,7 +80,7 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId).subscribe((data: any) => {
            this.incomDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.Income);
            this.oregonDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.HomeAddressProof);
-           this.HIVDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.HivVerification);
+           this.hivDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.HivVerification);
             this.getIncomeEligibility();
             this.getEligibilityChecklistAnswers();
           },(error) => {
