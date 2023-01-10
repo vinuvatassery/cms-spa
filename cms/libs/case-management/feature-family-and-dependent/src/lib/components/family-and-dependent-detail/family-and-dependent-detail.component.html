@@ -82,7 +82,7 @@
             kendoButton
             class="k-danger-link"
             *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
-            aria-label="remove family member"
+            aria-label="delete family member"
             (click)="onFormDeleteclick()"
           >
             Remove
@@ -90,9 +90,7 @@
         </div>
         <div class="justify-content-end">
           <button
-            kendoButton
-            [primary]="false"
-            look="outline"
+          kendoButton [primary]="true"  look="outline"
             aria-label="cancel editing family member"
             (click)="onFamilyMemberClosed()"
           >
@@ -119,7 +117,7 @@
   <input type="hidden" formControlName="dependentTypeCode">  
   <kendo-dialog-titlebar (close)="onFamilyMemberClosed()">  {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">Enter the family member’s information.</p>
+    <p class="text-muted mb-2">   {{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'Edit or remove this family member' : 'Enter the family member’s information' }}  .</p>
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
@@ -130,7 +128,7 @@
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','relationshipCode') && isSubmitted">Relationship
+        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','relationshipCode') && isSubmitted">Relationship to Client
           is required</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
@@ -140,7 +138,7 @@
            formControlName="firstName">   </kendo-textbox>
  
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','firstName') && isSubmitted">First Name
+        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','firstName') && isSubmitted">Legal First Name
           is required</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
@@ -149,13 +147,13 @@
           [fillMode]="formUiStyle.inputFillMode"
           formControlName="lastName">   </kendo-textbox> 
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','lastName') && isSubmitted">Last Name
+        <kendo-formerror *ngIf="familyMemberForm?.hasError('required','lastName') && isSubmitted">Legal Last Name
           is required</kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">         
           <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
-          formControlName="dob"           >
+          formControlName="dob"  placeholder="">
         </kendo-datepicker>
               </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','dob') && isSubmitted">Date of Birth
@@ -165,7 +163,8 @@
         <kendo-floatinglabel text="Social Security Number (optional)">
           <kendo-maskedtextbox aria-label="social security number optional" 
            [fillMode]="formUiStyle.inputFillMode"
-           formControlName="ssn"   [mask]="ssnMaskFormat" 
+           [maskOnFocus]="true"
+           formControlName="ssn"   [mask]="ssnMaskFormat"   
            >   </kendo-maskedtextbox> 
         </kendo-floatinglabel>
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
@@ -212,7 +211,7 @@
           
         </fieldset>
         <div class="flex-col">
-          <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">Enrollment status is required</kendo-formerror>
+          <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">Enrolled in client’s health insurance plan is required</kendo-formerror>
           </div>
       </div>
     </div>
@@ -225,7 +224,7 @@
           kendoButton 
           class="k-danger-link"
           *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
-          aria-label="remove family member"
+          aria-label="delete family member"
           (click)="onFormDeleteclick()" type="button"
         >
           DELETE
@@ -233,8 +232,7 @@
       </div>
       <div class="justify-content-end">
         <button
-          kendoButton         
-          look="outline"
+        kendoButton [primary]="true"  look="outline"
           aria-label="cancel adding family member"
           (click)="onFamilyMemberClosed()"
         >
