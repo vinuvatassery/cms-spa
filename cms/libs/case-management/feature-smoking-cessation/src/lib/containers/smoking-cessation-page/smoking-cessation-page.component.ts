@@ -252,10 +252,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   checkValidations() {
     this.validate();
-    if (this.smokingCessationForm.valid) {
-      return true;
-    }
-    return false;
+    return this.smokingCessationForm.valid;
   }
 
 }

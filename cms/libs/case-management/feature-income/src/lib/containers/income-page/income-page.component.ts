@@ -349,9 +349,6 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   checkValidations(){
     this.submitIncomeDetailsForm();
-    if(this.noIncomeDetailsForm.valid){
-      return true;
-    }
-    return false;
+    return this.noIncomeDetailsForm.valid;
   }
 }

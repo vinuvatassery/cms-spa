@@ -298,7 +298,7 @@ export class CaseDetailPageComponent implements OnInit {
     })
   }
 
-  updateCaseStatus() {
+  onUpdateCaseStatusClicked() {
     this.loaderService.show();
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {

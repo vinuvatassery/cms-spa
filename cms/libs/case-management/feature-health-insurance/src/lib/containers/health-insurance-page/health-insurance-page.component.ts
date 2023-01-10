@@ -295,10 +295,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   }
 
   checkValidations(){
-    if(this.insuranceFlagForm.valid){
-      return true;
-    }
-    return false;
+    return this.insuranceFlagForm.valid;
   }
 }
 

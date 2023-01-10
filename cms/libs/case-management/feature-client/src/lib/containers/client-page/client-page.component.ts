@@ -865,10 +865,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   checkValidations(){
     this.validateForm();
-    if(this.appInfoForm.valid){
-      return true;
-    }
-    return false;
+    return this.appInfoForm.valid;
   }
 
 }
