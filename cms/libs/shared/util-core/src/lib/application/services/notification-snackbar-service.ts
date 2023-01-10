@@ -19,7 +19,7 @@ export class NotificationSnackbarService {
         if(type == SnackBarNotificationType.ERROR)
         {
           const err= subtitle;          
-          subtitleText =err?.error?.error;
+          subtitleText =err?.error?.message;
         
         }
         const snackbarMessage: any = {

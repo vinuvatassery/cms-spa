@@ -112,13 +112,13 @@ export class CaseDetailPageComponent implements OnInit {
     this.navigationSubscription.unsubscribe();
     this.loadSessionSubscription .unsubscribe();
   }
-  cancelClientCase(){
-    this.loaderService.show()    
-    this.caseFacade.cancelCase(this.clientCaseId,CaseStatusCode.CANCELED) .subscribe(
+  cancelCase(){
+    this.loaderService.show()  
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.CANCELED) .subscribe(
       (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
-          'client case canceled successfully.'
+          'Case canceled successfully.'
         ); 
         this.onCloseDeleteConfirmClicked();  
         this.loaderService.hide() 

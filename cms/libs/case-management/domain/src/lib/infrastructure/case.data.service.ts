@@ -400,9 +400,9 @@ export class CaseDataService {
       caseData
     );
   }
-  cancelCase(caseData: any,status:any) {
+  updateCaseStatus(caseData: any,clientCaseId:any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/status=${status}`,caseData
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}`,caseData
     );
   }
 }
