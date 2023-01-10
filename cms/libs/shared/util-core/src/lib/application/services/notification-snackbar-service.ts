@@ -30,7 +30,6 @@ export class NotificationSnackbarService {
 
         }
         const snackbarMessage: any = {
-          title: titleText,
           subtitle: subtitleText,
           type: type,
         };

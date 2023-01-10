@@ -7,7 +7,7 @@
       <div class="flex-row">
         <div class="flex-col">
           <kendo-floatinglabel text="Income Source">
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeSources$" textField="lovDesc"
+            <kendo-dropdownlist dropdownFieldautofocus [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeSources$" textField="lovDesc"
             valueField="lovCode" [valuePrimitive]="true" aria-label="income sources" name="income sources" formControlName="incomeSourceCode" #incomeSources>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
@@ -51,7 +51,7 @@
           <kendo-floatinglabel text="Income Start">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               formatPlaceholder="formatPattern" aria-label="income start" name="income start"
-              formControlName="incomeStartDate" #incomeStartDate>
+              formControlName="incomeStartDate"  placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Income start date is required
@@ -61,7 +61,7 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Income End (Optional)">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-              formatPlaceholder="formatPattern" aria-label="income end" name="income end" formControlName="incomeEndDate"
+              formatPlaceholder="formatPattern"  placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
               #incomeEndDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
@@ -148,7 +148,7 @@
           </button>
         </div>
         <div class="justify-content-end">
-          <button kendoButton [primary]="true" look="outline" aria aria-label="cancel editing income"
+          <button kendoButton [primary]="true" look="outline"  aria-label="cancel editing income"
             (click)="closeIncomeDetailPoup()">
             Cancel
           </button>

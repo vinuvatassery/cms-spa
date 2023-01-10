@@ -1,7 +1,9 @@
 <div class="client-data-block">
   <h3>HIV Verification</h3>
   <section>
-    <h5 class="mt-1">Verification method</h5>
+ 
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">    <h5 class="mt-1">Verification method</h5> </legend>
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
@@ -9,20 +11,21 @@
           kendoRadioButton
           name="verificationMethod"
           value="Request from Case Manager"
+          aria-labelledby="RequestfromCaseManager"
           [(ngModel)]="rdoVerificationMethod"
           [disabled]="
             rdoVerificationMethod ===
               'Request from Healthcare Provider via email' ||
             rdoVerificationMethod === 'Upload an attachment'
           "
-          aria-labelledby="verificationMethodFromCaseManager"
-          id="verificationMethod1"
-          tabindex="1"
+          
+          id="RequestfromCaseManager"
+          
         />
         <kendo-label
           class="k-radio-label"
           text="Request from Case Manager"
-          for="verificationMethod1"
+          for="RequestfromCaseManager"
         ></kendo-label>
       </span>
 
@@ -33,14 +36,14 @@
           name="verificationMethod"
           value="Request from Healthcare Provider via email"
           [(ngModel)]="rdoVerificationMethod"
-          aria-labelledby="verificationMethodFromHealthcareProvider"
-          id="verificationMethod2"
-          tabindex="2"
+          aria-labelledby="fromHealthcareProviderviaemail"
+          id="fromHealthcareProviderviaemail"
+          
         />
         <kendo-label
           class="k-radio-label"
           text="Request from Healthcare Provider via email"
-          for="verificationMethod2"
+          for="fromHealthcareProviderviaemail"
         ></kendo-label>
       </span>
 
@@ -50,18 +53,18 @@
           kendoRadioButton
           name="verificationMethod"
           value="Upload an attachment"
-          [(ngModel)]="rdoVerificationMethod"
-          aria-labelledby="verificationMethodUploadAttachment"
-          id="verificationMethod3"
-          tabindex="3"
+          [(ngModel)]="rdoVerificationMethod" 
+          id="verificationMethodUploadanattachment"
+          aria-labelledby="verificationMethodUploadanattachment"
         />
         <kendo-label
           class="k-radio-label"
           text="Upload an attachment"
-          for="verificationMethod3"
+          for="verificationMethodUploadanattachment"
         ></kendo-label>
       </span>
     </div>
+    </fieldset>
   </section>
   <div *ngIf="rdoVerificationMethod">
     <case-management-hiv-verification-request

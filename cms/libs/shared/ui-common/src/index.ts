@@ -24,3 +24,4 @@ export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';
 export * from './lib/pipes/phone.pipe';
 export * from './lib/enums/yes-no-flag-enum';
+export * from './lib/directives/kendo-componentsforaccessanility.directive';

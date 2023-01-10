@@ -11,9 +11,13 @@ export class LoaderService {
   isLoading = new Subject<boolean>();
   public loaderArray:any = [];
   constructor(@Inject(DOCUMENT) private document: Document) {
-    // Add the current (light) theme as a default
-    this.document.body.classList.remove('app-pageloader-on');
+
+    if(this.loaderArray.length === 0){
+      this.document.body.classList.remove('app-pageloader-on');
+    }
+    
   }
+
   show() {
     this.loaderArray.push(1);
      this.isLoading.next(true);
@@ -23,6 +27,9 @@ export class LoaderService {
   hide() {
       this.isLoading.next(false);
       this.loaderArray.pop();
-      this.document.body.classList.remove('app-pageloader-on');
+      if(this.loaderArray.length === 0){
+        this.document.body.classList.remove('app-pageloader-on');
+      }
+  
   }
 }
