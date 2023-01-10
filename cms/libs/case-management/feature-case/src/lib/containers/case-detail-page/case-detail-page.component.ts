@@ -114,7 +114,7 @@ export class CaseDetailPageComponent implements OnInit {
   }
   cancelCase(){
     this.loaderService.show()  
-    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.CANCELED) .subscribe(
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe(
       (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
@@ -143,9 +143,9 @@ export class CaseDetailPageComponent implements OnInit {
   getCase(){ 
     this.case$.subscribe((caseData:any)=>{   
       this.clientCaseId = caseData.clientCaseId;
-      if(caseData.caseStatusCode ===CaseStatusCode.NEW || 
-        caseData.caseStatusCode === CaseStatusCode.INCOMPLETE || 
-        caseData.caseStatusCode === CaseStatusCode.REVIEW){
+      if(caseData.caseStatusCode ===CaseStatusCode.new || 
+        caseData.caseStatusCode === CaseStatusCode.incomplete || 
+        caseData.caseStatusCode === CaseStatusCode.review){
         this.showDelete = true;
       }
       else{
@@ -165,7 +165,7 @@ export class CaseDetailPageComponent implements OnInit {
     });        
   } 
   hideButton(type:any){
-    if(type===ButtonType.DELETE_APPLICATION &&  !this.showDelete){
+    if(type===ButtonType.deleteApplication &&  !this.showDelete){
     return false;
     }
     else {
