@@ -58,9 +58,14 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
       homeAddressProofChecklistId: ['e85074d6-6ba2-4f7c-8ce8-120fe5c9dbfe'],
       homeAddressProof: ['',Validators.required],
       incomeChecklistId: ['06fede81-4784-48a9-99fb-3151e0fb98cb'],
-      income: [''],
+      income: ['',Validators.required],
       hivVerificationChecklistId: ['762c5bb4-6b1f-4f97-8791-b713a78b3cad'],
-      hivVerification: [''],
+      hivVerification: ['',Validators.required],
+      xyzChecklistId: ['3d7fd4fa-48a4-4701-a8a6-aa106dc10b69'],
+      xyz: ['',Validators.required],
+      exceptionChecklistId: ['f5955730-7d7c-479e-bff6-fcf948c2bba9'],
+      exception: [''],
+
     });
   }
 
@@ -95,10 +100,20 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
     const hivVerificationChecklistId =this.eligibilityForm.controls['hivVerificationChecklistId'].value;
     const hivVerification = this.savedAnswersList.find((m:any) => m.eligibilityChecklistId===hivVerificationChecklistId)?.answer;
     this.eligibilityForm.controls['hivVerification'].setValue(hivVerification);
+
+    const xyzChecklistId =this.eligibilityForm.controls['xyzChecklistId'].value;
+    const xyz = this.savedAnswersList.find((m:any) => m.eligibilityChecklistId===xyzChecklistId)?.answer;
+    this.eligibilityForm.controls['xyz'].setValue(xyz);
+
+    const exceptionChecklistId =this.eligibilityForm.controls['exceptionChecklistId'].value;
+    const exception = this.savedAnswersList.find((m:any) => m.eligibilityChecklistId===exceptionChecklistId)?.answer;
+    this.eligibilityForm.controls['exception'].setValue(exception);
+    
   }
 
   private save() {
     this.formSubmited=true;
+    this.ref.detectChanges();
     if (this.eligibilityForm.valid) {
       this.formSubmited=false;
       const checklistAnswers = [];
@@ -122,6 +137,22 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
         this.eligibilityForm.controls['hivVerificationChecklistId'].value,
         answer: this.eligibilityForm.controls['hivVerification'].value,
       });
+
+      checklistAnswers.push({
+        clientCaseEligibilityId,
+        eligibilityChecklistId:
+        this.eligibilityForm.controls['xyzChecklistId'].value,
+        answer: this.eligibilityForm.controls['xyz'].value,
+      });
+
+      checklistAnswers.push({
+        clientCaseEligibilityId,
+        eligibilityChecklistId:
+        this.eligibilityForm.controls['exceptionChecklistId'].value,
+        answer: this.eligibilityForm.controls['exception'].value,
+      });
+
+      
       this.loaderService.show();
       this.saveAndUpdate(checklistAnswers).subscribe(
           (data) => {

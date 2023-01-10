@@ -44,8 +44,10 @@
           <a class="text-bold text-underline">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
+        <kendo-formerror *ngIf="formSubmited && !eligibilityForm.controls['homeAddressProof'].valid">Oregon resident is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 text-right">
+        
         <kendo-buttongroup selection="single">
           <button
             kendoButton
@@ -66,7 +68,9 @@
             No
           </button>
         </kendo-buttongroup>
-        <kendo-formerror *ngIf="formSubmited && !eligibilityForm.controls['homeAddressProof'].valid">Oregon resident is required.</kendo-formerror>
+       
+       
+        
       </div>
     </div>
   </div>
@@ -119,7 +123,7 @@
           <a class="text-bold text-underline">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
-
+        <kendo-formerror *ngIf="formSubmited && !eligibilityForm.controls['income'].valid">Income requirements is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 text-right">
         <kendo-buttongroup selection="single">
@@ -186,6 +190,7 @@
           <a class="text-bold text-underline">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
+        <kendo-formerror *ngIf="formSubmited && !eligibilityForm.controls['hivVerification'].valid">HIV status is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 text-right">
         <kendo-buttongroup selection="single">
@@ -210,6 +215,7 @@
         (click)="onToggleExceptionClicked()"
       >
         <h4 class="mb-1 mt-0">Does client meet criteria XYZ?</h4>
+        <kendo-formerror *ngIf="formSubmited && !eligibilityForm.controls['xyz'].valid">criteria XYZ is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 text-right">
         <kendo-buttongroup selection="single">
@@ -217,6 +223,8 @@
             kendoButton
             aria-label="does client meet criteria yes"
             [toggleable]="true"
+            [selected]="eligibilityForm.controls['xyz']?.value==='Yes'"
+            (click)="answerClick('xyz','Yes')"
           >
             Yes
           </button>
@@ -224,6 +232,8 @@
             kendoButton
             aria-label="does client meet criteria no"
             [toggleable]="true"
+            [selected]="eligibilityForm.controls['xyz']?.value==='No'"
+            (click)="answerClick('xyz','No')"
           >
             No
           </button>
@@ -240,6 +250,8 @@
             kendoButton
             aria-label="make an exception yes"
             [toggleable]="true"
+            [selected]="eligibilityForm.controls['exception']?.value==='Yes'"
+            (click)="answerClick('exception','Yes')"
           >
             Yes
           </button>
@@ -247,6 +259,8 @@
             kendoButton
             aria-label="make an exception no"
             [toggleable]="true"
+            [selected]="eligibilityForm.controls['exception']?.value==='No'"
+            (click)="answerClick('exception','No')"
           >
             No
           </button>
