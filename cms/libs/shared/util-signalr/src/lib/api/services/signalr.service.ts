@@ -32,7 +32,7 @@ export class SignalrService {
     private readonly oidcSecurityService: OidcSecurityService,
     private readonly configurationProvider: ConfigurationProvider
   ) {
-    //this.initialize();
+    this.initialize();
   }
 
   /** Private methods **/
