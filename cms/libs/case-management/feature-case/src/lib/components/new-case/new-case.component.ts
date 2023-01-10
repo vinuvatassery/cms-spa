@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef, Output, EventEmitter, Input, ViewChild, AfterViewInit
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProgramCode, CaseFacade } from '@cms/case-management/domain';
+import { ProgramCode, CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
 import { ComboBoxComponent } from '@progress/kendo-angular-dropdowns';
 import { Router } from '@angular/router';
 /** Internal Libraries **/
@@ -146,7 +146,7 @@ export class NewCaseComponent implements OnInit {
 
   onClientSelected(event: any) {
     if (event) {
-      if (event.caseStatus == "ACCEPT") {
+      if (event.caseStatus == CaseStatusCode.ACCEPT) {
         this.router.navigate([`/case-management/cases/case360/${event.clientId}`]);
       }
       else {
