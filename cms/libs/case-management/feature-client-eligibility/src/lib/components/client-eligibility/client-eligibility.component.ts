@@ -26,6 +26,7 @@ export class ClientEligibilityComponent implements OnInit {
   isOpenAcceptance = false;
   isOpenDeny = false;
   isDenialLetter = false;
+  isEdit = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   sessionId: any = "";
   clientId: any;

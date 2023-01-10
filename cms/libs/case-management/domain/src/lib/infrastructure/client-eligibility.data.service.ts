@@ -27,4 +27,15 @@ export class ClientEligibilityDataService {
   getEligibility(clientCaseEligibilityId: string, clientId: string) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client/${clientId}/${clientCaseEligibilityId}`);
   }
+  saveAcceptedApplication(acceptedApplication:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/eligibility/application-eligibility`, acceptedApplication);
+  }
+  getAcceptedApplication(clientCaseId:string,clientCaseEligibilityId:string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}/eligibility/${clientCaseEligibilityId}/application-eligibility`);
+  }
+  getClientEligibilityInfo(clientId: number, clientCaseId: string, clientCaseEligibilityId: string)
+  {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}/clients/${clientId}/eligibility/${clientCaseEligibilityId}/info`);
+
+  }
 }

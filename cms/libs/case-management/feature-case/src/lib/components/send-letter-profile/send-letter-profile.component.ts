@@ -1,8 +1,11 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit,ChangeDetectorRef } from '@angular/core';
+import { first } from 'rxjs';
 /** Facades **/
-import { CaseFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'  
+import { CaseFacade,WorkflowFacade,ClientEligibilityFacade, ClientEligibilityInfo } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { ActivatedRoute } from '@angular/router';
+import { LoaderService,SnackBarNotificationType} from '@cms/shared/util-core';
 
 
 @Component({
@@ -13,19 +16,48 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class SendLetterProfileComponent implements OnInit {
  currentDate = new Date();
- 
+
 
   /** Public properties **/
   ddlSendLetters$ = this.caseFacade.ddlSendLetters$;
   isEligibilityInfoDialogOpened = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
-    
+  sessionId: any = "";
+  clientId: any;
+  clientCaseEligibilityId: string = "";
+  clientCaseId: any;
+  isEdit = true;
+  clientEligibilityInfo! : ClientEligibilityInfo;
+
+
   /** Constructor **/
-  constructor(private readonly caseFacade: CaseFacade) {}
+  constructor(private readonly caseFacade: CaseFacade,
+    private readonly clientEligibilityFacade: ClientEligibilityFacade
+    ,private readonly loaderService: LoaderService
+    ,private changeDetector: ChangeDetectorRef
+    ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadSessionData();
     this.loadDdlSendLetters();
+  }
+
+  loadSessionData() {
+    this.loaderService.show();
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session !== null && session !== undefined && session.sessionData !== undefined) {
+          const sessionData=JSON.parse(session.sessionData);
+          this.clientCaseId = sessionData.ClientCaseId;
+          this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
+          this.clientId = sessionData.clientId;
+          this.loadEligibilityInfo();
+        }
+      });
+
   }
 
   /** Private methods **/
@@ -35,10 +67,31 @@ export class SendLetterProfileComponent implements OnInit {
 
   /** Internal event methods **/
   onCloseEligibilityInfoClicked() {
+    this.loaderService.show();
     this.isEligibilityInfoDialogOpened = false;
+    this.loadEligibilityInfo();
   }
 
   onOpenEligibilityInfoClicked() {
     this.isEligibilityInfoDialogOpened = true;
+  }
+  loadEligibilityInfo()
+  {
+    this.clientEligibilityFacade.getClientEligibilityInfo(this.clientCaseEligibilityId, this.clientId,this.clientCaseId).subscribe({
+      next: (data:any) => {
+        this.clientEligibilityInfo = data;
+        this.changeDetector.detectChanges();
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        if (err){
+          this.loaderService.hide();
+          this.clientEligibilityFacade.ShowHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      },
+    });
   }
 }

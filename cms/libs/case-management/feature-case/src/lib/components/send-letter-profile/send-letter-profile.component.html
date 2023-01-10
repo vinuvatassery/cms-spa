@@ -1,26 +1,26 @@
-<div class="user-side-profile">
+<div class="user-side-profile"  *ngIf="clientEligibilityInfo" >
   <div class="flex-row mb-2">
     <div class="flex-col">
-      <h3>Anthony Hopkins</h3>
-      <p class="text-muted pt-1">(He/Him/His)</p>
+      <h3>{{clientEligibilityInfo.clientFullName}}</h3>
+      <p class="text-muted pt-1">({{clientEligibilityInfo.clientPronouns}})</p>
     </div>
   </div>
   <div class="flex-row mb-2">
     <div class="flex-col">
       <p class="text-bold">Name on Primary Insurance Card</p>
-      <p>Anthony Hopkins</p>
+      <p>{{clientEligibilityInfo.insuranceFullName}}</p>
     </div>
   </div>
   <div class="flex-row mb-2">
     <div class="flex-col">
       <p class="text-bold">Name on Official ID</p>
-      <p>Anthony Hopkins</p>
+      <p>{{clientEligibilityInfo.officialIdFullName}}</p>
     </div>
   </div>
   <div class="flex-row mb-2">
     <div class="flex-col flex-col-8">
       <p class="text-bold">Status</p>
-      <p>ACCEPT</p>
+      <p>{{clientEligibilityInfo.status}}</p>
     </div>
     <div class="flex-col flex-col-4 text-right">
       <button
@@ -36,7 +36,7 @@
   <div class="flex-row mb-2">
     <div class="flex-col flex-col-8">
       <p class="text-bold">Group</p>
-      <p>Group 1</p>
+      <p>{{clientEligibilityInfo.group}}</p>
     </div>
     <div class="flex-col flex-col-4 text-right">
       <button
@@ -52,7 +52,7 @@
   <div class="flex-row mb-2">
     <div class="flex-col flex-col-8">
       <p class="text-bold">Eligibility Period</p>
-      <p>05-30-2022 - 05-30-2023</p>
+      <p>{{clientEligibilityInfo.eilgibilityStartDate}} - {{clientEligibilityInfo.eligibilityEndDate}}</p>
     </div>
     <div class="flex-col flex-col-4 text-right">
       <button
@@ -76,7 +76,7 @@
         [popover]="userCard"
         showOn="hover"
       >
-        Sara John
+      {{clientEligibilityInfo.caseWorkerName}}
       </button>
     </div>
   </div>
@@ -96,6 +96,9 @@
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
+  <case-management-accept-application  (isCloseModalEvent)="onCloseEligibilityInfoClicked()" [isEdit]="isEdit"  [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-accept-application>
+</kendo-dialog>
+  <!-- <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
       Edit Status, Group, and Eligibility Period as needed. Click “Update” to
@@ -137,7 +140,6 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
           <kendo-textbox aria-label="Sara John" [disabled]="true" value="Sara John"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-          <!-- <input kendoTextBox  value="Sara John" /> -->
         </kendo-floatinglabel>
       </div>
     </div>
@@ -164,4 +166,4 @@
       </div>
     </div>
   </kendo-dialog-actions>
-</kendo-dialog>
+</kendo-dialog> -->
