@@ -213,6 +213,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   onExistDependentSubmit()
   {
     this.isExistSubmitted =true;
+    this.existFamilyMemberForm.markAllAsTouched();
     if(this.existFamilyMemberForm.valid)
     {
       const existDepData =
@@ -236,7 +237,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   onDependentSubmit()
   {
     this.isSubmitted = true;    
-    
+    this.familyMemberForm.markAllAsTouched();
    if(this.familyMemberForm.valid)
    {
       const dependent  = {

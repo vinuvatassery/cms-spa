@@ -29,7 +29,11 @@
   border: 0px;
   padding: 0px;
 }
-
+.k-multiselect{
+  .k-clear-value{
+    display: none;
+  }
+}
 .k-combobox {
   width: 100%;
   .k-dropdown-wrap {
