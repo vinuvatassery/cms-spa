@@ -3,7 +3,7 @@
   <section>
     <form [formGroup]="contactInfoForm">
       <!-- Contact Email Details-->
-      <div class="block-section" formGroupName="maillingAddress">
+      <div class="block-section" formGroupName="mailingAddress">
         <div class="flex-row">
           <div class="flex-col mat-split-list">
             <h5 class="text-capital">Mailing Address</h5>
@@ -20,9 +20,13 @@
               [maxlength]="100"
               formControlName="address1"
               > </kendo-textbox>
-            </kendo-floatinglabel>
-            <kendo-formerror> 
-              Address line 1 is required</kendo-formerror>
+            </kendo-floatinglabel>           
+            <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.required">
+              Address Line 1 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -37,6 +41,9 @@
               formControlName="address2"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="mailingAddress?.address2?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -51,7 +58,12 @@
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>City is required</kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.city?.errors?.required">
+              City is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.city?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -83,7 +95,12 @@
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Zip is required</kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.required">
+              Zip is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.pattern">
+              Not a valid zip code format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3 mt-04" *ngIf="showMailAddressValidationLoader$ | async">
@@ -118,7 +135,7 @@
             
               formControlName="sameAsMailingAddressFlag"
                />
-              <label class="k-checkbox-label" for="sameAsMailingAddressFlag">Same as Mailing Address</label>
+              <label class="k-checkbox-label" for="check1">Same as mailing address</label>
 
             </span>
           </kendo-formfield>
@@ -135,7 +152,12 @@
               formControlName="address1"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Address line 1 is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
+              Address Line 1 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address1?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -150,7 +172,12 @@
               formControlName="address2"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Address line 1 is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address2?.errors?.required">
+              Address Line 2 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address2?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -165,7 +192,12 @@
               formControlName="city"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>City is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
+              City is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.city?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -175,6 +207,7 @@
             <kendo-floatinglabel text="State">
               <kendo-dropdownlist 
               aria-label="State" 
+              [disabled]="true"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlStates$ | async"
               formControlName="state"              
@@ -198,7 +231,12 @@
               formControlName="zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Zip is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.zip?.errors?.required">
+              Zip is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.zip?.errors?.pattern">
+              Not a valid zip code format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3 mt-04" *ngIf="showHomeAddressValidationLoader$ | async">
@@ -251,7 +289,7 @@
               aria-labelledby="homeAddress_homelessFlag"
               formControlName="homelessFlag"
                />
-              <label class="k-checkbox-label" for="homeAddress_homelessFlag">Houseless</label>
+              <label class="k-checkbox-label" for="homeAddress_homelessFlag">Unhoused</label>
             </span>
           </kendo-formfield>
           </div>
@@ -373,7 +411,7 @@
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
-              Home phone is required
+              Home Phone Number or Not Applicable selection is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -444,7 +482,7 @@
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
-              Cell phone is required
+              Cell Phone Number or Not Applicable selection is required
             </kendo-formerror>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -515,7 +553,7 @@
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
-                Work phone is required
+                Work Phone Number or Not Applicable selection is required
               </kendo-formerror>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
@@ -587,7 +625,7 @@
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
-                Other phone is required
+                Other Phone Number or Not Applicable selection is required
               </kendo-formerror>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
@@ -662,7 +700,7 @@
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <kendo-formfield>
-              <kendo-floatinglabel text="Email Address (Optional)">
+              <kendo-floatinglabel text="Email Address">
                 <kendo-textbox 
                 aria-label="email address optional"
                 [fillMode]="formUiStyle.inputFillMode"
@@ -714,7 +752,7 @@
                 type="checkbox" 
                 id="gopaperless" 
                 kendoCheckBox  
-                formControlName="goPapperlessFlag"
+                formControlName="paperlessFlag"
                 aria-labelledby="gopaperless"  
                 />
                 <label class="k-checkbox-label" for="gopaperless">Go paperless and send important notices via email, when
@@ -777,7 +815,7 @@
               formControlName="contactName"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Contacts name is required</kendo-formerror>
+            <kendo-formerror>Contact's Name is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -797,7 +835,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Contact's relationship to client is required</kendo-formerror>
+            <kendo-formerror>Contact's Relationship to Client is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -830,7 +868,7 @@
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
              <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">
-              Contact's phone number is required
+              Contact's Phone Number is required
             </kendo-formerror>
             <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.pattern">
               Not a valid phone number format 
@@ -869,14 +907,14 @@
           <span>
           <input
           type="radio"
-          id="choosenmailAddressEntered" 
-          name="choosenAddress"  
+          id="chosenmailAddressEntered" 
+          name="chosenAddress"  
           value="addressEntered" 
-          formControlName="choosenAddress"             
+          formControlName="chosenAddress"             
           kendoRadioButton
-          aria-labelledby="choosenmailAddressEntered" 
+          aria-labelledby="chosenmailAddressEntered" 
           />
-          <kendo-label for="choosenmailAddressEntered" text="Address Entered"></kendo-label> 
+          <kendo-label for="chosenmailAddressEntered" text="Address Entered"></kendo-label> 
         </span>
         <div class="mt-2 ml-3">
       <p>  {{mailAddressEntered?.address1 | uppercase }} </p> 
@@ -888,14 +926,14 @@
           <span>
           <input
           type="radio"
-          id="choosenmailAddressSuggested"
-          name="choosenAddress" 
+          id="chosenmailAddressSuggested"
+          name="chosenAddress"
+          aria-labelledby="chosenmailAddressSuggested"
           value="addressSuggested"
-          formControlName="choosenAddress"
-          aria-labelledby="choosenmailAddressSuggested" 
+          formControlName="chosenAddress"
           kendoRadioButton
           />
-          <kendo-label for="choosenmailAddressSuggested" text="Suggested Address"></kendo-label>  
+          <kendo-label for="chosenmailAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
       <div class="mt-2 ml-3">
         <p>   {{mailAddressSuggested?.address1}}</p>
@@ -947,15 +985,14 @@
           <span>
           <input
           type="radio"
-          id="choosenhomeAddressEntered" 
-          name="choosenAddress" 
-          aria-labelledby="address entered"
+          id="chosenhomeAddressEntered" 
+          name="chosenAddress"           
           value="addressEntered" 
-          formControlName="choosenAddress"             
+          formControlName="chosenAddress"             
           kendoRadioButton
-          aria-labelledby="choosenhomeAddressEntered" 
+          aria-labelledby="chosenhomeAddressEntered" 
           />
-          <kendo-label for="choosenhomeAddressEntered" text="Address Entered"></kendo-label> 
+          <kendo-label for="chosenhomeAddressEntered" text="Address Entered"></kendo-label> 
         </span>
         <p class="mt-2 ml-3">
         {{homeAddressEntered?.address1 | uppercase }} <br>
@@ -967,14 +1004,14 @@
           <span>
           <input
           type="radio"
-          id="choosenhomeAddressSuggested"
-          name="choosenAddress"
-          aria-labelledby="choosenhomeAddressSuggested"
+          id="chosenhomeAddressSuggested"
+          name="chosenAddress"
+          aria-labelledby="chosenhomeAddressSuggested"
           value="addressSuggested"
-          formControlName="choosenAddress"
+          formControlName="chosenAddress"
           kendoRadioButton
           />
-          <kendo-label for="choosenhomeAddressSuggested" text="Suggested Address"></kendo-label>  
+          <kendo-label for="chosenhomeAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
       <p class="mt-2 ml-3">
           {{homeAddressSuggested?.address1}} <br>
