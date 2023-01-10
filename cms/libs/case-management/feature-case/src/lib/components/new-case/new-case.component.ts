@@ -26,23 +26,23 @@ export class NewCaseComponent implements OnInit {
   @Output() searchTextEvent = new EventEmitter<string>();
 
   /** input properties **/
-  @Input() caseSearchResults$!: any
-  @Input() caseOwners !: any
-  @Input() ddlPrograms!: any
-  @Input() ddlCaseOrigins!: any
-  @Input() formButtonDisabled!: boolean
+  @Input() caseSearchResults$! : any
+  @Input() caseOwners ! : any
+  @Input() ddlPrograms! : any
+  @Input() ddlCaseOrigins! : any
+  @Input() formButtonDisabled! : boolean
   @ViewChild('searchcaseornew')
-  private searchcaseornew: any;
+  private searchcaseornew: any ;
 
   /** Public properties **/
-  parentForm!: FormGroup;
+  parentForm! : FormGroup;
   isProgramSelectionOpened = false;
   selectedProgram!: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
-  showSearchresult!: false
+  showSearchresult! : false
 
-  isSubmitted!: boolean;
+  isSubmitted! : boolean ;
 
   clientInfo: any[] = [];
   /** Constructor**/
@@ -63,8 +63,10 @@ export class NewCaseComponent implements OnInit {
       )
       .subscribe(
 
-        (text) => {
-          if (text) {
+        (text) => 
+        {
+          if(text)
+          {
             this.searchTextEvent.emit(text)
             this.showInputLoader = false;
 
@@ -91,14 +93,15 @@ export class NewCaseComponent implements OnInit {
       }
     });
   }
-  private registerFormData() {
+  private registerFormData()
+  {
 
     this.parentForm = this.formBuilder.group({
       applicationDate: [new Date(), Validators.required],
       caseOriginCode: ['', Validators.required],
       caseOwnerId: ['', Validators.required],
-      programId: [{ value: this.selectedProgram?.programId, disabled: true }, [Validators.required]],
-      concurrencyStamp: ['']
+      programId: [{ value: this.selectedProgram?.programId, disabled: true }, [Validators.required]] ,
+      concurrencyStamp : ['']  
     });
 
   }
@@ -124,9 +127,10 @@ export class NewCaseComponent implements OnInit {
     this.isProgramSelectionOpened = false;
   }
 
-  onsearchTextChange(text: string) {
+  onsearchTextChange(text : string)
+  { 
 
-    if (text) {
+    if (text){
       this.showInputLoader = true;
       this.filterManager.next(text);
     }
