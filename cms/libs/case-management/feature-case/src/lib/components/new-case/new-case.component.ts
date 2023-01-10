@@ -130,7 +130,7 @@ export class NewCaseComponent implements OnInit {
   onsearchTextChange(text : string)
   { 
 
-    if (text){
+    if(text){ 
       this.showInputLoader = true;
       this.filterManager.next(text);
     }
