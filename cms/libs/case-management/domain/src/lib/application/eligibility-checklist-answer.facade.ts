@@ -37,5 +37,11 @@ export class EligibilityChecklistAnswerFacade {
     return this.eligibilityChecklistAnswerDataService.saveEligibilityChecklistAnswer(eligibilityChecklistAnswerData);
   }
 
+  getEligibilityChecklistAnswers(clientCaseEligibilityId: string) {
+    return this.eligibilityChecklistAnswerDataService.getEligibilityChecklistAnswers(clientCaseEligibilityId)
+  }
+  updateEligibilityChecklistAnswer(eligibilityChecklistAnswerData: any) {
+    return this.eligibilityChecklistAnswerDataService.updateEligibilityChecklistAnswer(eligibilityChecklistAnswerData);
+  }
  
 }

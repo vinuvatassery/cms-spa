@@ -51,7 +51,7 @@
             kendoButton
             aria-label="proof of address yes"
             [toggleable]="true"
-            [selected]="true"
+            [selected]="eligibilityForm.controls['homeAddressProof']?.value==='Yes'"
             (click)="answerClick('homeAddressProof','Yes')"
           >
             Yes
@@ -60,11 +60,13 @@
             kendoButton
             aria-label="proof of address no"
             [toggleable]="true"
+            [selected]="eligibilityForm.controls['homeAddressProof']?.value==='No'"
             (click)="answerClick('homeAddressProof','No')"
           >
             No
           </button>
         </kendo-buttongroup>
+        <kendo-formerror *ngIf="formSubmited && !eligibilityForm.controls['homeAddressProof'].valid">Oregon resident is required.</kendo-formerror>
       </div>
     </div>
   </div>
@@ -125,6 +127,7 @@
             kendoButton
             aria-label="proof of income yes"
             [toggleable]="true"
+            [selected]="eligibilityForm.controls['income']?.value==='Yes'"
             (click)="answerClick('income','Yes')"
           >
             Yes
@@ -133,6 +136,7 @@
             kendoButton
             aria-label="proof of income no"
             [toggleable]="true"
+            [selected]="eligibilityForm.controls['income']?.value==='No'"
             (click)="answerClick('income','No')"
           >
             No
@@ -185,10 +189,14 @@
       </div>
       <div class="flex-col flex-col-4 text-right">
         <kendo-buttongroup selection="single">
-          <button kendoButton aria-label="proof of hiv yes" [toggleable]="true" (click)="answerClick('HivVerification','Yes')">
+          <button kendoButton aria-label="proof of hiv yes" [toggleable]="true"
+          [selected]="eligibilityForm.controls['hivVerification']?.value==='Yes'"
+          (click)="answerClick('hivVerification','Yes')">
             Yes
           </button>
-          <button kendoButton aria-label="proof of hiv no" [toggleable]="true" (click)="answerClick('HivVerification','No')">
+          <button kendoButton aria-label="proof of hiv no" [toggleable]="true"
+          [selected]="eligibilityForm.controls['hivVerification']?.value==='No'"
+          (click)="answerClick('hivVerification','No')">
             No
           </button>
         </kendo-buttongroup>

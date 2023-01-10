@@ -11,11 +11,15 @@ export class EligibilityChecklistAnswerDataService {
   constructor(private readonly http: HttpClient
     ,private configurationProvider: ConfigurationProvider) {}
 
-  getEligibility(clientCaseEligibilityId: string, clientId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-eligibility/clientCaseEligibilityId=${clientCaseEligibilityId}&clientId=${clientId}`);
+  getEligibilityChecklistAnswers(clientCaseEligibilityId: string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility/checklist-answers/${clientCaseEligibilityId}`);
   }
 
   saveEligibilityChecklistAnswer(eligibilityChecklistAnswerData: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-checklist-answers`, eligibilityChecklistAnswerData);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility/checklist-answers`, eligibilityChecklistAnswerData);
+  }
+
+  updateEligibilityChecklistAnswer(eligibilityChecklistAnswerData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility/checklist-answers`, eligibilityChecklistAnswerData);
   }
 }

@@ -1,8 +1,8 @@
 /** Angular **/
-import { Component,OnInit, ChangeDetectionStrategy ,ChangeDetectorRef,Input} from '@angular/core';
+import { Component,OnInit, ChangeDetectionStrategy ,ChangeDetectorRef,Input,Output,EventEmitter} from '@angular/core';
 import { first,Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { WorkflowFacade,ClientDocumentFacade,ClientEligibilityFacade,ClientDocumnetEntityType } from '@cms/case-management/domain';
+import { WorkflowFacade,ClientDocumentFacade,ClientEligibilityFacade,ClientDocumnetEntityType,EligibilityChecklistAnswerFacade } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService,
   LoggingService,
@@ -17,6 +17,9 @@ import {FormGroup,FormBuilder} from '@angular/forms';
 })
 export class ClientEligibilityComponent implements OnInit {
   @Input() eligibilityForm: FormGroup;
+  @Input() formSubmited!: boolean;
+  
+  @Output() savedAnswersList = new EventEmitter<any>();
   
   /** Public properties **/
   isShowException = false;
@@ -40,6 +43,7 @@ export class ClientEligibilityComponent implements OnInit {
     ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
     ,private clientDocumentFacade:ClientDocumentFacade
     ,private clientEligibilityFacade:ClientEligibilityFacade,
+    private eligibilityChecklistAnswerFacade: EligibilityChecklistAnswerFacade,
     private formBuilder: FormBuilder,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService
@@ -77,6 +81,7 @@ export class ClientEligibilityComponent implements OnInit {
            this.oregonDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.HomeAddressProof);
            this.HIVDocuments=data.filter((m:any)=>m.entityTypeCode===ClientDocumnetEntityType.HivVerification);
             this.getIncomeEligibility();
+            this.getEligibilityChecklistAnswers();
           },(error) => {
               //this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
             })
@@ -84,6 +89,15 @@ export class ClientEligibilityComponent implements OnInit {
         }
       });
 
+  }
+  getEligibilityChecklistAnswers() {
+    this.loaderService.show()
+    this.eligibilityChecklistAnswerFacade.getEligibilityChecklistAnswers(this.clientCaseEligibilityId).subscribe((data: any) => {
+    this.savedAnswersList.emit(data);
+    this.loaderService.hide();
+     },(error:any) => {
+      this.loaderService.hide();
+       })
   }
   getIncomeEligibility() {
     this.loaderService.show()
