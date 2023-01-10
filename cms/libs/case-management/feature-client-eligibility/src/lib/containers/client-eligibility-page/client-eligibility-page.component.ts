@@ -86,7 +86,6 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
 
   setSavedAnswersList(value: any) {
     this.savedAnswersList = value;
-    console.log(this.savedAnswersList);
     if(this.savedAnswersList.length===0)return;
     const homeAddressProofChecklistId =this.eligibilityForm.controls['homeAddressProofChecklistId'].value;
     const homeAddressProof = this.savedAnswersList.find((m:any) => m.eligibilityChecklistId===homeAddressProofChecklistId)?.answer;
