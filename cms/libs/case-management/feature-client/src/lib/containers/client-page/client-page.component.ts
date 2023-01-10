@@ -92,14 +92,12 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   private loadSessionData()
   {  
-    debugger
    this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
    this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
     .subscribe((session: any) => {  
-      debugger   
       this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
       this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
@@ -475,7 +473,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
      else{
       var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)     
       if(existingPronoun === null || existingPronoun === undefined){
-        debugger
           var clientPronoun = new ClientPronoun();
           if(pronoun.lovCode===PronounCode.NotListed) {
                     clientPronoun.otherDesc = this.appInfoForm.controls["pronoun"].value;
