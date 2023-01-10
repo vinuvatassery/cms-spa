@@ -38,9 +38,9 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   
   /** Constructor **/
   constructor(
-    private healthProvider:HealthcareProviderFacade,
-    private route: ActivatedRoute,
-    private workFlowFacade: WorkflowFacade) { }
+    private readonly healthProvider:HealthcareProviderFacade,
+    private readonly route: ActivatedRoute,
+    private readonly workFlowFacade: WorkflowFacade) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {  
