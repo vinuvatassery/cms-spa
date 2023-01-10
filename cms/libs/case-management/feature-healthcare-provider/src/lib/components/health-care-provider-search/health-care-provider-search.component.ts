@@ -155,7 +155,7 @@ export class HealthCareProviderSearchComponent implements OnInit
 
   onsearchTextChange(text : string)
   {     
-       if(text.length > 1)
+       if(text.length > 0)
        {
          this.providerSearchInputLoader = true;
          this.filterManager.next(text); 
