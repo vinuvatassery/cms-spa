@@ -18,7 +18,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
   styleUrls: ['./new-case.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewCaseComponent implements OnInit{
+export class NewCaseComponent implements OnInit  {
   public showInputLoader = false;
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
