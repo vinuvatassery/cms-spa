@@ -81,7 +81,6 @@ export class NewCaseComponent implements OnInit  {
   ngOnInit(): void {
     this.setDefaultProgram();
     this.registerFormData();
-    this.getClientInfo();
   }
 
   private setDefaultProgram() {
@@ -134,19 +133,6 @@ export class NewCaseComponent implements OnInit  {
       this.showInputLoader = true;
       this.filterManager.next(text);
     }
-  }
-
-  getClientInfo() {
-    this.caseFacade.caseSearched$.subscribe({
-      next: (response: any) => {
-        this.clientInfo = response;
-      },
-      error: (err: any) => {
-        this.loggingService.logException(err)
-        this.caseFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err); 
-      }
-    })
-
   }
 
   onClientSelected(event: any) {
