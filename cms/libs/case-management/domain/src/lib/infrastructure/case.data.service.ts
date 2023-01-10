@@ -403,6 +403,6 @@ export class CaseDataService {
 
   getSessionInfoByCaseId(clientCaseId:any){
   return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/SessionSearch/${clientCaseId}`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}/SessionSearch`);
   }
 }
