@@ -39,9 +39,9 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
  constructor(private readonly userDataService: UserDataService,
   private readonly caseManagerDataService: CaseManagerDataService,
       private readonly loaderService: LoaderService,
-      private loggingService : LoggingService ,
+      private readonly loggingService : LoggingService ,
       private readonly notificationSnackbarService : NotificationSnackbarService,
-      private workflowFacade: WorkflowFacade ) {}
+      private readonly workflowFacade: WorkflowFacade ) {}
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -74,7 +74,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
         this.getManagerUsersSubject.next(getManagerUsersResponse);
       },
         error: (err) => {
-           this.loggingService.logException(err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
       });
   }
@@ -141,7 +141,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
         this.hideLoader()
       },
         error: (err) => {
-            this.loggingService.logException(err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
       }); 
     }
@@ -149,7 +149,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
     
     updateCaseManagerStatus(clientCaseId : string ,  hasManager :string, needManager : string) {
       this.showLoader()
-        return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager, needManager)
+        return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager ?? 'NULL', needManager ?? 'NULL')
     }
 
     removeCaseManager(clientCaseId : string): void {

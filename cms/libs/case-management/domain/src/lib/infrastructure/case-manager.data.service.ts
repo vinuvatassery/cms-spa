@@ -21,45 +21,45 @@ export class CaseManagerDataService {
     private configurationProvider : ConfigurationProvider) {}
 
 
-    loadCaseManagers(clientCaseId : string) {     
+    loadCaseManagers(caseId : string) {     
         return this.http.get<ClientCase[]>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager?ClientCaseId=${clientCaseId}`
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers?caseId=${caseId}`
         );   
     
     }
 
-    removeCaseManager(clientCaseId : string)
+    removeCaseManager(caseId : string)
     {
       return this.http.delete(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/case-manager/${clientCaseId}`
+        `/case-management/case-managers/${caseId}`
       );
     }
 
-    assignCaseManager(clientCaseId : string ,  userId : string)
+    assignCaseManager(caseId : string ,  userId : string)
     {
       return this.http.patch(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}/${userId}`,null
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}/${userId}`,null
       );
     }
 
-    updateCaseManagerStatus(clientCaseId : string ,  hasManager :string, needManager : string)
+    updateCaseManagerStatus(caseId : string ,  hasManager :string, needManager : string)
     {
       return this.http.put(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}?hasManager=${hasManager}&needManager=${needManager}`,null
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}?hasManager=${hasManager}&needManager=${needManager}`,null
       );
     }
 
-    getCaseManagerStatus(clientCaseId : string)
+    getCaseManagerStatus(caseId : string)
     {
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}/manager-status`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}/manager-status`
       );
     }
 
-    loadSelectedCaseManagerData(assignedCaseManagerId: string , clientCaseId : string) {     
+    loadSelectedCaseManagerData(assignedCaseManagerId: string , caseId : string) {     
       return this.http.get<LoginUser[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-manager/${clientCaseId}/manager-data/${assignedCaseManagerId}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}/${assignedCaseManagerId}`
       );   
   
   }
