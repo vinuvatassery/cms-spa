@@ -1,0 +1,30 @@
+<kendo-dialog-titlebar> Remove Case Manager? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+     This Case Manager will no longer be associated with this client
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel removing case manager"
+          (click)="onDeleteConfirm(false)"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="remove case manager"
+          (click)="onDeleteConfirm(true)"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
