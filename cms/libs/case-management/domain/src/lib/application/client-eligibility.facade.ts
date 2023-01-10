@@ -91,4 +91,9 @@ export class ClientEligibilityFacade {
   {
     return this.clientEligibilityDataService.getAcceptedApplication(clientCaseId,clientCaseEligibilityId);
   }
+  getClientEligibilityInfo(clientCaseEligibilityId: string, clientId: number, clientCaseId: string)
+  {
+    return this.clientEligibilityDataService.getClientEligibilityInfo(clientId,clientCaseId,clientCaseEligibilityId);
+
+  }
 }

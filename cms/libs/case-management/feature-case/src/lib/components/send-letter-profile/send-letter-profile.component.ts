@@ -1,11 +1,11 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { first } from 'rxjs';
 /** Facades **/
-import { CaseFacade,WorkflowFacade } from '@cms/case-management/domain';
+import { CaseFacade,WorkflowFacade,ClientEligibilityFacade, ClientEligibilityInfo } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ActivatedRoute } from '@angular/router';
-import { LoaderService} from '@cms/shared/util-core';
+import { LoaderService,SnackBarNotificationType} from '@cms/shared/util-core';
 
 
 @Component({
@@ -27,11 +27,14 @@ export class SendLetterProfileComponent implements OnInit {
   clientCaseEligibilityId: string = "";
   clientCaseId: any;
   isEdit = true;
+  clientEligibilityInfo! : ClientEligibilityInfo;
 
 
   /** Constructor **/
-  constructor(private readonly caseFacade: CaseFacade
+  constructor(private readonly caseFacade: CaseFacade,
+    private readonly clientEligibilityFacade: ClientEligibilityFacade
     ,private readonly loaderService: LoaderService
+    ,private changeDetector: ChangeDetectorRef
     ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute) {}
 
   /** Lifecycle hooks **/
@@ -51,7 +54,7 @@ export class SendLetterProfileComponent implements OnInit {
           this.clientCaseId = sessionData.ClientCaseId;
           this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
           this.clientId = sessionData.clientId;
-          this.loaderService.hide();
+          this.loadEligibilityInfo();
         }
       });
 
@@ -64,10 +67,31 @@ export class SendLetterProfileComponent implements OnInit {
 
   /** Internal event methods **/
   onCloseEligibilityInfoClicked() {
+    this.loaderService.show();
     this.isEligibilityInfoDialogOpened = false;
+    this.loadEligibilityInfo();
   }
 
   onOpenEligibilityInfoClicked() {
     this.isEligibilityInfoDialogOpened = true;
+  }
+  loadEligibilityInfo()
+  {
+    this.clientEligibilityFacade.getClientEligibilityInfo(this.clientCaseEligibilityId, this.clientId,this.clientCaseId).subscribe({
+      next: (data:any) => {
+        this.clientEligibilityInfo = data;
+        this.changeDetector.detectChanges();
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        if (err){
+          this.loaderService.hide();
+          this.clientEligibilityFacade.ShowHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      },
+    });
   }
 }

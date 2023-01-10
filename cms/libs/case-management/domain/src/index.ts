@@ -42,6 +42,8 @@ export * from './lib/entities/insurance-plan';
 export * from './lib/entities/health-insurance-policy';
 export * from './lib/entities/carrier-contact-info';
 export * from './lib/entities/accepted-application';
+export * from './lib/entities/client-eligibility-info';
+
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';

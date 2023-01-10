@@ -90,8 +90,6 @@ export class AcceptApplicationComponent implements OnInit {
     this.isSave = true
     if (this.eligibilityForm.valid) {
       this.populateEligibility();
-      // this.acceptedApplication.caseStatusCode = 'ACCEPT';
-      // this.acceptedApplication.clientCaseId = '58744eaf-6bbc-491c-968e-5dd04e98c68e';
       this.loaderService.show();
     this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication).subscribe({
       next: (data) => {
@@ -103,10 +101,6 @@ export class AcceptApplicationComponent implements OnInit {
           );
           this.loaderService.hide();
           this.router.navigate(['/case-management/case-detail/application-eligibility/send-letter'], {
-            // queryParams: {
-            //   sid: sessionResp?.workflowSessionId,
-            //   eid: sessionData?.entityId
-            // },
             queryParamsHandling: "preserve"
           });
         }
