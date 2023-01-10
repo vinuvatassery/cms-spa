@@ -145,11 +145,12 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
         answer: this.eligibilityForm.controls['xyz'].value,
       });
 
+      const exceptionAnswer=this.eligibilityForm.controls['exception'].value || 'No';
       checklistAnswers.push({
         clientCaseEligibilityId,
         eligibilityChecklistId:
         this.eligibilityForm.controls['exceptionChecklistId'].value,
-        answer: this.eligibilityForm.controls['exception'].value,
+        answer: exceptionAnswer,
       });
 
       
