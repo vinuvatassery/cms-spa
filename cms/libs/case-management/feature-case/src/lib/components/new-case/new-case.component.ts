@@ -9,7 +9,7 @@ import { ComboBoxComponent } from '@progress/kendo-angular-dropdowns';
 import { Router } from '@angular/router';
 /** Internal Libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { LoaderService, LoggingService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
@@ -18,7 +18,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
   styleUrls: ['./new-case.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewCaseComponent implements OnInit {
+export class NewCaseComponent implements OnInit{
   public showInputLoader = false;
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
@@ -143,6 +143,7 @@ export class NewCaseComponent implements OnInit {
       },
       error: (err: any) => {
         this.loggingService.logException(err)
+        this.caseFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err); 
       }
     })
 
@@ -169,6 +170,7 @@ export class NewCaseComponent implements OnInit {
           },
           error: (err: any) => {
             this.loaderService.hide();
+            this.caseFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err); 
             this.loggingService.logException(err)
           }
         })
