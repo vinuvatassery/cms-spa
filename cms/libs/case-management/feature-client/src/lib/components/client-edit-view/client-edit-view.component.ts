@@ -923,6 +923,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       error: (err: any) => {
         this.loaderService.hide();
         this.loggingService.logException(err);
+        this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       }
     })
   }
