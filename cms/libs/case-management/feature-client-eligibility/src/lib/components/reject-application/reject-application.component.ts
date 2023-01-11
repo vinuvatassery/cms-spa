@@ -23,14 +23,14 @@ export class RejectApplicationComponent implements OnInit {
   constructor(private readonly caseFacade: CaseFacade,private readonly loaderService: LoaderService) {}
   ngOnInit(): void {
     this.caseStatus.clientCaseId = this.clientCaseId;
-    this.caseStatus.caseStatusCode = CaseStatusCode.REJECT;
+    this.caseStatus.caseStatusCode = CaseStatusCode.reject;
   }
   updateCaseStatus()
   {
     this.loaderService.show();
-    this.caseFacade.updateCaseStatus(this.caseStatus).subscribe({
+    this.caseFacade.updateCaseStatuss(this.caseStatus).subscribe({
       next: (data) => {
-        this.caseFacade.ShowHideSnackBar(
+        this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Case status updated successfully.'
         );
@@ -40,7 +40,7 @@ export class RejectApplicationComponent implements OnInit {
       error: (err) => {
         if (err){
           this.loaderService.hide();
-          this.caseFacade.ShowHideSnackBar(
+          this.caseFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
             err
           );

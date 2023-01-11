@@ -82,7 +82,7 @@ export class AcceptApplicationComponent implements OnInit {
       assignedCwUser:['']
     });
 
-    this.eligibilityForm.controls['caseStatusCode'].setValue(CaseStatusCode.ACCEPT);
+    this.eligibilityForm.controls['caseStatusCode'].setValue(CaseStatusCode.accept);
 
   }
   save()
@@ -154,7 +154,7 @@ export class AcceptApplicationComponent implements OnInit {
 
   assignEnddate()
   {
-    if(this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value === CaseStatusCode.ACCEPT )
+    if(this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value === CaseStatusCode.accept )
     {
       if(this.eligibilityForm.controls['eligibilityStartDate'].value)
       {
@@ -172,7 +172,7 @@ export class AcceptApplicationComponent implements OnInit {
         this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(enddate));
       }
     }
-    else if (this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value !== CaseStatusCode.ACCEPT)
+    else if (this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value !== CaseStatusCode.accept)
     {
       if(this.eligibilityForm.controls['eligibilityStartDate'].value)
       {
