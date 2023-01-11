@@ -68,7 +68,20 @@ export class HealthInsurancePolicyFacade {
   updateHealthInsurancePolicy(healthInsurancePolicy: any) {
     const formData: any = new FormData();
     for (var key in healthInsurancePolicy) {
-      formData.append(key, healthInsurancePolicy);
+      let value;
+      if(healthInsurancePolicy[key] == null){
+        value ="";
+      }
+      else{
+        if(key == 'othersCoveredOnPlan'){
+          value = JSON.stringify(healthInsurancePolicy[key]);
+          key = 'othersCoveredOnPlanStr';
+        }
+        else{
+          value = healthInsurancePolicy[key];
+        }
+      }
+      formData.append(key,value);
     }
     return this.healthInsurancePolicyService.updateHealthInsurancePolicy(formData);
   }
