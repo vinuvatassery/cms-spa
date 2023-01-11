@@ -244,7 +244,4 @@ export class DrugPharmacyFacade {
       },
     });
   }
-  loadPharmacyPriority(clientId:any) {
-    return this.drugDataService.loadPharmacyPriority(clientId);
-  }
 }

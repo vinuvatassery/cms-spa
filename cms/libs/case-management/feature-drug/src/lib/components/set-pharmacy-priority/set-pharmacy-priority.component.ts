@@ -99,19 +99,6 @@ savePrirorityObjectList:any[] =[];
      this.copyLoadPrioritites=this.loadPrioritites.filter(m=>m.lovCode!=value);
  
   }
-  private loadClientPharmacies() {
-    this.clientpharmacies$.subscribe({
-      next: (pharmacies: ClientPharmacy[]) => {
-        pharmacies.forEach((pharmacyData: any) => {
-          pharmacyData.pharmacyNameAndNumber =
-            pharmacyData.pharmacyName + ' #' + pharmacyData.pharmacyNumber;
-        });
-      },
-      error: (error: any) => {
-        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
-      },
-    });
-  }
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
@@ -121,7 +108,7 @@ savePrirorityObjectList:any[] =[];
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientId = JSON.parse(session.sessionData).clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-          this.loadPharmacyPriority();
+         // this.loadPharmacyPriority();
         }
       });
 
@@ -138,7 +125,6 @@ savePrirorityObjectList:any[] =[];
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
-        debugger;
         this.loaderService.hide();
         this.drugPharmacyFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities saved sucessfully')
         this.workflowFacade.navigate(navigationType);
@@ -192,17 +178,7 @@ savePrirorityObjectList:any[] =[];
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
-  private loadPharmacyPriority(): void {
-     this.isDisabled = false;
-    this.drugPharmacyFacade.loadPharmacyPriority( this.clientId).subscribe({
-      next: (response:any) => {
-        this.pharmacyPriorityList = response;
-      },
-      error: (error: any) => {
-        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
-      }
-    })
-  }
+
   // /** Internal event methods **/
   onCloseChangePriorityClicked() {
     this.closeChangePriority.emit();
