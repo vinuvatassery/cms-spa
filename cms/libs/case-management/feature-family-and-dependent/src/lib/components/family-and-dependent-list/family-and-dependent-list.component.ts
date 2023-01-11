@@ -113,7 +113,14 @@ CAClient = DependentTypeCode.CAClient;
   
     this.addOrEditFamilyDependentDisplay();      
     }
+// updating the pagination infor based on dropdown selection
+pageselectionchange(data: any) {
+  this.state.take = data.value;
+  this.state.skip = 0;
+  this.loadFamilyDependents()
+}
 
+ 
   /** Private methods **/
 
   private addOrEditFamilyDependentDisplay() {
@@ -259,7 +266,7 @@ CAClient = DependentTypeCode.CAClient;
  
    public dataStateChange(stateData: any): void {         
       this.sort = stateData.sort;
-      this.sortValue = stateData.sort[0]?.field
+      this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
       this.sortType = stateData.sort[0]?.dir ?? 'asc'
       this.state=stateData;
       this.loadFamilyDependents();   
