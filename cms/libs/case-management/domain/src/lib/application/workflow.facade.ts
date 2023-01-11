@@ -48,12 +48,12 @@ export class WorkflowFacade {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /**Constructor */
-  constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
+  constructor(private readonly workflowService: WorkflowDataService, private readonly router: Router, private readonly actRoute: ActivatedRoute
     ,   private readonly loaderService: LoaderService,
-    private loggingService : LoggingService ,
+    private readonly loggingService : LoggingService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService,
-    private configurationProvider : ConfigurationProvider ) { }
+    public readonly intl: IntlService,
+    private readonly configurationProvider : ConfigurationProvider ) { }
 
 
   ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)

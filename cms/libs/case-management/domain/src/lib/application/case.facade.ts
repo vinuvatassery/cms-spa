@@ -62,11 +62,11 @@ export class CaseFacade {
   }];
   constructor(
     private readonly caseDataService: CaseDataService,
-    private loggingService : LoggingService,
+    private readonly loggingService : LoggingService,
     private readonly loaderService: LoaderService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService,
-    private configurationProvider : ConfigurationProvider,
+    public readonly intl: IntlService,
+    private readonly configurationProvider : ConfigurationProvider,
 
   ) { }
 

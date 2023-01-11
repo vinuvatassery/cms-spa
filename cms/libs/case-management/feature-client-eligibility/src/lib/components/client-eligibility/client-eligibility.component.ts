@@ -41,11 +41,11 @@ export class ClientEligibilityComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef
     ,private readonly loaderService: LoaderService
-    ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
-    ,private clientDocumentFacade:ClientDocumentFacade
-    ,private clientEligibilityFacade:ClientEligibilityFacade,
-    private eligibilityChecklistAnswerFacade: EligibilityChecklistAnswerFacade,
-    private formBuilder: FormBuilder,
+    ,private readonly workflowFacade: WorkflowFacade,private route: ActivatedRoute
+    ,private readonly clientDocumentFacade:ClientDocumentFacade
+    ,private readonly clientEligibilityFacade:ClientEligibilityFacade,
+    private readonly eligibilityChecklistAnswerFacade: EligibilityChecklistAnswerFacade,
+    private readonly formBuilder: FormBuilder,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService
     ) {

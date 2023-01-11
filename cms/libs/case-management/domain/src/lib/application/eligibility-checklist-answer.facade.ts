@@ -13,7 +13,7 @@ export class EligibilityChecklistAnswerFacade {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private configurationProvider: ConfigurationProvider) { }
+    private readonly configurationProvider: ConfigurationProvider) { }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {

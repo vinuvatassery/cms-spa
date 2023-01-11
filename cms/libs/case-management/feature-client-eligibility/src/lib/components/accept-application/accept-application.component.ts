@@ -42,13 +42,13 @@ export class AcceptApplicationComponent implements OnInit {
   /** Constructor **/
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
-    private lovFacade: LovFacade,
-    private formBuilder: FormBuilder,
-    public intl: IntlService,
+    private readonly lovFacade: LovFacade,
+    private readonly formBuilder: FormBuilder,
+    public readonly intl: IntlService,
     private readonly loaderService: LoaderService,
-    private configurationProvider : ConfigurationProvider,
+    private readonly configurationProvider : ConfigurationProvider,
     private readonly loginUserFacade : UserManagementFacade,
-    private router: Router
+    private readonly router: Router
   ) {}
 
   /** Lifecycle hooks **/

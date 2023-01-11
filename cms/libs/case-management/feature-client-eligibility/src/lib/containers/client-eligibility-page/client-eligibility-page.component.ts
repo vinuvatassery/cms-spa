@@ -34,9 +34,9 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
   savedAnswersList: any = [];
   /** Constructor **/
   constructor(
-    private workflowFacade: WorkflowFacade,
-    private eligibilityChecklistAnswerFacade: EligibilityChecklistAnswerFacade,
-    private formBuilder: FormBuilder,
+    private readonly workflowFacade: WorkflowFacade,
+    private readonly eligibilityChecklistAnswerFacade: EligibilityChecklistAnswerFacade,
+    private readonly formBuilder: FormBuilder,
     private readonly ref: ChangeDetectorRef,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,

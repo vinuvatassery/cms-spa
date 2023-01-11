@@ -33,11 +33,12 @@ export class SendLetterProfileComponent implements OnInit {
 
   /** Constructor **/
   constructor(private readonly caseFacade: CaseFacade,
-    private readonly clientEligibilityFacade: ClientEligibilityFacade
+     private readonly clientEligibilityFacade: ClientEligibilityFacade
     ,private readonly loaderService: LoaderService
-    ,private changeDetector: ChangeDetectorRef
-    ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
-   , private userManagementFacade : UserManagementFacade) {}
+    ,private readonly changeDetector: ChangeDetectorRef
+    ,private readonly workflowFacade: WorkflowFacade
+    ,private readonly route: ActivatedRoute
+   , private readonly userManagementFacade : UserManagementFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
