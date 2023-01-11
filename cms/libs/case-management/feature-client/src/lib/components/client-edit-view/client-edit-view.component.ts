@@ -32,8 +32,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  @Output() ValidateFields = new EventEmitter<FormGroup>();
  @Output() PronounChanges = new EventEmitter<any>();
  @Output() ApplicantNameChange = new EventEmitter<any>();
-  
-
 
   /** Public properties **/
   public currentDate = new Date(); 
@@ -95,15 +93,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
-  materialOptionButtonValid!:boolean;
-  interpreterOptionButtonValid!:boolean;
-  deafOrHearingOptionButtonValid!:boolean;
-  blindOrSeriousDiffOptionButtonValid!:boolean;
-  physicalMentaDiffOptionButtonValid!:boolean;
-  walkingOrClimbingOptionButtonValid!:boolean;
-  dressingOrBathOptionButtonValid!:boolean;
-  concentrateAndRememberDiffOptionButtonValid!:boolean;
-  seriesDiffOptionButtonValid!:boolean;
+
 
   textboxDisable!:boolean;
   optionButtonValid!:boolean;
@@ -541,6 +531,7 @@ private assignPronounModelToForm(){
     this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
   if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+      this.updateWorkflowPronounCount(true);
   if(pronoun.clientPronounCode ==='NOT_LISTED'){
       this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
       this.textboxDisable = false;
@@ -549,6 +540,15 @@ private assignPronounModelToForm(){
  })
     this.clientfacade.pronounListSubject.next(this.pronounList);     
 }
+}
+
+private updateWorkflowPronounCount(isCompleted:boolean){
+  const workFlowdata: CompletionChecklist[] = [{
+    dataPointName: 'pronoun',
+    status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+  }];
+
+  this.workflowFacade.updateChecklist(workFlowdata);
 }
 
   private adjustAttributeChanged(event: Event) { 
@@ -566,10 +566,10 @@ private assignPronounModelToForm(){
         distinctUntilChanged(),
         startWith(null), pairwise()
       )
-      .subscribe(([prev, curr]: [any, any]) => {
+      .subscribe(([prev, curr]: [any, any]) => {       
         this.updateFormCompleteCount(prev, curr);      
       });
-      this.appInfoForm.statusChanges.subscribe(a=>{   
+       this.appInfoForm.statusChanges.subscribe(a=>{   
        if(this.appInfoForm.controls["pronouns"].valid){
         this.checkBoxValid = true;
 
@@ -577,69 +577,7 @@ private assignPronounModelToForm(){
        else{
         this.checkBoxValid = false;
        }
-       if(this.appInfoForm.controls["materialInAlternateFormatCode"].valid){
-        this.materialOptionButtonValid = true;
-
-       }
-       else{
-        this.materialOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["interpreterCode"].valid){
-        this.interpreterOptionButtonValid = true;
-
-       }
-       else{
-        this.interpreterOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["deafOrHearingCode"].valid){
-        this.deafOrHearingOptionButtonValid = true;
-
-       }
-       else{
-        this.deafOrHearingOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["blindSeeingCode"].valid){
-        this.blindOrSeriousDiffOptionButtonValid = true;
-
-       }
-       else{
-        this.blindOrSeriousDiffOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["limitingConditionCode"].valid){
-        this.physicalMentaDiffOptionButtonValid = true;
-
-       }
-       else{
-        this.physicalMentaDiffOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["walkingClimbingDifficultyCode"].valid){
-        this.walkingOrClimbingOptionButtonValid = true;
-
-       }
-       else{
-        this.walkingOrClimbingOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["dressingBathingDifficultyCode"].valid){
-        this.dressingOrBathOptionButtonValid = true;
-
-       }
-       else{
-        this.dressingOrBathOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["concentratingDifficultyCode"].valid){
-        this.concentrateAndRememberDiffOptionButtonValid = true;
-
-       }
-       else{
-        this.concentrateAndRememberDiffOptionButtonValid = false;
-       }
-       if(this.appInfoForm.controls["errandsDifficultyCode"].valid){
-        this.seriesDiffOptionButtonValid = true;
-
-       }
-       else{
-        this.seriesDiffOptionButtonValid = false;
-       }    
+        
  
     });
   }

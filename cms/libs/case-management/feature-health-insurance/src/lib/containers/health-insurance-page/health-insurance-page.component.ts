@@ -1,9 +1,9 @@
 /** Angular **/
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 /** External libraries **/
-import { first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
-import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, othersCoveredOnPlan } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, CompletionChecklist, StatusFlag, othersCoveredOnPlan } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
@@ -52,6 +52,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.buildInsuranceFlagForm();
     this.addSaveSubscription();
     this.loadSessionData();
+    this.insuranceFlagFormChangeSubscription();
   }
 
   ngOnDestroy(): void {
@@ -147,6 +148,45 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     }
     return of(false)
   }
+
+  private insuranceFlagFormChangeSubscription() {
+    this.insuranceFlagForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        startWith(null),
+        pairwise()
+      )
+      .subscribe(([prev, curr]: [any, any]) => {
+        this.updateFormCompleteCount(prev, curr);
+      });
+  }
+
+  private updateFormCompleteCount(prev: any, curr: any) {
+    let completedDataPoints: CompletionChecklist[] = [];
+    if (prev && curr) {
+        if (prev['currentInsuranceFlag'] != curr['currentInsuranceFlag']) {
+            const item: CompletionChecklist = {
+                dataPointName: 'currentInsuranceFlag',
+                status: curr['currentInsuranceFlag'] === StatusFlag.No ? StatusFlag.Yes : StatusFlag.No
+            };
+
+            completedDataPoints.push(item);
+        }
+        if (prev['groupPolicyEligibleFlag'] !== curr['groupPolicyEligibleFlag']) {
+          const item: CompletionChecklist = {
+                dataPointName: 'groupPolicyEligibleFlag',
+                status: curr['groupPolicyEligibleFlag'] ? StatusFlag.Yes : StatusFlag.No
+            };
+
+            completedDataPoints.push(item);
+        }
+    }
+
+    if (completedDataPoints.length > 0) {
+        this.workflowFacade.updateChecklist(completedDataPoints);
+    }
+}
 
   loadSessionData() {
     //this.loaderService.show();

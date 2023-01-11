@@ -12,8 +12,8 @@ import { CompletionChecklist } from '../entities/workflow-stage-completion-statu
 /** Data services **/
 import { EmployersDataService } from '../infrastructure/employers.data.service';
 // enum  library
-import {StatusFlag} from '../enums/status-flag.enum'
-import {WorkflowFacade}from  './workflow.facade'
+import { StatusFlag } from '../enums/status-flag.enum'
+import { WorkflowFacade } from './workflow.facade'
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -23,65 +23,62 @@ export class EmploymentFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'employerName'
-  public sortType = 'asc'
+  public sortType = ''
   public sort: SortDescriptor[] = [{
-    field: this.sortValue,
-    dir: 'asc' 
+    field: this.sortValue, 
   }];
-  
+
   /** Private properties **/
   private employersSubject = new Subject<any>();
   private employersDetailsSubject = new BehaviorSubject<any>([]);
   private employmentStatusGetSubject = new Subject<any>();
-  private employersStatusSubject =  new BehaviorSubject<any>([]);
+  private employersStatusSubject = new BehaviorSubject<any>([]);
   /** Public properties **/
   employers$ = this.employersSubject.asObservable();
   employersDetails$ = this.employersDetailsSubject.asObservable();
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
   employersStatus$ = this.employersStatusSubject.asObservable();
-   // handling the snackbar & loader
+  // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   employmentFacadeSnackbar$ = this.snackbarSubject.asObservable();
 
-  showLoader(){this.loaderService.show();}
-  hideLoader(){ this.loaderService.hide();}
+  showLoader() { this.loaderService.show(); }
+  hideLoader() { this.loaderService.hide(); }
 
 
-  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
-    if(type == SnackBarNotificationType.ERROR)
-    {
-       const err= subtitle;    
-       this.loggingService.logException(err)
-    }  
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.hideLoader();   
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.hideLoader();
   }
 
   /** Constructor**/
   constructor(
     private readonly employersDataService: EmployersDataService,
     private workflowFacade: WorkflowFacade,
-    private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
-    private configurationProvider : ConfigurationProvider,
+    private loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService
-  ) {}
+  ) { }
 
   /** Public methods **/
 
 
   // Loading the unemployment status
-  loadEmploymentStatus(clientCaseEligibilityId : string) : void {
+  loadEmploymentStatus(clientCaseEligibilityId: string): void {
     this.employersDataService.loadEmploymentStatusService(clientCaseEligibilityId).subscribe({
       next: (employmentStatusGetResponse) => {
         this.employmentStatusGetSubject.next(employmentStatusGetResponse);
       },
       error: (err) => {
-         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
-   
+
     });
   }
 
@@ -109,28 +106,19 @@ export class EmploymentFacade {
               data: employersResponse['items'],
               total: employersResponse?.totalCount,
             };
-            const workFlowdata: CompletionChecklist[] = [
-              {
-                dataPointName: 'employment',
-                status:
-                  parseInt(employersResponse['totalCount']) > 0
-                    ? StatusFlag.Yes
-                    : StatusFlag.No,
-              },
-            ];
 
-            this.workflowFacade.updateChecklist(workFlowdata);
+            this.updateWorkFlowCount(parseInt(employersResponse['totalCount']) > 0 ? StatusFlag.Yes : StatusFlag.No);
             this.employersSubject.next(gridView);
           }
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);     
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
   }
-  
+
   // Loading the employmet details based on employerid
-  loadEmployersDetails(  clientCaseEligibilityId: string,  clientEmployerId: string ) {
+  loadEmployersDetails(clientCaseEligibilityId: string, clientEmployerId: string) {
     return this.employersDataService.loadEmployersDetailsService(
       clientCaseEligibilityId,
       clientEmployerId
@@ -159,5 +147,14 @@ export class EmploymentFacade {
   unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
     return this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed);
   }
-  
+
+  updateWorkFlowCount(status: StatusFlag) {
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'employment',
+      status: status
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
+  }
+
 }

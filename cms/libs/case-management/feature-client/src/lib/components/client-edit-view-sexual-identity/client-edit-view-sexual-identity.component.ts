@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  LovFacade } from '@cms/system-config/domain';
 
@@ -20,9 +21,11 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   ControlPrefix = 'SexulaIdentity';
   DescriptionField = 'SexulaIdentityDescription';
+  private countOfSelection=0; 
   constructor(
     private readonly lovFacade: LovFacade,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private readonly workflowFacade : WorkflowFacade
   ) {
     this.appInfoForm = this.formBuilder.group({ SexulaIdentity: [''] });
   }
@@ -31,6 +34,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
   ngOnInit(): void {
     this.lovFacade.getSexulaIdentityLovs();
     this.loadSexulaIdentities();
+    this.formChangeSubscription();
   }
   private loadSexulaIdentities() {
     this.SexulaIdentityLovs$.subscribe((data) => {
@@ -50,6 +54,30 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
     });
   }
 
+  private formChangeSubscription(){
+    this.appInfoForm.controls['SexulaIdentityGroup'].valueChanges.subscribe(value=>{
+      if(value && this.countOfSelection >=0){
+        this.updateWorkflowCount(true);
+        this.countOfSelection++;
+      }
+      else{
+        this.countOfSelection = this.countOfSelection > 0 ? --this.countOfSelection : this.countOfSelection;
+        if(this.countOfSelection <= 0){
+          this.updateWorkflowCount(false);
+        }
+      }
+    });
+  }
+  
+  private updateWorkflowCount(isCompleted:boolean){
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'sexualIdentity',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+  
+    this.workflowFacade.updateChecklist(workFlowdata);
+  }
+
   onCheckChange(event: any, lovCode: string) {
     if (event.target.checked) {
       this.appInfoForm.controls['SexulaIdentityGroup'].setValue(lovCode);
@@ -61,6 +89,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
           this.DescriptionField
         ].updateValueAndValidity();
       }
+      //this.countOfSelection++;
     } else {
       this.appInfoForm.controls['SexulaIdentityGroup'].setValue('');
 
@@ -72,6 +101,9 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
           this.DescriptionField
         ].updateValueAndValidity();
       }
+      //this.countOfSelection = this.countOfSelection > 0 ?  --this.countOfSelection: this.countOfSelection;
     }
+
+    //this.updateWorkflowCount(this.countOfSelection > 0);
   }
 }

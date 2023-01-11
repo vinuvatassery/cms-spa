@@ -98,12 +98,12 @@ cms-sidenav {
         cursor: pointer;
         letter-spacing: .5px;
         .sidebar-menu_label-badge {
-          background: material-color($hive-warn-palette, 500);
+          background: $badge-alets;
           color: $white !important;
           border-radius: $border-radius-sm;
           padding: $size-s $size-m;
           min-width: $font-size-xlg + $font-size-s;
-          font-family: $font-family-light;
+          font-family: $font-family-bold;
           margin-left: $size-l;
         }
       }
