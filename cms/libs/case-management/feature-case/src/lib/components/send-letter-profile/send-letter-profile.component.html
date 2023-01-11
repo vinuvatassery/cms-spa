@@ -76,7 +76,7 @@
         [popover]="userCard"
         showOn="hover"
       >
-      {{clientEligibilityInfo.caseWorkerName}}
+      {{clientEligibilityInfo.caseManagerName}}
       </button>
     </div>
   </div>
@@ -85,7 +85,12 @@
 <!-- User Card -->
 <kendo-popover #userCard width="330">
   <ng-template kendoPopoverBodyTemplate>
-    <common-user-profile-card></common-user-profile-card>
+    <case-management-hiv-case-manager-card
+    [gridHoverDataItem]="clientEligibilityInfo"
+    [userImage$]="userImage$"
+    (loadUserImageEvent)="getCaseWorkerImage($event)"
+     ></case-management-hiv-case-manager-card>
+     <!-- <common-user-profile-card></common-user-profile-card> -->
   </ng-template>
 </kendo-popover>
 
