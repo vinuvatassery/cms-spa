@@ -399,14 +399,10 @@ export class CaseDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case`,
       caseData
     );
-  }
+  }  
   updateCaseStatus(caseData: any,clientCaseId:any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}`,caseData
     );
-  }
-  updateCaseStatuss(clientCase: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/status`, clientCase);
-
   }
 }

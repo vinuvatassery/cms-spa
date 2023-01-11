@@ -15,20 +15,14 @@ export class RejectApplicationComponent implements OnInit {
 
   @Input() clientCaseId: string = '';
   @Output() isCloseDenyModal: EventEmitter<boolean> = new EventEmitter();
-  caseStatus = {
-    clientCaseId : '',
-    caseStatusCode:''
-  }
-
+  
   constructor(private readonly caseFacade: CaseFacade,private readonly loaderService: LoaderService) {}
   ngOnInit(): void {
-    this.caseStatus.clientCaseId = this.clientCaseId;
-    this.caseStatus.caseStatusCode = CaseStatusCode.reject;
   }
   updateCaseStatus()
   {
     this.loaderService.show();
-    this.caseFacade.updateCaseStatuss(this.caseStatus).subscribe({
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.reject).subscribe({
       next: (data) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,

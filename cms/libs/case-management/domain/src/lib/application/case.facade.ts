@@ -263,9 +263,4 @@ export class CaseFacade {
           return  this.caseDataService.updateCaseStatus(caseData,clientCaseId)
     }
 
-  updateCaseStatuss(ClientCase:any)
-  {
-    return  this.caseDataService.updateCaseStatuss(ClientCase)
-  }
-
 }
