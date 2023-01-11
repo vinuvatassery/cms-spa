@@ -1,7 +1,7 @@
-<kendo-dialog-titlebar> Delete Family Member? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar> Remove Case Manager? </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
     <p>
-        {{ deleteRqdependentTypeCode === CAClient ? 'Their CAREAssist profile will no longer be associated with this client' : 'Their data will be permanently deleted from this application' }}
+     This Case Manager will no longer be associated with this client
    
     </p>
   </section>
@@ -12,7 +12,7 @@
           kendoButton
           [primary]="true"
           look="outline"
-          aria-label="cancel adding health provider"
+          aria-label="cancel removing case manager"
           (click)="onDeleteConfirm(false)"
         >
           Cancel
@@ -20,10 +20,10 @@
         <button
           kendoButton
           class="k-error-button"
-          aria-label="delete health provider"
+          aria-label="remove case manager"
           (click)="onDeleteConfirm(true)"
         >
-        {{ deleteRqdependentTypeCode === CAClient ? 'REMOVE' : 'DELETE' }}
+          Remove
         </button>
       </div>
     </div>
