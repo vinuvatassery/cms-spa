@@ -314,7 +314,7 @@ getPriorityLovs(): void {
       this.lovPrioritySubject.next(lovPriorityResponse);
     },
     error: (err) => {
-      console.error('err', err);
+      this.loggingService.logException(err)
     },
   });
 
