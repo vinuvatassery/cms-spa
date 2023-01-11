@@ -40,7 +40,7 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   onDuplicateFoundClick() {
     this.loaderService.show();
-    this.caseFacade.cancelCase(this.currentClientInfo.clientCaseId, CaseStatusCode.CANCELLED).subscribe({
+    this.caseFacade.updateCaseStatus(this.currentClientInfo.clientCaseId, CaseStatusCode.canceled).subscribe({
       next: (response: any) => {
         this.router.navigate([`/case-management/cases/case360/${this.matchingClientInfo.clientId}`])
         this.closeModalClick.next(true);

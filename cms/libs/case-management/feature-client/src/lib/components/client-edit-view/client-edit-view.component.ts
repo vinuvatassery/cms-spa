@@ -885,10 +885,10 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
     let lastName = this.appInfoForm.controls['lastName'].value != null ? this.appInfoForm.controls['lastName'].value : '';
     let dateOfBirth = this.appInfoForm.controls['dateOfBirth'].value;
-    let clientSsn = this.appInfoForm.controls['ssn'].value;
+    let clientSsn = this.appInfoForm.controls['ssn'].value != null ? this.appInfoForm.controls['ssn'].value : '';;
     let ssnNotApplicable = this.appInfoForm.controls['ssnNotApplicable'].value;
     if (ssnNotApplicable) {
-      clientSsn = null
+      clientSsn = '';
     }
     let parsedDate = new Date(this.intl.formatDate(dateOfBirth, this.dateFormat))
     let data = {
