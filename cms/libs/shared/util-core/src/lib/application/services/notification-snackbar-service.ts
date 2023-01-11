@@ -9,27 +9,35 @@ export class NotificationSnackbarService {
 
       snackbarSubject = new Subject<any>();
       snackbar$ = this.snackbarSubject.asObservable();
-      subscribeNotification(){
-
-      }
+     
       manageSnackBar(type : SnackBarNotificationType , subtitle : any)
       {
         let subtitleText = subtitle;
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
+        
         if(type == SnackBarNotificationType.ERROR)
         {
-          const err= subtitle;
-          if(err?.error?.ruleSetsExecuted != undefined)
+         
+          const err= subtitle;     
+          let errorMessage =''
+          
+          //In case of fluent validation result from API
+          if(err?.isValid === false)
           {
-            subtitleText = "Validation Failed";
+            err?.errors.forEach((item : any)=> {
+              errorMessage += item?.errorMessage+' ';
+            });           
           }
           else
           {
-            subtitleText =(err?.name ?? '')+' '+(err?.error?.code ?? '')+' '+(err?.error?.error ?? '')+' '+(err?.status);
+             //exception plugin result DTO
+              errorMessage =  err?.error?.details == null ? err?.error?.message : err?.error?.details
           }
-
+          subtitleText = errorMessage ;        
         }
+
         const snackbarMessage: any = {
+          title: titleText,
           subtitle: subtitleText,
           type: type,
         };

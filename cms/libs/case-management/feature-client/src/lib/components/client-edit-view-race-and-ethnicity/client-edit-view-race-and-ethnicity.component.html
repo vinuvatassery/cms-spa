@@ -6,7 +6,7 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel
-          text="Racial or Ethnic Identities"
+          text="Ethnic Identities"
           class="k-multiselect-wrapper"
         >
           <span
@@ -17,6 +17,7 @@
           ></span>
 
           <kendo-multiselect
+          aria-label="Ethnic Identities"
             [checkboxes]="{ checkOnClick: true, enabled: true }"
             formControlName="Ethnicity"
             #multiselect
@@ -69,7 +70,7 @@
       <div class="flex-row">
         <div class="flex-col">
           <kendo-floatinglabel
-            text="Racial or Ethnic Identities"
+            text="Racial Identities"
             class="k-multiselect-wrapper"
           >
             <span
@@ -80,6 +81,7 @@
             ></span>
   
             <kendo-multiselect
+              aria-label="Racial Identities"
               [checkboxes]="{ checkOnClick: true, enabled: true }"
               formControlName="RaceAndEthnicity"
               #multiselect
@@ -131,7 +133,23 @@
         </div>
       </div>
     </section>
-  
+    <section *ngIf="raceAndEthnicityPrimaryNotListed">
+      <div class="flex-row">
+        <div class="flex-col flex-col-4">
+          <kendo-floatinglabel text="Racial or Ethnic Identity if Not listed, please specify">
+            <kendo-textbox
+              aria-label="Racial or Ethnic Identity"
+              formControlName="RaceAndEthnicityNotListed"
+              [fillMode]="formUiStyle.inputFillMode"
+              
+            >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicityNotListed'].valid"
+            >Racial or Ethnic Identity is required.</kendo-formerror>
+        </div>
+      </div>
+    </section>
     <section>
       <h5 class="mb-0">
         If they selected multiple, is there one they think of as their primary
@@ -153,27 +171,11 @@
               </ng-template>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicityPrimary'].valid">Primary identity is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicityPrimary'].valid">Primary Identity is required.</kendo-formerror>
         </div>
       </div>
     </section>
 
-    <section *ngIf="raceAndEthnicityPrimaryNotListed">
-      <div class="flex-row">
-        <div class="flex-col flex-col-4">
-          <kendo-floatinglabel text="Racial or Ethnic Identity if Not listed, please specify">
-            <kendo-textbox
-              aria-label="Racial or Ethnic Identity"
-              formControlName="RaceAndEthnicityNotListed"
-              [fillMode]="formUiStyle.inputFillMode"
-              
-            >
-            </kendo-textbox>
-          </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicityNotListed'].valid"
-            >Racial or Ethnic Identity is required.</kendo-formerror>
-        </div>
-      </div>
-    </section>
+    
   </div>
   

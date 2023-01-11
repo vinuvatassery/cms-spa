@@ -80,8 +80,8 @@ export class CaseFacade {
     this.loaderService.hide();
   }
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
     if(type == SnackBarNotificationType.ERROR)
     {
        const err= subtitle;
@@ -109,7 +109,7 @@ export class CaseFacade {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -177,7 +177,7 @@ export class CaseFacade {
         this.HideLoader();
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -255,9 +255,17 @@ export class CaseFacade {
 
     }
 
-  updateCaseStatus(ClientCase:any)
+    updateCaseStatus(clientCaseId : any,caseStatusCode:any) 
+    { 
+          const caseData = { 
+            caseStatusCode  : caseStatusCode          
+          }      
+          return  this.caseDataService.updateCaseStatus(caseData,clientCaseId)
+    }
+
+  updateCaseStatuss(ClientCase:any)
   {
-    return  this.caseDataService.updateCaseStatus(ClientCase)
+    return  this.caseDataService.updateCaseStatuss(ClientCase)
   }
 
 }

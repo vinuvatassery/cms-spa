@@ -3,6 +3,7 @@ export interface ClientCase {
      assignedCwUserId :  string ,
      caseOriginCode :  string ,
      caseStartDate :  string ,
-     concurrencyStamp : string
+     concurrencyStamp : string,
+     caseStatusCode:string
   }
   
