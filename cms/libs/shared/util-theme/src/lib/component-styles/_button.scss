@@ -331,6 +331,26 @@
       width: 100%;
     }
   }
+
+
+    .k-button-solid-base{
+      transition: .2s;
+      &:hover{
+      background: material-color($hive-primary-palette, 800) !important;
+      background-color: material-color($hive-primary-palette, 800) !important;
+      color: $white !important;
+     
+    } 
+  }
+
+  .k-split-button-arrow {
+    transition: .2s;
+   &:hover{
+    background: material-color($hive-primary-palette, 800) !important;
+    background-color: material-color($hive-primary-palette, 800) !important;
+    color: $white !important;
+   }
+  }
 }
 
 // .k-dropdown-button{
