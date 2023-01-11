@@ -6,6 +6,7 @@ import { CaseFacade,WorkflowFacade,ClientEligibilityFacade, ClientEligibilityInf
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService,SnackBarNotificationType} from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { LoaderService,SnackBarNotificationType} from '@cms/shared/util-core';
 })
 export class SendLetterProfileComponent implements OnInit {
  currentDate = new Date();
-
+ userImage$ = this.userManagementFacade.userImage$;
 
   /** Public properties **/
   ddlSendLetters$ = this.caseFacade.ddlSendLetters$;
@@ -35,7 +36,8 @@ export class SendLetterProfileComponent implements OnInit {
     private readonly clientEligibilityFacade: ClientEligibilityFacade
     ,private readonly loaderService: LoaderService
     ,private changeDetector: ChangeDetectorRef
-    ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute) {}
+    ,private workflowFacade: WorkflowFacade,private route: ActivatedRoute
+   , private userManagementFacade : UserManagementFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -94,4 +96,11 @@ export class SendLetterProfileComponent implements OnInit {
       },
     });
   }
+  getCaseWorkerImage(assignedCaseWorkerId : string)
+   {
+      if(assignedCaseWorkerId)
+      {
+        this.userManagementFacade.getUserImage(assignedCaseWorkerId);
+      }
+   }
 }
