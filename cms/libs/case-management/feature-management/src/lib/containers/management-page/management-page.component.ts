@@ -255,8 +255,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   }
 
   checkValidations(){
-    // TO DO:Validation functionality is pending as the Save and Other related work is not in Sprint 2.2 scope.
-    return true;
+    return this.validate();
   }
 
   private loadSessionData()
