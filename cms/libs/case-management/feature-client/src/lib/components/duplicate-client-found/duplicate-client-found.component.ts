@@ -49,6 +49,7 @@ export class DuplicateClientFoundComponent implements OnInit {
       error: (err: any) => {
         this.loaderService.hide();
         this.loggingService.logException(err);
+        this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
       }
     })
   }
