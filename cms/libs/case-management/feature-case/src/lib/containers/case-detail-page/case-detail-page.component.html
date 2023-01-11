@@ -27,7 +27,7 @@
 
         <div class="breadcrumb-right app-c-split-button">
           <kendo-splitbutton [data]="saveForLaterData" class="app-c-split-button app-dropdown-action"
-            buttonClass="k-split-button"
+            buttonClass="k-split-button" [tabindex]="0" 
             [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
             <div class="btn-inner-block" (click)="onSaveAndContinueClicked()">
               <span class="material-icons" aria-label="save and continue" aria-hidden="false">save</span>
@@ -38,38 +38,7 @@
                 aria-hidden="false" (click)="dataItem.click" *ngIf="hideButton(dataItem.text)" >
                 <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                 <label> {{ dataItem.text }} </label>
-              </button>
-              <!-- <button
-                kendoButton
-                look="flat"
-                class="btn-h-danger"
-                (click)="onDiscardConfirmClicked()"
-                aria-label="discard changes"
-              >
-                <span
-                  class="material-icons"
-                  aria-label="discard changes"
-                  aria-hidden="true"
-                  >do_disturb_alt</span
-                >
-                <label>Discard Changes</label>
-              </button> -->
-              <!-- <button
-                kendoButton
-                look="flat"
-                class="btn-h-danger"
-                (click)="onDeleteConfirmClicked()"
-                aria-label="delete application"
-              >
-                <span
-                  class="material-icons"
-                  aria-label="delete application"
-                  aria-hidden="true"
-                  >delete</span
-                >
-                <label>Delete Application</label>
-              </button> -->
-
+              </button> 
             </ng-template>
           </kendo-splitbutton>
         </div>
@@ -148,7 +117,7 @@
         <button kendoButton [primary]="true" look="outline" aria-label="cancel delete"(click)="cancelDeletion()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="delete client’s data"(click)="cancelClientCase()">
+        <button kendoButton class="k-error-button" aria-label="cancel case"(click)="cancelCase()">
           Delete
         </button>
       </div>

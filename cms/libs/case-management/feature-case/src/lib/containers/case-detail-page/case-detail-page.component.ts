@@ -110,14 +110,15 @@ export class CaseDetailPageComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
+    this.loadSessionSubscription .unsubscribe();
   }
-  cancelClientCase(){
-    this.loaderService.show()    
-    this.caseFacade.cancelCase(this.clientCaseId) .subscribe(
+  cancelCase(){
+    this.loaderService.show()  
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe(
       (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
-          'client case canceled successfully.'
+          'Case canceled successfully.'
         ); 
         this.onCloseDeleteConfirmClicked();  
         this.loaderService.hide() 
@@ -140,11 +141,11 @@ export class CaseDetailPageComponent implements OnInit {
     );
   }
   getCase(){ 
-    this.case$.subscribe((caseData:any)=>{ 
+    this.case$.subscribe((caseData:any)=>{   
       this.clientCaseId = caseData.clientCaseId;
-      if(caseData.caseStatusCode ===CaseStatusCode.NEW || 
-        caseData.caseStatusCode === CaseStatusCode.INCOMPLETE || 
-        caseData.caseStatusCode === CaseStatusCode.REVIEW){
+      if(caseData.caseStatusCode ===CaseStatusCode.new || 
+        caseData.caseStatusCode === CaseStatusCode.incomplete || 
+        caseData.caseStatusCode === CaseStatusCode.review){
         this.showDelete = true;
       }
       else{
@@ -164,7 +165,7 @@ export class CaseDetailPageComponent implements OnInit {
     });        
   } 
   hideButton(type:any){
-    if(type===ButtonType.DELETE_APPLICATION &&  !this.showDelete){
+    if(type===ButtonType.deleteApplication &&  !this.showDelete){
     return false;
     }
     else {
@@ -173,13 +174,6 @@ export class CaseDetailPageComponent implements OnInit {
   }
   cancelDeletion(){
     this.isShowDeleteConfirmPopup = false;
-  }
-  cancelDiscard(){
-    this.isShowDiscardConfirmPopup = false;
-  }
-  discardChanges(){
-    this.isShowDiscardConfirmPopup = false;
-    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
   }
   /** Private Methods */
   private loadQueryParams() {

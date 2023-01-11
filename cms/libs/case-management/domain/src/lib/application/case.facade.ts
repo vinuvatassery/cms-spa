@@ -255,12 +255,12 @@ export class CaseFacade {
 
     }
 
-    cancelCase(clientCaseId : any) 
+    updateCaseStatus(clientCaseId : any,caseStatusCode:any) 
     { 
           const caseData = { 
-            clientCaseId  : clientCaseId          
+            caseStatusCode  : caseStatusCode          
           }      
-          return  this.caseDataService.cancelCase(caseData)
+          return  this.caseDataService.updateCaseStatus(caseData,clientCaseId)
     }
 
 }

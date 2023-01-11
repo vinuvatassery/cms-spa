@@ -15,6 +15,9 @@
   width: 100%;
 }
 
+.k-form-hint{
+  padding: $size-m $size-l;
+}
 .option-with-check {
   display: flex;
   align-items: center;
@@ -26,7 +29,11 @@
   border: 0px;
   padding: 0px;
 }
-
+.k-multiselect{
+  .k-clear-value{
+    display: none;
+  }
+}
 .k-combobox {
   width: 100%;
   .k-dropdown-wrap {
