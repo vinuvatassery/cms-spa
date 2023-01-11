@@ -57,7 +57,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.loadFormdata();
     this.addSaveSubscription();
     /** methods for case child form **/

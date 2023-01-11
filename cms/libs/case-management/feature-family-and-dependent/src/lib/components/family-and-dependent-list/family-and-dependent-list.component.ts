@@ -84,7 +84,7 @@ CAClient = DependentTypeCode.CAClient;
     },
     {
       buttonType:"btn-h-danger",
-      text: "Remove Family Member",
+      text: "Delete Family Member",
       icon: "delete",    
       click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {           
           

@@ -4,12 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
-import { forkJoin, mergeMap, of, Subscription, tap, first } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, tap,first } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, CaseStatusCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType,CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Router } from '@angular/router';
 
 
 
@@ -25,9 +26,8 @@ export class CaseDetailPageComponent implements OnInit {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
-  private showConfirmationPopupSubscription !: Subscription;
-  private loadSessionSubscription!: Subscription;
-  public size: DateInputSize = 'medium';
+  private loadSessionSubscription !:Subscription;
+  private showConfirmationPopupSubscription !: Subscription;  public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
 
@@ -53,6 +53,8 @@ export class CaseDetailPageComponent implements OnInit {
   isShowSendNewLetterPopup = false;
   isInnerLeftMenuOpen = false;
   sessionId!: string;
+  case$ = this.caseFacade.getCase$;
+  showDelete:boolean=true;
   currentStatusCode:string="";
   isSubmitted:boolean=false;
   data: Array<any> = [
@@ -98,7 +100,8 @@ export class CaseDetailPageComponent implements OnInit {
     private loaderService: LoaderService,
     private loggingService : LoggingService,
     private readonly snackbarService : NotificationSnackbarService,
-    private lovFacade:LovFacade
+    private router: Router,
+	private lovFacade:LovFacade
   ) {
   }
 
@@ -107,17 +110,79 @@ export class CaseDetailPageComponent implements OnInit {
     this.loadQueryParams();
     this.loadDdlCommonAction();
     this.addNavigationSubscription();
-    this.addConfirmationPopupSubscription();
+    this.loadCase();   
+    this.getCase();
+ 	this.addConfirmationPopupSubscription();
     this.loadSessionData();
-    this.getCaseStatusLov();
-  }
+    this.getCaseStatusLov();  }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
-    this.showConfirmationPopupSubscription.unsubscribe();
-    this.loadSessionSubscription.unsubscribe();
+    this.loadSessionSubscription .unsubscribe();
+	this.showConfirmationPopupSubscription.unsubscribe();  }
+  cancelCase(){
+    this.loaderService.show()  
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe(
+      (response: any) => {
+        this.caseFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Case canceled successfully.'
+        ); 
+        this.onCloseDeleteConfirmClicked();  
+        this.loaderService.hide() 
+        this.router.navigateByUrl(`dashboard`); 
+      },
+      (error: any) => {
+        if (error) {
+          this.caseFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          this.loggingService.logException(
+            {
+              name:SnackBarNotificationType.ERROR,
+              message:error
+            });
+          this.loaderService.hide()    
+        }
+      }
+    );
   }
-
+  getCase(){ 
+    this.case$.subscribe((caseData:any)=>{   
+      this.clientCaseId = caseData.clientCaseId;
+      if(caseData.caseStatusCode ===CaseStatusCode.new || 
+        caseData.caseStatusCode === CaseStatusCode.incomplete || 
+        caseData.caseStatusCode === CaseStatusCode.review){
+        this.showDelete = true;
+      }
+      else{
+        this.showDelete = false;
+      }
+    })
+     
+  }
+  private loadCase()
+  {     
+   this.sessionId = this.route.snapshot.queryParams['sid'];    
+   this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription =this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+    .subscribe((session: any) => {      
+     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId     
+     this.caseFacade.loadCasesById(this.clientCaseId);      
+    });        
+  } 
+  hideButton(type:any){
+    if(type===ButtonType.deleteApplication &&  !this.showDelete){
+    return false;
+    }
+    else {
+      return true;
+    }
+  }
+  cancelDeletion(){
+    this.isShowDeleteConfirmPopup = false;
+  }
   /** Private Methods */
   private loadQueryParams() {
     const workflowType: string = WorkflowTypeCode.NewCase;
@@ -293,7 +358,7 @@ export class CaseDetailPageComponent implements OnInit {
     this.lovFacade.getCaseStatusLovs();
     this.lovFacade.caseStatusType$.subscribe((statusResponse: any) => {
       if (statusResponse.length > 0) {
-        this.caseStatuses = statusResponse.filter((x: any) => x.lovCode == CaseStatusCode.INCOMPLETE || x.lovCode == CaseStatusCode.REJECT)
+        this.caseStatuses = statusResponse.filter((x: any) => x.lovCode == CaseStatusCode.incomplete || x.lovCode == CaseStatusCode.reject)
       }
     })
   }
@@ -302,11 +367,7 @@ export class CaseDetailPageComponent implements OnInit {
     this.loaderService.show();
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
-      let caseData={
-        clientCaseId:this.clientCaseId,
-        caseStatusCode:this.currentStatusCode
-      }
-      this.caseFacade.updateCaseStatus(caseData).subscribe({
+      this.caseFacade.updateCaseStatus(this.clientCaseId,this.currentStatusCode).subscribe({
         next:(casesResponse:any)=>{
           this.loaderService.hide();
           this.workflowFacade.saveForLater(true);

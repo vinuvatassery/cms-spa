@@ -400,18 +400,14 @@ export class CaseDataService {
       caseData
     );
   }
-
+  updateCaseStatus(caseData: any,clientCaseId:any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client/cases/${clientCaseId}/status`,caseData
+    );
+  }
   loadCasesStatusById(clientCaseId : string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/client/case/${clientCaseId}/status`
     );
-  }
-  
-  updateCaseStatus(caseData: any) {
-    return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client/case/status`,
-      caseData
-    );
-  }
-}
+  }}

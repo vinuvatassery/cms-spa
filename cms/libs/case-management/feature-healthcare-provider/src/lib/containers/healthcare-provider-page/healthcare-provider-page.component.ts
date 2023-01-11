@@ -40,10 +40,10 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   
   /** Constructor **/
   constructor(
-    private healthProvider:HealthcareProviderFacade,
-    private route: ActivatedRoute,
-    private workFlowFacade: WorkflowFacade,
-    private loaderService: LoaderService,
+    private readonly healthProvider:HealthcareProviderFacade,
+    private readonly route: ActivatedRoute,
+    private readonly workFlowFacade: WorkflowFacade,
+	private loaderService: LoaderService,
     private router :Router) { }
 
   /** Lifecycle Hooks **/

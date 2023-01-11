@@ -16,7 +16,7 @@
     <div class="flex-col mb-1">
       <kendo-floatinglabel aria-label="date of hire" text="Date of Hire">
         <kendo-datepicker [incompleteDateValidation]="true" formControlName="empHireDate" #empHireDate  [fillMode]="formUiStyle.dateInputFillMode"
-          format="MM-dd-yyyy" formatPlaceholder="formatPattern"   placeholder="">
+          format="MM-dd-yyyy" formatPlaceholder="formatPattern"   placeholder="" >
         </kendo-datepicker>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!empDetailsForm.controls['empHireDate'].valid && employerFormSubmitted">Employer date of hire is required

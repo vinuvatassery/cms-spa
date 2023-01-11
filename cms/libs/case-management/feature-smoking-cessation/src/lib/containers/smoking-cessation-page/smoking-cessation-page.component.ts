@@ -38,7 +38,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     smokingCessationNoteApplicableFlag: '',
     smokingCessationNote: ''
   };
-  isDisabled = false;
+  isDisabled = true;
 
 
   public formUiStyle: UIFormStyle = new UIFormStyle();

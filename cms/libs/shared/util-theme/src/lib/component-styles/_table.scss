@@ -490,6 +490,8 @@ table,
       min-width: 0px;
       font-size: $font-size;
       padding: 0px;
+      position: relative;
+    top: -1px;
     }
   }
   .k-pager-nav{
