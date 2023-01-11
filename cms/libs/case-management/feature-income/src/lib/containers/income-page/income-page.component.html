@@ -21,7 +21,7 @@
         <div class="flex-col">
 
 
-          <section  *ngIf="hasNoIncome">
+          <div  *ngIf="hasNoIncome">
             <form [formGroup]="noIncomeDetailsForm">
               <div class="flex-row">
 
@@ -52,7 +52,7 @@
 
                 <div class="flex-col">
                   <kendo-floatinglabel
-                    text="What resources do they use to meet basic needs such as food, housing, transportation, etc..,">
+                    text="What resources do they use to meet basic needs such as food, housing, transportation, etc.?">
                     <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #incomeNotes resizable="auto"
                       [maxlength]="incomeNoteMaxLength" [value]="incomeNote"
                       (valueChange)="onIncomeNoteValueChange($event)" aria-label="income note"
@@ -71,10 +71,10 @@
               </div>
 
             </form>
-          </section>
-          <section *ngIf="!hasNoIncome">
+          </div>
+          <div *ngIf="!hasNoIncome">
             <case-management-income-list [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
-          </section>
+          </div>
           
         </div>
       </div>

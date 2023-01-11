@@ -21,6 +21,7 @@ export interface LoginUser {
      caseCapacity : number,
      domainCode : string,
      assistorGroupCode : string,
-     caseAvailability : number   
+     caseAvailability : number,   
+     fullCustomName : string
   }
   

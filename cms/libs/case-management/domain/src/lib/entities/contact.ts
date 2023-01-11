@@ -43,7 +43,7 @@ export interface ClientEmail {
   concurrencyStamp?: string;
 }
 
-export interface FriedsOrFamilyContact {
+export interface FriendsOrFamilyContact {
   clientDependentId?: string;
   contactName?: string;
   contactRelationshipCode?: string;
@@ -58,7 +58,7 @@ export interface ContactInfo {
   phone?: ClientPhone[];
   email?: ClientEmail;
   preferredContactCode?: string;
-  friedsOrFamilyContact?: FriedsOrFamilyContact;
+  friendsOrFamilyContact?: FriendsOrFamilyContact;
   clientCaseEligibility?: ClientCaseElgblty;
   homeAddressProof?:HomeAddressProof;
 }
