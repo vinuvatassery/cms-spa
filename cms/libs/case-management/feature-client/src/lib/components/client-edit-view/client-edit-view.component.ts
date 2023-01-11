@@ -94,7 +94,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
   ageMinLimit=1;
-  ageMaxLimit=9999;
+  ageMaxLimit=9999999999;
 
 
   textboxDisable!:boolean;
