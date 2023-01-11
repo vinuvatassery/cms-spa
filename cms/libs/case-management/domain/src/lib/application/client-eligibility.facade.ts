@@ -21,7 +21,7 @@ export class ClientEligibilityFacade {
   /** Constructor**/
   constructor(
     private readonly clientEligibilityDataService: ClientEligibilityDataService,
-    private loggingService : LoggingService,
+    private readonly loggingService : LoggingService,
     private readonly loaderService: LoaderService ,
     private readonly notificationSnackbarService : NotificationSnackbarService
   ) {}
