@@ -1,4 +1,4 @@
 <ng-template #notificationAlertTemplate>
-  <span class="k-notification-title">{{ snackbarMessage.title }}</span>
-  <span class="k-notification-sub-title">{{ snackbarMessage.subtitle }}</span>
+  <span class="k-notification-title" aria-live="polite" role="status">{{ snackbarMessage.title }}</span>
+  <span class="k-notification-sub-title" ria-live="assertive">{{ snackbarMessage.subtitle }}</span>
 </ng-template>

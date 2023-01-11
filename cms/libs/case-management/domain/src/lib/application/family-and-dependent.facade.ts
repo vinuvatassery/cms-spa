@@ -241,9 +241,9 @@ export class FamilyAndDependentFacade {
                           
           key.dob = ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )
           
-          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)      
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)     
           
-          debugger
+          
           if(key?.clientDependentId === '00000000-0000-0000-0000-000000000000')   
           {
               key.memberType = ClientDependentGroupDesc.Clients            

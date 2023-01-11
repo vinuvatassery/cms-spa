@@ -400,6 +400,11 @@ export class CaseDataService {
       caseData
     );
   }
+  updateCaseStatus(caseData: any,clientCaseId:any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}`,caseData
+    );
+  }
 
   getSessionInfoByCaseId(clientCaseId:any){
   return this.http.get(

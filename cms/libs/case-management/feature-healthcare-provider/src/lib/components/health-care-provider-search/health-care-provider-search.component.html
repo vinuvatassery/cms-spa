@@ -16,7 +16,7 @@
             aria-label="search member"
             aria-hidden="true"
             >search</span >
-            <kendo-label text="Search Provider Name">
+            <kendo-label text="Provider who treats their HIV">
               <span *ngIf="providerSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
             <kendo-autocomplete
            
@@ -25,7 +25,7 @@
             [value]="selectedCustomProviderName"       
             autofocusfield 
             valueField ="selectedCustomProvider"                           
-            placeholder="Search Provider Name"               
+            placeholder="Provider who treats their HIV"               
             [filterable]="true"   
             (close)="searchCloseEvent();"
             [popupSettings]="{popupClass: 'healthcaresearch-list', animate: true, appendTo:'component' }"
@@ -39,6 +39,9 @@
            
           </kendo-autocomplete>  
           </kendo-label>
+          <kendo-formhint align="start">
+            Name of clinic, doctor, nurse practitioner, or other care provider
+          </kendo-formhint>
           <kendo-formerror *ngIf="(existHealthProvderForm?.hasError('required','providerId')) && isExistSubmitted">Provider
             is required</kendo-formerror>
       

@@ -137,7 +137,7 @@ export class NewCaseComponent implements OnInit  {
 
   onClientSelected(event: any) {
     if (event) {
-      if (event.caseStatus == CaseStatusCode.ACCEPT) {
+      if (event.caseStatus == CaseStatusCode.accept) {
         this.router.navigate([`/case-management/cases/case360/${event.clientId}`]);
       }
       else {
@@ -156,7 +156,7 @@ export class NewCaseComponent implements OnInit  {
           },
           error: (err: any) => {
             this.loaderService.hide();
-            this.caseFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err); 
+            this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
             this.loggingService.logException(err)
           }
         })
