@@ -8,7 +8,7 @@ import { groupBy, GroupResult } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
-import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, Subject, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
@@ -35,6 +35,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   @Output() addExistingClientEvent = new EventEmitter<any>(); 
 
   filterManager: Subject<string> = new Subject<string>();
+  searchResultSubject = new Subject<any>();
+  searchResult$ = this.searchResultSubject.asObservable();  
   currentDate = new Date();
   /** Public properties **/
   familyMemberForm!: FormGroup;
@@ -123,14 +125,17 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   private loadFamilyDependents() {   
   
-    this.dependentSearch$.subscribe({
+   this.dependentSearch$.subscribe({    
       next: (dependentSearch : any) => {
         this.dependentSearch = groupBy(dependentSearch, [
           { field: 'memberType' },
-        ]);
+        ]);  
+        this.searchResultSubject.next(this.dependentSearch)      
       }
+      
     });  
-
+    
+   
   }
 
   /** Internal event methods **/
@@ -177,7 +182,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
        dependentType : dataItem?.clientId > 0 ? DependentTypeCode.CAClient : DependentTypeCode.Dependent,
        clientDependentId :  dataItem?.clientDependentId      
      })    
- 
+    
   }
   onExitFamilyFormLoad()
   {    
@@ -300,9 +305,11 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
    onsearchTextChange(text : string)      
    {    
-      if(text.length > 3)
+      if(text.length > 0)
       {
+        this.dependentSearch= [];
         this.showDependentSearchInputLoader = true;
+        this.searchResultSubject.next(this.dependentSearch)      
       this.filterManager.next(text); 
       }
     } 
