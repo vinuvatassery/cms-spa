@@ -157,13 +157,14 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker  
-          aria-label="Date of Birth"  
+          aria-label="Date of Birth" 
+          placeholder="" 
           [fillMode]="formUiStyle.dateInputFillMode"
           [max]="currentDate"
           formControlName="dateOfBirth"
           format="MM-dd-yyyy"
           
-          ></kendo-datepicker>
+         ></kendo-datepicker>
           <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>

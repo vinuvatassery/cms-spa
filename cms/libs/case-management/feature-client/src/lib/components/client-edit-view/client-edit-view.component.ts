@@ -255,7 +255,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       officialIdFirstName:  ['',{disabled:false}],
       officialIdLastName:  ['',{disabled:false}],
       officialIdsNotApplicable:  [''],
-      dateOfBirth:  [this.currentDate],
+      dateOfBirth:  [''],
       ssn:  ['',{disabled:false}],
       ssnNotApplicable:  [''],
       registerToVote: [''],
@@ -309,8 +309,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.isVisible =false;
       if(this.appInfoForm !== undefined){
       this.appInfoForm.reset();    
-      this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
-      this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
+      //this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
+      //this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
       this.appInfoForm.controls['middleName'].enable();
       this.appInfoForm.controls["officialIdLastName"].enable();
       this.appInfoForm.controls["officialIdFirstName"].enable();
