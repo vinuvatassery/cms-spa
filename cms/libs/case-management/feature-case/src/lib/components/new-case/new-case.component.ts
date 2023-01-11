@@ -50,8 +50,8 @@ export class NewCaseComponent implements OnInit  {
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
-    public intl: IntlService,
-    private readonly caseFacade: CaseFacade,
+    public  intl: IntlService,
+    private caseFacade: CaseFacade,
     private loggingService: LoggingService,
     private router: Router
   ) {
