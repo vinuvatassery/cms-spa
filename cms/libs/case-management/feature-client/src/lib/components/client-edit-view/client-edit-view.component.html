@@ -4,7 +4,7 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Enter First Name" class="k-form">
-          <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus showErrorIcon="initial" 
+          <kendo-textbox aria-label="enter first name"  [tabindex]="0" (blur)="searchDuplicateClient()"  textFieldautofocus showErrorIcon="initial" 
             formControlName="firstName" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
@@ -35,7 +35,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name">
           <kendo-textbox aria-label="last name" showErrorIcon="initial" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="lastName" [maxlength]="lengthRestrictForty">
+            formControlName="lastName" (blur)="searchDuplicateClient()"  [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
           <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
@@ -126,7 +126,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
-            formControlName="dateOfBirth" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+            formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
             placeholder=""></kendo-datepicker>
 
         </kendo-floatinglabel>
@@ -140,12 +140,13 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Social Security Number">
           <kendo-textbox aria-label="social security number" showErrorIcon="initial"
-            [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
+            [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" (blur)="searchDuplicateClient()"  [maxlength]="maxLengthSsn"
             [value]="appInfoForm.controls['ssn'].value | ssn"> </kendo-textbox>
 
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social
-          security number is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
+        <kendo-formerror *ngIf=" !appInfoForm.controls['ssn'].valid && ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">This SSN matches another client. Please update before proceeding</kendo-formerror>
+		
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
