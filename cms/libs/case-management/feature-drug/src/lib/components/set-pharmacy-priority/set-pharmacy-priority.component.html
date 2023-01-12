@@ -16,11 +16,11 @@
 
       <kendo-floatinglabel text="Priority">
 
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="onChangePrirority($event,i)" [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"  
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="onChangePriority($event,i)" [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"  
         
             textField="lovDesc"
             valueField="lovCode" 
-            [data]="copyLoadPrioritites">
+            [data]="copyLoadPriorties">
         </kendo-dropdownlist>
  
       </kendo-floatinglabel>

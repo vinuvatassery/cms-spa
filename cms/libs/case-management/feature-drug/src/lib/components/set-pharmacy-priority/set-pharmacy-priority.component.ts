@@ -6,7 +6,7 @@ import {
   Output, Input,
   EventEmitter,
 } from '@angular/core';
-import {
+import { 
   FormGroup,
   FormControl
 } from '@angular/forms'
@@ -38,8 +38,8 @@ pharmcayPriority: PharmacyPriority={
   clientId: 0,
   priorityCode: '',
 };
- loadPrioritites:any[]=[];
- copyLoadPrioritites:any[]=[];
+ priorties:any[]=[];
+ copyLoadPriorties:any[]=[];
 
  savePrirorityObject = {
   clientPharmacyId: "",
@@ -78,7 +78,7 @@ savePrirorityObjectList:any[] =[];
     this.loadSessionData();
     this.loadclientpharmacies();
     this.lov.getPriorityLovs();
-    this.loadPriorities();
+    this.loadPriority();
     this.addSaveSubscription();
     this.pharmacyPriorityFormChanged();
   }
@@ -86,17 +86,17 @@ savePrirorityObjectList:any[] =[];
     this.loadSessionSubscription.unsubscribe();
   }
   /** Private methods **/
-  private loadPriorities() {
+  private loadPriority() {
     this.lov.pharmacyPrioritylov$.subscribe((priorityLov: Lov[]) => {
-      this.copyLoadPrioritites = priorityLov;
-      this.loadPrioritites = priorityLov;
+      this.copyLoadPriorties = priorityLov;
+      this.priorties = priorityLov;
     });
   }
  
 
-  public onChangePrirority(value: any,index:any): void {
+  public onChangePriority(value: any,index:any): void {
    this.savePrirorityObjectList[index].priorityCode = value;
-     this.copyLoadPrioritites=this.loadPrioritites.filter(m=>m.lovCode!=value);
+     this.copyLoadPriorties=this.priorties.filter(m=>m.lovCode!=value);
  
   }
   loadSessionData() {
@@ -108,7 +108,6 @@ savePrirorityObjectList:any[] =[];
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientId = JSON.parse(session.sessionData).clientId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-         // this.loadPharmacyPriority();
         }
       });
 
