@@ -3,7 +3,7 @@ import { ElementRef, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries **/
-import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError } from 'rxjs';
+import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map } from 'rxjs';
 
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof } from '@cms/case-management/domain';
@@ -177,7 +177,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private addContactInfoFormChangeSubscription() {
     this.contactInfoForm.valueChanges
       .pipe(
-        //debounceTime(300),
+        map(_ => this.contactInfoForm.getRawValue()),
         distinctUntilChanged(),
         startWith(null), pairwise()
       )
@@ -844,14 +844,25 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       const cellPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
       const workPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
       const otherPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+      if (mailingAddress) {
+        this.contactInfoForm.get('mailingAddress')?.patchValue(mailingAddress);
+        this.mailAddressEntered = {
+          address1:mailingAddress?.address1,
+          address2:mailingAddress?.address2,
+          city:mailingAddress?.city,
+          state:mailingAddress?.state,
+          zip5:mailingAddress?.zip
+        };
+      }
+
       if (homeAddress) {
-        this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);
         this.contactInfoForm.get('homeAddress.address1')?.patchValue(homeAddress?.address1);
         this.contactInfoForm.get('homeAddress.address2')?.patchValue(homeAddress?.address2);
         this.contactInfoForm.get('homeAddress.city')?.patchValue(homeAddress?.city);
         this.contactInfoForm.get('homeAddress.state')?.patchValue(homeAddress?.state);
         this.contactInfoForm.get('homeAddress.zip')?.patchValue(homeAddress?.zip);
         this.contactInfoForm.get('homeAddress.county')?.patchValue(homeAddress?.county);
+        this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);
         this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homelessFlag === StatusFlag.Yes);
         this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressProofFlag === StatusFlag.Yes);
         this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.patchValue(this.contactInfo?.clientCaseEligibility?.housingStabilityCode);
@@ -863,16 +874,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           zip5:homeAddress?.zip
         };
       }
-      if (mailingAddress) {
-        this.contactInfoForm.get('mailingAddress')?.patchValue(mailingAddress);
-        this.mailAddressEntered = {
-          address1:mailingAddress?.address1,
-          address2:mailingAddress?.address2,
-          city:mailingAddress?.city,
-          state:mailingAddress?.state,
-          zip5:mailingAddress?.zip
-        };
-      }
+
 
       if (homePhone) {
         this.contactInfoForm.get('homePhone.phoneNbr')?.patchValue(homePhone?.phoneNbr);
