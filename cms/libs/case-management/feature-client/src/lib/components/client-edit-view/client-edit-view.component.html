@@ -4,7 +4,7 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Enter First Name" class="k-form">
-          <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus showErrorIcon="initial" 
+          <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus  
             formControlName="firstName" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
@@ -14,7 +14,7 @@
       <!-- [disabled]="isMiddleNameChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Middle Initial (Optional)">
-          <kendo-textbox aria-label="middle initial" showErrorIcon="initial" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="middle initial"  [fillMode]="formUiStyle.inputFillMode"
             formControlName="middleName" [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
 
@@ -34,7 +34,7 @@
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name">
-          <kendo-textbox aria-label="last name" showErrorIcon="initial" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="last name"  [fillMode]="formUiStyle.inputFillMode"
             formControlName="lastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
@@ -139,7 +139,7 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Social Security Number">
-          <kendo-textbox aria-label="social security number" showErrorIcon="initial"
+          <kendo-textbox aria-label="social security number" 
             [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
             [value]="appInfoForm.controls['ssn'].value | ssn"> </kendo-textbox>
 

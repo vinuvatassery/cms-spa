@@ -175,6 +175,13 @@ export class CaseDetailPageComponent implements OnInit {
   cancelDeletion(){
     this.isShowDeleteConfirmPopup = false;
   }
+  cancelDiscard(){
+    this.isShowDiscardConfirmPopup = false;
+  }
+  discardChanges(){
+    this.isShowDiscardConfirmPopup = false;
+    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
+  }
   /** Private Methods */
   private loadQueryParams() {
     const workflowType: string = WorkflowTypeCode.NewCase;
