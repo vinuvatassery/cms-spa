@@ -178,7 +178,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   {    
    this.existFamilyMemberForm.patchValue(
      {
-       clientId: dataItem?.clientId  ,    
+       clientId: dataItem?.clientId ?? 0 ,    
        dependentType : dataItem?.clientId > 0 ? DependentTypeCode.CAClient : DependentTypeCode.Dependent,
        clientDependentId :  dataItem?.clientDependentId      
      })    
@@ -189,7 +189,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
    .subscribe((existDependentData: any) =>
    {  
-       if(existDependentData?.dependentClientId)
+    
+       if(existDependentData?.clientDependentId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
 
@@ -202,8 +203,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
          this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
              {     
-               clientId:  existDependentData?.dependentClientId,  
-               dependentClientId:  existDependentData?.dependentClientId,     
+               clientId:  existDependentData?.dependentClientId ?? 0,  
+               dependentClientId:  existDependentData?.dependentClientId ?? 0,     
                existRelationshipCode: existDependentData?.relationshipCode, 
                clientDependentId: existDependentData?.clientDependentId,
                dependentType: DependentTypeCode.CAClient,
@@ -219,6 +220,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   {
     this.isExistSubmitted =true;
     this.existFamilyMemberForm.markAllAsTouched();
+    
     if(this.existFamilyMemberForm.valid)
     {
       const existDepData =
