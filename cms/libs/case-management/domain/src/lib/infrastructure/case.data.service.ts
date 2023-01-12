@@ -408,6 +408,6 @@ export class CaseDataService {
 
   getSessionInfoByCaseId(clientCaseId:any){
   return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client/cases/${clientCaseId}/SessionSearch`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/SessionSearch`);
   }
 }
