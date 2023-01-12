@@ -1,1 +1,47 @@
-<p>duplicate-client-found works!</p>
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+        The following client profile matches the information that you entered in this application.
+    </p>
+    <p class="text-muted mb-2"> If these are different clients and the application information was entered incorrectly,
+        click "Not a duplicate."
+        If SSN matches, the field will have an error until it is changed.
+    </p>
+    <p class="text-muted mb-2">
+        If these are the same client, click "Duplicate Found." You will be navigated to the client's existing profile
+        and this application will be deleted.
+    </p>
+    <div class="duplicate-threecolumn-wrapper mt-3 mb-2">
+        <div class="duplicate-threecolumn-item">
+            <h5></h5>
+            <h5> THIS APPLICATION</h5>
+            <h5> POSSIBLE DUPLICATE</h5>
+        </div>
+        <div class="duplicate-threecolumn-item">
+            <p class="text-bold">Name </p>
+            <p>{{currentClientInfo.firstName}} {{currentClientInfo.lastName}}</p>
+            <p>{{matchingClientInfo.firstName}} {{matchingClientInfo.lastName}}</p>
+        </div>
+        <div class="duplicate-threecolumn-item">
+            <p class="text-bold">DOB </p>
+            <p>{{currentClientInfo.dob |date :'MM/dd/YYYY'}}</p>
+            <p>{{matchingClientInfo.dob |date :'MM/dd/YYYY'}}</p>
+        </div>
+        <div class="duplicate-threecolumn-item">
+            <p class="text-bold">SSN </p>
+            <p>{{ssn}}</p>
+            <p>{{ssn}}</p>
+        </div>
+    </div>
+</section>
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div class="justify-content-end">
+            <button (click)=" onNotaDuplicateClick()" aria-label="Not a Duplicate" kendoButton [primary]="true" look="outline">
+                Not a Duplicate
+            </button>
+            <button (click)="onDuplicateFoundClick()" aria-label="Duplicate Found" kendoButton [primary]="true">
+                Duplicate Found
+            </button>
+        </div>
+    </div>
+</kendo-dialog-actions>
