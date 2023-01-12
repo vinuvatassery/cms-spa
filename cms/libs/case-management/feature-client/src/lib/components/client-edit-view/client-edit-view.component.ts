@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
-import { groupBy } from '@progress/kendo-data-query';
+
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, isEmpty, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
 /** Facades **/
@@ -11,12 +11,9 @@ import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowF
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { kMaxLength } from 'buffer';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
-import { first } from '@progress/kendo-angular-editor/util';
-import { SsnPipe } from '@cms/shared/ui-common';
-import { IntlService } from '@progress/kendo-angular-intl';
 
+import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
  
 @Component({
   selector: 'case-management-client-edit-view',
@@ -132,12 +129,13 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
     private readonly elementRef: ElementRef,
-    private workflowFacade:WorkflowFacade,
-    private formBuilder:FormBuilder,
+    private readonly workflowFacade:WorkflowFacade,
+    private readonly formBuilder:FormBuilder,
     private readonly lovFacade : LovFacade,
-    public intl: IntlService,
-    private configurationProvider : ConfigurationProvider,
-    private loggingService : LoggingService,
+    public readonly intl: IntlDateService,
+    public readonly kendoDataQuery: DataQuery,
+    private readonly configurationProvider : ConfigurationProvider,
+    private readonly loggingService : LoggingService,
     private readonly loaderService: LoaderService,
     private readonly ref: ChangeDetectorRef,  ) { }
 
@@ -674,7 +672,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     this.clientfacade.loadDdlRacialIdentities();
     this.ddlRacialIdentities$.subscribe({
       next: (racialIdentities) => {
-        this.racialIdentityOptions = groupBy(racialIdentities, [
+        this.racialIdentityOptions = this.kendoDataQuery.groupBy(racialIdentities, [
           { field: 'racialGroup' },
         ]);
       },
