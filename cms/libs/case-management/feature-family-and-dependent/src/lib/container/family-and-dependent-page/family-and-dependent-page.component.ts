@@ -239,16 +239,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(this.checkValidations()){
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-        }
       }
     });
   }
-
-  checkValidations(){
-    // As no validation is there for the Family and dependent Checkbox,returning true to complete save for later process.
-    return true;
-  }
- 
 }

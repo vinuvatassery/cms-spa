@@ -52,7 +52,6 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   private saveClickSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
-  private sessionDataSubscription !: Subscription;
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private caseManagerFacade: CaseManagerFacade,
@@ -63,7 +62,6 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
-    this.loadSessionData();
     this.addSaveSubscription();
     this.loadCase()
     this.addSaveForLaterSubscription();
@@ -74,7 +72,6 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
-    this.sessionDataSubscription.unsubscribe();
   }
 
   /** Private Methods **/
@@ -257,16 +254,4 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   checkValidations(){
     return this.validate();
   }
-
-  private loadSessionData()
-  {  
-   this.sessionId = this.route.snapshot.queryParams['sid'];    
-   this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-    this.sessionDataSubscription=this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {      
-     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-     this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-     this.clientId = JSON.parse(session.sessionData).clientId   
-    });        
-  } 
 }

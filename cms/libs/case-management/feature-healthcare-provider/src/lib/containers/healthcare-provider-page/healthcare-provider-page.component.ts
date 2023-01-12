@@ -213,16 +213,9 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(this.checkValidations()){
           this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
-        }
       }
     });
-  }
-
-  checkValidations(){
-    // As no validation is there for the Health Care Provider Checkbox,returning true to complete save for later process.
-    return true;
   }
 
 }
