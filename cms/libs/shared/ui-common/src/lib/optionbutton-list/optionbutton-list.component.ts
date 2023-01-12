@@ -25,6 +25,7 @@ export class OptionbuttonListComponent implements OnInit {
   @Input() textFieldFloatingText:any;
   @Input() textPlaceholderText:any;
   @Input() textValidationMessage:any;
+  @Input() textFieldMinLimit:any;
   @Input() textFieldMaxLimit:any;
   @Input() rdoInputlov :any;
   @Input() dropdownInutLov :any;

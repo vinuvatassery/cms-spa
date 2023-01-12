@@ -243,7 +243,7 @@
           [dropdownInutLov]="materialsyeslov$" [textFieldDisable]="yesMaterialDisable"
           [OptionControlerName]="'materialInAlternateFormatCode'" [textControlerName]="'materialInAlternateFormatDesc'"
           [textFieldType]="'dropDown'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Select formats'"
-          [textValidationMessage]="'Material is required.'">
+          [textValidationMessage]="'An Alternate Format is Required.'">
         </common-optionbutton-list>
       </div>
     </fieldset>
@@ -296,7 +296,7 @@
       <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="interpreterTypeInputDisable" [OptionControlerName]="'interpreterCode'"
         [textControlerName]="'interpreterType'" [textFieldType]="'textField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Type of interpreter'" [textValidationMessage]="'Type is required.'"
+        [textPlaceholderText]="'Type of interpreter'" [textValidationMessage]="'Type of interpreter is required.'"
         [textFieldMaxLimit]="50">
       </common-optionbutton-list>
     </fieldset>
@@ -312,8 +312,8 @@
       <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="startAgeDeafOrHearingInputDisable" [OptionControlerName]="'deafOrHearingCode'"
         [textControlerName]="'startAgeDeafOrHearing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -328,8 +328,8 @@
       <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="startAgeBlindSeeingInputDisable" [OptionControlerName]="'blindSeeingCode'"
         [textControlerName]="'startAgeBlindSeeing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -359,7 +359,7 @@
         [OptionControlerName]="'walkingClimbingDifficultyCode'"
         [textControlerName]="'startAgeWalkingClimbingDifficulty'" [textFieldType]="'numericField'"
         [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'" [textFieldMaxLimit]="9999">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -376,7 +376,7 @@
         [OptionControlerName]="'dressingBathingDifficultyCode'"
         [textControlerName]="'startAgeDressingBathingDifficulty'" [textFieldType]="'numericField'"
         [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'" [textFieldMaxLimit]="9999">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -394,7 +394,7 @@
         [textFieldDisable]="startAgeConcentratingDifficultyInputDisable"
         [OptionControlerName]="'concentratingDifficultyCode'" [textControlerName]="'startAgeConcentratingDifficulty'"
         [textFieldType]="'numericField'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'" [textFieldMaxLimit]="9999">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -411,8 +411,8 @@
       <common-optionbutton-list   [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="startAgeErrandsDifficultyInputDisable" [OptionControlerName]="'errandsDifficultyCode'"
         [textControlerName]="'startAgeErrandsDifficulty'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>

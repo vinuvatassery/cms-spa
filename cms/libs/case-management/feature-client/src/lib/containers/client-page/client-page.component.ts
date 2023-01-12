@@ -401,7 +401,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = null;
         }
-
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode = this.appInfoForm.controls["blindSeeingCode"].value
         if(this.appInfoForm.controls["blindSeeingCode"].value !== null && 
         this.appInfoForm.controls["blindSeeingCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
