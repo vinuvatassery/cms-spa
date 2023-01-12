@@ -610,10 +610,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].updateValueAndValidity();
     }
     if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y') {
-      this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].setValidators([
-        Validators.required,
-      ]);
-      this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
+      if (this.healthInsuranceForm.value.othersCoveredOnPlan.length == 0) {
+        this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
+      }
     }
     if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'N' || this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y') {
       this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
@@ -757,14 +759,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsurancePolicy.othersCoveredOnPlan.push(...this.healthInsuranceForm.value.newOthersCoveredOnPlan);
       }
       this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;
-      if (this.healthInsurancePolicy.isClientPolicyHolderFlag == 'N') {
-        this.healthInsurancePolicy.policyHolderFirstName = this.healthInsuranceForm.value.policyHolderFirstName;
-        this.healthInsurancePolicy.policyHolderLastName = this.healthInsuranceForm.value.policyHolderLastName;
-      }
-      else {
-        this.healthInsurancePolicy.policyHolderFirstName = "";
-        this.healthInsurancePolicy.policyHolderLastName = "";
-      }
+      this.healthInsurancePolicy.policyHolderFirstName = this.healthInsuranceForm.value.policyHolderFirstName;
+      this.healthInsurancePolicy.policyHolderLastName = this.healthInsuranceForm.value.policyHolderLastName;
+
       if (this.copyOfInsuranceCardFiles?.length > 0 && this.copyOfInsuranceCardFiles[0].uid == "") {
         this.healthInsurancePolicy.copyOfInsuranceCardFile = this.copyOfInsuranceCardFiles[0].document.rawFile;
         this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles[0].name;
