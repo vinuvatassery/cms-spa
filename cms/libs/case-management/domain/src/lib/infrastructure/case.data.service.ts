@@ -131,7 +131,7 @@ export class CaseDataService {
   loadCaseBySearchText(text : string) {     
       return this.http.get<ClientCase[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/client/SearchText=${text}`
+        `/case-management/clients/SearchText=${text}`
       );   
   
   }
