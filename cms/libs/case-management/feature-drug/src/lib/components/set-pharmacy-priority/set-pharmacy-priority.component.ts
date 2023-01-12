@@ -65,11 +65,11 @@ savePrirorityObjectList:any[] =[];
   /** Constructor **/
   constructor(
      private readonly drugPharmacyFacade: DrugPharmacyFacade,
-    private route: ActivatedRoute,
-    private loaderService: LoaderService,
-    private workflowFacade: WorkflowFacade,
-    private lov: LovFacade,
-     private loggingService:LoggingService) {
+    private readonly route: ActivatedRoute,
+    private readonly loaderService: LoaderService,
+    private readonly workflowFacade: WorkflowFacade,
+    private  readonly lov: LovFacade,
+     private readonly loggingService:LoggingService) {
     
     }
 
@@ -192,7 +192,7 @@ savePrirorityObjectList:any[] =[];
         this.onCloseChangePriorityClicked();
       }
     },(error:any) =>{
-      this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error?.error?.error});
+      this.drugPharmacyFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error)
     });
 
   }
