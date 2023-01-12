@@ -47,7 +47,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
-    private router :Router
+    private readonly router :Router
     ) { }
 
   /** Lifecycle Hooks **/

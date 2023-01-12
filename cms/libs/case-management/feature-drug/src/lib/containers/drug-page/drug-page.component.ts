@@ -67,6 +67,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
  
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
+    
     private route: ActivatedRoute,
     private readonly incomeFacade: IncomeFacade,
     private drugPharmacyFacade: DrugPharmacyFacade,
@@ -74,8 +75,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly elementRef: ElementRef,
-    private prescriptionDrugFacade :PrescriptionDrugFacade,
- 	  private router :Router) { }
+    private readonly prescriptionDrugFacade :PrescriptionDrugFacade,
+ 	  private readonly router :Router) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {

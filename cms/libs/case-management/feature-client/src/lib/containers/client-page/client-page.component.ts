@@ -50,10 +50,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   constructor(private workFlowFacade: WorkflowFacade,
               private clientFacade: ClientFacade, 
               private route: ActivatedRoute,
-              private readonly caseFacade: CaseFacade,
+              private caseFacade: CaseFacade,
               private loaderService: LoaderService,
               private loggingService:LoggingService,
-              private readonly notificationSnackbarService : NotificationSnackbarService,
+              private notificationSnackbarService : NotificationSnackbarService,
               private router:Router
               ) { }
 

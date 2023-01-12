@@ -63,7 +63,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private readonly elementRef: ElementRef,
     private readonly loaderService: LoaderService,
-	private router: Router) { }
+	  private readonly router: Router) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

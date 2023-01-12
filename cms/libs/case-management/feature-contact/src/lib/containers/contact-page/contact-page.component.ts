@@ -75,9 +75,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly clientDocumentFacade: ClientDocumentFacade,
-    private router :Router
+    private readonly router :Router
   ) { }
 
   /** Lifecycle hooks **/

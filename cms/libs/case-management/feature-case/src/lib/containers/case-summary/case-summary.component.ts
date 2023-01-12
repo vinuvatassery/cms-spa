@@ -53,7 +53,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     private readonly workFlowFacade : WorkflowFacade,
     private readonly loginUserFacade : UserManagementFacade,
     private readonly lovFacade : LovFacade ,
-    private loaderService: LoaderService
+    private readonly loaderService: LoaderService
   ) {}
 
   /** Lifecycle hooks **/

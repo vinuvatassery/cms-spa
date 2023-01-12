@@ -43,8 +43,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
     private readonly healthProvider:HealthcareProviderFacade,
     private readonly route: ActivatedRoute,
     private readonly workFlowFacade: WorkflowFacade,
-	private loaderService: LoaderService,
-    private router :Router) { }
+	  private readonly loaderService: LoaderService,
+    private readonly router :Router) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {  
