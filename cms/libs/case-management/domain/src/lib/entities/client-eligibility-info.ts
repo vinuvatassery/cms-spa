@@ -5,7 +5,7 @@ export class ClientEligibilityInfo{
   officialIdFullName :string = '';
   status :string = '';
   group :string = '';
-  eilgibilityStartDate :string = '';
+  eligibilityStartDate :string = '';
   eligibilityEndDate :string = '';
   caseManagerName :string = '';
   caseManagerId : string='';

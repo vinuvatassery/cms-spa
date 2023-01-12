@@ -12,14 +12,14 @@ export class EligibilityChecklistAnswerDataService {
     ,private configurationProvider: ConfigurationProvider) {}
 
   getEligibilityChecklistAnswers(clientCaseEligibilityId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/eligibility/${clientCaseEligibilityId}/checklist-answers`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/eligibility/${clientCaseEligibilityId}/checklist`);
   }
 
   saveEligibilityChecklistAnswer(eligibilityChecklistAnswerData: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/eligibility/checklist-answers`, eligibilityChecklistAnswerData);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/eligibility/checklist`, eligibilityChecklistAnswerData);
   }
 
   updateEligibilityChecklistAnswer(eligibilityChecklistAnswerData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/eligibility/checklist-answers`, eligibilityChecklistAnswerData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/eligibility/checklist`, eligibilityChecklistAnswerData);
   }
 }
