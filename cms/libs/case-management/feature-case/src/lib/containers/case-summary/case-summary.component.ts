@@ -107,7 +107,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
         ),       
       ).subscribe(([navigationType, isSaved]) => {
         if (isSaved == true) {
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
           this.workFlowFacade.navigate(navigationType);
         }
       });
@@ -122,7 +122,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
        .pipe
        (
         catchError((err: any) => {      
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) 
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err) 
           
           return of(false)  
         })

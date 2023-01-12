@@ -56,7 +56,7 @@ export class WorkflowFacade {
     private readonly configurationProvider : ConfigurationProvider ) { }
 
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -114,11 +114,11 @@ export class WorkflowFacade {
               },
             });
           }
-          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')
           this.hideLoader();
         },
         error: (err: any) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
 
       });
@@ -145,7 +145,7 @@ export class WorkflowFacade {
           this.hideLoader();
         },
         error: (err: any) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       })
   }
@@ -397,6 +397,7 @@ export class WorkflowFacade {
       error: (err) => {
         this.hideLoader();
         this.loggingService.logException(err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }

@@ -110,7 +110,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
       ),  
     ).subscribe(([navigationType, isSaved ]) => {         
       if (isSaved == true) {    
-        this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
         this.checkBoxSubscription.unsubscribe();      
         this.workFlowFacade.navigate(navigationType);
         this.healthProvider.HideLoader(); 
@@ -127,7 +127,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
       (
        catchError((err: any) => { 
         this.healthProvider.HideLoader();                     
-         this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
          return  of(false);
        })  
       )  
@@ -144,7 +144,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
       (this.clientCaseEligibilityId,this.providersStatus).subscribe((isSaved) => {  
         this.healthProvider.HideLoader();       
         if (isSaved == true) {    
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
           if(this.isProvidersGridDisplay === true)
             {
               this.updateWorkFlowStatus();
