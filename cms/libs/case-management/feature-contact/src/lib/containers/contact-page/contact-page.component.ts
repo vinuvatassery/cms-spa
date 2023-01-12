@@ -12,7 +12,7 @@ import { StatusFlag } from '@cms/case-management/domain';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -63,7 +63,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   private saveClickSubscription !: Subscription;
   private currentSessionSubscription !: Subscription;
   private isNoMailAddressValidationRequired = true;
-
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   constructor(
     private readonly contactFacade: ContactFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
@@ -74,8 +75,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly clientDocumentFacade: ClientDocumentFacade,
+    private readonly router :Router
   ) { }
 
   /** Lifecycle hooks **/
@@ -91,6 +93,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.currentSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -116,6 +120,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.noFriendsOrFamilyChangeSubscription();
     this.homeAddressProofFlagChangeSubscription();
     this.contactRelationshipChangeSubscription();
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   private loadCurrentSession() {
@@ -1362,4 +1368,38 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   get mailingAddress() {
     return (this.contactInfoForm.get('mailingAddress') as FormGroup).controls as any;
   }
-}
+
+private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.workflowFacade.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations(){
+    this.contactInfoForm.markAllAsTouched();
+    const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined)
+    if(isAddressProofRequired){
+      this.showAddressProofRequiredValidation = true;
+    }
+    if(this.contactInfoForm.valid && !this.showAddressProofRequiredValidation){
+      return true;
+    }
+    return false;
+  }}
