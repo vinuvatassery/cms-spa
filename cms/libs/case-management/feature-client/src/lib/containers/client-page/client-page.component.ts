@@ -11,7 +11,7 @@ import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType,PronounCode } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
 
 
@@ -27,6 +27,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!:Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
 
    /** Public properties **/
   isValid:boolean=true;
@@ -48,10 +50,11 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   constructor(private workFlowFacade: WorkflowFacade,
               private clientFacade: ClientFacade, 
               private route: ActivatedRoute,
-              private readonly caseFacade: CaseFacade,
+              private caseFacade: CaseFacade,
               private loaderService: LoaderService,
               private loggingService:LoggingService,
-              private readonly notificationSnackbarService : NotificationSnackbarService
+              private notificationSnackbarService : NotificationSnackbarService,
+              private router:Router
               ) { }
 
 
@@ -59,11 +62,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadSessionData();
     this.addSaveSubscription();
-    
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   /** Private methods **/
@@ -395,7 +401,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = null;
         }
-
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode = this.appInfoForm.controls["blindSeeingCode"].value
         if(this.appInfoForm.controls["blindSeeingCode"].value !== null && 
         this.appInfoForm.controls["blindSeeingCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
@@ -626,9 +631,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls["ssn"].removeValidators(Validators.required);;
               this.appInfoForm.controls["ssn"].updateValueAndValidity();      
         }
-        else{
-              this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
-              this.appInfoForm.controls["ssn"].updateValueAndValidity();    
+        else {
+          let hasError = this.appInfoForm.controls["ssn"].errors;
+          this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
+          this.appInfoForm.controls["ssn"].updateValueAndValidity();
+          if (hasError) {
+            this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+          }
         }
         if(this.appInfoForm.controls["registerToVote"].value == null ||
                this.appInfoForm.controls["registerToVote"].value ==''){
@@ -833,4 +842,33 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   setApplicantName(name:any){
     this.applicantName =name;
   }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.saveAndUpdate()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations(){
+    this.validateForm();
+    return this.appInfoForm.valid;
+  }
+
 }

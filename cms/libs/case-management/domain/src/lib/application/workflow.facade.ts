@@ -32,6 +32,9 @@ export class WorkflowFacade {
   private sessionSubject = new BehaviorSubject<any>([]);
   private sessionDataSubject = new Subject<any>();
   private workflowReadySubject = new Subject<boolean>();
+  private saveForLaterClickedSubject = new Subject<boolean>();
+  private saveForLaterValidationSubject = new Subject<boolean>();
+  private saveForLaterConfirmationSubject = new Subject<boolean>();
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
@@ -41,6 +44,9 @@ export class WorkflowFacade {
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
   workflowReady$ = this.workflowReadySubject.asObservable();
 
+  saveForLaterClicked$ = this.saveForLaterClickedSubject.asObservable();
+  saveForLaterValidationClicked$ = this.saveForLaterValidationSubject.asObservable();
+  saveForLaterConfirmationClicked$ = this.saveForLaterConfirmationSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
   clientCaseEligibilityId: string | undefined; 
@@ -83,6 +89,18 @@ export class WorkflowFacade {
   /** Public methods **/
   save(navigationType: NavigationType) {
     this.saveAndContinueClickedSubject.next(navigationType);
+  }
+
+  saveForLater(data: boolean) {
+    this.saveForLaterClickedSubject.next(data);
+  }
+
+  saveForLaterValidations(validation: boolean) {
+    this.saveForLaterValidationSubject.next(validation);
+  }
+
+  showSaveForLaterConfirmationPopup(showHide: boolean) {
+    this.saveForLaterConfirmationSubject.next(showHide);
   }
 
   navigate(navigationType: NavigationType) {
@@ -404,4 +422,6 @@ export class WorkflowFacade {
       },
     });
   }
+
+  
 } 

@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoggingService } from '@cms/shared/util-core';
+import { NotificationSnackbarService,SnackBarNotificationType,LoggingService  } from '@cms/shared/util-core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -14,8 +14,8 @@ export class LovFacade {
 
   constructor(
     private readonly lovDataService: LovDataService,
-    private loggingService : LoggingService
-
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService
   ) { }
 
   /** Private properties **/
@@ -43,6 +43,7 @@ export class LovFacade {
   private lovMetalLevelSubject = new BehaviorSubject<Lov[]>([]);
   private lovPremiumFrequencySubject = new BehaviorSubject<Lov[]>([]);
   private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -68,9 +69,18 @@ export class LovFacade {
   metalLevellov$ = this.lovMetalLevelSubject.asObservable();
   premiumFrequencylov$ = this.lovPremiumFrequencySubject.asObservable();
   medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
+  caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
 
 
         /** Public methods **/
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+
+  }
 
  getLovsbyParent(lovType : string,parentCode : string): void {
   this.lovDataService.getLovsbyParent(lovType, parentCode).subscribe({
@@ -304,6 +314,19 @@ getMedicareCoverageTypeLovs(): void {
       console.error('err', err);
     },
   });
+}
+
+getCaseStatusLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.CaseStatusCode).subscribe({
+    next: (lovCaseStatusResponse) => {
+      this.lovCaseStatusTypeSubject.next(lovCaseStatusResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+
 }
 }
 

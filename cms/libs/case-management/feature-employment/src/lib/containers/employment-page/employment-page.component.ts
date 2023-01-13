@@ -7,7 +7,7 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 
 import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType, StatusFlag } from '@cms/case-management/domain';
-import {  SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-employment-page',
   templateUrl: './employment-page.component.html',
@@ -32,14 +32,16 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   private saveClickSubscription!: Subscription;
   private checkBoxSubscription!: Subscription;
   private employeeSubscription$ = this.employmentFacade.employers$;
-
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   /** Constructor */
   constructor(
     private employmentFacade: EmploymentFacade,
     private completionStatusFacade: CompletionStatusFacade,
     private workflowFacade: WorkflowFacade,
     private readonly router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loaderService: LoaderService,
     
   ) {}
 
@@ -49,10 +51,14 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     this.loadCase();
     this.addSaveSubscription();
     this.employerSubscription();
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
   // loading case details like session id, eligibility id , clientid and clientcaseid
   loadCase() {
@@ -151,5 +157,26 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     if(this.isEmployedGridDisplay === true){
       this.employmentFacade.updateWorkFlowCount(StatusFlag.Yes);
     }
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+      }
+    });
   }
 }

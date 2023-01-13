@@ -11,7 +11,7 @@ import { FormGroup, FormControl, } from '@angular/forms';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-drug-page',
@@ -62,10 +62,12 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   hasNoIncome = false;
   isNodateSignatureNoted = false;
   private loadSessionSubscription!: Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
  
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
-   
+    
     private route: ActivatedRoute,
     private readonly incomeFacade: IncomeFacade,
     private drugPharmacyFacade: DrugPharmacyFacade,
@@ -73,7 +75,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly elementRef: ElementRef,
-    private prescriptionDrugFacade :PrescriptionDrugFacade) { }
+    private readonly prescriptionDrugFacade :PrescriptionDrugFacade,
+ 	  private readonly router :Router) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -82,12 +85,16 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.addSaveSubscription();
     this.loadClientPharmacies();
     this.priscriptionDrugFormChanged();
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
     
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -295,5 +302,31 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.drugPharmacyFacade.removeClientPharmacy(this.workflowFacade.clientId ?? 0, clientPharmacyId);
   }
 
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations(){
+    return this.prescriptionDrugForm.valid;
+  }
 }
 
