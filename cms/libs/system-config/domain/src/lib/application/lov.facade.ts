@@ -339,7 +339,6 @@ getGroupLovs(): void {
       this.lovGroupSubject.next(lovResponse);
     },
     error: (err) => {
-      console.error('err', err);
     },
   });
 }
