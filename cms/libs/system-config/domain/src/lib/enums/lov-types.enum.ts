@@ -3,6 +3,7 @@ export enum LovType {
     Pronoun ='PRONOUNS',
     Material='MATERIAL_IN_ALTERNATE_FORMAT',
     MaterialYes='MATERIAL_IN_ALTERNATE_FORMAT_YES',
+    PharmacyPriority='PHARMACY_PRIORITY',
     Gender ='Gender',
     Transgender ='Transgender',
     SexAtBirth ='SEX_AT_BIRTH',
