@@ -145,7 +145,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
       )
   }
 
-  private employerSubscription(){
+  private employerSubscription(){  
     this.employeeSubscription$.subscribe((emp:any) => {   
           this.employmentFacade.updateWorkFlowCount(emp?.total <= 0 && !this.isEmployedGridDisplay ? StatusFlag.No: StatusFlag.Yes);
     });

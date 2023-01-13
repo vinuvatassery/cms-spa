@@ -164,6 +164,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       initialAdjustment.push(data);
     });
 
+    // if(this.contactInfo?.homeAddressProof?.documentName){
+    //   this.updateHomeAddressProofCount(!this.isEdit);
+    // }
+
     if (initialAdjustment.length > 0) {
       this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
     }
@@ -243,8 +247,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       })
     });
 
+    const addressProof: CompletionChecklist = {
+      dataPointName: 'homeAddress_proof',
+      status: this.contactInfo?.homeAddressProof?.documentName ? StatusFlag.Yes : StatusFlag.No
+    };
+    completedDataPoints.push(addressProof);
+
     if (completedDataPoints.length > 0) {
-      this.workflowFacade.updateChecklist(completedDataPoints, updateOnWorkflow);
+      this.workflowFacade.updateChecklist(completedDataPoints, true);
     }
     this.allowWorkflowCountUpdate = true;
   }
@@ -287,10 +297,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       if (!this.preferredContactMethods?.includes(selectPreferredCode)) {
         this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
       }
+      this.updatePreferredContactCount(true);
     }
     else {
       this.contactInfoForm?.get('email.preferredContactMethod')?.removeValidators(Validators.required);
       this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
+      this.updatePreferredContactCount(false);
     }
   }
 
@@ -955,11 +967,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
     else{
       this.homeAddressProofFile=[];
-    }
-
-      if(this.contactInfo?.homeAddressProof?.documentName){
-        this.updateHomeAddressProofCount(true);
-      }
+    }    
 
       this.loaderService.hide();
       this.isNoMailAddressValidationRequired = false;
@@ -1040,7 +1048,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.isNoProofOfHomeChecked = isChecked;
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
-    }
+    }    
+    this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);    
   }
 
   private setVisibilityByHomePhoneNotApplicable(isChecked: boolean) {
@@ -1257,6 +1266,15 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }];
 
     this.workflowFacade.updateChecklist(workFlowData);
+  }
+
+  private updatePreferredContactCount(isCompleted: boolean) {
+    const data: CompletionChecklist[] = [{
+      dataPointName: 'preferredContactMethod_applicableFlag',  
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist(data);
   }
 
   private closeValidationPopup(type: string) {
