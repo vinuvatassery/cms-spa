@@ -64,14 +64,17 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
           <!-- <input kendoTextBox /> -->
-          <kendo-textbox aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+          <kendo-textbox [disabled]="true" [(ngModel)]="clientCaseStatusData.assignedCwUserName" aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Case Status">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCommonActions$ | async">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="caseStatuses" textField="lovDesc"
+          valueField="lovCode" [valuePrimitive]="true" [(ngModel)]="currentStatusCode">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="currentStatusCode==''&& isSubmitted"> Income type is required
+        </kendo-formerror>
       </div>
       <div class="flex-col mb-2">
         <h5>Do you need to send the client a letter?</h5>
@@ -95,7 +98,7 @@
           aria-label="cancel new case">
           Cancel
         </button>
-        <button kendoButton [primary]="true" (click)="onSendNewLetterClicked()" aria-label="save and exit new case">
+        <button kendoButton [primary]="true" (click)="onUpdateCaseStatusClicked()" aria-label="save and exit new case">
           Save & Exit
         </button>
       </div>

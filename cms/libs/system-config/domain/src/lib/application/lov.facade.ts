@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoggingService } from '@cms/shared/util-core';
+import { NotificationSnackbarService,SnackBarNotificationType,LoggingService  } from '@cms/shared/util-core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -16,8 +16,8 @@ export class LovFacade {
 
   constructor(
     private readonly lovDataService: LovDataService,
-    private loggingService : LoggingService
-
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService
   ) { }
 
   /** Private properties **/
@@ -47,6 +47,7 @@ export class LovFacade {
   private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovCaseStatusSubject = new BehaviorSubject<Lov[]>([]);
   private lovGroupSubject = new BehaviorSubject<Lov[]>([]);
+  private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -74,9 +75,18 @@ export class LovFacade {
   medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
   caseStatusLov$ = this.lovCaseStatusSubject.asObservable();
   groupLov$ = this.lovGroupSubject.asObservable();
+  caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
 
 
         /** Public methods **/
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+
+  }
 
  getLovsbyParent(lovType : string,parentCode : string): void {
   this.lovDataService.getLovsbyParent(lovType, parentCode).subscribe({
