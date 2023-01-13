@@ -942,15 +942,15 @@ private updateWorkflowPronounCount(isCompleted:boolean){
           this.matchingClient = response;
           if (this.applicantInfo.client != undefined) {
             if (response.clientId != this.applicantInfo.client.clientId) {
-              this.showDuplicatePopup = true
+              this.showDuplicatePopup = true;
+              if (response.ssn == data.ssn) {
+                this.ssnDuplicateFound = true;
+                this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+              }
             }
           }
           else {
             this.showDuplicatePopup = true
-          }
-          if (response.ssn == data.ssn) {
-            this.ssnDuplicateFound = true;
-            this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
           }
           this.ref.detectChanges();
         }

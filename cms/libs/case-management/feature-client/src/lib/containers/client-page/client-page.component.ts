@@ -102,12 +102,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
-   this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$ .pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {     
+   this.loadSessionSubscription = this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+    .subscribe((session: any) => {  
       this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
       if(session !== null && session !== undefined && session.sessionData !==undefined){
       this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId 
-      this.clientId = JSON.parse(session.sessionData).clientId; 
+      let clientParsedId=JSON.parse(session.sessionData).clientId
+      if(clientParsedId!=null){
+        this.clientId=clientParsedId;
+      }
       this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
       if(this.clientCaseId !== undefined && this.clientCaseId  !==null){
         this.applicantInfo.clientCaseId = this.clientCaseId   
