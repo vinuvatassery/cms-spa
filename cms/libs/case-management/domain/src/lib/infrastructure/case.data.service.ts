@@ -366,7 +366,7 @@ export class CaseDataService {
     loadCasesById(clientCaseId : string) {
       return this.http.get<ClientCase[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/client-case/${clientCaseId}`
+        `/case-management/clients/cases/${clientCaseId}`
       );
     }
   
@@ -402,11 +402,16 @@ export class CaseDataService {
   }
   updateCaseStatus(caseData: any,clientCaseId:any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}`,caseData
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/status`,caseData
     );
   }
-
-  getSessionInfoByCaseId(clientCaseId:any){
+  loadCasesStatusById(clientCaseId : string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/clients/cases/${clientCaseId}/status`
+    );
+  }
+	getSessionInfoByCaseId(clientCaseId:any){
   return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/SessionSearch`);
   }

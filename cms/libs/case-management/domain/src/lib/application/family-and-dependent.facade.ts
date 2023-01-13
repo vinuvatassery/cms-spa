@@ -25,11 +25,9 @@ import { IntlService } from '@progress/kendo-angular-intl';
 export class FamilyAndDependentFacade {
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'fullName'
-  public sortType = 'asc'
-
+  public sortType = '' 
   public sort: SortDescriptor[] = [{
-    field: this.sortValue,
-    dir: 'asc' 
+    field: this.sortValue, 
   }];
   
 

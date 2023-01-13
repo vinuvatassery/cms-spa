@@ -1,8 +1,9 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
-import { groupBy } from '@progress/kendo-data-query';
+
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, isEmpty, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
 /** Facades **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
@@ -10,12 +11,9 @@ import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowF
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { kMaxLength } from 'buffer';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
-import { first } from '@progress/kendo-angular-editor/util';
-import { SsnPipe } from '@cms/shared/ui-common';
 
-
+import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
  
 @Component({
   selector: 'case-management-client-edit-view',
@@ -93,6 +91,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
   checkBoxValid!:boolean;
+  ageMinLimit=1;
+  ageMaxLimit=9999999999;
 
 
   textboxDisable!:boolean;
@@ -122,11 +122,24 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   raceAndEthnicityPrimaryData: Array<any> = [];
   raceAndEthnicityPrimaryNotListed: boolean = false;
   applicantInfoSubscription !:Subscription;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
+  ssnDuplicateFound: boolean = false;
+  showDuplicatePopup:boolean=false;
+  currentClient:any={};
+  matchingClient:any={};
  
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
-    private readonly elementRef: ElementRef,private workflowFacade:WorkflowFacade,
-    private formBuilder:FormBuilder,private readonly lovFacade : LovFacade) { }
+    private readonly elementRef: ElementRef,
+    private readonly workflowFacade:WorkflowFacade,
+    private readonly formBuilder:FormBuilder,
+    private readonly lovFacade : LovFacade,
+    public readonly intl: IntlDateService,
+    public readonly kendoDataQuery: DataQuery,
+    private readonly configurationProvider : ConfigurationProvider,
+    private readonly loggingService : LoggingService,
+    private readonly loaderService: LoaderService,
+    private readonly ref: ChangeDetectorRef,  ) { }
 
   /** Lifecycle hooks **/
   
@@ -661,7 +674,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     this.clientfacade.loadDdlRacialIdentities();
     this.ddlRacialIdentities$.subscribe({
       next: (racialIdentities) => {
-        this.racialIdentityOptions = groupBy(racialIdentities, [
+        this.racialIdentityOptions = this.kendoDataQuery.groupBy(racialIdentities, [
           { field: 'racialGroup' },
         ]);
       },
@@ -863,5 +876,59 @@ private updateWorkflowPronounCount(isCompleted:boolean){
   onTareaRaceAndEthinicityChanged(event: any): void {
     this.tareaRaceAndEthinicityCharachtersCount = event.length;
     this.tareaRaceAndEthinicityCounter = `${this.tareaRaceAndEthinicityCharachtersCount}/${this.tareaRaceAndEthinicityMaxLength}`;
+  }
+
+  searchDuplicateClient() {
+    this.ssnDuplicateFound = false;
+    this.appInfoForm.controls['ssn'].setErrors(null);
+    this.appInfoForm.controls['ssn'].updateValueAndValidity();
+    let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
+    let lastName = this.appInfoForm.controls['lastName'].value != null ? this.appInfoForm.controls['lastName'].value : '';
+    let dateOfBirth = this.appInfoForm.controls['dateOfBirth'].value;
+    let clientSsn = this.appInfoForm.controls['ssn'].value != null ? this.appInfoForm.controls['ssn'].value : '';;
+    let ssnNotApplicable = this.appInfoForm.controls['ssnNotApplicable'].value;
+    if (ssnNotApplicable) {
+      clientSsn = '';
+    }
+    let parsedDate = new Date(this.intl.formatDate(dateOfBirth, this.dateFormat))
+    let data = {
+      firstName: firstName,
+      lastName: lastName,
+      dob: parsedDate,
+      ssn: clientSsn
+    };
+    this.loaderService.show();
+    this.clientfacade.searchDuplicateClient(data).subscribe({
+      next: (response: any) => {
+        if (response != null) {
+          this.currentClient = data;
+          this.currentClient["clientCaseId"] = this.applicantInfo.clientCaseId;
+          this.matchingClient = response;
+          if (this.applicantInfo.client != undefined) {
+            if (response.clientId != this.applicantInfo.client.clientId) {
+              this.showDuplicatePopup = true;
+              if (response.ssn == data.ssn) {
+                this.ssnDuplicateFound = true;
+                this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+              }
+            }
+          }
+          else {
+            this.showDuplicatePopup = true
+          }
+          this.ref.detectChanges();
+        }
+        this.loaderService.hide();
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+        this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      }
+    })
+  }
+
+  onDuplicatPopupCloseClick() {
+    this.showDuplicatePopup = false;
   }
 }

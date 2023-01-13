@@ -24,7 +24,7 @@ import {
 import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import {UIFormStyle} from './kendo-uiform-style-config';
-import {UploadFileRistrictionOptions, CurrencyFormat} from './kendo-form-element-config';
+import {UploadFileRistrictionOptions, CurrencyFormat,IntlDateService, DataQuery} from './kendo-form-element-config';
  
 const MODULES = [
   InputsModule,
@@ -55,7 +55,9 @@ const MODULES = [
   providers: [
     UIFormStyle,
     UploadFileRistrictionOptions,
-    CurrencyFormat
+    CurrencyFormat,
+    IntlDateService,
+    DataQuery
   ]
 })
 export class SharedUiTpaModule {}

@@ -253,7 +253,7 @@ export class CaseFacade {
         caseData.caseStartDate =this.intl.formatDate(caseData.caseStartDate,this.dateFormat)   
         return  this.caseDataService.UpdateCase(caseData)
 
-    }
+  }
   
   getSessionInfoByCaseId(clientCaseId:any){
     return  this.caseDataService.getSessionInfoByCaseId(clientCaseId)
@@ -265,5 +265,9 @@ export class CaseFacade {
           }      
           return  this.caseDataService.updateCaseStatus(caseData,clientCaseId)
     }
+
+  getCaseStatusById(clientCaseId : string ) {    
+     return  this.caseDataService.loadCasesStatusById(clientCaseId)
+  }
 
 }

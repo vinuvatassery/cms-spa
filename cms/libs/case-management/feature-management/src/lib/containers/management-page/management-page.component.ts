@@ -4,9 +4,11 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag } from '@cms/case-management/domain';
-import { ActivatedRoute } from '@angular/router';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+
+import { ActivatedRoute,  Router } from '@angular/router';
+import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-management-page',
@@ -48,22 +50,28 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
-
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private caseManagerFacade: CaseManagerFacade,
     private route: ActivatedRoute,
-    private userManagementFacade : UserManagementFacade) { }
+    private userManagementFacade : UserManagementFacade,
+    private loaderService:LoaderService,
+    private router : Router) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
     this.addSaveSubscription();
     this.loadCase()
-    
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   /** Private Methods **/
@@ -219,4 +227,31 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
        this.userManagementFacade.getUserImage(assignedCaseManagerId);
        }
    }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations(){
+    return this.validate();
+  }
 }
