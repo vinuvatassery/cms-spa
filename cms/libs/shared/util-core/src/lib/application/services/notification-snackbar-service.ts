@@ -33,7 +33,10 @@ export class NotificationSnackbarService {
              //exception plugin result DTO
               errorMessage =  err?.error?.details == null ? err?.error?.message : err?.error?.details
           }
-          subtitleText = errorMessage ;        
+         
+          subtitleText = errorMessage ?? err?.name ;        
+          
+         
         }
 
         const snackbarMessage: any = {
