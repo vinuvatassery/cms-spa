@@ -323,8 +323,8 @@
                   <span class="app-checkboxwidtext-wrapper">
                     <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
                       formControlName="enrolledInInsuranceFlag" (change)="updateEnrollStatus($event, i)"
-                      aria-labelledby="othersCoverdSelect" id="othersCoverdSelect"
-                      [checked]="person.value.enrolledInInsuranceFlag=='Y'? true: false"
+                      aria-labelledby="othersCoverdSelect" id="othersCoverdSelect{{i}}"
+                      [checked]="person.value.enrolledInInsuranceFlag"
                       name={{person.value.firstName}}{{-person.value.lastName}} />
                     <label class="k-checkbox-label" for="othersCoverdSelect">{{person.value.firstName}}
                       {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
@@ -453,7 +453,7 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="copyOfInsuranceCardFiles?.length == 0 && !!copyOfInsuranceCardFiles[0].name"> Copy of insurance card is required
+        <kendo-formerror *ngIf="!copyOfInsuranceCardFiles && isViewContentEditable==false"> Copy of insurance card is required
         </kendo-formerror>
       </div>
       <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
@@ -468,7 +468,7 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && proofOfPremiumFiles?.length == 0">
+        <kendo-formerror *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && !proofOfPremiumFiles && isViewContentEditable==false">
           Proof of premium is required
         </kendo-formerror>
       </div>

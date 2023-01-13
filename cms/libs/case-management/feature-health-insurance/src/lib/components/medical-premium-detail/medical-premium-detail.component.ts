@@ -419,9 +419,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
       healthInsurancePolicy.othersCoveredOnPlanFlag
     );
+    healthInsurancePolicy.othersCoveredOnPlan?.forEach((person: any) => {
+      person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
+    })
     let personsGroup = !!healthInsurancePolicy.othersCoveredOnPlan ? healthInsurancePolicy.othersCoveredOnPlan.map(pe => this.formBuilder.group(pe)) : [];
     let personForm = this.formBuilder.array(personsGroup);
     this.healthInsuranceForm.setControl('othersCoveredOnPlan', personForm);
+    this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', this.formBuilder.array([]));
     if (!!healthInsurancePolicy.copyOfInsuranceCardFileName) {
       this.copyOfInsuranceCardFiles = [{
         name: healthInsurancePolicy.copyOfInsuranceCardFileName,
@@ -453,7 +457,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   updateEnrollStatus(event: any, i: number) {
-    this.othersCoveredOnPlan.controls[i].patchValue({ 'enrolledInInsuranceFlag': event.target.checked ? 'Y' : 'N' });
+    this.othersCoveredOnPlan.controls[i].patchValue({ 'enrolledInInsuranceFlag': event.target.checked ? true : false });
   }
 
   private conditionsInsideView() {
@@ -758,6 +762,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         });
         this.healthInsurancePolicy.othersCoveredOnPlan.push(...this.healthInsuranceForm.value.newOthersCoveredOnPlan);
       }
+      this.healthInsuranceForm.value.othersCoveredOnPlan.forEach((person: any)=> {
+        person.enrolledInInsuranceFlag = !!person.enrolledInInsuranceFlag ? StatusFlag.Yes : StatusFlag.No;
+      })
       this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;
       this.healthInsurancePolicy.policyHolderFirstName = this.healthInsuranceForm.value.policyHolderFirstName;
       this.healthInsurancePolicy.policyHolderLastName = this.healthInsuranceForm.value.policyHolderLastName;
@@ -839,14 +846,18 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       relationshipCode: new FormControl(''),
       firstName: new FormControl('', Validators.maxLength(40)),
       lastName: new FormControl('', Validators.maxLength(40)),
-      dob: new FormControl(''),
-      enrolledInInsuranceFlag: new FormControl('Y'),
+      dob: new FormControl(),
+      enrolledInInsuranceFlag: new FormControl(true),
     });
     this.newOthersCoveredOnPlan.push(personForm);
   }
 
   removePerson(i: number) {
     this.newOthersCoveredOnPlan.removeAt(i);
+  }
+
+  checkEnrollment(status: string) {
+    return status === 'Y' ? true : false;
   }
 
   insuranceCarrierNameData(data: any) {
@@ -919,6 +930,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     }
   }
   save() {
+    debugger;
     this.isSubmitted = true;
     this.validateForm();
     let isInsuranceFile = true;

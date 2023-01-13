@@ -45,44 +45,34 @@ export class HealthInsurancePolicyFacade {
     this.loaderService.hide();
   }
 
-  saveHealthInsurancePolicy(healthInsurancePolicy: any) {
-    const formData: any = new FormData();
-    for (var key in healthInsurancePolicy) {
-      let value;
-      if(healthInsurancePolicy[key] == null){
-        value ="";
-      }
-      else{
-        if(key == 'othersCoveredOnPlan'){
-          value = JSON.stringify(healthInsurancePolicy[key]);
-          key = 'othersCoveredOnPlanStr';
-        }
-        else{
-          value = healthInsurancePolicy[key];
-        }
-      }
-      formData.append(key,value);
+  saveHealthInsurancePolicy(healthInsurancePolicy: healthInsurancePolicy) {
+    const formData = new FormData();
+    if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
+      formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');
     }
+    if (!!healthInsurancePolicy?.copyOfSummaryFile) {
+      formData.append('CopyOfSummaryFile', healthInsurancePolicy?.copyOfSummaryFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.proofOfPremiumFile) {
+      formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
+    }
+    this.FormData_append_object(formData, healthInsurancePolicy);
+
     return this.healthInsurancePolicyService.saveHealthInsurancePolicy(formData);
   }
   updateHealthInsurancePolicy(healthInsurancePolicy: any) {
-    const formData: any = new FormData();
-    for (var key in healthInsurancePolicy) {
-      let value;
-      if(healthInsurancePolicy[key] == null){
-        value ="";
-      }
-      else{
-        if(key == 'othersCoveredOnPlan'){
-          value = JSON.stringify(healthInsurancePolicy[key]);
-          key = 'othersCoveredOnPlanStr';
-        }
-        else{
-          value = healthInsurancePolicy[key];
-        }
-      }
-      formData.append(key,value);
+    const formData = new FormData();
+    if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
+      formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');
     }
+    if (!!healthInsurancePolicy?.copyOfSummaryFile) {
+      formData.append('CopyOfSummaryFile', healthInsurancePolicy?.copyOfSummaryFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.proofOfPremiumFile) {
+      formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
+    }
+    this.FormData_append_object(formData, healthInsurancePolicy);
+
     return this.healthInsurancePolicyService.updateHealthInsurancePolicy(formData);
   }
 
@@ -99,6 +89,23 @@ export class HealthInsurancePolicyFacade {
         console.error('err', err);
       },
     });
+  }
+
+  FormData_append_object(fd: FormData, obj: any, key?: any) {
+    var i, k;
+    for (i in obj) {
+      k = key ? key + '[' + i + ']' : i;
+      if (obj[i] instanceof File) {
+        continue;
+      }
+      else if (typeof obj[i] == 'object') {
+        this.FormData_append_object(fd, obj[i], k);
+      }
+      else {
+        fd.append(k, obj[i]);
+        console.log(obj[i])
+      }
+    }
   }
 
 }
