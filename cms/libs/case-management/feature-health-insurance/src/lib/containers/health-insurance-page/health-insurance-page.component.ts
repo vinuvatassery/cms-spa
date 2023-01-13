@@ -8,7 +8,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -34,6 +34,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
@@ -44,7 +46,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     private readonly ref: ChangeDetectorRef,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private readonly loggingService: LoggingService) { }
+    private readonly loggingService: LoggingService,
+    private readonly router :Router
+    ) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -53,11 +57,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.addSaveSubscription();
     this.loadSessionData();
     this.insuranceFlagFormChangeSubscription();
-  }
+	this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();  }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
   ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -268,6 +275,33 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
         })
     }
 
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations(){
+    return this.insuranceFlagForm.valid;
   }
 }
 

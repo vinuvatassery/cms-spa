@@ -25,11 +25,9 @@ import { IntlService } from '@progress/kendo-angular-intl';
 export class FamilyAndDependentFacade {
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'fullName'
-  public sortType = 'asc'
-
+  public sortType = '' 
   public sort: SortDescriptor[] = [{
-    field: this.sortValue,
-    dir: 'asc' 
+    field: this.sortValue, 
   }];
   
 
@@ -241,9 +239,9 @@ export class FamilyAndDependentFacade {
                           
           key.dob = ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )
           
-          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)      
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)     
           
-          debugger
+          
           if(key?.clientDependentId === '00000000-0000-0000-0000-000000000000')   
           {
               key.memberType = ClientDependentGroupDesc.Clients            
