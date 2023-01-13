@@ -136,10 +136,10 @@ export class DrugPharmacyFacade {
       },
     });
   }
-  save(): Observable<boolean> {
-    //TODO: save api call   
-    return of(true);
-  }
+  // save(): Observable<boolean> {
+  //   //TODO: save api call   
+  //   return of(true);
+  // }
  updatePharmacyPriority(pharmacyPriority: any): Observable<any> {
     return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
 
