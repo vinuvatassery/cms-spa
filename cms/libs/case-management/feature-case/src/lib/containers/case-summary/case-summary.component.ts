@@ -82,7 +82,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     }
 
   private loadCase()
-  {     
+  {    
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
     this.sessionDataSubscription =this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
