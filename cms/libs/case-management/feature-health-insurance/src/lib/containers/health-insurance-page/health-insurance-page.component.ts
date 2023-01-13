@@ -110,7 +110,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       medicarePartAStartDate:[''],
       medicarePartBStartDate:[''],
       onQmbFlag:[''],
-      onLisFlag:['']
+      onLisFlag:[''],
+      othersCoveredOnPlanFlag:['']
 
 
 

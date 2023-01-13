@@ -257,11 +257,21 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
     const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
     this.metalLevelDefaultValue = metalLevel;
     this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
-    this.healthInsuranceForm.controls['aptcFlag'].setValue(
-      healthInsurancePolicy.aptcFlag
-    );
-    this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
-      healthInsurancePolicy.aptcMonthlyAmt
+    if(healthInsurancePolicy.aptcNotTakingFlag===StatusFlag.No){
+      this.healthInsuranceForm.controls['aptcFlag'].setValue(
+        healthInsurancePolicy.aptcNotTakingFlag
+      );
+    }else{
+      this.healthInsuranceForm.controls['aptcFlag'].setValue(
+        healthInsurancePolicy.aptcFlag
+      );
+      this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
+        healthInsurancePolicy.aptcMonthlyAmt
+      );
+    }
+    debugger
+    this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
+      healthInsurancePolicy.othersCoveredOnPlanFlag
     );
     this.healthInsuranceForm.controls['groupPlanType'].setValue(
       healthInsurancePolicy.insuranceGroupPlanTypeCode
@@ -352,12 +362,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
       this.metalLevelDefaultValue = metalLevel;
       this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
-      this.healthInsuranceForm.controls['aptcFlag'].setValue(
-        healthInsurancePolicy.aptcFlag
-      );
-      this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
-        healthInsurancePolicy.aptcMonthlyAmt
-      );
+      // this.healthInsuranceForm.controls['aptcFlag'].setValue(
+      //   healthInsurancePolicy.aptcFlag
+      // );
+      // this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
+      //   healthInsurancePolicy.aptcMonthlyAmt
+      // );
     }
     this.disableEnableRadio();
   }
@@ -384,6 +394,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       'insurancePlanName',
       'aptcFlag',
       'metalLevel',
+      'othersCoveredOnPlanFlag',
     ];
     const CobraPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
@@ -612,8 +623,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
         this.healthInsurancePolicy.aptcMonthlyAmt =this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
       }
 
+      
 
-
+      this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value;
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
 
       this.healthInsurancePolicy.medicareBeneficiaryIdNbr = this.healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].value;

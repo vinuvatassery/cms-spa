@@ -389,7 +389,7 @@
         <div>
           <div
             class="flex-col"
-            *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
+            *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan">
            
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend">  <h5>Are others covered on the plan?</h5> </legend>
@@ -398,14 +398,16 @@
                 <input
                   [disabled]="isViewContentEditable"
                   type="radio"
+                  formControlName="othersCoveredOnPlanFlag"
+                  value="Y"
+                  name="othersCoveredOnPlanFlag"
                   kendoRadioButton
-                  name="othersCovered"
                   aria-labelledby="othersCoveredOnThePlanYes"
-                  id="othersCoveredOnThePlanYes" 
+                  id="othersCoveredOnPlanFlagY" 
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="othersCoveredOnThePlanYes"
+                  for="othersCoveredOnPlanFlagY"
                   text="Yes"
                 ></kendo-label>
               </span>
@@ -413,14 +415,16 @@
                 <input
                   [disabled]="isViewContentEditable"
                   type="radio"
+                  formControlName="othersCoveredOnPlanFlag"
+                  value="N"
+                  name="othersCoveredOnPlanFlag"
                   kendoRadioButton
-                  name="othersCovered"
                   aria-labelledby="othersCoveredOnThePlanNo"
-                  id="othersCoveredOnThePlanNo" 
+                  id="othersCoveredOnPlanFlagN" 
                 />
                 <kendo-label
                   class="k-radio-label"
-                  for="othersCoveredOnThePlanNo"
+                  for="othersCoveredOnPlanFlagN"
                   text="No"
                 ></kendo-label>
               </span>
