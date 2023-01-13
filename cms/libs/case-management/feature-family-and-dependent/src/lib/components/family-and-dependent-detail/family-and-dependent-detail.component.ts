@@ -44,7 +44,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   isOpenedNewFamilyMember = false;
   showDependentSearchInputLoader = false;
   dependentSearch!: GroupResult[];
-  popupClass = 'k-autocomplete-custom';
+  popupClass = 'k-autocomplete-custom autocompletecombo';
   ssnMaskFormat = "000-00-0000" 
   isSubmitted = false;
   isExistSubmitted = false;

@@ -32,25 +32,38 @@
               placeholder="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)"
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
               [filterable]="true"   
+                  (close)="$event.preventDefault(); "
               (filterChange)="onsearchTextChange($event)"    
-              (close)="searchCloseEvent();"
+             
                     
-            >          
+            >    
+            <!-- (close)="searchCloseEvent();"       -->
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
-                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
-                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
-                <span *ngIf="dataItem.ssn" class="pr-1" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
+                <span class="pr-1 namecolumn" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
+                <span class="pr-1 dobcolumn" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
+                <span *ngIf="dataItem.ssn" class="pr-1 ssmcolumn" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
               </ng-template>
               <ng-template kendoAutoCompleteFooterTemplate>
-                <button
-                  kendoButton
-                  [primary]="true"
-                  class="btn-full-no-radius"
-                  (click)="onNewFamilyMemberClicked()"
-                  aria-label="add new family member"
-                >
-                  ADD NEW FAMILY MEMBER
-                </button>
+                <div class="app-c-globalSearch app-c-globalSearch-footer p-0 k-table-footer">
+                  <div class="flex-row p-0">
+                    <div class="flex-col p-0">
+                      <p class="looking-for-message">
+                        <!-- Don’t see find who you are looking for? -->
+                        Don’t see who you are looking for?
+                      </p>
+                      <button
+                      kendoButton
+                      [primary]="true"
+                      class="btn-full-no-radius"
+                      (click)="onNewFamilyMemberClicked()"
+                      aria-label="add new family member"
+                    >
+                      ADD NEW FAMILY MEMBER
+                    </button>
+                    </div>
+                  </div>
+                </div>
+              
               </ng-template>
             </kendo-autocomplete>      
             </kendo-label>
@@ -169,7 +182,7 @@
         </kendo-floatinglabel>
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
       </div>
-      <div class="flex-col mb-3">
+      <div class="flex-col mb-3 mt-2">
         
         <fieldset class="k-form-fieldset">
           <legend class="k-form-legend">    <h5>Currently enrolled in client’s health insurance plan?</h5></legend>
