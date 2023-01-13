@@ -90,6 +90,7 @@ export class EmploymentFacade {
     sort: string,
     sortType: string
   ) {
+    this.showLoader();
     this.employersDataService
       .loadEmploymentService(
         clientCaseEligibilityId,
@@ -109,10 +110,12 @@ export class EmploymentFacade {
 
             this.updateWorkFlowCount(parseInt(employersResponse['totalCount']) > 0 ? StatusFlag.Yes : StatusFlag.No);
             this.employersSubject.next(gridView);
+            this.hideLoader();
           }
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
         },
       });
   }
