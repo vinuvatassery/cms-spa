@@ -12,7 +12,7 @@ import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {      
     
     if(type == SnackBarNotificationType.ERROR)
@@ -21,10 +21,10 @@ export class DrugPharmacyFacade {
        this.loggingService.logException(err)
     }  
     this.snackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.hideLoader();   
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }

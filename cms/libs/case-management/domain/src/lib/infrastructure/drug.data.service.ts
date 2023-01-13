@@ -231,7 +231,7 @@ export class DrugDataService {
  savePharmacyPriorityService(pharmacyPriority: any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/pharmacies/pharmacy_priority`, pharmacyPriority
+        `/case-management/pharmacies/priority`, pharmacyPriority
     );
   }
 }

@@ -125,7 +125,7 @@ savePrirorityObjectList:any[] =[];
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.drugPharmacyFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities saved sucessfully')
+        this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities saved sucessfully')
         this.workflowFacade.navigate(navigationType);
       }
     });
@@ -188,11 +188,11 @@ savePrirorityObjectList:any[] =[];
     this.drugPharmacyFacade.updatePharmacyPriority(this.savePrirorityObjectList).subscribe((x:any) =>{
       if(x){
         this.loaderService.hide();
-        this.drugPharmacyFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities saved sucessfully')
+        this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities saved sucessfully')
         this.onCloseChangePriorityClicked();
       }
     },(error:any) =>{
-      this.drugPharmacyFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , error)
+      this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
     });
 
   }
