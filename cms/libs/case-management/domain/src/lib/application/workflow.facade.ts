@@ -31,6 +31,7 @@ export class WorkflowFacade {
   private routesSubject = new BehaviorSubject<any>([]);
   private sessionSubject = new BehaviorSubject<any>([]);
   private sessionDataSubject = new Subject<any>();
+  private workflowReadySubject = new Subject<boolean>();
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
@@ -38,6 +39,8 @@ export class WorkflowFacade {
   completionStatus$ = this.wfProcessCompletionStatusSubject.asObservable();
   sessionSubject$ = this.sessionSubject.asObservable();
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
+  workflowReady$ = this.workflowReadySubject.asObservable();
+
   clientId: number | undefined;
   clientCaseId: string | undefined;
   clientCaseEligibilityId: string | undefined; 
@@ -125,6 +128,7 @@ export class WorkflowFacade {
   }
 
   loadWorkflowSession(type: string, entityId: string, sessionId: string) {
+    this.workflowReadySubject.next(false);
     this.ShowLoader();
     this.workflowService.loadWorkflowMaster(entityId, EntityTypeCode.Program, type)
       .pipe(
@@ -249,7 +253,7 @@ export class WorkflowFacade {
     }
   }
 
-  updateChecklist(completedDataPoints: CompletionChecklist[]) {
+  updateChecklist(completedDataPoints: CompletionChecklist[], updateCount:boolean = true) {
     const processId = this.actRoute.snapshot.queryParams['pid'];
     if (completedDataPoints) {
       let completionChecklist: WorkflowProcessCompletionStatus = this.deepCopy(this.completionChecklist)
@@ -261,7 +265,7 @@ export class WorkflowFacade {
           this.updateCompletionStatus(completionChecklist?.completionChecklist, completedDtpoint);
         });
 
-        this.updateWorkflowCompletionStatus(completionChecklist);
+        this.updateWorkflowCompletionStatus(completionChecklist, updateCount);
       }
     }
   }
@@ -320,6 +324,7 @@ export class WorkflowFacade {
     });
     this.completionChecklist = processCompletionChecklist;
     this.wfProcessCompletionStatusSubject.next(processCompletionChecklist);
+    this.workflowReadySubject.next(true);
   }
 
   private updateRoutes(currentWorkflow: WorkFlowProgress, nextWorkflow: WorkFlowProgress) {
@@ -353,7 +358,7 @@ export class WorkflowFacade {
     }
   }
 
-  private updateWorkflowCompletionStatus(completionStatus: WorkflowProcessCompletionStatus) {
+  private updateWorkflowCompletionStatus(completionStatus: WorkflowProcessCompletionStatus, updateCount:boolean) {
     if (completionStatus) {
       let currentScreenStatus: WorkflowProcessCompletionStatus = this.deepCopy(this.completionChecklist)?.filter((status: WorkflowProcessCompletionStatus) => status?.processId === completionStatus?.processId)[0];
       let currentScreenStatusIndex = this.deepCopy(this.completionChecklist)?.findIndex((status: WorkflowProcessCompletionStatus) => status?.processId === completionStatus?.processId);
@@ -362,7 +367,9 @@ export class WorkflowFacade {
         currentScreenStatus.calcualtedTotalCount = completionStatus?.completionChecklist?.length;
         currentScreenStatus.completionChecklist = completionStatus?.completionChecklist;
         this.completionChecklist[currentScreenStatusIndex] = currentScreenStatus;
+        if(updateCount === true){
         this.wfProcessCompletionStatusSubject.next(this.completionChecklist);
+        }
       }
     }
   }

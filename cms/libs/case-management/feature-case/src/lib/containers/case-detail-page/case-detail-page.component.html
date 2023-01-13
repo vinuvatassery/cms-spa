@@ -44,7 +44,7 @@
         </div>
       </div>
     </section>
-    <div class="casenav-details-wrapper">
+    <div class="casenav-details-wrapper" *ngIf="isWorkflowReady$ | async">
       <router-outlet></router-outlet>
     </div>
  

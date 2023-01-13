@@ -88,6 +88,7 @@ export class CaseDetailPageComponent implements OnInit {
   routes$ = this.workflowFacade.routes$;
   completeStaus$ = this.workflowFacade.completionStatus$;
   currentSession = this.workflowFacade.currentSession
+  isWorkflowReady$ = this.workflowFacade.workflowReady$
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,

@@ -570,9 +570,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
 
   /** Public  methods **/
-  updatePageCount(completedDataPoints: CompletionChecklist[]) {
-    if (completedDataPoints?.length > 0) {
-      this.workFlowFacade.updateChecklist(completedDataPoints);
+  updatePageCount(data: { completedDataPoints: CompletionChecklist[], updateWorkflowCount: boolean}) {
+    if (data?.completedDataPoints?.length > 0) {
+      this.workFlowFacade.updateChecklist(data?.completedDataPoints, data?.updateWorkflowCount);
     }
   }
 

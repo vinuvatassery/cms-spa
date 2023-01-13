@@ -1,7 +1,7 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 /** External libraries **/
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, WorkflowProcessCompletionStatus } from '@cms/case-management/domain';
 
@@ -20,6 +20,7 @@ export class PageCompletionStatusComponent implements OnInit, OnDestroy {
   /**Public properties **/
   completed!: number;
   total!: number;
+  showCountCalculationLoader$ = new BehaviorSubject(false);
 
   /** Private Properties */
   private statusSubscription!: Subscription;
@@ -39,9 +40,11 @@ export class PageCompletionStatusComponent implements OnInit, OnDestroy {
   private addCompletionStatusSubscription() {
     this.statusSubscription = this.completionStatus$
       .subscribe((wfCompStatus: WorkflowProcessCompletionStatus[]) => {
+      this.showCountCalculationLoader$.next(true);
         let currentWfStep = wfCompStatus.filter(wf => wf.processId == this.workflowProcessId)[0];
         this.completed = currentWfStep?.completedCount ?? 0;
         this.total = currentWfStep?.calcualtedTotalCount ?? 0;
+        this.showCountCalculationLoader$.next(false);
       });
   }
 }
