@@ -32,7 +32,7 @@
               placeholder="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)"
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
               [filterable]="true"   
-                  (close)="$event.preventDefault(); "
+              (close)="searchCloseEvent();"
               (filterChange)="onsearchTextChange($event)"    
              
                     
