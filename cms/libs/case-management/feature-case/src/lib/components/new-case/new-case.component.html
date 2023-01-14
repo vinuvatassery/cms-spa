@@ -18,7 +18,7 @@
           <kendo-multicolumncombobox         
             [data]="caseSearchResults$ | async"
             textField="name"
-            valueField="id"
+            valueField="clientId"
             autofocusfield
             id="searchcaseornew"
             #searchcaseornew
@@ -27,8 +27,8 @@
             [fillMode]="formUiStyle.dropDownFillMode"
             [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
             [filterable]="true"
-        
-            (filterChange)="onsearchTextChange($event)">
+            (filterChange)="onsearchTextChange($event)"
+            (selectionChange)="onClientSelected($event)">
           <!-- (close)="$event.preventDefault(); " -->
           <!-- title="Name" -->
             <kendo-combobox-column>

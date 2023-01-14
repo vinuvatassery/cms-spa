@@ -12,6 +12,22 @@ import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {      
+    
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.snackbarService.manageSnackBar(type,subtitle)
+    this.hideLoader();   
+  }
+
+  hideLoader()
+  {
+    this.loaderService.hide();
+  }
   /** Private properties **/
   private pharmaciesSubject = new BehaviorSubject<any>([]);
   private selectedPharmacySubject = new BehaviorSubject<any>([]);
@@ -120,21 +136,13 @@ export class DrugPharmacyFacade {
       },
     });
   }
+  // save(): Observable<boolean> {
+  //   //TODO: save api call   
+  //   return of(true);
+  // }
+ updatePharmacyPriority(pharmacyPriority: any): Observable<any> {
+    return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
 
-  loadDdlPriorities(): void {
-    this.drugDataService.loadDdlPriorities().subscribe({
-      next: (ddlPrioritiesResponse) => {
-        this.ddlPrioritiesSubject.next(ddlPrioritiesResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
-  save(): Observable<boolean> {
-    //TODO: save api call   
-    return of(true);
   }
 
   searchPharmacies(searchText: string) {
@@ -236,5 +244,4 @@ export class DrugPharmacyFacade {
       },
     });
   }
-
 }

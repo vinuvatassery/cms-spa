@@ -254,7 +254,10 @@ export class CaseFacade {
         return  this.caseDataService.UpdateCase(caseData)
 
   }
-
+  
+  getSessionInfoByCaseId(clientCaseId:any){
+    return  this.caseDataService.getSessionInfoByCaseId(clientCaseId)
+  }
     updateCaseStatus(clientCaseId : any,caseStatusCode:any) 
     { 
           const caseData = { 

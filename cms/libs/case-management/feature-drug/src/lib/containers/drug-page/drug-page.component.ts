@@ -223,6 +223,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
   private save() {
     let isValid = true;
+    return of(true);
     // TODO: validate the form
     if (isValid) {
       
