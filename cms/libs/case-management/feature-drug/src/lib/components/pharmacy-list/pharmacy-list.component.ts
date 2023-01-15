@@ -16,11 +16,14 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class PharmacyListComponent implements OnInit {
   /** Input Properties **/
   @Input() clientpharmacies$!: Observable<any>;
-  @Input() pharmacysearchResult$!: Observable<Pharmacy>
-  @Input() selectedPharmacy$!: Observable<Pharmacy>
-  @Input() addPharmacyResponse$!: Observable<boolean>
-  @Input() editPharmacyResponse$!: Observable<boolean>
-  @Input() removePharmacyResponse$!: Observable<boolean>
+  @Input() pharmacysearchResult$!: Observable<Pharmacy>;
+  @Input() selectedPharmacy$!: Observable<Pharmacy>;
+  @Input() addPharmacyResponse$!: Observable<boolean>;
+  @Input() editPharmacyResponse$!: Observable<boolean>;
+  @Input() removePharmacyResponse$!: Observable<boolean>;
+  @Input() triggerPriorityPopup$!: Observable<boolean>;
+  @Input() searchLoaderVisibility$!: Observable<boolean>;
+
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
   @Output() addPharmacyClick = new EventEmitter<string>();
@@ -29,7 +32,6 @@ export class PharmacyListComponent implements OnInit {
   @Output() removePharmacyClick = new EventEmitter<string>();
 
   /** Public properties **/
-  //clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
   isOpenChangePriorityClicked$ = new BehaviorSubject(false);
   isOpenPharmacyClicked$ = new BehaviorSubject(false);
   isEditPharmacyListClicked = false;
@@ -39,16 +41,8 @@ export class PharmacyListComponent implements OnInit {
   removeButtonEmitted = false;
   editButtonEmitted = false;
   addButtonEmitted = false;
-
-
-  // public sortValue = this.drugPharmacyFacade.sortValue;
-  // public sortType = this.drugPharmacyFacade.sortType;
-  // public pageSizes = this.drugPharmacyFacade.gridPageSizes;
-  // public gridSkipCount = this.drugPharmacyFacade.skipCount;
-  // public sort = this.drugPharmacyFacade.sort;
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -89,36 +83,43 @@ export class PharmacyListComponent implements OnInit {
     },
   ];
 
+   /** Private properties **/
+  clientPharmacyCount!:Number;
+
   /** Constructor **/
   constructor() { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    // this.state = {
-    //   skip: this.gridSkipCount,
-    //   take: this.pageSizes[0]?.value,
-    //   sort: this.sort,
-    // };
     this.loadClientPharmacies();  
     this.actionResponseSubscription();
     this.editPharmacyItemSubscribe();
- 
+    this.priorityPopupShowSubscription();
   }
 
   /** Private methods **/
   private loadClientPharmacies() {
-    // this.drugPharmacyFacade.loadClientPharmacies();
     this.clientpharmacies$.subscribe({
       next: (pharmacies: ClientPharmacy[]) => {
-        pharmacies.forEach((pharmacyData: any) => {
-          pharmacyData.pharmacyNameAndNumber =
-            pharmacyData.pharmacyName + ' #' + pharmacyData.pharmacyNumber;
+        pharmacies.forEach((pharmacyData: ClientPharmacy) => {
+          pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
+          if(pharmacyData.phone){
+            pharmacyData.phone = this.formatPhoneNumber(pharmacyData.phone);
+          }
         });
       },
       error: (err) => {
         console.log(err);
       },
     });
+  }
+
+  private priorityPopupShowSubscription(){
+    this.triggerPriorityPopup$.subscribe((value:boolean)=>{
+      if(value){
+        this.isOpenChangePriorityClicked$.next(true);
+      }
+    })
   }
 
   private actionResponseSubscription() {
@@ -150,8 +151,19 @@ export class PharmacyListComponent implements OnInit {
     }
   }
 
+  private formatPhoneNumber(phoneNumberString: string) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      var intlCode = (match[1] ? '+1 ' : '');
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return '';
+  }
+
   /** Internal event methods **/
   onOpenPharmacyClicked() {
+
     this.isOpenPharmacyClicked$.next(true);
   }
 
@@ -204,10 +216,13 @@ export class PharmacyListComponent implements OnInit {
     if (data?.isDelete === true) {
       this.removePharmacyEvent(data?.clientPharmacyId);
     }
+    else{
+      this.handleRemoveClientPharmacyClose();
+    }
   }
 
   handleRemoveClientPharmacyClose() {
-    this.isRemoveClientPharmacyClicked$.next(true);
+    this.isRemoveClientPharmacyClicked$.next(false);
     this.removeButtonEmitted = false;
   }
 }

@@ -42,9 +42,11 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   isBenefitsChanged = true;
   clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
   pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$
+  searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
   addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
   editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
   removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
+  triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
   selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   clientCaseEligibilityId: string = "";
   sessionId: any = "";
@@ -83,7 +85,6 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.loadSessionData();
     this.addSaveSubscription();
-    this.loadClientPharmacies();
     this.priscriptionDrugFormChanged();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
@@ -217,6 +218,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
           this.loadPrescriptionDrug();
+          this.loadClientPharmacies(this.clientId);
         }
       });
 
@@ -253,8 +255,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
 
   /* Pharmacy */
-  private loadClientPharmacies() {
-    this.drugPharmacyFacade.loadClientPharmacyList(this.workflowFacade.clientId ?? 0);
+  private loadClientPharmacies(clientId:number) {
+    this.drugPharmacyFacade.loadClientPharmacyList(clientId);
     this.clientpharmacies$.subscribe({
       next: (pharmacies) => {
         if(pharmacies?.length > 0){
@@ -287,7 +289,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
 
   addPharmacy(vendorId: string) {
-    this.drugPharmacyFacade.addClientPharmacy(this.workflowFacade.clientId ?? 0, vendorId, PriorityCode.Primary);
+    this.drugPharmacyFacade.addClientPharmacy(this.workflowFacade.clientId ?? 0, vendorId);
   }
 
   editPharmacyInit(vendorId: string) {
@@ -295,7 +297,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
 
   editPharmacy(data: any) {
-    this.drugPharmacyFacade.editClientPharmacy(this.workflowFacade.clientId ?? 0, data?.clientPharmacyId, data?.vendorId, PriorityCode.Primary);
+    this.drugPharmacyFacade.editClientPharmacy(this.workflowFacade.clientId ?? 0, data?.clientPharmacyId, data?.vendorId);
   }
 
   removePharmacy(clientPharmacyId: string) {
