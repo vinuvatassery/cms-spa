@@ -1,3 +1,4 @@
+
 export class healthInsurancePolicy {
         clientInsurancePolicyId :string|null=null;
         clientId :number|null=null;
@@ -39,7 +40,18 @@ export class healthInsurancePolicy {
         oonEndDate? :Date;
         oonPharmacy :string|null=null;
         oonDrugs :string|null=null;
-        concurrencyStamp :string|null=null;
         activeFlag :string|null=null;
         creationTime? :Date;
+        insuranceCardFile: any = null;
+        insuranceCardFileName: string = "";
+        insuranceCardFileSize: number | null = null;
+        insuranceCardFileTypeCode: string = "";
+        insuranceCardFileId: string = "";
+        insuranceCardFilePath: string = "";
+        summaryFile: any = null;
+        summaryFileName: string = "";
+        summaryFileSize: number | null = null;
+        summaryFileTypeCode: string = "";
+        summaryFileId: string = "";
+        summaryFilePath: string = "";
 }

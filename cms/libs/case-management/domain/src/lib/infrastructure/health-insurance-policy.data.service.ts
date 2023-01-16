@@ -11,16 +11,16 @@ export class HealthInsurancePolicyDataService {
     private configurationProvider: ConfigurationProvider
   ) {}
 
-  saveHealthInsurancePolicy(healthInsurancePolicy: healthInsurancePolicy) {
+  saveHealthInsurancePolicy(healthInsuranceFormData: FormData) {
     return this.http.post<healthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
-      healthInsurancePolicy
+      healthInsuranceFormData
     );
   }
-  updateHealthInsurancePolicy(healthInsurancePolicy: healthInsurancePolicy) {
+  updateHealthInsurancePolicy(healthInsuranceFormData: FormData) {
     return this.http.put<healthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
-      healthInsurancePolicy
+      healthInsuranceFormData
     );
   }
 

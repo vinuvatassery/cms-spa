@@ -22,5 +22,6 @@ export enum LovType {
     MetalLevel ='METAL_LEVEL',
     PremiumFrequency = 'PREMIUM_FREQUENCY_CODE',
     MedicareCoverageType = 'MEDICARE_COVERAGE_TYPE_CODE',
-    CaseStatusCode = 'CASE_STATUS_CODE'
+    CaseStatusCode = 'CASE_STATUS_CODE',
+    healthInsuranceProof = 'HEALTH_INSURANCE_PROOF',
   }

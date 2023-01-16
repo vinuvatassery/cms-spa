@@ -519,7 +519,15 @@
             *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan "
           >
             <h5 class="text-capital">Copy of Insurance Card</h5>
-            <kendo-upload [disabled]="isViewContentEditable"> </kendo-upload>
+            <!-- <kendo-upload [disabled]="isViewContentEditable"> </kendo-upload> -->
+            <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" 
+              [multiple]="false"  (select)="handleFileSelected($event, 'insuranceCard')"[autoUpload]="false"
+              (remove)="handleFileRemoved($event, 'insuranceCard')" #copyOfInsurance
+              [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
+              [restrictions]="uploadFileRestrictions.fileRestrictions">
+          </kendo-upload>
+
+          <kendo-formerror *ngIf="!insuranceCardUploaded">Upload of Insurance card is required.</kendo-formerror>
             <kendo-formhint>Max file size 25MB</kendo-formhint>
           </div>
           <div
@@ -527,7 +535,13 @@
             *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan"
           >
             <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
-            <kendo-upload [disabled]="isViewContentEditable"> </kendo-upload>
+            <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
+              [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
+              (remove)="handleFileRemoved($event, 'summary')" #copyOfSummary [removeUrl]="uploadRemoveUrl"   
+              [ngModel]="copyOfSummaryFiles" [ngModelOptions]="{standalone: true}"          
+              [restrictions]="uploadFileRestrictions.fileRestrictions">
+          </kendo-upload>
+          <kendo-formerror *ngIf="!summaryUploaded">Upload of Proof of Premium Amount is required.</kendo-formerror>
             <kendo-formhint>Max file size 25MB</kendo-formhint>
           </div>
         </div>
