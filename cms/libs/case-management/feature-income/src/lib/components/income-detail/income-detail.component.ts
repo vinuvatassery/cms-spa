@@ -290,11 +290,16 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
 
+
     if (!this.hasNoProofOfIncome) {
       if (this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value === 'O') {
-        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([  Validators.required,]);
-        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
+        this.IncomeDetailsForm.controls['otherDesc'].setValidators([  Validators.required,]);
+        this.IncomeDetailsForm.controls['otherDesc'].updateValueAndValidity();
       }
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls[
+        'proofIncomeTypeCode'
+      ].updateValueAndValidity();
 
       if (!this.proofOfIncomeFiles) {
         this.proofOfIncomeValidator = true;
