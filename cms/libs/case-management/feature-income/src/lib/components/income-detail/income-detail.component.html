@@ -11,7 +11,7 @@
             valueField="lovCode" [valuePrimitive]="true" aria-label="income sources" name="income sources" formControlName="incomeSourceCode" #incomeSources>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeSourceCode'].valid"> Income source is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeSourceCode'].valid"> Income Source is required
           </kendo-formerror>
         </div>
         <div class="flex-col">
@@ -20,7 +20,7 @@
             valueField="lovCode" [valuePrimitive]="true" (valueChange)="loadProofOfIncomeTypes()" aria-label="income types" name="income types" formControlName="incomeTypeCode" #incomeTypes>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeTypeCode'].valid"> Income type is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeTypeCode'].valid"> Income Type is required
           </kendo-formerror>
 
         </div>
@@ -33,7 +33,7 @@
             </kendo-numerictextbox>
           </kendo-floatinglabel>
 
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeAmt'].valid"> Income amount is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeAmt'].valid"> Amount is required
           </kendo-formerror>
 
         </div>
@@ -43,7 +43,7 @@
             valueField="lovCode" [valuePrimitive]="true" aria-label="frequencies" name="frequencies" formControlName="incomeFrequencyCode" #incomeFrequencies>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeFrequencyCode'].valid"> Income Frequency is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeFrequencyCode'].valid"> Frequency is required
           </kendo-formerror>
 
         </div>
@@ -54,7 +54,7 @@
               formControlName="incomeStartDate"  placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Income start date is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Income Start is required
           </kendo-formerror>
 
         </div>
@@ -65,7 +65,7 @@
               #incomeEndDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid"> Income end date is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid"> Income End is required
           </kendo-formerror>
 
         </div>
@@ -95,7 +95,7 @@
             </ng-template> -->
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
-          <kendo-formerror *ngIf="proofOfIncomeValidator"> Upload proof is required </kendo-formerror>
+          <kendo-formerror *ngIf="proofOfIncomeValidator"> Poof of Income is required </kendo-formerror>
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
@@ -105,7 +105,7 @@
               formControlName="proofIncomeTypeCode" #proofOfIncomeTypes>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['proofIncomeTypeCode'].valid"> Proof of income types is
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['proofIncomeTypeCode'].valid"> Proof of Income Type is
             required </kendo-formerror>
 
         </div>
@@ -116,7 +116,7 @@
               formControlName="otherDesc" #otherDesc>
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['otherDesc'].valid"> Other income is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['otherDesc'].valid"> Name of other Proof is required
           </kendo-formerror>
 
         </div>
@@ -133,8 +133,7 @@
               </kendo-textarea-suffix>
             </kendo-textarea>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeNote'].valid"> Financial justification or
-            Income note is required </kendo-formerror>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeNote'].valid"> Financial justification or Income Note is required </kendo-formerror>
 
         </div>
       </div>

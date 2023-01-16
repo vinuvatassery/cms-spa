@@ -27,7 +27,7 @@
 
         <div class="breadcrumb-right app-c-split-button">
           <kendo-splitbutton [data]="saveForLaterData" class="app-c-split-button app-dropdown-action"
-            buttonClass="k-split-button"
+            buttonClass="k-split-button" [tabindex]="0" 
             [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
             <div class="btn-inner-block" (click)="onSaveAndContinueClicked()">
               <span class="material-icons" aria-label="save and continue" aria-hidden="false">save</span>
@@ -35,41 +35,10 @@
             </div>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                aria-hidden="false" (click)="dataItem.click">
+                aria-hidden="false" (click)="dataItem.click" *ngIf="hideButton(dataItem.text)" >
                 <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                 <label> {{ dataItem.text }} </label>
-              </button>
-              <!-- <button
-                kendoButton
-                look="flat"
-                class="btn-h-danger"
-                (click)="onDiscardConfirmClicked()"
-                aria-label="discard changes"
-              >
-                <span
-                  class="material-icons"
-                  aria-label="discard changes"
-                  aria-hidden="true"
-                  >do_disturb_alt</span
-                >
-                <label>Discard Changes</label>
-              </button> -->
-              <!-- <button
-                kendoButton
-                look="flat"
-                class="btn-h-danger"
-                (click)="onDeleteConfirmClicked()"
-                aria-label="delete application"
-              >
-                <span
-                  class="material-icons"
-                  aria-label="delete application"
-                  aria-hidden="true"
-                  >delete</span
-                >
-                <label>Delete Application</label>
-              </button> -->
-
+              </button> 
             </ng-template>
           </kendo-splitbutton>
         </div>
@@ -95,14 +64,17 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
           <!-- <input kendoTextBox /> -->
-          <kendo-textbox aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+          <kendo-textbox [disabled]="true" [(ngModel)]="clientCaseStatusData.assignedCwUserName" aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Case Status">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCommonActions$ | async">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="caseStatuses" textField="lovDesc"
+          valueField="lovCode" [valuePrimitive]="true" [(ngModel)]="currentStatusCode">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="currentStatusCode==''&& isSubmitted"> Income type is required
+        </kendo-formerror>
       </div>
       <div class="flex-col mb-2">
         <h5>Do you need to send the client a letter?</h5>
@@ -126,7 +98,7 @@
           aria-label="cancel new case">
           Cancel
         </button>
-        <button kendoButton [primary]="true" (click)="onSendNewLetterClicked()" aria-label="save and exit new case">
+        <button kendoButton [primary]="true" (click)="onUpdateCaseStatusClicked()" aria-label="save and exit new case">
           Save & Exit
         </button>
       </div>
@@ -139,17 +111,16 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete application?">
   <section class="k-dialog-body mb-2">
     <p>
-      All progress will be lost and the client’s data will be permanently
-      deleted from the system.
+      All progress will be lost and the client’s data will be removed from the system.
     </p>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel delete">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel delete"(click)="cancelDeletion()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="delete client’s data">
+        <button kendoButton class="k-error-button" aria-label="cancel case"(click)="cancelCase()">
           Delete
         </button>
       </div>
@@ -169,10 +140,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel permanent delete">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel discard changes" (click)="cancelDiscard()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label=" permanent delete">
+        <button kendoButton class="k-error-button" aria-label="discard changes" (click)="discardChanges()">
           Discard
         </button>
       </div>

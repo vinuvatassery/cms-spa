@@ -3,13 +3,13 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, } from '@angular/core';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, Observable } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
@@ -22,6 +22,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
@@ -60,7 +62,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     private lov: LovFacade,
     private route: ActivatedRoute,
     private readonly elementRef: ElementRef,
-    private readonly loaderService: LoaderService) { }
+    private readonly loaderService: LoaderService,
+	  private readonly router: Router) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -71,11 +74,15 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     this.loadFrequencies();
     this.loadProofOfIncomeTypes();
     this.addSaveSubscription();
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   /** Private methods **/
@@ -315,5 +322,33 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount
     );
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations(){
+    this.submitIncomeDetailsForm();
+    return this.noIncomeDetailsForm.valid;
   }
 }
