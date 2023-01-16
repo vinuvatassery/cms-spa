@@ -80,6 +80,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
+    debugger;
     this.buildForm();
     this.loadSessionData();
     this.addSaveSubscription();
@@ -208,10 +209,12 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
 
   loadSessionData() {
+    debugger;
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
+        debugger;
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
@@ -222,8 +225,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   }
   private save() {
+    debugger;
     let isValid = true;
-    return of(true);
     // TODO: validate the form
     if (isValid) {
       

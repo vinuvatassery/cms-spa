@@ -39,6 +39,7 @@ HideLoader()
   this.loaderService.hide();
 }
   updatePrescriptionDrug(prescriptionDrug: any, summaryBenefitFiles: any ): Observable<any> {
+    debugger;
     const formData: any = new FormData();
     for (var key in prescriptionDrug) {
         formData.append(key, prescriptionDrug[key]);

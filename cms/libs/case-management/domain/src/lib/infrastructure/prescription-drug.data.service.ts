@@ -12,14 +12,15 @@ export class PrescriptionDrugDataService {
 
   /** Public methods **/
   updatePrescriptionDrugService(prescriptionDrug: any) {
+    debugger;
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/prescription-drug/prescription`, prescriptionDrug
+        `/case-management/drugs`, prescriptionDrug
     );
   }
   loadPrescriptionDrug(clientCaseEligibilityId:any){
     return this.http.get<PrescriptionDrug>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/prescription-drug?clientCaseEligibilityId=${clientCaseEligibilityId}`,);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/`+ clientCaseEligibilityId);
   }
 
 }
