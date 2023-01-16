@@ -33,8 +33,7 @@ export class KendoFileUploadDirective {
 })
 export class FormFieldAutoFocus implements AfterViewInit{ 
   constructor(public elementRef: ElementRef){} 
-  ngAfterViewInit(){
-    debugger;
+  ngAfterViewInit(){  
     setTimeout(()=>{                           // <<<---using ()=> syntax
       this.elementRef.nativeElement.children[0].children[0].focus();
   }, 200); 

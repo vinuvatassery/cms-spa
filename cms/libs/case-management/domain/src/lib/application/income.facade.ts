@@ -40,21 +40,21 @@ export class IncomeFacade {
     private configurationProvider: ConfigurationProvider) { }
 
     ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-    {        
+    {
       if(type == SnackBarNotificationType.ERROR)
       {
-         const err= subtitle;    
+         const err= subtitle;
          this.loggingService.logException(err)
-      }  
+      }
       this.notificationSnackbarService.manageSnackBar(type,subtitle)
-      this.HideLoader();   
+      this.HideLoader();
     }
 
     ShowLoader()
     {
       this.loaderService.show();
     }
-  
+
     HideLoader()
     {
       this.loaderService.hide();
@@ -67,7 +67,7 @@ export class IncomeFacade {
         this.ddlIncomeTypesSubject.next(ddlIncomesTypesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -78,7 +78,7 @@ export class IncomeFacade {
         this.ddlIncomeSourcesSubject.next(ddlIncomeSourcesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -89,7 +89,7 @@ export class IncomeFacade {
         this.ddlFrequenciesSubject.next(ddlFrequenciesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -100,7 +100,7 @@ export class IncomeFacade {
         this.ddlProofOfIncomeTypesSubject.next(ddlProofOfIncomeTypesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -129,7 +129,7 @@ export class IncomeFacade {
       },
       error: (err) => {
         this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -142,7 +142,7 @@ export class IncomeFacade {
         );
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -152,10 +152,13 @@ export class IncomeFacade {
   }
 
   saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
-    
+
     const formData: any = new FormData();
     for (var key in clientIncome) {
-      if (key == "incomeStartDate" || key == 'incomeEndDate') {
+      if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+      }
+      if (key == "incomeStartDate") {
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
       }
       else {
@@ -168,7 +171,10 @@ export class IncomeFacade {
   editClientIncome(clientIncome:any, proofOfIncomeFile:any){
     const formData: any = new FormData();
     for (var key in clientIncome) {
-      if (key == "incomeStartDate" || key == 'incomeEndDate') {
+      if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+      }
+      if (key == "incomeStartDate") {
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
       }
       else {

@@ -72,7 +72,8 @@ CAClient = DependentTypeCode.CAClient;
   public actions = [
     {
       buttonType:"btn-h-primary",
-      text: "Edit Family Member",
+      clientText: "Edit Family Member",
+      depText: "Edit Family Member",
       icon: "edit" ,   
       click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {             
         if(!this.editbuttonEmitted)
@@ -84,7 +85,8 @@ CAClient = DependentTypeCode.CAClient;
     },
     {
       buttonType:"btn-h-danger",
-      text: "Delete Family Member",
+      clientText: "Delete Family Member",
+      depText: "Remove Family Member",
       icon: "delete",    
       click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {           
           
@@ -113,7 +115,14 @@ CAClient = DependentTypeCode.CAClient;
   
     this.addOrEditFamilyDependentDisplay();      
     }
+// updating the pagination infor based on dropdown selection
+pageselectionchange(data: any) {
+  this.state.take = data.value;
+  this.state.skip = 0;
+  this.loadFamilyDependents()
+}
 
+ 
   /** Private methods **/
 
   private addOrEditFamilyDependentDisplay() {
@@ -259,7 +268,7 @@ CAClient = DependentTypeCode.CAClient;
  
    public dataStateChange(stateData: any): void {         
       this.sort = stateData.sort;
-      this.sortValue = stateData.sort[0]?.field
+      this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
       this.sortType = stateData.sort[0]?.dir ?? 'asc'
       this.state=stateData;
       this.loadFamilyDependents();   

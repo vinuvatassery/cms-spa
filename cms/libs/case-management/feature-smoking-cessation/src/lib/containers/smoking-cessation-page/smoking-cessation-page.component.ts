@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pair
 /** Internal Libraries **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist, StatusFlag, SmokingCessation, YesNoFlag, ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
@@ -20,6 +20,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   /** Public properties **/
   tareaCessationMaxLength = 300;
   tareaCessationCharachtersCount!: number;
@@ -46,7 +48,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private caseFacad: CaseFacade,
     private loaderService: LoaderService,
-    private loggingService: LoggingService
+    private loggingService: LoggingService,
+    private router:Router
   ) {
   }
 
@@ -58,11 +61,15 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.tareaVariablesIntiation();
     this.addSaveSubscription();
     this.smokingCessationFormChanged();
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
@@ -218,6 +225,34 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
       this.smokingCessationForm.controls["smokingCessationNote"].updateValueAndValidity()
     }
     this.isDisabled = disable;
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        if(this.checkValidations()){
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
+      }
+    });
+  }
+
+  checkValidations() {
+    this.validate();
+    return this.smokingCessationForm.valid;
   }
 
 }

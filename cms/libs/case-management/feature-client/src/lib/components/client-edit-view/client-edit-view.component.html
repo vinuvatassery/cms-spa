@@ -4,7 +4,7 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Enter First Name" class="k-form">
-          <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus showErrorIcon="initial" 
+          <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
             formControlName="firstName" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
@@ -14,7 +14,7 @@
       <!-- [disabled]="isMiddleNameChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Middle Initial (Optional)">
-          <kendo-textbox aria-label="middle initial" showErrorIcon="initial" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="middle initial"  [fillMode]="formUiStyle.inputFillMode"
             formControlName="middleName" [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
 
@@ -34,7 +34,7 @@
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name">
-          <kendo-textbox aria-label="last name" showErrorIcon="initial" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="last name"  [fillMode]="formUiStyle.inputFillMode" (blur)="searchDuplicateClient()" 
             formControlName="lastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
@@ -126,7 +126,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
-            formControlName="dateOfBirth" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+            formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
             placeholder=""></kendo-datepicker>
 
         </kendo-floatinglabel>
@@ -139,13 +139,14 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Social Security Number">
-          <kendo-textbox aria-label="social security number" showErrorIcon="initial"
+          <kendo-textbox aria-label="social security number" (blur)="searchDuplicateClient()" 
             [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
             [value]="appInfoForm.controls['ssn'].value | ssn"> </kendo-textbox>
 
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social
-          security number is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
+        <kendo-formerror *ngIf=" !appInfoForm.controls['ssn'].valid && ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">This SSN matches another client. Please update before proceeding</kendo-formerror>
+		
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
@@ -242,7 +243,7 @@
           [dropdownInutLov]="materialsyeslov$" [textFieldDisable]="yesMaterialDisable"
           [OptionControlerName]="'materialInAlternateFormatCode'" [textControlerName]="'materialInAlternateFormatDesc'"
           [textFieldType]="'dropDown'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Select formats'"
-          [textValidationMessage]="'Material is required.'">
+          [textValidationMessage]="'An Alternate Format is Required.'">
         </common-optionbutton-list>
       </div>
     </fieldset>
@@ -295,7 +296,7 @@
       <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="interpreterTypeInputDisable" [OptionControlerName]="'interpreterCode'"
         [textControlerName]="'interpreterType'" [textFieldType]="'textField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Type of interpreter'" [textValidationMessage]="'Type is required.'"
+        [textPlaceholderText]="'Type of interpreter'" [textValidationMessage]="'Type of interpreter is required.'"
         [textFieldMaxLimit]="50">
       </common-optionbutton-list>
     </fieldset>
@@ -311,8 +312,8 @@
       <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="startAgeDeafOrHearingInputDisable" [OptionControlerName]="'deafOrHearingCode'"
         [textControlerName]="'startAgeDeafOrHearing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -327,8 +328,8 @@
       <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="startAgeBlindSeeingInputDisable" [OptionControlerName]="'blindSeeingCode'"
         [textControlerName]="'startAgeBlindSeeing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -358,7 +359,7 @@
         [OptionControlerName]="'walkingClimbingDifficultyCode'"
         [textControlerName]="'startAgeWalkingClimbingDifficulty'" [textFieldType]="'numericField'"
         [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'" [textFieldMaxLimit]="9999">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -375,7 +376,7 @@
         [OptionControlerName]="'dressingBathingDifficultyCode'"
         [textControlerName]="'startAgeDressingBathingDifficulty'" [textFieldType]="'numericField'"
         [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'" [textFieldMaxLimit]="9999">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -393,7 +394,7 @@
         [textFieldDisable]="startAgeConcentratingDifficultyInputDisable"
         [OptionControlerName]="'concentratingDifficultyCode'" [textControlerName]="'startAgeConcentratingDifficulty'"
         [textFieldType]="'numericField'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'" [textFieldMaxLimit]="9999">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -410,11 +411,17 @@
       <common-optionbutton-list   [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
         [textFieldDisable]="startAgeErrandsDifficultyInputDisable" [OptionControlerName]="'errandsDifficultyCode'"
         [textControlerName]="'startAgeErrandsDifficulty'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
       </common-optionbutton-list>
     </fieldset>
   </section>
 
 
 </form>
+
+
+<kendo-dialog *ngIf="showDuplicatePopup" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="onDuplicatPopupCloseClick()">
+  <kendo-dialog-titlebar>Possible Duplicate Found</kendo-dialog-titlebar>
+  <case-management-duplicate-client-found [currentClientInfo]="currentClient" [matchingClientInfo]="matchingClient" (closeModalClick)="onDuplicatPopupCloseClick()"> </case-management-duplicate-client-found>
+</kendo-dialog>
