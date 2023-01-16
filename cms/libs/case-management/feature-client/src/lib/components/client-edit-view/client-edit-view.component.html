@@ -3,8 +3,8 @@
   <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4">
-        <kendo-floatinglabel text="Enter First Name" class="k-form">
-          <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
+        <kendo-floatinglabel text="First Name" class="k-form">
+          <kendo-textbox aria-label="first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
             formControlName="firstName" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
@@ -13,7 +13,7 @@
       </div>
       <!-- [disabled]="isMiddleNameChecked" -->
       <div class="flex-col flex-col-4">
-        <kendo-floatinglabel text="Middle Initial (Optional)">
+        <kendo-floatinglabel text="Middle Initial">
           <kendo-textbox aria-label="middle initial"  [fillMode]="formUiStyle.inputFillMode"
             formControlName="middleName" [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
@@ -128,7 +128,7 @@
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
             formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
             placeholder=""></kendo-datepicker>
-
+            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
