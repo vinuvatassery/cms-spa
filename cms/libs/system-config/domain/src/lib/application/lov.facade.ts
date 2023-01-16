@@ -44,6 +44,7 @@ export class LovFacade {
   private lovPremiumFrequencySubject = new BehaviorSubject<Lov[]>([]);
   private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovPriorityCodeSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -70,6 +71,7 @@ export class LovFacade {
   premiumFrequencylov$ = this.lovPremiumFrequencySubject.asObservable();
   medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
   caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
+  priorityCodeType$ = this.lovPriorityCodeSubject.asObservable();
 
 
         /** Public methods **/
@@ -320,6 +322,19 @@ getCaseStatusLovs(): void {
   this.lovDataService.getLovsbyType(LovType.CaseStatusCode).subscribe({
     next: (lovCaseStatusResponse) => {
       this.lovCaseStatusTypeSubject.next(lovCaseStatusResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+
+}
+
+getCaseCodeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.PriorityCode).subscribe({
+    next: (lovCaseStatusResponse) => {
+      this.lovPriorityCodeSubject.next(lovCaseStatusResponse);
     },
     error: (err) => {
       this.loggingService.logException(err)

@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'case-management-set-health-insurance-priority',
@@ -11,11 +11,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class SetHealthInsurancePriorityComponent implements OnInit {
   /** Public properties **/
-  ddlMedicalHealthPlanPriority$ =
-    this.healthFacade.ddlMedicalHealthPlanPriority$;
+  ddlMedicalHealthPlanPriority$ =this.lovFacade.priorityCodeType$;
     public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
-  constructor(private readonly healthFacade: HealthInsuranceFacade) {}
+  constructor(private lovFacade: LovFacade,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -24,6 +23,6 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
 
   /** Private methods **/
   private loadDdlMedicalHealthPlanPriority() {
-    this.healthFacade.loadDdlMedicalHealthPlanPriority();
+    this.lovFacade.getCaseCodeLovs();
   }
 }
