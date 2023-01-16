@@ -856,10 +856,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.newOthersCoveredOnPlan.removeAt(i);
   }
 
-  checkEnrollment(status: string) {
-    return status === 'Y' ? true : false;
-  }
-
   insuranceCarrierNameData(data: any) {
     if (this.isEdit) {
       this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(

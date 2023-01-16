@@ -97,6 +97,19 @@
             </div>
           </fieldset>
         </div>
+        <div class="flex-col mb-2 mt-2 file-uploads">
+          <h5 class="text-capital">Copy of Insurance Card</h5>
+          <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
+            [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
+            (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance')" #copyOfInsurance
+            [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
+            [restrictions]="uploadFileRestrictions.fileRestrictions">
+          </kendo-upload>
+          <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <kendo-formerror *ngIf="!copyOfInsuranceCardFiles && isViewContentEditable==false"> Copy of insurance card is
+            required
+          </kendo-formerror>
+        </div>
       </div>
     </div>
 
@@ -181,9 +194,7 @@
           <case-management-medical-premium-detail-group-plan-type [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-group-plan-type>
         </div>
-        <div class="flex-col mt-3" *ngIf="ddlInsuranceType !==InsurancePlanTypes.OregonHealthPlan
-           && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan
-            && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan">
+        <div class="flex-col mt-3" *ngIf="ddlInsuranceType !==InsurancePlanTypes.OregonHealthPlan">
           <div class="block-section">
             <div class="flex-row">
               <div class="flex-col">
@@ -286,9 +297,9 @@
         </div>
 
         <div class="flex-col" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
-           && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan
-             && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan 
-             &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
+             && ddlInsuranceType !== InsurancePlanTypes.Cobra 
+             && ddlInsuranceType !== InsurancePlanTypes.Medicare
+             && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
               <h5>Are others covered on the plan?</h5>
@@ -311,8 +322,10 @@
             </div>
           </fieldset>
         </div>
-        <div class="flex-col mt-2"
-          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  &&  ddlInsuranceType !== InsurancePlanTypes.Cobra">
+        <div class="flex-col mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan 
+        && ddlInsuranceType !== InsurancePlanTypes.Cobra 
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare 
+        && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
               <h5>Others covered on the plan(Select all that apply)</h5>
@@ -324,7 +337,6 @@
                     <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
                       formControlName="enrolledInInsuranceFlag" (change)="updateEnrollStatus($event, i)"
                       aria-labelledby="othersCoverdSelect" id="othersCoverdSelect{{i}}"
-                      [checked]="person.value.enrolledInInsuranceFlag"
                       name={{person.value.firstName}}{{-person.value.lastName}} />
                     <label class="k-checkbox-label" for="othersCoverdSelect">{{person.value.firstName}}
                       {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
@@ -334,7 +346,10 @@
             </div>
           </fieldset>
         </div>
-        <div formArrayName="newOthersCoveredOnPlan">
+        <div formArrayName="newOthersCoveredOnPlan" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan 
+        && ddlInsuranceType !== InsurancePlanTypes.Cobra
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare
+        && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
           <div *ngFor="let person of newOthersCoveredOnPlan.controls; let i=index">
             <div class="flex-row pl-3 mt-2" [formGroupName]="i">
               <div class="flex-col d-flex align-iems-center justify-content-between">
@@ -392,10 +407,11 @@
           </div>
         </div>
 
-
         <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
-          <div class="flex-col"
-            *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan  && ddlInsuranceType !== InsurancePlanTypes.Cobra && ddlInsuranceType !== InsurancePlanTypes.Medicare">
+          <div class="flex-col" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan 
+            && ddlInsuranceType !== InsurancePlanTypes.Cobra
+            && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
+            && ddlInsuranceType !== InsurancePlanTypes.Medicare">
             <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
               aria-label="add new person">
               <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
@@ -403,8 +419,11 @@
           </div>
         </div>
       </div>
-      <div class="flex-col mt-3"
-        *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan ">
+      <div class="flex-col mt-3" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
+        && ddlInsuranceType !== InsurancePlanTypes.Cobra
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare 
+        && ddlInsuranceType !== InsurancePlanTypes.Veterans
+        && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
         <h5>Is the client the policy holder?</h5>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
@@ -422,7 +441,11 @@
             client policy holder flag is required.</kendo-formerror>
         </div>
       </div>
-      <div class="flex-row pl-3 mt-2">
+      <div class="flex-row pl-3 mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan 
+      && ddlInsuranceType !== InsurancePlanTypes.Cobra
+      && ddlInsuranceType !== InsurancePlanTypes.Medicare 
+      && ddlInsuranceType !== InsurancePlanTypes.Veterans
+      && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
@@ -444,7 +467,7 @@
         </div>
       </div>
       <div class="flex-col mb-2 mt-2 file-uploads"
-        *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan">
+        *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.Veterans">
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
@@ -453,12 +476,15 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="!copyOfInsuranceCardFiles && isViewContentEditable==false"> Copy of insurance card is required
+        <kendo-formerror *ngIf="!copyOfInsuranceCardFiles && isViewContentEditable==false"> Copy of insurance card is
+          required
         </kendo-formerror>
       </div>
       <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
-         && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan
-           && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan 
+           && ddlInsuranceType !== InsurancePlanTypes.Cobra
+           && ddlInsuranceType !== InsurancePlanTypes.Medicare
+           && ddlInsuranceType !== InsurancePlanTypes.Veterans
+           && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan 
            && healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y'">
         <h5 class="text-capital">Proof of premium amount</h5>
         <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
@@ -468,12 +494,16 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && !proofOfPremiumFiles && isViewContentEditable==false">
+        <kendo-formerror
+          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && !proofOfPremiumFiles && isViewContentEditable==false">
           Proof of premium is required
         </kendo-formerror>
       </div>
-      <div class="flex-col mb-2  file-uploads"
-        *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan  && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan ">
+      <div class="flex-col mb-2  file-uploads" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan 
+        && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan
+        && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan
+        && ddlInsuranceType !== InsurancePlanTypes.Veterans 
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
         <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
         <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"

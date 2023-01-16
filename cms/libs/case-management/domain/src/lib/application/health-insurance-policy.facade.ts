@@ -20,6 +20,17 @@ export class HealthInsurancePolicyFacade {
   healthFacadesnackbar$ = this.snackbarSubject.asObservable();
   healthInsurancePolicy$ = this.healthInsurancePolicySubject.asObservable();
 
+  public dateFields: Array<string> = [
+    'startDate',
+    'endDate',
+    'premiumPaidThruDate',
+    'nextPremiumDueDate',
+    'medicarePartAStartDate',
+    'medicarePartBStartDate',
+    'oonStartDate',
+    'oonEndDate',
+    'creationTime'
+  ];
 
   ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -99,11 +110,20 @@ export class HealthInsurancePolicyFacade {
         continue;
       }
       else if (typeof obj[i] == 'object') {
-        this.FormData_append_object(fd, obj[i], k);
+        if (this.dateFields.indexOf(i) >= 0) {
+          if (obj[i] != null && obj[i] != "") {
+            fd.append(i, (new Date(obj[i]).toLocaleDateString()));
+          }
+          else {
+            fd.append(i, obj[i]);
+          }
+        }
+        else {
+          this.FormData_append_object(fd, obj[i], k);
+        }
       }
       else {
         fd.append(k, obj[i]);
-        console.log(obj[i])
       }
     }
   }
