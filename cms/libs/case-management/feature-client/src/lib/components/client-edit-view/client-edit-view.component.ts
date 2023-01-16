@@ -127,6 +127,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   showDuplicatePopup:boolean=false;
   currentClient:any={};
   matchingClient:any={};
+  showDuplicateLoader:boolean=false;
  
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -897,7 +898,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       dob: parsedDate,
       ssn: clientSsn
     };
-    this.loaderService.show();
+    this.showDuplicateLoader=true;
     this.clientfacade.searchDuplicateClient(data).subscribe({
       next: (response: any) => {
         if (response != null) {
@@ -916,12 +917,12 @@ private updateWorkflowPronounCount(isCompleted:boolean){
           else {
             this.showDuplicatePopup = true
           }
-          this.ref.detectChanges();
         }
-        this.loaderService.hide();
+        this.showDuplicateLoader=false;
+        this.ref.detectChanges();
       },
       error: (err: any) => {
-        this.loaderService.hide();
+        this.showDuplicateLoader=false;
         this.loggingService.logException(err);
         this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       }
