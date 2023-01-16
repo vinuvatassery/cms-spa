@@ -172,9 +172,10 @@
 <!-- Delete Modal -->
 <kendo-dialog
   *ngIf="isOpenedDeleteConfirm"
-  (close)="onDeleteConfirmCloseClicked()"
+ 
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
+<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Remove healthcare provider? </kendo-dialog-titlebar>
  <case-management-health-care-provider-remove-confirmation
  [prvId]="prvSelectedId" 
  (deleteConfimEvent)="handleAcceptPrvRemove($event)"
