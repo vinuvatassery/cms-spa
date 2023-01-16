@@ -587,10 +587,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.appInfoForm.updateValueAndValidity();
             this.appInfoForm.controls["firstName"].setValidators([Validators.required]);
             this.appInfoForm.controls["firstName"].updateValueAndValidity();
-
             this.appInfoForm.controls["dateOfBirth"].setValidators([Validators.required]);
             this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
-            //this.appInfoForm.controls["dateOfBirth"].setErrors(null);
         if(this.appInfoForm.controls["chkmiddleName"].value  ){
               this.appInfoForm.controls["middleName"].removeValidators(Validators.required);;
               this.appInfoForm.controls["middleName"].updateValueAndValidity();

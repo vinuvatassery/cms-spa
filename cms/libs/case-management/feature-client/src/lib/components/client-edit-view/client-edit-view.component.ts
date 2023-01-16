@@ -705,7 +705,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
   onInsuranceCardChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.appInfoForm.controls['prmInsFirstName'].setValue(null);
       this.appInfoForm.controls['prmInsFirstName'].removeValidators(Validators.required);
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsLastName'].removeValidators(Validators.required);
