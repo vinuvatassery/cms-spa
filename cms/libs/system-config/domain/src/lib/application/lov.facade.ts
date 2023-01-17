@@ -331,7 +331,7 @@ getCaseStatusLovs(): void {
 }
 
 getPriorityLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.PharmacyPriority).subscribe({
+  this.lovDataService.getLovsbyType(LovType.PriorityCode).subscribe({
     next: (lovPriorityResponse) => {
       this.lovPrioritySubject.next(lovPriorityResponse);
     },
