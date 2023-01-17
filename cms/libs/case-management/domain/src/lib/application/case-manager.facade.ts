@@ -91,7 +91,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
             total:  getCaseManagersResponse["totalCount"]  
             };       
         const workFlowdata: CompletionChecklist[] = [{
-          dataPointName: 'hasHivCaseManager',
+          dataPointName: 'caseManager',
           status: (parseInt(getCaseManagersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
         }]; 
         if(parseInt(getCaseManagersResponse["totalCount"]) > 0)
@@ -201,6 +201,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
     dataPointName: 'wouldYouLikeOne',
     status: statusData === true ? StatusFlag.Yes : StatusFlag.No 
   }]; 
+
   this.workflowFacade.updateChecklist(workFlowdata);
  }
     

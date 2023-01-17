@@ -43,7 +43,7 @@ export class PageCompletionStatusComponent implements OnInit, OnDestroy {
       this.showCountCalculationLoader$.next(true);
         let currentWfStep = wfCompStatus.filter(wf => wf.processId == this.workflowProcessId)[0];
         this.completed = currentWfStep?.completedCount ?? 0;
-        this.total = currentWfStep?.calcualtedTotalCount ?? 0;
+        this.total = currentWfStep?.calculatedTotalCount ?? 0;
         this.showCountCalculationLoader$.next(false);
       });
   }

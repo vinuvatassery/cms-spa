@@ -120,7 +120,10 @@ export class CaseDetailPageComponent implements OnInit {
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
     this.loadSessionSubscription .unsubscribe();
-	this.showConfirmationPopupSubscription.unsubscribe();  }
+	  this.showConfirmationPopupSubscription.unsubscribe();      
+    this.workflowFacade.unloadWorkflowSession();
+}
+
   cancelCase(){
     this.loaderService.show()  
     this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe(

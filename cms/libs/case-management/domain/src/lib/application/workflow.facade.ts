@@ -195,7 +195,7 @@ export class WorkflowFacade {
       const navUpdate = {
         navType: navType,
         workflowProgressId: currentWorkflowStep?.workflowProgressId,
-        requiredDatapointsCount: completionStatus?.calcualtedTotalCount ?? 0,
+        requiredDatapointsCount: completionStatus?.calculatedTotalCount ?? 0,
         completedDatapointsCount: completionStatus?.completedCount ?? 0
       }
 
@@ -333,10 +333,15 @@ export class WorkflowFacade {
       const workflowProgress = this.deepCopy(workflowSession.workFlowProgress).filter((wp: WorkFlowProgress) => wp.processId === wf.processId)[0];
       const processCompletion: WorkflowProcessCompletionStatus = {
         processId: wf.processId,
-        calcualtedTotalCount: workflowProgress && workflowProgress?.requiredDatapointsCount != 0 ? workflowProgress?.requiredDatapointsCount : wf?.requiredCount,
+        calculatedTotalCount: workflowProgress && workflowProgress?.requiredDatapointsCount != 0 ? workflowProgress?.requiredDatapointsCount : (wf?.requiredCount === 0 ? 1: wf?.requiredCount),
         completedCount: workflowProgress ? workflowProgress?.completedDatapointsCount : 0,
         completionChecklist: completionChecklist
       };
+
+      if(workflowProgress?.title === 'Case Details'){
+        processCompletion.calculatedTotalCount = completionChecklist?.length ?? 0;
+        processCompletion.completedCount = completionChecklist?.length ?? 0;
+      }
 
       processCompletionChecklist.push(processCompletion);
     });
@@ -351,6 +356,18 @@ export class WorkflowFacade {
     nextWorkflow.currentFlag = StatusFlag.Yes;
     nextWorkflow.visitedFlag = StatusFlag.Yes;
 
+    const completionCount = this.deepCopy(this.completionChecklist)?.filter((checklist:WorkflowProcessCompletionStatus) => checklist.processId === currentWorkflow.processId)[0];
+    if (completionCount) {
+      if(completionCount?.calculatedTotalCount === 0){
+        currentWorkflow.completedDatapointsCount = 1;
+        currentWorkflow.requiredDatapointsCount = 1;
+      }
+      else{
+        currentWorkflow.completedDatapointsCount = completionCount?.completedCount;
+        currentWorkflow.requiredDatapointsCount = completionCount?.calculatedTotalCount;
+      }
+    }
+    
     const currentIndex = this.deepCopy(this.currentSession?.workFlowProgress)?.findIndex((wf: WorkFlowProgress) => wf.workflowProgressId === currentWorkflow.workflowProgressId);
     if (currentIndex !== -1) {
       this.currentSession.workFlowProgress[currentIndex] = currentWorkflow;
@@ -382,7 +399,7 @@ export class WorkflowFacade {
       let currentScreenStatusIndex = this.deepCopy(this.completionChecklist)?.findIndex((status: WorkflowProcessCompletionStatus) => status?.processId === completionStatus?.processId);
       if (currentScreenStatusIndex !== -1) {
         currentScreenStatus.completedCount = completionStatus?.completionChecklist?.filter(chklist => chklist?.status === StatusFlag.Yes)?.length;
-        currentScreenStatus.calcualtedTotalCount = completionStatus?.completionChecklist?.length;
+        currentScreenStatus.calculatedTotalCount = completionStatus?.completionChecklist?.length;
         currentScreenStatus.completionChecklist = completionStatus?.completionChecklist;
         this.completionChecklist[currentScreenStatusIndex] = currentScreenStatus;
         if(updateCount === true){
@@ -421,6 +438,11 @@ export class WorkflowFacade {
         console.error('err', err);
       },
     });
+  }
+
+  unloadWorkflowSession(){
+    this.routesSubject.next([]);
+    this.wfProcessCompletionStatusSubject.next([]);
   }
 
   
