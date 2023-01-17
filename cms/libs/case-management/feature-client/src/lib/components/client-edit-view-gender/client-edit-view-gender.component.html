@@ -29,9 +29,8 @@
               aria-label="enter gender"
               [formControlName]="DescriptionField"
               [fillMode]="formUiStyle.inputFillMode"
-              [disabled]="
-                !appInfoForm.controls[ControlPrefix + gender.lovCode].value
-              "
+              [maxlength]="maxLengthFifty"
+              [disabled]="!appInfoForm.controls[ControlPrefix + gender.lovCode].value"
             >
             </kendo-textbox>
           </kendo-floatinglabel>

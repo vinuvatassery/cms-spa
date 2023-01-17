@@ -32,6 +32,7 @@
                   aria-label="Enter Answer"
                   [fillMode]="formUiStyle.inputFillMode"
                   [formControlName]="DescriptionField"
+                  [maxlength]="50"
                   [disabled]="
                     appInfoForm.controls['Transgender'].value !== 'NOT_LISTED'
                   "
@@ -39,7 +40,7 @@
               </kendo-floatinglabel>
               <kendo-formerror
                 *ngIf="!appInfoForm.controls[DescriptionField].valid"
-                >'Are they transgender' is required.</kendo-formerror
+                >Are they transgender is required.</kendo-formerror
               >
               </div>
             </div>

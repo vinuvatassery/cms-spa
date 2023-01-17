@@ -18,15 +18,16 @@ export class ClientEditViewGenderComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   GenderLovs$ = this.lovFacade.genderlov$;
-  ControlPrefix = 'Gender';
-  DescriptionField = 'GenderDescription';
+  ControlPrefix = 'gender-';
+  DescriptionField = 'genderDescription';
+  maxLengthFifty =50;
   private countOfSelection=0; 
   constructor(
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder,
     private readonly workflowFacade : WorkflowFacade
   ) {
-    this.appInfoForm = this.formBuilder.group({ Gender: [''] });
+    this.appInfoForm = this.formBuilder.group({ });
   }
   Genders: any = [];
   ngOnInit(): void {
@@ -75,21 +76,27 @@ export class ClientEditViewGenderComponent implements OnInit {
     this.workflowFacade.updateChecklist(workFlowdata);
   }
 
+  setControlValidations() {
+    const genderControls = Object.keys(this.appInfoForm.controls).filter(m => m.includes('gender-'));
+    genderControls.forEach((gender: any) => {
+      this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
+      this.appInfoForm.controls[gender].updateValueAndValidity();
+    });
+  }
+
   onCheckChange(event: any, lovCode: string) {
     if (event.target.checked) {
-      this.appInfoForm.controls['GenderGroup'].setValue(lovCode);
+      this.appInfoForm.controls['GenderGroup'].setValue('someValue');
+      this.appInfoForm.controls['GenderGroup'].updateValueAndValidity();
       if (lovCode === 'NOT_LISTED') {
-        this.appInfoForm.controls[this.DescriptionField].setErrors({
-          incorrect: true,
-        });
+          this.appInfoForm.controls[this.DescriptionField].setValidators(Validators.required); 
       }      
-    } else {
-      this.appInfoForm.controls['GenderGroup'].setValue('');
-
-      if (lovCode === 'NOT_LISTED') {
-        this.appInfoForm.controls[this.DescriptionField].setErrors(null);
-        this.appInfoForm.controls[this.DescriptionField].setValue('');
+    } else {    if (lovCode === 'NOT_LISTED') {
+      this.appInfoForm.controls[this.DescriptionField].setValue(null); 
+      this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required); 
+      this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity(); 
       }     
-    }   
+    } 
+    this.setControlValidations();  
   }
 }
