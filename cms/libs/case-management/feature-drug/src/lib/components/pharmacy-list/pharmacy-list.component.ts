@@ -103,9 +103,6 @@ export class PharmacyListComponent implements OnInit {
       next: (pharmacies: ClientPharmacy[]) => {
         pharmacies.forEach((pharmacyData: ClientPharmacy) => {
           pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
-          if(pharmacyData.phone){
-            pharmacyData.phone = this.formatPhoneNumber(pharmacyData.phone);
-          }
         });
       },
       error: (err) => {
@@ -149,16 +146,6 @@ export class PharmacyListComponent implements OnInit {
     if (resp === true) {
       this.handleClosePharmacyClicked();
     }
-  }
-
-  private formatPhoneNumber(phoneNumberString: string) {
-    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      var intlCode = (match[1] ? '+1 ' : '');
-      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-    }
-    return '';
   }
 
   /** Internal event methods **/
