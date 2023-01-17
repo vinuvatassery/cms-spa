@@ -543,6 +543,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         ]);
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
+      //TODO validate the upload file here. Not required file same for other plans as well
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan) {
       OffExchangePlanRequiredFields.forEach((key: string) => {
@@ -603,6 +604,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['medicarePartBStartDate'].updateValueAndValidity();
       }
     }
+    //TODO please add the condition which insurance type below field is used for
     if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y') {
       this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValidators([
         Validators.required,
@@ -640,12 +642,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     });
   }
   private resetData() {
-    Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
-      if (key !== 'insuranceType' && key !== 'clientInsurancePolicyId') {
-        this.healthInsuranceForm.controls[key].setValue(null);
-        this.healthInsuranceForm.controls[key].updateValueAndValidity();
-      }
-    });
+     if( this.healthInsuranceForm.controls !== null && Object.keys(this.healthInsuranceForm.controls).length>0){
+      Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
+        if (key !== 'insuranceType' && key !== 'clientInsurancePolicyId' && key !=="othersCoveredOnPlan" && key !== "newOthersCoveredOnPlan") {
+          this.healthInsuranceForm.controls[key].setValue(null);
+          this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        }
+      });
+    }
   }
 
   private populateInsurancePolicy() {
@@ -815,7 +819,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   /** Internal event methods **/
   onHealthInsuranceTypeChanged() {
-    // this.resetData();
+    this.resetData();
     this.resetValidators();
     this.ddlInsuranceType =
       this.healthInsuranceForm.controls['insuranceType'].value;
@@ -926,10 +930,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     }
   }
   save() {
-    this.isSubmitted = true;
+    //this.isSubmitted = true;
     this.validateForm();
     let isInsuranceFile = true;
     let isProofFile = true;
+    //TODO: please move the validation to validateForm()
+    //Create three variable in global isInsuranceFileUploaded, isProofFileUploaded, isSummaryFileUploaded and set true
     if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan
       && this.ddlInsuranceType !== this.InsurancePlanTypes.QualifiedHealthPlan
       && this.ddlInsuranceType !== this.InsurancePlanTypes.OffExchangePlan) {
