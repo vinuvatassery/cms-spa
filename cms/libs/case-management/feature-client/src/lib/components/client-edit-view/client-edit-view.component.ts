@@ -127,6 +127,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   showDuplicatePopup:boolean=false;
   currentClient:any={};
   matchingClient:any={};
+  ssnMask='000-00-0000'
  
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -931,4 +932,5 @@ private updateWorkflowPronounCount(isCompleted:boolean){
   onDuplicatPopupCloseClick() {
     this.showDuplicatePopup = false;
   }
+
 }
