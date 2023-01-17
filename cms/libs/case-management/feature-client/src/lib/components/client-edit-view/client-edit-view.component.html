@@ -139,13 +139,13 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Social Security Number">
-          <kendo-textbox aria-label="social security number" (blur)="searchDuplicateClient()" 
+          <kendo-maskedtextbox  mask="000-00-0000"  aria-label="social security number" (blur)="searchDuplicateClient()" 
             [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
-            [value]="appInfoForm.controls['ssn'].value | ssn"> </kendo-textbox>
+            [value]="appInfoForm.controls['ssn'].value "> </kendo-maskedtextbox >
 
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="appInfoForm.controls['ssn'].hasError('minlength') && !this.appInfoForm.controls['ssn'].disabled">Social Security Number cannot be less then 9 digits.</kendo-formerror>
-        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !appInfoForm.controls['ssn'].hasError('minlength') && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social Security Number is required.</kendo-formerror>
+        <kendo-formerror *ngIf="appInfoForm.controls['ssn'].hasError('patternError') && !this.appInfoForm.controls['ssn'].disabled">Social Security Number cannot be less then 9 digits.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !appInfoForm.controls['ssn'].hasError('patternError') && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social Security Number is required.</kendo-formerror>
         <kendo-formerror *ngIf=" !appInfoForm.controls['ssn'].valid && ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">This SSN matches another client. Please update before proceeding</kendo-formerror>
 		
       </div>

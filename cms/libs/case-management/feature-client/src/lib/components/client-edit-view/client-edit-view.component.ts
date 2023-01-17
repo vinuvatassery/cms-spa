@@ -763,14 +763,10 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.isSSNChecked = true;
-      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
       this.appInfoForm.controls['ssn'].disable();
     }
     else {
       this.isSSNChecked = false;
-      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
       this.appInfoForm.controls['ssn'].enable();
     }
   }
@@ -881,8 +877,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
 
   searchDuplicateClient() {
     this.ssnDuplicateFound = false;
-    this.appInfoForm.controls['ssn'].setErrors(null);
-    this.appInfoForm.controls['ssn'].updateValueAndValidity();
     let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
     let lastName = this.appInfoForm.controls['lastName'].value != null ? this.appInfoForm.controls['lastName'].value : '';
     let dateOfBirth = this.appInfoForm.controls['dateOfBirth'].value;
@@ -898,6 +892,9 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       dob: parsedDate,
       ssn: clientSsn
     };
+    if(clientSsn !='' && !this.appInfoForm.controls['ssn'].valid){
+      return;
+    }
     this.loaderService.show();
     this.clientfacade.searchDuplicateClient(data).subscribe({
       next: (response: any) => {

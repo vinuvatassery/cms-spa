@@ -637,10 +637,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else {
           let hasError = this.appInfoForm.controls["ssn"].errors;
           this.appInfoForm.controls["ssn"].setValidators(Validators.required);
-          this.appInfoForm.controls["ssn"].setValidators(Validators.minLength(9));
           this.appInfoForm.controls["ssn"].updateValueAndValidity();
           if (hasError) {
-            this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+            this.appInfoForm.controls['ssn'].setErrors(hasError);
           }
         }
         if(this.appInfoForm.controls["registerToVote"].value == null ||
