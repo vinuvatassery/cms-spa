@@ -57,12 +57,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   showHomeAddressValidationLoader$ = new BehaviorSubject(false);
   showRelationshipOtherDec: boolean = false;
   showAddressProofRequiredValidation: boolean = false;
+  showPreferredContactLoader = false;
   public homeAddressProofFile: any = undefined;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private currentSessionSubscription !: Subscription;
   private isNoMailAddressValidationRequired = true;
+  private allowWorkflowCountUpdate = false;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
   constructor(
@@ -151,7 +153,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
   }
 
-  private adjustAttributeInit() {
+  private adjustAttributeInit(updateOnWorkflow:boolean) {
     const initialAdjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {
@@ -163,9 +165,15 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       initialAdjustment.push(data);
     });
 
+    // if(this.contactInfo?.homeAddressProof?.documentName){
+    //   this.updateHomeAddressProofCount(!this.isEdit);
+    // }
+
     if (initialAdjustment.length > 0) {
       this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
     }
+
+    this.updateWorkflowChecklist(updateOnWorkflow);
   }
 
   private loadDdlRelationships() {
@@ -188,15 +196,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         startWith(null), pairwise()
       )
       .subscribe(([prev, curr]: [any, any]) => {
-        this.updateFormCompleteCount(prev, curr);
-        if (prev) {
-          if (prev['homePhone']['phoneNbr'] !== curr['homePhone']['phoneNbr']
-            || prev['cellPhone']['phoneNbr'] !== curr['cellPhone']['phoneNbr']
-            || prev['workPhone']['phoneNbr'] !== curr['workPhone']['phoneNbr']
-            || prev['otherPhone']['phoneNbr'] !== curr['otherPhone']['phoneNbr']
-            || prev['email']['email'] !== curr['email']['email']) {
-            this.loadPreferredContactMethod();
-          }
+        if(this.allowWorkflowCountUpdate === true){
+          this.updateFormCompleteCount(prev, curr);
         }
       });
   }
@@ -217,17 +218,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           });
         }
       }
-      else {
-        Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
-          if (this.contactInfoForm?.get(`${groupkey}.${key}`)?.value && this.contactInfoForm?.get(`${groupkey}.${key}`)?.valid) {
-            let item: CompletionChecklist = {
-              dataPointName: `${groupkey}_${key}`,
-              status: StatusFlag.Yes
-            };
-            completedDataPoints.push(item);
-          }
-        });
-      }
     });
 
     if (completedDataPoints.length > 0) {
@@ -235,7 +225,40 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadPreferredContactMethod() {
+  private updateWorkflowChecklist(updateOnWorkflow:boolean) {
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.contactInfoForm.controls).forEach(groupkey => {
+      Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
+        if (this.contactInfoForm?.get(`${groupkey}.${key}`)?.value) {
+          let item: CompletionChecklist = {
+            dataPointName: `${groupkey}_${key}`,
+            status: StatusFlag.Yes
+          };
+          completedDataPoints.push(item);
+        }
+      })
+    });
+
+    const addressProof: CompletionChecklist = {
+      dataPointName: 'homeAddress_proof',
+      status: this.contactInfo?.homeAddressProof?.documentName ? StatusFlag.Yes : StatusFlag.No
+    };
+    completedDataPoints.push(addressProof);
+
+    const otherDesc: CompletionChecklist = {
+      dataPointName: 'relationshipCodeOther',
+      status: this.contactInfo?.friendsOrFamilyContact?.contactRelationshipCode === 'O' ? StatusFlag.Yes : StatusFlag.No
+    };
+    completedDataPoints.push(otherDesc);
+    
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints, true);
+    }
+    this.allowWorkflowCountUpdate = true;
+  }
+
+  loadPreferredContactMethod() {
+    this.showPreferredContactLoader = true;
     const preferredContact: string[] = [];
     const homePhone = (this.contactInfoForm.get('homePhone') as FormGroup)?.controls['phoneNbr'];
     const cellPhone = (this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['phoneNbr'];
@@ -247,7 +270,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     const isValidWorkPhone = workPhone?.value && workPhone?.valid && !((this.contactInfoForm.get('workPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false);
     const isValidOtherPhone = otherPhone?.value && otherPhone?.valid && !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false);
     const isValidEmail = email?.value && email?.valid && !((this.contactInfoForm.get('email') as FormGroup)?.controls['applicableFlag']?.value ?? false);
-
     this.setMessageConsentVisibility(isValidHomePhone, isValidCellPhone, isValidWorkPhone, isValidOtherPhone, isValidEmail);
     if (isValidHomePhone) {
       preferredContact.push(this.formatPhoneNumber(homePhone?.value ?? ''));
@@ -262,7 +284,10 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       preferredContact.push(this.formatPhoneNumber(otherPhone?.value ?? ''));
     }
     if (isValidEmail) {
-      preferredContact.push(email?.value ?? '');
+    const match = email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,6}$/);
+      if(match){
+        preferredContact.push(email?.value ?? '');
+      }
     }
     this.preferredContactMethods = preferredContact;
 
@@ -273,10 +298,15 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       if (!this.preferredContactMethods?.includes(selectPreferredCode)) {
         this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
       }
+      this.updatePreferredContactCount(true);
+      this.showPreferredContactLoader = false;
+
     }
     else {
       this.contactInfoForm?.get('email.preferredContactMethod')?.removeValidators(Validators.required);
       this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
+      this.updatePreferredContactCount(false);
+      this.showPreferredContactLoader = false;
     }
   }
 
@@ -929,6 +959,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       this.contactInfoForm.get('familyAndFriendsContact')?.patchValue(this.contactInfo?.friendsOrFamilyContact);
       this.contactInfoForm.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.patchValue(this.contactInfo?.friendsOrFamilyContact?.noFriendOrFamilyContactFlag === StatusFlag.Yes);
+      if(this.contactInfo?.homeAddressProof?.documentName){
       this.homeAddressProofFile = [
         {
           name: this.contactInfo?.homeAddressProof?.documentName,
@@ -937,17 +968,17 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           uid: this.contactInfo?.homeAddressProof?.documentId
         },
       ];
-
-      if(this.contactInfo?.homeAddressProof?.documentName){
-        this.updateHomeAddressProofCount(true);
-      }
-
-      this.adjustAttributeInit();
+    }
+    else{
+      this.homeAddressProofFile=[];
+    }    
+      this.loadPreferredContactMethod();
       this.loaderService.hide();
       this.isNoMailAddressValidationRequired = false;
       this.validateMailingAddress(true);
       this.validateHomeAddress(true);
     }
+    this.adjustAttributeInit(!this.isEdit);
   }
 
   private homePhoneApplicableFlagChangeSubscription() {
@@ -1021,7 +1052,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.isNoProofOfHomeChecked = isChecked;
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
-    }
+    }    
+    this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);    
   }
 
   private setVisibilityByHomePhoneNotApplicable(isChecked: boolean) {
@@ -1108,13 +1140,20 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   private setVisibilityByRelationship(selectedValue: any) {
+    const otherDesc: CompletionChecklist = {
+      dataPointName: 'relationshipCodeOther',
+      status: StatusFlag.No
+    };
+
     if (selectedValue === 'O') {
       this.showRelationshipOtherDec = true;
+      otherDesc.status = StatusFlag.Yes;      
     }
     else {
       this.showRelationshipOtherDec = false;
     }
 
+    this.workflowFacade.updateBasedOnDtAttrChecklist([otherDesc]);
     this.contactInfoForm?.get('familyAndFriendsContact.otherDesc')?.updateValueAndValidity();
   }
 
@@ -1238,6 +1277,15 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }];
 
     this.workflowFacade.updateChecklist(workFlowData);
+  }
+
+  private updatePreferredContactCount(isCompleted: boolean) {
+    const data: CompletionChecklist[] = [{
+      dataPointName: 'preferredContactMethod_applicableFlag',  
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist(data);
   }
 
   private closeValidationPopup(type: string) {
