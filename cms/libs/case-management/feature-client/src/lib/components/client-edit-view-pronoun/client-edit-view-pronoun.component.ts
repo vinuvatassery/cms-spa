@@ -28,6 +28,7 @@ export class ClientEditViewPronounComponent implements OnInit {
    maxLengthFifty =50;
    public formUiStyle : UIFormStyle = new UIFormStyle();  
    //textboxDisable:boolean=true;
+   disablePronouns:any;
 
    private countOfSelection=0;   
 
@@ -51,9 +52,9 @@ export class ClientEditViewPronounComponent implements OnInit {
     this.pronounList = data;
     this.PronounChanges.emit(this.pronounList);
     data.forEach((element) => {
-        this.appInfoForm.addControl(element.lovCode, new FormControl(''));
-     
-    });
+        this.appInfoForm.addControl(element.lovCode, new FormControl(''));        
+    });  
+    this.disablePronouns =  this.pronounList.filter((x:any)=>x.lovCode !== PronounCode.dontKnow && x.lovCode !== PronounCode.dontWant)
   });
   this.appInfoForm.valueChanges.subscribe(a=>{     
       
@@ -69,15 +70,44 @@ export class ClientEditViewPronounComponent implements OnInit {
   this.workflowFacade.updateChecklist(workFlowdata);
 }
    onCheckChange(event:any,lovCode:any) { 
-    if(!this.appInfoForm.controls[PronounCode.NotListed].value){
+    if(!this.appInfoForm.controls[PronounCode.notListed].value){
       this.appInfoForm.controls['pronoun'].removeValidators(Validators.required);
       this.appInfoForm.controls['pronoun'].updateValueAndValidity();
-    }    
-     if(event.target.checked && lovCode ===PronounCode.NotListed){  
-      this.textboxDisable = false;      
-    }
+    }  
+  
+      switch(lovCode){
+        case PronounCode.notListed:
+          this.textboxDisable = false;  
+          break;
+        case PronounCode.dontKnow:
+        case PronounCode.dontWant:{
+          if(event.target.checked){
+            this.disablePronouns.forEach((pronoun:any) => { 
+              this.appInfoForm.controls[pronoun.lovCode].disable();
+            });   
+            break;
+          }
+          else{
+            if(lovCode ===PronounCode.dontKnow){
+              if(!this.appInfoForm.controls[PronounCode.dontWant].value === true){
+                this.disablePronouns.forEach((pronoun:any) => { 
+                  this.appInfoForm.controls[pronoun.lovCode].enable();
+                });  
+              }
+            }
+            if(lovCode ===PronounCode.dontWant){
+              if(!this.appInfoForm.controls[PronounCode.dontKnow].value === true){
+                this.disablePronouns.forEach((pronoun:any) => { 
+                  this.appInfoForm.controls[pronoun.lovCode].enable();
+                });  
+              }
+            }
+          }
+        }
+
+      }
    
-     if(!event.target.checked && lovCode ===PronounCode.NotListed) {  
+     if(!event.target.checked && lovCode ===PronounCode.notListed) {  
        this.textboxDisable = true;
      } 
     if(event.target.checked){
@@ -107,6 +137,7 @@ export class ClientEditViewPronounComponent implements OnInit {
           this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
       });
     }
+ 
    }
    onChange(event:any){
     if(event ===""){

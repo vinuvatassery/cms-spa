@@ -318,7 +318,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
       }
       this.applicantInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
-      if (this.applicantInfo.client.genderAtBirthCode===PronounCode.NotListed) {
+      if (this.applicantInfo.client.genderAtBirthCode===PronounCode.notListed) {
         this.applicantInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;
       }
 
@@ -343,7 +343,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }    
         
            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
-           if (this.appInfoForm.controls["Transgender"].value===PronounCode.NotListed) {
+           if (this.appInfoForm.controls["Transgender"].value===PronounCode.notListed) {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
            }
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
@@ -479,7 +479,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)     
       if(existingPronoun === null || existingPronoun === undefined){
           var clientPronoun = new ClientPronoun();
-          if(pronoun.lovCode===PronounCode.NotListed) {
+          if(pronoun.lovCode===PronounCode.notListed) {
                     clientPronoun.otherDesc = this.appInfoForm.controls["pronoun"].value;
                     clientPronoun.clientPronounCode =pronoun.lovCode;
                     clientPronoun.clientId = this.clientId;
@@ -491,7 +491,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientPronounList.push(clientPronoun);
         }
         else{
-          if(pronoun.lovCode===PronounCode.NotListed) {
+          if(pronoun.lovCode===PronounCode.notListed) {
             const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);          
             this.applicantInfo.clientPronounList[index].clientPronounCode = pronoun.lovCode;
             this.applicantInfo.clientPronounList[index].otherDesc = this.appInfoForm.controls["pronoun"].value;
@@ -514,7 +514,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
          let clientGender = new ClientGender();
          clientGender.clientGenderCode =control;
          clientGender.clientId = this.clientId;
-         if(clientGender.clientGenderCode===PronounCode.NotListed){
+         if(clientGender.clientGenderCode===PronounCode.notListed){
            clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
          }
          const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
@@ -538,7 +538,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       if (RaceAndEthnicityPrimary.lovCode===el.lovCode)
         clientRace.isPrimaryFlag = StatusFlag.Yes;
       clientRace.clientId = this.clientId;
-      if (el.lovCode === PronounCode.NotListed)
+      if (el.lovCode === PronounCode.notListed)
         clientRace.raceDesc = this.appInfoForm.controls['RaceAndEthnicityNotListed'].value;
       this.applicantInfo.clientRaceList.push(clientRace)
     });
@@ -565,7 +565,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         const clientSexualIdentity = new ClientSexualIdentity();
         clientSexualIdentity.clientSexualIdentityCode = control;
         clientSexualIdentity.clientId = this.clientId;
-        if (clientSexualIdentity.clientSexualIdentityCode === PronounCode.NotListed) {
+        if (clientSexualIdentity.clientSexualIdentityCode === PronounCode.notListed) {
           clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexulaIdentityDescription'].value;
         }
 
@@ -662,7 +662,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.pronounList.forEach((pronounCode:any) => {             
                 this.appInfoForm.controls[pronounCode.lovCode].removeValidators(Validators.requiredTrue);
                 this.appInfoForm.controls[pronounCode.lovCode].updateValueAndValidity();
-                if(pronounCode.lovCode ===PronounCode.NotListed && this.appInfoForm.controls[pronounCode.lovCode].value){
+                if(pronounCode.lovCode ===PronounCode.notListed && this.appInfoForm.controls[pronounCode.lovCode].value){
                   this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
                   this.appInfoForm.controls['pronoun'].updateValueAndValidity();
                 }               
