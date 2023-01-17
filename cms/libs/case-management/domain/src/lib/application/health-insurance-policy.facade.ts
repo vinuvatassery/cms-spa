@@ -32,13 +32,13 @@ export class HealthInsurancePolicyFacade {
     'creationTime'
   ];
 
-  ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
       this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
-    this.HideLoader();
+    this.hideLoader();
 
   }
 
@@ -48,11 +48,11 @@ export class HealthInsurancePolicyFacade {
     private healthInsurancePolicyService: HealthInsurancePolicyDataService) { }
 
   /** Public methods **/
-  ShowLoader() {
+  showLoader() {
     this.loaderService.show();
   }
 
-  HideLoader() {
+  hideLoader() {
     this.loaderService.hide();
   }
 
@@ -67,7 +67,7 @@ export class HealthInsurancePolicyFacade {
     if (!!healthInsurancePolicy?.proofOfPremiumFile) {
       formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
     }
-    this.FormData_append_object(formData, healthInsurancePolicy);
+    this.formDataAppendObject(formData, healthInsurancePolicy);
 
     return this.healthInsurancePolicyService.saveHealthInsurancePolicy(formData);
   }
@@ -82,7 +82,7 @@ export class HealthInsurancePolicyFacade {
     if (!!healthInsurancePolicy?.proofOfPremiumFile) {
       formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
     }
-    this.FormData_append_object(formData, healthInsurancePolicy);
+    this.formDataAppendObject(formData, healthInsurancePolicy);
 
     return this.healthInsurancePolicyService.updateHealthInsurancePolicy(formData);
   }
@@ -102,7 +102,7 @@ export class HealthInsurancePolicyFacade {
     });
   }
 
-  FormData_append_object(fd: FormData, obj: any, key?: any) {
+  private formDataAppendObject(fd: FormData, obj: any, key?: any) {
     var i, k;
     for (i in obj) {
       k = key ? key + '[' + i + ']' : i;
@@ -119,7 +119,7 @@ export class HealthInsurancePolicyFacade {
           }
         }
         else {
-          this.FormData_append_object(fd, obj[i], k);
+          this.formDataAppendObject(fd, obj[i], k);
         }
       }
       else {

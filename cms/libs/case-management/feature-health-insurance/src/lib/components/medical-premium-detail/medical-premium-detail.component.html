@@ -476,7 +476,7 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="!copyOfInsuranceCardFiles && isViewContentEditable==false"> Copy of insurance card is
+        <kendo-formerror *ngIf="!isInsuranceFileUploaded && isViewContentEditable==false"> Copy of insurance card is
           required
         </kendo-formerror>
       </div>
@@ -495,7 +495,7 @@
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
-          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && !proofOfPremiumFiles && isViewContentEditable==false">
+          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && !isProofFileUploaded && isViewContentEditable==false">
           Proof of premium is required
         </kendo-formerror>
       </div>
