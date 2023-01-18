@@ -31,6 +31,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private checkBoxSubscription!: Subscription;
+  private employeeSubscription$ = this.employmentFacade.employers$;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
   /** Constructor */
@@ -49,6 +50,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadCase();
     this.addSaveSubscription();
+    this.employerSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
   }
@@ -141,6 +143,12 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
           return of(false);
         }),
       )
+  }
+
+  private employerSubscription(){  
+    this.employeeSubscription$.subscribe((emp:any) => {   
+          this.employmentFacade.updateWorkFlowCount(emp?.total <= 0 && !this.isEmployedGridDisplay ? StatusFlag.No: StatusFlag.Yes);
+    });
   }
 
   // unemployment checkbox click
