@@ -182,4 +182,8 @@ export class HealthInsuranceFacade {
   deleteInsurancePolicy(insurancePolicyId: any) {
     return this.contactDataService.deleteInsurancePolicy(insurancePolicyId);
   }
+
+  deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
+    return this.contactDataService.deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId);
+  }
 }
