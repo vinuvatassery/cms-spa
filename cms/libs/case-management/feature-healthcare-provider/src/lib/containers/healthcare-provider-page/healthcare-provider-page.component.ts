@@ -61,13 +61,15 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
    /** Private methods **/
    private loadCase()
    {  
+    this.healthProvider.showLoader();            
     this.sessionId = this.route.snapshot.queryParams['sid'];    
     this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
      this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
      .subscribe((session: any) => {      
       this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
       this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-      this.clientId = JSON.parse(session.sessionData).clientId   
+      this.clientId = JSON.parse(session.sessionData).clientId  
+      this.healthProvider.hideLoader();             
       this.loadProviderStatus();      
      });        
    } 
