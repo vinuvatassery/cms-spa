@@ -123,7 +123,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
         this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
         this.checkBoxSubscription.unsubscribe();      
         this.workFlowFacade.navigate(navigationType);
-        this.healthProvider.HideLoader(); 
+        this.healthProvider.hideLoader(); 
       }
     });
   }
@@ -136,7 +136,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
        .pipe
       (
        catchError((err: any) => { 
-        this.healthProvider.HideLoader();                     
+        this.healthProvider.hideLoader();                     
          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
          return  of(false);
        })  
@@ -152,7 +152,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
       (this.clientCaseEligibilityId,this.providersStatus).subscribe((isSaved) => {  
-        this.healthProvider.HideLoader();       
+        this.healthProvider.hideLoader();       
         if (isSaved == true) {    
           this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
           if(this.isProvidersGridDisplay === true)

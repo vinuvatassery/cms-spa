@@ -88,10 +88,10 @@
         >
          
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-ClientDependentId="ClientDependentId">
-          <button kendoButton  look="flat" [attr.aria-label]="dependent.dependentTypeCode === 'C' ? dataItem.clientText : dataItem.depText" [class]="dataItem.buttonType" aria-hidden="false" 
+          <button kendoButton  look="flat" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" [class]="dataItem.buttonType" aria-hidden="false" 
           (click)="dataItem.click(dependent.clientDependentId,dependent.dependentTypeCode)">
-            <span class="material-icons" [attr.aria-label]="dependent.dependentTypeCode === 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
-            <label>   {{ dependent.dependentTypeCode === 'C' ? dataItem.clientText : dataItem.depText  }} </label>
+            <span class="material-icons" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
+            <label>   {{ dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText  }} </label>
         </button>        
           </ng-template>
         </kendo-dropdownbutton>      
