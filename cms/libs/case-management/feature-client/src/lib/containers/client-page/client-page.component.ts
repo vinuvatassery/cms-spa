@@ -809,7 +809,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                   this.appInfoForm.controls['RaceAndEthnicityNotListed'].updateValueAndValidity(); 
                 }
               }
-              
+              debugger
               this.appInfoForm.controls['Ethnicity'].setValidators(Validators.required); 
               this.appInfoForm.controls['Ethnicity'].updateValueAndValidity(); 
 

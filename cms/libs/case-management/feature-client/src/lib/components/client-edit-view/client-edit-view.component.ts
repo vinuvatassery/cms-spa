@@ -196,15 +196,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }
   }
   raceAndEthnicityChange(value: any) {
-    const Ethnicity = this.appInfoForm.controls["Ethnicity"]?.value;
     const Race = this.appInfoForm.controls["RaceAndEthnicity"]?.value;
     this.raceAndEthnicityPrimaryData = [];
     this.raceAndEthnicityPrimaryNotListed = false;
-    if (Array.isArray(Ethnicity)) {
-      Ethnicity.forEach((el: any) => {
-        this.raceAndEthnicityPrimaryData.push(el);
-      });
-    }
 
     if (Array.isArray(Race)) {
       Race.forEach((el: any) => {
@@ -218,8 +212,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
     if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
+      this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
     } else {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(null);
+      this.appInfoForm.controls['RaceAndEthnicityPrimary'].enable();
     }
   }
   ngAfterViewChecked() {  
