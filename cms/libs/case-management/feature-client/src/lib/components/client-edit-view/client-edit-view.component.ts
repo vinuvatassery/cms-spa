@@ -167,7 +167,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
  
   ngOnDestroy(): void {
-    this.applicantInfoSubscription.unsubscribe();    
+    this.applicantInfoSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -181,7 +181,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.pronounList = pronoun;
     if(this.pronounList  !== undefined && this.pronounList !== null){
         this.PronounChanges.emit(this.pronounList);
-        this.assignPronounModelToForm();
+        //this.assignPronounModelToForm();
     }
   }
   setRaceAndEthnicityData(value:any){
@@ -307,7 +307,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
   private loadApplicantInfoSubscription(){
     
-    this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
+    this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{   
+      debugger;
       this.textboxDisable  = true; 
       this.yesMaterialDisable = true;
       this.interpreterTypeInputDisable = true;
@@ -444,8 +445,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   }
 
   
-this.assignRaceAndEthnicityToForm();
-  this.assignPronounModelToForm();
+  this.assignRaceAndEthnicityToForm();
+  //this.assignPronounModelToForm();
 
   this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
   this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
@@ -539,21 +540,21 @@ this.assignRaceAndEthnicityToForm();
     }
 
   }
-private assignPronounModelToForm(){
-  if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
-    this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
-  if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
-      this.updateWorkflowPronounCount(true);
-  if(pronoun.clientPronounCode ==='NOT_LISTED'){
-      this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
-      this.textboxDisable = false;
-    }   
-    }
- })
-    this.clientfacade.pronounListSubject.next(this.pronounList);     
-}
-}
+// private assignPronounModelToForm(){
+//   if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
+//     this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
+//   if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
+//       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+//       this.updateWorkflowPronounCount(true);
+//   if(pronoun.clientPronounCode ==='NOT_LISTED'){
+//       this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
+//       this.textboxDisable = false;
+//     }   
+//     }
+//  })
+//     this.clientfacade.pronounListSubject.next(this.pronounList);     
+// }
+// }
 
 private updateWorkflowPronounCount(isCompleted:boolean){
   const workFlowdata: CompletionChecklist[] = [{
