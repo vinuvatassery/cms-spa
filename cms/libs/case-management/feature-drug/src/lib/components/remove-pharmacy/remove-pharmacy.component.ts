@@ -12,7 +12,7 @@ export class RemovePharmacyComponent {
   @Input() clientPharmacyId!: string;
 
   /** Output properties **/
-  @Output() removeConfimEvent = new EventEmitter<any>();
+  @Output() removeConfirmEvent = new EventEmitter<any>();
 
     /** public properties **/
   onRemoveOrCancelClick(isDelete : boolean)
@@ -23,6 +23,6 @@ export class RemovePharmacyComponent {
       clientPharmacyId : this.clientPharmacyId
     }
 
-    this.removeConfimEvent.emit(deleteConfirmParams);
+    this.removeConfirmEvent.emit(deleteConfirmParams);
   }
 }

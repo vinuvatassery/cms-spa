@@ -3,7 +3,7 @@ import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnIni
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
-import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, CompletionChecklist, StatusFlag, othersCoveredOnPlan } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
@@ -110,10 +110,16 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       medicarePartAStartDate:[''],
       medicarePartBStartDate:[''],
       onQmbFlag:[''],
-      onLisFlag:['']
-
-
-
+      onLisFlag:[''],
+      othersCoveredOnPlanFlag: [''],
+      othersCoveredOnPlan: this.formBuilder.array([]),
+      newOthersCoveredOnPlan: this.formBuilder.array([]),
+      isClientPolicyHolderFlag: [''],
+      policyHolderFirstName: [''],
+      policyHolderLastName: [''],
+      proofOfPremium: [''],
+      copyOfInsuranceCard: [''],
+      copyOfSummary: ['']
     });
 
   }
