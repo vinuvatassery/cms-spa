@@ -27,13 +27,15 @@
 
                 <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Date Client Signed">
-                    <kendo-datepicker autofocusfield [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" [max]="todaysDate"
+                    <kendo-datepicker autofocusfield [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                       formatPlaceholder="formatPattern" aria-label="Date Client Signed" name="Date Client Signed"
                       formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate>
                     </kendo-datepicker>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid"> Date Client
+                  <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid && !noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Date Client
                     Signed is required
+                  </kendo-formerror>
+                  <kendo-formerror *ngIf="noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Future date is not allowed
                   </kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-6">
@@ -75,7 +77,7 @@
           <div *ngIf="!hasNoIncome">
             <case-management-income-list [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
           </div>
-          
+
         </div>
       </div>
     </div>
