@@ -7,6 +7,7 @@ import { CaseManager } from '../entities/case-manager';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
 import { UserDefaultRoles } from '../enums/user-default-roles.enum';
+import { YesNoFlag } from '../enums/yes-no-flag.enum';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
 import { WorkflowFacade } from './workflow.facade';
 
@@ -91,7 +92,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
             total:  getCaseManagersResponse["totalCount"]  
             };       
         const workFlowdata: CompletionChecklist[] = [{
-          dataPointName: 'hasHivCaseManager',
+          dataPointName: 'caseManager',
           status: (parseInt(getCaseManagersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
         }]; 
         if(parseInt(getCaseManagersResponse["totalCount"]) > 0)
@@ -149,6 +150,10 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
     
     updateCaseManagerStatus(clientCaseId : string ,  hasManager :string, needManager : string) {
       this.showLoader()
+      if(hasManager === StatusFlag.Yes)
+      {
+        needManager ='NULL'
+      }
         return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager ?? 'NULL', needManager ?? 'NULL')
     }
 
@@ -201,6 +206,7 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
     dataPointName: 'wouldYouLikeOne',
     status: statusData === true ? StatusFlag.Yes : StatusFlag.No 
   }]; 
+
   this.workflowFacade.updateChecklist(workFlowdata);
  }
     

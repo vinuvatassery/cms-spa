@@ -13,7 +13,7 @@
       <div
       *ngIf="i != routes?.length-1"
       [ngClass]="{ 'kendo-list-items':true,
-      'section-completed':route.completedDatapointsCount === route.requiredDatapointsCount && route.requiredDatapointsCount !== 0,
+      'section-completed':route.completedDatapointsCount === route.requiredDatapointsCount && route.visitedFlag==='Y',
       'active-item': route.currentFlag ==='Y', 'case-menu-disabled': route.visitedFlag==='N'}" (click)="onRouteChange(route)">
       <span>{{ route.title }}</span>
       <page-completion-status

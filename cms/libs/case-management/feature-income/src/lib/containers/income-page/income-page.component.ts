@@ -166,16 +166,6 @@ export class IncomePageComponent implements OnInit, OnDestroy {
           completedDataPoints.push(item);
         }
       }
-      else {
-        if (this.noIncomeDetailsForm?.get(key)?.value && this.noIncomeDetailsForm?.get(key)?.valid) {
-          let item: CompletionChecklist = {
-            dataPointName: key,
-            status: StatusFlag.Yes
-          };
-
-          completedDataPoints.push(item);
-        }
-      }
     });
 
     if (completedDataPoints.length > 0) {
@@ -183,18 +173,39 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private adjustAttributeChanged(activeDataPointName: string='', inactiveDataPointName: string='') {
-    const acitveData: CompletionChecklist = {
-      dataPointName: activeDataPointName,
-      status: StatusFlag.Yes 
+  private adjustAttributeChanged() {
+    const noIncome: CompletionChecklist = {
+      dataPointName: 'incomeFlag_no',
+      status: this.hasNoIncome === true ? StatusFlag.Yes :StatusFlag.No 
     };
-    const inactiveData: CompletionChecklist = {
-      dataPointName: inactiveDataPointName,
-      status: StatusFlag.No 
+    const yesIncome: CompletionChecklist = {
+      dataPointName: 'incomeFlag_yes',
+      status: this.hasNoIncome === false ? StatusFlag.Yes :StatusFlag.No 
     };
 
-    this.workflowFacade.updateBasedOnDtAttrChecklist([acitveData, inactiveData]);
+    this.workflowFacade.updateBasedOnDtAttrChecklist([noIncome, yesIncome]);
+    this.updateInitialCompletionCheckList();
   }
+
+  private updateInitialCompletionCheckList(){
+    if (this.hasNoIncome === true) {
+    let completedDataPoints: CompletionChecklist[] = [];
+        Object.keys(this.noIncomeDetailsForm.controls).forEach(key => {
+            if (this.noIncomeDetailsForm?.get(key)?.value && this.noIncomeDetailsForm?.get(key)?.valid) {
+                let item: CompletionChecklist = {
+                    dataPointName: key,
+                    status: StatusFlag.Yes
+                };
+
+                completedDataPoints.push(item);
+            }
+        });
+        if (completedDataPoints.length > 0) {
+          this.workflowFacade.updateChecklist(completedDataPoints);
+        }
+    }
+}
+  
 
   /** Internal event methods **/
   onIncomeNoteValueChange(event: any): void {
@@ -222,6 +233,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         this.hasNoIncome = true;
         this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
       }
+
+      this.adjustAttributeChanged();
     })
   }
 
@@ -240,12 +253,10 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       });
       this.isNodateSignatureNoted = true;
       this.noIncomeDetailsFormChangeSubscription();
-      this.adjustAttributeChanged('incomeFlag_no', 'incomeFlag_yes');
       this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
     }
-    else{
-      this.adjustAttributeChanged('incomeFlag_yes', 'incomeFlag_no');
-    }
+
+    this.adjustAttributeChanged();
   }
 
 

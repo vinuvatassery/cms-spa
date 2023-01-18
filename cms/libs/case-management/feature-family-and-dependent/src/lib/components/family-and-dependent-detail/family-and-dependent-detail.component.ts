@@ -175,7 +175,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
   onSearchTemplateClick(dataItem : any)
-  {    
+  {  
    this.existFamilyMemberForm.patchValue(
      {
        clientId: dataItem?.clientId ?? 0 ,    
@@ -230,7 +230,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         dependentType :DependentTypeCode.CAClient ,
         relationshipCode : this.existFamilyMemberForm?.controls["existRelationshipCode"].value ,
         clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value ,
-        selectedClientDependentId: this.existFamilyMemberForm?.controls["clientDependentId"].value 
+        selectedClientDependentId: this.existFamilyMemberForm?.controls["selectedClientDependentId"].value 
       }   
 
       existDepData.clientDependentId =  existDepData?.clientDependentId=='' ? "00000000-0000-0000-0000-000000000000" : existDepData?.clientDependentId

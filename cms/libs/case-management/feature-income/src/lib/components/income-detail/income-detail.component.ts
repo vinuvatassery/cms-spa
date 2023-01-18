@@ -1,7 +1,7 @@
 /** Angular **/
 import {  Component,  ChangeDetectionStrategy,  Output,  EventEmitter,  Input,  OnDestroy,  OnInit,} from '@angular/core';
 /** Facades **/
-import { IncomeFacade, StatusFlag } from '@cms/case-management/domain';
+import { IncomeFacade, StatusFlag, IncomeTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators,  FormGroup,  FormControl,  FormBuilder,} from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
@@ -122,9 +122,14 @@ export class IncomeDetailComponent implements OnInit {
       this.IncomeDetailsForm.controls['incomeTypeCode'].value != null &&
       this.IncomeDetailsForm.controls['incomeTypeCode'].value != ''
     ) {
+      let incomeType = this.IncomeDetailsForm.controls['incomeTypeCode'].value;
+      if(this.IncomeDetailsForm.controls['incomeTypeCode'].value === IncomeTypeCode.SocialSecurityDisabilityInsurance)
+      {
+        incomeType = IncomeTypeCode.SupplementalSecurityIncome;
+      }
       this.lov
         .getProofOfIncomeTypesLov(
-          this.IncomeDetailsForm.controls['incomeTypeCode'].value
+          incomeType
         )
         .subscribe((proofOfIncomeTypesLov: Lov[]) => {
           this.proofOfIncomeTypes$ = proofOfIncomeTypesLov;
@@ -290,11 +295,16 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
 
+
     if (!this.hasNoProofOfIncome) {
       if (this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value === 'O') {
-        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([  Validators.required,]);
-        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
+        this.IncomeDetailsForm.controls['otherDesc'].setValidators([  Validators.required,]);
+        this.IncomeDetailsForm.controls['otherDesc'].updateValueAndValidity();
       }
+      this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls[
+        'proofIncomeTypeCode'
+      ].updateValueAndValidity();
 
       if (!this.proofOfIncomeFiles) {
         this.proofOfIncomeValidator = true;

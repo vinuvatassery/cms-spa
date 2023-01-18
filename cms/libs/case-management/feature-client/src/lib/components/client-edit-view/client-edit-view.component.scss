@@ -24,3 +24,11 @@
     margin-right: 10px;
   }
 }
+
+.inlineloaderwrapper{
+  position: relative;
+  .input-inline-loader{
+    top: 48%;
+    right: 26px;
+  }
+}

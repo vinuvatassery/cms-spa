@@ -68,6 +68,8 @@ export * from './lib/enums/case-status-code.enum';
 export * from './lib/enums/pronoun-code.enum';
 export * from './lib/enums/button-type.enum';
 export * from './lib/enums/case-origin.enum';
+export * from './lib/enums/income-type-code.enum';
+
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
