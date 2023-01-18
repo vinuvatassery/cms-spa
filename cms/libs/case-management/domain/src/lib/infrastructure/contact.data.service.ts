@@ -490,6 +490,6 @@ export class ContactDataService {
   }
 
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/delete`);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
   }
 }
