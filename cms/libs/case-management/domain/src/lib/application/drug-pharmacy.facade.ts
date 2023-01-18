@@ -39,7 +39,8 @@ export class DrugPharmacyFacade {
   private addPharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private editPharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private removePharmacyResponseSubject = new BehaviorSubject<boolean>(false);
-
+  private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+  private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
   pharmacies$ = this.pharmaciesSubject.asObservable();
   selectedPharmacy$ = this.selectedPharmacySubject.asObservable();
@@ -51,6 +52,8 @@ export class DrugPharmacyFacade {
   addPharmacyResponse$ = this.addPharmacyResponseSubject.asObservable();
   editPharmacyResponse$ = this.editPharmacyResponseSubject.asObservable();
   removePharmacyResponse$ = this.removePharmacyResponseSubject.asObservable();
+  triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
+  searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = ' '
@@ -100,12 +103,15 @@ export class DrugPharmacyFacade {
     });
   }
 
-  loadClientPharmacyList(clientId: number) {
+  loadClientPharmacyList(clientId: number, isTriggerPriorityPopup:boolean = false) {
     this.loaderService.show();
     this.drugDataService.loadClientPharmacyList(clientId).subscribe({
-      next: (pharmacies: ClientPharmacy) => {
+      next: (pharmacies: ClientPharmacy[]) => {
         this.loaderService.hide();
         this.clientPharmaciesSubject.next(pharmacies);
+        if(isTriggerPriorityPopup === true && pharmacies?.length > 1){
+          this.triggerPriorityPopupSubject.next(true);
+        }
       },
       error: (err) => {
         this.loaderService.hide();
@@ -142,18 +148,20 @@ export class DrugPharmacyFacade {
   // }
  updatePharmacyPriority(pharmacyPriority: any): Observable<any> {
     return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
-
   }
 
   searchPharmacies(searchText: string) {
+    this.searchLoaderVisibilitySubject.next(true);
     return this.drugDataService.searchPharmacies(searchText).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach(vendor => {
           vendor.vendorFullName = `${vendor.vendorName} #${vendor.vendorNbr} ${vendor.address1} ${vendor.address2} ${vendor.cityCode} ${vendor.stateCode} ${vendor.zip}`;
         });
         this.pharmaciesSubject.next(response);
+        this.searchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {  
+        this.searchLoaderVisibilitySubject.next(false);
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       },
@@ -177,16 +185,16 @@ export class DrugPharmacyFacade {
     });
   }
 
-  addClientPharmacy(clientId: number, vendorId: string, priorityCode: PriorityCode) {
+  addClientPharmacy(clientId: number, vendorId: string) {
     var model = {
-      vendorId: vendorId,
-      priorityCode: priorityCode
+      vendorId: vendorId,      
     };
+
     this.loaderService.show();
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-          this.loadClientPharmacyList(clientId);
+          this.loadClientPharmacyList(clientId, true);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Added Successfully');
         }
@@ -201,10 +209,9 @@ export class DrugPharmacyFacade {
     });
   }
 
-  editClientPharmacy(clientId: number, clientPharmacyId: string, vendorId?: string, priorityCode?: PriorityCode) {
+  editClientPharmacy(clientId: number, clientPharmacyId: string, vendorId?: string) {
     var model = {
-      vendorId: vendorId,
-      priorityCode: priorityCode
+      vendorId: vendorId     
     };
     this.loaderService.show();
     return this.drugDataService.editClientPharmacy(clientId, clientPharmacyId, model).subscribe({

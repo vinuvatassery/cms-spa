@@ -91,8 +91,7 @@ export class LovFacade {
     next: (lovResponse) => {
       this.lovcascadeSubject.next(lovResponse);
     },
-    error: (err) => {
-      this.loggingService.logException(err)
+    error: (err) => {     
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -103,8 +102,7 @@ getRelationShipsLovs(): void {
     next: (relationsResponse) => {
       this.lovRelationShipSubject.next(relationsResponse);
     },
-    error: (err) => {
-      this.loggingService.logException(err)
+    error: (err) => {    
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -114,8 +112,7 @@ getGenderLovs(): void {
     next: (lovResponse) => {
       this.lovGenderSubject.next(lovResponse);
     },
-    error: (err) => {
-      this.loggingService.logException(err)
+    error: (err) => {     
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -126,8 +123,7 @@ getCaseOriginLovs(): void {
     next: (lovcaseoriginResponse) => {
       this.lovcaseoriginSubject.next(lovcaseoriginResponse);
     },
-    error: (err) => {
-      this.loggingService.logException(err)
+    error: (err) => {   
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -139,7 +135,7 @@ getPronounLovs(): void {
       this.lovPronounSubject.next(lovPronounResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
 
@@ -151,7 +147,6 @@ getMaterialLovs(): void {
       this.lovMaterialSubject.next(lovMaterialResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -163,7 +158,6 @@ getTransgenderLovs(): void {
       this.lovTransgenderSubject.next(lovResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -174,7 +168,6 @@ getSexAtBirthLovs(): void {
       this.lovSexAtBirthSubject.next(lovResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -185,7 +178,6 @@ getSexulaIdentityLovs(): void {
       this.lovSexulaIdentitySubject.next(lovResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -196,7 +188,6 @@ getContactRelationShipsLovs(): void {
       this.lovCntRelationshipCodeSubject.next(relationsResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -207,7 +198,6 @@ getMaterialYesLovs(): void {
       this.lovMaterialYesSubject.next(lovMaterialYesResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -219,7 +209,6 @@ getIncomeSourceLovs():void{
       this.lovIncomeSourceSubject.next(lovIncomeSourceResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -230,7 +219,6 @@ getSpokenWrittenLanguageLovs(): void {
       this.lovSpokenWriottenLanguageSubject.next(LanguageResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -241,7 +229,6 @@ getEnglishProficiencyLovs(): void {
       this.lovEnglishProficiencySubject.next(proficiencyResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -252,7 +239,6 @@ getRaceLovs(): void {
       this.lovRaceSubject.next(response);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -263,7 +249,6 @@ getEthnicityLovs(): void {
       this.lovEthnicitySubject.next(response);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -274,7 +259,6 @@ getIncomeTypeLovs():void{
       this.lovIncomeTypeSubject.next(lovIncomeTypeResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -286,7 +270,6 @@ getIncomeFrequencyLovs():void{
       this.lovIncomeFrequencySubject.next(lovIncomeFrequencyResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -301,7 +284,6 @@ getInsuranceTypeLovs(): void {
       this.lovInsuranceTypeSubject.next(loveInsuranceTypeResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -312,7 +294,6 @@ getMetalLevelLovs(): void {
       this.lovMetalLevelSubject.next(lovResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -324,7 +305,6 @@ getPremiumFrequencyLovs(): void {
       this.lovPremiumFrequencySubject.next(lovResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -335,7 +315,6 @@ getMedicareCoverageTypeLovs(): void {
       this.lovMedicareCoverageTypeSubject.next(lovResponse);
     },
     error: (err) => {     
-       this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -347,7 +326,6 @@ getCaseStatusLovs(): void {
       this.lovCaseStatusTypeSubject.next(lovCaseStatusResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -368,12 +346,11 @@ getCaseCodeLovs(): void {
 }
 
 getPriorityLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.PharmacyPriority).subscribe({
+  this.lovDataService.getLovsbyType(LovType.PriorityCode).subscribe({
     next: (lovPriorityResponse) => {
       this.lovPrioritySubject.next(lovPriorityResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });

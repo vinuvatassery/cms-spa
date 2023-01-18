@@ -15,6 +15,7 @@
             >search</span >
               <span *ngIf="caseSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
             <kendo-autocomplete
+            formControlName="autoCompleteText"
             [fillMode]="formUiStyle.dropDownFillMode" 
             [data]="caseManagerSearchList$ | async"           
             [value]="selectedCustomCaseManagerName"        
@@ -30,7 +31,7 @@
             </ng-template>    
            
           </kendo-autocomplete>  
-          <kendo-formerror *ngIf="(existCaseManagerForm?.hasError('required','assignedcaseManagerId')) && isExistSubmitted">Select a Case Manager</kendo-formerror>
+          <kendo-formerror *ngIf="((existCaseManagerForm?.hasError('required','assignedcaseManagerId')) || (existCaseManagerForm?.hasError('required','autoCompleteText'))) && isExistSubmitted">Select a Case Manager</kendo-formerror>
       
           </div>
         </div>     
