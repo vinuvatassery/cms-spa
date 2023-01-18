@@ -107,7 +107,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
             this.isDisabled = true;
           }
 
-
+          this.adjustDataAttribute(!this.isDisabled);
         },
         error: error => {
           this.smokingCessationFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error?.error?.error)
@@ -183,17 +183,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
           };
           completedDataPoints.push(item);
         }
-      }
-      else {
-        if (this.smokingCessationForm?.get(key)?.value && this.smokingCessationForm?.get(key)?.valid) {
-          let item: CompletionChecklist = {
-            dataPointName: key,
-            status: StatusFlag.Yes
-          };
-
-          completedDataPoints.push(item);
-        }
-      }
+      }      
     });
 
     if (completedDataPoints.length > 0) {
@@ -222,9 +212,10 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
   disableSmokingCessationNote(disable: boolean) {
     if (disable) {
       this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
-      this.smokingCessationForm.controls["smokingCessationNote"].updateValueAndValidity()
+      this.smokingCessationForm.controls["smokingCessationNote"].updateValueAndValidity();
     }
     this.isDisabled = disable;
+    this.adjustDataAttribute(!disable);
   }
 
   private addSaveForLaterSubscription(): void {
@@ -248,6 +239,34 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  private adjustDataAttribute(isRequired:boolean) {
+      const data: CompletionChecklist = {
+        dataPointName: 'smokingCessationNote_Required',
+        status: isRequired ? StatusFlag.Yes : StatusFlag.No
+      };
+
+      this.workflowFacade.updateBasedOnDtAttrChecklist([data]);  
+      this.updateInitialWorkflowChecklist();
+  }
+
+  private updateInitialWorkflowChecklist(){
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.smokingCessationForm.controls).forEach(key => {
+      if (this.smokingCessationForm?.get(key)?.value) {
+        let item: CompletionChecklist = {
+          dataPointName: key,
+          status: StatusFlag.Yes
+        };
+
+        completedDataPoints.push(item);
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
   }
 
   checkValidations() {

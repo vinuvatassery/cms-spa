@@ -120,7 +120,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
         if(response!==null){
           this.prescriptionDrugForm.controls["hivFlag"].setValue(response.hivPositiveFlag);
           this.prescriptionDrugForm.controls["nonPrefFlag"].setValue(response.nonPreferredPharmacyFlag);
-          
+          this.adjustAttributeInit();
         }
       },
     })
@@ -151,16 +151,6 @@ export class DrugPageComponent implements OnInit, OnDestroy {
           completedDataPoints.push(item);
         }
       }
-      else {
-        if (this.prescriptionDrugForm?.get(key)?.value && this.prescriptionDrugForm?.get(key)?.valid) {
-          let item: CompletionChecklist = {
-            dataPointName: key,
-            status: StatusFlag.Yes
-          };
-
-          completedDataPoints.push(item);
-        }
-      }
     });
 
     if (completedDataPoints.length > 0) {
@@ -178,7 +168,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
 
   private adjustAttributeInit() {
-    const initialAjustment: CompletionChecklist[] = [];
+    const initialAdjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {
       const data: CompletionChecklist = {
@@ -186,11 +176,31 @@ export class DrugPageComponent implements OnInit, OnDestroy {
         status: control.checked ? StatusFlag.Yes : StatusFlag.No
       };
 
-      initialAjustment.push(data);
+      initialAdjustment.push(data);
     });
 
-    if (initialAjustment.length > 0) {
-      this.workflowFacade.updateBasedOnDtAttrChecklist(initialAjustment);
+    if (initialAdjustment.length > 0) {
+      this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
+    }
+
+    this.updateInitialCompletionCheckList();
+  }
+
+  private updateInitialCompletionCheckList(){
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.prescriptionDrugForm.controls).forEach(key => {
+      if (this.prescriptionDrugForm?.get(key)?.value && this.prescriptionDrugForm?.get(key)?.valid) {
+        let item: CompletionChecklist = {
+          dataPointName: key,
+          status: StatusFlag.Yes
+        };
+
+        completedDataPoints.push(item);
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
     }
   }
 
@@ -207,6 +217,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
       }
     });
   }
+  
 
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
@@ -225,6 +236,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
   private save() {
     let isValid = true;
+    return of(true);
     // TODO: validate the form
     if (isValid) {
       
@@ -263,9 +275,10 @@ export class DrugPageComponent implements OnInit, OnDestroy {
           pharmacies?.forEach((pharmacyData: any) => {
             pharmacyData.PharmacyNameAndNumber =
               pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
-          });
-          this.updateWorkflowCount('pharmacy', true);
-        }
+          });          
+        }   
+
+        this.updateWorkflowCount('pharmacy', pharmacies?.length > 0);
       },
       error: (err) => {
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
