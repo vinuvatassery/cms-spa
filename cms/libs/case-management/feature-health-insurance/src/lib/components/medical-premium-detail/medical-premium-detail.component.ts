@@ -539,7 +539,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges {
       this.healthInsurancePolicy = new healthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.clientCaseEligibilityId =this.clientCaseEligibilityId;
-      this.healthInsurancePolicy.priorityCode = 'p';
+      //this.healthInsurancePolicy.priorityCode = 'p';
       this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
       this.healthInsurancePolicy.healthInsuranceTypeCode = this.ddlInsuranceType;
 

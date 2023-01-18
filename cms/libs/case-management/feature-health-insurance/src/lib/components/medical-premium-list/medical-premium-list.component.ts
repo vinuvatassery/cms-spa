@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
@@ -28,6 +28,9 @@ export class MedicalPremiumListComponent implements OnInit {
   public gridSkipCount = this.healthFacade.skipCount;
   public state!: State;
   currentInsurancePolicyId: any;
+  selectedInsurance: any;
+  gridList=[];
+  
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
@@ -56,7 +59,7 @@ export class MedicalPremiumListComponent implements OnInit {
       icon: "format_line_spacing",
       type: "priority",
       click: (): void => {
-        this.onChangePriorityOpenClicked()
+        // this.onChangePriorityOpenClicked()
       },
     },
     {
@@ -76,10 +79,11 @@ export class MedicalPremiumListComponent implements OnInit {
   /** Constructor **/
   constructor(
     private readonly healthFacade: HealthInsuranceFacade,
+    private readonly cdr: ChangeDetectorRef,
     private readonly healthInsurancePolicyFacade: HealthInsurancePolicyFacade,
-    private workflowFacade: WorkflowFacade,
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder) {
+    private readonly workflowFacade: WorkflowFacade,
+    private readonly route: ActivatedRoute,
+    private readonly formBuilder: FormBuilder) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -96,6 +100,7 @@ export class MedicalPremiumListComponent implements OnInit {
       this.onDeleteConfirmCloseClicked();
       this.handleHealthInsuranceCloseClicked();
     }
+    this.loadHealthInsurancePlans();
   }
   /** Internal event methods **/
   onChangePriorityCloseClicked() {
@@ -147,7 +152,10 @@ export class MedicalPremiumListComponent implements OnInit {
 
   loadHealthInsurancePlans() {
     this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
+      if(medicalHealthPolicy?.data?.length > 0)
+      this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
       if(medicalHealthPolicy?.length > 0){
+        
         const item: CompletionChecklist = {
           dataPointName: 'currentInsuranceFlag',
           status: StatusFlag.Yes
@@ -201,9 +209,11 @@ export class MedicalPremiumListComponent implements OnInit {
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
         this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
     }
-    if (type == 'Priority') {
+    if (type == 'priority') {
+      this.selectedInsurance=dataItem;
       this.onChangePriorityOpenClicked()
     }
+    this.cdr.detectChanges();
   }
   deleteButonClicked(deleteButonClicked:any){
     if(deleteButonClicked){

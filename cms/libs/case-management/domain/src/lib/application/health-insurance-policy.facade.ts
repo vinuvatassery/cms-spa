@@ -55,6 +55,9 @@ export class HealthInsurancePolicyFacade {
   updateHealthInsurancePolicy(healthInsurancePolicy:healthInsurancePolicy) {
     return this.healthInsurancePolicyService.updateHealthInsurancePolicy(healthInsurancePolicy);
 }
+  setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
+    return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
+  }
 
   getCarrierContactInfo(carrierId:any)
   {

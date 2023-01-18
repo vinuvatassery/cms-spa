@@ -147,7 +147,7 @@
 <kendo-dialog *ngIf="isOpenedChangePriorityModal" (close)="onChangePriorityCloseClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar> Change Priority </kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority></case-management-set-health-insurance-priority>
+  <case-management-set-health-insurance-priority [selectedInsurance]="selectedInsurance" [gridList]="gridList"></case-management-set-health-insurance-priority>
 </kendo-dialog>
 
 <!-- Delete Modal -->
