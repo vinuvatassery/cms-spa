@@ -10,7 +10,8 @@
       </kendo-dialog-titlebar>
     <section class="k-dialog-body">
       <p class="text-muted mb-2">
-        Search to see if the family member is already in the system. If they aren't in the system, manually add a new family member.
+        {{ isAddFamilyMember ? 'Search to see if the family member is already in the system. If they are not in the system, manually add a new family member.' : 'Edit the family member as needed' }}
+        
       </p>
       <div class="flex-row">
         <div class="flex-col">
@@ -173,7 +174,7 @@
           is required</kendo-formerror>
       </div>
       <div class="flex-col">
-        <kendo-floatinglabel text="Social Security Number (optional)">
+        <kendo-floatinglabel text="SSN (optional)">
           <kendo-maskedtextbox aria-label="social security number optional" 
            [fillMode]="formUiStyle.inputFillMode"
            [maskOnFocus]="true"

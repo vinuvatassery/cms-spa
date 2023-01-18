@@ -206,7 +206,7 @@ export class DrugDataService {
   }
 
   loadClientPharmacyList(clientId: number) {
-    return this.http.get<ClientPharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`);
+    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`);
   }
 
   searchPharmacies(searchText: string) {

@@ -139,14 +139,13 @@
               name="sameAsMailingAddressFlag" 
               aria-labelledby="sameAsMailingAddressFlag" 
               formControlName="sameAsMailingAddressFlag"
-               />
-              <label class="k-checkbox-label" for="sameAsMailingAddressFlag">Same as mailing address</label>
-
+               /> 
+              <label class="k-checkbox-label" for="sameAsMailingAddressFlag">Same as mailing</label> 
             </span>
           </kendo-formfield>
           </div>
         </div>
-        <div class="flex-row mt-1">
+        <div class="flex-row mt-1"> 
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 1">
@@ -418,6 +417,7 @@
               [maxlength]="10"
               formControlName="phoneNbr"
               mask="(999) 000-0000"
+              (blur)="loadPreferredContactMethod()"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
@@ -489,6 +489,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               formControlName="phoneNbr"
               mask="(999) 000-0000"
+              (blur)="loadPreferredContactMethod()"
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
@@ -560,6 +561,7 @@
                 [maxlength]="10"
                 formControlName="phoneNbr"
                 mask="(999) 000-0000"
+                (blur)="loadPreferredContactMethod()"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
@@ -632,6 +634,7 @@
                 [maxlength]="10"
                 formControlName="phoneNbr"
                 mask="(999) 000-0000"
+                (blur)="loadPreferredContactMethod()"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
@@ -721,6 +724,7 @@
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="100"
                 formControlName="email"
+                (blur)="loadPreferredContactMethod()"
                 > </kendo-textbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="email.email.errors?.email">
@@ -781,7 +785,8 @@
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <kendo-formfield>
-              <kendo-floatinglabel text="Preferred Contact">
+              <kendo-floatinglabel text="Preferred Contact" class="inline-search-loader">
+                <span *ngIf="showPreferredContactLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
                 <kendo-dropdownlist 
                 aria-labelledby="Preferred Contact" 
                 [fillMode]="formUiStyle.dropDownFillMode" 

@@ -70,7 +70,8 @@ export class CaseManagerSearchComponent implements OnInit
   composeExistCaseManagerForm()
   {    
       this.existCaseManagerForm = this.formBuilder.group({   
-        assignedcaseManagerId: ['',Validators.required]          
+        assignedcaseManagerId: ['',Validators.required]   ,
+        autoCompleteText: ['',Validators.required]       
       });
       
      if(this.isEditSearchCaseManagerValue === true)
@@ -84,7 +85,8 @@ export class CaseManagerSearchComponent implements OnInit
     
     this.existCaseManagerForm.setValue(
             {
-              assignedcaseManagerId: this.existingCaseManagerData?.assignedcaseManagerId               
+              assignedcaseManagerId: this.existingCaseManagerData?.assignedcaseManagerId  ,     
+              autoCompleteText :this.selectedCustomCaseManagerName      
            }) 
   }
 
