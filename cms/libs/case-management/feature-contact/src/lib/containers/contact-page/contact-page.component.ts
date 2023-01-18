@@ -112,6 +112,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.addSaveSubscription();
     this.addContactInfoFormChangeSubscription();
     this.sameAsMailingAddressChangeSubscription();
+    this.addMailingAddressChangeSubscription();
     this.homelessFlagChangeSubscription();
     this.addStateChangeSubscription();
     this.homePhoneApplicableFlagChangeSubscription();
@@ -423,6 +424,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     homeAddressGroup.controls['city'].updateValueAndValidity();
     homeAddressGroup.controls['state'].setValidators([Validators.required]);
     homeAddressGroup.controls['state'].updateValueAndValidity();
+    homeAddressGroup.controls['county'].setValidators([Validators.required]);
+    homeAddressGroup.controls['county'].updateValueAndValidity();
 
     if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
       homePhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
@@ -979,6 +982,15 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.validateHomeAddress(true);
     }
     this.adjustAttributeInit(!this.isEdit);
+  }
+
+  private addMailingAddressChangeSubscription() {
+    (this.contactInfoForm.get('mailingAddress') as FormGroup).valueChanges
+      .subscribe(() => {      
+        if ((this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false) === true) {
+          this.setSameAsMailingAddressFlagChanges(true);
+        }
+      });
   }
 
   private homePhoneApplicableFlagChangeSubscription() {
