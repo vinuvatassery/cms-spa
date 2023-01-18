@@ -18,6 +18,6 @@ export interface CompletionChecklist {
 export interface WorkflowProcessCompletionStatus {
     processId: string
     completedCount:number,
-    calcualtedTotalCount:number,
+    calculatedTotalCount:number,
     completionChecklist:CompletionChecklist[]
 }

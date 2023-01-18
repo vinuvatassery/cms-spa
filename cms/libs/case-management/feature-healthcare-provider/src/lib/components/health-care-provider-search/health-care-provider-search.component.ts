@@ -80,7 +80,8 @@ export class HealthCareProviderSearchComponent implements OnInit
   {    
       this.existHealthProvderForm = this.formBuilder.group({   
         providerId: ['',Validators.required]   ,
-        selectedProviderId: ['']     
+        selectedProviderId: [''] ,
+        providerAutoComplete : ['',Validators.required]    
       });
       
      if(this.isEditSearchHealthProviderValue === true)
@@ -103,8 +104,9 @@ export class HealthCareProviderSearchComponent implements OnInit
     this.existHealthProvderForm.setValue(
             {
                selectedProviderId: this.existingProviderData?.providerId  ,
-              providerId: this.existingProviderData?.providerId  
-           }) 
+              providerId: this.existingProviderData?.providerId  ,
+              providerAutoComplete : this.selectedCustomProviderName
+            }) 
   }
 
   onSearchTemplateClick(dataItem : any)
@@ -119,7 +121,7 @@ export class HealthCareProviderSearchComponent implements OnInit
     {      
        this.isExistSubmitted = true;
        if(this.existHealthProvderForm.valid)
-       {
+       {        
         const existProviderData =
         {
           providerId : this.existHealthProvderForm?.controls["providerId"].value,
@@ -157,6 +159,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   {     
        if(text.length > 0)
        {
+       
          this.providerSearchInputLoader = true;
          this.filterManager.next(text); 
        }
