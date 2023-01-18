@@ -193,16 +193,21 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
+      <div class="justify-content-end">        
         <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          aria-label="cancel adding health provider"
-          (click)="onBusinessInfoCloseClicked()"
-        >
-          OK
-        </button>        
+        kendoButton
+        [primary]="true"
+        look="outline"
+        (click)="onBusinessInfoCloseClicked()"
+        aria-label="cancel adding provider"
+      >
+        CANCEL
+      </button>
+        <button kendoButton [primary]="true" 
+        (click)="onBusinessInfoCloseClicked()" aria-label="add or update pharmacy">
+          ADD
+        </button>
+      
       </div>
     </div>
   </kendo-dialog-actions>
