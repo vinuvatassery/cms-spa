@@ -29,7 +29,7 @@
                   <kendo-floatinglabel text="Date Client Signed">
                     <kendo-datepicker autofocusfield [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" [max]="todaysDate"
                       formatPlaceholder="formatPattern" aria-label="Date Client Signed" name="Date Client Signed"
-                      formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate>
+                      formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate  placeholder="" >
                     </kendo-datepicker>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid"> Date Client

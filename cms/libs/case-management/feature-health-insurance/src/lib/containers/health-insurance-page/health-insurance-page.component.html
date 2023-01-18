@@ -67,6 +67,7 @@
                   value="Y"
                   [checked]="groupPolicyEligible == 'Y'"
                   formControlName="groupPolicyEligibleFlag"
+                  (change)="onGroupInsuranceChange()"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -84,6 +85,7 @@
                   value="N"
                   [checked]="groupPolicyEligible == 'N'"
                   formControlName="groupPolicyEligibleFlag"
+                  (change)="onGroupInsuranceChange()"
                 />
                 <kendo-label
                   class="k-radio-label"

@@ -488,4 +488,8 @@ export class ContactDataService {
   deleteInsurancePolicy(insurancePolicyId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
   }
+
+  deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
+  }
 }

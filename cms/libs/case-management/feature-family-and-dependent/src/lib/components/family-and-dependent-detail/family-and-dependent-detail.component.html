@@ -131,7 +131,7 @@
   <input type="hidden" formControlName="dependentTypeCode">  
   <kendo-dialog-titlebar (close)="onFamilyMemberClosed()">  {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">   {{ !isAddFamilyMember ? 'Edit or remove this family member' : 'Enter the family member’s information' }}  .</p>
+    <p class="text-muted mb-2">   {{ !isAddFamilyMember ? 'Edit or remove this family member' : 'Enter the family member’s information' }}.</p>
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
@@ -148,7 +148,7 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal First Name">
           <kendo-textbox    aria-label="Legal First Name"  [maxlength]="40"
-           [fillMode]="formUiStyle.inputFillMode"
+           [fillMode]="formUiStyle.inputFillMode" placeholder="Legal First Name"
            formControlName="firstName">   </kendo-textbox>
  
         </kendo-floatinglabel>
@@ -158,7 +158,7 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal Last Name">
           <kendo-textbox aria-label="legal last name"  
-          [fillMode]="formUiStyle.inputFillMode"
+          [fillMode]="formUiStyle.inputFillMode"  placeholder="Legal Last Name"
           formControlName="lastName">   </kendo-textbox> 
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','lastName') && isSubmitted">Legal Last Name
@@ -167,7 +167,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">         
           <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
-          formControlName="dob"  placeholder="">
+          formControlName="dob"  placeholder="Date of Birth" placeholder="">
         </kendo-datepicker>
               </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','dob') && isSubmitted">Date of Birth
@@ -176,7 +176,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="SSN (optional)">
           <kendo-maskedtextbox aria-label="social security number optional" 
-           [fillMode]="formUiStyle.inputFillMode"
+           [fillMode]="formUiStyle.inputFillMode" placeholder="Social Security Number (optional)"
            [maskOnFocus]="true"
            formControlName="ssn"   [mask]="ssnMaskFormat"   
            >   </kendo-maskedtextbox> 
