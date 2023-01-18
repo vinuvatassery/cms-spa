@@ -148,10 +148,10 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     if (this.insuranceFlagForm.valid) {
       this.ShowLoader();
       let caseEligibilityFlagsData = this.insuranceFlagForm.value;
-      caseEligibilityFlagsData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
-      caseEligibilityFlagsData["clientId"] = this.clientId;
-      return this.healthFacade.saveInsuranceFlags(caseEligibilityFlagsData);
-
+      if(caseEligibilityFlagsData.currentInsuranceFlag==StatusFlag.No){
+        return this.healthFacade.deleteInsurancePolicyByEligibilityId(this.clientCaseEligibilityId);
+      }
+      return of(true);
     }
     return of(false)
   }
@@ -219,18 +219,20 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   loadInsurancePolicyFlags() {
     this.healthFacade.medicalHealthPolicy$.subscribe((policy: any) => {
-      if (policy.currentInsuranceFlag && policy.groupPolicyEligibleFlag) {
+      if (policy.currentInsuranceFlag) {
         this.currentInsurance = policy.currentInsuranceFlag;
-        this.groupPolicyEligible = policy.groupPolicyEligibleFlag;
-        this.patchInsurancePolicyFlags(policy);
-        if (this.currentInsurance == 'Y') {
+        if (this.currentInsurance == StatusFlag.Yes) {
           this.showTable = true;
         }
-        else{
+        else {
           this.showTable = false;
         }
-        this.ref.detectChanges();
       }
+      if (policy.groupPolicyEligibleFlag) {
+        this.groupPolicyEligible = policy.groupPolicyEligibleFlag;
+      }
+      this.patchInsurancePolicyFlags(policy);
+      this.ref.detectChanges();
     })
   }
 
@@ -239,13 +241,50 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.insuranceFlagForm?.get('groupPolicyEligibleFlag')?.setValue(insurancePolicy?.groupPolicyEligibleFlag)
   }
 
+  onGroupInsuranceChange(){
+    this.ShowLoader()
+    this.saveHealthInsuranceFlag().subscribe({
+      next:(response:any)=>{
+        this.HideLoader();
+      },
+      error:(err:any)=>{
+        this.HideLoader();
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ; 
+      }
+    });
+  }
+
   onCurrentInsuranceChange(currentInsuranceValue: string) {
-    if (currentInsuranceValue == 'Y') {
-      this.showTable = true;
-    }
-    else {
-      this.showTable = false;
-    }
+    this.ShowLoader()
+    this.saveHealthInsuranceFlag().subscribe({
+      next:(response:any)=>{
+        if (currentInsuranceValue == StatusFlag.Yes) {
+          this.showTable = true;
+          const gridDataRefinerValue = {
+            skipCount: this.healthFacade.skipCount,
+            pagesize: this.healthFacade.gridPageSizes[0]?.value
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
+          this.loadInsurancePolicyFlags();
+        }
+        else {
+          this.showTable = false;
+        }
+        this.HideLoader();
+        this.ref.detectChanges();
+      },
+      error:(err:any)=>{
+        this.HideLoader();
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err);
+      }
+    });
+  }
+
+  saveHealthInsuranceFlag(){
+    let caseEligibilityFlagsData = this.insuranceFlagForm.value;
+    caseEligibilityFlagsData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
+    caseEligibilityFlagsData["clientId"] = this.clientId;
+    return this.healthFacade.saveInsuranceFlags(caseEligibilityFlagsData)
   }
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
