@@ -59,8 +59,9 @@ export class PharmacyDetailComponent implements OnInit {
   }
 
   removePharmacy() {
-
+    this.removePharmacyEvent.emit();
   }
+
 
   addOrEditPharmacy() {
     if (this.selectedPharmacyId) {
