@@ -236,7 +236,6 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   }
   private save() {
     let isValid = true;
-    // TODO: validate the form
     if (isValid) {
       
       this.prescriptionInfo.clientCaseEligibilityId = this.clientCaseEligibilityId;
