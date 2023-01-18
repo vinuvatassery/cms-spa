@@ -966,7 +966,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   save() {
     //this.isSubmitted = true;
     this.validateForm();
-    if (this.healthInsuranceForm.valid && this.isInsuranceFileUploaded && this.isProofFileUploaded) {
+    if (this.healthInsuranceForm.valid && this.isInsuranceFileUploaded && this.isProofFileUploaded && this.isSummaryFileUploaded) {
       this.populateInsurancePolicy();
       this.insurancePolicyFacade.showLoader();
       if (this.isEdit) {
