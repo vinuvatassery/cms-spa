@@ -167,11 +167,13 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">         
           <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
-          formControlName="dob"  placeholder="Date of Birth" placeholder="">
+          formControlName="dob" [max]="currentDate" placeholder="Date of Birth">
         </kendo-datepicker>
               </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','dob') && isSubmitted">Date of Birth
           is required</kendo-formerror>
+          <kendo-formerror *ngIf="familyMemberForm?.value.dob > currentDate && isSubmitted">Date of Birth
+            cannot be future date.</kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="SSN (optional)">
