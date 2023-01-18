@@ -11,7 +11,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** Facades **/
 import { Pharmacy } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { Observable } from 'rxjs';
+import { Subject } from '@microsoft/signalr';
+import { BehaviorSubject, Observable } from 'rxjs';
 @Component({
   selector: 'case-management-pharmacy-detail',
   templateUrl: './pharmacy-detail.component.html',
@@ -23,6 +24,7 @@ export class PharmacyDetailComponent implements OnInit {
   @Input() isEditPharmacy!: boolean;
   @Input() selectedPharmacy: any;
   @Input() pharmacySearchResult$!: Observable<Pharmacy>;
+  @Input() searchLoaderVisibility$!: Observable<boolean>;
 
   /** Output properties  **/
   @Output() closePharmacyEvent = new EventEmitter();
@@ -39,7 +41,6 @@ export class PharmacyDetailComponent implements OnInit {
   pharmacyForm!: FormGroup;
   selectedPharmacyForEdit!: string;
   selectedPharmacyId!: string | null;
-
   /** Constructor **/
   constructor() { }
 

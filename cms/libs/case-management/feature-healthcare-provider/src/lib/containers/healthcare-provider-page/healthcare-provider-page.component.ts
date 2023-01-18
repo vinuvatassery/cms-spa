@@ -61,13 +61,15 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
    /** Private methods **/
    private loadCase()
    {  
+    this.healthProvider.showLoader();            
     this.sessionId = this.route.snapshot.queryParams['sid'];    
     this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
      this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
      .subscribe((session: any) => {      
       this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
       this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-      this.clientId = JSON.parse(session.sessionData).clientId   
+      this.clientId = JSON.parse(session.sessionData).clientId  
+      this.healthProvider.hideLoader();             
       this.loadProviderStatus();      
      });        
    } 
@@ -121,7 +123,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
         this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
         this.checkBoxSubscription.unsubscribe();      
         this.workFlowFacade.navigate(navigationType);
-        this.healthProvider.HideLoader(); 
+        this.healthProvider.hideLoader(); 
       }
     });
   }
@@ -134,7 +136,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
        .pipe
       (
        catchError((err: any) => { 
-        this.healthProvider.HideLoader();                     
+        this.healthProvider.hideLoader();                     
          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
          return  of(false);
        })  
@@ -150,7 +152,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
       (this.clientCaseEligibilityId,this.providersStatus).subscribe((isSaved) => {  
-        this.healthProvider.HideLoader();       
+        this.healthProvider.hideLoader();       
         if (isSaved == true) {    
           this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
           if(this.isProvidersGridDisplay === true)
