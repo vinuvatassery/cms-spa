@@ -512,6 +512,10 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror
+        *ngIf="!isSummaryFileUploaded">
+        summary file is required
+      </kendo-formerror>
       </div>
     </div>
   </div>

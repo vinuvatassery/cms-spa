@@ -469,6 +469,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private validateForm() {
+    this.isSummaryFileUploaded = true;
+    this.isProofFileUploaded = true;
+    this.isInsuranceFileUploaded = true;
     const QualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceEndDate',
@@ -610,7 +613,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['medicarePartBStartDate'].updateValueAndValidity();
       }
     }
-    if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans) {
+    if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra) {
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y') {
         this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValidators([
           Validators.required,
@@ -654,6 +658,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan) {
         this.isProofFileUploaded = (this.proofOfPremiumFiles?.length > 0 && !!this.proofOfPremiumFiles[0].name) ? true : false;
       }
+      if(this.ddlInsuranceType === this.InsurancePlanTypes.Cobra){
+        this.isSummaryFileUploaded = (this.copyOfSummaryFiles?.length > 0 && !!this.copyOfSummaryFiles[0].name) ? true : false;
+      }
+
     }
   }
 
@@ -671,7 +679,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           this.healthInsuranceForm.controls[key].updateValueAndValidity();
         }
       });
+      
     }
+    this.isSummaryFileUploaded = true;
+    this.isProofFileUploaded = true;
+    this.isInsuranceFileUploaded = true;
   }
 
   private populateInsurancePolicy() {
