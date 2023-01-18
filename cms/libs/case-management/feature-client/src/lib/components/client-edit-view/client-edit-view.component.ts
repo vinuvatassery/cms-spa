@@ -25,7 +25,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  
      
   /** Output Properties **/
- @Output() AppInfoChanged = new EventEmitter<CompletionChecklist[]>();
+ @Output() AppInfoChanged = new EventEmitter<{completedDataPoints: CompletionChecklist[], updateWorkflowCount:boolean}>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() ValidateFields = new EventEmitter<FormGroup>();
  @Output() PronounChanges = new EventEmitter<any>();
@@ -122,11 +122,15 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   raceAndEthnicityPrimaryData: Array<any> = [];
   raceAndEthnicityPrimaryNotListed: boolean = false;
   applicantInfoSubscription !:Subscription;
+
+    /** Private properties **/
+  private allowWorkflowCountUpdate = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   ssnDuplicateFound: boolean = false;
   showDuplicatePopup:boolean=false;
   currentClient:any={};
   matchingClient:any={};
+  showDuplicateLoader:boolean=false;
  
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -334,6 +338,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       if(this.applicantInfo.clientCaseId !== null){
       this.assignModelToForm(applicantInfo);
       }
+      else{
+        this.adjustAttributeInit();
+      }
     }
    
   }); 
@@ -503,7 +510,8 @@ this.assignRaceAndEthnicityToForm();
   this.appInfoForm.controls["spokenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.spokenLanguageCode);
   this.appInfoForm.controls["writtenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.writtenLanguageCode);
   this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode);
- 
+  
+  this.adjustAttributeInit();
 }
   private assignRaceAndEthnicityToForm() {
     if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
@@ -559,7 +567,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     status: isCompleted ? StatusFlag.Yes : StatusFlag.No
   }];
 
-  this.workflowFacade.updateChecklist(workFlowdata);
+  this.AppInfoChanged.emit({completedDataPoints: workFlowdata, updateWorkflowCount: true});
 }
 
   private adjustAttributeChanged(event: Event) { 
@@ -577,8 +585,10 @@ private updateWorkflowPronounCount(isCompleted:boolean){
         distinctUntilChanged(),
         startWith(null), pairwise()
       )
-      .subscribe(([prev, curr]: [any, any]) => {       
-        this.updateFormCompleteCount(prev, curr);      
+      .subscribe(([prev, curr]: [any, any]) => {  
+        if(this.allowWorkflowCountUpdate === true) {            
+          this.updateFormCompleteCount(prev, curr); 
+        }     
       });
        this.appInfoForm.statusChanges.subscribe(a=>{   
        if(this.appInfoForm.controls["pronouns"].valid){
@@ -588,8 +598,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
        else{
         this.checkBoxValid = false;
        }
-        
- 
     });
   }
   private updateFormCompleteCount(prev: any, curr: any) {
@@ -604,21 +612,50 @@ private updateWorkflowPronounCount(isCompleted:boolean){
           completedDataPoints.push(item);
         }
       }
-      else {
-        if (this.appInfoForm?.get(key)?.value && this.appInfoForm?.get(key)?.valid) {
-          let item: CompletionChecklist = {
-            dataPointName: key,
-            status: StatusFlag.Yes
-          };
-
-          completedDataPoints.push(item);
-        }
-      }
     });
 
     if (completedDataPoints.length > 0) {
-      this.AppInfoChanged.emit(completedDataPoints);
+      this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: true});
     }
+  }
+
+  private adjustAttributeInit() {
+    const initialAdjustment: CompletionChecklist[] = [];
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      const data: CompletionChecklist = {
+        dataPointName: control.name,
+        status: control.checked ? StatusFlag.Yes : StatusFlag.No
+      };
+
+      initialAdjustment.push(data);
+    });
+
+    if (initialAdjustment.length > 0) {
+      //this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
+      this.AdjustAttrChanged.emit(initialAdjustment);
+    }
+
+    this.updateInitialWorkflowCheckList();
+  }
+
+  private updateInitialWorkflowCheckList(){
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.appInfoForm.controls).forEach(key => {
+      if (this.appInfoForm?.get(key)?.value) {
+        let item: CompletionChecklist = {
+          dataPointName: key,
+          status: StatusFlag.Yes
+        };
+
+        completedDataPoints.push(item);
+      }  
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: false});
+    }
+    this.allowWorkflowCountUpdate = true;
   }
 
   private loadTareaRaceAndEthinicity() {
@@ -895,7 +932,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       dob: parsedDate,
       ssn: clientSsn
     };
-    this.loaderService.show();
+    this.showDuplicateLoader=true;
     this.clientfacade.searchDuplicateClient(data).subscribe({
       next: (response: any) => {
         if (response != null) {
@@ -914,12 +951,12 @@ private updateWorkflowPronounCount(isCompleted:boolean){
           else {
             this.showDuplicatePopup = true
           }
-          this.ref.detectChanges();
         }
-        this.loaderService.hide();
+        this.showDuplicateLoader=false;
+        this.ref.detectChanges();
       },
       error: (err: any) => {
-        this.loaderService.hide();
+        this.showDuplicateLoader=false;
         this.loggingService.logException(err);
         this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       }

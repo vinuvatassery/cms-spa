@@ -5,6 +5,7 @@ export interface ClientPharmacy {
     pharmacyNameAndNumber?: string;
     pharmacyName?: string;
     pharmacyNumber?: string;
+    priorityName?: string;
     priorityCode?: string;
     city?: string;
     state?: string;

@@ -91,7 +91,7 @@ CAClient = DependentTypeCode.CAClient;
       click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {           
           
         if(!this.deletebuttonEmitted)
-        {             
+        {      
           this.deletebuttonEmitted = true;  
         this.onDeleteFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
         }

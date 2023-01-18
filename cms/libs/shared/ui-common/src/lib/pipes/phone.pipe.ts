@@ -11,7 +11,7 @@ export class PhonePipe implements PipeTransform {
       const midSectionStr = value.slice(3,6);
       const lastSectionStr = value.slice(6,9);
 
-      return `(${areaCodeStr})${midSectionStr}-${lastSectionStr}`;
+      return `(${areaCodeStr}) ${midSectionStr}-${lastSectionStr}`;
     }
     return "";
   }
