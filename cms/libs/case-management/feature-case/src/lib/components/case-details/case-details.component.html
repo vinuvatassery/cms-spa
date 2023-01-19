@@ -13,6 +13,7 @@
   <div class="flex-col">
     <kendo-floatinglabel text="Case Origin">
       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+      placeholder="Case Origin"
        required [data]="ddlCaseOrigins | async"
         formControlName="caseOriginCode" 
         textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
@@ -34,7 +35,8 @@
       valueField="loginUserId"
       [valuePrimitive]="true"       
       [filterable]="true"     
-      [kendoDropDownFilter]="caseOwnerfilterSettings"      
+      [kendoDropDownFilter]="caseOwnerfilterSettings" 
+      placeholder="Case Owner"     
     >
     </kendo-combobox>
     </kendo-floatinglabel>

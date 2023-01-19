@@ -5,19 +5,19 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Contact’s Name">
-        <kendo-textbox aria-label="contacts name1"    [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="contacts name1"  placeholder="Contact’s Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
          
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Contact’s Relationship to Client">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRelationshipToClient$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  [data]="ddlRelationshipToClient$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Contact’s Phone Number">
-        <kendo-textbox aria-label="contacts phone number"    [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="contacts phone number" placeholder="Contact’s Phone Number"   [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
   
       </kendo-floatinglabel>
     </div>

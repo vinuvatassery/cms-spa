@@ -85,6 +85,7 @@ export class IncomeDetailComponent implements OnInit {
     this.loadFrequencies();
 
     if (this.isEditValue) {
+      this.loaderService.show();
       this.loadIncomeDetails();
     } else {
       this.selectedIncome = [];
@@ -148,6 +149,7 @@ export class IncomeDetailComponent implements OnInit {
         next: (response) => {
           if (response) {
             this.loadingIncomeDetailsIntoForm(response);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
