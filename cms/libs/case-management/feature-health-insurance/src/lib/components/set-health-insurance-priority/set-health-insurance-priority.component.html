@@ -1,3 +1,4 @@
+<form [formGroup]="form">
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
     Select the priority for each insurance plan below. When possible, the system
@@ -10,11 +11,16 @@
       <p>{{insurance.insurancePlanName}}</p>
     </div>
     <div class="flex-col flex-col-6">
-      {{insurance.priorityCode}}
       <kendo-floatinglabel text="Priority">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [(ngModel)]="insurance.priorityCode" (valueChange)="onChangePriority($event,i)" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true" valueField="lovCode" textField="lovDesc" [data]="ddlMedicalHealthPlanPriority$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+        [formControlName]="insurance.clientInsurancePolicyId"
+        [value]="insurance.priorityCode"
+        (valueChange)="onChangePriority($event,i)"
+        name="priorityCode"
+        [valuePrimitive]="true" valueField="lovCode" textField="lovDesc" [data]="ddlMedicalHealthPlanPriority$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="formSubmitted && !form.controls[insurance.clientInsurancePolicyId]?.valid">Priority is required.</kendo-formerror>
     </div>
   </div>
 </section>
@@ -27,6 +33,7 @@
         [primary]="true"
         look="outline"
         aria-label="cancel adding priority"
+        (click)="onModalCloseClicked()"
       >
         Cancel
       </button>
@@ -36,3 +43,4 @@
     </div>
   </div>
 </kendo-dialog-actions>
+</form>

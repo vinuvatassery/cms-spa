@@ -105,6 +105,7 @@ export class MedicalPremiumListComponent implements OnInit {
   /** Internal event methods **/
   onChangePriorityCloseClicked() {
     this.isOpenedChangePriorityModal = false;
+    this.loadInsurancePolicies();
   }
 
   onChangePriorityOpenClicked() {
