@@ -5,7 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { catchError, first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
-import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, 
+  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -43,7 +44,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId!:string;
   sessionId! : string;
   message!:string;
-  //clientFacadesnackbar$ = this.notificationSnackbarService.snackbar$
   //snackbar:any;
  
     /** Constructor **/
@@ -462,11 +462,13 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     if(this.applicantInfo.clientPronounList == undefined){
       this.applicantInfo.clientPronounList = [];
     }
-    this.pronounList.forEach((pronoun:any) => {      
-      if( this.appInfoForm.controls[pronoun.lovCode].value ===""
-         ||this.appInfoForm.controls[pronoun.lovCode].value === null
-         ||this.appInfoForm.controls[pronoun.lovCode].value ===false){
-          var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)
+    //this.pronounList.forEach((pronoun:any) => {   
+    Object.keys( this.appInfoForm.controls).filter(m=>m.includes('pronoun')).forEach(pronoun => { 
+      if( this.appInfoForm.controls[pronoun].value ===""
+         ||this.appInfoForm.controls[pronoun].value === null
+         ||this.appInfoForm.controls[pronoun].value ===false){
+          var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+          var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronounCode)
         if(existingPronoun != null){
            const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);
           if (index > -1) {
@@ -476,24 +478,28 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
       }
      else{
-      var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronoun.lovCode)     
+      var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+      var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronounCode)     
       if(existingPronoun === null || existingPronoun === undefined){
           var clientPronoun = new ClientPronoun();
-          if(pronoun.lovCode===PronounCode.notListed) {
+          if(pronounCode === PronounCode.notListed) {
+                    var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
                     clientPronoun.otherDesc = this.appInfoForm.controls["pronoun"].value;
-                    clientPronoun.clientPronounCode =pronoun.lovCode;
+                    clientPronoun.clientPronounCode =pronounCode;
                     clientPronoun.clientId = this.clientId;
             }
             else{
-              clientPronoun.clientPronounCode =pronoun.lovCode;
+              var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+              clientPronoun.clientPronounCode =pronounCode;
               clientPronoun.clientId = this.clientId;
             } 
             this.applicantInfo.clientPronounList.push(clientPronoun);
         }
         else{
-          if(pronoun.lovCode===PronounCode.notListed) {
+          var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+          if(pronounCode===PronounCode.notListed) {
             const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);          
-            this.applicantInfo.clientPronounList[index].clientPronounCode = pronoun.lovCode;
+            this.applicantInfo.clientPronounList[index].clientPronounCode = pronounCode;
             this.applicantInfo.clientPronounList[index].otherDesc = this.appInfoForm.controls["pronoun"].value;
            }
         }
@@ -654,25 +660,26 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           }  
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
-          this.pronounList.forEach((pronoun:any) => {
-            if(this.appInfoForm.controls[pronoun.lovCode].value ===true){
+          Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => { 
+            if(this.appInfoForm.controls[pronoun].value ===true){
               this.appInfoForm.controls['pronouns'].setErrors(null);
             }
           });
-          if(this.appInfoForm.controls['pronouns'].valid){
-            this.pronounList.forEach((pronounCode:any) => {             
-                this.appInfoForm.controls[pronounCode.lovCode].removeValidators(Validators.requiredTrue);
-                this.appInfoForm.controls[pronounCode.lovCode].updateValueAndValidity();
-                if(pronounCode.lovCode ===PronounCode.notListed && this.appInfoForm.controls[pronounCode.lovCode].value){
+          if(this.appInfoForm.controls['pronouns'].valid){   
+              Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {          
+                this.appInfoForm.controls[pronoun].removeValidators(Validators.requiredTrue);
+                this.appInfoForm.controls[pronoun].updateValueAndValidity();
+                var pronounCode =   pronoun.replace('ControlPrefix.pronoun','');
+                if(pronounCode === PronounCode.notListed && this.appInfoForm.controls[pronoun].value){
                   this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
                   this.appInfoForm.controls['pronoun'].updateValueAndValidity();
                 }               
             });
           }
           if(!this.appInfoForm.controls['pronouns'].valid){
-            this.pronounList.forEach((pronoun:any) => {   
-                this.appInfoForm.controls[pronoun.lovCode].setValidators(Validators.requiredTrue);
-                this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+            Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => { 
+                this.appInfoForm.controls[pronoun].setValidators(Validators.requiredTrue);
+                this.appInfoForm.controls[pronoun].updateValueAndValidity();
             });
           }
           this.appInfoForm.controls['materialInAlternateFormatCode'].setValidators(Validators.required);
@@ -829,20 +836,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.appInfoForm.controls['BirthGender'].setValidators(Validators.required); 
               this.appInfoForm.controls['BirthGender'].updateValueAndValidity();
 
-              
-              
-              
-              
-           
+    
           this.appInfoForm.updateValueAndValidity();
   }
   setAppInfoForm(appInfoForm:FormGroup)
   {
     this.appInfoForm = appInfoForm;
   }
-  setChangedPronoun(pronoun:any){
-    this.pronounList = pronoun;
-  }
+ 
   setApplicantName(name:any){
     this.applicantName =name;
   }

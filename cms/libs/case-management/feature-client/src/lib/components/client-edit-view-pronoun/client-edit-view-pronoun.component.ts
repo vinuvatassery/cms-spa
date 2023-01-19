@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { CompletionChecklist, StatusFlag, WorkflowFacade,PronounCode, ClientFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, StatusFlag, WorkflowFacade,PronounCode, ClientFacade,ControlPrefix } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-client-edit-view-pronoun',
   templateUrl: './client-edit-view-pronoun.component.html',
@@ -18,7 +18,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
   @Input() textboxDisable!:boolean;
 
     /** Output Properties **/
-  @Output() PronounChanges = new EventEmitter<any>();  
+  //@Output() PronounChanges = new EventEmitter<any>();  
 
     /** Public properties **/
    pronounList: any = []; 
@@ -27,6 +27,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
    applicantInfo$ = this.clientfacade.applicantInfo$;
    showNotListedRequired:boolean=false;   
    maxLengthFifty =50;
+   controlPrefix = ControlPrefix.pronoun;
    public formUiStyle : UIFormStyle = new UIFormStyle();  
    //textboxDisable:boolean=true;
    disablePronouns:any;
@@ -54,9 +55,8 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
  private loadPronouns(){
   this.pronounLovs$.subscribe((data) => {
     this.pronounList = data;
-    this.PronounChanges.emit(this.pronounList);
     data.forEach((element) => {
-        this.appInfoForm.addControl(element.lovCode, new FormControl(''));        
+        this.appInfoForm.addControl(ControlPrefix.pronoun + element.lovCode, new FormControl(''));        
     });  
     this.disablePronouns =  this.pronounList.filter((x:any)=>x.lovCode !== PronounCode.dontKnow && x.lovCode !== PronounCode.dontWant)
   });
@@ -87,8 +87,8 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
     private assignPronounModelToForm(clientPronounList:any){
         if(clientPronounList !== undefined && clientPronounList !== undefined && clientPronounList != null){   
         clientPronounList.forEach((pronoun:any) => {  
-        if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-            this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
+        if(this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.clientPronounCode.toUpperCase()] !== undefined){
+            this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.clientPronounCode.toUpperCase()].setValue(true);
         if(pronoun.clientPronounCode ===PronounCode.notListed){
             this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
             this.textboxDisable = false;
@@ -99,7 +99,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
       }
     }
    onCheckChange(event:any,lovCode:any) { 
-    if(!this.appInfoForm.controls[PronounCode.notListed].value){
+    if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.notListed].value){
       this.appInfoForm.controls['pronoun'].removeValidators(Validators.required);
       this.appInfoForm.controls['pronoun'].updateValueAndValidity();
     }  
@@ -120,20 +120,20 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
     this.updateWorkflowCount(this.countOfSelection > 0);
 
     this.pronounList.forEach((pronoun:any) => {
-      if(this.appInfoForm.controls[pronoun.lovCode].value ===true){
+      if(this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].value ===true){
         this.appInfoForm.controls['pronouns'].setErrors(null);
       }
     });
     if(this.appInfoForm.controls['pronouns'].valid){
       this.pronounList.forEach((pronoun:any) => {             
-          this.appInfoForm.controls[pronoun.lovCode].removeValidators(Validators.requiredTrue);
-          this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+          this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].removeValidators(Validators.requiredTrue);
+          this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].updateValueAndValidity();
       });
     }
     if(!this.appInfoForm.controls['pronouns'].valid){
       this.pronounList.forEach((pronoun:any) => {   
-          this.appInfoForm.controls[pronoun.lovCode].setValidators(Validators.requiredTrue);
-          this.appInfoForm.controls[pronoun.lovCode].updateValueAndValidity();
+          this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].setValidators(Validators.requiredTrue);
+          this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].updateValueAndValidity();
       });
     }
  
@@ -147,23 +147,24 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
       case PronounCode.dontWant:{
         if(checked){
           this.disablePronouns.forEach((pronoun:any) => { 
-            this.appInfoForm.controls[pronoun.lovCode].setValue(false);
-            this.appInfoForm.controls[pronoun.lovCode].disable();
+            this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].setValue(false);
+            this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].disable();
+            this.textboxDisable = true;  
           });   
           break;
         }
         else{
           if(lovCode ===PronounCode.dontKnow){
-            if(!this.appInfoForm.controls[PronounCode.dontWant].value === true){
+            if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.dontWant].value === true){
               this.disablePronouns.forEach((pronoun:any) => { 
-                this.appInfoForm.controls[pronoun.lovCode].enable();
+                this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].enable();
               });  
             }
           }
           if(lovCode ===PronounCode.dontWant){
-            if(!this.appInfoForm.controls[PronounCode.dontKnow].value === true){
+            if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.dontKnow].value === true){
               this.disablePronouns.forEach((pronoun:any) => { 
-                this.appInfoForm.controls[pronoun.lovCode].enable();
+                this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].enable();
               });  
             }
           }
@@ -172,7 +173,6 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
 
     }
    }
-
    onChange(event:any){
     if(event ===""){
       this.appInfoForm.controls['pronoun'].setErrors({'incorrect': true});
@@ -180,7 +180,5 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
     else{
       this.appInfoForm.controls['pronoun'].setErrors(null);
     }
-
-   }
- 
+   } 
 }

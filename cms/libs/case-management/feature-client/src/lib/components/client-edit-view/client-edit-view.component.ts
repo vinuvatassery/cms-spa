@@ -1,10 +1,10 @@
 of/** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef,  Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
+import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, isEmpty, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
+import { ConfigurationProvider, LoaderService, LoggingService,  SnackBarNotificationType } from '@cms/shared/util-core';
+import {  debounceTime, distinctUntilChanged,  of, pairwise,  startWith, Subscription,  } from 'rxjs';
 /** Facades **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
@@ -28,7 +28,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  @Output() AppInfoChanged = new EventEmitter<{completedDataPoints: CompletionChecklist[], updateWorkflowCount:boolean}>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() ValidateFields = new EventEmitter<FormGroup>();
- @Output() PronounChanges = new EventEmitter<any>();
+ //@Output() PronounChanges = new EventEmitter<any>();
  @Output() ApplicantNameChange = new EventEmitter<any>();
 
   /** Public properties **/
@@ -181,13 +181,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }); 
   } 
 
-  setChangedPronoun(pronoun:any){
-    this.pronounList = pronoun;
-    if(this.pronounList  !== undefined && this.pronounList !== null){
-        this.PronounChanges.emit(this.pronounList);
-        //this.assignPronounModelToForm();
-    }
-  }
   setRaceAndEthnicityData(value:any){
     this.raceAndEthnicity = value;
     if(Array.isArray(value) && value.length>0){
@@ -637,10 +630,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     this.clientfacade.loadRdoSexAssigned();
   }
 
-  // private loadRdoMaterials() {
-  //   this.clientfacade.loadRdoMaterials();
-  // }
-
   private loadRdoInterpreter() {
     this.clientfacade.loadRdoInterpreter();
   }
@@ -799,15 +788,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       this.isSexAssignedTextBoxDisabled = true;
     }
   }
-
-  // onMaterialsRdoClicked(event: any) {
-  //   this.materialsSelectedValue = event.target.id;
-  //   if (this.materialsSelectedValue == 1) {
-  //     this.isMaterialsTextBoxDisabled = false;
-  //   } else {
-  //     this.isMaterialsTextBoxDisabled = true;
-  //   }
-  // }
 
   onInterpreterRdoClicked(event: any) {
     this.interpreterSelectedValue = event.target.id;
