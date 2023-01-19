@@ -1,7 +1,7 @@
 <section [formGroup]="appInfoForm">
   <fieldset class="k-form-fieldset">
     <legend class="k-form-legend">    
-      <h5 class="mt-3">What is their sex assigned at birth?</h5>
+      <h5 class="mt-3">What is their Sex Assigned at Birth?</h5>
 </legend>
 
   <div class="component-list-h">
@@ -34,8 +34,8 @@
                   aria-label="Enter Sex Assigned at Birth"
                   [fillMode]="formUiStyle.inputFillMode"
                     [formControlName]="DescriptionField"
-                    [disabled]="
-                      appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'"
+                    [maxlength]="50"
+                    [disabled]="appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'"
                     placeholder="Enter Answer" 
                   ></kendo-textbox>
                 </kendo-floatinglabel>
