@@ -1178,6 +1178,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.copyOfInsuranceCardFiles = [];
         this.isInsuranceFileUploaded = false;
       }
+      else if (fileType == 'medicareCard') {
+        this.copyOfMedicareCardFiles = [];
+        this.isMedicareCardFileUploaded = false;
+      }
     }
   }
 }
