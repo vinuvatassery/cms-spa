@@ -95,6 +95,7 @@
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="proofOfIncomeValidator"> Proof of Income is required </kendo-formerror>
+          <kendo-formerror *ngIf="proofOfIncomeValidatorSize"> Document maximum lenght in 25 MB </kendo-formerror>
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">

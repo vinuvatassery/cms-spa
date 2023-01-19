@@ -37,6 +37,7 @@ export class IncomeDetailComponent implements OnInit {
   isIncomeDetailsPopupOpen = false;
   proofOfIncomeFiles: any;
   proofOfIncomeValidator: boolean = false;
+  proofOfIncomeValidatorSize: boolean = false;
   noProofOfIncomeFlag!: StatusFlag;
   currentDate = new Date();
   /** Public properties **/
@@ -269,8 +270,13 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
+    debugger;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
+   if(this.proofOfIncomeFiles.size>26214400) 
+   {
+    this.proofOfIncomeValidatorSize=true;
+   }
     console.log(this.proofOfIncomeFiles);
   }
 
