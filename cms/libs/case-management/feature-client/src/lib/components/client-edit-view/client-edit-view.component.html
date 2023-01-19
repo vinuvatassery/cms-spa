@@ -4,9 +4,9 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
         <span *ngIf="showDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-        <kendo-floatinglabel text="Enter First Name" class="k-form">
-          <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
-            formControlName="firstName" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
+        <kendo-floatinglabel text="First Name" class="k-form">
+          <kendo-textbox aria-label="first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
+            formControlName="firstName" placeholder="First Name" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
 
@@ -36,7 +36,7 @@
       <div class="flex-col flex-col-4 inlineloaderwrapper">
         <span *ngIf="showDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Last Name">
-          <kendo-textbox aria-label="last name"  [fillMode]="formUiStyle.inputFillMode" (blur)="searchDuplicateClient()" 
+          <kendo-textbox aria-label="last name" placeholder="Last Name"   [fillMode]="formUiStyle.inputFillMode" (blur)="searchDuplicateClient()" 
             formControlName="lastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
@@ -52,7 +52,7 @@
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="First Name on Primary Insurance Card">
-          <kendo-textbox aria-label="first name on primary insurance card" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="first name on primary insurance card" placeholder="First Name on Primary Insurance Card" [fillMode]="formUiStyle.inputFillMode"
             formControlName="prmInsFirstName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
 
@@ -65,7 +65,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Primary Insurance Card">
           <kendo-textbox aria-label="last name on primary insurance card" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="prmInsLastName" [maxlength]="lengthRestrictForty">
+            formControlName="prmInsLastName"  placeholder="Last Name on Primary Insurance Card" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
 
           <kendo-formerror
@@ -90,7 +90,7 @@
       <!-- [disabled]="isOfficialIdChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="First Name on Official ID">
-          <kendo-textbox aria-label="first name on official id" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="first name on official id" placeholder="First Name on Official ID" [fillMode]="formUiStyle.inputFillMode"
             formControlName="officialIdFirstName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
 
@@ -102,7 +102,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Official ID">
           <!-- [disabled]="isOfficialIdChecked" -->
-          <kendo-textbox aria-label="last name on official id" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="last name on official id" placeholder="Last Name on Official ID" [fillMode]="formUiStyle.inputFillMode"
             formControlName="officialIdLastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
         </kendo-floatinglabel>
@@ -131,7 +131,7 @@
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
             formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
             placeholder=""></kendo-datepicker>
-
+            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
@@ -143,7 +143,7 @@
       <div class="flex-col flex-col-4 inlineloaderwrapper">
         <span *ngIf="showDuplicateLoader" class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Social Security Number">
-          <kendo-textbox aria-label="social security number" (blur)="searchDuplicateClient()" 
+          <kendo-textbox aria-label="social security number" placeholder="Social Security Number" (blur)="searchDuplicateClient()" 
             [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
             [value]="appInfoForm.controls['ssn'].value | ssn"> </kendo-textbox>
 

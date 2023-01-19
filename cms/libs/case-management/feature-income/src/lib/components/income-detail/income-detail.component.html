@@ -27,7 +27,7 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Amount" class="amount-with-symbol">
             <span class="k-input-prefix custom-currencysymbol"> $ </span>
-            <kendo-numerictextbox aria-label="amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
+            <kendo-numerictextbox placeholder="Amount" aria-label="amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
               formControlName="incomeAmt" #incomeAmount [fillMode]="formUiStyle.inputFillMode" name="amount">
 
             </kendo-numerictextbox>
@@ -59,7 +59,7 @@
 
         </div>
         <div class="flex-col flex-col-6">
-          <kendo-floatinglabel text="Income End (Optional)">
+          <kendo-floatinglabel text="Income End">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               formatPlaceholder="formatPattern"  placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
               #incomeEndDate>
@@ -95,7 +95,7 @@
             </ng-template> -->
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
-          <kendo-formerror *ngIf="proofOfIncomeValidator"> Poof of Income is required </kendo-formerror>
+          <kendo-formerror *ngIf="proofOfIncomeValidator"> Proof of Income is required </kendo-formerror>
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
@@ -112,7 +112,7 @@
 
         <div class="flex-col" *ngIf="!hasNoProofOfIncome && incomeTypesOther === 'O'">
           <kendo-floatinglabel text="Name of other Proof">
-            <kendo-textbox [fillMode]="formUiStyle.dropDownFillMode" aria-label="Other income" name="Other income"
+            <kendo-textbox  placeholder="Name of other Proof" [fillMode]="formUiStyle.dropDownFillMode" aria-label="Other income" name="Other income"
               formControlName="otherDesc" #otherDesc>
             </kendo-textbox>
           </kendo-floatinglabel>
@@ -122,7 +122,7 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Financial justification or Income Note">
-            <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #tareaJustifications resizable="auto"
+            <kendo-textarea  [fillMode]="formUiStyle.inputFillMode" #tareaJustifications resizable="auto"
               [maxlength]="tareaJustificationMaxLength" [value]="tareaJustification"
               (valueChange)="onTareaJustificationValueChange($event)" aria-label="income note" name="income-note"
               formControlName="incomeNote">

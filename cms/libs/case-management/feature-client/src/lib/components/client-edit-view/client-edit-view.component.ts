@@ -1,4 +1,4 @@
-/** Angular **/
+of/** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
@@ -272,7 +272,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       officialIdFirstName:  ['',{disabled:false}],
       officialIdLastName:  ['',{disabled:false}],
       officialIdsNotApplicable:  [''],
-      dateOfBirth:  [this.currentDate],
+      dateOfBirth:  [''],
       ssn:  ['',{disabled:false}],
       ssnNotApplicable:  [''],
       registerToVote: [''],
@@ -325,9 +325,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
       if(this.appInfoForm !== undefined){
-      this.appInfoForm.reset();    
-      this.appInfoForm.controls["dateOfBirth"].setValue(new Date());   
-      this.appInfoForm.controls["dateOfBirth"].updateValueAndValidity();
+      this.appInfoForm.reset();
       this.appInfoForm.controls['middleName'].enable();
       this.appInfoForm.controls["officialIdLastName"].enable();
       this.appInfoForm.controls["officialIdFirstName"].enable();
@@ -655,7 +653,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     });
 
     if (completedDataPoints.length > 0) {
-      this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: false});
+      this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: true});
     }
     this.allowWorkflowCountUpdate = true;
   }

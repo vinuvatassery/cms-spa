@@ -27,7 +27,7 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Benificiary ID Number">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="Medicare Benificiary ID Number"
+            <kendo-textbox [disabled]="isViewContentEditable" aria-label="Medicare Benificiary ID Number" placeholder="Medicare Benificiary ID Number"
               formControlName="medicareBeneficiaryIdNbr" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
             </kendo-textbox>
           </kendo-floatinglabel>
@@ -143,7 +143,7 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="lainsurance id number"
+            <kendo-textbox [disabled]="isViewContentEditable" aria-label="lainsurance id number" placeholder="Insurance ID Number"
               formControlName="insuranceIdNumber" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
             </kendo-textbox>
           </kendo-floatinglabel>
@@ -248,7 +248,7 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                   <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                  <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
+                  <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right" placeholder="Premium Amount"
                     placeholder="00.00" formControlName="premiumAmt" #premiumAmt [fillMode]="formUiStyle.inputFillMode"
                     name="premiumAmt" [disabled]="isViewContentEditable">
 
@@ -272,7 +272,7 @@
               <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
                   <kendo-textbox [maxlength]="20" formControlName="paymentIdNbr"
-                    [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" aria-label="payment id number"
+                    [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" aria-label="payment id number" placeholder="Payment ID Number"
                     [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is
@@ -373,7 +373,7 @@
               </div>
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="First Name">
-                  <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
+                  <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
                     [fillMode]="formUiStyle.inputFillMode" formControlName="firstName"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.value.othersCoveredOnPlanFlag == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].firstName
@@ -383,7 +383,7 @@
               </div>
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Last Name">
-                  <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name"
+                  <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
                     [fillMode]="formUiStyle.inputFillMode" formControlName="lastName"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].lastName
@@ -448,7 +448,7 @@
       && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
+            <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
               [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"> </kendo-textbox>
             <kendo-formerror
               *ngIf="!healthInsuranceForm.controls['policyHolderFirstName'].valid && isViewContentEditable==false">First
@@ -458,7 +458,7 @@
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder Last Name">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name"
+            <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
               [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName">
             </kendo-textbox>
             <kendo-formerror *ngIf="!healthInsuranceForm.controls['policyHolderLastName'].valid">Last Name is
