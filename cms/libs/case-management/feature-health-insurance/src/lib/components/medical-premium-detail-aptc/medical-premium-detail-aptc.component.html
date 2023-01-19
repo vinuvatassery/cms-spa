@@ -78,7 +78,7 @@
       </fieldset>
       <div class="block-section mt-2" *ngIf="healthInsuranceForm.controls['aptcFlag'].value==='Y'">
         <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
-          <kendo-textbox  aria-label="monthly aptc amount"
+          <kendo-textbox  aria-label="monthly aptc amount" placeholder="Monthly APTC Amount (may be $0)" 
             formControlName="aptcMonthlyAmt"
             [fillMode]="formUiStyle.inputFillMode"> 
             <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
