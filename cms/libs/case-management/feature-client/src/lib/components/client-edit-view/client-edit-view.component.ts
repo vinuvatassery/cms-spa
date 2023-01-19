@@ -14,6 +14,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 
 import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
+import { LessOrEqualToFilterOperatorComponent } from '@progress/kendo-angular-grid';
  
 @Component({
   selector: 'case-management-client-edit-view',
@@ -132,6 +133,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   matchingClient:any={};
   ssnMask='000-00-0000'
   showDuplicateLoader:boolean=false;
+  otherEthnicityList:any[]=[];
  
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -164,7 +166,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
-    this.LoadLovs(); 
+    this.LoadLovs();
+    this.loadDdlOtherIdentities(); 
     this.buildForm(); 
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
@@ -207,6 +210,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
         else
           this.raceAndEthnicityPrimaryNotListed = true;
       });
+    }
+
+    if(this.raceAndEthnicityPrimaryData.length>1){
+      this.raceAndEthnicityPrimaryData=[...this.raceAndEthnicityPrimaryData,...this.otherEthnicityList]
     }
 
     if (this.raceAndEthnicityPrimaryData.length == 1) {
@@ -304,6 +311,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.lovFacade.getMaterialYesLovs();
     this.lovFacade.getSpokenWrittenLanguageLovs();
     this.lovFacade.getEnglishProficiencyLovs();
+    this.lovFacade.getOtherEthnicityIdentitiesLovs();
   }
   private loadApplicantInfoSubscription(){
     
@@ -520,18 +528,25 @@ this.assignRaceAndEthnicityToForm();
         const foundRace = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientRaceCategoryCode);
         if (foundRace !== undefined) {
           RaceAndEthnicity.push(foundRace);
-          if (el.isPrimaryFlag === StatusFlag.Yes)
-          RaceAndEthnicityPrimary=foundRace;
-            //this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(foundRace);
-
         }
         const foundEthnicity = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
         if (foundEthnicity !== undefined){
           Ethnicity=foundEthnicity
-          if (el.isPrimaryFlag === StatusFlag.Yes)
-          RaceAndEthnicityPrimary=foundEthnicity;
         }
       });
+      let primaryRace=this.applicantInfo.clientRaceList.filter((race:any)=>race.isPrimaryFlag==StatusFlag.Yes);
+      if(primaryRace.length>0){
+        let checkPrimaryInRaceList=this.raceAndEthnicity.find((lov: any) => lov.lovCode === primaryRace[0].clientRaceCategoryCode);
+        if(checkPrimaryInRaceList){
+          RaceAndEthnicityPrimary=checkPrimaryInRaceList;
+        }
+        else{
+          let checkPrimaryInOtherEthnicityList=this.otherEthnicityList.find((lov: any) => lov.lovCode === primaryRace[0].clientRaceCategoryCode);
+          if(checkPrimaryInOtherEthnicityList){
+            RaceAndEthnicityPrimary=checkPrimaryInOtherEthnicityList;
+          }
+        }
+      }
       this.appInfoForm.controls['RaceAndEthnicity']?.setValue(RaceAndEthnicity);
       this.appInfoForm.controls['Ethnicity']?.setValue(Ethnicity);
       this.raceAndEthnicityChange(true);
@@ -969,4 +984,9 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     }
   }
 
+  loadDdlOtherIdentities(){
+    this.lovFacade.otherEthnicitylov$.subscribe((response:any)=>{
+      this.otherEthnicityList=response
+    })
+  }
 }

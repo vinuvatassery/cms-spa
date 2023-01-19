@@ -533,6 +533,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     let ethnicityValue=this.appInfoForm.controls['Ethnicity'].value;
     Ethnicity.push(ethnicityValue);
     const RaceAndEthnicityPrimary = this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
+    var checkPrimaryInRaceList=RaceAndEthnicity.filter((lov:any)=>lov.lovCode==RaceAndEthnicityPrimary.lovCode);
+    if(checkPrimaryInRaceList.length==0){
+      RaceAndEthnicity.push(RaceAndEthnicityPrimary);
+    }
     RaceAndEthnicity.forEach((el: any) => {
       const clientRace = new ClientRace();
       clientRace.clientRaceCategoryCode =el.lovCode;
@@ -544,7 +548,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         clientRace.raceDesc = this.appInfoForm.controls['RaceAndEthnicityNotListed'].value;
       this.applicantInfo.clientRaceList.push(clientRace)
     });
-
     Ethnicity.forEach((el: any) => {
       const clientRace = new ClientRace();
       clientRace.clientEthnicIdentityCode = el.lovCode;
