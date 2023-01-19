@@ -29,11 +29,11 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   formSubmitted!: boolean;
   /** Constructor **/
   constructor(
-    private lovFacade: LovFacade,
-    private insurancePolicyFacade: HealthInsurancePolicyFacade,
-    private notificationSnackbarService: NotificationSnackbarService,
-    private cdr: ChangeDetectorRef,
-    private formBuilder: FormBuilder
+    private readonly lovFacade: LovFacade,
+    private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly formBuilder: FormBuilder
     
   ) {
     this.form = this.formBuilder.group({ });

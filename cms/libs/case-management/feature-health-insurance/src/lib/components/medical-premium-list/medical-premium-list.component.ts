@@ -30,8 +30,6 @@ export class MedicalPremiumListComponent implements OnInit {
   currentInsurancePolicyId: any;
   selectedInsurance: any;
   gridList=[];
-  
-
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
@@ -58,9 +56,7 @@ export class MedicalPremiumListComponent implements OnInit {
       text: "Change Priority",
       icon: "format_line_spacing",
       type: "priority",
-      click: (): void => {
-        // this.onChangePriorityOpenClicked()
-      },
+      click: (): void => {},
     },
     {
       buttonType: "btn-h-danger",
@@ -156,7 +152,6 @@ export class MedicalPremiumListComponent implements OnInit {
       if(medicalHealthPolicy?.data?.length > 0)
       this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
       if(medicalHealthPolicy?.length > 0){
-        
         const item: CompletionChecklist = {
           dataPointName: 'currentInsuranceFlag',
           status: StatusFlag.Yes
