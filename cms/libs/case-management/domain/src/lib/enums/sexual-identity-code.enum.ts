@@ -1,6 +1,6 @@
-export enum GenderCode {
+export enum SexualIdentityCode {
     dontKnow =  "DONT_KNOW",
-    dontKnowAnswer =  "DONT_KNOW_ANSWER",
+    dontWant =  "DONT_WANT",
     dontKnowQustion = "DONT_KNOW_QUESTION",
     notListed ="NOT_LISTED"
 }

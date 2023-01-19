@@ -414,28 +414,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   else{
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
-  }
-  
-  if (Array.isArray(applicantInfo.clientGenderList) ) {
-    applicantInfo.clientGenderList.forEach(gender => { 
-      this.appInfoForm.controls['Gender'+gender.clientGenderCode]?.setValue(true);
-      if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
-        this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
-      }
-      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);
-      
-    })
-  }
-  if (Array.isArray(applicantInfo.clientSexualIdentityList) ) {
-    applicantInfo.clientSexualIdentityList.forEach(identity => { 
-      this.appInfoForm.controls['SexulaIdentity'+identity.clientSexualIdentityCode]?.setValue(true);
-      if(identity.clientSexualIdentityCode==="NOT_LISTED" && identity.otherDesc!==null){
-        this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
-      }
-      this.appInfoForm.controls['SexulaIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
-      
-    })
-  }
+  } 
+
   const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
   this.appInfoForm.controls['Transgender']?.setValue(Transgender);
   if (Transgender==='NOT_LISTED') {
@@ -450,7 +430,6 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
 
   
   this.assignRaceAndEthnicityToForm();
-  //this.assignPronounModelToForm();
 
   this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
   this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
@@ -545,21 +524,6 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     }
 
   }
-// private assignPronounModelToForm(){
-//   if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
-//     this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
-//   if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-//       this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
-//       this.updateWorkflowPronounCount(true);
-//   if(pronoun.clientPronounCode ==='NOT_LISTED'){
-//       this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
-//       this.textboxDisable = false;
-//     }   
-//     }
-//  })
-//     this.clientfacade.pronounListSubject.next(this.pronounList);     
-// }
-// }
 
 private updateWorkflowPronounCount(isCompleted:boolean){
   const workFlowdata: CompletionChecklist[] = [{

@@ -60,9 +60,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
     });  
     this.disablePronouns =  this.pronounList.filter((x:any)=>x.lovCode !== PronounCode.dontKnow && x.lovCode !== PronounCode.dontWant)
   });
-  this.appInfoForm.valueChanges.subscribe(a=>{     
-      
- });
+
  }
  private loadApplicantInfoSubscription(){
       this.appInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{   
@@ -71,7 +69,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
           && applicantInfo.clientPronounList.length>0){
             this.assignPronounModelToForm(applicantInfo.clientPronounList);
             var nonDisablePronouns =  applicantInfo.clientPronounList.filter((x:any)=>x.clientPronounCode === PronounCode.dontKnow|| x.clientPronounCode === PronounCode.dontWant)
-            if(this.disablePronouns.length>0){
+            if(nonDisablePronouns.length>0){
               this.enableDisablePronoun(true, nonDisablePronouns[0].clientPronounCode);
             }
           }        
