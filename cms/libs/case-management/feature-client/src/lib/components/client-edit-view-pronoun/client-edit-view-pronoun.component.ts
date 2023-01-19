@@ -49,7 +49,6 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
     this.loadApplicantInfoSubscription();
    }
    ngOnDestroy(): void {
-    debugger;
     this.appInfoSubscription.unsubscribe();    
   }
  private loadPronouns(){

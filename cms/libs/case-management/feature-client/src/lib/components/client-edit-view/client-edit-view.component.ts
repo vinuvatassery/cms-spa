@@ -312,7 +312,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   private loadApplicantInfoSubscription(){
     
     this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{   
-      debugger;
       this.textboxDisable  = true; 
       this.yesMaterialDisable = true;
       this.interpreterTypeInputDisable = true;

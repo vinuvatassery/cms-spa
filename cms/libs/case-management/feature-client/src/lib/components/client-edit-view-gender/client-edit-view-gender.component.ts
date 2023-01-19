@@ -74,7 +74,37 @@ export class ClientEditViewGenderComponent implements OnInit {
   
     this.workflowFacade.updateChecklist(workFlowdata);
   }
+  enableDisableGender(checked:boolean,lovCode:any){
+    // switch(lovCode){  
+    //   case PronounCode.dontKnow:
+    //   case PronounCode.dontWant:{
+    //     if(checked){
+    //       this.disablePronouns.forEach((pronoun:any) => { 
+    //         this.appInfoForm.controls[pronoun.lovCode].setValue(false);
+    //         this.appInfoForm.controls[pronoun.lovCode].disable();
+    //       });   
+    //       break;
+    //     }
+    //     else{
+    //       if(lovCode ===PronounCode.dontKnow){
+    //         if(!this.appInfoForm.controls[PronounCode.dontWant].value === true){
+    //           this.disablePronouns.forEach((pronoun:any) => { 
+    //             this.appInfoForm.controls[pronoun.lovCode].enable();
+    //           });  
+    //         }
+    //       }
+    //       if(lovCode ===PronounCode.dontWant){
+    //         if(!this.appInfoForm.controls[PronounCode.dontKnow].value === true){
+    //           this.disablePronouns.forEach((pronoun:any) => { 
+    //             this.appInfoForm.controls[pronoun.lovCode].enable();
+    //           });  
+    //         }
+    //       }
+    //     }
+    //   }
 
+    // }
+   }
   onCheckChange(event: any, lovCode: string) {
     if (event.target.checked) {
       this.appInfoForm.controls['GenderGroup'].setValue(lovCode);
