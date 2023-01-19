@@ -270,7 +270,7 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
-    debugger;
+   
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
    if(this.proofOfIncomeFiles.size>26214400) 
