@@ -846,6 +846,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               sexulaIdentity.forEach(control => {
                 if (this.appInfoForm.controls[control].value===true) {
                   this.appInfoForm.controls['SexulaIdentityGroup'].setValue(this.appInfoForm.controls[control].value); 
+                  if (control === 'SexulaIdentityNOT_LISTED') {
+                    this.appInfoForm.controls['SexulaIdentityDescription'].setValidators(Validators.required);
+                    this.appInfoForm.controls['SexulaIdentityDescription'].updateValueAndValidity();
+                  }
                 }
                });
                if(!this.appInfoForm.controls['SexulaIdentityGroup'].valid){

@@ -77,23 +77,21 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
   
     this.workflowFacade.updateChecklist(workFlowdata);
   }
-
+  setControlValidations() {
+    const sexulaIdentity = Object.keys(this.appInfoForm.controls).filter(m => m.includes('SexulaIdentity'));
+    sexulaIdentity.forEach((gender: any) => {
+      this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
+      this.appInfoForm.controls[gender].updateValueAndValidity();
+    });
+  }
   onCheckChange(event: any, lovCode: string) {
     if (event.target.checked) {
       this.appInfoForm.controls['SexulaIdentityGroup'].setValue(lovCode);
-      if (lovCode === 'NOT_LISTED') {
-        this.appInfoForm.controls[this.DescriptionField].setValidators(
-          Validators.required
-        );
-        this.appInfoForm.controls[
-          this.DescriptionField
-        ].updateValueAndValidity();
-      }
-      //this.countOfSelection++;
     } else {
       this.appInfoForm.controls['SexulaIdentityGroup'].setValue('');
 
       if (lovCode === 'NOT_LISTED') {
+        this.appInfoForm.controls[this.DescriptionField].setValue(null); 
         this.appInfoForm.controls[this.DescriptionField].removeValidators(
           Validators.required
         );
@@ -101,9 +99,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit {
           this.DescriptionField
         ].updateValueAndValidity();
       }
-      //this.countOfSelection = this.countOfSelection > 0 ?  --this.countOfSelection: this.countOfSelection;
     }
-
-    //this.updateWorkflowCount(this.countOfSelection > 0);
+    this.setControlValidations();
   }
 }
