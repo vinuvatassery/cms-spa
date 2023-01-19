@@ -6,6 +6,9 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
+import { StatusFlag } from '../enums/status-flag.enum';
+import { WorkflowFacade } from './workflow.facade';
 @Injectable({ providedIn: 'root' })
 export class HealthInsuranceFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
@@ -44,6 +47,7 @@ export class HealthInsuranceFacade {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
+    private readonly workflowFacade:WorkflowFacade,
     private configurationProvider: ConfigurationProvider) { }
 
   ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -90,7 +94,7 @@ export class HealthInsuranceFacade {
             data: medicalHealthPlansResponse['clientInsurancePolicies'],
             total: medicalHealthPlansResponse?.totalCount,
           };
-
+          this.updateWorkflowCount('insurance_plans',  medicalHealthPlansResponse?.totalCount > 0);
           this.medicalHealthPlansSubject.next(gridView);
         }
         this.HideLoader();
@@ -99,6 +103,15 @@ export class HealthInsuranceFacade {
         this.ShowHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
+  }
+
+  private updateWorkflowCount(dataPointName:string, isCompleted:boolean){
+    const dataPoint: CompletionChecklist[] = [{
+      dataPointName: dataPointName,
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(dataPoint);
   }
 
   loadDdlMedicalHealthPlanPriority(): void {

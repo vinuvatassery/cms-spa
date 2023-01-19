@@ -654,7 +654,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     });
 
     if (completedDataPoints.length > 0) {
-      this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: false});
+      this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: true});
     }
     this.allowWorkflowCountUpdate = true;
   }

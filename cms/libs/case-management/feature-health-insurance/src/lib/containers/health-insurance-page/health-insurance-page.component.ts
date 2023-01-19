@@ -171,29 +171,54 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
-    if (prev && curr) {
-        if (prev['currentInsuranceFlag'] != curr['currentInsuranceFlag']) {
-            const item: CompletionChecklist = {
-                dataPointName: 'currentInsuranceFlag',
-                status: curr['currentInsuranceFlag'] === StatusFlag.No ? StatusFlag.Yes : StatusFlag.No
-            };
-
-            completedDataPoints.push(item);
+    Object.keys(this.insuranceFlagForm.controls).forEach(key => {
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+          };
+          completedDataPoints.push(item);
         }
-        if (prev['groupPolicyEligibleFlag'] !== curr['groupPolicyEligibleFlag']) {
-          const item: CompletionChecklist = {
-                dataPointName: 'groupPolicyEligibleFlag',
-                status: curr['groupPolicyEligibleFlag'] ? StatusFlag.Yes : StatusFlag.No
-            };
-
-            completedDataPoints.push(item);
-        }
-    }
+      }
+    });
 
     if (completedDataPoints.length > 0) {
-        this.workflowFacade.updateChecklist(completedDataPoints);
+      this.workflowFacade.updateChecklist(completedDataPoints);
     }
-}
+  }
+
+  private adjustAttributeInit() {
+    this.adjustInsurancePlansAttributes(this.insuranceFlagForm?.get('currentInsuranceFlag')?.value ?? StatusFlag.No);
+    this.updateInitialCompletionCheckList();
+  }
+
+  private adjustInsurancePlansAttributes(status:StatusFlag){
+    const data: CompletionChecklist = {
+      dataPointName: 'insurance_plans_required',
+      status: status
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+  }
+
+  private updateInitialCompletionCheckList(){
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.insuranceFlagForm.controls).forEach(key => {
+      if (this.insuranceFlagForm?.get(key)?.value && this.insuranceFlagForm?.get(key)?.valid) {
+        let item: CompletionChecklist = {
+          dataPointName: key,
+          status: StatusFlag.Yes
+        };
+
+        completedDataPoints.push(item);
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
+  }
 
   loadSessionData() {
     //this.loaderService.show();
@@ -233,6 +258,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       }
       this.patchInsurancePolicyFlags(policy);
       this.ref.detectChanges();
+      this.adjustAttributeInit();
     })
   }
 
@@ -256,6 +282,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   onCurrentInsuranceChange(currentInsuranceValue: string) {
     this.ShowLoader()
+    this.adjustInsurancePlansAttributes(currentInsuranceValue == StatusFlag.Yes ?StatusFlag.Yes:StatusFlag.No);
     this.saveHealthInsuranceFlag().subscribe({
       next:(response:any)=>{
         if (currentInsuranceValue == StatusFlag.Yes) {
