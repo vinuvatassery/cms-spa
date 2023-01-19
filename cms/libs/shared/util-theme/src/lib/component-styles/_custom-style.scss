@@ -536,6 +536,26 @@
   max-width: 500px;
 }
 
+.autocompletecombo{
+  .k-list-header-text, .k-list-item-text{
+    font-family: $font-family-bold;
+  }
+  .namecolumn{
+    display: inline-block;
+    width: calc(100% - 260px);
+  }
+
+  .dobcolumn{
+width: 120px;
+display: inline-block;
+  }
+
+  .ssmcolumn{
+width: 125px;
+display: inline-block;
+  }
+}
+
 .nobg-loader{
-  background: transparent;
+  background: transparent; 
 }

@@ -14,7 +14,7 @@ export class SmokingCessationFacade {
  snackbarSubject = new Subject<SnackBar>();
  familyfacadesnackbar$ = this.snackbarSubject.asObservable();
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -22,7 +22,7 @@ export class SmokingCessationFacade {
        this.loggingService.logException(err)
     }  
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.hideLoader();   
   }
 
      constructor(private readonly smokingCessationDataService:SmokingCessationDataService, 
@@ -32,12 +32,12 @@ export class SmokingCessationFacade {
 
     /** Public methods **/
 
-     ShowLoader()
+     showLoader()
      {
        this.loaderService.show();
      }
    
-     HideLoader()
+     hideLoader()
      {
        this.loaderService.hide();
      }

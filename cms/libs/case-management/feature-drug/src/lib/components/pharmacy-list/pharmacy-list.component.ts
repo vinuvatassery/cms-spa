@@ -2,9 +2,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 /** Internal Libraries **/
-import { ClientPharmacy, DrugPharmacyFacade, Pharmacy } from '@cms/case-management/domain';
+import { ClientPharmacy, Pharmacy } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -32,10 +32,10 @@ export class PharmacyListComponent implements OnInit {
   @Output() removePharmacyClick = new EventEmitter<string>();
 
   /** Public properties **/
-  isOpenChangePriorityClicked$ = new BehaviorSubject(false);
-  isOpenPharmacyClicked$ = new BehaviorSubject(false);
+  isOpenChangePriorityClicked$ = new Subject();
+  isOpenPharmacyClicked$ = new Subject();
   isEditPharmacyListClicked = false;
-  isRemoveClientPharmacyClicked$ = new BehaviorSubject(false);
+  isRemoveClientPharmacyClicked$ = new Subject();
   selectClientPharmacyId!: string;
   selectedPharmacyForEdit!: any;
   removeButtonEmitted = false;
@@ -87,7 +87,11 @@ export class PharmacyListComponent implements OnInit {
   clientPharmacyCount!:Number;
 
   /** Constructor **/
-  constructor() { }
+  constructor() {
+    this.isOpenChangePriorityClicked$.next(false);
+    this.isOpenPharmacyClicked$.next(false);
+    this.isRemoveClientPharmacyClicked$.next(false);
+   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -197,6 +201,10 @@ export class PharmacyListComponent implements OnInit {
   onRemovePharmacyClicked(clientPharmacyId: string) {
     this.selectClientPharmacyId = clientPharmacyId;
     this.isRemoveClientPharmacyClicked$.next(true);
+  }
+
+  removeClientPharmacyOnEditMode(){
+    this.removePharmacyEvent(this.selectClientPharmacyId);
   }
 
   removeClientPharmacy(data: any) {
