@@ -145,7 +145,7 @@
         <kendo-floatinglabel text="Social Security Number">
           <kendo-maskedtextbox  mask="000-00-0000"  aria-label="social security number" (blur)="searchDuplicateClient()" 
             [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
-            [value]="appInfoForm.controls['ssn'].value "> </kendo-maskedtextbox >
+            [value]="appInfoForm.controls['ssn'].value" (input)="ssnValueChange()"> </kendo-maskedtextbox >
 
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="appInfoForm.controls['ssn'].hasError('patternError') && !this.appInfoForm.controls['ssn'].disabled">Social Security Number cannot be less then 9 digits.</kendo-formerror>

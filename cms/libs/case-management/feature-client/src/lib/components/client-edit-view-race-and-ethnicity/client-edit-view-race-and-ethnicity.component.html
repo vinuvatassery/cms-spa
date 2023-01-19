@@ -16,21 +16,13 @@
             aria-hidden="true"
           ></span>
 
-          <kendo-multiselect
-          aria-label="Ethnic Identities"
-            [checkboxes]="{ checkOnClick: true, enabled: true }"
+          <kendo-dropdownlist
+          aria-label="Ethnic Identity"
             formControlName="Ethnicity"
-            #multiselect
             [fillMode]="formUiStyle.dropDownFillMode"
-            [autoClose]="false"
             [data]="ethnicityData"
             [textField]="'lovDesc'"
             [valueField]="'lovCode'"
-            (valueChange)="RaceAndEthnicityhange($event)"
-            [popupSettings]="{
-              popupClass: popupClassMultiSelect,
-              animate: true
-            }"
           >
             <!-- <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
               <div class="input-search">
@@ -57,7 +49,7 @@
                
               </span>
             </ng-template>
-          </kendo-multiselect>
+          </kendo-dropdownlist>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!appInfoForm.controls['Ethnicity'].valid">Ethnic Identity is required.</kendo-formerror>
       </div>

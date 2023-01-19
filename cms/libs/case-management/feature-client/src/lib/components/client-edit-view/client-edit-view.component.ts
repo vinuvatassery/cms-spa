@@ -209,7 +209,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       });
     }
 
-
     if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
@@ -515,7 +514,7 @@ this.assignRaceAndEthnicityToForm();
   private assignRaceAndEthnicityToForm() {
     if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
       const RaceAndEthnicity: any = [];
-      const Ethnicity: any = [];
+      let Ethnicity: any=null;
       let RaceAndEthnicityPrimary=null;
       this.applicantInfo.clientRaceList.forEach((el: any) => {
         const foundRace = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientRaceCategoryCode);
@@ -528,7 +527,7 @@ this.assignRaceAndEthnicityToForm();
         }
         const foundEthnicity = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
         if (foundEthnicity !== undefined){
-          Ethnicity.push(foundEthnicity);
+          Ethnicity=foundEthnicity
           if (el.isPrimaryFlag === StatusFlag.Yes)
           RaceAndEthnicityPrimary=foundEthnicity;
         }
@@ -961,6 +960,13 @@ private updateWorkflowPronounCount(isCompleted:boolean){
 
   onDuplicatPopupCloseClick() {
     this.showDuplicatePopup = false;
+  }
+
+  ssnValueChange() {
+    var value = (this.appInfoForm.controls["ssn"].value).replace(/\s/g, "");
+    if (value != '' && value.length < 9) {
+      this.appInfoForm.controls['ssn'].setErrors({ 'patternError': true });
+    }
   }
 
 }
