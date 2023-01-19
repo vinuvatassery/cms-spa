@@ -122,6 +122,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   raceAndEthnicityPrimaryData: Array<any> = [];
   raceAndEthnicityPrimaryNotListed: boolean = false;
   applicantInfoSubscription !:Subscription;
+  dateValidator: boolean = false;
 
     /** Private properties **/
   private allowWorkflowCountUpdate = false;
@@ -962,8 +963,18 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       }
     })
   }
+  dateValidate(event: Event)
+  {
+    this.dateValidator=false;
+    var signeddate=this.appInfoForm.controls['dateOfBirth'].value;
+      var todayDate= new Date();
+      if(signeddate>todayDate){
+      this.dateValidator=true;
+      }
+  }
 
   onDuplicatPopupCloseClick() {
     this.showDuplicatePopup = false;
   }
+  
 }
