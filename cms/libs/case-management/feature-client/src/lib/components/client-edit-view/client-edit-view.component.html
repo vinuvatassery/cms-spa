@@ -16,7 +16,7 @@
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Middle Initial (Optional)">
           <kendo-textbox aria-label="middle initial"  [fillMode]="formUiStyle.inputFillMode"
-            formControlName="middleName" [maxlength]="lengthRestrictThirty">
+            formControlName="middleName"  placeholder="Middle Initial (Optional)"  [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
 
           <kendo-formerror
@@ -130,8 +130,10 @@
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
             formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+            (keyup)="dateValidate($event)"
             placeholder=""></kendo-datepicker>
-            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
+            <kendo-formerror *ngIf="dateValidator"> Future date can not be selected</kendo-formerror>
+            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
@@ -205,7 +207,7 @@
       </legend>
       <div class="component-list-h">
         <case-management-client-edit-view-pronoun [appInfoForm]="appInfoForm"
-          (PronounChanges)="setChangedPronoun($event)" [checkBoxValid]="checkBoxValid"
+          [checkBoxValid]="checkBoxValid"
           [textboxDisable]="textboxDisable">
         </case-management-client-edit-view-pronoun>
         <hr />
