@@ -44,7 +44,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId!:string;
   sessionId! : string;
   message!:string;
-  //snackbar:any;
  
     /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
@@ -462,7 +461,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     if(this.applicantInfo.clientPronounList == undefined){
       this.applicantInfo.clientPronounList = [];
     }
-    //this.pronounList.forEach((pronoun:any) => {   
     Object.keys( this.appInfoForm.controls).filter(m=>m.includes('pronoun')).forEach(pronoun => { 
       if( this.appInfoForm.controls[pronoun].value ===""
          ||this.appInfoForm.controls[pronoun].value === null
