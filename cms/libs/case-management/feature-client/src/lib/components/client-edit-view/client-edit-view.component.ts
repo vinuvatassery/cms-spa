@@ -132,7 +132,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   currentClient:any={};
   matchingClient:any={};
   ssnMask='000-00-0000'
-  showDuplicateLoader:boolean=false;
+  showNameDuplicateLoader:boolean=false;
+  showSsnDuplicateLoader:boolean=false;
   otherEthnicityList:any[]=[];
  
   /** Constructor**/
@@ -816,6 +817,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       this.isSSNChecked = false;
       this.appInfoForm.controls['ssn'].enable();
     }
+    this.searchDuplicateClient();
   }
 
   registerToVoteSelected(event:Event){
@@ -939,38 +941,51 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       dob: parsedDate,
       ssn: clientSsn
     };
-    if(clientSsn !='' && !this.appInfoForm.controls['ssn'].valid){
+    if (clientSsn != '' && this.appInfoForm.controls['ssn'].hasError('patternError')) {
       return;
     }
-    this.showDuplicateLoader=true;
-    this.clientfacade.searchDuplicateClient(data).subscribe({
-      next: (response: any) => {
-        if (response != null) {
-          this.currentClient = data;
-          this.currentClient["clientCaseId"] = this.applicantInfo.clientCaseId;
-          this.matchingClient = response;
-          if (this.applicantInfo.client != undefined) {
-            if (response.clientId != this.applicantInfo.client.clientId) {
-              this.showDuplicatePopup = true;
-              if (response.ssn == data.ssn) {
-                this.ssnDuplicateFound = true;
-                this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+    if ((data.firstName != '' && data.lastName != '' && dateOfBirth != null) || (data.ssn != '')) {
+      if (data.ssn != '') {
+        this.showSsnDuplicateLoader = true;
+      }
+      if (data.firstName != '' && data.lastName != '' && dateOfBirth != null) {
+        this.showNameDuplicateLoader = true;
+      }
+      this.clientfacade.searchDuplicateClient(data).subscribe({
+        next: (response: any) => {
+          if (response != null) {
+            this.currentClient = data;
+            this.currentClient["clientCaseId"] = this.applicantInfo.clientCaseId;
+            this.matchingClient = response;
+            if (this.applicantInfo.client != undefined) {
+              if (response.clientId != this.applicantInfo.client.clientId) {
+                this.showDuplicatePopup = true;
+                if (response.ssn == data.ssn) {
+                  this.ssnDuplicateFound = true;
+                  this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+                }
               }
             }
+            else {
+              this.showDuplicatePopup = true
+            }
           }
-          else {
-            this.showDuplicatePopup = true
+          else{
+            
           }
+          this.showNameDuplicateLoader = false;
+          this.showSsnDuplicateLoader = false;
+          this.ref.detectChanges();
+        },
+        error: (err: any) => {
+          this.showNameDuplicateLoader = false;
+          this.showSsnDuplicateLoader = false;
+          this.loggingService.logException(err);
+          this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         }
-        this.showDuplicateLoader=false;
-        this.ref.detectChanges();
-      },
-      error: (err: any) => {
-        this.showDuplicateLoader=false;
-        this.loggingService.logException(err);
-        this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
-      }
-    })
+      })
+    }
+   
   }
 
   onDuplicatPopupCloseClick() {

@@ -3,7 +3,7 @@
   <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Enter First Name" class="k-form">
           <kendo-textbox aria-label="enter first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
             formControlName="firstName" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
@@ -34,7 +34,7 @@
 
       </div>
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Last Name">
           <kendo-textbox aria-label="last name"  [fillMode]="formUiStyle.inputFillMode" (blur)="searchDuplicateClient()" 
             formControlName="lastName" [maxlength]="lengthRestrictForty">
@@ -126,7 +126,7 @@
   <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
             formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
@@ -141,7 +141,7 @@
   <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showDuplicateLoader" class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showSsnDuplicateLoader" class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Social Security Number">
           <kendo-maskedtextbox  mask="000-00-0000"  aria-label="social security number" (blur)="searchDuplicateClient()" 
             [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
@@ -149,7 +149,7 @@
 
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="appInfoForm.controls['ssn'].hasError('patternError') && !this.appInfoForm.controls['ssn'].disabled">Social Security Number cannot be less then 9 digits.</kendo-formerror>
-        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !appInfoForm.controls['ssn'].hasError('patternError') && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social Security Number is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && appInfoForm.controls['ssn'].hasError('required') && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social Security Number is required.</kendo-formerror>
         <kendo-formerror *ngIf=" !appInfoForm.controls['ssn'].valid && ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">This SSN matches another client. Please update before proceeding</kendo-formerror>
 		
       </div>
