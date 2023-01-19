@@ -2,9 +2,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 /** Internal Libraries **/
-import { ClientPharmacy, DrugPharmacyFacade, Pharmacy } from '@cms/case-management/domain';
+import { ClientPharmacy, Pharmacy } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -16,11 +16,14 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class PharmacyListComponent implements OnInit {
   /** Input Properties **/
   @Input() clientpharmacies$!: Observable<any>;
-  @Input() pharmacysearchResult$!: Observable<Pharmacy>
-  @Input() selectedPharmacy$!: Observable<Pharmacy>
-  @Input() addPharmacyResponse$!: Observable<boolean>
-  @Input() editPharmacyResponse$!: Observable<boolean>
-  @Input() removePharmacyResponse$!: Observable<boolean>
+  @Input() pharmacysearchResult$!: Observable<Pharmacy>;
+  @Input() selectedPharmacy$!: Observable<Pharmacy>;
+  @Input() addPharmacyResponse$!: Observable<boolean>;
+  @Input() editPharmacyResponse$!: Observable<boolean>;
+  @Input() removePharmacyResponse$!: Observable<boolean>;
+  @Input() triggerPriorityPopup$!: Observable<boolean>;
+  @Input() searchLoaderVisibility$!: Observable<boolean>;
+
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
   @Output() addPharmacyClick = new EventEmitter<string>();
@@ -29,26 +32,17 @@ export class PharmacyListComponent implements OnInit {
   @Output() removePharmacyClick = new EventEmitter<string>();
 
   /** Public properties **/
-  //clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
-  isOpenChangePriorityClicked$ = new BehaviorSubject(false);
-  isOpenPharmacyClicked$ = new BehaviorSubject(false);
+  isOpenChangePriorityClicked$ = new Subject();
+  isOpenPharmacyClicked$ = new Subject();
   isEditPharmacyListClicked = false;
-  isRemoveClientPharmacyClicked$ = new BehaviorSubject(false);
+  isRemoveClientPharmacyClicked$ = new Subject();
   selectClientPharmacyId!: string;
   selectedPharmacyForEdit!: any;
   removeButtonEmitted = false;
   editButtonEmitted = false;
   addButtonEmitted = false;
-
-
-  // public sortValue = this.drugPharmacyFacade.sortValue;
-  // public sortType = this.drugPharmacyFacade.sortType;
-  // public pageSizes = this.drugPharmacyFacade.gridPageSizes;
-  // public gridSkipCount = this.drugPharmacyFacade.skipCount;
-  // public sort = this.drugPharmacyFacade.sort;
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -89,36 +83,44 @@ export class PharmacyListComponent implements OnInit {
     },
   ];
 
+   /** Private properties **/
+  clientPharmacyCount!:Number;
+
   /** Constructor **/
-  constructor() { }
+  constructor() {
+    this.isOpenChangePriorityClicked$.next(false);
+    this.isOpenPharmacyClicked$.next(false);
+    this.isRemoveClientPharmacyClicked$.next(false);
+   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    // this.state = {
-    //   skip: this.gridSkipCount,
-    //   take: this.pageSizes[0]?.value,
-    //   sort: this.sort,
-    // };
     this.loadClientPharmacies();  
     this.actionResponseSubscription();
     this.editPharmacyItemSubscribe();
- 
+    this.priorityPopupShowSubscription();
   }
 
   /** Private methods **/
   private loadClientPharmacies() {
-    // this.drugPharmacyFacade.loadClientPharmacies();
     this.clientpharmacies$.subscribe({
       next: (pharmacies: ClientPharmacy[]) => {
-        pharmacies.forEach((pharmacyData: any) => {
-          pharmacyData.pharmacyNameAndNumber =
-            pharmacyData.pharmacyName + ' #' + pharmacyData.pharmacyNumber;
+        pharmacies.forEach((pharmacyData: ClientPharmacy) => {
+          pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
         });
       },
       error: (err) => {
         console.log(err);
       },
     });
+  }
+
+  private priorityPopupShowSubscription(){
+    this.triggerPriorityPopup$.subscribe((value:boolean)=>{
+      if(value){
+        this.isOpenChangePriorityClicked$.next(true);
+      }
+    })
   }
 
   private actionResponseSubscription() {
@@ -152,6 +154,7 @@ export class PharmacyListComponent implements OnInit {
 
   /** Internal event methods **/
   onOpenPharmacyClicked() {
+
     this.isOpenPharmacyClicked$.next(true);
   }
 
@@ -200,14 +203,21 @@ export class PharmacyListComponent implements OnInit {
     this.isRemoveClientPharmacyClicked$.next(true);
   }
 
+  removeClientPharmacyOnEditMode(){
+    this.removePharmacyEvent(this.selectClientPharmacyId);
+  }
+
   removeClientPharmacy(data: any) {
     if (data?.isDelete === true) {
       this.removePharmacyEvent(data?.clientPharmacyId);
     }
+    else{
+      this.handleRemoveClientPharmacyClose();
+    }
   }
 
   handleRemoveClientPharmacyClose() {
-    this.isRemoveClientPharmacyClicked$.next(true);
+    this.isRemoveClientPharmacyClicked$.next(false);
     this.removeButtonEmitted = false;
   }
 }
