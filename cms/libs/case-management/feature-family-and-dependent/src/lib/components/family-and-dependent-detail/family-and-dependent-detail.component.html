@@ -76,7 +76,7 @@
           <kendo-floatinglabel text="Relationship to Client">
             <kendo-dropdownlist  
             [fillMode]="formUiStyle.dropDownFillMode" 
-            [data]="ddlRelationships$ | async"
+            [data]="relationshipList"
             textField="lovDesc"
             valueField="lovCode" 
             aria-label="Relationship to Client"
@@ -137,7 +137,7 @@
         <kendo-floatinglabel text="Relationship to Client">
           <kendo-dropdownlist dropdownFieldautofocus  [fillMode]="formUiStyle.dropDownFillMode" 
           aria-label ="Relationship to Client"
-          [data]="ddlRelationships$ | async"
+          [data]="relationshipList"
           formControlName="relationshipCode"
           textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
           </kendo-dropdownlist>

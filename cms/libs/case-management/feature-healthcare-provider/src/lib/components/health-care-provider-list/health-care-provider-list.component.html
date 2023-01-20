@@ -97,7 +97,8 @@
           <div class="d-flex align-items-center">    
             <label class="mr-1">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-              [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
+              [valuePrimitive]="true" [(value)]="state.take"
+              (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
     
@@ -152,6 +153,7 @@
     >{{ isEditSearchHealthProvider ? 'Edit Healthcare Provider' : 'Add Healthcare Provider' }}
   </kendo-dialog-titlebar>
   <case-management-health-care-provider-search 
+    [searchProviderLoaded$]="searchProviderLoaded$"
     [existingProviderData]="existingProviderData"
     [selectedCustomProviderName]="selectedCustomProviderName"
     [prvId]="prvSelectedId" 
