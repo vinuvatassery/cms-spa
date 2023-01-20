@@ -33,7 +33,7 @@
             </kendo-numerictextbox>
           </kendo-floatinglabel>
 
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeAmt'].valid"> Amount is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeAmt'].valid">Income Amount is required
           </kendo-formerror>
 
         </div>
@@ -54,7 +54,7 @@
               formControlName="incomeStartDate"  placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Income Start is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Income Start Date is required
           </kendo-formerror>
 
         </div>
@@ -65,8 +65,7 @@
               #incomeEndDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid"> Income End is required
-          </kendo-formerror>
+          
 
         </div>
         <div class="flex-col justify-content-between align-items-center ">
@@ -96,6 +95,7 @@
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="proofOfIncomeValidator"> Proof of Income is required </kendo-formerror>
+          <kendo-formerror *ngIf="proofOfIncomeValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
