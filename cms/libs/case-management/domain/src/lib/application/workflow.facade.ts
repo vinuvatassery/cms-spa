@@ -76,7 +76,7 @@ export class WorkflowFacade {
     this.hideLoader();
   }
 
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
@@ -113,7 +113,7 @@ export class WorkflowFacade {
   }
 
   createNewSession(newCaseFormData: FormGroup) {
-    this.ShowLoader();
+    this.showLoader();
     const sessionData = {
       entityId: newCaseFormData?.controls["programId"].value,
       EntityTypeCode: EntityTypeCode.Program,
@@ -147,7 +147,7 @@ export class WorkflowFacade {
 
   loadWorkflowSession(type: string, entityId: string, sessionId: string) {
     this.workflowReadySubject.next(false);
-    this.ShowLoader();
+    this.showLoader();
     this.workflowService.loadWorkflowMaster(entityId, EntityTypeCode.Program, type)
       .pipe(
         mergeMap((wfMaster: any) =>
@@ -422,7 +422,7 @@ export class WorkflowFacade {
 
 
   loadWorkFlowSessionData(sessionId: string): void {
-    this.ShowLoader();
+    this.showLoader();
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
         if (ddlsessionDataResponse) {
