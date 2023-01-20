@@ -323,7 +323,8 @@
         </div>
         <div class="flex-col mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
         && ddlInsuranceType !== InsurancePlanTypes.Cobra
-        && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
+        && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
               <h5>Others covered on the plan(Select all that apply)</h5>
@@ -346,7 +347,8 @@
         </div>
         <div formArrayName="newOthersCoveredOnPlan" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
         && ddlInsuranceType !== InsurancePlanTypes.Cobra
-        && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
+        && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
           <div *ngFor="let person of newOthersCoveredOnPlan.controls; let i=index">
             <div class="flex-row pl-3 mt-2" [formGroupName]="i">
               <div class="flex-col d-flex align-iems-center justify-content-between">
@@ -408,6 +410,7 @@
           <div class="flex-col" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
             && ddlInsuranceType !== InsurancePlanTypes.Cobra
             && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
+            && ddlInsuranceType !== InsurancePlanTypes.Medicare
           ">
             <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
               aria-label="add new person">
