@@ -35,4 +35,10 @@ export class HealthInsurancePolicyDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/carrier/contact-info/${carrierId}`
     );
   }
+  setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/priority`,
+      healthInsurancePolicies
+    );
+  }
 }

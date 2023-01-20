@@ -1,10 +1,10 @@
 of/** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef,  Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
+import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, isEmpty, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
+import { ConfigurationProvider, LoaderService, LoggingService,  SnackBarNotificationType } from '@cms/shared/util-core';
+import {  debounceTime, distinctUntilChanged,  of, pairwise,  startWith, Subscription,  } from 'rxjs';
 /** Facades **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
@@ -29,7 +29,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  @Output() AppInfoChanged = new EventEmitter<{completedDataPoints: CompletionChecklist[], updateWorkflowCount:boolean}>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() ValidateFields = new EventEmitter<FormGroup>();
- @Output() PronounChanges = new EventEmitter<any>();
+ //@Output() PronounChanges = new EventEmitter<any>();
  @Output() ApplicantNameChange = new EventEmitter<any>();
 
   /** Public properties **/
@@ -123,6 +123,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   raceAndEthnicityPrimaryData: Array<any> = [];
   raceAndEthnicityPrimaryNotListed: boolean = false;
   applicantInfoSubscription !:Subscription;
+  dateValidator: boolean = false;
 
     /** Private properties **/
   private allowWorkflowCountUpdate = false;
@@ -176,7 +177,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
  
   ngOnDestroy(): void {
-    this.applicantInfoSubscription.unsubscribe();    
+    this.applicantInfoSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -186,13 +187,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }); 
   } 
 
-  setChangedPronoun(pronoun:any){
-    this.pronounList = pronoun;
-    if(this.pronounList  !== undefined && this.pronounList !== null){
-        this.PronounChanges.emit(this.pronounList);
-        this.assignPronounModelToForm();
-    }
-  }
   setRaceAndEthnicityData(value:any){
     this.raceAndEthnicity = value;
     if(Array.isArray(value) && value.length>0){
@@ -316,7 +310,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
   private loadApplicantInfoSubscription(){
     
-    this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
+    this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{   
       this.textboxDisable  = true; 
       this.yesMaterialDisable = true;
       this.interpreterTypeInputDisable = true;
@@ -419,28 +413,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   else{
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
-  }
-  
-  if (Array.isArray(applicantInfo.clientGenderList) ) {
-    applicantInfo.clientGenderList.forEach(gender => { 
-      this.appInfoForm.controls['Gender'+gender.clientGenderCode]?.setValue(true);
-      if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
-        this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
-      }
-      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);
-      
-    })
-  }
-  if (Array.isArray(applicantInfo.clientSexualIdentityList) ) {
-    applicantInfo.clientSexualIdentityList.forEach(identity => { 
-      this.appInfoForm.controls['SexulaIdentity'+identity.clientSexualIdentityCode]?.setValue(true);
-      if(identity.clientSexualIdentityCode==="NOT_LISTED" && identity.otherDesc!==null){
-        this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
-      }
-      this.appInfoForm.controls['SexulaIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
-      
-    })
-  }
+  } 
+
   const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
   this.appInfoForm.controls['Transgender']?.setValue(Transgender);
   if (Transgender==='NOT_LISTED') {
@@ -454,8 +428,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   }
 
   
-this.assignRaceAndEthnicityToForm();
-  this.assignPronounModelToForm();
+  this.assignRaceAndEthnicityToForm();
 
   this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
   this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
@@ -557,21 +530,6 @@ this.assignRaceAndEthnicityToForm();
     }
 
   }
-private assignPronounModelToForm(){
-  if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
-    this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
-  if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
-      this.updateWorkflowPronounCount(true);
-  if(pronoun.clientPronounCode ==='NOT_LISTED'){
-      this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
-      this.textboxDisable = false;
-    }   
-    }
- })
-    this.clientfacade.pronounListSubject.next(this.pronounList);     
-}
-}
 
 private updateWorkflowPronounCount(isCompleted:boolean){
   const workFlowdata: CompletionChecklist[] = [{
@@ -684,10 +642,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
   private loadRdoSexAssigned() {
     this.clientfacade.loadRdoSexAssigned();
   }
-
-  // private loadRdoMaterials() {
-  //   this.clientfacade.loadRdoMaterials();
-  // }
 
   private loadRdoInterpreter() {
     this.clientfacade.loadRdoInterpreter();
@@ -845,15 +799,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     }
   }
 
-  // onMaterialsRdoClicked(event: any) {
-  //   this.materialsSelectedValue = event.target.id;
-  //   if (this.materialsSelectedValue == 1) {
-  //     this.isMaterialsTextBoxDisabled = false;
-  //   } else {
-  //     this.isMaterialsTextBoxDisabled = true;
-  //   }
-  // }
-
   onInterpreterRdoClicked(event: any) {
     this.interpreterSelectedValue = event.target.id;
     if (this.interpreterSelectedValue == 1) {
@@ -983,7 +928,15 @@ private updateWorkflowPronounCount(isCompleted:boolean){
         }
       })
     }
-   
+  }
+  dateValidate(event: Event)
+  {
+    this.dateValidator=false;
+    var signeddate=this.appInfoForm.controls['dateOfBirth'].value;
+      var todayDate= new Date();
+      if(signeddate>todayDate){
+      this.dateValidator=true;
+      }
   }
 
   onDuplicatPopupCloseClick() {
