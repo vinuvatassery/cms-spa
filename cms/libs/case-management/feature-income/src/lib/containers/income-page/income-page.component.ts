@@ -1,16 +1,16 @@
- 
+
 
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, } from '@angular/core';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, Observable } from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, Observable } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { IntlDateService,UIFormStyle } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoaderService } from '@cms/shared/util-core';
+import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-income-page',
@@ -49,6 +49,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   clientCaseId: any;
   incomeData: any = {};
   noIncomeFlag: boolean = false;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   private loadSessionSubscription!: Subscription;
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),
@@ -57,12 +58,14 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   });
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
-    private completionStatusFacade: CompletionStatusFacade,
-    private workflowFacade: WorkflowFacade,
-    private lov: LovFacade,
-    private route: ActivatedRoute,
+    private readonly completionStatusFacade: CompletionStatusFacade,
+    private readonly workflowFacade: WorkflowFacade,
+    private readonly lov: LovFacade,
+    private readonly route: ActivatedRoute,
+    private readonly intl: IntlDateService,
     private readonly elementRef: ElementRef,
     private readonly loaderService: LoaderService,
+    private readonly configurationProvider : ConfigurationProvider,
 	  private readonly router: Router) { }
 
   /** Lifecycle hooks **/
@@ -117,6 +120,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
+        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated')
         this.workflowFacade.navigate(navigationType);
       }
     });
@@ -132,11 +136,29 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       }
     }
     else{
-      this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
-      this.noIncomeData.clientId = this.clientId
-      this.noIncomeData.noIncomeFlag = "N";
-      this.loaderService.show();
-      return this.incomeFacade.save(this.noIncomeData);
+      if (!this.hasNoIncome && this.incomeData.clientIncomes != null)
+      {
+        this.loaderService.show();
+        this.noIncomeData.noIncomeFlag = StatusFlag.No;
+        this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+        this.noIncomeData.clientId = this.clientId
+        this.noIncomeData.noIncomeClientSignedDate = null;
+        this.noIncomeData.noIncomeSignatureNotedDate = null;
+        this.noIncomeData.noIncomeNote = null;
+        this.loaderService.show();
+        return this.incomeFacade.save(this.noIncomeData)
+        .pipe
+        (
+        catchError((err: any) => {
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          return  of(false);
+        })
+        )
+      }
+      else
+      {
+        return  of(false);
+      }
     }
     return of(false)
   }
@@ -176,11 +198,11 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   private adjustAttributeChanged() {
     const noIncome: CompletionChecklist = {
       dataPointName: 'incomeFlag_no',
-      status: this.hasNoIncome === true ? StatusFlag.Yes :StatusFlag.No 
+      status: this.hasNoIncome === true ? StatusFlag.Yes :StatusFlag.No
     };
     const yesIncome: CompletionChecklist = {
       dataPointName: 'incomeFlag_yes',
-      status: this.hasNoIncome === false ? StatusFlag.Yes :StatusFlag.No 
+      status: this.hasNoIncome === false ? StatusFlag.Yes :StatusFlag.No
     };
 
     this.workflowFacade.updateBasedOnDtAttrChecklist([noIncome, yesIncome]);
@@ -205,7 +227,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         }
     }
 }
-  
+
 
   /** Internal event methods **/
   onIncomeNoteValueChange(event: any): void {
@@ -219,6 +241,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   /** Private Methods **/
   private loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any): void {
+    this.loaderService.show();
     this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize);
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
@@ -229,10 +252,19 @@ export class IncomePageComponent implements OnInit, OnDestroy {
           noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
           noIncomeNote: new FormControl('', []),
         });
+        this.noIncomeDetailsFormChangeSubscription();
         this.isNodateSignatureNoted = true;
         this.hasNoIncome = true;
         this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
       }
+      else
+      {
+        this.noIncomeFlag = false;
+        this.isNodateSignatureNoted = false;
+        this.hasNoIncome = false;
+        this.setIncomeDetailFormValue(null);
+      }
+      this.loaderService.hide();
 
       this.adjustAttributeChanged();
     })
@@ -261,6 +293,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
 
   public submitIncomeDetailsForm(): void {
+
     this.noIncomeDetailsForm.markAllAsTouched();
     if (this.hasNoIncome) {
       this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators([
@@ -281,13 +314,18 @@ export class IncomePageComponent implements OnInit, OnDestroy {
       this.noIncomeDetailsForm.controls[
         'noIncomeNote'
       ].updateValueAndValidity();
+      var signeddate=this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value;
+      var todayDate= new Date();
+      if(signeddate>todayDate){
+        this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setErrors({'incorrect':true})
+      }
       // this.onDoneClicked();
       if (this.noIncomeDetailsForm.valid) {
         this.noIncomeData.noIncomeFlag = this.hasNoIncome == true ? "Y" : "N";
         this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.noIncomeData.clientId = this.clientId
-        this.noIncomeData.noIncomeClientSignedDate = this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value;
-        this.noIncomeData.noIncomeSignatureNotedDate = this.noIncomeDetailsForm.get("noIncomeSignatureNotedDate")?.value;
+        this.noIncomeData.noIncomeClientSignedDate = new Date(this.intl.formatDate(this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value, this.dateFormat));
+        this.noIncomeData.noIncomeSignatureNotedDate = new Date(this.intl.formatDate(this.noIncomeDetailsForm.get("noIncomeSignatureNotedDate")?.value, this.dateFormat));
         this.noIncomeData.noIncomeNote = this.noIncomeDetailsForm.get("noIncomeNote")?.value;
       }
     }
@@ -304,7 +342,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
 
   loadSessionData() {
-    //this.loaderService.show();
+    this.loaderService.show();
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))

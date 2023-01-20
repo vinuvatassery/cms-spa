@@ -33,25 +33,38 @@
               placeholder="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)"
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
               [filterable]="true"   
-              (filterChange)="onsearchTextChange($event)"    
               (close)="searchCloseEvent();"
+              (filterChange)="onsearchTextChange($event)"    
+             
                     
-            >          
+            >    
+            <!-- (close)="searchCloseEvent();"       -->
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
-                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
-                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
-                <span *ngIf="dataItem.ssn" class="pr-1" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
+                <span class="pr-1 namecolumn" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
+                <span class="pr-1 dobcolumn" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
+                <span *ngIf="dataItem.ssn" class="pr-1 ssmcolumn" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
               </ng-template>
               <ng-template kendoAutoCompleteFooterTemplate>
-                <button
-                  kendoButton
-                  [primary]="true"
-                  class="btn-full-no-radius"
-                  (click)="onNewFamilyMemberClicked()"
-                  aria-label="add new family member"
-                >
-                  ADD NEW FAMILY MEMBER
-                </button>
+                <div class="app-c-globalSearch app-c-globalSearch-footer p-0 k-table-footer">
+                  <div class="flex-row p-0">
+                    <div class="flex-col p-0">
+                      <p class="looking-for-message">
+                        <!-- Don’t see find who you are looking for? -->
+                        Don’t see who you are looking for?
+                      </p>
+                      <button
+                      kendoButton
+                      [primary]="true"
+                      class="btn-full-no-radius"
+                      (click)="onNewFamilyMemberClicked()"
+                      aria-label="add new family member"
+                    >
+                      ADD NEW FAMILY MEMBER
+                    </button>
+                    </div>
+                  </div>
+                </div>
+              
               </ng-template>
             </kendo-autocomplete>      
             </kendo-label>
@@ -118,7 +131,7 @@
   <input type="hidden" formControlName="dependentTypeCode">  
   <kendo-dialog-titlebar (close)="onFamilyMemberClosed()">  {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">   {{ !isAddFamilyMember ? 'Edit or remove this family member' : 'Enter the family member’s information' }}  .</p>
+    <p class="text-muted mb-2">   {{ !isAddFamilyMember ? 'Edit or remove this family member' : 'Enter the family member’s information' }}.</p>
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
@@ -135,7 +148,7 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal First Name">
           <kendo-textbox    aria-label="Legal First Name"  [maxlength]="40"
-           [fillMode]="formUiStyle.inputFillMode"
+           [fillMode]="formUiStyle.inputFillMode" placeholder="Legal First Name"
            formControlName="firstName">   </kendo-textbox>
  
         </kendo-floatinglabel>
@@ -145,7 +158,7 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal Last Name">
           <kendo-textbox aria-label="legal last name"  
-          [fillMode]="formUiStyle.inputFillMode"
+          [fillMode]="formUiStyle.inputFillMode"  placeholder="Legal Last Name"
           formControlName="lastName">   </kendo-textbox> 
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','lastName') && isSubmitted">Legal Last Name
@@ -154,23 +167,25 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Date of Birth">         
           <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
-          formControlName="dob"  placeholder="">
+          formControlName="dob" [max]="currentDate" placeholder="Date of Birth">
         </kendo-datepicker>
               </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','dob') && isSubmitted">Date of Birth
           is required</kendo-formerror>
+          <kendo-formerror *ngIf="familyMemberForm?.value.dob > currentDate && isSubmitted">Date of Birth
+            cannot be future date.</kendo-formerror>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="SSN (optional)">
           <kendo-maskedtextbox aria-label="social security number optional" 
-           [fillMode]="formUiStyle.inputFillMode"
+           [fillMode]="formUiStyle.inputFillMode" placeholder="Social Security Number (optional)"
            [maskOnFocus]="true"
            formControlName="ssn"   [mask]="ssnMaskFormat"   
            >   </kendo-maskedtextbox> 
         </kendo-floatinglabel>
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
       </div>
-      <div class="flex-col mb-3">
+      <div class="flex-col mb-3 mt-2">
         
         <fieldset class="k-form-fieldset">
           <legend class="k-form-legend">    <h5>Currently enrolled in client’s health insurance plan?</h5></legend>
