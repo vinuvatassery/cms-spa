@@ -274,7 +274,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   bindValues(healthInsurancePolicy: healthInsurancePolicy) {
-    debugger;
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(
       healthInsurancePolicy.clientInsurancePolicyId
     );
@@ -541,7 +540,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       'medicareCoverageTypeCode',
       'onLisFlag']
     this.resetValidators();
-    debugger;
     this.healthInsuranceForm.markAllAsTouched();
     this.healthInsuranceForm.updateValueAndValidity();
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
