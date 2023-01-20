@@ -11,11 +11,14 @@
       <p>{{insurance.insurancePlanName}}</p>
     </div>
     <div class="flex-col flex-col-6">
+      {{insurance.clientInsurancePolicyId}}
+      --
+      {{insurance.priorityCode}}
       <kendo-floatinglabel text="Priority">
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
         [formControlName]="insurance.clientInsurancePolicyId"
         [value]="insurance.priorityCode"
-        (valueChange)="onChangePriority($event,i)"
+        (valueChange)="onChangePriority($event,insurance)"
         name="priorityCode"
         [valuePrimitive]="true" valueField="lovCode" textField="lovDesc" [data]="ddlMedicalHealthPlanPriority$ | async">
         </kendo-dropdownlist>
