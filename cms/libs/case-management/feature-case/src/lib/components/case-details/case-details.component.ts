@@ -1,25 +1,27 @@
 /** Angular **/
-import { Component,  Input, OnInit, 
-  ChangeDetectorRef, ChangeDetectionStrategy,  OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
-  import { Router } from '@angular/router';
-import { FormGroup } from '@angular/forms'; 
+import {
+  Component, Input, OnInit,
+  ChangeDetectorRef, ChangeDetectionStrategy, OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 
 /** Internal Libraries **/
-import { UIFormStyle } from '@cms/shared/ui-tpa'  
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 /** external Libraries **/
 import { first, Subscription, tap } from 'rxjs';
-import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
-import { ProgramCode } from '@cms/case-management/domain';
+import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
+import { ProgramCode, CaseOriginCode } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
   templateUrl: './case-details.component.html',
-  styleUrls :  ['./case-details.component.scss'],
+  styleUrls: ['./case-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , OnInit  {   
+export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit {
 
   /// filter autocomplete with startswith
   public showInputLoader = false;
@@ -29,101 +31,97 @@ export class CaseDetailsSummaryComponent   implements OnChanges , OnDestroy , On
   };
 
   isProgramSelectionOpened = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  
-  date =new Date();
-  caseOwnersObject! : any
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+
+  date = new Date();
+  caseOwnersObject!: any
 
   @Input() isProgramVIsible!: any;
   @Input() parentForm!: FormGroup;
-  @Input() isSubmitted: any;  
-  @Input() caseSearchResults$! : any
-  @Input() caseOwners ! : any
-  @Input() ddlPrograms! : any
-  @Input() ddlCaseOrigins! : any
-  @Input() selectedProgram! : any
-  @Input() selectedCase! : any  
+  @Input() isSubmitted: any;
+  @Input() caseSearchResults$!: any
+  @Input() caseOwners !: any
+  @Input() ddlPrograms!: any
+  @Input() ddlCaseOrigins!: any
+  @Input() selectedProgram!: any
+  @Input() selectedCase!: any
 
   private caseDataDataSubscription !: Subscription;
-  today =new Date();
+  today = new Date();
 
-   /** Constructor**/
-  constructor(private readonly router: Router,private readonly ref: ChangeDetectorRef    ,
+  /** Constructor**/
+  constructor(private readonly router: Router, private readonly ref: ChangeDetectorRef,
     private loaderService: LoaderService,
-   
-  ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {   
-    
-    if(changes['caseOwners']?.currentValue?.source != null)
-    {       
-        this.caseOwners.pipe()
-        .subscribe((Owners: any[]) => {             
-          this.caseOwnersObject = [...Owners];         
-          if(!this.isProgramVIsible)
-          {  
-          this.GetCaseData();               
-          }        
-        });  
-    
-    }  
- } 
+  ) { }
 
+  ngOnChanges(changes: SimpleChanges): void {
 
- ngOnInit(): void {    
-  this.setDefaultProgram();  
- }
+    if (changes['caseOwners']?.currentValue?.source != null) {
+      this.caseOwners.pipe()
+        .subscribe((Owners: any[]) => {
+          this.caseOwnersObject = [...Owners];
+          if (!this.isProgramVIsible) {
+            this.GetCaseData();
+          }
+        });
 
-  setDefaultProgram() {   
-  this.ddlPrograms  
-  .subscribe({
-    next: (programs: any) => {    
-      if(programs.length > 0)
-      { 
-      this.parentForm.patchValue(
-        {
-          programId:  programs.filter(
-            (data: any) => data.programCode == ProgramCode.DefaultProgram
-          )[0].programId      
-        }) 
-        this.loaderService.hide()
-      }
     }
-  });  
-}
+  }
+
+
+  ngOnInit(): void {
+    this.setDefaultProgram();
+  }
+
+  setDefaultProgram() {
+    this.ddlPrograms
+      .subscribe({
+        next: (programs: any) => {
+          if (programs.length > 0) {
+            this.parentForm.patchValue(
+              {
+                programId: programs.filter(
+                  (data: any) => data.programCode == ProgramCode.DefaultProgram
+                )[0].programId
+              })
+            this.loaderService.hide()
+          }
+        }
+      });
+  }
 
 
   ///get case details
   ///with session id
-  GetCaseData()
-  {    
+  GetCaseData() {
     this.caseDataDataSubscription = this.selectedCase?.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
-      .subscribe((caseData: any) => {   
+      .subscribe((caseData: any) => {
         this.parentForm.reset()
-          if(caseData.programId != null && caseData.caseStartDate != null
-            && caseData.assignedCwUserId != null)
-          {            
-            this.parentForm.setValue(
-              {
-                applicationDate : new Date(caseData.caseStartDate),
-                caseOriginCode : caseData?.caseOriginCode ,
-                caseOwnerId   : caseData?.assignedCwUserId,
-                programId : caseData?.programId,
-                concurrencyStamp : caseData?.concurrencyStamp
-              }
-            )
-       
-          }
-        }        
-        )   
-  } 
+        if (caseData.programId != null && caseData.caseStartDate != null
+          && caseData.assignedCwUserId != null) {
+          this.parentForm.setValue(
+            {
+              applicationDate: new Date(caseData.caseStartDate),
+              caseOriginCode: caseData?.caseOriginCode,
+              caseOwnerId: caseData?.assignedCwUserId,
+              programId: caseData?.programId,
+              concurrencyStamp: caseData?.concurrencyStamp
+            })
+          this.formValidation(caseData);
+        }
+      })
+  }
 
+  ngOnDestroy(): void {
+    if (!this.isProgramVIsible) {
+      this.caseDataDataSubscription.unsubscribe();
+    }
+  }
 
-  ngOnDestroy(): void 
-  {
-    if(!this.isProgramVIsible)
-    { 
-    this.caseDataDataSubscription.unsubscribe();
+  formValidation(caseData: any) {
+    if (caseData.caseOriginCode == CaseOriginCode.ClientPortal) {
+      this.parentForm.controls['caseOriginCode'].disable();
     }
   }
 }
