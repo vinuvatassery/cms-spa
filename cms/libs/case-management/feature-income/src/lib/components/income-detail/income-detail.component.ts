@@ -1,13 +1,13 @@
 /** Angular **/
-import {  Component,  ChangeDetectionStrategy,  Output,  EventEmitter,  Input,  OnDestroy,  OnInit,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, } from '@angular/core';
 /** Facades **/
-import { IncomeFacade, StatusFlag } from '@cms/case-management/domain';
+import { IncomeFacade, StatusFlag, ClientDocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { Validators,  FormGroup,  FormControl,  FormBuilder,} from '@angular/forms';
+import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
-import { LoaderService,  LoggingService,  NotificationSnackbarService,  SnackBarNotificationType,} from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, } from '@cms/shared/util-core';
 import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'case-management-income-detail',
@@ -74,8 +74,9 @@ export class IncomeDetailComponent implements OnInit {
     private lov: LovFacade,
     private readonly loaderService: LoaderService,
     private loggingService: LoggingService,
-    private readonly notificationSnackbarService: NotificationSnackbarService
-  ) {}
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly clientDocumentFacade: ClientDocumentFacade
+  ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -191,9 +192,9 @@ export class IncomeDetailComponent implements OnInit {
       incomeData['clientCaseId'] = this.clientCaseId;
 
       if (this.incomeTypesOther == 'O') {
-        incomeData.otherDesc =  this.IncomeDetailsForm.controls['otherDesc'].value;
-      } else{
-        incomeData.otherDesc =  this.IncomeDetailsForm.controls['otherDesc'].value == null;
+        incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value;
+      } else {
+        incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value == null;
       }
 
       if (!this.isEditValue) {
@@ -275,13 +276,13 @@ export class IncomeDetailComponent implements OnInit {
   // checking the validation
   setValidators() {
     this.IncomeDetailsForm.markAllAsTouched();
-    this.IncomeDetailsForm.controls['incomeSourceCode'].setValidators([ Validators.required,  ]);
+    this.IncomeDetailsForm.controls['incomeSourceCode'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeTypeCode'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeAmt'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,    ]);
-    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,    ]);
+    this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
     // this.IncomeDetailsForm.controls['incomeEndDate'].setValidators([Validators.required,    ]);
-    this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,    ]);
+    this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeAmt'].updateValueAndValidity();
@@ -292,7 +293,7 @@ export class IncomeDetailComponent implements OnInit {
 
     if (!this.hasNoProofOfIncome) {
       if (this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value === 'O') {
-        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([  Validators.required,]);
+        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([Validators.required,]);
         this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
       }
 
@@ -312,7 +313,7 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeAmt'].setValue(this.selectedIncome.incomeAmt);
     this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValue(this.selectedIncome.incomeFrequencyCode);
     this.IncomeDetailsForm.controls['incomeStartDate'].setValue(new Date(this.selectedIncome.incomeStartDate));
-    this.IncomeDetailsForm.controls['incomeEndDate'].setValue(this.selectedIncome.incomeEndDate != null? new Date(this.selectedIncome.incomeEndDate): null);
+    this.IncomeDetailsForm.controls['incomeEndDate'].setValue(this.selectedIncome.incomeEndDate != null ? new Date(this.selectedIncome.incomeEndDate) : null);
     this.IncomeDetailsForm.controls['incomeNote'].setValue(this.selectedIncome.incomeNote);
     this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
@@ -373,10 +374,31 @@ export class IncomeDetailComponent implements OnInit {
     this.isRemoveIncomeConfirmationPopupOpened = false;
   }
 
-  incomeDeleteHandle(event:any){
-    if(event){
+  incomeDeleteHandle(event: any) {
+    if (event) {
       this.sendDetailToIncomeList.next(true);
       this.onRemoveIncomeConfirmationClosed();
+    }
+  }
+
+  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
+    if (clientDocumentId && clientDocumentId != '') {
+      this.loaderService.show()
+      this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (type === 'download') {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+        } else {
+          window.open(fileUrl, "_blank");
+        }
+        this.loaderService.hide();
+      }, (error) => {
+        this.loaderService.hide();
+        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+      })
     }
   }
 }
