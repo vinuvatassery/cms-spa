@@ -34,7 +34,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Input() addExistingProvider$: any;
   @Input() loadExistingProvider$: any;  
   @Input() existingProviderData: any;  
- 
+  @Input() searchProviderLoaded$: any;
   @Input() selectedCustomProviderName: any;  
  
 
@@ -42,8 +42,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   providers$ = this.drugPharmacyFacade.healthCareProviders$;
   isOpenNewProviderClicked = false;
   filteredSelectedProvider! : any;
-  isAdminRole =false; 
-  providerSearchInputLoader = false;
+  isAdminRole =false;   
   popupClass = 'k-autocomplete-custom';
   selectedClinic! : string
  
@@ -158,17 +157,10 @@ export class HealthCareProviderSearchComponent implements OnInit
   onsearchTextChange(text : string)
   {     
        if(text.length > 0)
-       {
+       {      
        
-         this.providerSearchInputLoader = true;
          this.filterManager.next(text); 
        }
   } 
-
-  searchCloseEvent()
-  {
-    this.providerSearchInputLoader = false;
-  }
-
 
 }
