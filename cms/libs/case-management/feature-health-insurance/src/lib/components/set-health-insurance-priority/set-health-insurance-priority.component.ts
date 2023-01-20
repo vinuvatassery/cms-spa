@@ -94,10 +94,10 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     }
 
   }
-  dateRangeOverlaps(a_start: Date, a_end: Date, b_start: Date, b_end: Date) {
-    if (a_start <= b_start && b_start <= a_end) return true;
-    if (a_start <= b_end && b_end <= a_end) return true; 
-    if (b_start < a_start && a_end < b_end) return true;
+  dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
+    if (aStart <= bStart && bStart <= aEnd) return true;
+    if (aStart <= bEnd && bEnd <= aEnd) return true; 
+    if (bStart < aStart && aEnd < bEnd) return true;
     return false;
   }
   onModalCloseClicked() {
