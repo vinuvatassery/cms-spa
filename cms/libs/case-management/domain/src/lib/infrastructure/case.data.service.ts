@@ -131,9 +131,9 @@ export class CaseDataService {
   loadCaseBySearchText(text : string) {
       return this.http.get<ClientCase[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/client-case/SearchText=${text}`
-      );
-
+        `/case-management/clients/SearchText=${text}`
+      );   
+  
   }
 
   loadCasesForAuthuser(): Observable<Case[]> {
@@ -411,4 +411,9 @@ export class CaseDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/clients/cases/${clientCaseId}/status`
     );
-  }}
+  }
+	getSessionInfoByCaseId(clientCaseId:any){
+  return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/SessionSearch`);
+  }
+}

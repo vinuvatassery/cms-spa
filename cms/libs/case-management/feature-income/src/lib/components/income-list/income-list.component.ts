@@ -69,14 +69,14 @@ export class IncomeListComponent implements OnInit {
       },
     },
  
-    {
-      buttonType:"btn-h-danger",
-      text: "Remove File",
-      // icon: "delete",
-      click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
-      },
-    },
+    // {
+    //   buttonType:"btn-h-danger",
+    //   text: "Remove File",
+    //   // icon: "delete",
+    //   click: (): void => {
+    //   //  this.onDeactivatePhoneNumberClicked()
+    //   },
+    // },
    
     
  

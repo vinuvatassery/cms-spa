@@ -20,6 +20,7 @@
               [maxlength]="100"
               formControlName="address1"
               (blur)="validateMailingAddress()"
+              placeholder="Address Line 1"
               > </kendo-textbox>
             </kendo-floatinglabel>           
             <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.required">
@@ -41,6 +42,7 @@
               [maxlength]="100"
               formControlName="address2"
               (blur)="validateMailingAddress()"
+              placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="mailingAddress?.address2?.errors?.pattern">
@@ -58,7 +60,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
-              (blur)="validateMailingAddress()"
+              (blur)="validateMailingAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="mailingAddress?.city?.errors?.required">
@@ -82,7 +84,7 @@
               textField="stateName"
               valueField="stateCode"
               [valuePrimitive]="true"
-              (blur)="validateMailingAddress()"
+              (blur)="validateMailingAddress()"  placeholder="State"
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -97,7 +99,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
-              (blur)="validateMailingAddress()"
+              (blur)="validateMailingAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.required">
@@ -135,18 +137,18 @@
               <input 
               type="checkbox" 
               id="sameAsMailingAddressFlag" 
-              kendoCheckBox 
-         
-            
+              kendoCheckBox  
+              name="sameAsMailingAddressFlag" 
+              aria-labelledby="sameAsMailingAddressFlag" 
               formControlName="sameAsMailingAddressFlag"
-               />
-              <label class="k-checkbox-label" for="check1">Same as mailing address</label>
-
+               /> 
+              <label class="k-checkbox-label" for="sameAsMailingAddressFlag">Same as mailing</label> 
+  
             </span>
           </kendo-formfield>
           </div>
         </div>
-        <div class="flex-row mt-1">
+        <div class="flex-row mt-1"> 
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 1">
@@ -155,7 +157,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address1"
-              (blur)="validateHomeAddress()"
+              (blur)="validateHomeAddress()" placeholder="Address Line 1"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
@@ -176,7 +178,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
-              (blur)="validateHomeAddress()"
+              (blur)="validateHomeAddress()"  placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.address2?.errors?.required">
@@ -197,7 +199,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
-              (blur)="validateHomeAddress()"
+              (blur)="validateHomeAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
@@ -223,7 +225,7 @@
               valueField="stateCode"
               [valuePrimitive]="true"
               (valueChange)="onStateChange($event)"
-              (blur)="validateHomeAddress()"
+              (blur)="validateHomeAddress()"  placeholder="State"
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -238,7 +240,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
-              (blur)="validateHomeAddress()"
+              (blur)="validateHomeAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.zip?.errors?.required">
@@ -268,7 +270,7 @@
               [data]="ddlCountries$ | async"
               textField="countyName"
               valueField="countyCode"
-              [valuePrimitive]="true"
+              [valuePrimitive]="true"  placeholder="Country"
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -416,8 +418,12 @@
               aria-label="home phone" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
+              [maskOnFocus]="true" 
               formControlName="phoneNbr"
-              mask="(999) 000-0000"
+              mask="(999) 000-0000" 
+              formatPlaceholder="formatPattern"
+              placeholder=" " 
+              (blur)="loadPreferredContactMethod()" 
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
@@ -482,13 +488,15 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Cell Phone">
               <kendo-maskedtextbox 
-      
+              [maskOnFocus]="true" 
               aria-label="Cell Phone"
               [disabled]="isNoCellPhoneChecked" 
               [maxlength]="10"
               [fillMode]="formUiStyle.inputFillMode"
               formControlName="phoneNbr"
-              mask="(999) 000-0000"
+              mask="(999) 000-0000" 
+              placeholder="Cell Phone" 
+              (blur)="loadPreferredContactMethod()" 
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
@@ -554,12 +562,15 @@
               <kendo-formfield>
               <kendo-floatinglabel text="Work Phone">
                 <kendo-maskedtextbox 
+                [maskOnFocus]="true" 
                 aria-label="work phone" 
                 [disabled]="isNoWorkPhoneChecked"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="10"
                 formControlName="phoneNbr"
-                mask="(999) 000-0000"
+                mask="(999) 000-0000" 
+                placeholder="Work Phone" 
+                (blur)="loadPreferredContactMethod()" 
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
@@ -626,12 +637,15 @@
               <kendo-formfield>
               <kendo-floatinglabel text="Other Phone">
                 <kendo-maskedtextbox 
+                [maskOnFocus]="true" 
                 [disabled]="isNoOtherPhoneChecked" 
                 aria-label="other phone"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="10"
                 formControlName="phoneNbr"
-                mask="(999) 000-0000"
+                mask="(999) 000-0000" 
+                placeholder="Other Phone" 
+                (blur)="loadPreferredContactMethod()" 
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
@@ -651,6 +665,7 @@
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="100"
                 formControlName="otherPhoneNote"
+                placeholder="Note"
                   > </kendo-textbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.otherPhoneNote.errors?.required">
@@ -720,7 +735,9 @@
                 aria-label="email address optional"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="100"
-                formControlName="email"
+                formControlName="email" 
+                placeholder="Email Address" 
+                (blur)="loadPreferredContactMethod()" 
                 > </kendo-textbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="email.email.errors?.email">
@@ -781,7 +798,8 @@
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <kendo-formfield>
-              <kendo-floatinglabel text="Preferred Contact">
+              <kendo-floatinglabel text="Preferred Contact" class="inline-search-loader">
+                <span *ngIf="showPreferredContactLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
                 <kendo-dropdownlist 
                 aria-labelledby="Preferred Contact" 
                 [fillMode]="formUiStyle.dropDownFillMode" 
@@ -828,6 +846,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="40"
               formControlName="contactName"
+              placeholder="Contact's Name"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="fAfContact.contactName.errors?.required">
@@ -868,6 +887,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="50"
               formControlName="otherDesc"
+              placeholder="Description"
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="fAfContact.otherDesc.errors?.required">
@@ -884,12 +904,14 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Contact's Phone Number">
               <kendo-maskedtextbox 
+              [maskOnFocus]="true" 
               [disabled]="isNoFriendsOrFamilyChecked" 
               aria-label="contacts phone number"
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="contactPhoneNbr"
               mask="(999) 000-0000"
+              placeholder="Contact's Phone Number"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
              <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">

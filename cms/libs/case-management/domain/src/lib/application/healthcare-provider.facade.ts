@@ -23,6 +23,7 @@ export class HealthcareProviderFacade {
   private healthCareProviderSearchSubject = new Subject<any>();
   private addExistingProviderSubject = new Subject<any>();
   private loadExistingProviderSubject = new Subject<any>();
+  private searchProviderLoadedSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -33,6 +34,7 @@ export class HealthcareProviderFacade {
   healthCareProviderSearchList$ = this.healthCareProviderSearchSubject.asObservable();
   addExistingProvider$ = this.addExistingProviderSubject.asObservable();
   loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
+  searchProviderLoaded$ = this.searchProviderLoadedSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
@@ -51,16 +53,16 @@ export class HealthcareProviderFacade {
     private workflowFacade: WorkflowFacade ,private configurationProvider : ConfigurationProvider 
   ) {}
 
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -68,54 +70,54 @@ export class HealthcareProviderFacade {
        this.loggingService.logException(err)
     }  
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.hideLoader();   
   }
 
   /** Public methods **/
-  removeHealthCareProviders(ClientCaseEligibilityId : string , ProviderId : string): void {
-    this.ShowLoader();
-    this.healthcareProviderDataService.removeHealthCareProvider(ClientCaseEligibilityId,ProviderId)
+  removeHealthCareProviders(clientId : number,  ProviderId : string): void {    
+    this.showLoader();
+    this.healthcareProviderDataService.removeHealthCareProvider(clientId,ProviderId)
     .subscribe({
       next: (removeHealthCareProvidersResponse) => {        
         if(removeHealthCareProvidersResponse == true)
         {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic Removed Successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic Removed Successfully')  
         } 
         this.healthCareProvideRemoveSubject.next(removeHealthCareProvidersResponse);       
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)      
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
       },
     });
   }
 
-  loadProviderStatusStatus(clientCaseEligibilityId : string) : void {
- 
-    this.healthcareProviderDataService.loadProviderStatusStatus(clientCaseEligibilityId).subscribe({
+  loadProviderStatusStatus(clientId : number,) : void {
+    this.showLoader();
+    this.healthcareProviderDataService.loadProviderStatusStatus(clientId).subscribe({
       next: (providerStatusGetResponse) => {
-        this.HideLoader();
+        this.hideLoader();
         this.healthCareProvideGetFlagSubject.next(providerStatusGetResponse);
       },
       error: (err) => {  
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
 
-  updateHealthCareProvidersFlagonCheck(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)  {
+  updateHealthCareProvidersFlagonCheck(clientId : number, nohealthCareProviderFlag : string)  {
   
-   return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
+   return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag)
   }
 
-  updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
+  updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string)
   {
  
-    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
+    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag)
   }
 
-  loadHealthCareProviders(clientCaseEligibilityId : string,skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
-    this.ShowLoader();
-    this.healthcareProviderDataService.loadHealthCareProviders(clientCaseEligibilityId, skipcount ,maxResultCount  ,sort , sortType).subscribe({
+  loadHealthCareProviders(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+    this.showLoader();
+    this.healthcareProviderDataService.loadHealthCareProviders(clientId , skipcount ,maxResultCount  ,sort , sortType).subscribe({
       next: (healthCareProvidersResponse : any) => {        
         if(healthCareProvidersResponse)
         {      
@@ -126,61 +128,65 @@ export class HealthcareProviderFacade {
 
           this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
           this.healthCareProvidersSubject.next(gridView);
+          this.hideLoader();    
          }
-         this.HideLoader();    
+         else{
+         this.hideLoader();    
+         }
       },
-      error: (err) => {
-        this.HideLoader();   
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err);
+      error: (err) => {      
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.updateWorkflowCount(false);   
       },
     });
   }
 
 
- searchHealthCareProviders(text : string , clientCaseEligibilityId : string): void {  
-    this.healthcareProviderDataService.searchProviders(text,clientCaseEligibilityId).subscribe({
+ searchHealthCareProviders(text : string , clientId : number): void {  
+  this.searchProviderLoadedSubject.next(true);
+  this.healthCareProviderSearchSubject.next(null);
+    this.healthcareProviderDataService.searchProviders(text,clientId).subscribe({
       next: (healthCareProvidersSearchResponse) => {        
         if(healthCareProvidersSearchResponse)
         {            
           Object.values(healthCareProvidersSearchResponse).forEach((key) => {   
                     key.selectedCustomProvider = key.fullName+' '+key.clinicName+' '+key.address
           });
-          this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);
-         }         
+          this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);         
+         }      
+         this.searchProviderLoadedSubject.next(false);   
       },
       error: (err) => { 
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.searchProviderLoadedSubject.next(false);
       },
     });
   }
 
   addExistingHealthCareProvider(existProviderData :any) : void {
-    this.ShowLoader();
+    this.showLoader();
     this.healthcareProviderDataService.addExistingHealthCareProvider(existProviderData).subscribe({
       next: (addExistingProviderGetResponse) => {
-        this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
         this.addExistingProviderSubject.next(addExistingProviderGetResponse);
       },
-      error: (err) => {  
-        this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      error: (err) => {        
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
 
 
-  loadExistingHealthCareProvider(ClientCaseEligibilityId : string  ,providerId :string) : void {
-    this.ShowLoader();
-    this.healthcareProviderDataService.loadExistingHealthCareProvider(ClientCaseEligibilityId   ,providerId ).subscribe({
+  loadExistingHealthCareProvider(clientId : number,providerId :string) : void {
+    this.showLoader();
+    this.healthcareProviderDataService.loadExistingHealthCareProvider(clientId ,providerId ).subscribe({
       next: (loadExistingProviderResponse) => {
-        this.HideLoader();
+        this.hideLoader();
         this.loadExistingProviderSubject.next(loadExistingProviderResponse);
       },
-      error: (err) => {  
-        this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      error: (err) => {        
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }

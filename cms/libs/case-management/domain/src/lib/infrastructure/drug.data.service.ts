@@ -6,18 +6,14 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { PriorityCode } from '../enums/priority-code.enum';
 import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
-
+import { PharmacyPriority } from '../entities/pharmacy-priority';
 @Injectable({ providedIn: 'root' })
 export class DrugDataService {
   /** Constructor**/
   constructor(private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider) { }
 
-  /** Public methods **/
-  loadDdlPriorities() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  }
-
+  // /** Public methods **//
   loadPharmacies() {
     return of([
       {
@@ -210,7 +206,7 @@ export class DrugDataService {
   }
 
   loadClientPharmacyList(clientId: number) {
-    return this.http.get<ClientPharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`);
+    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`);
   }
 
   searchPharmacies(searchText: string) {
@@ -231,5 +227,11 @@ export class DrugDataService {
 
   removeClientPharmacy(clientId: number, clientPharmacyId: string) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy/${clientPharmacyId}`);
+  }
+ savePharmacyPriorityService(pharmacyPriority: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/pharmacies/priority`, pharmacyPriority
+    );
   }
 }

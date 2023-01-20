@@ -13,9 +13,7 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 
 })
 export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
 
- 
-  clientId ! : number
-  clientCaseEligibilityId ! : string
+  clientId ! : number 
 
   /** Public properties **/  
   healthCareProviderSearchList$  =this.healthProvider.healthCareProviderSearchList$;
@@ -24,6 +22,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   healthCareProvideGetFlag$  =this.healthProvider.healthCareProvideGetFlag$;
   addExistingProvider$   =this.healthProvider.addExistingProvider$ ;
   loadExistingProvider$  =this.healthProvider.loadExistingProvider$;
+  searchProviderLoaded$  =this.healthProvider.searchProviderLoaded$;
   isProvidersGridDisplay =true;
   pageSizes = this.healthProvider.gridPageSizes;
   sortValue  = this.healthProvider.sortValue;
@@ -61,20 +60,21 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
    /** Private methods **/
    private loadCase()
    {  
+    this.healthProvider.showLoader();            
     this.sessionId = this.route.snapshot.queryParams['sid'];    
     this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
      this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
      .subscribe((session: any) => {      
-      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-      this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-      this.clientId = JSON.parse(session.sessionData).clientId   
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId  
+      this.clientId = JSON.parse(session.sessionData).clientId  
+      this.healthProvider.hideLoader(); 
       this.loadProviderStatus();      
      });        
    } 
 
    private loadProviderStatus() : void 
    {    
-        this.healthProvider.loadProviderStatusStatus(this.clientCaseEligibilityId);
+        this.healthProvider.loadProviderStatusStatus(this.clientId);
         this.checkBoxSubscription= 
         this.healthCareProvideGetFlag$.pipe(filter(x=> typeof x === 'boolean')).subscribe
       ((x: boolean)=>
@@ -101,13 +101,13 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
         if((this.isProvidersGridDisplay ?? false) == false)
         {
           this.pageSizes = this.healthProvider.gridPageSizes;
-        this.healthProvider.loadHealthCareProviders(this.clientCaseEligibilityId
+        this.healthProvider.loadHealthCareProviders(this.clientId
           , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
         }
     }
 
   private removeHealthCareProvider(ProviderId : string){
-     this.healthProvider.removeHealthCareProviders(this.clientCaseEligibilityId, ProviderId);      
+     this.healthProvider.removeHealthCareProviders(this.clientId, ProviderId);      
   }
 
   /** Private Methods **/
@@ -121,20 +121,21 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
         this.checkBoxSubscription.unsubscribe();      
         this.workFlowFacade.navigate(navigationType);
-        this.healthProvider.HideLoader(); 
+        this.healthProvider.hideLoader(); 
       }
     });
   }
 
 
-  private save() {       
+  private save() {     
+    this.healthProvider.showLoader();       
     this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
      return  this.healthProvider.updateHealthCareProvidersFlag
-      (this.clientCaseEligibilityId,this.providersStatus)
+      (this.clientId,this.providersStatus)
        .pipe
       (
        catchError((err: any) => { 
-        this.healthProvider.HideLoader();                     
+        this.healthProvider.hideLoader();                     
          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
          return  of(false);
        })  
@@ -149,8 +150,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
 
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
-      (this.clientCaseEligibilityId,this.providersStatus).subscribe((isSaved) => {  
-        this.healthProvider.HideLoader();       
+      (this.clientId,this.providersStatus).subscribe((isSaved) => {  
+        this.healthProvider.hideLoader();       
         if (isSaved == true) {    
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
           if(this.isProvidersGridDisplay === true)
@@ -169,12 +170,12 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
 
    searchTextEventHandleer(text : string)
    {
-    this.healthProvider.searchHealthCareProviders(text, this.clientCaseEligibilityId);
+    this.healthProvider.searchHealthCareProviders(text, this.clientId);
    }
 
    addExistingProviderEventHandler(existProviderData : any)
    {
-    existProviderData.clientCaseEligibilityId = this.clientCaseEligibilityId
+    existProviderData.clientId = this.clientId
    this.healthProvider.addExistingHealthCareProvider(existProviderData)
       
    }
@@ -183,7 +184,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
    {        
     if(prvSelectedId)
     {
-    this.healthProvider.loadExistingHealthCareProvider(this.clientCaseEligibilityId,prvSelectedId)
+    this.healthProvider.loadExistingHealthCareProvider(this.clientId,prvSelectedId)
     }
    }
 

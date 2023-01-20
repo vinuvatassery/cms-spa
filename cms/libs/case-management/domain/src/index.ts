@@ -41,9 +41,9 @@ export * from './lib/entities/vendor';
 export * from './lib/entities/insurance-plan';
 export * from './lib/entities/health-insurance-policy';
 export * from './lib/entities/carrier-contact-info';
+export * from './lib/entities/pharmacy-priority';
 export * from './lib/entities/accepted-application';
 export * from './lib/entities/client-eligibility-info';
-
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -72,6 +72,11 @@ export * from './lib/enums/group-code.enum';
 export * from './lib/enums/accepted-case-status-code.enum';
 export * from './lib/enums/pronoun-code.enum';
 export * from './lib/enums/button-type.enum';
+export * from './lib/enums/income-type-code.enum';
+export * from './lib/enums/gender-code.enum';
+export * from './lib/enums/sexual-identity-code.enum';
+export * from './lib/enums/control-prefix.enum';
+
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

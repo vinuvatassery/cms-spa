@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag } from '@cms/case-management/domain';
+import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
@@ -96,7 +96,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
     {   
       //Currently has HIV Case Manager?
       this.hasManager = (x ===true) ? StatusFlag.Yes : StatusFlag.No;
-
+      this.adjustDataAttribute();
       //show hide grid
       this.gridVisibleSubject.next(x);
     });
@@ -114,6 +114,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
   handlehasManagerRadioChange($event : any)
   {
     this.validate();
+    this.adjustDataAttribute();
   }
 
   handleNeedManagerRadioChange($event : any)
@@ -249,6 +250,49 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  private updateWorkflowCount(dataPointName:string, status:StatusFlag){
+    const workFlowData: CompletionChecklist[] = [{
+      dataPointName: dataPointName,
+      status: status
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowData);
+  }
+
+  private adjustDataAttribute(){
+    let data: CompletionChecklist[]=[];
+    if(this.hasManager === StatusFlag.Yes)
+    {
+      data = [{
+        dataPointName: 'case_manager_exist',
+        status: StatusFlag.Yes
+      },
+      {
+        dataPointName: 'caseManager_not_exist',
+        status: StatusFlag.No 
+      }];
+    }
+    else{
+      data = [{
+        dataPointName: 'case_manager_exist',
+        status: StatusFlag.No
+      },
+      {
+        dataPointName: 'caseManager_not_exist',
+        status: StatusFlag.Yes 
+      }];
+    }
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist(data); 
+    this.workflowFacade.updateChecklist([{
+      dataPointName: 'hasHivCaseManager',
+      status: StatusFlag.Yes 
+    },{
+      dataPointName: 'wouldYouLikeOne',
+      status: this.needManager?? StatusFlag.No 
+    }]);
   }
 
   checkValidations(){

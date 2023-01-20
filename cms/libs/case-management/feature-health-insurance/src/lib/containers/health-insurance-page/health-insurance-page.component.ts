@@ -3,7 +3,7 @@ import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnIni
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 /** Facades **/
-import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, CompletionChecklist, StatusFlag, othersCoveredOnPlan } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
@@ -110,10 +110,16 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       medicarePartAStartDate:[''],
       medicarePartBStartDate:[''],
       onQmbFlag:[''],
-      onLisFlag:['']
-
-
-
+      onLisFlag:[''],
+      othersCoveredOnPlanFlag: [''],
+      othersCoveredOnPlan: this.formBuilder.array([]),
+      newOthersCoveredOnPlan: this.formBuilder.array([]),
+      isClientPolicyHolderFlag: [''],
+      policyHolderFirstName: [''],
+      policyHolderLastName: [''],
+      proofOfPremium: [''],
+      copyOfInsuranceCard: [''],
+      copyOfSummary: ['']
     });
 
   }
@@ -142,10 +148,10 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     if (this.insuranceFlagForm.valid) {
       this.ShowLoader();
       let caseEligibilityFlagsData = this.insuranceFlagForm.value;
-      caseEligibilityFlagsData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
-      caseEligibilityFlagsData["clientId"] = this.clientId;
-      return this.healthFacade.saveInsuranceFlags(caseEligibilityFlagsData);
-
+      if(caseEligibilityFlagsData.currentInsuranceFlag==StatusFlag.No){
+        return this.healthFacade.deleteInsurancePolicyByEligibilityId(this.clientCaseEligibilityId);
+      }
+      return of(true);
     }
     return of(false)
   }
@@ -165,29 +171,54 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
-    if (prev && curr) {
-        if (prev['currentInsuranceFlag'] != curr['currentInsuranceFlag']) {
-            const item: CompletionChecklist = {
-                dataPointName: 'currentInsuranceFlag',
-                status: curr['currentInsuranceFlag'] === StatusFlag.No ? StatusFlag.Yes : StatusFlag.No
-            };
-
-            completedDataPoints.push(item);
+    Object.keys(this.insuranceFlagForm.controls).forEach(key => {
+      if (prev && curr) {
+        if (prev[key] !== curr[key]) {
+          let item: CompletionChecklist = {
+            dataPointName: key,
+            status: curr[key] ? StatusFlag.Yes : StatusFlag.No
+          };
+          completedDataPoints.push(item);
         }
-        if (prev['groupPolicyEligibleFlag'] !== curr['groupPolicyEligibleFlag']) {
-          const item: CompletionChecklist = {
-                dataPointName: 'groupPolicyEligibleFlag',
-                status: curr['groupPolicyEligibleFlag'] ? StatusFlag.Yes : StatusFlag.No
-            };
-
-            completedDataPoints.push(item);
-        }
-    }
+      }
+    });
 
     if (completedDataPoints.length > 0) {
-        this.workflowFacade.updateChecklist(completedDataPoints);
+      this.workflowFacade.updateChecklist(completedDataPoints);
     }
-}
+  }
+
+  private adjustAttributeInit() {
+    this.adjustInsurancePlansAttributes(this.insuranceFlagForm?.get('currentInsuranceFlag')?.value ?? StatusFlag.No);
+    this.updateInitialCompletionCheckList();
+  }
+
+  private adjustInsurancePlansAttributes(status:StatusFlag){
+    const data: CompletionChecklist = {
+      dataPointName: 'insurance_plans_required',
+      status: status
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+  }
+
+  private updateInitialCompletionCheckList(){
+    let completedDataPoints: CompletionChecklist[] = [];
+    Object.keys(this.insuranceFlagForm.controls).forEach(key => {
+      if (this.insuranceFlagForm?.get(key)?.value && this.insuranceFlagForm?.get(key)?.valid) {
+        let item: CompletionChecklist = {
+          dataPointName: key,
+          status: StatusFlag.Yes
+        };
+
+        completedDataPoints.push(item);
+      }
+    });
+
+    if (completedDataPoints.length > 0) {
+      this.workflowFacade.updateChecklist(completedDataPoints);
+    }
+  }
 
   loadSessionData() {
     //this.loaderService.show();
@@ -213,18 +244,21 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   loadInsurancePolicyFlags() {
     this.healthFacade.medicalHealthPolicy$.subscribe((policy: any) => {
-      if (policy.currentInsuranceFlag && policy.groupPolicyEligibleFlag) {
+      if (policy.currentInsuranceFlag) {
         this.currentInsurance = policy.currentInsuranceFlag;
-        this.groupPolicyEligible = policy.groupPolicyEligibleFlag;
-        this.patchInsurancePolicyFlags(policy);
-        if (this.currentInsurance == 'Y') {
+        if (this.currentInsurance == StatusFlag.Yes) {
           this.showTable = true;
         }
-        else{
+        else {
           this.showTable = false;
         }
-        this.ref.detectChanges();
       }
+      if (policy.groupPolicyEligibleFlag) {
+        this.groupPolicyEligible = policy.groupPolicyEligibleFlag;
+      }
+      this.patchInsurancePolicyFlags(policy);
+      this.ref.detectChanges();
+      this.adjustAttributeInit();
     })
   }
 
@@ -233,13 +267,51 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.insuranceFlagForm?.get('groupPolicyEligibleFlag')?.setValue(insurancePolicy?.groupPolicyEligibleFlag)
   }
 
+  onGroupInsuranceChange(){
+    this.ShowLoader()
+    this.saveHealthInsuranceFlag().subscribe({
+      next:(response:any)=>{
+        this.HideLoader();
+      },
+      error:(err:any)=>{
+        this.HideLoader();
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ; 
+      }
+    });
+  }
+
   onCurrentInsuranceChange(currentInsuranceValue: string) {
-    if (currentInsuranceValue == 'Y') {
-      this.showTable = true;
-    }
-    else {
-      this.showTable = false;
-    }
+    this.ShowLoader()
+    this.adjustInsurancePlansAttributes(currentInsuranceValue == StatusFlag.Yes ?StatusFlag.Yes:StatusFlag.No);
+    this.saveHealthInsuranceFlag().subscribe({
+      next:(response:any)=>{
+        if (currentInsuranceValue == StatusFlag.Yes) {
+          this.showTable = true;
+          const gridDataRefinerValue = {
+            skipCount: this.healthFacade.skipCount,
+            pagesize: this.healthFacade.gridPageSizes[0]?.value
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
+          this.loadInsurancePolicyFlags();
+        }
+        else {
+          this.showTable = false;
+        }
+        this.HideLoader();
+        this.ref.detectChanges();
+      },
+      error:(err:any)=>{
+        this.HideLoader();
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err);
+      }
+    });
+  }
+
+  saveHealthInsuranceFlag(){
+    let caseEligibilityFlagsData = this.insuranceFlagForm.value;
+    caseEligibilityFlagsData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
+    caseEligibilityFlagsData["clientId"] = this.clientId;
+    return this.healthFacade.saveInsuranceFlags(caseEligibilityFlagsData)
   }
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {

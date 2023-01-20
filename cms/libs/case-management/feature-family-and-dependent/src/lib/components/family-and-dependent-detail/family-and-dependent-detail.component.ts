@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, first, Subject, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { Lov } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-family-and-dependent-detail',
@@ -44,17 +45,17 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   isOpenedNewFamilyMember = false;
   showDependentSearchInputLoader = false;
   dependentSearch!: GroupResult[];
-  popupClass = 'k-autocomplete-custom';
+  popupClass = 'k-autocomplete-custom autocompletecombo';
   ssnMaskFormat = "000-00-0000" 
   isSubmitted = false;
   isExistSubmitted = false;
   isExistDependent =false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   isAddFamilyMember =true;
-  clientDependentId! : string
-  dependentTypeCode! : string
-  fullClientName! : string
-
+  clientDependentId! : string;
+  dependentTypeCode! : string;
+  fullClientName! : string;
+  relationshipList: Array<Lov> = [];
   /** Constructor **/
   constructor(  
     private readonly ref: ChangeDetectorRef,
@@ -86,6 +87,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     this.loadFamilyDependents();   
     this.loadNewFamilyMemberData();  
     this.composeExistFamilyMemberForm()
+    this.updateRelationshipList();
   }
 
   /** Private methods **/
@@ -138,6 +140,12 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    
   }
 
+  private updateRelationshipList() {
+    this.ddlRelationships$.subscribe((data: any) => {
+      this.relationshipList = data.filter((relation: Lov) => relation.lovCode != 'F');
+    });
+  }
+
   /** Internal event methods **/
   onNewFamilyMemberClicked() {
     this.isOpenedNewFamilyMember = true;
@@ -175,7 +183,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
   onSearchTemplateClick(dataItem : any)
-  {    
+  {  
    this.existFamilyMemberForm.patchValue(
      {
        clientId: dataItem?.clientId ?? 0 ,    
@@ -230,7 +238,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         dependentType :DependentTypeCode.CAClient ,
         relationshipCode : this.existFamilyMemberForm?.controls["existRelationshipCode"].value ,
         clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value ,
-        selectedClientDependentId: this.existFamilyMemberForm?.controls["clientDependentId"].value 
+        selectedClientDependentId: this.existFamilyMemberForm?.controls["selectedClientDependentId"].value 
       }   
 
       existDepData.clientDependentId =  existDepData?.clientDependentId=='' ? "00000000-0000-0000-0000-000000000000" : existDepData?.clientDependentId
