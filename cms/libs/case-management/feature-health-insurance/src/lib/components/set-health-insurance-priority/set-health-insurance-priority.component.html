@@ -15,7 +15,7 @@
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
         [formControlName]="insurance.clientInsurancePolicyId"
         [value]="insurance.priorityCode"
-        (valueChange)="onChangePriority($event,i)"
+        (valueChange)="onChangePriority($event,insurance)"
         name="priorityCode"
         [valuePrimitive]="true" valueField="lovCode" textField="lovDesc" [data]="ddlMedicalHealthPlanPriority$ | async">
         </kendo-dropdownlist>
