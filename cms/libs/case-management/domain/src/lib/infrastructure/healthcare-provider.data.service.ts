@@ -19,50 +19,50 @@ export class HealthcareProviderDataService {
   /** Public methods **/
 
   ///1
-  removeHealthCareProvider(ClientCaseEligibilityId : string,ProviderId : string)
+  removeHealthCareProvider(clientId : number ,ProviderId : string)
   {
     return this.http.delete(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/providers`+
+      `/case-management/healthcare-providers/${clientId}/providers`+
       `/${ProviderId}`
     );
   }
 
 
   ///2
-  loadProviderStatusStatus(clientCaseEligibilityId : string) {     
+  loadProviderStatusStatus(clientId : number) {     
     return this.http.get<HealthcareProvider[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${clientCaseEligibilityId}/provider-status`
+      `/case-management/healthcare-providers/${clientId}/provider-status`
     );
     
   }
   
   ///3
-  updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
+  updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string)
   {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/${nohealthCareProviderFlag}`     
+      `/case-management/healthcare-providers/${clientId}/${nohealthCareProviderFlag}`     
     ,null);
   }
 
 
 
   ///4
-  loadHealthCareProviders(ClientCaseEligibilityId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
+  loadHealthCareProviders(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
     return this.http.get<HealthcareProvider[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers?clientCaseEligibilityId=${ClientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/healthcare-providers?clientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
     
   }
 
-  loadExistingHealthCareProvider(ClientCaseEligibilityId : string  ,providerId :string) {   
+  loadExistingHealthCareProvider(clientId : number  ,providerId :string) {   
       
     return this.http.get<HealthcareProvider[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${ClientCaseEligibilityId}/providers/${providerId}`
+      `/case-management/healthcare-providers/${clientId}/providers/${providerId}`
     );
     
   }
@@ -73,14 +73,14 @@ export class HealthcareProviderDataService {
     {
       return this.http.post(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/healthcare-providers/${existProviderData?.clientCaseEligibilityId}/providers/${existProviderData?.providerId}/${existProviderData?.selectedProviderId}`,null
+        `/case-management/healthcare-providers/${existProviderData?.clientId}/providers/${existProviderData?.providerId}/${existProviderData?.selectedProviderId}`,null
       );
     }
   
       //search for autocomplete
-      searchProviders(text :  string , clientCaseEligibilityId : string) {
+      searchProviders(text :  string , clientId : number) {
         return this.http.get<HealthcareProvider[]>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientCaseEligibilityId}/providers/search/${text}`  
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/providers/search/${text}`  
         );
       }  
  

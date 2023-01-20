@@ -44,6 +44,7 @@ export class LovFacade {
   private lovPremiumFrequencySubject = new BehaviorSubject<Lov[]>([]);
   private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovPriorityCodeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPrioritySubject=new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -71,6 +72,7 @@ export class LovFacade {
   premiumFrequencylov$ = this.lovPremiumFrequencySubject.asObservable();
   medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
   caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
+  priorityCodeType$ = this.lovPriorityCodeSubject.asObservable();
   pharmacyPrioritylov$=this.lovPrioritySubject.asObservable();
 
 
@@ -324,6 +326,19 @@ getCaseStatusLovs(): void {
       this.lovCaseStatusTypeSubject.next(lovCaseStatusResponse);
     },
     error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+
+}
+
+getCaseCodeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.PriorityCode).subscribe({
+    next: (lovCaseStatusResponse) => {
+      this.lovPriorityCodeSubject.next(lovCaseStatusResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
