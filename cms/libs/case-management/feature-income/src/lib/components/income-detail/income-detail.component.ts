@@ -154,7 +154,8 @@ export class IncomeDetailComponent implements OnInit {
           }
         },
         error: (err) => {
-          console.log(err);
+          this.incomeFacade.HideLoader();
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
   }
@@ -270,19 +271,17 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
-   
+    this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
    if(this.proofOfIncomeFiles.size>26214400) 
    {
     this.proofOfIncomeValidatorSize=true;
    }
-    console.log(this.proofOfIncomeFiles);
   }
 
   handleFileRemoved(event: any) {
     this.proofOfIncomeFiles = null;
-    console.log(this.proofOfIncomeFiles);
   }
 
   // checking the validation
