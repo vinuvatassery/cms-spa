@@ -47,4 +47,13 @@ export class NotificationSnackbarService {
         this.snackbarSubject.next(snackbarMessage);
       
       }
+      errorSnackBar( subtitle : any)
+      {
+        const snackbarMessage: any = {
+          title: SnackBarNotificationType.ERROR,
+          subtitle: subtitle,
+          type: SnackBarNotificationType.ERROR,
+        };
+        this.snackbarSubject.next(snackbarMessage);
+      }
 }

@@ -133,5 +133,8 @@ export class HealthInsurancePolicyFacade {
       }
     }
   }
+  setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
+    return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
+  }
 
 }
