@@ -189,23 +189,47 @@
           [width]="130"
           class="text-center"
         >
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton
-              [data]="actions"
-              icon="upload"
-              class="TableActionPopup app-dropdown-action"
-              buttonClass="k-icon-button"
-              aria-label="more actions"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-            >
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click" >
-                  <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
-                  <label>   {{ dataItem.text }} </label>
-              </button> 
-              </ng-template>
-            </kendo-dropdownbutton>
-          </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+
+          <kendo-dropdownbutton
+
+            [data]="actions"
+
+            icon="upload"
+
+            class="TableActionPopup app-dropdown-action"
+
+            buttonClass="k-icon-button"
+
+            aria-label="more actions"
+
+            [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+
+          >
+
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+
+              <button *ngIf="dataItem.text !== 'Attach from computer'"  kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click" >
+
+                <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
+
+                <label>   {{ dataItem.text }} </label>
+
+            </button>
+
+           
+
+                <button kendoButton  look="flat" *ngIf="dataItem.text === 'Attach from computer'" [attr.aria-label]="dataItem.text" class="upoadlistbtn" [class]="dataItem.buttonType" aria-hidden="false"  >
+                  <kendo-upload  hidden  #uploadformcomp>  </kendo-upload>
+                <label [for]="uploadformcomp">   {{ dataItem.text }} </label>
+
+            </button>
+
+            </ng-template>
+
+          </kendo-dropdownbutton>
+
+        </ng-template>
         </kendo-grid-column>
       </kendo-grid>
     </div>

@@ -1,3 +1,5 @@
 export enum PronounCode {
-    NotListed="NOT_LISTED"
+    notListed=  "NOT_LISTED",
+    dontKnow =  "DONT_KNOW",
+    dontWant =  "DONT_WANT"
 }
