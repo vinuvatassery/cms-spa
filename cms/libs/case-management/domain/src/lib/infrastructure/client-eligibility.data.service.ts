@@ -20,9 +20,7 @@ export class ClientEligibilityDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
 
-  loadDdlGroups() {
-    return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  }
+ 
 
   getEligibility(clientCaseEligibilityId: string, clientId: string) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilty/${clientCaseEligibilityId}`);

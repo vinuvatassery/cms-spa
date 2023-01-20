@@ -59,16 +59,16 @@ export class ClientEligibilityFacade {
     });
   }
 
-  loadDdlGroups() {
-    this.clientEligibilityDataService.loadDdlGroups().subscribe({
-      next: (ddlGroupsResponse) => {
-        this.ddlGroupsSubject.next(ddlGroupsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
+  // loadDdlGroups() {
+  //   this.clientEligibilityDataService.loadDdlGroups().subscribe({
+  //     next: (ddlGroupsResponse) => {
+  //       this.ddlGroupsSubject.next(ddlGroupsResponse);
+  //     },
+  //     error: (err) => {
+  //       console.error('err', err);
+  //     },
+  //   });
+  // }
   showLoader()
   {
     this.loaderService.show();
