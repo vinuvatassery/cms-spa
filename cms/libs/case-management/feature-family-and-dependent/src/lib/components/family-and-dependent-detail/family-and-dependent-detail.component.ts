@@ -56,6 +56,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   dependentTypeCode! : string;
   fullClientName! : string;
   relationshipList: Array<Lov> = [];
+  public showDateError: boolean = false;
   /** Constructor **/
   constructor(  
     private readonly ref: ChangeDetectorRef,
@@ -317,10 +318,16 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    {    
       if(text.length > 0)
       {
+        if(text.length == 5 && text[4] == '/') {
+          this.showDateError = true;
+        }
+        else {
+        this.showDateError = false;
         this.dependentSearch= [];
         this.showDependentSearchInputLoader = true;
         this.searchResultSubject.next(this.dependentSearch)      
-      this.filterManager.next(text); 
+        this.filterManager.next(text); 
+        }
       }
     } 
    
