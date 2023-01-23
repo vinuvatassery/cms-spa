@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
 import { debounceTime, distinctUntilChanged, first, Subject, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { Lov } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-family-and-dependent-detail',
@@ -51,10 +52,11 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   isExistDependent =false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   isAddFamilyMember =true;
-  clientDependentId! : string
-  dependentTypeCode! : string
-  fullClientName! : string
-
+  clientDependentId! : string;
+  dependentTypeCode! : string;
+  fullClientName! : string;
+  relationshipList: Array<Lov> = [];
+  public showDateError: boolean = false;
   /** Constructor **/
   constructor(  
     private readonly ref: ChangeDetectorRef,
@@ -86,6 +88,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     this.loadFamilyDependents();   
     this.loadNewFamilyMemberData();  
     this.composeExistFamilyMemberForm()
+    this.updateRelationshipList();
   }
 
   /** Private methods **/
@@ -136,6 +139,12 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     });  
     
    
+  }
+
+  private updateRelationshipList() {
+    this.ddlRelationships$.subscribe((data: any) => {
+      this.relationshipList = data.filter((relation: Lov) => relation.lovCode != 'F');
+    });
   }
 
   /** Internal event methods **/
@@ -309,10 +318,16 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    {    
       if(text.length > 0)
       {
+        if(text.length == 5 && text[4] == '/') {
+          this.showDateError = true;
+        }
+        else {
+        this.showDateError = false;
         this.dependentSearch= [];
         this.showDependentSearchInputLoader = true;
         this.searchResultSubject.next(this.dependentSearch)      
-      this.filterManager.next(text); 
+        this.filterManager.next(text); 
+        }
       }
     } 
    

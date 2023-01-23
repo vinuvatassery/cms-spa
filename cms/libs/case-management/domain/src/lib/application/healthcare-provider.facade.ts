@@ -23,6 +23,8 @@ export class HealthcareProviderFacade {
   private healthCareProviderSearchSubject = new Subject<any>();
   private addExistingProviderSubject = new Subject<any>();
   private loadExistingProviderSubject = new Subject<any>();
+  private searchProviderLoadedSubject = new Subject<boolean>();
+  private showProvidervalidationSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -33,6 +35,8 @@ export class HealthcareProviderFacade {
   healthCareProviderSearchList$ = this.healthCareProviderSearchSubject.asObservable();
   addExistingProvider$ = this.addExistingProviderSubject.asObservable();
   loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
+  searchProviderLoaded$ = this.searchProviderLoadedSubject.asObservable();
+  showProvidervalidation$ = this.showProvidervalidationSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
@@ -72,9 +76,9 @@ export class HealthcareProviderFacade {
   }
 
   /** Public methods **/
-  removeHealthCareProviders(ClientCaseEligibilityId : string , ProviderId : string): void {
+  removeHealthCareProviders(clientId : number,  ProviderId : string): void {    
     this.showLoader();
-    this.healthcareProviderDataService.removeHealthCareProvider(ClientCaseEligibilityId,ProviderId)
+    this.healthcareProviderDataService.removeHealthCareProvider(clientId,ProviderId)
     .subscribe({
       next: (removeHealthCareProvidersResponse) => {        
         if(removeHealthCareProvidersResponse == true)
@@ -89,9 +93,9 @@ export class HealthcareProviderFacade {
     });
   }
 
-  loadProviderStatusStatus(clientCaseEligibilityId : string) : void {
- 
-    this.healthcareProviderDataService.loadProviderStatusStatus(clientCaseEligibilityId).subscribe({
+  loadProviderStatusStatus(clientId : number,) : void {
+    this.showLoader();
+    this.healthcareProviderDataService.loadProviderStatusStatus(clientId).subscribe({
       next: (providerStatusGetResponse) => {
         this.hideLoader();
         this.healthCareProvideGetFlagSubject.next(providerStatusGetResponse);
@@ -102,20 +106,20 @@ export class HealthcareProviderFacade {
     });
   }
 
-  updateHealthCareProvidersFlagonCheck(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)  {
+  updateHealthCareProvidersFlagonCheck(clientId : number, nohealthCareProviderFlag : string)  {
   
-   return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
+   return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag)
   }
 
-  updateHealthCareProvidersFlag(ClientCaseEligibilityId : string, nohealthCareProviderFlag : string)
+  updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string)
   {
  
-    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(ClientCaseEligibilityId,nohealthCareProviderFlag)
+    return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag)
   }
 
-  loadHealthCareProviders(clientCaseEligibilityId : string,skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+  loadHealthCareProviders(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
     this.showLoader();
-    this.healthcareProviderDataService.loadHealthCareProviders(clientCaseEligibilityId, skipcount ,maxResultCount  ,sort , sortType).subscribe({
+    this.healthcareProviderDataService.loadHealthCareProviders(clientId , skipcount ,maxResultCount  ,sort , sortType).subscribe({
       next: (healthCareProvidersResponse : any) => {        
         if(healthCareProvidersResponse)
         {      
@@ -125,6 +129,7 @@ export class HealthcareProviderFacade {
           };      
 
           this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
+          this.showProvidervalidationSubject.next(parseInt(healthCareProvidersResponse["totalCount"]) === 0);
           this.healthCareProvidersSubject.next(gridView);
           this.hideLoader();    
          }
@@ -132,8 +137,7 @@ export class HealthcareProviderFacade {
          this.hideLoader();    
          }
       },
-      error: (err) => {
-        this.hideLoader();   
+      error: (err) => {      
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.updateWorkflowCount(false);   
       },
@@ -141,20 +145,23 @@ export class HealthcareProviderFacade {
   }
 
 
- searchHealthCareProviders(text : string , clientCaseEligibilityId : string): void {  
+ searchHealthCareProviders(text : string , clientId : number): void {  
+  this.searchProviderLoadedSubject.next(true);
   this.healthCareProviderSearchSubject.next(null);
-    this.healthcareProviderDataService.searchProviders(text,clientCaseEligibilityId).subscribe({
+    this.healthcareProviderDataService.searchProviders(text,clientId).subscribe({
       next: (healthCareProvidersSearchResponse) => {        
         if(healthCareProvidersSearchResponse)
         {            
           Object.values(healthCareProvidersSearchResponse).forEach((key) => {   
                     key.selectedCustomProvider = key.fullName+' '+key.clinicName+' '+key.address
           });
-          this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);
-         }         
+          this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);         
+         }      
+         this.searchProviderLoadedSubject.next(false);   
       },
       error: (err) => { 
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.searchProviderLoadedSubject.next(false);
       },
     });
   }
@@ -167,23 +174,21 @@ export class HealthcareProviderFacade {
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
         this.addExistingProviderSubject.next(addExistingProviderGetResponse);
       },
-      error: (err) => {  
-        this.hideLoader();
+      error: (err) => {        
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
 
 
-  loadExistingHealthCareProvider(ClientCaseEligibilityId : string  ,providerId :string) : void {
+  loadExistingHealthCareProvider(clientId : number,providerId :string) : void {
     this.showLoader();
-    this.healthcareProviderDataService.loadExistingHealthCareProvider(ClientCaseEligibilityId   ,providerId ).subscribe({
+    this.healthcareProviderDataService.loadExistingHealthCareProvider(clientId ,providerId ).subscribe({
       next: (loadExistingProviderResponse) => {
         this.hideLoader();
         this.loadExistingProviderSubject.next(loadExistingProviderResponse);
       },
-      error: (err) => {  
-        this.hideLoader();
+      error: (err) => {        
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });

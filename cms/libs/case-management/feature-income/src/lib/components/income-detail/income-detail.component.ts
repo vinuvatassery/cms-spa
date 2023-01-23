@@ -37,6 +37,7 @@ export class IncomeDetailComponent implements OnInit {
   isIncomeDetailsPopupOpen = false;
   proofOfIncomeFiles: any;
   proofOfIncomeValidator: boolean = false;
+  proofOfIncomeValidatorSize: boolean = false;
   noProofOfIncomeFlag!: StatusFlag;
   currentDate = new Date();
   /** Public properties **/
@@ -153,7 +154,8 @@ export class IncomeDetailComponent implements OnInit {
           }
         },
         error: (err) => {
-          console.log(err);
+          this.incomeFacade.HideLoader();
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
   }
@@ -269,14 +271,17 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
+    this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
-    console.log(this.proofOfIncomeFiles);
+   if(this.proofOfIncomeFiles.size>26214400) 
+   {
+    this.proofOfIncomeValidatorSize=true;
+   }
   }
 
   handleFileRemoved(event: any) {
     this.proofOfIncomeFiles = null;
-    console.log(this.proofOfIncomeFiles);
   }
 
   // checking the validation

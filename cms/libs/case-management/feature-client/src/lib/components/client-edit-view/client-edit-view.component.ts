@@ -1,10 +1,10 @@
 of/** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation , ViewChild, Output, EventEmitter, ElementRef,Inject, Input, OnDestroy } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef,  Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
+import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { catchError, combineLatest, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, isEmpty, map, mergeMap, Observable, of, pairwise, pipe, startWith, Subscription, tap, timer } from 'rxjs';
+import { ConfigurationProvider, LoaderService, LoggingService,  SnackBarNotificationType } from '@cms/shared/util-core';
+import {  debounceTime, distinctUntilChanged,  of, pairwise,  startWith, Subscription,  } from 'rxjs';
 /** Facades **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
@@ -14,6 +14,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 
 import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
+import { LessOrEqualToFilterOperatorComponent } from '@progress/kendo-angular-grid';
  
 @Component({
   selector: 'case-management-client-edit-view',
@@ -28,7 +29,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  @Output() AppInfoChanged = new EventEmitter<{completedDataPoints: CompletionChecklist[], updateWorkflowCount:boolean}>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() ValidateFields = new EventEmitter<FormGroup>();
- @Output() PronounChanges = new EventEmitter<any>();
+ //@Output() PronounChanges = new EventEmitter<any>();
  @Output() ApplicantNameChange = new EventEmitter<any>();
 
   /** Public properties **/
@@ -122,6 +123,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   raceAndEthnicityPrimaryData: Array<any> = [];
   raceAndEthnicityPrimaryNotListed: boolean = false;
   applicantInfoSubscription !:Subscription;
+  dateValidator: boolean = false;
 
     /** Private properties **/
   private allowWorkflowCountUpdate = false;
@@ -130,7 +132,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   showDuplicatePopup:boolean=false;
   currentClient:any={};
   matchingClient:any={};
-  showDuplicateLoader:boolean=false;
+  ssnMask='000-00-0000'
+  showNameDuplicateLoader:boolean=false;
+  showSsnDuplicateLoader:boolean=false;
+  otherEthnicityList:any[]=[];
  
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
@@ -163,7 +168,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
-    this.LoadLovs(); 
+    this.LoadLovs();
+    this.loadDdlOtherIdentities(); 
     this.buildForm(); 
      this.addAppInfoFormChangeSubscription();    
      this.loadApplicantInfoSubscription();   
@@ -171,7 +177,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
  
   ngOnDestroy(): void {
-    this.applicantInfoSubscription.unsubscribe();    
+    this.applicantInfoSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -181,13 +187,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }); 
   } 
 
-  setChangedPronoun(pronoun:any){
-    this.pronounList = pronoun;
-    if(this.pronounList  !== undefined && this.pronounList !== null){
-        this.PronounChanges.emit(this.pronounList);
-        this.assignPronounModelToForm();
-    }
-  }
   setRaceAndEthnicityData(value:any){
     this.raceAndEthnicity = value;
     if(Array.isArray(value) && value.length>0){
@@ -195,15 +194,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }
   }
   raceAndEthnicityChange(value: any) {
-    const Ethnicity = this.appInfoForm.controls["Ethnicity"]?.value;
     const Race = this.appInfoForm.controls["RaceAndEthnicity"]?.value;
     this.raceAndEthnicityPrimaryData = [];
     this.raceAndEthnicityPrimaryNotListed = false;
-    if (Array.isArray(Ethnicity)) {
-      Ethnicity.forEach((el: any) => {
-        this.raceAndEthnicityPrimaryData.push(el);
-      });
-    }
 
     if (Array.isArray(Race)) {
       Race.forEach((el: any) => {
@@ -214,11 +207,16 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       });
     }
 
+    if(this.raceAndEthnicityPrimaryData.length>1){
+      this.raceAndEthnicityPrimaryData=[...this.raceAndEthnicityPrimaryData,...this.otherEthnicityList]
+    }
 
     if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
+      this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
     } else {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(null);
+      this.appInfoForm.controls['RaceAndEthnicityPrimary'].enable();
     }
   }
   ngAfterViewChecked() {  
@@ -308,10 +306,11 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.lovFacade.getMaterialYesLovs();
     this.lovFacade.getSpokenWrittenLanguageLovs();
     this.lovFacade.getEnglishProficiencyLovs();
+    this.lovFacade.getOtherEthnicityIdentitiesLovs();
   }
   private loadApplicantInfoSubscription(){
     
-    this.applicantInfoSubscription = this.clientfacade.applicantInfo$.subscribe((applicantInfo)=>{   
+    this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{   
       this.textboxDisable  = true; 
       this.yesMaterialDisable = true;
       this.interpreterTypeInputDisable = true;
@@ -414,28 +413,8 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   else{
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
-  }
-  
-  if (Array.isArray(applicantInfo.clientGenderList) ) {
-    applicantInfo.clientGenderList.forEach(gender => { 
-      this.appInfoForm.controls['Gender'+gender.clientGenderCode]?.setValue(true);
-      if(gender.clientGenderCode==="NOT_LISTED" && gender.otherDesc!==null){
-        this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
-      }
-      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);
-      
-    })
-  }
-  if (Array.isArray(applicantInfo.clientSexualIdentityList) ) {
-    applicantInfo.clientSexualIdentityList.forEach(identity => { 
-      this.appInfoForm.controls['SexulaIdentity'+identity.clientSexualIdentityCode]?.setValue(true);
-      if(identity.clientSexualIdentityCode==="NOT_LISTED" && identity.otherDesc!==null){
-        this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
-      }
-      this.appInfoForm.controls['SexulaIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
-      
-    })
-  }
+  } 
+
   const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
   this.appInfoForm.controls['Transgender']?.setValue(Transgender);
   if (Transgender==='NOT_LISTED') {
@@ -449,8 +428,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   }
 
   
-this.assignRaceAndEthnicityToForm();
-  this.assignPronounModelToForm();
+  this.assignRaceAndEthnicityToForm();
 
   this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
   this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
@@ -516,24 +494,31 @@ this.assignRaceAndEthnicityToForm();
   private assignRaceAndEthnicityToForm() {
     if (Array.isArray(this.applicantInfo?.clientRaceList) && Array.isArray(this.raceAndEthnicity)) {
       const RaceAndEthnicity: any = [];
-      const Ethnicity: any = [];
+      let Ethnicity: any=null;
       let RaceAndEthnicityPrimary=null;
       this.applicantInfo.clientRaceList.forEach((el: any) => {
         const foundRace = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientRaceCategoryCode);
         if (foundRace !== undefined) {
           RaceAndEthnicity.push(foundRace);
-          if (el.isPrimaryFlag === StatusFlag.Yes)
-          RaceAndEthnicityPrimary=foundRace;
-            //this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(foundRace);
-
         }
         const foundEthnicity = this.raceAndEthnicity.find((m: any) => m.lovCode === el.clientEthnicIdentityCode);
         if (foundEthnicity !== undefined){
-          Ethnicity.push(foundEthnicity);
-          if (el.isPrimaryFlag === StatusFlag.Yes)
-          RaceAndEthnicityPrimary=foundEthnicity;
+          Ethnicity=foundEthnicity
         }
       });
+      let primaryRace=this.applicantInfo.clientRaceList.filter((race:any)=>race.isPrimaryFlag==StatusFlag.Yes);
+      if(primaryRace.length>0){
+        let checkPrimaryInRaceList=this.raceAndEthnicity.find((lov: any) => lov.lovCode === primaryRace[0].clientRaceCategoryCode);
+        if(checkPrimaryInRaceList){
+          RaceAndEthnicityPrimary=checkPrimaryInRaceList;
+        }
+        else{
+          let checkPrimaryInOtherEthnicityList=this.otherEthnicityList.find((lov: any) => lov.lovCode === primaryRace[0].clientRaceCategoryCode);
+          if(checkPrimaryInOtherEthnicityList){
+            RaceAndEthnicityPrimary=checkPrimaryInOtherEthnicityList;
+          }
+        }
+      }
       this.appInfoForm.controls['RaceAndEthnicity']?.setValue(RaceAndEthnicity);
       this.appInfoForm.controls['Ethnicity']?.setValue(Ethnicity);
       this.raceAndEthnicityChange(true);
@@ -545,21 +530,6 @@ this.assignRaceAndEthnicityToForm();
     }
 
   }
-private assignPronounModelToForm(){
-  if(this.applicantInfo !== undefined && this.applicantInfo.clientPronounList !== undefined && this.applicantInfo.clientPronounList != null){   
-    this.applicantInfo.clientPronounList.forEach((pronoun:any) => {  
-  if(this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()] !== undefined){
-      this.appInfoForm.controls[pronoun.clientPronounCode.toUpperCase()].setValue(true);
-      this.updateWorkflowPronounCount(true);
-  if(pronoun.clientPronounCode ==='NOT_LISTED'){
-      this.appInfoForm.controls['pronoun'].setValue(pronoun.otherDesc);
-      this.textboxDisable = false;
-    }   
-    }
- })
-    this.clientfacade.pronounListSubject.next(this.pronounList);     
-}
-}
 
 private updateWorkflowPronounCount(isCompleted:boolean){
   const workFlowdata: CompletionChecklist[] = [{
@@ -672,10 +642,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
   private loadRdoSexAssigned() {
     this.clientfacade.loadRdoSexAssigned();
   }
-
-  // private loadRdoMaterials() {
-  //   this.clientfacade.loadRdoMaterials();
-  // }
 
   private loadRdoInterpreter() {
     this.clientfacade.loadRdoInterpreter();
@@ -797,16 +763,13 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.isSSNChecked = true;
-      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
       this.appInfoForm.controls['ssn'].disable();
     }
     else {
       this.isSSNChecked = false;
-      this.appInfoForm.controls['ssn'].setValidators(Validators.required);
-      this.appInfoForm.controls['ssn'].updateValueAndValidity();
       this.appInfoForm.controls['ssn'].enable();
     }
+    this.searchDuplicateClient();
   }
 
   registerToVoteSelected(event:Event){
@@ -835,15 +798,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       this.isSexAssignedTextBoxDisabled = true;
     }
   }
-
-  // onMaterialsRdoClicked(event: any) {
-  //   this.materialsSelectedValue = event.target.id;
-  //   if (this.materialsSelectedValue == 1) {
-  //     this.isMaterialsTextBoxDisabled = false;
-  //   } else {
-  //     this.isMaterialsTextBoxDisabled = true;
-  //   }
-  // }
 
   onInterpreterRdoClicked(event: any) {
     this.interpreterSelectedValue = event.target.id;
@@ -915,8 +869,6 @@ private updateWorkflowPronounCount(isCompleted:boolean){
 
   searchDuplicateClient() {
     this.ssnDuplicateFound = false;
-    this.appInfoForm.controls['ssn'].setErrors(null);
-    this.appInfoForm.controls['ssn'].updateValueAndValidity();
     let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
     let lastName = this.appInfoForm.controls['lastName'].value != null ? this.appInfoForm.controls['lastName'].value : '';
     let dateOfBirth = this.appInfoForm.controls['dateOfBirth'].value;
@@ -932,38 +884,75 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       dob: parsedDate,
       ssn: clientSsn
     };
-    this.showDuplicateLoader=true;
-    this.clientfacade.searchDuplicateClient(data).subscribe({
-      next: (response: any) => {
-        if (response != null) {
-          this.currentClient = data;
-          this.currentClient["clientCaseId"] = this.applicantInfo.clientCaseId;
-          this.matchingClient = response;
-          if (this.applicantInfo.client != undefined) {
-            if (response.clientId != this.applicantInfo.client.clientId) {
-              this.showDuplicatePopup = true;
-              if (response.ssn == data.ssn) {
-                this.ssnDuplicateFound = true;
-                this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+    if (clientSsn != '' && this.appInfoForm.controls['ssn'].hasError('patternError')) {
+      return;
+    }
+    if ((data.firstName != '' && data.lastName != '' && dateOfBirth != null) || (data.ssn != '')) {
+      if (data.ssn != '') {
+        this.showSsnDuplicateLoader = true;
+      }
+      if (data.firstName != '' && data.lastName != '' && dateOfBirth != null) {
+        this.showNameDuplicateLoader = true;
+      }
+      this.clientfacade.searchDuplicateClient(data).subscribe({
+        next: (response: any) => {
+          if (response != null) {
+            this.currentClient = data;
+            this.currentClient["clientCaseId"] = this.applicantInfo.clientCaseId;
+            this.matchingClient = response;
+            if (this.applicantInfo.client != undefined) {
+              if (response.clientId != this.applicantInfo.client.clientId) {
+                this.showDuplicatePopup = true;
+                if (response.ssn == data.ssn) {
+                  this.ssnDuplicateFound = true;
+                  this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+                }
               }
             }
+            else {
+              this.showDuplicatePopup = true
+            }
           }
-          else {
-            this.showDuplicatePopup = true
+          else{
+            
           }
+          this.showNameDuplicateLoader = false;
+          this.showSsnDuplicateLoader = false;
+          this.ref.detectChanges();
+        },
+        error: (err: any) => {
+          this.showNameDuplicateLoader = false;
+          this.showSsnDuplicateLoader = false;
+          this.loggingService.logException(err);
+          this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         }
-        this.showDuplicateLoader=false;
-        this.ref.detectChanges();
-      },
-      error: (err: any) => {
-        this.showDuplicateLoader=false;
-        this.loggingService.logException(err);
-        this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      })
+    }
+  }
+  dateValidate(event: Event)
+  {
+    this.dateValidator=false;
+    var signeddate=this.appInfoForm.controls['dateOfBirth'].value;
+      var todayDate= new Date();
+      if(signeddate>todayDate){
+      this.dateValidator=true;
       }
-    })
   }
 
   onDuplicatPopupCloseClick() {
     this.showDuplicatePopup = false;
+  }
+
+  ssnValueChange() {
+    var value = (this.appInfoForm.controls["ssn"].value).replace(/\s/g, "");
+    if (value != '' && value.length < 9) {
+      this.appInfoForm.controls['ssn'].setErrors({ 'patternError': true });
+    }
+  }
+
+  loadDdlOtherIdentities(){
+    this.lovFacade.otherEthnicitylov$.subscribe((response:any)=>{
+      this.otherEthnicityList=response
+    })
   }
 }

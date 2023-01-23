@@ -67,6 +67,9 @@ export class HealthInsurancePolicyFacade {
     if (!!healthInsurancePolicy?.proofOfPremiumFile) {
       formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
     }
+    if (!!healthInsurancePolicy?.medicareCardFile) {
+      formData.append('MedicareCardFile', healthInsurancePolicy?.medicareCardFile ?? '');
+    }
     this.formDataAppendObject(formData, healthInsurancePolicy);
 
     return this.healthInsurancePolicyService.saveHealthInsurancePolicy(formData);
@@ -81,6 +84,9 @@ export class HealthInsurancePolicyFacade {
     }
     if (!!healthInsurancePolicy?.proofOfPremiumFile) {
       formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.medicareCardFile) {
+      formData.append('MedicareCardFile', healthInsurancePolicy?.medicareCardFile ?? '');
     }
     this.formDataAppendObject(formData, healthInsurancePolicy);
 
@@ -126,6 +132,9 @@ export class HealthInsurancePolicyFacade {
         fd.append(k, obj[i]);
       }
     }
+  }
+  setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
+    return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
   }
 
 }

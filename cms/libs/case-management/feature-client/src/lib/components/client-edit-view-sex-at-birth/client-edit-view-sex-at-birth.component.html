@@ -36,12 +36,12 @@
                     [formControlName]="DescriptionField"
                     [maxlength]="50"
                     [disabled]="appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'"
-                    placeholder="Enter Answer" 
+                    placeholder="Enter Sex Assigned at Birth" 
                   ></kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror
                   *ngIf="!appInfoForm.controls[DescriptionField].valid"
-                  >At least one Option must be selected.</kendo-formerror
+                  >Sex assigned at birth is required.</kendo-formerror
                 >
               </div>
               </div>
@@ -49,7 +49,7 @@
           </div>
         </div>
       </span>
-      <kendo-formerror *ngIf="!appInfoForm.controls['BirthGender']?.valid">Atleast one option is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!appInfoForm.controls['BirthGender']?.valid">	At least one Option must be selected.</kendo-formerror>
   </div>
   </fieldset>
 </section>

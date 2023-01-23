@@ -28,6 +28,7 @@
               aria-label="Enter Sexual Orientation or Sexual Identity"
                 [formControlName]="DescriptionField"
                 [fillMode]="formUiStyle.inputFillMode"
+                [maxlength]="50"
                 [disabled]="
                   !appInfoForm.controls[ControlPrefix + Identity.lovCode].value "
                 placeholder="Enter sexual orientation or sexual identity" 

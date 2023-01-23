@@ -31,7 +31,7 @@ export class ClientFacade {
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
   private specialHandlingsSubject = new BehaviorSubject<any>([]);  
   appInfoFormSubject = new BehaviorSubject<any>([]);
-  applicationInfoSubject = new BehaviorSubject<any>([]);
+  applicationInfoSubject = new Subject<any>();
   pronounListSubject = new  BehaviorSubject<any>([]);
 
   /** Public properties **/
