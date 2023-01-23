@@ -105,6 +105,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
           if(otherGeder.length>0){
             this.enableDisableGender(true, otherGeder[0].clientGenderCode);
           }
+          this.updateWorkflowCount(true);
         }        
       }
     });

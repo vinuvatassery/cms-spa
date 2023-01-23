@@ -72,6 +72,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
             if(nonDisablePronouns.length>0){
               this.enableDisablePronoun(true, nonDisablePronouns[0].clientPronounCode);
             }
+            this.updateWorkflowCount(true);
           }        
         }
       });
