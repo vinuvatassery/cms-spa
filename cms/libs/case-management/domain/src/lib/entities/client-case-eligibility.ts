@@ -13,7 +13,8 @@ export class ClientCaseEligibility{
         clientTransgenderDesc !:string;
         genderDesc !:string;
         materialInAlternateFormatCode !:string;
-        materialInAlternateFormatDesc !:string;
+        materialInAlternateFormatDesc :string|null=null;
+        materialInAlternateFormatOther :string|null=null;
         spokenLanguageCode :string|null=null;
         writtenLanguageCode :string|null=null;
         englishProficiencyCode :string|null=null;
