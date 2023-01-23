@@ -27,19 +27,19 @@ export class AuthService {
       ({ isAuthenticated, allConfigsAuthenticated }) => {
         this.authenticated = isAuthenticated;
 
-        console.warn('authenticated: ', isAuthenticated);
+        //console.warn('authenticated: ', isAuthenticated);
       }
     );
 
     this.oidcSecurityService.userData$.subscribe(({ userData }) => {
       this.user = userData;
-      console.warn('user: ', JSON.stringify(userData));
+      //console.warn('user: ', JSON.stringify(userData));
     });
 
     this.eventService
       .registerForEvents()
       .subscribe((result: OidcClientNotification<AuthStateResult>) => {
-        console.warn('Event Received, ', JSON.stringify(result));
+        //console.warn('Event Received, ', JSON.stringify(result));
       });
 
     this.eventService
@@ -86,7 +86,7 @@ export class AuthService {
 
   checkAuth() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
-      console.warn('CheckAuth(): ' + JSON.stringify(isAuthenticated));
+      //console.warn('CheckAuth(): ' + JSON.stringify(isAuthenticated));
     });
   }
 }

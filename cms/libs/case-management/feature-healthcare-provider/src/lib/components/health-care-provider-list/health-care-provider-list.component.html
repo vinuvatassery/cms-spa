@@ -51,21 +51,33 @@
         <kendo-grid-column
         field="providerPriority"
         title="Provider Type"
-        [width]="150"
+        [width]="50"
         [sortable]="false" 
         [columnMenu]="false"
       ></kendo-grid-column>     
         <kendo-grid-column
           field="primaryPhone"
           title="Provider Phone"
-          [width]="150"
+          [width]="70"
           [sortable]="false" 
           [columnMenu]="false"
-        ></kendo-grid-column>     
+        >      
+      </kendo-grid-column>    
+        <kendo-grid-column
+        field="address1"
+        title="Provider Address"
+        [width]="180"
+        [sortable]="false" 
+        [columnMenu]="false"
+      >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.address1}}  {{dataItem.address2}}  {{dataItem.city+' '+dataItem.stateCode+' '+dataItem.zip}}
+       </ng-template>   
+    </kendo-grid-column>     
         <kendo-grid-column
           field="providerId"
           title="Option"
-          [width]="75"
+          [width]="30"
           class="text-center"
           [sticky]="true"
           [sortable]="false" 
