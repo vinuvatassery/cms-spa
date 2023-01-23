@@ -537,8 +537,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.applicantInfo.clientRaceList = [];
     //const clientRaceListSaved = this.applicantInfo.clientRaceList;// this is in case of update record
     const RaceAndEthnicity = this.appInfoForm.controls['RaceAndEthnicity'].value;
-    const Ethnicity = this.appInfoForm.controls['Ethnicity'].value;
+    const Ethnicity = [];
+    let ethnicityValue=this.appInfoForm.controls['Ethnicity'].value;
+    Ethnicity.push(ethnicityValue);
     const RaceAndEthnicityPrimary = this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
+    var checkPrimaryInRaceList=RaceAndEthnicity.filter((lov:any)=>lov.lovCode==RaceAndEthnicityPrimary.lovCode);
+    if(checkPrimaryInRaceList.length==0){
+      RaceAndEthnicity.push(RaceAndEthnicityPrimary);
+    }
     RaceAndEthnicity.forEach((el: any) => {
       const clientRace = new ClientRace();
       clientRace.clientRaceCategoryCode =el.lovCode;
@@ -550,7 +556,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         clientRace.raceDesc = this.appInfoForm.controls['RaceAndEthnicityNotListed'].value;
       this.applicantInfo.clientRaceList.push(clientRace)
     });
-
     Ethnicity.forEach((el: any) => {
       const clientRace = new ClientRace();
       clientRace.clientEthnicIdentityCode = el.lovCode;
@@ -645,10 +650,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }
         else {
           let hasError = this.appInfoForm.controls["ssn"].errors;
-          this.appInfoForm.controls["ssn"].setValidators(Validators.required);;
+          this.appInfoForm.controls["ssn"].setValidators(Validators.required);
           this.appInfoForm.controls["ssn"].updateValueAndValidity();
           if (hasError) {
-            this.appInfoForm.controls['ssn'].setErrors({ 'incorrect': true });
+            this.appInfoForm.controls['ssn'].setErrors(hasError);
           }
         }
         if(this.appInfoForm.controls["registerToVote"].value == null ||
@@ -819,7 +824,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                   this.appInfoForm.controls['RaceAndEthnicityNotListed'].updateValueAndValidity(); 
                 }
               }
-              
               this.appInfoForm.controls['Ethnicity'].setValidators(Validators.required); 
               this.appInfoForm.controls['Ethnicity'].updateValueAndValidity(); 
 

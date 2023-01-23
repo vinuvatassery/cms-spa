@@ -32,11 +32,9 @@
               valueField ="fullCustomName"              
               placeholder="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)"
               [popupSettings]="{ popupClass: popupClass, animate: true }"                 
-              [filterable]="true"   
+              [filterable]="true" 
               (close)="searchCloseEvent();"
-              (filterChange)="onsearchTextChange($event)"    
-             
-                    
+              (filterChange)="onsearchTextChange($event)"           
             >    
             <!-- (close)="searchCloseEvent();"       -->
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
@@ -70,6 +68,8 @@
             </kendo-label>
             <kendo-formerror *ngIf="(existFamilyMemberForm?.hasError('required','clientDependentId')&& existFamilyMemberForm?.hasError('required','clientId')) && isExistSubmitted">Dependent
               is required</kendo-formerror>
+            <kendo-formerror *ngIf="!fullClientName && isExistSubmitted">A family member is required.</kendo-formerror>
+            <kendo-formerror *ngIf="!!showDateError">Please use 'MM/dd/yyyy' format.</kendo-formerror>
           </div>
         </div>
         <div class="flex-col mb-1">
