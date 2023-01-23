@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { ActivatedRoute, Router } from '@angular/router';
 import {  CompletionChecklist, HealthcareProviderFacade, NavigationType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-healthcare-provider-page',
@@ -16,6 +16,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   clientId ! : number 
 
   /** Public properties **/  
+  private showProvidervalidationboxSubject = new Subject<boolean>();
+
   healthCareProviderSearchList$  =this.healthProvider.healthCareProviderSearchList$;
   healthCareProviders$ = this.healthProvider.healthCareProviders$;
   removeHealthProvider$ =this.healthProvider.removeHealthProvider$;
@@ -23,6 +25,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   addExistingProvider$   =this.healthProvider.addExistingProvider$ ;
   loadExistingProvider$  =this.healthProvider.loadExistingProvider$;
   searchProviderLoaded$  =this.healthProvider.searchProviderLoaded$;
+  showProvidervalidation$  =this.healthProvider.showProvidervalidation$;
+  showProvidervalidationbox$  = this.showProvidervalidationboxSubject.asObservable();
   isProvidersGridDisplay =true;
   pageSizes = this.healthProvider.gridPageSizes;
   sortValue  = this.healthProvider.sortValue;
@@ -31,6 +35,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   clientCaseId! : string;
   sessionId! : string;
   providersStatus!: StatusFlag;
+  showProvidervalidationbox! : boolean;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;
@@ -90,6 +95,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
 
    loadProvidersHandle( gridDataRefinerValue : any ): void
     {    
+      this.showProvidervalidationboxSubject.next(false)
         const gridDataRefiner = 
         {
           skipcount: gridDataRefinerValue.skipCount,
@@ -103,6 +109,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
           this.pageSizes = this.healthProvider.gridPageSizes;
         this.healthProvider.loadHealthCareProviders(this.clientId
           , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
+          this.showHideValidation()
         }
     }
 
@@ -128,26 +135,46 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
 
 
   private save() {     
-    this.healthProvider.showLoader();       
     this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
-     return  this.healthProvider.updateHealthCareProvidersFlag
-      (this.clientId,this.providersStatus)
-       .pipe
-      (
-       catchError((err: any) => { 
-        this.healthProvider.hideLoader();                     
-         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
-         return  of(false);
-       })  
-      )  
+    
+        if(this.showProvidervalidationbox && !this.isProvidersGridDisplay)
+        {        
+          this.showProvidervalidationboxSubject.next(true)
+          return  of(false);
+        }
+        else
+        {
+          this.showProvidervalidationboxSubject.next(false)
+          this.healthProvider.showLoader();    
+          return  this.healthProvider.updateHealthCareProvidersFlag
+            (this.clientId,this.providersStatus)
+            .pipe
+            (
+            catchError((err: any) => { 
+              this.healthProvider.hideLoader();                     
+              this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+              return  of(false);
+            })  
+            )  
+        }
      }
 
+
+     showHideValidation() 
+     {    
+      this.showProvidervalidation$.pipe(filter(x=> typeof x === 'boolean')).subscribe
+      ((x: boolean)=>
+      {        
+        this.showProvidervalidationbox = x;       
+      });     
+     }
   /** Internal event methods **/
   onProviderValueChanged() {   
      
     this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
     this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
-
+    
+    this.showProvidervalidationboxSubject.next(false)
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
       (this.clientId,this.providersStatus).subscribe((isSaved) => {  

@@ -160,7 +160,7 @@ private updateFormCompleteCount(prev: any, curr: any) {
           dataPointName: key,
           status: curr[key] ? StatusFlag.Yes : StatusFlag.No
         };
-        console.log(key);
+       
         completedDataPoints.push(item);
       }
     }
@@ -177,7 +177,7 @@ private updateFormCompleteCount(prev: any, curr: any) {
   });
 
   if (completedDataPoints.length > 0) {
-    console.log(completedDataPoints);
+   
    this.workFlowFacade.updateChecklist(completedDataPoints);
   }
 }
