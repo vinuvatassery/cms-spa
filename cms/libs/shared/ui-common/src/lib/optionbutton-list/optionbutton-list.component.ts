@@ -34,7 +34,8 @@ export class OptionbuttonListComponent implements OnInit,OnChanges {
   @Input() otherControlerValidationMessage:any;
  
      /** Public properties **/
-  otherInputVisible:boolean= false;
+  materialFormatOther:any = MaterialFormat.other.toUpperCase();
+  yesOption:any = YesNoFlag.Yes.toUpperCase();
   public autoCorrect = true;
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   public caseOwnerfilterSettings: DropDownFilterSettings = {
@@ -65,16 +66,16 @@ export class OptionbuttonListComponent implements OnInit,OnChanges {
     if(!(this.appInfoForm.controls[this.OptionControlerName].value.toUpperCase()  ===YesNoFlag.Yes.toUpperCase()) && 
     (this.appInfoForm.controls[this.textControlerName] !== undefined )){
       this.appInfoForm.controls[this.textControlerName].removeValidators(Validators.required);
-      this.appInfoForm.controls[this.textControlerName].updateValueAndValidity();     
+      this.appInfoForm.controls[this.textControlerName].updateValueAndValidity();  
+      if(this.OptionControlerName === 'materialInAlternateFormatCode'){
+        this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(null);
+      }  
+      
     }
   }
   onChange(event:any){
-    if(event.toUpperCase() ===MaterialFormat.other.toUpperCase()){
-      this.otherInputVisible = true;
-    }
-    else{
-      this.otherInputVisible = false;
-    }
-    
+    this.appInfoForm.controls[this.otherControlerName].setValue(null);
+    this.appInfoForm.controls[this.otherControlerName].removeValidators(Validators.required);
+    this.appInfoForm.controls[this.otherControlerName].updateValueAndValidity();
   }
 }

@@ -383,7 +383,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = this.appInfoForm.controls["materialInAlternateFormatDesc"].value
             if(this.applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibility?.materialInAlternateFormatDesc?.toUpperCase()===MaterialFormat.other.toUpperCase()){
               this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = this.appInfoForm.controls["materialInAlternateFormatOther"].value;
-            }           
+            }  
+            else{
+              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = null;
+            }         
         }
         else{
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = null;
@@ -698,6 +701,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 if( this.appInfoForm.controls['materialInAlternateFormatCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
                   this.appInfoForm.controls['materialInAlternateFormatDesc'].setValidators(Validators.required);
                   this.appInfoForm.controls['materialInAlternateFormatDesc'].updateValueAndValidity();
+                  if(
+                    (this.appInfoForm.controls['materialInAlternateFormatDesc'].value !== null
+                    && this.appInfoForm.controls['materialInAlternateFormatDesc'].value.toUpperCase() === MaterialFormat.other.toUpperCase())
+                  && this.appInfoForm.controls['materialInAlternateFormatOther'].value ===null 
+                  || this.appInfoForm.controls['materialInAlternateFormatOther'].value ===undefined
+                  || this.appInfoForm.controls['materialInAlternateFormatOther'].value ===''){
+                    this.appInfoForm.controls['materialInAlternateFormatOther'].setValidators(Validators.required);
+                    this.appInfoForm.controls['materialInAlternateFormatOther'].updateValueAndValidity();
+                  }
                 }
                 
               }    
