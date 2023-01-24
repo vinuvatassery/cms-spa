@@ -140,7 +140,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
-        this.workflowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Status Updated')  
+        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Status Updated')  
         this.workflowFacade.navigate(navigationType);
       }
     });
@@ -154,7 +154,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
           .pipe
           (
           catchError((err: any) => {                     
-            this.workflowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+            this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
             return  of(false);
           })  
           )  

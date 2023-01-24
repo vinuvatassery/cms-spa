@@ -127,6 +127,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit,OnDestroy {
           if(otherSexualIdentities.length>0){
             this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
           }
+          this.updateWorkflowCount(true);
         }        
       }
     });

@@ -214,11 +214,14 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
+      this.updateAdjustAttribute('RaceAndEthnicityPrimaryAdjust', StatusFlag.No);
     } else {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(null);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].enable();
+      this.updateAdjustAttribute('RaceAndEthnicityPrimaryAdjust', StatusFlag.Yes);
     }
   }
+
   ngAfterViewChecked() {  
     var firstName = '';
     var lastName ='';
@@ -545,10 +548,15 @@ private updateWorkflowPronounCount(isCompleted:boolean){
 }
 
   private adjustAttributeChanged(event: Event) { 
+    this.updateAdjustAttribute((event.target as HTMLInputElement).name, (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No)
+  }
+
+  private updateAdjustAttribute(dataPointName: string, status: StatusFlag){
     const data: CompletionChecklist = {
-      dataPointName: (event.target as HTMLInputElement).name,
-      status: (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No
+      dataPointName: dataPointName,
+      status: status
     };
+
     this.AdjustAttrChanged.emit([data]);
   }
 
@@ -605,8 +613,8 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       initialAdjustment.push(data);
     });
 
+    initialAdjustment.push({ dataPointName: '', status: this.raceAndEthnicityPrimaryData.length == 1 ? StatusFlag.No : StatusFlag.Yes });
     if (initialAdjustment.length > 0) {
-      //this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
       this.AdjustAttrChanged.emit(initialAdjustment);
     }
 
