@@ -669,9 +669,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             }
           });
           if(this.appInfoForm.controls['pronouns'].valid){   
-              Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {          
-                this.appInfoForm.controls[pronoun].removeValidators(Validators.requiredTrue);
-                this.appInfoForm.controls[pronoun].updateValueAndValidity();
+              Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {  
                 var pronounCode =   pronoun.replace(ControlPrefix.pronoun,'');
                 if(pronounCode === PronounCode.notListed && this.appInfoForm.controls[pronoun].value){
                   this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
@@ -684,6 +682,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 this.appInfoForm.controls[pronoun].setValidators(Validators.requiredTrue);
                 this.appInfoForm.controls[pronoun].updateValueAndValidity();
             });
+            this.appInfoForm.controls['pronouns'].setValue(null);
           }
           this.appInfoForm.controls['materialInAlternateFormatCode'].setValidators(Validators.required);
           this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();

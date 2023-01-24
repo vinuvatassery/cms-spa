@@ -155,6 +155,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
           this.disableSexualIdentity.forEach((sexualIdentity: any) => {
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].setValue(false);
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].disable();
+            this.appInfoForm.controls[this.DescriptionField].setValue(null);
           });
           break;
         }
