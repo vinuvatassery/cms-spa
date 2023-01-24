@@ -1,3 +1,4 @@
+ 
  <div class="component-list-h" [formGroup]="appInfoForm">    
     <span class="app-checkboxwidtext-wrapper"     
     *ngFor="let material of rdoInputlov | async; let i = index" >          
@@ -28,14 +29,30 @@
                  [attr.aria-label]="textPlaceholderText"
                 textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                 [formControlName]="textControlerName"               
-                [disabled]="textFieldDisable">
+                [disabled]="textFieldDisable" (valueChange)="onChange($event)">
              </kendo-dropdownlist>  
               </kendo-floatinglabel>
             </div>
           </div>
           <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{textValidationMessage}}</kendo-formerror>        
        
-    </div>  
+    </div>
+    <div *ngIf = "!textFieldDisable  && appInfoForm.controls[textControlerName].value === materialFormatOther && material.lovCode === yesOption  && textFieldType === 'dropDown'"> 
+      <div class="flex-row">
+        <div class="flex-col flex-col-6">
+        <kendo-floatinglabel            
+          [text]="otherControlerPlaceholderText" >        
+        <kendo-textbox [attr.aria-label]="otherControlerPlaceholderText"  
+          [fillMode]="formUiStyle.inputFillMode"    
+          [formControlName]="otherControlerName"
+          [placeholder]="otherControlerPlaceholderText"
+          [maxlength]="textFieldMaxLimit">  
+       </kendo-textbox>
+      </kendo-floatinglabel>
+        <kendo-formerror *ngIf="((!appInfoForm.controls[otherControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{otherControlerValidationMessage}}</kendo-formerror>        
+      </div>
+      </div>
+    </div> 
     <div *ngIf = "material.lovCode ===textFieldAfter && textFieldType === 'textField'"> 
       <div class="flex-row">
         <div class="flex-col flex-col-6">
@@ -76,7 +93,7 @@
 </div>
   </div>  
     </span>  
-    <kendo-formerror *ngIf="!appInfoForm.controls[OptionControlerName].valid">At least one Option must be selected.</kendo-formerror>
+    <kendo-formerror *ngIf="!appInfoForm.controls[OptionControlerName]?.valid">At least one Option must be selected.</kendo-formerror>
   </div>
 
 
