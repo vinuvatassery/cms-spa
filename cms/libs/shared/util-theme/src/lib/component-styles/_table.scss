@@ -542,8 +542,8 @@ table,
 
 .k-filter-menu-container, .k-editor{
   .k-picker-solid, .k-textbox{
-    border: 1px solid #ccc !important;
-    border-bottom: 1px solid #ccc !important;
+    border: 1px solid $theme-border !important;
+    border-bottom: 1px solid $theme-border !important;
     border-radius: 4px !important;
     background: $white;
   }
