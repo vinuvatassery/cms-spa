@@ -64,16 +64,15 @@ export class WorkflowFacade {
     public readonly intl: IntlService,
     private readonly configurationProvider : ConfigurationProvider ) { }
 
-
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {
+  {        
     if(type == SnackBarNotificationType.ERROR)
     {
        const err= subtitle;
        this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.hideLoader();
+    this.hideLoader();   
   }
 
   showLoader()
@@ -135,11 +134,11 @@ export class WorkflowFacade {
               },
             });
           }
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')  
           this.hideLoader();
         },
         error: (err: any) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
 
       });
@@ -163,11 +162,11 @@ export class WorkflowFacade {
           this.currentWorkflowMaster = wfMaster;
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
-          this.sessionSubject.next(this.currentSession);
+          this.sessionSubject.next(this.currentSession);          
           this.hideLoader();
         },
         error: (err: any) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
       })
   }
@@ -426,20 +425,34 @@ export class WorkflowFacade {
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
         if (ddlsessionDataResponse) {
-          const sessionData = JSON.parse(ddlsessionDataResponse?.sessionData);
-          if (ddlsessionDataResponse) {
+          const  sessionData =
+          {           
+            clientId : JSON.parse(ddlsessionDataResponse?.sessionData).ClientId ,
+            ClientCaseId: JSON.parse(ddlsessionDataResponse?.sessionData).ClientCaseId ,
+            clientCaseEligibilityId : JSON.parse(ddlsessionDataResponse?.sessionData).ClientCaseEligibilityId ,
+            entityID : JSON.parse(ddlsessionDataResponse?.sessionData).EntityID ,
+            EntityTypeCode : JSON.parse(ddlsessionDataResponse?.sessionData).EntityTypeCode ,
+          }
+          const workflowResonseData =
+          {      
+            sessionData : JSON.stringify(sessionData) ,    
+            workFlowProgress : ddlsessionDataResponse?.workFlowProgress,
+            workflowId : ddlsessionDataResponse?.workflowId,
+            workflowSessionId : ddlsessionDataResponse?.workflowSessionId
+         }    
+        
+          if (ddlsessionDataResponse) {            
             this.clientId = sessionData?.clientId;
             this.clientCaseId = sessionData?.ClientCaseId;
             this.clientCaseEligibilityId = sessionData?.clientCaseEligibilityId;
           }
+          this.sessionDataSubject.next(workflowResonseData);
         }
-        this.sessionDataSubject.next(ddlsessionDataResponse);
+       
         this.hideLoader();
       },
       error: (err) => {
-        this.hideLoader();
-        this.loggingService.logException(err);
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }

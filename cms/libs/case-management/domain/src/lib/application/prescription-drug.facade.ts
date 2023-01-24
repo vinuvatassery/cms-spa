@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 /** Providers **/
-import { ConfigurationProvider, LoaderService ,NotificationSnackbarService, SnackBarNotificationType,LoggingService} from '@cms/shared/util-core';
-import { BehaviorSubject, Observable } from 'rxjs';
-// entities library
-import { PrescriptionDrug } from '../entities/prescription-drug';
+import { ConfigurationProvider, LoaderService, NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
+import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 /** Data services **/
 import { PrescriptionDrugDataService } from '../infrastructure/prescription-drug.data.service';
 
@@ -11,43 +9,43 @@ import { PrescriptionDrugDataService } from '../infrastructure/prescription-drug
 
 @Injectable({ providedIn: 'root' })
 export class PrescriptionDrugFacade {
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {      
-    if(type == SnackBarNotificationType.ERROR)
-    {
-       const err= subtitle;    
-       this.loggingService.logException(err)
-    }  
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
-  }
-   /** Private properties **/
-   private prescriptionDrugResponseSubject = new BehaviorSubject<any>([]);
-    /** Public properties **/
- 
-    prescriptionDrugResponse$ = this.prescriptionDrugResponseSubject.asObservable();
-/** Constructor**/
-constructor(
-  private readonly prescriptionDrugDataService: PrescriptionDrugDataService,
-  private configurationProvider : ConfigurationProvider,
-  private loggingService : LoggingService,
-  private readonly loaderService: LoaderService,
-  private readonly notificationSnackbarService : NotificationSnackbarService,
-) {}
-HideLoader()
-{
-  this.loaderService.hide();
-}
-  updatePrescriptionDrug(prescriptionDrug: any, summaryBenefitFiles: any ): Observable<any> {
+  /** Private properties **/
+  private prescriptionDrugResponseSubject = new BehaviorSubject<any>([]);
+  /** Public properties **/
+
+  prescriptionDrugResponse$ = this.prescriptionDrugResponseSubject.asObservable();
+  /** Constructor**/
+  constructor(
+    private readonly prescriptionDrugDataService: PrescriptionDrugDataService,
+    private loggingService: LoggingService,
+    private readonly loaderService: LoaderService,
+    private readonly snackbarService: NotificationSnackbarService,
+  ) { }
+
+  updatePrescriptionDrug(prescriptionDrug: any, summaryBenefitFiles: any): Observable<any> {
     const formData: any = new FormData();
     for (var key in prescriptionDrug) {
-        formData.append(key, prescriptionDrug[key]);
+      if (typeof prescriptionDrug[key] == 'object') {
+        for (var childKey in prescriptionDrug[key]) {
+          formData.append(`${key}[${childKey}]`, prescriptionDrug[key][childKey]);
+        }
+      }
+      formData.append(key, prescriptionDrug[key]);
     }
-    formData.append('SummaryBenefitFiles', summaryBenefitFiles);
-    return this.prescriptionDrugDataService.updatePrescriptionDrugService(formData);
+    formData.append('summaryBenefitDocument', summaryBenefitFiles);
+    return this.prescriptionDrugDataService.updatePrescriptionDrugService(prescriptionDrug?.clientId, formData).pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+        }
+        return of(false);
+      })
+    );
   }
-  
-  loadPrescriptionDrug(clientCaseEligibilityId:any) {
-    return this.prescriptionDrugDataService.loadPrescriptionDrug(clientCaseEligibilityId);
+
+  loadPrescriptionDrug(clientId: Number, clientCaseEligibilityId: any) {
+    return this.prescriptionDrugDataService.loadPrescriptionDrug(clientId, clientCaseEligibilityId);
   }
 }

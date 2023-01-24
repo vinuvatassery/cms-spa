@@ -1,7 +1,7 @@
 <section [formGroup]="appInfoForm">
   <fieldset class="k-form-fieldset">
     <legend class="k-form-legend">    
-      <h5 class="mt-3">What is their sex assigned at birth?</h5>
+      <h5 class="mt-3">What is their Sex Assigned at Birth?</h5>
 </legend>
 
   <div class="component-list-h">
@@ -29,14 +29,14 @@
                 <div class="flex-col flex-col-6">
 
                
-                <kendo-floatinglabel text="Enter Answer">
+                <kendo-floatinglabel text="Enter Sex Assigned at Birth">
                   <kendo-textbox
-                  aria-label="Enter Answer"
+                  aria-label="Enter Sex Assigned at Birth"
                   [fillMode]="formUiStyle.inputFillMode"
                     [formControlName]="DescriptionField"
-                    [disabled]="
-                      appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'"
-                    placeholder="Enter Answer" 
+                    [maxlength]="50"
+                    [disabled]="appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'"
+                    placeholder="Enter Sex Assigned at Birth" 
                   ></kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror
@@ -49,7 +49,7 @@
           </div>
         </div>
       </span>
-      <kendo-formerror *ngIf="!appInfoForm.controls['BirthGender']?.valid">Atleast one option is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!appInfoForm.controls['BirthGender']?.valid">	At least one Option must be selected.</kendo-formerror>
   </div>
   </fieldset>
 </section>

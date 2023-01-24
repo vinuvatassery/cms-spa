@@ -46,7 +46,6 @@ export class ClientEditViewSexAtBirthComponent implements OnInit {
       this.appInfoForm.controls[this.DescriptionField].setValidators(
         Validators.required
       );
-      this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
     } else {
       this.appInfoForm.controls[this.DescriptionField].removeValidators(
         Validators.required

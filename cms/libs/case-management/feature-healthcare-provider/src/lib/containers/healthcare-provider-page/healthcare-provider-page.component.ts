@@ -152,7 +152,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
             (
             catchError((err: any) => { 
               this.healthProvider.hideLoader();                     
-              this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+              this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
               return  of(false);
             })  
             )  
