@@ -78,11 +78,11 @@
       </fieldset>
       <div class="block-section mt-2" *ngIf="healthInsuranceForm.controls['aptcFlag'].value==='Y'">
         <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
-          <kendo-textbox  aria-label="monthly aptc amount" placeholder="Monthly APTC Amount (may be $0)" 
+          <span class="k-input-prefix custom-currencysymbol"> $ </span>  
+          <kendo-textbox  aria-label="monthly aptc amount" placeholder="" 
             formControlName="aptcMonthlyAmt"
             [fillMode]="formUiStyle.inputFillMode"> 
-            <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
-            </kendo-textbox>
+          </kendo-textbox>
            
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcMonthlyAmt'].valid && isViewContentEditable==false)">Monthly APTC Amount is required.</kendo-formerror>
