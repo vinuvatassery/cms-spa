@@ -117,7 +117,6 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
    
      if(!event.target.checked && lovCode ===PronounCode.notListed) {  
        this.textboxDisable = true;
-       this.appInfoForm.controls['pronoun'].setValue(null);
 
      } 
     if(event.target.checked){
@@ -157,7 +156,6 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
             this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].setValue(false);
             this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].disable();
             this.textboxDisable = true;  
-            this.appInfoForm.controls['pronoun'].setValue(null);
           });   
           break;
         }
