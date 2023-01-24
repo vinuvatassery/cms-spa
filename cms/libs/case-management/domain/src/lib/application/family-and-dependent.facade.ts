@@ -66,7 +66,7 @@ export class FamilyAndDependentFacade {
 
 
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -103,13 +103,13 @@ export class FamilyAndDependentFacade {
       next: (dependentdeleteResponse) => {      
        if(dependentdeleteResponse == true)
        {     
-        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')  
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')  
        }             
         this.dependentdeleteSubject.next(dependentdeleteResponse);
         this.HideLoader();
       },
       error: (err) => {        
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)      
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
       },
     });
   }
@@ -120,14 +120,14 @@ export class FamilyAndDependentFacade {
       next: (addNewdependentsResponse) => {
         if(addNewdependentsResponse)
         {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Dependent Added Successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Dependent Added Successfully')  
         }
            
         this.dependentAddNewSubject.next(addNewdependentsResponse);
         this.HideLoader();
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)      
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
       },
     });
   }
@@ -139,14 +139,14 @@ export class FamilyAndDependentFacade {
         
         if(updateNewdependentsResponse)
         {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent data Updated')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent data Updated')  
         }
            
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
         this.HideLoader();
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -159,7 +159,7 @@ export class FamilyAndDependentFacade {
         this.HideLoader();
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -173,7 +173,7 @@ export class FamilyAndDependentFacade {
         this.HideLoader();
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -203,7 +203,7 @@ export class FamilyAndDependentFacade {
           dataPointName: 'family_dependents',
           status: StatusFlag.No
         }]);
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -221,7 +221,7 @@ export class FamilyAndDependentFacade {
         this.HideLoader();
       },
       error: (err) => {  
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
@@ -254,7 +254,7 @@ export class FamilyAndDependentFacade {
         this.dependentSearchSubject.next(dependentSearchResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -267,13 +267,13 @@ export class FamilyAndDependentFacade {
       next: (dependentStatusResponse) => {    
         if(dependentStatusResponse)
         {     
-         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent added successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent added successfully')  
         }
         
         this.existdependentStatusSubject.next(dependentStatusResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         
       },
     });
