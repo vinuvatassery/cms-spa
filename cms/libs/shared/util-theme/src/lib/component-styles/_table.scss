@@ -539,3 +539,18 @@ table,
 
   }
 }
+
+.k-filter-menu-container, .k-editor{
+  .k-picker-solid, .k-textbox{
+    border: 1px solid #ccc !important;
+    border-bottom: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    background: $white;
+  }
+}
+.tableamountview{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
