@@ -512,9 +512,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   private populateClientGender(){
     const clientGenderListSaved = this.applicantInfo.clientGenderList;// this is in case of update record
     this.applicantInfo.clientGenderList=[];
-     Object.keys( this.appInfoForm.controls).filter(m=>m.includes('Gender')).forEach(control => {
+     Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.gender)).forEach(control => {
        if (this.appInfoForm.controls[control].value===true) {
-         control= control.replace('Gender','');
+         control= control.replace(ControlPrefix.gender,'');
          let clientGender = new ClientGender();
          clientGender.clientGenderCode =control;
          clientGender.clientId = this.clientId;
@@ -568,14 +568,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   }
   private populateClientSexualIdentity() {
     this.applicantInfo.clientSexualIdentityList = [];
-    Object.keys(this.appInfoForm.controls).filter(m => m.includes('SexulaIdentity')).forEach(control => {
+    Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.sexualIdentity)).forEach(control => {
       if (this.appInfoForm.controls[control].value === true) {
-        control = control.replace('SexulaIdentity', '');
+        control = control.replace(ControlPrefix.sexualIdentity, '');
         const clientSexualIdentity = new ClientSexualIdentity();
         clientSexualIdentity.clientSexualIdentityCode = control;
         clientSexualIdentity.clientId = this.clientId;
         if (clientSexualIdentity.clientSexualIdentityCode === PronounCode.notListed) {
-          clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexulaIdentityDescription'].value;
+          clientSexualIdentity.otherDesc = this.appInfoForm.controls['SexualIdentityDescription'].value;
         }
 
         this.applicantInfo.clientSexualIdentityList.push(clientSexualIdentity);
@@ -672,7 +672,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {          
                 this.appInfoForm.controls[pronoun].removeValidators(Validators.requiredTrue);
                 this.appInfoForm.controls[pronoun].updateValueAndValidity();
-                var pronounCode =   pronoun.replace('ControlPrefix.pronoun','');
+                var pronounCode =   pronoun.replace(ControlPrefix.pronoun,'');
                 if(pronounCode === PronounCode.notListed && this.appInfoForm.controls[pronoun].value){
                   this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
                   this.appInfoForm.controls['pronoun'].updateValueAndValidity();
@@ -828,15 +828,55 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
               this.appInfoForm.controls['GenderGroup'].setValidators(Validators.required); 
               this.appInfoForm.controls['GenderGroup'].updateValueAndValidity(); 
+            
+             
+             const genderControls=  Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.gender));
+             this.appInfoForm.controls['GenderGroup'].setValue(null); 
+             this.appInfoForm.controls['GenderGroup'].updateValueAndValidity();
+             this.appInfoForm.controls['genderDescription'].updateValueAndValidity(); 
+             genderControls.forEach(control => {
+              if (this.appInfoForm.controls[control].value===true) {
+                this.appInfoForm.controls['GenderGroup'].setValue(this.appInfoForm.controls[control].value); 
+              }
+             });
+             if(!this.appInfoForm.controls['GenderGroup'].valid){
+                genderControls.forEach((gender:any) => {   
+                  this.appInfoForm.controls[gender].setValidators(Validators.requiredTrue);
+                  this.appInfoForm.controls[gender].updateValueAndValidity();
+              });
+             }
+            
 
               this.appInfoForm.controls['Transgender'].setValidators(Validators.required); 
-              this.appInfoForm.controls['Transgender'].updateValueAndValidity(); 
+              this.appInfoForm.controls['Transgender'].updateValueAndValidity();
+              this.appInfoForm.controls['TransgenderDescription'].updateValueAndValidity();
 
-              this.appInfoForm.controls['SexulaIdentityGroup'].setValidators(Validators.required); 
-              this.appInfoForm.controls['SexulaIdentityGroup'].updateValueAndValidity(); 
+              this.appInfoForm.controls['SexualIdentityGroup'].setValue(null);
+              const sexulaIdentity=  Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.sexualIdentity));
+              sexulaIdentity.forEach(control => {
+                if (this.appInfoForm.controls[control].value===true) {
+                  this.appInfoForm.controls['SexualIdentityGroup'].setValue(control); 
+                  if (control === ControlPrefix.sexualIdentity+'NOT_LISTED') {
+                    this.appInfoForm.controls['SexualIdentityDescription'].setValidators(Validators.required);
+                    this.appInfoForm.controls['SexualIdentityDescription'].updateValueAndValidity();
+                  }
+                }
+               });
+               this.appInfoForm.controls['SexualIdentityGroup'].setValidators(Validators.required); 
+               this.appInfoForm.controls['SexualIdentityGroup'].updateValueAndValidity();
+               if(!this.appInfoForm.controls['SexualIdentityGroup'].valid){
+                sexulaIdentity.forEach((control:any) => {   
+                    this.appInfoForm.controls[control].setValidators(Validators.requiredTrue);
+                    this.appInfoForm.controls[control].updateValueAndValidity();
+                });
+               }
+
+               
 
               this.appInfoForm.controls['BirthGender'].setValidators(Validators.required); 
               this.appInfoForm.controls['BirthGender'].updateValueAndValidity();
+              
+              this.appInfoForm.controls['BirthGenderDescription'].updateValueAndValidity();
 
     
           this.appInfoForm.updateValueAndValidity();

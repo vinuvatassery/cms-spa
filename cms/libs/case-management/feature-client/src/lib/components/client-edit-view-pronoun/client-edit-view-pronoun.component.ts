@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy,ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -36,7 +36,8 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
 
      /** Construtor **/
    constructor(
-    private formBuilder: FormBuilder,
+    private readonly formBuilder: FormBuilder,
+    private readonly cdr: ChangeDetectorRef,
      private readonly lovFacade : LovFacade,
      private readonly workflowFacade : WorkflowFacade,
      private readonly clientfacade: ClientFacade,
@@ -58,7 +59,8 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
     data.forEach((element) => {
         this.appInfoForm.addControl(ControlPrefix.pronoun + element.lovCode, new FormControl(''));        
     });  
-    this.disablePronouns =  this.pronounList.filter((x:any)=>x.lovCode !== PronounCode.dontKnow && x.lovCode !== PronounCode.dontWant)
+    this.disablePronouns =  this.pronounList.filter((x:any)=>x.lovCode !== PronounCode.dontKnow && x.lovCode !== PronounCode.dontWant);
+    this.cdr.detectChanges();
   });
 
  }
@@ -140,6 +142,8 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
  
    }
    enableDisablePronoun(checked:boolean,lovCode:any){
+    this.appInfoForm.controls['pronoun'].removeValidators(Validators.required);
+      this.appInfoForm.controls['pronoun'].updateValueAndValidity();
     switch(lovCode){
       case PronounCode.notListed:
         this.textboxDisable = false;  
