@@ -20,8 +20,8 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
 
   SexulaIdentityLovs$ = this.lovFacade.sexulaIdentitylov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  ControlPrefix = ControlPrefix.sexulaIdentity;
-  DescriptionField = 'SexulaIdentityDescription';
+  ControlPrefix = ControlPrefix.sexualIdentity;
+  DescriptionField = 'SexualIdentityDescription';
   disableSexualIdentity: any;
   applicantInfo$ = this.clientfacade.applicantInfo$;
   appInfoSubscription!: Subscription;
@@ -57,7 +57,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
       });
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
       this.appInfoForm.addControl(
-        'SexulaIdentityGroup',
+        'SexualIdentityGroup',
         new FormControl('')
       );
       this.SexulaIdentities = data;
@@ -67,7 +67,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   }
 
   private formChangeSubscription() {
-    this.appInfoForm.controls['SexulaIdentityGroup'].valueChanges.subscribe(value => {
+    this.appInfoForm.controls['SexualIdentityGroup'].valueChanges.subscribe(value => {
       if (value && this.countOfSelection >= 0) {
         this.updateWorkflowCount(true);
         this.countOfSelection++;
@@ -99,7 +99,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   onCheckChange(event: any, lovCode: string) {
     this.enableDisableSexualIdentity(event.target.checked, lovCode);
     if (event.target.checked) {
-      this.appInfoForm.controls['SexulaIdentityGroup'].setValue(lovCode);
+      this.appInfoForm.controls['SexualIdentityGroup'].setValue(lovCode);
     } else {
       if (lovCode === SexualIdentityCode.notListed) {
         this.appInfoForm.controls[this.DescriptionField].removeValidators(
@@ -132,9 +132,9 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
       clientSexualIdentityList.forEach(identity => {
         this.appInfoForm.controls[this.ControlPrefix + identity.clientSexualIdentityCode]?.setValue(true);
         if (identity.clientSexualIdentityCode === SexualIdentityCode.notListed && identity.otherDesc !== null) {
-          this.appInfoForm.controls['SexulaIdentityDescription']?.setValue(identity.otherDesc);
+          this.appInfoForm.controls['SexualIdentityDescription']?.setValue(identity.otherDesc);
         }
-        this.appInfoForm.controls['SexulaIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
+        this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
 
       })
     }
