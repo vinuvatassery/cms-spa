@@ -377,6 +377,7 @@ export class IncomeDetailComponent implements OnInit {
           src: this.selectedIncome.documentPath,
           uid: this.selectedIncome.clientDocumentId,
           size: this.selectedIncome?.documentSize,
+          documentId: this.selectedIncome.clientDocumentId
         },
       ];
     }
@@ -401,7 +402,7 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
-    if (clientDocumentId && clientDocumentId != '') {
+    if (clientDocumentId && clientDocumentId != '' && this.isEditValue) {
       this.loaderService.show()
       this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
         const fileUrl = window.URL.createObjectURL(data);
