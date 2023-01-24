@@ -65,7 +65,7 @@ export class WorkflowFacade {
     private configurationProvider : ConfigurationProvider ) { }
   
 
-  ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
@@ -73,15 +73,15 @@ export class WorkflowFacade {
        this.loggingService.logException(err)
     }  
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.hideLoader();   
   }
 
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }
@@ -113,7 +113,7 @@ export class WorkflowFacade {
   }
 
   createNewSession(newCaseFormData: FormGroup) {
-    this.ShowLoader();
+    this.showLoader();
     const sessionData = {
       entityId: newCaseFormData?.controls["programId"].value,
       EntityTypeCode: EntityTypeCode.Program,
@@ -135,11 +135,11 @@ export class WorkflowFacade {
               },
             });
           }
-          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')  
-          this.HideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Session Created Successfully')  
+          this.hideLoader();
         },
         error: (err: any) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
 
       });
@@ -147,7 +147,7 @@ export class WorkflowFacade {
 
   loadWorkflowSession(type: string, entityId: string, sessionId: string) {
     this.workflowReadySubject.next(false);
-    this.ShowLoader();
+    this.showLoader();
     this.workflowService.loadWorkflowMaster(entityId, EntityTypeCode.Program, type)
       .pipe(
         mergeMap((wfMaster: any) =>
@@ -164,10 +164,10 @@ export class WorkflowFacade {
           this.createCompletionChecklist(wfMaster, wfSession);
           this.routesSubject.next(wfSession?.workFlowProgress);
           this.sessionSubject.next(this.currentSession);          
-          this.HideLoader();
+          this.hideLoader();
         },
         error: (err: any) => {
-          this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
         },
       })
   }
@@ -425,17 +425,33 @@ export class WorkflowFacade {
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
         if (ddlsessionDataResponse) {
-          const sessionData = JSON.parse(ddlsessionDataResponse?.sessionData);
-          if (ddlsessionDataResponse) {
+          const  sessionData =
+          {           
+            clientId : JSON.parse(ddlsessionDataResponse?.sessionData).ClientId ,
+            ClientCaseId: JSON.parse(ddlsessionDataResponse?.sessionData).ClientCaseId ,
+            clientCaseEligibilityId : JSON.parse(ddlsessionDataResponse?.sessionData).ClientCaseEligibilityId ,
+            EntityID : JSON.parse(ddlsessionDataResponse?.sessionData).EntityID ,
+            EntityTypeCode : JSON.parse(ddlsessionDataResponse?.sessionData).EntityTypeCode ,
+          }
+          const workflowResonseData =
+          {      
+            sessionData : JSON.stringify(sessionData) ,    
+            workFlowProgress : ddlsessionDataResponse?.workFlowProgress,
+            workflowId : ddlsessionDataResponse?.workflowId,
+            workflowSessionId : ddlsessionDataResponse?.workflowSessionId
+         }    
+        
+          if (ddlsessionDataResponse) {            
             this.clientId = sessionData?.clientId;
             this.clientCaseId = sessionData?.ClientCaseId;
             this.clientCaseEligibilityId = sessionData?.clientCaseEligibilityId;
           }
+          this.sessionDataSubject.next(workflowResonseData);
         }
-        this.sessionDataSubject.next(ddlsessionDataResponse);
+       
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
