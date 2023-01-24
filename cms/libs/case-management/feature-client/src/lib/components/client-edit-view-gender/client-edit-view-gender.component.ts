@@ -2,9 +2,10 @@ import { Component, Input, OnInit,OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
-  FormGroup
+  FormGroup,
+  Validators
 } from '@angular/forms';
-import { CompletionChecklist, StatusFlag, WorkflowFacade,GenderCode,ClientFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, StatusFlag, WorkflowFacade,GenderCode,ClientFacade, ControlPrefix } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -19,8 +20,9 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   GenderLovs$ = this.lovFacade.genderlov$;
   applicantInfo$ = this.clientfacade.applicantInfo$;
-  ControlPrefix = 'Gender';
-  DescriptionField = 'GenderDescription';
+  ControlPrefix = ControlPrefix.gender;
+  DescriptionField = 'genderDescription';
+  maxLengthFifty =50;
   disableGender:any;
   appInfoSubscription!:Subscription;
   private countOfSelection=0; 
@@ -30,7 +32,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
     private readonly workflowFacade : WorkflowFacade,
     private readonly clientfacade: ClientFacade
   ) {
-    this.appInfoForm = this.formBuilder.group({ Gender: [''] });
+    this.appInfoForm = this.formBuilder.group({ });
   }
   Genders: any = [];
   ngOnInit(): void {
@@ -47,7 +49,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
       if (!Array.isArray(data)) return;
       data.forEach((element) => {
         this.appInfoForm.addControl(
-          this.ControlPrefix + element.lovCode,
+          ControlPrefix.gender + element.lovCode,
           new FormControl('')
         );
       });
@@ -83,10 +85,17 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   
     this.workflowFacade.updateChecklist(workFlowdata);
   }
+  setControlValidations() {
+    const genderControls = Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.gender));
+    genderControls.forEach((gender: any) => {
+      this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
+      this.appInfoForm.controls[gender].updateValueAndValidity();
+    });
+  }
   private assignGenderModelToForm(clientGenderList:any){
     if (Array.isArray(clientGenderList) ) {
       clientGenderList.forEach((gender:any) => { 
-      this.appInfoForm.controls[this.ControlPrefix +gender.clientGenderCode]?.setValue(true);
+      this.appInfoForm.controls[ControlPrefix.gender +gender.clientGenderCode]?.setValue(true);
       if(gender.clientGenderCode===GenderCode.notListed && gender.otherDesc!==null){
         this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
       }
@@ -105,45 +114,52 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
           if(otherGeder.length>0){
             this.enableDisableGender(true, otherGeder[0].clientGenderCode);
           }
+          this.updateWorkflowCount(true);
         }        
       }
     });
   }
 
   enableDisableGender(checked:boolean,lovCode:any){
+    this.appInfoForm.controls[this.DescriptionField].removeValidators(
+      Validators.required
+    );
+    this.appInfoForm.controls[
+      this.DescriptionField
+    ].updateValueAndValidity();
     switch(lovCode){  
       case GenderCode.dontKnow:
       case GenderCode.dontKnowAnswer:
       case GenderCode.dontKnowQustion:{
         if(checked){
           this.disableGender.forEach((gender:any) => { 
-            this.appInfoForm.controls[ this.ControlPrefix + gender.lovCode].setValue(false);
-            this.appInfoForm.controls[ this.ControlPrefix + gender.lovCode].disable();
+            this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].setValue(false);
+            this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].disable();
           });   
           break;
         }
         else{
           if(lovCode === GenderCode.dontKnow){
-            if(!this.appInfoForm.controls[this.ControlPrefix + GenderCode.dontKnowAnswer].value === true && 
-              !this.appInfoForm.controls[this.ControlPrefix + GenderCode.dontKnowQustion].value === true){
+            if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowAnswer].value === true && 
+              !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowQustion].value === true){
               this.disableGender.forEach((gender:any) => { 
-                this.appInfoForm.controls[ this.ControlPrefix + gender.lovCode].enable();
+                this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
               });  
             }
           }
           if(lovCode ===GenderCode.dontKnowAnswer){
-            if(!this.appInfoForm.controls[this.ControlPrefix + GenderCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + GenderCode.dontKnowQustion].value === true){
+            if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnow].value === true &&
+              !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowQustion].value === true){
               this.disableGender.forEach((gender:any) => { 
-                this.appInfoForm.controls[ this.ControlPrefix + gender.lovCode].enable();
+                this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
               });  
             }
           }
           if(lovCode ===GenderCode.dontKnowQustion){
-            if(!this.appInfoForm.controls[this.ControlPrefix + GenderCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + GenderCode.dontKnowAnswer].value === true){
+            if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnow].value === true &&
+              !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowAnswer].value === true){
               this.disableGender.forEach((gender:any) => { 
-                this.appInfoForm.controls[ this.ControlPrefix + gender.lovCode].enable();
+                this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
               });  
             }
           }
@@ -157,17 +173,22 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
     if (event.target.checked) {
       this.appInfoForm.controls['GenderGroup'].setValue(lovCode);
       if (lovCode === GenderCode.notListed) {
-        this.appInfoForm.controls[this.DescriptionField].setErrors({
-          incorrect: true,
-        });
+        this.appInfoForm.controls[this.DescriptionField].setValidators(
+          Validators.required
+        );
       }      
     } else {
       this.appInfoForm.controls['GenderGroup'].setValue('');
 
       if (lovCode === GenderCode.notListed) {
-        this.appInfoForm.controls[this.DescriptionField].setErrors(null);
-        this.appInfoForm.controls[this.DescriptionField].setValue('');
+        this.appInfoForm.controls[this.DescriptionField].removeValidators(
+          Validators.required
+        );
+        this.appInfoForm.controls[
+          this.DescriptionField
+        ].updateValueAndValidity();
       }     
-    }   
+    } 
+    this.setControlValidations();  
   }
 }
