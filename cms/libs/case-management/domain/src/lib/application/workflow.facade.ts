@@ -430,7 +430,7 @@ export class WorkflowFacade {
             clientId : JSON.parse(ddlsessionDataResponse?.sessionData).ClientId ,
             ClientCaseId: JSON.parse(ddlsessionDataResponse?.sessionData).ClientCaseId ,
             clientCaseEligibilityId : JSON.parse(ddlsessionDataResponse?.sessionData).ClientCaseEligibilityId ,
-            EntityID : JSON.parse(ddlsessionDataResponse?.sessionData).EntityID ,
+            entityID : JSON.parse(ddlsessionDataResponse?.sessionData).EntityID ,
             EntityTypeCode : JSON.parse(ddlsessionDataResponse?.sessionData).EntityTypeCode ,
           }
           const workflowResonseData =
