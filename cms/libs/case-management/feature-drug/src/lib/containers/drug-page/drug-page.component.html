@@ -9,13 +9,13 @@
           Are they currently taking prescription drugs for HIV (anti-retrovirals)?
         </h5></legend>
       <div class="component-list-h">
-        
+        <kendo-formfield>
         <span class="app-radiobtnwidtext-wrapper">
           <input
             type="radio"
             kendoRadioButton
-            formControlName="hivFlag"
-            value="Y"  
+            formControlName="prescriptionDrugsForHivCode"
+            value="YES"  
             name="prescription"
             id="takingPrescriptionYes"  />
           <kendo-label
@@ -28,11 +28,10 @@
           <input
             type="radio"
             kendoRadioButton
-            formControlName="hivFlag"
-            value="N"  
+            formControlName="prescriptionDrugsForHivCode"
+            value="NO"  
             name="prescription"
             id="takingPrescriptionNo"
-       
           />
           <kendo-label
             class="k-radio-label"
@@ -44,16 +43,19 @@
           <input
             type="radio"
             kendoRadioButton 
+            formControlName="prescriptionDrugsForHivCode"
+            value="DO_NOT_KNOW" 
             name="prescription"
             id="takingPrescriptionDontKnow"
-       
           />
           <kendo-label
             class="k-radio-label"
             for="takingPrescriptionDontKnow"
-            text="Don't know"
+            text="Do not know"
           ></kendo-label>
         </span>
+        <kendo-formerror> Are they currently taking prescription drugs for HIV is required </kendo-formerror>
+        </kendo-formfield>
       </div>
       </fieldset>
   </section>
@@ -64,15 +66,15 @@
         Kaiser, or specified mail order)?</h5></legend>
      
     <div class="component-list-h">
+      <kendo-formfield>
       <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
           kendoRadioButton
-          formControlName="nonPrefFlag"
-          value="Y" 
+          formControlName="nonPreferredPharmacyCode"
+          value="YES" 
           name="healthInsurance"
           id="requiresNonPreferredPharmacyYes"
-    
         />
         <kendo-label
           class="k-radio-label"
@@ -84,11 +86,10 @@
         <input
           type="radio"
           kendoRadioButton
-          formControlName="nonPrefFlag"
-          value="N" 
+          formControlName="nonPreferredPharmacyCode"
+          value="NO" 
           name="healthInsurance"
           id="requiresNonPreferredPharmacyNo"
-   
         />
         <kendo-label
           class="k-radio-label"
@@ -100,21 +101,23 @@
         <input
           type="radio"
           kendoRadioButton 
+          formControlName="nonPreferredPharmacyCode"
+          value="DO_NOT_KNOW"
           name="healthInsurance"
           id="requiresNonPreferredPharmacyDontKnow"
- 
         />
         <kendo-label
           class="k-radio-label" 
-          text="Don't know"
+          text="Do not know"
           for="requiresNonPreferredPharmacyDontKnow"
         ></kendo-label>
       </span>
+      <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+    </kendo-formfield>
     </div>
     </fieldset>
   <!-- </form> -->
   </section>
-  </form>
   <section>
     <div class="flex-row mt-3">
       <div class="flex-col mat-split-list">
@@ -127,8 +130,8 @@
             type="checkbox"
             name="noSummaryOfBenefits"
             kendoCheckBox
-            (change)="onBenefitsValueChange()" 
             id="noSummaryOfBenefits"
+            formControlName="noSummaryOfBenefitsFlag"
           />
           <kendo-label 
           class="k-checkbox-label" 
@@ -138,15 +141,26 @@
         </span>
       </div>
     </div>
-    <div class="flex-row mt-2" *ngIf="isBenefitsChanged">
+    <div class="flex-row mt-2" *ngIf="isSummaryOfBenefitsRequired$ | async">
       <div class="flex-col flex-col-10">
-        <kendo-upload aria-label="upload proof" name="upload proof" 
-            [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
-             [ngModel]="uploadedBenfitSummaryFile" [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl"> </kendo-upload>
+        <kendo-fileselect 
+        aria-label="upload proof" 
+        name="myFileSelect" 
+        #myFileSelect="ngModel"
+        [restrictions]="uploadFileRestrictions.fileRestrictions"   
+        [multiple]="false" 
+        [ngModel]="uploadedBenefitSummaryFile" 
+        [ngModelOptions]="{standalone: true}"
+        (select)="handleFileSelected($event)" 
+        (remove)="handleFileRemoved()"> 
+      </kendo-fileselect>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="showDocRequiredValidation">Summary of Benefits is required</kendo-formerror>
       </div>
     </div>
   </section>
+</form>
+
   <!-- Pharmacies -->
   <section>
     <h5 class="text-capital mt-3">Add Pharmacies</h5>

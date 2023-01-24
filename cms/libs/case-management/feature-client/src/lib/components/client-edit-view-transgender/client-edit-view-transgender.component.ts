@@ -45,12 +45,16 @@ export class ClientEditViewTransgenderComponent implements OnInit {
 
   onTransgenderRdoClicked(lovCode: string) {
     if (lovCode === 'NOT_LISTED') {
-      this.appInfoForm.controls[this.DescriptionField].setErrors({
-        incorrect: true,
-      });
+      this.appInfoForm.controls[this.DescriptionField].setValidators(
+        Validators.required
+      );
     } else {
-      this.appInfoForm.controls[this.DescriptionField].setErrors(null);
-      this.appInfoForm.controls[this.DescriptionField].setValue('');
+      this.appInfoForm.controls[this.DescriptionField].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls[
+        this.DescriptionField
+      ].updateValueAndValidity();
     }
   }
 }

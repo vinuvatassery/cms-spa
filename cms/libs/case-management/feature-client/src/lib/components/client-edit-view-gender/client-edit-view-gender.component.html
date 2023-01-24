@@ -30,9 +30,8 @@
               placeholder="Enter Gender" 
               [formControlName]="DescriptionField"
               [fillMode]="formUiStyle.inputFillMode"
-              [disabled]="
-                !appInfoForm.controls[ControlPrefix + gender.lovCode].value
-              "
+              [maxlength]="maxLengthFifty"
+              [disabled]="!appInfoForm.controls[ControlPrefix + gender.lovCode].value"
             >
             </kendo-textbox>
           </kendo-floatinglabel>
@@ -43,7 +42,7 @@
       </div>
     </span>
     <kendo-formerror *ngIf="!appInfoForm.controls['GenderGroup']?.valid"
-      >Atleast one option is required.</kendo-formerror
+      >At least one Gender must be selected.</kendo-formerror
     >
   </div>
   </fieldset>
