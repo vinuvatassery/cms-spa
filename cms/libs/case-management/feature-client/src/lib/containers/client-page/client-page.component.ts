@@ -679,7 +679,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {          
                 this.appInfoForm.controls[pronoun].removeValidators(Validators.requiredTrue);
                 this.appInfoForm.controls[pronoun].updateValueAndValidity();
-                var pronounCode =   pronoun.replace('ControlPrefix.pronoun','');
+                var pronounCode =   pronoun.replace(ControlPrefix.pronoun,'');
                 if(pronounCode === PronounCode.notListed && this.appInfoForm.controls[pronoun].value){
                   this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
                   this.appInfoForm.controls['pronoun'].updateValueAndValidity();

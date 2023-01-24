@@ -57,6 +57,8 @@ export class OptionbuttonListComponent implements OnInit,OnChanges {
   }
     /** Public methods **/
   onMaterialsRdoClicked(event: any) {
+    this.appInfoForm.controls[this.OptionControlerName].removeValidators(Validators.required);
+    this.appInfoForm.controls[this.OptionControlerName].updateValueAndValidity();
     if( this.appInfoForm.controls[this.OptionControlerName].value.toUpperCase() ===YesNoFlag.Yes.toUpperCase()){
       this.textFieldDisable = false;
     }
