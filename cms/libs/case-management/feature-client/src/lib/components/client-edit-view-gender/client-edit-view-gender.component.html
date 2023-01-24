@@ -1,5 +1,10 @@
 <section [formGroup]="appInfoForm">
-  <h5>What is their gender? Select all that apply</h5>
+
+
+  <fieldset class="k-form-fieldset">
+    <legend class="k-form-legend">    
+      <h5>What is their gender? Select all that apply</h5>
+</legend>
   <div class="component-list-h">
     <span
       class="app-checkboxwidtext-wrapper"
@@ -9,10 +14,11 @@
         type="checkbox"
         kendoCheckBox
         [formControlName]="ControlPrefix + gender.lovCode"
-        id="{{ gender.lovCode }}"
+        attr.aria-labelledby="{{ ControlPrefix + gender.lovCode }}"     
+        id="{{ ControlPrefix + gender.lovCode }}"
         (change)="onCheckChange($event, gender.lovCode)"
       />
-      <label class="k-checkbox-label" for="{{ gender.lovCode }}"
+      <label class="k-checkbox-label" for="{{ ControlPrefix + gender.lovCode }}"
         >{{ gender.lovDesc }}
       </label>
 
@@ -21,11 +27,11 @@
           <kendo-floatinglabel text="Enter Gender">
             <kendo-textbox
               aria-label="enter gender"
+              placeholder="Enter Gender" 
               [formControlName]="DescriptionField"
               [fillMode]="formUiStyle.inputFillMode"
-              [disabled]="
-                !appInfoForm.controls[ControlPrefix + gender.lovCode].value
-              "
+              [maxlength]="maxLengthFifty"
+              [disabled]="!appInfoForm.controls[ControlPrefix + gender.lovCode].value"
             >
             </kendo-textbox>
           </kendo-floatinglabel>
@@ -36,7 +42,8 @@
       </div>
     </span>
     <kendo-formerror *ngIf="!appInfoForm.controls['GenderGroup']?.valid"
-      >Atleast one option is required.</kendo-formerror
+      >At least one Gender must be selected.</kendo-formerror
     >
   </div>
+  </fieldset>
 </section>

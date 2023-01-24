@@ -2,7 +2,7 @@
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel text="All Columns">
-      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlGridColumns$ | async">
+      <kendo-dropdownlist aria-label="All Columns"  [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlGridColumns$ | async">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
@@ -10,7 +10,7 @@
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
       <!-- <input kendoTextBox /> -->
-      <kendo-textbox aria-label="Search" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+      <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
@@ -69,9 +69,9 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex"> 
         <div class="d-flex align-items-center"> 
-          <label class="mr-1">Rows Per Page</label> 
+          <label class="mr-1" for="RowsPerPage">Rows Per Page</label> 
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-                [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
+                [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
 

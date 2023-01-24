@@ -1,14 +1,16 @@
 /** Angular **/
-import {  Component, OnInit,  ChangeDetectionStrategy,
-   ChangeDetectorRef,  Output,  EventEmitter,  Input,} from '@angular/core';
-import { FormBuilder, FormGroup ,Validators} from '@angular/forms';
-import { ProgramCode } from '@cms/case-management/domain';
- 
+import {
+  Component, OnInit, ChangeDetectionStrategy,
+  ChangeDetectorRef, Output, EventEmitter, Input, ViewChild, AfterViewInit
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProgramCode, CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
+
+import { Router } from '@angular/router';
 /** Internal Libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-
-import { debounceTime,  distinctUntilChanged, Subject } from 'rxjs';
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-new-case',
@@ -16,12 +18,12 @@ import { IntlService } from '@progress/kendo-angular-intl';
   styleUrls: ['./new-case.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewCaseComponent implements OnInit {
-public showInputLoader = false;
+export class NewCaseComponent implements OnInit  {
+  public showInputLoader = false;
   /*** Output ***/
   @Output() isCreateNewCasePopupOpened = new EventEmitter();
   @Output() newcaseSaveEvent = new EventEmitter<any>();
-  @Output() searchTextEvent = new EventEmitter<string>();   
+  @Output() searchTextEvent = new EventEmitter<string>();
 
   /** input properties **/
   @Input() caseSearchResults$! : any
@@ -29,70 +31,78 @@ public showInputLoader = false;
   @Input() ddlPrograms! : any
   @Input() ddlCaseOrigins! : any
   @Input() formButtonDisabled! : boolean
+  @ViewChild('searchcaseornew')
+  private searchcaseornew: any ;
 
-    /** Public properties **/
+  /** Public properties **/
   parentForm! : FormGroup;
   isProgramSelectionOpened = false;
   selectedProgram!: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
   showSearchresult! : false
- 
+
   isSubmitted! : boolean ;
+
+  clientInfo: any[] = [];
   /** Constructor**/
-  constructor(   
-    private readonly ref: ChangeDetectorRef, 
+  constructor(
+    private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
-    public intl: IntlService
+    public  intl: IntlService,
+    private caseFacade: CaseFacade,
+    private loggingService: LoggingService,
+    private router: Router
   ) {
- 
+
     this.filterManager
-    .pipe(   
-    debounceTime(500),
-    distinctUntilChanged()
-    )      
-    .subscribe(
-      
-      (text) => 
-      {
-        if(text)
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(
+
+        (text) => 
         {
-        this.searchTextEvent.emit(text)
-        this.showInputLoader = false;  
- 
-        } 
-      }
-      
-      );    
-      this.showInputLoader = false;  
-   }
+          if(text)
+          {
+            this.searchTextEvent.emit(text)
+            this.showInputLoader = false;
+
+          }
+        }
+
+      );
+    this.showInputLoader = false;
+  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.setDefaultProgram();  
+    this.setDefaultProgram();
     this.registerFormData();
   }
-  private setDefaultProgram() {   
+
+  private setDefaultProgram() {
     this.ddlPrograms.subscribe({
       next: (programs: any) => {
         this.selectedProgram = programs.filter(
           (data: any) => data.programCode == ProgramCode.DefaultProgram
         )[0];
       }
-    });  
+    });
   }
   private registerFormData()
   {
-    
+
     this.parentForm = this.formBuilder.group({
       applicationDate: [new Date(), Validators.required],
       caseOriginCode: ['', Validators.required],
       caseOwnerId: ['', Validators.required],
       programId: [{ value: this.selectedProgram?.programId, disabled: true }, [Validators.required]] ,
       concurrencyStamp : ['']  
-      });
-    
+    });
+
   }
 
 
@@ -104,9 +114,9 @@ public showInputLoader = false;
     this.ref.markForCheck();
   }
 
-  onSubmit() {     
+  onSubmit() {
     this.parentForm.markAllAsTouched();
-    this.isSubmitted = true;    
+    this.isSubmitted = true;
     this.newcaseSaveEvent.emit(this.parentForm);
 
   }
@@ -117,12 +127,41 @@ public showInputLoader = false;
   }
 
   onsearchTextChange(text : string)
-  {    
+  { 
 
     if(text){ 
-      this.showInputLoader = true;  
-      this.filterManager.next(text); 
-    } 
+      this.showInputLoader = true;
+      this.filterManager.next(text);
+    }
+  }
+
+  onClientSelected(event: any) {
+    if (event) {
+      if (event.caseStatus == CaseStatusCode.accept) {
+        this.router.navigate([`/case-management/cases/case360/${event.clientId}`]);
+      }
+      else {
+        this.loaderService.show();
+        this.caseFacade.getSessionInfoByCaseId(event.clientCaseId).subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.loaderService.hide();
+              this.router.navigate(['case-management/case-detail'], {
+                queryParams: {
+                  sid: response[0].sessionId,
+                  eid: response[0].entityID
+                },
+              });
+            }
+          },
+          error: (err: any) => {
+            this.loaderService.hide();
+            this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
+            this.loggingService.logException(err)
+          }
+        })
+      }
+    }
   }
 
 }

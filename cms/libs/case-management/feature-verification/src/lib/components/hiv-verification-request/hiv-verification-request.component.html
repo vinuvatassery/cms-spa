@@ -5,7 +5,7 @@
 
    
       <kendo-floatinglabel  text="Healthcare Provider’s Email Address">
-      <kendo-textbox aria-label="healthcare providers email address"    [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+      <kendo-textbox aria-label="healthcare providers email address"  placeholder="Healthcare Provider’s Email Address"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
         <!-- <input kendoTextBox aria-label="healthcare providers email address" /> -->
       </kendo-floatinglabel>
     </div>
@@ -36,8 +36,8 @@
     </div>
     </div>
     <div class="flex-row" *ngIf="data === 'Upload an attachment'">
-      <div class="flex-col flex-col-6"> 
-      <kendo-upload></kendo-upload>
+      <div class="flex-col flex-col-6">  
+      <kendo-upload   #Uploadanattachment   id="Uploadanattachment"></kendo-upload>
       <kendo-formhint>Max file size 25MB</kendo-formhint>
     </div>
     </div>

@@ -7,7 +7,7 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Name of Employer">
-        <kendo-textbox formControlName="empName"  #empName aria-label="name of employer" 
+        <kendo-textbox formControlName="empName" placeholder="Name of Employer" textFieldautofocus  #empName aria-label="name of employer" 
           [fillMode]="formUiStyle.inputFillMode" [maxlength]="empNameMaxValue"> </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!empDetailsForm.controls['empName'].valid && employerFormSubmitted">Employer name is required
@@ -16,7 +16,7 @@
     <div class="flex-col mb-1">
       <kendo-floatinglabel aria-label="date of hire" text="Date of Hire">
         <kendo-datepicker [incompleteDateValidation]="true" formControlName="empHireDate" #empHireDate  [fillMode]="formUiStyle.dateInputFillMode"
-          format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+          format="MM-dd-yyyy" formatPlaceholder="formatPattern"   placeholder="" >
         </kendo-datepicker>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!empDetailsForm.controls['empHireDate'].valid && employerFormSubmitted">Employer date of hire is required
@@ -46,7 +46,7 @@
 
 <!-- remove emploer popup confirmation  -->
 <kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove employer">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete employer?">
   <case-management-remove-employer-confirmation  (deleteUpdateEmploymentEvent)="updateEmploymentHandle($event)"  [selectedEmployer]="selectedEmployer"
     (closeModal)="onRemoveEmployerConfirmationClosed()"></case-management-remove-employer-confirmation>
 </kendo-dialog>

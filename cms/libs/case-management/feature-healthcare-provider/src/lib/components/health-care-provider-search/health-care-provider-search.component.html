@@ -10,21 +10,23 @@
     </p>
     <div class="flex-row">
       <div class="flex-col">
-        <div class="k-auto-complete-box">
+        <div class="k-auto-complete-box field-label-hide">
           <span
             class="material-icons global-search-icon"
             aria-label="search member"
             aria-hidden="true"
             >search</span >
-              <span *ngIf="providerSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+            <kendo-label text="Provider who treats their HIV">
+              <span *ngIf="searchProviderLoaded$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
             <kendo-autocomplete
+            formControlName ="providerAutoComplete"
             [fillMode]="formUiStyle.dropDownFillMode" 
             [data]="healthCareProviderSearchList$ | async"           
-            [value]="selectedCustomProviderName"        
+            [value]="selectedCustomProviderName"       
+            autofocusfield 
             valueField ="selectedCustomProvider"                           
-            placeholder="Search Provider Name"               
-            [filterable]="true"   
-            (close)="searchCloseEvent();"
+            placeholder="Provider who treats their HIV"               
+            [filterable]="true"              
             [popupSettings]="{popupClass: 'healthcaresearch-list', animate: true, appendTo:'component' }"
             (filterChange)="onsearchTextChange($event)"  
           >          
@@ -35,7 +37,11 @@
             </ng-template>    
            
           </kendo-autocomplete>  
-          <kendo-formerror *ngIf="(existHealthProvderForm?.hasError('required','providerId')) && isExistSubmitted">Provider
+          </kendo-label>
+          <kendo-formhint align="start">
+            Name of clinic, doctor, nurse practitioner, or other care provider
+          </kendo-formhint>
+          <kendo-formerror *ngIf="((existHealthProvderForm?.hasError('required','providerId')) || (existHealthProvderForm?.hasError('required','providerAutoComplete'))) && isExistSubmitted">Provider
             is required</kendo-formerror>
       
           </div>

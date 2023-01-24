@@ -10,13 +10,13 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Choose Phone Type">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlPhoneTypes$ | async">
+        <kendo-dropdownlist   aria-label="Choose Phone Type"  [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlPhoneTypes$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Phone Number">
-        <kendo-textbox aria-label="phone number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="phone number"  placeholder="phone number"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
         <!-- <input kendoTextBox aria-label="phone number" /> -->
       </kendo-floatinglabel>
     </div>

@@ -8,18 +8,17 @@ import { PrescriptionDrug } from '../entities/prescription-drug';
 @Injectable({ providedIn: 'root' })
 export class PrescriptionDrugDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient, private readonly configurationProvider: ConfigurationProvider) {}
+  constructor(private readonly http: HttpClient, private readonly configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  updatePrescriptionDrugService(prescriptionDrug: any) {
+  updatePrescriptionDrugService(clientId: Number,prescriptionDrug: any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/prescription-drug/prescription`, prescriptionDrug
-    );
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugs`, prescriptionDrug);
   }
-  loadPrescriptionDrug(clientCaseEligibilityId:any){
+  
+  loadPrescriptionDrug(clientId: Number, clientCaseEligibilityId: any) {
     return this.http.get<PrescriptionDrug>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/prescription-drug?clientCaseEligibilityId=${clientCaseEligibilityId}`,);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugs?clientCaseEligibilityId=${clientCaseEligibilityId}`);
   }
 
 }

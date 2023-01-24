@@ -1,20 +1,20 @@
+ 
  <div class="component-list-h" [formGroup]="appInfoForm">    
     <span class="app-checkboxwidtext-wrapper"     
     *ngFor="let material of rdoInputlov | async; let i = index" >          
             <input
             type="radio"
             kendoRadioButton
-            id="material.lovCode"
+            id="{{OptionControlerName + material.lovCode}}"
             [value]="material.lovCode"
-            [name]="OptionControlerName"             
-            aria-labelledby="needsMaterials"
-            tabindex="5"
+            [name]="OptionControlerName"   
+            attr.aria-labelledby="{{OptionControlerName + material.lovCode}}"     
             [formControlName]="OptionControlerName"
             (change)="onMaterialsRdoClicked($event)"/>
       
           <kendo-label
             class="k-radio-label"
-            for="material.lovCode"
+            for="{{OptionControlerName + material.lovCode}}"
             text="{{material.lovDesc}}" 
           ></kendo-label>
          
@@ -26,25 +26,43 @@
               <kendo-floatinglabel [text]="textPlaceholderText">
                 <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
                  [data]="dropdownInutLov | async"
+                 [attr.aria-label]="textPlaceholderText"
                 textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                 [formControlName]="textControlerName"               
-                [disabled]="textFieldDisable">
+                [disabled]="textFieldDisable" (valueChange)="onChange($event)">
              </kendo-dropdownlist>  
               </kendo-floatinglabel>
             </div>
           </div>
           <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{textValidationMessage}}</kendo-formerror>        
        
-    </div>  
+    </div>
+    <div *ngIf = "!textFieldDisable  && appInfoForm.controls[textControlerName].value === materialFormatOther && material.lovCode === yesOption  && textFieldType === 'dropDown'"> 
+      <div class="flex-row">
+        <div class="flex-col flex-col-6">
+        <kendo-floatinglabel            
+          [text]="otherControlerPlaceholderText" >        
+        <kendo-textbox [attr.aria-label]="otherControlerPlaceholderText"  
+          [fillMode]="formUiStyle.inputFillMode"    
+          [formControlName]="otherControlerName"
+          [placeholder]="otherControlerPlaceholderText"
+          [maxlength]="textFieldMaxLimit">  
+       </kendo-textbox>
+      </kendo-floatinglabel>
+        <kendo-formerror *ngIf="((!appInfoForm.controls[otherControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{otherControlerValidationMessage}}</kendo-formerror>        
+      </div>
+      </div>
+    </div> 
     <div *ngIf = "material.lovCode ===textFieldAfter && textFieldType === 'textField'"> 
       <div class="flex-row">
         <div class="flex-col flex-col-6">
         <kendo-floatinglabel            
           [text]="textPlaceholderText" >        
-        <kendo-textbox aria-label="textPlaceholderText"  
+        <kendo-textbox [attr.aria-label]="textPlaceholderText"  
           [fillMode]="formUiStyle.inputFillMode"
           [disabled]="textFieldDisable"       
           [formControlName]="textControlerName"
+          [placeholder]="textPlaceholderText" 
           [maxlength]="textFieldMaxLimit">  
        </kendo-textbox>
       </kendo-floatinglabel>
@@ -57,21 +75,25 @@
         <div class="flex-col flex-col-6">
       <kendo-floatinglabel            
         [text]="textPlaceholderText" >        
-      <kendo-numerictextbox aria-label="textPlaceholderText"  
+      <kendo-numerictextbox [attr.aria-label]="textPlaceholderText"  
         [fillMode]="formUiStyle.inputFillMode"
         [disabled]="textFieldDisable"       
         [formControlName]="textControlerName"
         [autoCorrect]="autoCorrect"
         [format]="'n'"
+        [min]="textFieldMinLimit"
         [max]="textFieldMaxLimit"
+        [placeholder]="textPlaceholderText" 
+        [decimals]="0"
        >  
      </kendo-numerictextbox>
     </kendo-floatinglabel>
-   <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{textValidationMessage}}</kendo-formerror>        
-</div></div>
+    <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{textValidationMessage}}</kendo-formerror>        
+  </div>
+</div>
   </div>  
     </span>  
-    <kendo-formerror *ngIf="!appInfoForm.controls[OptionControlerName].valid">Atleast one option is required.</kendo-formerror>
+    <kendo-formerror *ngIf="!appInfoForm.controls[OptionControlerName]?.valid">At least one Option must be selected.</kendo-formerror>
   </div>
 
 

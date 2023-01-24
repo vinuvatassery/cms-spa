@@ -9,15 +9,15 @@ export class HealthInsurancePolicyDataService {
   constructor(
     private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider
-  ) {}
+  ) { }
 
-  saveHealthInsurancePolicy(healthInsurancePolicy: healthInsurancePolicy) {
+  saveHealthInsurancePolicy(healthInsurancePolicy: any) {
     return this.http.post<healthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
       healthInsurancePolicy
     );
   }
-  updateHealthInsurancePolicy(healthInsurancePolicy: healthInsurancePolicy) {
+  updateHealthInsurancePolicy(healthInsurancePolicy: any) {
     return this.http.put<healthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
       healthInsurancePolicy
@@ -33,6 +33,12 @@ export class HealthInsurancePolicyDataService {
   getCarrierContactInfo(carrierId: any) {
     return this.http.get<CarrierContactInfo>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/carrier/contact-info/${carrierId}`
+    );
+  }
+  setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/priority`,
+      healthInsurancePolicies
     );
   }
 }

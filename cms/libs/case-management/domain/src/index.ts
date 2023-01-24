@@ -40,7 +40,8 @@ export * from './lib/entities/prescription-drug';
 export * from './lib/entities/vendor';
 export * from './lib/entities/insurance-plan';
 export * from './lib/entities/health-insurance-policy';
-export * from './lib/entities/carrier-contact-info'
+export * from './lib/entities/carrier-contact-info';
+export * from './lib/entities/pharmacy-priority'
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -63,6 +64,16 @@ export * from './lib/enums/priority-code.enum';
 export * from './lib/enums/insurance-plan.enum';
 export * from './lib/enums/parta-medicare-type.enum';
 export * from './lib/enums/partb-medicare-type.enum';
+export * from './lib/enums/case-status-code.enum';
+export * from './lib/enums/pronoun-code.enum';
+export * from './lib/enums/button-type.enum';
+export * from './lib/enums/case-origin.enum';
+export * from './lib/enums/income-type-code.enum';
+export * from './lib/enums/gender-code.enum';
+export * from './lib/enums/sexual-identity-code.enum';
+export * from './lib/enums/control-prefix.enum';
+export * from './lib/enums/material-format.enum';
+
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

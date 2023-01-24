@@ -6,7 +6,7 @@
   </p>
   <div class="flex-row">
     <div class="flex-col">
-      <div class="autoSelect-search mat-form-no-b-space">
+      <div class="autoSelect-search mat-form-no-b-space field-label-hide">
         <div class="global-search">
           <span
             class="material-icons global-search-icon"
@@ -14,43 +14,25 @@
             aria-hidden="true"
             >search</span
           >
+          <span *ngIf="searchLoaderVisibility$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
           <kendo-formfield>
-          <kendo-autocomplete
-          [fillMode]="formUiStyle.dropDownFillMode" 
-          [data]="pharmacySearchResult$ | async"     
-          [value]="selectedPharmacyForEdit" 
-          valueField ="vendorFullName"    
-          [filterable]="true"  
-          placeholder="Search Pharmacy Name/Number"
-          (filterChange)="searchPharmacies($event)"
-          > 
-          <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
-            <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.vendorFullName}}</span>          
-          </ng-template>
-      </kendo-autocomplete>
-      <kendo-formerror>Pharmacy required</kendo-formerror>
-    </kendo-formfield>
-          <!-- <kendo-multicolumncombobox
-          [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="pharmacies$ | async"
-            textField="name"
-            valueField="id"
-            placeholder="Search Pharmacy Name/Number"
-            [(ngModel)]="filteredSelectedPharmacy"
-          >
-            <kendo-combobox-column [width]="250">
-              <ng-template
-                kendoMultiColumnComboBoxColumnCellTemplate
-                let-dataItem
-              >
-                <span class="pr-1">{{ dataItem.name }}</span>
-                <span class="pr-1"> {{ dataItem.id }}</span>
-                <span class="text-muted">{{ dataItem.address }}</span>
+            <kendo-label text="Search Pharmacy Name/Number"> 
+              <kendo-autocomplete
+              autofocusfield
+              [fillMode]="formUiStyle.dropDownFillMode" 
+              [data]="pharmacySearchResult$ | async"     
+              [value]="selectedPharmacyForEdit" 
+              valueField ="vendorFullName"    
+              [filterable]="true"  
+              placeholder="Search Pharmacy Name/Number"
+              (filterChange)="searchPharmacies($event)"
+              > 
+              <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.vendorFullName}}</span>          
               </ng-template>
-            </kendo-combobox-column>
-          </kendo-multicolumncombobox> -->
-
-
+              </kendo-autocomplete>
+            </kendo-label>
+    </kendo-formfield>
         </div>
       </div>
     </div>

@@ -8,8 +8,9 @@ import { groupBy, GroupResult } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
-import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, Subject, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { Lov } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-family-and-dependent-detail',
@@ -35,6 +36,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   @Output() addExistingClientEvent = new EventEmitter<any>(); 
 
   filterManager: Subject<string> = new Subject<string>();
+  searchResultSubject = new Subject<any>();
+  searchResult$ = this.searchResultSubject.asObservable();  
   currentDate = new Date();
   /** Public properties **/
   familyMemberForm!: FormGroup;
@@ -42,17 +45,18 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   isOpenedNewFamilyMember = false;
   showDependentSearchInputLoader = false;
   dependentSearch!: GroupResult[];
-  popupClass = 'k-autocomplete-custom';
+  popupClass = 'k-autocomplete-custom autocompletecombo';
   ssnMaskFormat = "000-00-0000" 
   isSubmitted = false;
   isExistSubmitted = false;
   isExistDependent =false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   isAddFamilyMember =true;
-  clientDependentId! : string
-  dependentTypeCode! : string
-  fullClientName! : string
-
+  clientDependentId! : string;
+  dependentTypeCode! : string;
+  fullClientName! : string;
+  relationshipList: Array<Lov> = [];
+  public showDateError: boolean = false;
   /** Constructor **/
   constructor(  
     private readonly ref: ChangeDetectorRef,
@@ -84,6 +88,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     this.loadFamilyDependents();   
     this.loadNewFamilyMemberData();  
     this.composeExistFamilyMemberForm()
+    this.updateRelationshipList();
   }
 
   /** Private methods **/
@@ -123,14 +128,23 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   private loadFamilyDependents() {   
   
-    this.dependentSearch$.subscribe({
+   this.dependentSearch$.subscribe({    
       next: (dependentSearch : any) => {
         this.dependentSearch = groupBy(dependentSearch, [
           { field: 'memberType' },
-        ]);
+        ]);  
+        this.searchResultSubject.next(this.dependentSearch)      
       }
+      
     });  
+    
+   
+  }
 
+  private updateRelationshipList() {
+    this.ddlRelationships$.subscribe((data: any) => {
+      this.relationshipList = data.filter((relation: Lov) => relation.lovCode != 'F');
+    });
   }
 
   /** Internal event methods **/
@@ -170,21 +184,22 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
   onSearchTemplateClick(dataItem : any)
-  {    
+  {  
    this.existFamilyMemberForm.patchValue(
      {
-       clientId: dataItem?.clientId  ,    
+       clientId: dataItem?.clientId ?? 0 ,    
        dependentType : dataItem?.clientId > 0 ? DependentTypeCode.CAClient : DependentTypeCode.Dependent,
        clientDependentId :  dataItem?.clientDependentId      
      })    
- 
+    
   }
   onExitFamilyFormLoad()
   {    
    this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
    .subscribe((existDependentData: any) =>
    {  
-       if(existDependentData?.dependentClientId)
+    
+       if(existDependentData?.clientDependentId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
 
@@ -197,8 +212,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
          this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
              {     
-               clientId:  existDependentData?.dependentClientId,  
-               dependentClientId:  existDependentData?.dependentClientId,     
+               clientId:  existDependentData?.dependentClientId ?? 0,  
+               dependentClientId:  existDependentData?.dependentClientId ?? 0,     
                existRelationshipCode: existDependentData?.relationshipCode, 
                clientDependentId: existDependentData?.clientDependentId,
                dependentType: DependentTypeCode.CAClient,
@@ -213,6 +228,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   onExistDependentSubmit()
   {
     this.isExistSubmitted =true;
+    this.existFamilyMemberForm.markAllAsTouched();
+    
     if(this.existFamilyMemberForm.valid)
     {
       const existDepData =
@@ -222,7 +239,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         dependentType :DependentTypeCode.CAClient ,
         relationshipCode : this.existFamilyMemberForm?.controls["existRelationshipCode"].value ,
         clientDependentId : this.existFamilyMemberForm?.controls["clientDependentId"].value ,
-        selectedClientDependentId: this.existFamilyMemberForm?.controls["clientDependentId"].value 
+        selectedClientDependentId: this.existFamilyMemberForm?.controls["selectedClientDependentId"].value 
       }   
 
       existDepData.clientDependentId =  existDepData?.clientDependentId=='' ? "00000000-0000-0000-0000-000000000000" : existDepData?.clientDependentId
@@ -236,7 +253,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   onDependentSubmit()
   {
     this.isSubmitted = true;    
-    
+    this.familyMemberForm.markAllAsTouched();
    if(this.familyMemberForm.valid)
    {
       const dependent  = {
@@ -299,10 +316,18 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
    onsearchTextChange(text : string)      
    {    
-      if(text.length > 3)
+      if(text.length > 0)
       {
+        if(text.length == 5 && text[4] == '/') {
+          this.showDateError = true;
+        }
+        else {
+        this.showDateError = false;
+        this.dependentSearch= [];
         this.showDependentSearchInputLoader = true;
-      this.filterManager.next(text); 
+        this.searchResultSubject.next(this.dependentSearch)      
+        this.filterManager.next(text); 
+        }
       }
     } 
    

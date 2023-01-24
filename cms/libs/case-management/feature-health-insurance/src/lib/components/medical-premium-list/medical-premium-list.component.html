@@ -45,7 +45,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="Option" title="Option" [width]="75" [sticky]="true" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action"
+            <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More option" class="TableActionPopup app-dropdown-action"
               buttonClass="k-icon-button" aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 
@@ -100,10 +100,10 @@
           let-currentPage="currentPage">
           <div class="grid-custom-paginationtemplates d-flex">
             <div class="d-flex align-items-center">
-              <label class="mr-1">Rows Per Page</label>
+              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                 [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"
-                (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+                (selectionChange)="pageselectionchange($event)" aria-label="Rows Per Page" id="RowsPerPage"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
               <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
@@ -146,8 +146,8 @@
 <!-- Change Priority Modal -->
 <kendo-dialog *ngIf="isOpenedChangePriorityModal" (close)="onChangePriorityCloseClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar> Change Priority </kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority></case-management-set-health-insurance-priority>
+  <kendo-dialog-titlebar> Select Insurance Priority </kendo-dialog-titlebar>
+  <case-management-set-health-insurance-priority [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"></case-management-set-health-insurance-priority>
 </kendo-dialog>
 
 <!-- Delete Modal -->

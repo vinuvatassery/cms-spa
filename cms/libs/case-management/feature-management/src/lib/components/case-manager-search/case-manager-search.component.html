@@ -1,0 +1,69 @@
+  <form [formGroup]="existCaseManagerForm" (ngSubmit)="onCaseManagerSubmit()">   
+  <input type="hidden" formControlName="assignedcaseManagerId">  
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+      To select a Case Manager, start typing their name or PNumber.
+    </p>
+    <div class="flex-row">
+      <div class="flex-col">
+        <div class="k-auto-complete-box">
+          <span
+            class="material-icons global-search-icon"
+            aria-label="search case manager"
+            aria-hidden="true"
+            >search</span >
+              <span *ngIf="caseSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+            <kendo-autocomplete
+            formControlName="autoCompleteText"
+            [fillMode]="formUiStyle.dropDownFillMode" 
+            [data]="caseManagerSearchList$ | async"           
+            [value]="selectedCustomCaseManagerName"        
+            valueField ="fullCustomName"                           
+            placeholder="Search Case Manager Name or PNumber"               
+            [filterable]="true"   
+            (close)="searchCloseEvent();"
+            [popupSettings]="{popupClass: 'healthcaresearch-list', animate: true, appendTo:'component' }"
+            (filterChange)="onsearchTextChange($event)"  
+          >          
+            <ng-template kendoAutoCompleteItemTemplate let-dataItem >   
+              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}   {{ dataItem.pOrNbr }}  {{ dataItem.phoneNbr }}</span>               
+            </ng-template>    
+           
+          </kendo-autocomplete>  
+          <kendo-formerror *ngIf="((existCaseManagerForm?.hasError('required','assignedcaseManagerId')) || (existCaseManagerForm?.hasError('required','autoCompleteText'))) && isExistSubmitted">Select a Case Manager</kendo-formerror>
+      
+          </div>
+        </div>     
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div>   
+        <button
+          kendoButton
+          class="k-danger-link"
+          *ngIf="isEditSearchCaseManagerValue"
+          aria-label="remove provider"
+          (click)="onDeleteConfirm()"
+        >
+          REMOVE
+        </button>
+      </div>
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          (click)="onCloseCaseManagerSearchClicked()"
+          aria-label="cancel adding provider"
+        >
+          CANCEL
+        </button>
+        <button kendoButton [primary]="true" aria-label="add or update case manager">
+          {{ isEditSearchCaseManagerValue ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</form>

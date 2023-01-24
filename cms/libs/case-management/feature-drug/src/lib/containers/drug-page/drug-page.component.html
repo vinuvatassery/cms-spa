@@ -2,26 +2,25 @@
   <h3>Prescription drugs</h3>
   <form [formGroup]="prescriptionDrugForm">
   <section>
-    <h5 class="mt-1">
-      Are they currently taking prescription drugs for HIV (anti-retrovirals)?
-    </h5>
+   
     <!-- <form [formGroup]="prescriptionDrugForm"> -->
+      <fieldset class="k-form-fieldset">
+        <legend class="k-form-legend"> <h5 class="mt-1">
+          Are they currently taking prescription drugs for HIV (anti-retrovirals)?
+        </h5></legend>
       <div class="component-list-h">
+        <kendo-formfield>
         <span class="app-radiobtnwidtext-wrapper">
           <input
             type="radio"
             kendoRadioButton
-            formControlName="hivFlag"
-            value="Y"
-            
-            aria-labelledby="takingPrescriptionYes"
+            formControlName="prescriptionDrugsForHivCode"
+            value="YES"  
             name="prescription"
-            id="takingPrescription1"
-            tabindex="1"
-          />
+            id="takingPrescriptionYes"  />
           <kendo-label
             class="k-radio-label"
-            for="takingPrescription1"
+            for="takingPrescriptionYes"
             text="Yes"
           ></kendo-label>
         </span>
@@ -29,58 +28,57 @@
           <input
             type="radio"
             kendoRadioButton
-            formControlName="hivFlag"
-            value="N"
-            
-            aria-labelledby="takingPrescriptionNo"
+            formControlName="prescriptionDrugsForHivCode"
+            value="NO"  
             name="prescription"
-            id="takingPrescription2"
-            tabindex="2"
+            id="takingPrescriptionNo"
           />
           <kendo-label
             class="k-radio-label"
-            for="takingPrescription2"
+            for="takingPrescriptionNo"
             text="No"
           ></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
           <input
             type="radio"
-            kendoRadioButton
-            aria-labelledby="takingPrescriptionDontKnow"
+            kendoRadioButton 
+            formControlName="prescriptionDrugsForHivCode"
+            value="DO_NOT_KNOW" 
             name="prescription"
-            id="takingPrescription3"
-            tabindex="3"
+            id="takingPrescriptionDontKnow"
           />
           <kendo-label
             class="k-radio-label"
-            for="takingPrescription3"
-            text="Don't know"
+            for="takingPrescriptionDontKnow"
+            text="Do not know"
           ></kendo-label>
         </span>
+        <kendo-formerror> Are they currently taking prescription drugs for HIV is required </kendo-formerror>
+        </kendo-formfield>
       </div>
+      </fieldset>
   </section>
   <section>
-    <h5 class="mt-3">
-      Health insurance requires a particular non-preferred pharmacy (e.g. Medco,
-      Kaiser, or specified mail order)?
-    </h5>
-   
+ 
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend"><h5>Health insurance requires a particular non-preferred pharmacy (e.g. Medco,
+        Kaiser, or specified mail order)?</h5></legend>
+     
     <div class="component-list-h">
+      <kendo-formfield>
       <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
           kendoRadioButton
-          formControlName="nonPrefFlag"
-          value="Y"
-          aria-labelledby="requiresNonPreferredPharmacyYes"
+          formControlName="nonPreferredPharmacyCode"
+          value="YES" 
           name="healthInsurance"
-          id="takingPrescription4"
-          tabindex="4"
+          id="requiresNonPreferredPharmacyYes"
         />
         <kendo-label
           class="k-radio-label"
-          for="takingPrescription4"
+          for="requiresNonPreferredPharmacyYes"
           text="Yes"
         ></kendo-label>
       </span>
@@ -88,39 +86,38 @@
         <input
           type="radio"
           kendoRadioButton
-          formControlName="nonPrefFlag"
-          value="N"
-          aria-labelledby="requiresNonPreferredPharmacyNo"
+          formControlName="nonPreferredPharmacyCode"
+          value="NO" 
           name="healthInsurance"
-          id="takingPrescription5"
-          tabindex="5"
+          id="requiresNonPreferredPharmacyNo"
         />
         <kendo-label
           class="k-radio-label"
-          for="takingPrescription5"
+          for="requiresNonPreferredPharmacyNo"
           text="No"
         ></kendo-label>
       </span>
       <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
-          kendoRadioButton
-          aria-labelledby="requiresNonPreferredPharmacyDontKnow"
+          kendoRadioButton 
+          formControlName="nonPreferredPharmacyCode"
+          value="DO_NOT_KNOW"
           name="healthInsurance"
-          id="takingPrescription6"
-          tabindex="6"
+          id="requiresNonPreferredPharmacyDontKnow"
         />
         <kendo-label
-          class="k-radio-label"
-          id="requiresNonPreferredPharmacyDontKnow"
-          text="Don't know"
-          for="takingPrescription6"
+          class="k-radio-label" 
+          text="Do not know"
+          for="requiresNonPreferredPharmacyDontKnow"
         ></kendo-label>
       </span>
+      <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+    </kendo-formfield>
     </div>
+    </fieldset>
   <!-- </form> -->
   </section>
-  </form>
   <section>
     <div class="flex-row mt-3">
       <div class="flex-col mat-split-list">
@@ -131,24 +128,39 @@
           <input
             class="adjust-attr"
             type="checkbox"
+            name="noSummaryOfBenefits"
             kendoCheckBox
-            (change)="onBenefitsValueChange()"
-            aria-labelledby="noSummaryOfBenefits"
             id="noSummaryOfBenefits"
+            formControlName="noSummaryOfBenefitsFlag"
           />
-          <label class="k-checkbox-label" for="noSummaryOfBenefits"
-            >No Summary of Benefits</label
-          >
+          <kendo-label 
+          class="k-checkbox-label" 
+          for="noSummaryOfBenefits"
+          text="No Summary of Benefits"
+            ></kendo-label>
         </span>
       </div>
     </div>
-    <div class="flex-row mt-2" *ngIf="isBenefitsChanged">
+    <div class="flex-row mt-2" *ngIf="isSummaryOfBenefitsRequired$ | async">
       <div class="flex-col flex-col-10">
-        <kendo-upload> </kendo-upload>
+        <kendo-fileselect 
+        aria-label="upload proof" 
+        name="myFileSelect" 
+        #myFileSelect="ngModel"
+        [restrictions]="uploadFileRestrictions.fileRestrictions"   
+        [multiple]="false" 
+        [ngModel]="uploadedBenefitSummaryFile" 
+        [ngModelOptions]="{standalone: true}"
+        (select)="handleFileSelected($event)" 
+        (remove)="handleFileRemoved()"> 
+      </kendo-fileselect>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="showDocRequiredValidation">Summary of Benefits is required</kendo-formerror>
       </div>
     </div>
   </section>
+</form>
+
   <!-- Pharmacies -->
   <section>
     <h5 class="text-capital mt-3">Add Pharmacies</h5>
@@ -159,6 +171,8 @@
     [addPharmacyResponse$]="addPharmacyRsp$"
     [editPharmacyResponse$]="editPharmacyRsp$"
     [removePharmacyResponse$]="removePharmacyRsp$"
+    [triggerPriorityPopup$]="triggerPriorityPopup$"
+    [searchLoaderVisibility$]="searchLoaderVisibility$"
     (searchPharmacy)="searchPharmacy($event)"
     (addPharmacyClick)="addPharmacy($event)"
     (editPharmacyInit)="editPharmacyInit($event)"

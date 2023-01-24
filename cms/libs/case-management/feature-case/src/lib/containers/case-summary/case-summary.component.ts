@@ -11,7 +11,7 @@ import {LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 /**external libraries */
 import { catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-summary',
@@ -40,6 +40,8 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
   updateCase$ = this.caseFacade.updateCase$;
   private saveClickSubscription !: Subscription;
   private sessionDataSubscription !: Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
 
   /** Constructor**/
   constructor(
@@ -50,21 +52,25 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     private route: ActivatedRoute,
     private readonly workFlowFacade : WorkflowFacade,
     private readonly loginUserFacade : UserManagementFacade,
-    private readonly lovFacade : LovFacade 
+    private readonly lovFacade : LovFacade ,
+    private readonly loaderService: LoaderService
   ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.loadFormdata();
     this.addSaveSubscription();
     /** methods for case child form **/
     this.registerFormData();
     this.addFormChangeSubscription();
-
+ 	  this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   } 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.sessionDataSubscription.unsubscribe();
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
     private loadFormdata()
@@ -76,7 +82,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     }
 
   private loadCase()
-  {     
+  {    
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workFlowFacade.loadWorkFlowSessionData(this.sessionId)
     this.sessionDataSubscription =this.workFlowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
@@ -107,7 +113,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
         ),       
       ).subscribe(([navigationType, isSaved]) => {
         if (isSaved == true) {
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
           this.workFlowFacade.navigate(navigationType);
         }
       });
@@ -122,7 +128,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
        .pipe
        (
         catchError((err: any) => {      
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) 
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err) 
           
           return of(false)  
         })
@@ -154,7 +160,7 @@ private updateFormCompleteCount(prev: any, curr: any) {
           dataPointName: key,
           status: curr[key] ? StatusFlag.Yes : StatusFlag.No
         };
-        console.log(key);
+       
         completedDataPoints.push(item);
       }
     }
@@ -171,9 +177,37 @@ private updateFormCompleteCount(prev: any, curr: any) {
   });
 
   if (completedDataPoints.length > 0) {
-    console.log(completedDataPoints);
+   
    this.workFlowFacade.updateChecklist(completedDataPoints);
   }
 }
 
+private addSaveForLaterSubscription(): void {
+      this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
+        mergeMap((statusResponse: boolean) =>
+          forkJoin([of(statusResponse), this.updateCase()])
+        ),
+      ).subscribe(([statusResponse, isSaved]) => {
+        if (isSaved) {
+          this.loaderService.hide();
+          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        }
+      });
+    }
+  
+    private addSaveForLaterValidationsSubscription(): void {
+      this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+        if (val) {
+          if(this.checkValidations()){
+            this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
+          }
+        }
+      });
+    }
+  
+    checkValidations(){
+      this.parentForm.updateValueAndValidity()
+      return this.parentForm.valid;
+     
+    }
 }

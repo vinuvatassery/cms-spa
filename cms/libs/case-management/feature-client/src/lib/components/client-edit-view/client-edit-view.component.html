@@ -1,471 +1,440 @@
 <form [formGroup]="appInfoForm" *ngIf="appInfoForm">
+      <!-- Applicant Full Name Section  -->
   <section kendoRippleContainer>
-    <div class="flex-row" >
-      <div class="flex-col flex-col-4">
-        <kendo-floatinglabel text="Enter First Name" class="k-form">
-          <!-- <input kendoTextBox aria-label="enter first name" /> -->
-          <kendo-textbox  aria-label="enter first name"  
-            showErrorIcon="initial"
-            formControlName="firstName"  
-            [maxlength]="lengthRestrictForty"
-            [fillMode]="formUiStyle.inputFillMode">         
-        </kendo-textbox>
-        
-        <!-- <kendo-formhint>Please, enter your email.</kendo-formhint> -->
-        <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
-     
+    <div class="flex-row">
+      <div class="flex-col flex-col-4 inlineloaderwrapper">
+        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <kendo-floatinglabel text="First Name" class="k-form">
+          <kendo-textbox aria-label="first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
+            formControlName="firstName" placeholder="First Name" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
+          </kendo-textbox>
+          <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
+
         </kendo-floatinglabel>
       </div>
-        <!-- [disabled]="isMiddleNameChecked" -->
+      <!-- [disabled]="isMiddleNameChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Middle Initial (Optional)">
-          <kendo-textbox   aria-label="middle initial" 
-              [fillMode]="formUiStyle.inputFillMode" 
-              formControlName="middleName"
-              [maxlength]="lengthRestrictThirty"           
-              >
+          <kendo-textbox aria-label="middle initial"  [fillMode]="formUiStyle.inputFillMode"
+            formControlName="middleName"  placeholder="Middle Initial (Optional)"  [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
-        
-          <kendo-formerror *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle initial is required.</kendo-formerror>
+
+          <kendo-formerror
+            *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle
+            initial is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
-        <input
-          class="adjust-attr"
-          type="checkbox"
-          aria-labelledby="middleInitial"
-          id="middleInitial"
-          name="chkmiddleName"
-          formControlName="chkmiddleName"
-          kendoCheckBox     
-          (change)="onMiddleNameChecked($event)"    
-        />
-        <label class="k-checkbox-label" for="middleInitial">No Middle Initial</label>
+          <input class="adjust-attr" type="checkbox" id="nomiddleInitial" name="chkmiddleName"
+            aria-labelledby="nomiddleInitial" formControlName="chkmiddleName" kendoCheckBox
+            (change)="onMiddleNameChecked($event)" />
+          <label class="k-checkbox-label" for="nomiddleInitial">No Middle Initial</label>
         </span>
-        
+
       </div>
-      <div class="flex-col flex-col-4">
+      <div class="flex-col flex-col-4 inlineloaderwrapper">
+        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Last Name">
-          <kendo-textbox aria-label="last name" 
-              [fillMode]="formUiStyle.inputFillMode" 
-              formControlName="lastName"
-              [maxlength]="lengthRestrictForty">
+          <kendo-textbox aria-label="last name" placeholder="Last Name"   [fillMode]="formUiStyle.inputFillMode" (blur)="searchDuplicateClient()" 
+            formControlName="lastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
           <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
         </kendo-floatinglabel>
       </div>
     </div>
-   <!-- [disabled]="isInsuranceCardChecked" -->
+  </section>
+
+  <!-- [disabled]="isInsuranceCardChecked" -->
+  <!-- Applicant Insurance Section  -->
+  <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="First Name on Primary Insurance Card">
-          <kendo-textbox aria-label="first name on primary insurance card"  
-              [fillMode]="formUiStyle.inputFillMode"
-              formControlName="prmInsFirstName"
-              [maxlength]="lengthRestrictForty"
-              >
+          <kendo-textbox aria-label="first name on primary insurance card" placeholder="First Name on Primary Insurance Card" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="prmInsFirstName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
-        
-          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsFirstName'].valid && !this.appInfoForm.controls['prmInsFirstName'].disabled">First name on primary insurance card is required.</kendo-formerror>
+
+          <kendo-formerror
+            *ngIf="!appInfoForm.controls['prmInsFirstName'].valid && !this.appInfoForm.controls['prmInsFirstName'].disabled">First
+            name on primary insurance card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <!-- [disabled]="isInsuranceCardChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Primary Insurance Card">
-          <kendo-textbox aria-label="last name on primary insurance card"  
-              [fillMode]="formUiStyle.inputFillMode" 
-              formControlName="prmInsLastName"
-              [maxlength]="lengthRestrictForty"
-              >   
+          <kendo-textbox aria-label="last name on primary insurance card" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="prmInsLastName"  placeholder="Last Name on Primary Insurance Card" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
-        
-          <kendo-formerror *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled" >Last name on primary insurance card is required.</kendo-formerror>
+
+          <kendo-formerror
+            *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled">Last
+            name on primary insurance card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
-        <input
-          type="checkbox"
-          class="adjust-attr"
-          name="prmInsNotApplicable"
-          id="cardNotApplicable"
-          aria-labelledby="insuranceCardNotApplicable"
-          kendoCheckBox
-          formControlName="prmInsNotApplicable"
-          (change)="onInsuranceCardChecked($event)"
-        />
-        <label class="k-checkbox-label" for="cardNotApplicable"
-          >Not Applicable</label
-        >
+          <input type="checkbox" class="adjust-attr" name="prmInsNotApplicable" id="primaryInsuranceNotApplicable"
+            aria-labelledby="primaryInsuranceNotApplicable" kendoCheckBox formControlName="prmInsNotApplicable"
+            (change)="onInsuranceCardChecked($event)" />
+          <label class="k-checkbox-label" for="primaryInsuranceNotApplicable">Not Applicable</label>
         </span>
       </div>
     </div>
+  </section>
+
+  <!-- Applicant Official Section  -->
+  <section kendoRippleContainer>
     <div class="flex-row">
       <!-- [disabled]="isOfficialIdChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="First Name on Official ID">
-          <kendo-textbox aria-label="first name on official id"  
-            [fillMode]="formUiStyle.inputFillMode" 
-            formControlName="officialIdFirstName"
-            [maxlength]="lengthRestrictForty"
-            >   
+          <kendo-textbox aria-label="first name on official id" placeholder="First Name on Official ID" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="officialIdFirstName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
-      
+
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First name on official id is required.</kendo-formerror>
+        <kendo-formerror
+          *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First
+          name on official id is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Official ID">
           <!-- [disabled]="isOfficialIdChecked" -->
-          <kendo-textbox aria-label="last name on official id"  
-            [fillMode]="formUiStyle.inputFillMode" 
-            formControlName="officialIdLastName"
-            [maxlength]="lengthRestrictForty"
-            >   
+          <kendo-textbox aria-label="last name on official id" placeholder="Last Name on Official ID" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="officialIdLastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last name on official id is required.</kendo-formerror>
+        <kendo-formerror
+          *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last
+          name on official id is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
-         <!-- (change)="onOfficialIdChecked($event)" -->
+        <!-- (change)="onOfficialIdChecked($event)" -->
         <span class="app-checkboxwidtext-wrapper">
-        <input
-          type="checkbox"
-          class="adjust-attr"
-          id="idNotApplicable"
-          name="officialIdsNotApplicable"
-          aria-labelledby="officialIdNotApplicable"
-          kendoCheckBox       
-          formControlName="officialIdsNotApplicable"
-          (change)="onOfficialIdChecked($event)"
-         
-        />
-        <label class="k-checkbox-label" for="idNotApplicable"
-          >Not Applicable</label
-        >
+          <input type="checkbox" class="adjust-attr" id="officialIdsNotApplicable" name="officialIdsNotApplicable"
+            kendoCheckBox aria-labelledby="officialIdsNotApplicable" formControlName="officialIdsNotApplicable"
+            (change)="onOfficialIdChecked($event)" />
+          <label class="k-checkbox-label" for="officialIdsNotApplicable">Not Applicable</label>
         </span>
       </div>
     </div>
+  </section>
+
+  <!-- Applicant Date Picker Section  -->
+  <section kendoRippleContainer>
     <div class="flex-row">
-      <div class="flex-col flex-col-4">
+      <div class="flex-col flex-col-4 inlineloaderwrapper">
+        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Date of Birth">
-          <kendo-datepicker  
-          [fillMode]="formUiStyle.dateInputFillMode"
-          [max]="currentDate"
-          formControlName="dateOfBirth"
-          format="MM-dd-yyyy"
-          
-          ></kendo-datepicker>
-      
+          <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
+            formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+            (keyup)="dateValidate($event)"
+            placeholder=""></kendo-datepicker>
+            <kendo-formerror *ngIf="dateValidator"> Future date can not be selected</kendo-formerror>
+            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
-   
+  </section>
+
+  <!-- Applicant SSN Section  -->
+  <section kendoRippleContainer>
     <div class="flex-row">
-      <div class="flex-col flex-col-4">
+      <div class="flex-col flex-col-4 inlineloaderwrapper">
+        <span *ngIf="showSsnDuplicateLoader" class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Social Security Number">
-          <kendo-textbox aria-label="social security number"  
-            [fillMode]="formUiStyle.inputFillMode" 
-            formControlName="ssn"
-            [maxlength]="maxLengthSsn"
-            [value]="appInfoForm.controls['ssn'].value | ssn"
-            >   </kendo-textbox>
-  
+          <kendo-maskedtextbox mask="000-00-0000"  aria-label="social security number" placeholder="Social Security Number" (blur)="searchDuplicateClient()" 
+            [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
+            [value]="appInfoForm.controls['ssn'].value" (input)="ssnValueChange()"> </kendo-maskedtextbox >
+
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && !this.appInfoForm.controls['ssn'].disabled">Social security number is required.</kendo-formerror>
+        <kendo-formerror *ngIf="appInfoForm.controls['ssn'].hasError('patternError') && !this.appInfoForm.controls['ssn'].disabled">Social Security Number cannot be less then 9 digits.</kendo-formerror>
+        <kendo-formerror *ngIf="!appInfoForm.controls['ssn'].valid && appInfoForm.controls['ssn'].hasError('required') && !ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">Social Security Number is required.</kendo-formerror>
+        <kendo-formerror *ngIf=" !appInfoForm.controls['ssn'].valid && ssnDuplicateFound && !this.appInfoForm.controls['ssn'].disabled">This SSN matches another client. Please update before proceeding</kendo-formerror>
+		
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
         <span class="app-checkboxwidtext-wrapper">
-        <input
-          type="checkbox"
-          class="adjust-attr"
-          id="ssnNotApplicable"
-          name="ssnNotApplicable"       
-          aria-labelledby="ssnNotApplicable"
-          kendoCheckBox
-          formControlName="ssnNotApplicable"
-          (change)="onSsnNotApplicableChecked($event)"
-        />
-        <label class="k-checkbox-label" for="ssnNotApplicable"
-          >Not Applicable</label 
-        >
-      </span>
+          <input type="checkbox" class="adjust-attr" id="ssnNotApplicable" name="ssnNotApplicable" kendoCheckBox
+            aria-labelledby="ssnNotApplicable" formControlName="ssnNotApplicable"
+            (change)="onSsnNotApplicableChecked($event)" />
+          <label class="k-checkbox-label" for="ssnNotApplicable">Not Applicable</label>
+        </span>
       </div>
     </div>
-  
   </section>
-   
-  <section class="mb-3">
-    <h5>Register to vote ?</h5>
-    <div class="flex-row gap-m">
-      <div class="flex-col">
-        <div class="component-list-h">
-          <span class="app-radiobtnwidtext-wrapper">
-            <input
-              type="radio"
-              kendoRadioButton
-              name="registerToVote"
-              value="Y"
-              aria-labelledby="registerToVoteYes"
-              id="register"
-              tabindex="1"
-              formControlName="registerToVote"  
-              (change)="registerToVoteSelected($event)"          
-            />
-            <kendo-label class="k-radio-label" text="Yes"></kendo-label>
-          </span>
-          <span class="app-radiobtnwidtext-wrapper">
-            <input
-              type="radio"
-              kendoRadioButton
-              value="N"
-              name="registerToVote"
-              aria-labelledby="registerToVoteNo"
-              id="register1"
-              tabindex="2"
-              formControlName="registerToVote"
-              (change)="registerToVoteSelected($event)"   
-            />
-            <kendo-label
-              class="k-radio-label"
-              text="No"
-              for="register1"
-            ></kendo-label>
-            <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is required.</kendo-formerror>
-          </span>
-          <div class="voterreg-info d-flex" *ngIf="isVisible">
-            <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>This application will  send voter registeration collaterial via letter or email once the applicaiton is saved  with the necessary contact information</p>
+
+  <!-- Applicant Register to vote Section  -->
+  <section>
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">  <h5>Register to vote?</h5>  </legend>
+
+      <div class="flex-row gap-m">
+        <div class="flex-col">
+          <div class="component-list-h">
+            <span class="app-radiobtnwidtext-wrapper" role="group" aria-labelledby="registertovoteyes">
+              <input type="radio" kendoRadioButton name="registerToVote" value="Y" id="registertovoteyes"
+                formControlName="registerToVote" (change)="registerToVoteSelected($event)"
+                aria-labelledby="registertovoteyes" />
+              <kendo-label class="k-radio-label" for="registertovoteyes" text="Yes"></kendo-label>
+            </span>
+            <span class="app-radiobtnwidtext-wrapper" role="group" aria-labelledby="registertovoteno">
+              <input type="radio" kendoRadioButton value="N" name="registerToVote" id="registertovoteno"
+                aria-labelledby="registertovoteno" formControlName="registerToVote"
+                (change)="registerToVoteSelected($event)" />
+              <kendo-label class="k-radio-label" text="No" for="registertovoteno"></kendo-label>
+              <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is
+                required.</kendo-formerror>
+            </span>
+            <div class="flex-col flex-col-6" >
+            <div class="info-banners blue-banner d-flex mt-2 align-item-fstart" *ngIf="isVisible">
+              <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
+              <div>
+                <p class="mt-1">If you want to register to vote please click on the following link to go to the Oregon State Voter Registration web site.<br/><br/>
+                  <a href="https://sos.oregon.gov/voting/pages/registration.aspx?lang=en" target="_blank">https://sos.oregon.gov/voting/pages/registration.aspx?lang=en</a>
+                </p>     </div>
+            </div>
+            </div>         
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </section>
-  <div></div>
-  <section  >
-    <h5>What pronouns do they use? (check all that apply)</h5>
-    <div class="component-list-h"  >
-      
-      <case-management-client-edit-view-pronoun 
-              [appInfoForm]="appInfoForm"
-              (PronounChanges)="setChangedPronoun($event)"
-              [checkBoxValid] ="checkBoxValid"
-              [textboxDisable]="textboxDisable">
-      </case-management-client-edit-view-pronoun>  
-      <hr />
-  
-      <!-- <common-checkbox-list>
-  
-      </common-checkbox-list> -->   
-      
-    </div>  
+
+  <!-- Applicant pronouns Section  -->
+  <section>
+
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">
+        <h5>What pronouns do they use? (check all that apply)</h5>
+      </legend>
+      <div class="component-list-h">
+        <case-management-client-edit-view-pronoun [appInfoForm]="appInfoForm"
+          [checkBoxValid]="checkBoxValid"
+          [textboxDisable]="textboxDisable">
+        </case-management-client-edit-view-pronoun>
+        <hr />
+      </div>
+    </fieldset>
   </section>
-  
-  
+
+  <!-- Applicant gender Section Checkboxes -->
   <case-management-client-edit-view-gender [appInfoForm]="appInfoForm"></case-management-client-edit-view-gender>
-  
-  <case-management-client-edit-view-transgender [appInfoForm]="appInfoForm"></case-management-client-edit-view-transgender>
-  
-  <case-management-client-edit-view-sexual-identity [appInfoForm]="appInfoForm"></case-management-client-edit-view-sexual-identity>
-  
-  <case-management-client-edit-view-sex-at-birth [appInfoForm]="appInfoForm"></case-management-client-edit-view-sex-at-birth>
-  
-  <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm" [raceAndEthnicityPrimaryData]="raceAndEthnicityPrimaryData" [raceAndEthnicityPrimaryNotListed]="raceAndEthnicityPrimaryNotListed" (RaceAndEthnicityData)="setRaceAndEthnicityData($event)" (RaceAndEthnicityChange)="raceAndEthnicityChange($event)"></case-management-client-edit-view-race-and-ethnicity>
+
+  <!-- Applicant transgender Section Checkboxes -->
+  <case-management-client-edit-view-transgender
+    [appInfoForm]="appInfoForm"></case-management-client-edit-view-transgender>
+
+  <!-- Applicant sexual orientation or sexual identity Section Checkboxes -->
+  <case-management-client-edit-view-sexual-identity
+    [appInfoForm]="appInfoForm"></case-management-client-edit-view-sexual-identity>
+
+  <!-- Applicant sex assigned at birth Section Checkboxes -->
+  <case-management-client-edit-view-sex-at-birth
+    [appInfoForm]="appInfoForm"></case-management-client-edit-view-sex-at-birth>
+
+  <!-- Applicant racial or ethnic identity?  Section dropdown -->
+  <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm"
+    [raceAndEthnicityPrimaryData]="raceAndEthnicityPrimaryData"
+    [raceAndEthnicityPrimaryNotListed]="raceAndEthnicityPrimaryNotListed"
+    (RaceAndEthnicityData)="setRaceAndEthnicityData($event)"
+    (RaceAndEthnicityChange)="raceAndEthnicityChange($event)"></case-management-client-edit-view-race-and-ethnicity>
+
+  <!-- Applicant Needs materials in alternate format Section Radio Button -->
+
   <section>
-    <h5>
-      Needs materials in alternate format (Braille, large print, audio recordings,
-      etc.)?
-    </h5>
-    <div class="component-list-h">
-  
-  
-      <common-optionbutton-list
-            [appInfoForm]="appInfoForm"
-            [rdoInputlov]="rdoMaterials$"
-            [dropdownInutLov]="materialsyeslov$"
-            [optionButtonValid]="materialOptionButtonValid"
-            [textFieldDisable] ="yesMaterialDisable"
-            [OptionControlerName] ="'materialInAlternateFormatCode'"
-            [textControlerName]="'materialInAlternateFormatDesc'"
-            [textFieldType]="'dropDown'"
-            [textFieldAfter]="'YES'"
-            [textPlaceholderText]="'Select formats'"
-            [textValidationMessage]="'Material is required.'">    
-      </common-optionbutton-list>   
-    </div>
-  
-    <div class="flex-row">
-      <div class="flex-col flex-col-4">   
-        <kendo-floatinglabel text="Spoken language">
-          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
-           [data]="spokenWrittenLanguagelov$ | async"
-            textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-            formControlName="spokenLanguage">
-        </kendo-dropdownlist>  
-        </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken language is required.</kendo-formerror>
-      </div>
-    </div>
-    <div class="flex-row">
-      <div class="flex-col flex-col-4">    
-        <kendo-floatinglabel text="Written language">
-          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
-           [data]="spokenWrittenLanguagelov$ | async"
-          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-          formControlName="writtenLanguage">
-        </kendo-dropdownlist>  
-        </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written language is required.</kendo-formerror>
-      </div>
-    </div>
-    <div class="flex-row">
-      <div class="flex-col flex-col-4">    
-        <kendo-floatinglabel text="English proficiency">
-          <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
-           [data]="englishProficiencylov$ | async"
-          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-          formControlName="englishProficiency">
-        </kendo-dropdownlist>  
-        </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English proficiency is required.</kendo-formerror>
-      </div>
-    </div>
-  </section>
-  
-  
-  <section>
-  
-    <h5>Needs interpreter?</h5>
-    <common-optionbutton-list
-          [appInfoForm]="appInfoForm"
-          [rdoInputlov]="rdoMaterials$"
-          [optionButtonValid]="interpreterOptionButtonValid"
-          [textFieldDisable] ="interpreterTypeInputDisable"
-          [OptionControlerName] ="'interpreterCode'"
-          [textControlerName]="'interpreterType'"
-          [textFieldType]="'textField'"
-          [textFieldAfter]="'YES'"
-          [textPlaceholderText]="'Type of interpreter'"
-          [textValidationMessage]="'Type is required.'"
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">
+        <h5> Needs materials in alternate format (Braille, large print, audio recordings, etc.)? </h5>
+      </legend>
+      <div class="component-list-h">
+        <common-optionbutton-list [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+          [dropdownInutLov]="materialsyeslov$" [textFieldDisable]="yesMaterialDisable"
+          [OptionControlerName]="'materialInAlternateFormatCode'" [textControlerName]="'materialInAlternateFormatDesc'"
+          [textFieldType]="'dropDown'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Select formats'"
+          [textValidationMessage]="'An Alternate Format is Required.'"[otherControlerName]="'materialInAlternateFormatOther'"
+          [otherControlerPlaceholderText]="'Enter formats'"[otherControlerValidationMessage]="'A response is required.'"
           [textFieldMaxLimit]="50">
-    </common-optionbutton-list>
+        </common-optionbutton-list>
+      </div>
+    </fieldset>
   </section>
+
+  <!-- Applicant Languagr Section -->
   <section>
-    <h5 class="mt-3">Deaf or serious difficulty hearing?</h5>
-      <common-optionbutton-list
-            [appInfoForm]="appInfoForm"
-            [rdoInputlov]="rdoMaterials$"
-            [optionButtonValid]="deafOrHearingOptionButtonValid"
-            [textFieldDisable] ="startAgeDeafOrHearingInputDisable"
-            [OptionControlerName] ="'deafOrHearingCode'"
-            [textControlerName]="'startAgeDeafOrHearing'"
-            [textFieldType]="'numericField'"
-            [textFieldAfter]="'YES'"
-            [textPlaceholderText]="'Age this condition began'"
-            [textValidationMessage]="'Age is required.'"
-            [textFieldMaxLimit]="9999">
-      </common-optionbutton-list> 
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Spoken Language">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="spokenWrittenLanguagelov$ | async"
+            textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" formControlName="spokenLanguage">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['spokenLanguage'].valid">Spoken Language is
+          required.</kendo-formerror>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="Written Language">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="spokenWrittenLanguagelov$ | async"
+            textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" formControlName="writtenLanguage">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['writtenLanguage'].valid">Written Language is
+          required.</kendo-formerror>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col flex-col-4">
+        <kendo-floatinglabel text="English Proficiency">
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="englishProficiencylov$ | async"
+            textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" formControlName="englishProficiency">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!appInfoForm.controls['englishProficiency'].valid">English Proficiency is
+          required.</kendo-formerror>
+      </div>
+    </div>
   </section>
+
+  <!-- Applicant Needs interpreter Section -->
   <section>
-    <h5 class="mt-3">
-      Blind or serious difficulty seeing, even when wearing glasses?
-    </h5>
-    <common-optionbutton-list
-        [appInfoForm]="appInfoForm"
-        [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="blindOrSeriousDiffOptionButtonValid"
-        [textFieldDisable] ="startAgeBlindSeeingInputDisable"
-        [OptionControlerName] ="'blindSeeingCode'"
-        [textControlerName]="'startAgeBlindSeeing'"
-        [textFieldType]="'numericField'"
-        [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
-    </common-optionbutton-list>    
+    <fieldset class="k-form-fieldset" [tabindex]="0">
+      <legend class="k-form-legend">
+        <h5>Needs interpreter?</h5>
+      </legend>
+
+      <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [textFieldDisable]="interpreterTypeInputDisable" [OptionControlerName]="'interpreterCode'"
+        [textControlerName]="'interpreterType'" [textFieldType]="'textField'" [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Type of interpreter'" [textValidationMessage]="'Type of interpreter is required.'"
+        [textFieldMaxLimit]="50">
+      </common-optionbutton-list>
+    </fieldset>
   </section>
+
+  <!-- Applicant serious difficulty hearing Section -->
   <section>
-    <h5 class="mt-3">Any limiting physical, mental, or emotional conditions?</h5>
-    <common-optionbutton-list
-        [appInfoForm]="appInfoForm"
-        [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="physicalMentaDiffOptionButtonValid"
-        [OptionControlerName] ="'limitingConditionCode'">
-    </common-optionbutton-list>  
+    <fieldset class="k-form-fieldset" [tabindex]="0">
+      <legend class="k-form-legend">
+        <h5 class="mt-3">Deaf or serious difficulty hearing?</h5>
+      </legend>
+
+      <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [textFieldDisable]="startAgeDeafOrHearingInputDisable" [OptionControlerName]="'deafOrHearingCode'"
+        [textControlerName]="'startAgeDeafOrHearing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+      </common-optionbutton-list>
+    </fieldset>
   </section>
+
+  <!-- Applicant Blind or serious difficulty Section -->
   <section>
-    <h5 class="mt-3">Serious difficulty walking or climbing stairs?</h5>
-    <common-optionbutton-list
-        [appInfoForm]="appInfoForm"
-        [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="walkingOrClimbingOptionButtonValid"
-        [textFieldDisable] ="startAgeWalkingClimbingDifficultyInputDisable"
-        [OptionControlerName] ="'walkingClimbingDifficultyCode'"
-        [textControlerName]="'startAgeWalkingClimbingDifficulty'"
-        [textFieldType]="'numericField'"
-        [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
-    </common-optionbutton-list>   
+
+    <fieldset class="k-form-fieldset" [tabindex]="0">
+      <legend class="k-form-legend">
+        <h5 class="mt-3"> Blind or serious difficulty seeing, even when wearing glasses? </h5>
+      </legend>
+      <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [textFieldDisable]="startAgeBlindSeeingInputDisable" [OptionControlerName]="'blindSeeingCode'"
+        [textControlerName]="'startAgeBlindSeeing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+      </common-optionbutton-list>
+    </fieldset>
   </section>
+
+  <!-- Applicant limiting physical, mental, or emotional Section -->
   <section>
-    <h5 class="mt-3">Difficulty dressing or bathing?</h5>
-    <common-optionbutton-list
-        [appInfoForm]="appInfoForm"
-        [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="dressingOrBathOptionButtonValid"
-        [textFieldDisable] ="startAgeDressingBathingDifficultyInputDisable"
-        [OptionControlerName] ="'dressingBathingDifficultyCode'"
-        [textControlerName]="'startAgeDressingBathingDifficulty'"
-        [textFieldType]="'numericField'"
-        [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
-    </common-optionbutton-list>  
-  
+    <fieldset class="k-form-fieldset">
+      <legend class="k-form-legend">
+        <h5 class="mt-3">Any limiting physical, mental, or emotional conditions?</h5>
+      </legend>
+
+      <common-optionbutton-list [tabindex]="0" [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [OptionControlerName]="'limitingConditionCode'">
+      </common-optionbutton-list>
+    </fieldset>
   </section>
+
+  <!-- Applicant Serious difficulty walking or climbing Section -->
   <section>
-    <h5 class="mt-3">
-      Serious difficulty concentrating, remembering, or making decisions due to a
-      physical, mental, or emotional condition?
-    </h5>
-    <common-optionbutton-list
-        [appInfoForm]="appInfoForm"
-        [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="concentrateAndRememberDiffOptionButtonValid"
-        [textFieldDisable] ="startAgeConcentratingDifficultyInputDisable"
-        [OptionControlerName] ="'concentratingDifficultyCode'"
-        [textControlerName]="'startAgeConcentratingDifficulty'"
-        [textFieldType]="'numericField'"
-        [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
-    </common-optionbutton-list>
+    <fieldset class="k-form-fieldset" [tabindex]="0">
+      <legend class="k-form-legend">
+        <h5 class="mt-3">Serious difficulty walking or climbing stairs?</h5>
+      </legend>
+
+      <common-optionbutton-list  [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [textFieldDisable]="startAgeWalkingClimbingDifficultyInputDisable"
+        [OptionControlerName]="'walkingClimbingDifficultyCode'"
+        [textControlerName]="'startAgeWalkingClimbingDifficulty'" [textFieldType]="'numericField'"
+        [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+      </common-optionbutton-list>
+    </fieldset>
   </section>
+
+  <!-- Applicant Difficulty dressing or bathing Section -->
   <section>
-    <h5 class="mt-3">
-      Serious difficulty doing errands alone due to a physical, mental, or
-      emotional condition?
-    </h5>
-    <common-optionbutton-list
-        [appInfoForm]="appInfoForm"
-        [rdoInputlov]="rdoMaterials$"
-        [optionButtonValid]="seriesDiffOptionButtonValid"
-        [textFieldDisable] ="startAgeErrandsDifficultyInputDisable"
-        [OptionControlerName] ="'errandsDifficultyCode'"
-        [textControlerName]="'startAgeErrandsDifficulty'"
-        [textFieldType]="'numericField'"
-        [textFieldAfter]="'YES'"
-        [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age is required.'"
-        [textFieldMaxLimit]="9999">
-    </common-optionbutton-list>
-  
+    <fieldset class="k-form-fieldset"  [tabindex]="0">
+      <legend class="k-form-legend">
+        <h5 class="mt-3">Difficulty dressing or bathing?</h5>
+      </legend>
+
+      <common-optionbutton-list [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [textFieldDisable]="startAgeDressingBathingDifficultyInputDisable"
+        [OptionControlerName]="'dressingBathingDifficultyCode'"
+        [textControlerName]="'startAgeDressingBathingDifficulty'" [textFieldType]="'numericField'"
+        [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+      </common-optionbutton-list>
+    </fieldset>
   </section>
-  
-  
-  </form>
+
+  <!-- Applicant difficulty concentrating, remembering, or making  Section -->
+  <section>
+    <fieldset class="k-form-fieldset"  [tabindex]="0">
+      <legend class="k-form-legend">
+        <h5 class="mt-3">
+          Serious difficulty concentrating, remembering, or making decisions due to a
+          physical, mental, or emotional condition?
+        </h5>
+      </legend>
+      <common-optionbutton-list [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [textFieldDisable]="startAgeConcentratingDifficultyInputDisable"
+        [OptionControlerName]="'concentratingDifficultyCode'" [textControlerName]="'startAgeConcentratingDifficulty'"
+        [textFieldType]="'numericField'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+      </common-optionbutton-list>
+    </fieldset>
+  </section>
+
+  <!-- Applicant Serious difficulty doing errands alone due to a physical  Section -->
+  <section>
+    <fieldset class="k-form-fieldset" [tabindex]="0">
+      <legend class="k-form-legend">
+        <h5 class="mt-3">
+          Serious difficulty doing errands alone due to a physical, mental, or
+          emotional condition?
+        </h5>
+      </legend>
+      <common-optionbutton-list   [appInfoForm]="appInfoForm" [rdoInputlov]="rdoMaterials$"
+        [textFieldDisable]="startAgeErrandsDifficultyInputDisable" [OptionControlerName]="'errandsDifficultyCode'"
+        [textControlerName]="'startAgeErrandsDifficulty'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
+        [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+      </common-optionbutton-list>
+    </fieldset>
+  </section>
+
+
+</form>
+
+
+<kendo-dialog *ngIf="showDuplicatePopup" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="onDuplicatPopupCloseClick()">
+  <kendo-dialog-titlebar>Possible Duplicate Found</kendo-dialog-titlebar>
+  <case-management-duplicate-client-found [currentClientInfo]="currentClient" [matchingClientInfo]="matchingClient" (closeModalClick)="onDuplicatPopupCloseClick()"> </case-management-duplicate-client-found>
+</kendo-dialog>

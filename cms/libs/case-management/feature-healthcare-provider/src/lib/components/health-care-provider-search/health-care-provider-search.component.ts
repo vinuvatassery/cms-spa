@@ -34,7 +34,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Input() addExistingProvider$: any;
   @Input() loadExistingProvider$: any;  
   @Input() existingProviderData: any;  
- 
+  @Input() searchProviderLoaded$: any;
   @Input() selectedCustomProviderName: any;  
  
 
@@ -42,8 +42,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   providers$ = this.drugPharmacyFacade.healthCareProviders$;
   isOpenNewProviderClicked = false;
   filteredSelectedProvider! : any;
-  isAdminRole =false; 
-  providerSearchInputLoader = false;
+  isAdminRole =false;   
   popupClass = 'k-autocomplete-custom';
   selectedClinic! : string
  
@@ -80,7 +79,8 @@ export class HealthCareProviderSearchComponent implements OnInit
   {    
       this.existHealthProvderForm = this.formBuilder.group({   
         providerId: ['',Validators.required]   ,
-        selectedProviderId: ['']     
+        selectedProviderId: [''] ,
+        providerAutoComplete : ['',Validators.required]    
       });
       
      if(this.isEditSearchHealthProviderValue === true)
@@ -103,8 +103,9 @@ export class HealthCareProviderSearchComponent implements OnInit
     this.existHealthProvderForm.setValue(
             {
                selectedProviderId: this.existingProviderData?.providerId  ,
-              providerId: this.existingProviderData?.providerId  
-           }) 
+              providerId: this.existingProviderData?.providerId  ,
+              providerAutoComplete : this.selectedCustomProviderName
+            }) 
   }
 
   onSearchTemplateClick(dataItem : any)
@@ -119,7 +120,7 @@ export class HealthCareProviderSearchComponent implements OnInit
     {      
        this.isExistSubmitted = true;
        if(this.existHealthProvderForm.valid)
-       {
+       {        
         const existProviderData =
         {
           providerId : this.existHealthProvderForm?.controls["providerId"].value,
@@ -155,17 +156,11 @@ export class HealthCareProviderSearchComponent implements OnInit
 
   onsearchTextChange(text : string)
   {     
-       if(text.length > 1)
-       {
-         this.providerSearchInputLoader = true;
+       if(text.length > 0)
+       {      
+       
          this.filterManager.next(text); 
        }
   } 
-
-  searchCloseEvent()
-  {
-    this.providerSearchInputLoader = false;
-  }
-
 
 }

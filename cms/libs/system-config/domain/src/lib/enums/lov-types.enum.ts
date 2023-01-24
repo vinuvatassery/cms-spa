@@ -3,6 +3,7 @@ export enum LovType {
     Pronoun ='PRONOUNS',
     Material='MATERIAL_IN_ALTERNATE_FORMAT',
     MaterialYes='MATERIAL_IN_ALTERNATE_FORMAT_YES',
+    PriorityCode='PRIORITY_CODE',
     Gender ='Gender',
     Transgender ='Transgender',
     SexAtBirth ='SEX_AT_BIRTH',
@@ -21,5 +22,8 @@ export enum LovType {
     HealthInsuranceType ='HEALTH_INSURANCE_TYPE',
     MetalLevel ='METAL_LEVEL',
     PremiumFrequency = 'PREMIUM_FREQUENCY_CODE',
-    MedicareCoverageType = 'MEDICARE_COVERAGE_TYPE_CODE'
+    MedicareCoverageType = 'MEDICARE_COVERAGE_TYPE_CODE',
+    HEALTHINSURANCEPROOF = 'HEALTH_INSURANCE_PROOF',
+    CaseStatusCode = 'CASE_STATUS_CODE',
+    EthnicityOtherCategories='ETHNICITY_OTHER_CATEGORIES'
   }

@@ -1,10 +1,14 @@
 <div class="client-data-block">
+  
   <h3>Smoking Cessation</h3>
   <section>
-    <form [formGroup]="smokingCessationForm">
+    <form [formGroup]="smokingCessationForm" novalidate>
     <div class="block-section pt-1">
       <div class="flex-row">
         <div class="flex-col mb-1">
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend"> </legend>
+       
           <div class="component-list-h" class="form-group">
             <span class="app-radiobtnwidtext-wrapper">
               <input
@@ -12,8 +16,8 @@
                 kendoRadioButton
                 name="smokingCessation"
                 aria-labelledby="smokingCessationYes"
-                id="smokingCessationYes"
-                tabindex="1"
+                id="smokingCessationYes" 
+                #smokingCessationYes
                 class="form-control" 
                 formControlName="smokingCessation"
                 value="Yes"
@@ -22,7 +26,7 @@
               <kendo-label
                 class="k-radio-label"
                 text="Yes"
-                for="smokingCessationYes"
+                [for]="smokingCessationYes"
               ></kendo-label>
             </span>
             <span class="app-radiobtnwidtext-wrapper">
@@ -31,8 +35,8 @@
                 kendoRadioButton
                 name="smokingCessation"
                 aria-labelledby="smokingCessationNo"
-                id="smokingCessationNo"
-                tabindex="2"
+                id="smokingCessationNo" 
+                #smokingCessationNo
                 class="form-control" 
                 formControlName="smokingCessation"
                 value="No"
@@ -41,11 +45,13 @@
               <kendo-label
               class="k-radio-label"
               text="No"
-              for="smokingCessationNo"
+              [for]="smokingCessationNo"
             ></kendo-label>
             </span>
             <kendo-formerror *ngIf="!smokingCessationForm.controls['smokingCessation'].valid">Smoking Cessation is required.</kendo-formerror>
           </div>
+      
+          </fieldset>
         </div>
         <div class="flex-col flex-col-8" >
           <div class="form-group"> 
@@ -59,9 +65,7 @@
               (valueChange)="onTareaCessationValueChange($event)"
               aria-label="smoking cessation note"
               class="form-control" 
-              formControlName="smokingCessationNote"
-             
-            >
+              formControlName="smokingCessationNote" >
               <kendo-textarea-suffix class="justify-content-end">
                 <span class="counter">{{ tareaCessationCounter }}</span>
               </kendo-textarea-suffix>
@@ -87,3 +91,5 @@
   </section>
 
 </div>
+ 
+ 

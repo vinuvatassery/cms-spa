@@ -11,7 +11,7 @@ import { first, Subject, Subscription } from 'rxjs';
   styleUrls: ['./health-care-provider-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HealthCareProviderListComponent implements OnInit , OnChanges {
+export class HealthCareProviderListComponent implements  OnChanges {
   /** Input properties **/
   @Input() hasNoProvider!: boolean;
   @Input() healthCareProvidersData$! : any;
@@ -23,6 +23,7 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
   @Input() healthCareProviderSearchList$: any;
   @Input() addExistingProvider$: any;
   @Input() loadExistingProvider$: any;
+  @Input() searchProviderLoaded$: any;
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
   @Output() loadProvidersListEvent = new EventEmitter<any>(); 
@@ -90,10 +91,14 @@ export class HealthCareProviderListComponent implements OnInit , OnChanges {
       this.loadHealthCareProvidersList()
   } 
 
-   ngOnInit(): void {
-    console.log('')
-   }
+  
 
+   // updating the pagination infor based on dropdown selection
+pageselectionchange(data: any) {
+  this.state.take = data.value;
+  this.state.skip = 0;
+  this.loadHealthCareProvidersList()
+}
   /** Internal event methods **/
   onCloseProviderClicked() {
     this.isOpenedProvider = false;

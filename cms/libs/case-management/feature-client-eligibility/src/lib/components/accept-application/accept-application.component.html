@@ -6,7 +6,7 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Case Status">
-        <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlAcceptApplications$ | async">
+        <kendo-dropdownlist  dropdownFieldautofocus [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlAcceptApplications$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -31,7 +31,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Assigned Case Worker">
         <!-- <input kendoTextBox aria-label="assigned case worker" /> -->
-        <kendo-textbox aria-label="assigned case worker" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox placeholder="Assigned Case Worker" aria-label="assigned case worker" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
   </div>

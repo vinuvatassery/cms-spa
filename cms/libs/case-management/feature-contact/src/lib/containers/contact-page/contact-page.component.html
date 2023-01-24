@@ -3,7 +3,7 @@
   <section>
     <form [formGroup]="contactInfoForm">
       <!-- Contact Email Details-->
-      <div class="block-section" formGroupName="maillingAddress">
+      <div class="block-section" formGroupName="mailingAddress">
         <div class="flex-row">
           <div class="flex-col mat-split-list">
             <h5 class="text-capital">Mailing Address</h5>
@@ -14,14 +14,21 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 1">
               <kendo-textbox 
+              textFieldautofocus
               aria-label="address line 1" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address1"
+              (blur)="validateMailingAddress()"
+              placeholder="Address Line 1"
               > </kendo-textbox>
-            </kendo-floatinglabel>
-            <kendo-formerror> 
-              Address line 1 is required</kendo-formerror>
+            </kendo-floatinglabel>           
+            <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.required">
+              Address Line 1 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -34,8 +41,13 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
+              (blur)="validateMailingAddress()"
+              placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="mailingAddress?.address2?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -48,9 +60,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
+              (blur)="validateMailingAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>City is required</kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.city?.errors?.required">
+              City is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.city?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -66,6 +84,7 @@
               textField="stateName"
               valueField="stateCode"
               [valuePrimitive]="true"
+              (blur)="validateMailingAddress()"  placeholder="State"
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -80,9 +99,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
+              (blur)="validateMailingAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Zip is required</kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.required">
+              Zip is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.pattern">
+              Not a valid zip code format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3 mt-04" *ngIf="showMailAddressValidationLoader$ | async">
@@ -111,19 +136,19 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check1" 
-              kendoCheckBox 
+              id="sameAsMailingAddressFlag" 
+              kendoCheckBox  
+              name="sameAsMailingAddressFlag" 
               aria-labelledby="sameAsMailingAddressFlag" 
-              id="check1"
               formControlName="sameAsMailingAddressFlag"
-               />
-              <label class="k-checkbox-label" for="check1">Same as Mailing Address</label>
-
+               /> 
+              <label class="k-checkbox-label" for="sameAsMailingAddressFlag">Same as mailing</label> 
+  
             </span>
           </kendo-formfield>
           </div>
         </div>
-        <div class="flex-row mt-1">
+        <div class="flex-row mt-1"> 
           <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 1">
@@ -132,9 +157,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address1"
+              (blur)="validateHomeAddress()" placeholder="Address Line 1"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Address line 1 is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
+              Address Line 1 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address1?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -147,9 +178,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
+              (blur)="validateHomeAddress()"  placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Address line 1 is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address2?.errors?.required">
+              Address Line 2 is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.address2?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -162,9 +199,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
+              (blur)="validateHomeAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>City is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
+              City is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.city?.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -174,6 +217,7 @@
             <kendo-floatinglabel text="State">
               <kendo-dropdownlist 
               aria-label="State" 
+              [disabled]="true"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlStates$ | async"
               formControlName="state"              
@@ -181,6 +225,7 @@
               valueField="stateCode"
               [valuePrimitive]="true"
               (valueChange)="onStateChange($event)"
+              (blur)="validateHomeAddress()"  placeholder="State"
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -195,9 +240,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
+              (blur)="validateHomeAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Zip is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.zip?.errors?.required">
+              Zip is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.zip?.errors?.pattern">
+              Not a valid zip code format
+            </kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3 mt-04" *ngIf="showHomeAddressValidationLoader$ | async">
@@ -219,7 +270,7 @@
               [data]="ddlCountries$ | async"
               textField="countyName"
               valueField="countyCode"
-              [valuePrimitive]="true"
+              [valuePrimitive]="true"  placeholder="Country"
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
@@ -244,13 +295,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check2" 
+              id="homeAddress_homelessFlag" 
               name="homeAddress_homelessFlag"
               kendoCheckBox 
-              aria-labelledby="houseless"
+              aria-labelledby="homeAddress_homelessFlag"
               formControlName="homelessFlag"
                />
-              <label class="k-checkbox-label" for="check2">Houseless</label>
+              <label class="k-checkbox-label" for="homeAddress_homelessFlag">Unhoused</label>
             </span>
           </kendo-formfield>
           </div>
@@ -263,69 +314,67 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check3" 
+              id="noHomeAddressProofFlag" 
+              kendoCheckBox 
+              aria-labelledby="noHomeAddressProofFlag"
               name="homeAddress_proofFlag"
-              kendoCheckBox
-              aria-labelledby="proofOfHomeAddress" 
               formControlName="noHomeAddressProofFlag"              
                 />
-              <label class="k-checkbox-label" for="check3">No proof of home address or residency</label>
+              <label class="k-checkbox-label" for="noHomeAddressProofFlag">No proof of home address or residency</label>
             </span>
           </kendo-formfield>
           </div>
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
+            <!-- <kendo-label class="k-checkbox-label" for="homeAddressProofUploaded" text="Proof of home address"> -->
             <kendo-fileselect 
-            aria-label="proof of home address" 
+            aria-label="proof of home address"  
             name="upload proof"
             [disabled]="isNoProofOfHomeChecked"
             [restrictions]="fileUploadRestrictions" 
             [multiple]="false"   
             (select)="handleFileSelected($event)" 
             (remove)="handleFileRemoved($event)"            
-            [ngModel]="homeAddressProofFile" 
+            [ngModel]="homeAddressProofFile"  
             [ngModelOptions]="{standalone: true}"
+            id="homeAddressProofUploaded"
             #homeAddressProofUploaded>
           </kendo-fileselect>
+        <!-- </kendo-label> -->
           <kendo-formhint>Max file size 25MB</kendo-formhint> 
           <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of home address is required
           </kendo-formerror>
           </div>
         </div>
+        <fieldset class="k-form-fieldset">  
         <div class="flex-row mt-2">
           <div class="flex-col mat-split-list mt-2">
-            <h5 class="text-capital">How stable is your housing?</h5>
+            <legend class="k-form-legend"> <h5 class="text-capital">How stable is your housing?</h5></legend> 
           </div>
         </div>
-          <div class="flex-row ml-1">
+          <div class="flex-row ml-1"> 
             <kendo-formfield>
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="housingStabilityCode"
-                  aria-labelledby="stable or permanent"
-                  id="StableOrPermanent"
-                  tabindex="1"
+                  name="housingStabilityCode" 
+                  id="StableOrPermanent" 
                   class="form-control" 
+                  aria-labelledby="StableOrPermanent"
                   formControlName="housingStabilityCode"
                   value="STABLE_PERMANENT"
                 />
-                <kendo-label
-                  class="k-radio-label"
-                  text="Stable/Permanent"
-                  for="StableOrPermanent"
-                ></kendo-label>
+                <kendo-label   class="k-radio-label"   text="Stable/Permanent"  for="StableOrPermanent"  > &nbsp;</kendo-label>
               </span>
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="housingStabilityCode"
+                  name="housingStabilityCode" 
+                  id="temporary" 
                   aria-labelledby="temporary"
-                  id="temporary"
-                  tabindex="1"
                   class="form-control" 
                   formControlName="housingStabilityCode"
                   value="TEMP"
@@ -342,8 +391,7 @@
                   kendoRadioButton
                   name="housingStabilityCode"
                   aria-labelledby="unstable"
-                  id="unstable"
-                  tabindex="1"
+                  id="unstable" 
                   class="form-control" 
                   formControlName="housingStabilityCode"
                   value="UNSTABLE"
@@ -356,7 +404,8 @@
               </span>
               <kendo-formerror>How stable is your housing is required</kendo-formerror>
           </kendo-formfield>
-        </div>   
+        </div>
+        </fieldset>   
       </div>
       <!-- Contact Phone Details-->
       <div class="block-section" formGroupName="homePhone">
@@ -369,12 +418,16 @@
               aria-label="home phone" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
+              [maskOnFocus]="true" 
               formControlName="phoneNbr"
-              mask="(999) 000-0000"
+              mask="(999) 000-0000" 
+              formatPlaceholder="formatPattern"
+              placeholder=" " 
+              (blur)="loadPreferredContactMethod()" 
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
-              Home phone is required
+              Home Phone Number or Not Applicable selection is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -387,13 +440,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check4"   
+              id="homePhone_applicableFlag"   
               name="homePhone_applicableFlag"           
               kendoCheckBox
-              aria-labelledby="homePhone applicableFlag"
+              aria-labelledby="homePhone_applicableFlag"
               formControlName="applicableFlag" 
                 />
-              <label class="k-checkbox-label" for="check4">Not Applicable</label>
+              <label class="k-checkbox-label"  for="homePhone_applicableFlag">Not Applicable</label>
             </span>
           </kendo-formfield>
           </div>
@@ -404,13 +457,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check5" 
               kendoCheckBox 
-              id="check5" 
-              aria-labelledby="detailedMessageOk" 
+              aria-labelledby="detailMsgConsentFlag4"
+              id="detailMsgConsentFlag4"  
               formControlName="detailMsgConsentFlag"
               />
-              <label class="k-checkbox-label" for="check5">Detailed Messages OK</label>
+              <label class="k-checkbox-label" for="detailMsgConsentFlag4">Detailed Messages OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -419,12 +471,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check6" 
-              kendoCheckBox 
-              aria-labelledby="smsTextOk"
+              id="smsTextConsentFlag1" 
+              aria-labelledby="smsTextConsentFlag1"
+              kendoCheckBox  
               formControlName="smsTextConsentFlag"
               />
-              <label class="k-checkbox-label" for="check6">SMS Text OK</label>
+              <label class="k-checkbox-label" for="smsTextConsentFlag1">SMS Text OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -436,17 +488,19 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Cell Phone">
               <kendo-maskedtextbox 
-              aria-labelledby="noCellPhoneCheck" 
+              [maskOnFocus]="true" 
               aria-label="Cell Phone"
               [disabled]="isNoCellPhoneChecked" 
               [maxlength]="10"
               [fillMode]="formUiStyle.inputFillMode"
               formControlName="phoneNbr"
-              mask="(999) 000-0000"
+              mask="(999) 000-0000" 
+              placeholder="Cell Phone" 
+              (blur)="loadPreferredContactMethod()" 
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
-              Cell phone is required
+              Cell Phone Number or Not Applicable selection is required
             </kendo-formerror>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -459,13 +513,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check7" 
-              name="cellPhone_applicableFlag"              
-              kendoCheckBox              
-              aria-labelledby="cellPhone"
+              id="cellPhone_applicableFlag" 
+              name="cellPhone_applicableFlag"   
+              aria-labelledby="cellPhone_applicableFlag"           
+              kendoCheckBox   
               formControlName="applicableFlag"
                 />
-              <label class="k-checkbox-label" for="check7">Not Applicable</label>
+              <label class="k-checkbox-label" for="cellPhone_applicableFlag">Not Applicable</label>
             </span>
           </kendo-formfield>
           </div>
@@ -476,12 +530,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check8" 
+              id="detailMsgConsentFlag1" 
+              aria-labelledby="detailMsgConsentFlag1"   
               kendoCheckBox 
-              aria-labelledby="detailedMessageOk"
               formControlName="detailMsgConsentFlag"
               />
-              <label class="k-checkbox-label" for="check8">Detailed Messages OK</label>
+              <label class="k-checkbox-label" for="detailMsgConsentFlag1">Detailed Messages OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -490,12 +544,12 @@
             <span class="app-checkboxwidtext-wrapper">
               <input 
               type="checkbox" 
-              id="check9" 
+              id="smsTextConsentFlag2" 
               kendoCheckBox 
-              aria-labelledby="smsTextOk"
+              aria-labelledby="smsTextConsentFlag2"   
               formControlName="smsTextConsentFlag"
               />
-              <label class="k-checkbox-label" for="check9">SMS Text OK</label>
+              <label class="k-checkbox-label" for="smsTextConsentFlag2">SMS Text OK</label>
             </span>
           </kendo-formfield>
           </div>
@@ -508,16 +562,19 @@
               <kendo-formfield>
               <kendo-floatinglabel text="Work Phone">
                 <kendo-maskedtextbox 
+                [maskOnFocus]="true" 
                 aria-label="work phone" 
                 [disabled]="isNoWorkPhoneChecked"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="10"
                 formControlName="phoneNbr"
-                mask="(999) 000-0000"
+                mask="(999) 000-0000" 
+                placeholder="Work Phone" 
+                (blur)="loadPreferredContactMethod()" 
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
-                Work phone is required
+                Work Phone Number or Not Applicable selection is required
               </kendo-formerror>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
@@ -530,13 +587,13 @@
                 <input 
                 class="adjust-attr"
                 type="checkbox" 
-                id="check10" 
+                id="workPhone_applicableFlag" 
                 name="workPhone_applicableFlag"
-                kendoCheckBox                
-                aria-labelledby="noWorkPhone" 
+                kendoCheckBox                 
                 formControlName="applicableFlag"
+                aria-labelledby="workPhone_applicableFlag"   
                 />
-                <label class="k-checkbox-label" for="check10">Not Applicable</label>
+                <label class="k-checkbox-label" for="workPhone_applicableFlag">Not Applicable</label>
               </span>
             </kendo-formfield>
             </div>
@@ -547,12 +604,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check11" 
-                kendoCheckBox 
-                aria-labelledby="detailedMessageOk" 
+                id="detailMsgConsentFlag2" 
+                kendoCheckBox  
+                aria-labelledby="detailMsgConsentFlag2"   
                 formControlName="detailMsgConsentFlag"
                 />
-                <label class="k-checkbox-label" for="check11">Detailed Messages OK</label>
+                <label class="k-checkbox-label" for="detailMsgConsentFlag2">Detailed Messages OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -561,12 +618,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check12" 
-                kendoCheckBox 
-                aria-labell="smsTextOk" 
+                id="smsTextConsentFlag3" 
+                kendoCheckBox  
+                aria-labelledby="smsTextConsentFlag3"  
                 formControlName="smsTextConsentFlag"
                 />
-                <label class="k-checkbox-label" for="check12">SMS Text OK</label>
+                <label class="k-checkbox-label" for="smsTextConsentFlag3">SMS Text OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -580,16 +637,19 @@
               <kendo-formfield>
               <kendo-floatinglabel text="Other Phone">
                 <kendo-maskedtextbox 
+                [maskOnFocus]="true" 
                 [disabled]="isNoOtherPhoneChecked" 
                 aria-label="other phone"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="10"
                 formControlName="phoneNbr"
-                mask="(999) 000-0000"
+                mask="(999) 000-0000" 
+                placeholder="Other Phone" 
+                (blur)="loadPreferredContactMethod()" 
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
-                Other phone is required
+                Other Phone Number or Not Applicable selection is required
               </kendo-formerror>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
@@ -605,9 +665,15 @@
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="100"
                 formControlName="otherPhoneNote"
+                placeholder="Note"
                   > </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror>Note is required</kendo-formerror>
+              <kendo-formerror *ngIf="otherPhone.otherPhoneNote.errors?.required">
+                Note is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="otherPhone.otherPhoneNote.errors?.pattern">
+                Special characters are not allowed
+              </kendo-formerror>
             </kendo-formfield>
             </div>
             <div class="flex-col flex-col-3 mt-checkbox">
@@ -616,13 +682,13 @@
                 <input 
                 class="adjust-attr"
                 type="checkbox" 
-                id="check13" 
+                id="otherPhone_applicableFlag" 
                 name="otherPhone_applicableFlag"
-                kendoCheckBox                
-                aria-labelledby="otherPhoneCheck" 
+                kendoCheckBox                 
                 formControlName="applicableFlag"
+                aria-labelledby="otherPhone_applicableFlag"  
                 />
-                <label class="k-checkbox-label" for="check13">Not Applicable</label>
+                <label class="k-checkbox-label" for="otherPhone_applicableFlag">Not Applicable</label>
               </span>
             </kendo-formfield>
             </div>
@@ -633,12 +699,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check14" 
+                id="detailMsgConsentFlag3" 
                 kendoCheckBox 
-                aria-labelledby="detailedMessageOk" 
                 formControlName="detailMsgConsentFlag"
+                aria-labelledby="detailMsgConsentFlag3"  
                 />
-                <label class="k-checkbox-label" for="check14">Detailed Messages OK</label>
+                <label class="k-checkbox-label" for="detailMsgConsentFlag3">Detailed Messages OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -647,12 +713,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check15" 
-                kendoCheckBox 
-                aria-labelledby="smsTextOk" 
+                id="smsTextConsentFlag4" 
+                kendoCheckBox   
                 formControlName="smsTextConsentFlag"
+                aria-labelledby="smsTextConsentFlag4"  
                 />
-                <label class="k-checkbox-label" for="check15">SMS Text OK</label>
+                <label class="k-checkbox-label" for="smsTextConsentFlag4">SMS Text OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -664,12 +730,14 @@
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <kendo-formfield>
-              <kendo-floatinglabel text="Email Address (Optional)">
+              <kendo-floatinglabel text="Email Address">
                 <kendo-textbox 
                 aria-label="email address optional"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="100"
-                formControlName="email"
+                formControlName="email" 
+                placeholder="Email Address" 
+                (blur)="loadPreferredContactMethod()" 
                 > </kendo-textbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="email.email.errors?.email">
@@ -683,14 +751,13 @@
                 <input 
                 class="adjust-attr"
                 type="checkbox" 
-                id="check16" 
+                id="email_applicableFlag" 
                 name="email_applicableFlag"
-                kendoCheckBox 
-                aria-label="emailNotApplicable" 
+                kendoCheckBox  
                 formControlName="applicableFlag" 
-
+                aria-labelledby="email_applicableFlag"  
                 />
-                <label class="k-checkbox-label" for="check16">Not Applicable</label>
+                <label class="k-checkbox-label" for="email_applicableFlag">Not Applicable</label>
               </span>
             </kendo-formfield>
             </div>
@@ -701,12 +768,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check17" 
-                kendoCheckBox 
-                aria-labelledby="detailedMessageOk"
+                id="detailedMessageOk" 
+                kendoCheckBox  
                 formControlName="detailMsgFlag"
+                aria-labelledby="detailedMessageOk"  
                 />
-                <label class="k-checkbox-label" for="check17" id="detailedMessageOk">Detailed Messages OK</label>
+                <label class="k-checkbox-label" for="detailedMessageOk"  >Detailed Messages OK</label>
               </span>
             </kendo-formfield>
             </div>
@@ -715,12 +782,12 @@
               <span class="app-checkboxwidtext-wrapper">
                 <input 
                 type="checkbox" 
-                id="check18" 
-                kendoCheckBox 
-                aria-labelledby="goPapperlessAndSendViaEmail" 
-                formControlName="goPapperlessFlag"
+                id="gopaperless" 
+                kendoCheckBox  
+                formControlName="paperlessFlag"
+                aria-labelledby="gopaperless"  
                 />
-                <label class="k-checkbox-label" for="check18">Go paperless and send important notices via email, when
+                <label class="k-checkbox-label" for="gopaperless">Go paperless and send important notices via email, when
                   possible</label>
               </span>
             </kendo-formfield>
@@ -731,8 +798,10 @@
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <kendo-formfield>
-              <kendo-floatinglabel text="Preferred Contact">
+              <kendo-floatinglabel text="Preferred Contact" class="inline-search-loader">
+                <span *ngIf="showPreferredContactLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
                 <kendo-dropdownlist 
+                aria-labelledby="Preferred Contact" 
                 [fillMode]="formUiStyle.dropDownFillMode" 
                 [data]="preferredContactMethods"
                 [disabled]="preferredContactMethods.length === 0"
@@ -757,13 +826,13 @@
               <input 
               class="adjust-attr"
               type="checkbox" 
-              id="check19" 
+              id="noFriendOrFamilyContactFlag" 
               name="familyAndFriendsContact_noFriendOrFamilyContactFlag"
-              kendoCheckBox              
-              aria-labelledby="noFriendsOrFamily" 
+              kendoCheckBox       
               formControlName="noFriendOrFamilyContactFlag"
+              aria-labelledby="noFriendOrFamilyContactFlag" 
               />
-              <label class="k-checkbox-label" for="check19">No friend or family contact</label>
+              <label class="k-checkbox-label" for="noFriendOrFamilyContactFlag">No friend or family contact</label>
             </span>
           </kendo-formfield>
           </div>
@@ -777,9 +846,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="40"
               formControlName="contactName"
+              placeholder="Contact's Name"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Contacts name is required</kendo-formerror>
+            <kendo-formerror *ngIf="fAfContact.contactName.errors?.required">
+              Contact's Name is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="fAfContact.contactName.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -788,6 +863,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Contact's Relationship to Client">
               <kendo-dropdownlist 
+              aria-label="Contact's Relationship to Client" 
               [fillMode]="formUiStyle.dropDownFillMode" 
               [data]="ddlRelationships$ | async"
               [disabled]="isNoFriendsOrFamilyChecked"
@@ -798,7 +874,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>Contact's relationship to client is required</kendo-formerror>
+            <kendo-formerror>Contact's Relationship to Client is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -811,9 +887,15 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="50"
               formControlName="otherDesc"
+              placeholder="Description"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror>Description is required</kendo-formerror>
+            <kendo-formerror *ngIf="fAfContact.otherDesc.errors?.required">
+              Description is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="fAfContact.otherDesc.errors?.pattern">
+              Special characters are not allowed
+            </kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
@@ -822,16 +904,18 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Contact's Phone Number">
               <kendo-maskedtextbox 
+              [maskOnFocus]="true" 
               [disabled]="isNoFriendsOrFamilyChecked" 
               aria-label="contacts phone number"
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="contactPhoneNbr"
               mask="(999) 000-0000"
+              placeholder="Contact's Phone Number"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
              <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">
-              Contact's phone number is required
+              Contact's Phone Number is required
             </kendo-formerror>
             <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.pattern">
               Not a valid phone number format 
@@ -870,14 +954,14 @@
           <span>
           <input
           type="radio"
-          id="choosenAddress" 
-          name="choosenAddress" 
-          aria-labelledby="address entered"
+          id="chosenmailAddressEntered" 
+          name="chosenAddress"  
           value="addressEntered" 
-          formControlName="choosenAddress"             
+          formControlName="chosenAddress"             
           kendoRadioButton
+          aria-labelledby="chosenmailAddressEntered" 
           />
-          <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
+          <kendo-label for="chosenmailAddressEntered" text="Address Entered"></kendo-label> 
         </span>
         <div class="mt-2 ml-3">
       <p>  {{mailAddressEntered?.address1 | uppercase }} </p> 
@@ -889,14 +973,14 @@
           <span>
           <input
           type="radio"
-          id="choosenAddress"
-          name="choosenAddress"
-          aria-labelledby="address suggested"
+          id="chosenmailAddressSuggested"
+          name="chosenAddress"
+          aria-labelledby="chosenmailAddressSuggested"
           value="addressSuggested"
-          formControlName="choosenAddress"
+          formControlName="chosenAddress"
           kendoRadioButton
           />
-          <kendo-label for="choosenAddress" text="Suggested Address"></kendo-label>  
+          <kendo-label for="chosenmailAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
       <div class="mt-2 ml-3">
         <p>   {{mailAddressSuggested?.address1}}</p>
@@ -925,7 +1009,7 @@
 
 <!-- Home Address Validation Modal -->
 <kendo-dialog *ngIf="homeAddressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked('H')"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Home Address Validation">
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Home Address Validation">
   <section class="k-dialog-body mb-2">
     <div *ngIf="homeAddressIsNotValid">
       <p >
@@ -948,14 +1032,14 @@
           <span>
           <input
           type="radio"
-          id="choosenAddress" 
-          name="choosenAddress" 
-          aria-labelledby="address entered"
+          id="chosenhomeAddressEntered" 
+          name="chosenAddress"           
           value="addressEntered" 
-          formControlName="choosenAddress"             
+          formControlName="chosenAddress"             
           kendoRadioButton
+          aria-labelledby="chosenhomeAddressEntered" 
           />
-          <kendo-label for="choosenAddress" text="Address Entered"></kendo-label> 
+          <kendo-label for="chosenhomeAddressEntered" text="Address Entered"></kendo-label> 
         </span>
         <p class="mt-2 ml-3">
         {{homeAddressEntered?.address1 | uppercase }} <br>
@@ -967,14 +1051,14 @@
           <span>
           <input
           type="radio"
-          id="choosenAddress"
-          name="choosenAddress"
-          aria-labelledby="address suggested"
+          id="chosenhomeAddressSuggested"
+          name="chosenAddress"
+          aria-labelledby="chosenhomeAddressSuggested"
           value="addressSuggested"
-          formControlName="choosenAddress"
+          formControlName="chosenAddress"
           kendoRadioButton
           />
-          <kendo-label for="choosenAddress" text="Suggested Address"></kendo-label>  
+          <kendo-label for="chosenhomeAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
       <p class="mt-2 ml-3">
           {{homeAddressSuggested?.address1}} <br>

@@ -51,21 +51,33 @@
         <kendo-grid-column
         field="providerPriority"
         title="Provider Type"
-        [width]="150"
+        [width]="50"
         [sortable]="false" 
         [columnMenu]="false"
       ></kendo-grid-column>     
         <kendo-grid-column
           field="primaryPhone"
           title="Provider Phone"
-          [width]="150"
+          [width]="70"
           [sortable]="false" 
           [columnMenu]="false"
-        ></kendo-grid-column>     
+        >      
+      </kendo-grid-column>    
+        <kendo-grid-column
+        field="address1"
+        title="Provider Address"
+        [width]="180"
+        [sortable]="false" 
+        [columnMenu]="false"
+      >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.address1}}  {{dataItem.address2}}  {{dataItem.city+' '+dataItem.stateCode+' '+dataItem.zip}}
+       </ng-template>   
+    </kendo-grid-column>     
         <kendo-grid-column
           field="providerId"
           title="Option"
-          [width]="75"
+          [width]="30"
           class="text-center"
           [sticky]="true"
           [sortable]="false" 
@@ -75,6 +87,7 @@
             <kendo-dropdownbutton
               [data]="actions"
               icon="more-vertical"
+              title="More option"
               class="TableActionPopup app-dropdown-action"
               buttonClass="k-icon-button"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
@@ -96,7 +109,8 @@
           <div class="d-flex align-items-center">    
             <label class="mr-1">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-              [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
+              [valuePrimitive]="true" [(value)]="state.take"
+              (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
     
@@ -148,9 +162,10 @@
   class="app-c-modal app-c-modal-lg app-c-modal-np"
 >
   <kendo-dialog-titlebar
-    >{{ isEditSearchHealthProvider ? 'Edit Health Care Provider' : 'Add Health Care Provider' }}
+    >{{ isEditSearchHealthProvider ? 'Edit Healthcare Provider' : 'Add Healthcare Provider' }}
   </kendo-dialog-titlebar>
   <case-management-health-care-provider-search 
+    [searchProviderLoaded$]="searchProviderLoaded$"
     [existingProviderData]="existingProviderData"
     [selectedCustomProviderName]="selectedCustomProviderName"
     [prvId]="prvSelectedId" 
@@ -171,9 +186,10 @@
 <!-- Delete Modal -->
 <kendo-dialog
   *ngIf="isOpenedDeleteConfirm"
-  (close)="onDeleteConfirmCloseClicked()"
+ 
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
+<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Remove healthcare provider? </kendo-dialog-titlebar>
  <case-management-health-care-provider-remove-confirmation
  [prvId]="prvSelectedId" 
  (deleteConfimEvent)="handleAcceptPrvRemove($event)"
@@ -192,16 +208,21 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
+      <div class="justify-content-end">        
         <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          aria-label="cancel adding health provider"
-          (click)="onBusinessInfoCloseClicked()"
-        >
-          OK
-        </button>        
+        kendoButton
+        [primary]="true"
+        look="outline"
+        (click)="onBusinessInfoCloseClicked()"
+        aria-label="cancel adding provider"
+      >
+        CANCEL
+      </button>
+        <button kendoButton [primary]="true" 
+        (click)="onBusinessInfoCloseClicked()" aria-label="add or update pharmacy">
+          ADD
+        </button>
+      
       </div>
     </div>
   </kendo-dialog-actions>

@@ -1,15 +1,16 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
-import { forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, tap,first } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType,CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Router } from '@angular/router';
 
 
 
@@ -25,9 +26,14 @@ export class CaseDetailPageComponent implements OnInit {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
-  public size: DateInputSize = 'medium';
+  private loadSessionSubscription !:Subscription;
+  private showConfirmationPopupSubscription !: Subscription;  public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
+
+  clientCaseId:any;
+  clientId:any;
+  clientCaseStatusData:any={};
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
@@ -38,7 +44,7 @@ export class CaseDetailPageComponent implements OnInit {
   openedPreviewLetter = false;
   openedSaveForLater = false;
   openedSendLetterToPrint = false;
-  ddlCommonActions$ = this.caseFacade.ddlCommonActions$;
+  caseStatuses:[]=[];
   ScreenName = ScreenType.CaseDetailPage;
   popupClass = 'app-c-split-button';
   isShowSaveLaterPopup = false;
@@ -47,6 +53,10 @@ export class CaseDetailPageComponent implements OnInit {
   isShowSendNewLetterPopup = false;
   isInnerLeftMenuOpen = false;
   sessionId!: string;
+  case$ = this.caseFacade.getCase$;
+  showDelete:boolean=true;
+  currentStatusCode:string="";
+  isSubmitted:boolean=false;
   data: Array<any> = [
     {
       text: '',
@@ -83,13 +93,16 @@ export class CaseDetailPageComponent implements OnInit {
   routes$ = this.workflowFacade.routes$;
   completeStaus$ = this.workflowFacade.completionStatus$;
   currentSession = this.workflowFacade.currentSession
+  isWorkflowReady$ = this.workflowFacade.workflowReady$
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade,
     private loaderService: LoaderService,
     private loggingService : LoggingService,
-    private readonly snackbarService : NotificationSnackbarService
+    private readonly snackbarService : NotificationSnackbarService,
+    private router: Router,
+	private lovFacade:LovFacade
   ) {
   }
 
@@ -98,12 +111,89 @@ export class CaseDetailPageComponent implements OnInit {
     this.loadQueryParams();
     this.loadDdlCommonAction();
     this.addNavigationSubscription();
-  }
+    this.loadCase();   
+    this.getCase();
+ 	this.addConfirmationPopupSubscription();
+    this.loadSessionData();
+    this.getCaseStatusLov();  }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
-  }
+    this.loadSessionSubscription .unsubscribe();
+	  this.showConfirmationPopupSubscription.unsubscribe();      
+    this.workflowFacade.unloadWorkflowSession();
+}
 
+  cancelCase(){
+    this.loaderService.show()  
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe(
+      (response: any) => {
+        this.caseFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Case canceled successfully.'
+        ); 
+        this.onCloseDeleteConfirmClicked();  
+        this.loaderService.hide() 
+        this.router.navigateByUrl(`dashboard`); 
+      },
+      (error: any) => {
+        if (error) {
+          this.caseFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          this.loggingService.logException(
+            {
+              name:SnackBarNotificationType.ERROR,
+              message:error
+            });
+          this.loaderService.hide()    
+        }
+      }
+    );
+  }
+  getCase(){ 
+    this.case$.subscribe((caseData:any)=>{   
+      this.clientCaseId = caseData.clientCaseId;
+      if(caseData.caseStatusCode ===CaseStatusCode.new || 
+        caseData.caseStatusCode === CaseStatusCode.incomplete || 
+        caseData.caseStatusCode === CaseStatusCode.review){
+        this.showDelete = true;
+      }
+      else{
+        this.showDelete = false;
+      }
+    })
+     
+  }
+  private loadCase()
+  {     
+   this.sessionId = this.route.snapshot.queryParams['sid'];    
+   this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription =this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+    .subscribe((session: any) => {      
+     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId     
+     this.caseFacade.loadCasesById(this.clientCaseId);      
+    });        
+  } 
+  hideButton(type:any){
+    if(type===ButtonType.deleteApplication &&  !this.showDelete){
+    return false;
+    }
+    else {
+      return true;
+    }
+  }
+  cancelDeletion(){
+    this.isShowDeleteConfirmPopup = false;
+  }
+  cancelDiscard(){
+    this.isShowDiscardConfirmPopup = false;
+  }
+  discardChanges(){
+    this.isShowDiscardConfirmPopup = false;
+    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
+  }
   /** Private Methods */
   private loadQueryParams() {
     const workflowType: string = WorkflowTypeCode.NewCase;
@@ -150,7 +240,8 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   onSaveLaterClicked() {
-    this.isShowSaveLaterPopup = true;
+   
+    this.workflowFacade.saveForLaterValidations(true);
   }
 
   onCloseDeleteConfirmClicked() {
@@ -236,4 +327,71 @@ export class CaseDetailPageComponent implements OnInit {
   openInnerLeftMenu() {
     this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
   }
+
+  private addConfirmationPopupSubscription(): void {
+    this.showConfirmationPopupSubscription = this.workflowFacade.saveForLaterConfirmationClicked$.subscribe((val) => {
+      if (val) {
+        this.isShowSaveLaterPopup = true;
+      }
+    });
+  }
+
+  loadSessionData() {
+    //this.loaderService.show();
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session !== null && session !== undefined && session.sessionData !== undefined) {
+          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+          this.clientId = JSON.parse(session.sessionData).clientId;
+          this.getCaseStatusDetails();
+        }
+      });
+  }
+
+  getCaseStatusDetails() {
+    this.loaderService.show();
+    this.caseFacade.getCaseStatusById(this.clientCaseId).subscribe({
+      next: (response: any) => {
+        this.loaderService.hide();
+        this.clientCaseStatusData = response;
+        this.currentStatusCode=response.caseStatusCode
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      }
+    })
+  }
+
+  getCaseStatusLov() {
+    this.lovFacade.getCaseStatusLovs();
+    this.lovFacade.caseStatusType$.subscribe((statusResponse: any) => {
+      if (statusResponse.length > 0) {
+        this.caseStatuses = statusResponse.filter((x: any) => x.lovCode == CaseStatusCode.incomplete || x.lovCode == CaseStatusCode.reject)
+      }
+    })
+  }
+
+  onUpdateCaseStatusClicked() {
+    this.loaderService.show();
+    this.isSubmitted = true;
+    if (this.currentStatusCode != "") {
+      this.caseFacade.updateCaseStatus(this.clientCaseId,this.currentStatusCode).subscribe({
+        next:(casesResponse:any)=>{
+          this.loaderService.hide();
+          this.workflowFacade.saveForLater(true);
+          this.isShowSaveLaterPopup = false;
+        },
+        error:(err:any)=>{
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        }
+      })
+    }
+
+  }
+
 }

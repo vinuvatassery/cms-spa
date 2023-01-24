@@ -20,6 +20,14 @@ export * from './lib/loader/loader.component';
 export * from './lib/loader/grid-loader.component';
 export * from './lib/optionbutton-list/optionbutton-list.component';
 
+/** Pipes **/
 export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/phone.pipe';
+
+/** Directives **/
+export * from './lib/directives/kendo-componentsforaccessanility.directive';
+
+/** Enums **/
 export * from './lib/enums/yes-no-flag-enum';
+export * from './lib/enums/material-format.enum';
+

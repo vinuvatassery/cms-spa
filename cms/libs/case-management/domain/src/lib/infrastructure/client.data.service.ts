@@ -355,5 +355,9 @@ export class ClientDataService {
         applicantInfo,
     
     )}
-    
+    searchDuplicateClient(clientData: any) {  
+      return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/duplicate-check`,
+      clientData,
+    )}
 }

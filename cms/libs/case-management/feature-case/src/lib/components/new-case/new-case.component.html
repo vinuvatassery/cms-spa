@@ -6,24 +6,29 @@
   <section>
     <div class="flex-row">
       <div class="flex-col">
-        <div class="global-search mat-form-no-b-space search-case">
+        <div class="global-search field-label-hide mat-form-no-b-space search-case">
           <span
             class="material-icons global-search-icon"
             aria-label="search case"
             aria-hidden="true"
             >search</span
           >
+          <kendo-label text="Search Case Name, Member ID or SSN">
           <span *ngIf="showInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
           <kendo-multicolumncombobox         
             [data]="caseSearchResults$ | async"
             textField="name"
-            valueField="id"
+            valueField="clientId"
+            autofocusfield
+            id="searchcaseornew"
+            #searchcaseornew
             [loading] = "showInputLoader"
             placeholder="Search Case Name, Member ID or SSN"
             [fillMode]="formUiStyle.dropDownFillMode"
             [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
             [filterable]="true"
-            (filterChange)="onsearchTextChange($event)">
+            (filterChange)="onsearchTextChange($event)"
+            (selectionChange)="onClientSelected($event)">
           <!-- (close)="$event.preventDefault(); " -->
           <!-- title="Name" -->
             <kendo-combobox-column>
@@ -36,12 +41,12 @@
                 <span class=" text-muted"> <em>ID:</em> {{dataItem.clientId}}</span>
               </ng-template>
             </kendo-combobox-column>
-            <kendo-combobox-column   [width]="120">
+            <kendo-combobox-column   [width]="125">
               <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
                 <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
               </ng-template>
             </kendo-combobox-column>
-            <kendo-combobox-column  [width]="130">
+            <kendo-combobox-column  [width]="140">
               <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
                 <span class="text-muted"><em> SSN:</em> {{ dataItem.ssn }}</span>
               </ng-template>
@@ -70,6 +75,7 @@
               </div>
             </ng-template>
           </kendo-multicolumncombobox>
+        </kendo-label>
         </div>
       </div>
     </div>

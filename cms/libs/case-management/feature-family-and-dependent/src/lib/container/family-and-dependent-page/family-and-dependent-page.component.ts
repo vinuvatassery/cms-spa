@@ -43,6 +43,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;
+  private saveForLaterClickSubscription !: Subscription;
+  private saveForLaterValidationSubscription !: Subscription;
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag  
@@ -68,10 +70,14 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.lovFacade.getRelationShipsLovs(); 
     this.loadCase()   
     this.addSaveSubscription();    
+    this.addSaveForLaterSubscription();
+    this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe(); 
+    this.saveForLaterClickSubscription.unsubscribe();
+    this.saveForLaterValidationSubscription.unsubscribe();
   }
 
   /** Private Methods **/
@@ -122,7 +128,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
       ),  
     ).subscribe(([navigationType, isSaved ]) => {         
       if (isSaved == true) {    
-        this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')  
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')  
         this.checkBoxSubscription.unsubscribe();      
         this.workflowFacade.navigate(navigationType);
       }
@@ -136,7 +142,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
        .pipe
       (
        catchError((err: any) => {                     
-         this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)          
+         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
          return  of(false);
        })  
       )  
@@ -159,7 +165,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.familyAndDependentFacade.updateDependentStatus
     (this.clientCaseEligibilityId,this.familyStatus).subscribe((isSaved) => {         
       if (isSaved == true) {    
-        this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')        
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')        
         if(this.isFamilyGridDisplay === true)
         {
           this.updateWorkFlowStatus();
@@ -216,5 +222,25 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     data.parentClientId =   this.clientId 
     this.familyAndDependentFacade.AddExistingDependent(data);
   }
- 
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
+      mergeMap((statusResponse: boolean) =>
+        forkJoin([of(statusResponse), this.save()])
+      ),
+    ).subscribe(([statusResponse, isSaved]) => {
+      if (isSaved) {
+        this.loaderService.hide();
+        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+      }
+    });
+  }
 }
