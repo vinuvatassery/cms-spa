@@ -36,7 +36,8 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
 
      /** Construtor **/
    constructor(
-    private formBuilder: FormBuilder,
+    private readonly formBuilder: FormBuilder,
+    private readonly cdr: ChangeDetectorRef,
      private readonly lovFacade : LovFacade,
      private readonly workflowFacade : WorkflowFacade,
      private readonly clientfacade: ClientFacade,
