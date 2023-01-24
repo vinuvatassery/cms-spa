@@ -36,12 +36,11 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
 
      /** Construtor **/
    constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly cdr: ChangeDetectorRef,
+     private readonly formBuilder: FormBuilder,
+     private readonly cdr: ChangeDetectorRef,
      private readonly lovFacade : LovFacade,
      private readonly workflowFacade : WorkflowFacade,
-     private readonly clientfacade: ClientFacade,
-     private readonly cdr: ChangeDetectorRef
+     private readonly clientfacade: ClientFacade
    ) {
     this.appInfoForm = this.formBuilder.group({Pronoun: [''],});
    }
