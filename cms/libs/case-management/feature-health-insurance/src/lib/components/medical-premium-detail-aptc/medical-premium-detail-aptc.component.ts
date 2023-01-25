@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-medical-premium-detail-aptc',
@@ -21,12 +22,14 @@ export class MedicalPremiumDetailAPTCComponent implements OnInit {
   aptcFlagValue: string = "";
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
-    private formBuilder: FormBuilder
+    public readonly lovFacade: LovFacade,
+    private readonly formBuilder: FormBuilder
   ) {
     this.healthInsuranceForm = this.formBuilder.group({ aptcFlag: [''] });
   }
 
   ngOnInit(): void {
+    this.lovFacade.getAptcLovs();
     this.setRadioSelection();
   }
 
@@ -37,14 +40,15 @@ export class MedicalPremiumDetailAPTCComponent implements OnInit {
   setRadioSelection(){
     if (this.healthInsuranceForm && this.healthInsurancePolicy) {
       let flagValue=this.healthInsuranceForm.controls["aptcFlag"].value;
-      if(flagValue !== StatusFlag.Yes){
+      if(flagValue !== 'YES'){
         this.aptcFlagValue = this.healthInsurancePolicy.aptcNotTakingFlag;
       }
       else{
         this.aptcFlagValue = this.healthInsuranceForm.controls["aptcFlag"].value
       }
-      this.disableEnableRadio();
+      
     }
+    this.disableEnableRadio();
   }
 
   disableEnableRadio(){
