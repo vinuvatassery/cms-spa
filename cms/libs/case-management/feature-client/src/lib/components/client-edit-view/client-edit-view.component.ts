@@ -280,6 +280,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       pronouns: [''] ,
       materialInAlternateFormatCode:[''],
       materialInAlternateFormatDesc:[''],
+      materialInAlternateFormatOther:[''],
       interpreterCode:[''],
       interpreterType:[''],
       deafOrHearingCode:[''],
@@ -437,6 +438,9 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode !== null && 
     this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode ==='YES'){
       this.yesMaterialDisable = false;
+      this.appInfoForm.controls["materialInAlternateFormatOther"].setValue(
+       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther);
+
   }
   this.appInfoForm.controls["interpreterCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode);
   this.appInfoForm.controls["interpreterType"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType);
