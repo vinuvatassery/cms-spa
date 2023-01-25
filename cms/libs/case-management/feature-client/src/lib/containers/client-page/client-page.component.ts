@@ -97,6 +97,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   private loadSessionData()
   {  
+   this.loaderService.show();
    this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
@@ -135,13 +136,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
        
       
       }
+      this.loaderService.hide();      
     }
   
-    });   
+    }); 
     
   } 
 
   private loadApplicantInfo(){   
+    this.loaderService.show();     
     if(  this.applicantInfo.client == undefined){
       this.applicantInfo.client = new Client;
     }
@@ -223,8 +226,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
              
             }
+            this.loaderService.hide();     
           } ,
-        error: error => {  
+        error: error => { 
+          this.loaderService.hide();      
           this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR ,error)  
           this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error})
         }
@@ -282,14 +287,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.populateClientPronoun();
     this.populateClientGender();
     this.populateClientSexualIdentity();
-
-    /*Modify when the get is ready */
-    /*-------------------------------------------------------------------------------- */
-     //this.populateClientCase();
-    
-     this.populateClientRace();
-     
-    /*-------------------------------------------------------------------------------- */
+    this.populateClientRace();
 
   }
 
@@ -526,7 +524,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
          clientGender.clientGenderCode =control;
          clientGender.clientId = this.clientId;
          if(clientGender.clientGenderCode===PronounCode.notListed){
-           clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
+           clientGender.otherDesc=this.appInfoForm.controls['genderDescription'].value;
          }
          const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
          if (Existing!==undefined) {
@@ -538,7 +536,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 }
   private populateClientRace() {
     this.applicantInfo.clientRaceList = [];
-    //const clientRaceListSaved = this.applicantInfo.clientRaceList;// this is in case of update record
     const RaceAndEthnicity = this.appInfoForm.controls['RaceAndEthnicity'].value;
     const Ethnicity = [];
     let ethnicityValue=this.appInfoForm.controls['Ethnicity'].value;
@@ -565,11 +562,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       clientRace.clientRaceCategoryCode = "";
       if (RaceAndEthnicityPrimary.lovCode === el.lovCode)
         clientRace.isPrimaryFlag = StatusFlag.Yes;
-      clientRace.clientId = this.clientId;
-      // const Existing=clientRaceListSaved.find(m=>m.clientEthnicIdentityCode===el.clientGenderCode);
-      //    if (Existing!==undefined) {
-      //     clientRace=Existing;
-      //    }
+      clientRace.clientId = this.clientId;     
       this.applicantInfo.clientRaceList.push(clientRace)
     });
   }
@@ -850,18 +843,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
              
              const genderControls=  Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.gender));
              this.appInfoForm.controls['GenderGroup'].setValue(null); 
-             this.appInfoForm.controls['GenderGroup'].updateValueAndValidity();
-             this.appInfoForm.controls['genderDescription'].updateValueAndValidity(); 
-             genderControls.forEach(control => {
-              if (this.appInfoForm.controls[control].value===true) {
-                this.appInfoForm.controls['GenderGroup'].setValue(this.appInfoForm.controls[control].value); 
+             this.appInfoForm.controls['genderDescription'].updateValueAndValidity();           
+            genderControls.forEach(gender =>  { 
+              if(this.appInfoForm.controls[gender].value ===true){
+                this.appInfoForm.controls['GenderGroup'].removeValidators(Validators.required)
+                this.appInfoForm.controls['GenderGroup'].updateValueAndValidity();
               }
-             });
+            });
              if(!this.appInfoForm.controls['GenderGroup'].valid){
                 genderControls.forEach((gender:any) => {   
                   this.appInfoForm.controls[gender].setValidators(Validators.requiredTrue);
                   this.appInfoForm.controls[gender].updateValueAndValidity();
               });
+              this.appInfoForm.controls['GenderGroup'].setValue(null); 
              }
             
 
