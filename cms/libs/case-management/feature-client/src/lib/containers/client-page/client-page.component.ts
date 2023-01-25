@@ -6,7 +6,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { catchError, first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, 
-  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix } from '@cms/case-management/domain';
+  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -381,9 +381,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         if(this.appInfoForm.controls["materialInAlternateFormatCode"].value !== null && 
         this.appInfoForm.controls["materialInAlternateFormatCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = this.appInfoForm.controls["materialInAlternateFormatDesc"].value
+            if(this.applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibility?.materialInAlternateFormatDesc?.toUpperCase()===MaterialFormat.other.toUpperCase()){
+              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = this.appInfoForm.controls["materialInAlternateFormatOther"].value;
+            }  
+            else{
+              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = null;
+            }         
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = '';
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = null;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = null;
         }
 
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode = this.appInfoForm.controls["interpreterCode"].value
@@ -694,6 +701,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 if( this.appInfoForm.controls['materialInAlternateFormatCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
                   this.appInfoForm.controls['materialInAlternateFormatDesc'].setValidators(Validators.required);
                   this.appInfoForm.controls['materialInAlternateFormatDesc'].updateValueAndValidity();
+                  if(
+                    (this.appInfoForm.controls['materialInAlternateFormatDesc'].value !== null
+                    && this.appInfoForm.controls['materialInAlternateFormatDesc'].value.toUpperCase() === MaterialFormat.other.toUpperCase())
+                  && this.appInfoForm.controls['materialInAlternateFormatOther'].value ===null 
+                  || this.appInfoForm.controls['materialInAlternateFormatOther'].value ===undefined
+                  || this.appInfoForm.controls['materialInAlternateFormatOther'].value ===''){
+                    this.appInfoForm.controls['materialInAlternateFormatOther'].setValidators(Validators.required);
+                    this.appInfoForm.controls['materialInAlternateFormatOther'].updateValueAndValidity();
+                  }
                 }
                 
               }    
