@@ -652,7 +652,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan
       && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
       && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra 
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.QualifiedHealthPlan) {
       if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y') {
         if (this.healthInsuranceForm.value.othersCoveredOnPlan.length == 0) {
           this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].setValidators([

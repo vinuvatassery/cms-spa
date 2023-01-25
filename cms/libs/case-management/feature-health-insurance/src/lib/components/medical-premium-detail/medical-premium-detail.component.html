@@ -443,7 +443,8 @@
       <div class="flex-row pl-3 mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
       && ddlInsuranceType !== InsurancePlanTypes.Cobra
       && ddlInsuranceType !== InsurancePlanTypes.Veterans
-      && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
+      && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
+      && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan">
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
