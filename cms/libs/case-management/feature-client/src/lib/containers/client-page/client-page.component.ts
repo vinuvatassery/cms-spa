@@ -13,7 +13,8 @@ import { CompletionChecklist } from '@cms/case-management/domain';
 import { NavigationType,PronounCode } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
+import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService,ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 
 
@@ -44,6 +45,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId!:string;
   sessionId! : string;
   message!:string;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
  
     /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
@@ -52,8 +54,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               private caseFacade: CaseFacade,
               private loaderService: LoaderService,
               private loggingService:LoggingService,
-              private notificationSnackbarService : NotificationSnackbarService,
-              private router:Router
+              private router:Router,
+              private intl: IntlService,
+              private configurationProvider: ConfigurationProvider
               ) { }
 
 
@@ -305,15 +308,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
       this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value.trim()===''?null:this.appInfoForm.controls["lastName"].value; 
-      var dob =  this.appInfoForm.controls["dateOfBirth"].value;
-      if(this.clientCaseEligibilityId != null){
-        this.applicantInfo.client.dob = new Date(dob.getUTCFullYear(), dob.getUTCMonth(),dob.getUTCDate() + 1, 
-        dob.getUTCHours(), dob.getUTCMinutes(), dob.getUTCSeconds()
-        );
-      }  
-      else{
-        this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
-      }
+      this.applicantInfo.client.dob= new Date(this.intl.formatDate(this.appInfoForm.controls['dateOfBirth'].value, this.dateFormat));  
       this.applicantInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
       if (this.applicantInfo.client.genderAtBirthCode===PronounCode.notListed) {
         this.applicantInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;
