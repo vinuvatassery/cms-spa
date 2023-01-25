@@ -667,12 +667,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-          }  
+          }
+
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => { 
             if(this.appInfoForm.controls[pronoun].value ===true){
               this.appInfoForm.controls['pronouns'].setErrors(null);
+              this.appInfoForm.controls['pronouns'].updateValueAndValidity();
             }
           });
           if(this.appInfoForm.controls['pronouns'].valid){   
