@@ -27,7 +27,7 @@ import {
   WorkflowFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, FormArray, ValidationErrors } from '@angular/forms';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, first } from 'rxjs';
@@ -498,7 +498,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.isMedicareCardFileUploaded = true;
     const QualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
-      'insuranceEndDate',
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',
@@ -1140,6 +1139,27 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
       }
 
+    }
+  }
+  endDateOnChange(endDate: Date) {
+    if (this.healthInsuranceForm.controls['insuranceStartDate'].value === null) {
+      this.snackbarService.errorSnackBar('Insurance Start Date required.');
+      this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
+      return;
+    }else{
+      var startDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.healthInsuranceForm.controls['insuranceStartDate'].value
+        )
+      );
+      const control:any = this.healthInsuranceForm.controls['insuranceEndDate'];
+      if(control.errors!==null){
+        const minError:any=control?.errors['minError'];
+        if (minError) {
+          this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
+        }
+      }
+      
     }
   }
 
