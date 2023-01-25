@@ -309,9 +309,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
     this.metalLevelDefaultValue = metalLevel;
     this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
-    this.healthInsuranceForm.controls['aptcFlag'].setValue(
-      healthInsurancePolicy.aptcFlag
-    );
+    let aptcCode=healthInsurancePolicy.aptcCode?.trim();
+    this.healthInsuranceForm.controls['aptcFlag'].setValue(aptcCode);
     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
       healthInsurancePolicy.aptcMonthlyAmt
     );
@@ -410,9 +409,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
       this.metalLevelDefaultValue = metalLevel;
       this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
-      this.healthInsuranceForm.controls['aptcFlag'].setValue(
-        healthInsurancePolicy.aptcFlag
-      );
       this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
         healthInsurancePolicy.aptcMonthlyAmt
       );
@@ -549,7 +545,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         ]);
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
-      if (this.healthInsuranceForm.controls['aptcFlag'].value === 'Y') {
+      if (this.healthInsuranceForm.controls['aptcFlag'].value === 'YES') {
         this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValidators([
           Validators.required,
         ]);
@@ -784,13 +780,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       {
         this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
       }
+      this.healthInsurancePolicy.aptcCode = this.healthInsuranceForm.controls['aptcFlag'].value.trim();
       if (
-        this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
+        this.healthInsuranceForm.controls['aptcFlag'].value === 'NO'
       ) {
-        this.healthInsurancePolicy.aptcNotTakingFlag = '';
-        this.healthInsurancePolicy.aptcFlag = this.healthInsuranceForm.controls['aptcFlag'].value;
-      } else {
-        this.healthInsurancePolicy.aptcFlag = StatusFlag.Yes;
+        this.healthInsurancePolicy.aptcNotTakingFlag = this.healthInsuranceForm.controls['aptcFlag'].value;
+      } else if(this.healthInsurancePolicy.aptcCode==='YES'){
         this.healthInsurancePolicy.aptcMonthlyAmt = this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
       }
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
