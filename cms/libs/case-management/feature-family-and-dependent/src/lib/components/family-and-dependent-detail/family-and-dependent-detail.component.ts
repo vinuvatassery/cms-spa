@@ -133,7 +133,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         this.dependentSearch = groupBy(dependentSearch, [
           { field: 'memberType' },
         ]);  
-        this.searchResultSubject.next(this.dependentSearch)      
+        this.searchResultSubject.next(this.dependentSearch);
+        this.showDependentSearchInputLoader = false;     
       }
       
     });  
