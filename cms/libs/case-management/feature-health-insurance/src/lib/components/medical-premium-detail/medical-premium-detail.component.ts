@@ -24,7 +24,8 @@ import {
   HealthInsurancePlan,
   PartBMedicareType,
   PartAMedicareType,
-  WorkflowFacade
+  WorkflowFacade,
+  FamilyAndDependentFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray, ValidationErrors } from '@angular/forms';
@@ -126,6 +127,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     private lovFacade: LovFacade,
     private insurancePlanFacade: InsurancePlanFacade,
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
+    private familyAndDependentFacade: FamilyAndDependentFacade,
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade,
     private readonly loaderService: LoaderService,
@@ -151,6 +153,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.loadRelationshipLov();
     this.disableEnableRadio();
     this.loadHealthInsuranceProofCodes();
+    this.loadClientDependents();
     this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
       if (this.healthInsuranceForm.controls['paymentIdNbrSameAsInsuranceIdNbrFlag'].value) {
         this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
@@ -234,6 +237,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         }
       });
     })
+  }
+
+  private loadClientDependents() {
+    this.familyAndDependentFacade.clientDependents$.subscribe((data: any) => {
+      if (!!data) {
+        data.forEach((person: any) => {
+          person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
+        });
+        let personsGroup = !!data ? data.map((person: any) => this.formBuilder.group(person)) : [];
+        let personForm = this.formBuilder.array(personsGroup);
+        this.healthInsuranceForm.setControl('othersCoveredOnPlan', personForm);
+      }
+    });
   }
 
   private viewSelection() {
@@ -414,9 +430,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       );
     }
     // if (healthInsurancePolicy.isClientPolicyHolderFlag == StatusFlag.No) {
-      this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].setValue(
-        healthInsurancePolicy.isClientPolicyHolderFlag
-      );
+    this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].setValue(
+      healthInsurancePolicy.isClientPolicyHolderFlag
+    );
     //}
     // else {
     //   this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].setValue(
