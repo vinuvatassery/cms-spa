@@ -14,6 +14,7 @@ import { first, Subscription, tap } from 'rxjs';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { ProgramCode, CaseOriginCode } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
+import { AuthService } from '@cms/shared/util-oidc';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
@@ -35,6 +36,7 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
 
   date = new Date();
   caseOwnersObject!: any
+  caseOwnerList!:any;
 
   @Input() isProgramVIsible!: any;
   @Input() parentForm!: FormGroup;
@@ -52,7 +54,7 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   /** Constructor**/
   constructor(private readonly router: Router, private readonly ref: ChangeDetectorRef,
     private loaderService: LoaderService,
-
+    private authService: AuthService,
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,6 +74,9 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
 
   ngOnInit(): void {
     this.setDefaultProgram();
+    if (this.isProgramVIsible) {
+      this.getCaseOwners();
+    }
   }
 
   setDefaultProgram() {
@@ -123,5 +128,21 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
     if (caseData.caseOriginCode == CaseOriginCode.ClientPortal) {
       this.parentForm.controls['caseOriginCode'].disable();
     }
+  }
+  
+  getLoggedInCaseWorker(){
+    let user=this.authService.getUser();
+    let loggedInCaseOwner= this.caseOwnerList.filter((x:any)=>x.adUserId==user.preferred_username);
+    if(loggedInCaseOwner.length>0){
+      this.parentForm.controls['caseOwnerId'].setValue(loggedInCaseOwner[0].loginUserId);
+    }
+  }
+  getCaseOwners(){
+    this.caseOwners.subscribe((element:any)=>{
+      if(element.length>0){
+        this.caseOwnerList=element;
+        this.getLoggedInCaseWorker();
+      }
+    })
   }
 }
