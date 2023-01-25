@@ -91,7 +91,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public racialName: any = [];
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
-  checkBoxValid!:boolean;
   ageMinLimit=1;
   ageMaxLimit=9999999999;
 
@@ -572,15 +571,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
           this.updateFormCompleteCount(prev, curr); 
         }     
       });
-       this.appInfoForm.statusChanges.subscribe(a=>{   
-       if(this.appInfoForm.controls["pronouns"].valid){
-        this.checkBoxValid = true;
 
-       }
-       else{
-        this.checkBoxValid = false;
-       }
-    });
   }
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];

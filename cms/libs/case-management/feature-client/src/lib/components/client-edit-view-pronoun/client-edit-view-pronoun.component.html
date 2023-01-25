@@ -25,11 +25,11 @@
               formControlName="pronoun"
               [disabled]="textboxDisable"
               [fillMode]="formUiStyle.inputFillMode"
-              (valueChange)="onChange($event)"
               [maxlength]="maxLengthFifty"
               placeholder="Enter Pronouns"  
               >               
-            </kendo-textbox>        
+            </kendo-textbox>    
+                
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!appInfoForm.controls['pronoun'].valid ">Pronoun is required.</kendo-formerror>
         </span>     
