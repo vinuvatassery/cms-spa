@@ -440,11 +440,12 @@
             client policy holder flag is required.</kendo-formerror>
         </div>
       </div>
-      <div class="flex-row pl-3 mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
+      <div class="flex-row pl-3 mt-2" *ngIf="(ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
       && ddlInsuranceType !== InsurancePlanTypes.Cobra
       && ddlInsuranceType !== InsurancePlanTypes.Veterans
       && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
-      && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan">
+      && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan)
+      || (healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && ddlInsuranceType == InsurancePlanTypes.QualifiedHealthPlan)">
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
