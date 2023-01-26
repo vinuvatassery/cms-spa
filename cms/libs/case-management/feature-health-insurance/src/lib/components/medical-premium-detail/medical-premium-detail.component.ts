@@ -662,7 +662,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan
       && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
       && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra 
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
       if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y') {
         if (this.healthInsuranceForm.value.othersCoveredOnPlan.length == 0) {
           this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].setValidators([
@@ -671,7 +672,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
         }
       }
-      if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'N' || this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y') {
+      if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'N') {
         this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
           Validators.required,
         ]);
@@ -679,6 +680,28 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
           Validators.required,
         ]);
+        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+      }
+      else{
+        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators(null);
+        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators(null);
+        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+      }
+      if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y'){
+        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+      }
+      else{
+        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators(null);
+        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators(null);
         this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
       }
     }
