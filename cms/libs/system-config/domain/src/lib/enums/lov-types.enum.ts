@@ -25,5 +25,6 @@ export enum LovType {
     MedicareCoverageType = 'MEDICARE_COVERAGE_TYPE_CODE',
     HEALTHINSURANCEPROOF = 'HEALTH_INSURANCE_PROOF',
     CaseStatusCode = 'CASE_STATUS_CODE',
-    EthnicityOtherCategories='ETHNICITY_OTHER_CATEGORIES'
+    EthnicityOtherCategories='ETHNICITY_OTHER_CATEGORIES',
+    Aptc='APTC'
   }

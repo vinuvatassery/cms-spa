@@ -91,7 +91,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public racialName: any = [];
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
-  checkBoxValid!:boolean;
   ageMinLimit=1;
   ageMaxLimit=9999999999;
 
@@ -281,6 +280,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       pronouns: [''] ,
       materialInAlternateFormatCode:[''],
       materialInAlternateFormatDesc:[''],
+      materialInAlternateFormatOther:[''],
       interpreterCode:[''],
       interpreterType:[''],
       deafOrHearingCode:[''],
@@ -438,6 +438,9 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode !== null && 
     this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode ==='YES'){
       this.yesMaterialDisable = false;
+      this.appInfoForm.controls["materialInAlternateFormatOther"].setValue(
+       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther);
+
   }
   this.appInfoForm.controls["interpreterCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode);
   this.appInfoForm.controls["interpreterType"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType);
@@ -568,15 +571,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
           this.updateFormCompleteCount(prev, curr); 
         }     
       });
-       this.appInfoForm.statusChanges.subscribe(a=>{   
-       if(this.appInfoForm.controls["pronouns"].valid){
-        this.checkBoxValid = true;
 
-       }
-       else{
-        this.checkBoxValid = false;
-       }
-    });
   }
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
