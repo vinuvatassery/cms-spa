@@ -214,9 +214,8 @@
         <div class="flex-row">
           <div class="flex-col flex-col-3">
             <kendo-formfield>
-            <kendo-floatinglabel text="State">
+            <kendo-floatinglabel text="State" >
               <kendo-dropdownlist 
-              aria-label="State" 
               [disabled]="true"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlStates$ | async"
@@ -229,8 +228,13 @@
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>State is required</kendo-formerror>
+            <kendo-formerror *ngIf="homeAddress?.state?.errors?.required">
+              State is required
+            </kendo-formerror>
           </kendo-formfield>
+          <kendo-formerror *ngIf="!(isHomeAddressStateOregon$ | async)">
+            Home address must be in Oregon
+          </kendo-formerror>
           </div>
           <div class="flex-col flex-col-3">
             <kendo-formfield>

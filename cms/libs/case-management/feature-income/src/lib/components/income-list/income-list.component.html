@@ -58,9 +58,9 @@
               <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
               <a>Income Proof</a>
             </button>
-              
+
             </div>
-            
+
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
@@ -81,6 +81,7 @@
           field="monthlyIncome"
           title="Monthly Income"
           [width]="100"
+          format="{0:c2}"
           [sticky]="true"
         >
           <ng-template
@@ -88,7 +89,7 @@
             let-column
             let-columnIndex="columnIndex"
           >
-            {{incomesTotal?.totalIncome}}
+            {{incomesTotal?.totalIncome | kendoNumber: 'c2'}}
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
@@ -108,13 +109,13 @@
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
-            
+
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="onIncomeActionClicked(dataItem,buttondataItem.type)">
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                   <label>   {{ buttondataItem.text }} </label>
               </button>
-            
+
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
@@ -216,7 +217,7 @@
 
             </button>
 
-           
+
 
                 <button kendoButton  look="flat" *ngIf="dataItem.text === 'Attach from computer'" [attr.aria-label]="dataItem.text" class="upoadlistbtn" [class]="dataItem.buttonType" aria-hidden="false"  >
                   <kendo-upload  hidden  #uploadformcomp>  </kendo-upload>
@@ -247,10 +248,10 @@
 <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened"  (close)="onRemoveIncomeConfirmationClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
   <case-management-remove-income-confirmation
-  (closeModal)="onRemoveIncomeConfirmationClosed()" 
+  (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"
   (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"></case-management-remove-income-confirmation>
 
-  
+
 </kendo-dialog>
 

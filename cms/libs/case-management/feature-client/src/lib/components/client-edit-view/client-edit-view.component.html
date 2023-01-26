@@ -133,7 +133,7 @@
             (keyup)="dateValidate($event)"
             placeholder=""></kendo-datepicker>
             <kendo-formerror *ngIf="dateValidator"> Future date can not be selected</kendo-formerror>
-            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror>
+            <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror> 
         </kendo-floatinglabel>
       </div>
     </div>
@@ -212,7 +212,6 @@
       </legend>
       <div class="component-list-h">
         <case-management-client-edit-view-pronoun [appInfoForm]="appInfoForm"
-          [checkBoxValid]="checkBoxValid"
           [textboxDisable]="textboxDisable">
         </case-management-client-edit-view-pronoun>
         <hr />
@@ -254,7 +253,9 @@
           [dropdownInutLov]="materialsyeslov$" [textFieldDisable]="yesMaterialDisable"
           [OptionControlerName]="'materialInAlternateFormatCode'" [textControlerName]="'materialInAlternateFormatDesc'"
           [textFieldType]="'dropDown'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Select formats'"
-          [textValidationMessage]="'An Alternate Format is Required.'">
+          [textValidationMessage]="'An Alternate Format is Required.'"[otherControlerName]="'materialInAlternateFormatOther'"
+          [otherControlerPlaceholderText]="'Enter formats'"[otherControlerValidationMessage]="'A response is required.'"
+          [textFieldMaxLimit]="50">
         </common-optionbutton-list>
       </div>
     </fieldset>

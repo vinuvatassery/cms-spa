@@ -27,5 +27,6 @@ export enum LovType {
     CaseStatusCode = 'CASE_STATUS_CODE',
     EthnicityOtherCategories='ETHNICITY_OTHER_CATEGORIES',
     CaseStatus = 'CASE_STATUS_CODE',
-    Group = 'GROUP_CODE'
+    Group = 'GROUP_CODE',
+    Aptc='APTC'
   }

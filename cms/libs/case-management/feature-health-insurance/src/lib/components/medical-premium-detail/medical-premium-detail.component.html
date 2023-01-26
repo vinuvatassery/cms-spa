@@ -141,11 +141,12 @@
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
+              (valueChange)="endDateOnChange($event)"
               [disabled]="isViewContentEditable" formControlName="insuranceEndDate" formatPlaceholder="formatPattern"
               placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid">Insurance end date is
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid">Insurance End Date is
             required.</kendo-formerror>
         </div>
         <div class="flex-col">
@@ -233,18 +234,18 @@
             <div class="flex-row mt-3"
               *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
               <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Date Currently Paid through">
+                <kendo-floatinglabel text="Date Currently Paid Through">
                   <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                     formControlName="premiumPaidThruDate" [disabled]="isViewContentEditable"
-                    formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid through">
+                    formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid Through">
                   </kendo-datepicker>
                 </kendo-floatinglabel>
               </div>
               <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Next Payment Premium Due Date">
+                <kendo-floatinglabel text="Next Premium Payment Due Date">
                   <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                     formControlName="nextPremiumDueDate" [disabled]="isViewContentEditable"
-                    formatPlaceholder="formatPattern" placeholder="" aria-label="Next Payment Premium Due Date">
+                    formatPlaceholder="formatPattern" placeholder="" aria-label="Next Premium Payment Due Date">
                   </kendo-datepicker>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">Next payment

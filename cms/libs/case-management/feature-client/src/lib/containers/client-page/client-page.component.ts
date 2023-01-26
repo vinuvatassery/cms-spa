@@ -6,14 +6,15 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { catchError, first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, 
-  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix } from '@cms/case-management/domain';
+  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
 import { NavigationType,PronounCode } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService } from '@cms/shared/util-core';
+import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService,ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 
 
@@ -44,6 +45,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId!:string;
   sessionId! : string;
   message!:string;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
  
     /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
@@ -52,8 +54,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               private caseFacade: CaseFacade,
               private loaderService: LoaderService,
               private loggingService:LoggingService,
-              private notificationSnackbarService : NotificationSnackbarService,
-              private router:Router
+              private router:Router,
+              private intl: IntlService,
+              private configurationProvider: ConfigurationProvider
               ) { }
 
 
@@ -97,6 +100,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   private loadSessionData()
   {  
+   this.loaderService.show();
    this.applicantInfo = new ApplicantInfo();
    this.applicantInfo.clientPronounList= [];
    this.sessionId = this.route.snapshot.queryParams['sid'];    
@@ -135,13 +139,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
        
       
       }
+      this.loaderService.hide();      
     }
   
-    });   
+    }); 
     
   } 
 
   private loadApplicantInfo(){   
+    this.loaderService.show();     
     if(  this.applicantInfo.client == undefined){
       this.applicantInfo.client = new Client;
     }
@@ -223,8 +229,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
               this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
              
             }
+            this.loaderService.hide();     
           } ,
-        error: error => {  
+        error: error => { 
+          this.loaderService.hide();      
           this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR ,error)  
           this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error})
         }
@@ -282,14 +290,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.populateClientPronoun();
     this.populateClientGender();
     this.populateClientSexualIdentity();
-
-    /*Modify when the get is ready */
-    /*-------------------------------------------------------------------------------- */
-     //this.populateClientCase();
-    
-     this.populateClientRace();
-     
-    /*-------------------------------------------------------------------------------- */
+    this.populateClientRace();
 
   }
 
@@ -307,15 +308,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.client.noMiddleInitialFlag = StatusFlag.No;
       }   
       this.applicantInfo.client.lastName = this.appInfoForm.controls["lastName"].value.trim()===''?null:this.appInfoForm.controls["lastName"].value; 
-      var dob =  this.appInfoForm.controls["dateOfBirth"].value;
-      if(this.clientCaseEligibilityId != null){
-        this.applicantInfo.client.dob = new Date(dob.getUTCFullYear(), dob.getUTCMonth(),dob.getUTCDate() + 1, 
-        dob.getUTCHours(), dob.getUTCMinutes(), dob.getUTCSeconds()
-        );
-      }  
-      else{
-        this.applicantInfo.client.dob = this.appInfoForm.controls["dateOfBirth"].value;
-      }
+      this.applicantInfo.client.dob= new Date(this.intl.formatDate(this.appInfoForm.controls['dateOfBirth'].value, this.dateFormat));  
       this.applicantInfo.client.genderAtBirthCode = this.appInfoForm.controls["BirthGender"].value;
       if (this.applicantInfo.client.genderAtBirthCode===PronounCode.notListed) {
         this.applicantInfo.client.genderAtBirthDesc = this.appInfoForm.controls["BirthGenderDescription"].value;
@@ -381,9 +374,16 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         if(this.appInfoForm.controls["materialInAlternateFormatCode"].value !== null && 
         this.appInfoForm.controls["materialInAlternateFormatCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = this.appInfoForm.controls["materialInAlternateFormatDesc"].value
+            if(this.applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibility?.materialInAlternateFormatDesc?.toUpperCase()===MaterialFormat.other.toUpperCase()){
+              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = this.appInfoForm.controls["materialInAlternateFormatOther"].value;
+            }  
+            else{
+              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = null;
+            }         
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = '';
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = null;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = null;
         }
 
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode = this.appInfoForm.controls["interpreterCode"].value
@@ -519,7 +519,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
          clientGender.clientGenderCode =control;
          clientGender.clientId = this.clientId;
          if(clientGender.clientGenderCode===PronounCode.notListed){
-           clientGender.otherDesc=this.appInfoForm.controls['GenderDescription'].value;
+           clientGender.otherDesc=this.appInfoForm.controls['genderDescription'].value;
          }
          const Existing=clientGenderListSaved.find(m=>m.clientGenderCode===clientGender.clientGenderCode);
          if (Existing!==undefined) {
@@ -531,7 +531,6 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 }
   private populateClientRace() {
     this.applicantInfo.clientRaceList = [];
-    //const clientRaceListSaved = this.applicantInfo.clientRaceList;// this is in case of update record
     const RaceAndEthnicity = this.appInfoForm.controls['RaceAndEthnicity'].value;
     const Ethnicity = [];
     let ethnicityValue=this.appInfoForm.controls['Ethnicity'].value;
@@ -558,11 +557,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
       clientRace.clientRaceCategoryCode = "";
       if (RaceAndEthnicityPrimary.lovCode === el.lovCode)
         clientRace.isPrimaryFlag = StatusFlag.Yes;
-      clientRace.clientId = this.clientId;
-      // const Existing=clientRaceListSaved.find(m=>m.clientEthnicIdentityCode===el.clientGenderCode);
-      //    if (Existing!==undefined) {
-      //     clientRace=Existing;
-      //    }
+      clientRace.clientId = this.clientId;     
       this.applicantInfo.clientRaceList.push(clientRace)
     });
   }
@@ -660,16 +655,17 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         else{
               this.appInfoForm.controls["registerToVote"].removeValidators(Validators.required);;
               this.appInfoForm.controls["registerToVote"].updateValueAndValidity();   
-          }  
+          }
           this.appInfoForm.controls["pronouns"].setValidators(Validators.required);
           this.appInfoForm.controls["pronouns"].updateValueAndValidity(); 
           Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => { 
             if(this.appInfoForm.controls[pronoun].value ===true){
-              this.appInfoForm.controls['pronouns'].setErrors(null);
+              this.appInfoForm.controls['pronouns'].removeValidators(Validators.required)
+              this.appInfoForm.controls['pronouns'].updateValueAndValidity();
             }
           });
           if(this.appInfoForm.controls['pronouns'].valid){   
-              Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {          
+              Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {  
                 this.appInfoForm.controls[pronoun].removeValidators(Validators.requiredTrue);
                 this.appInfoForm.controls[pronoun].updateValueAndValidity();
                 var pronounCode =   pronoun.replace(ControlPrefix.pronoun,'');
@@ -684,6 +680,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 this.appInfoForm.controls[pronoun].setValidators(Validators.requiredTrue);
                 this.appInfoForm.controls[pronoun].updateValueAndValidity();
             });
+            this.appInfoForm.controls['pronouns'].setValue(null);
           }
           this.appInfoForm.controls['materialInAlternateFormatCode'].setValidators(Validators.required);
           this.appInfoForm.controls['materialInAlternateFormatCode'].updateValueAndValidity();
@@ -694,6 +691,15 @@ export class ClientPageComponent implements OnInit, OnDestroy {
                 if( this.appInfoForm.controls['materialInAlternateFormatCode'].value.toUpperCase() ==YesNoFlag.Yes.toUpperCase()){
                   this.appInfoForm.controls['materialInAlternateFormatDesc'].setValidators(Validators.required);
                   this.appInfoForm.controls['materialInAlternateFormatDesc'].updateValueAndValidity();
+                  if(
+                    (this.appInfoForm.controls['materialInAlternateFormatDesc'].value !== null
+                    && this.appInfoForm.controls['materialInAlternateFormatDesc'].value.toUpperCase() === MaterialFormat.other.toUpperCase())
+                  && this.appInfoForm.controls['materialInAlternateFormatOther'].value ===null 
+                  || this.appInfoForm.controls['materialInAlternateFormatOther'].value ===undefined
+                  || this.appInfoForm.controls['materialInAlternateFormatOther'].value ===''){
+                    this.appInfoForm.controls['materialInAlternateFormatOther'].setValidators(Validators.required);
+                    this.appInfoForm.controls['materialInAlternateFormatOther'].updateValueAndValidity();
+                  }
                 }
                 
               }    
@@ -832,18 +838,19 @@ export class ClientPageComponent implements OnInit, OnDestroy {
              
              const genderControls=  Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.gender));
              this.appInfoForm.controls['GenderGroup'].setValue(null); 
-             this.appInfoForm.controls['GenderGroup'].updateValueAndValidity();
-             this.appInfoForm.controls['genderDescription'].updateValueAndValidity(); 
-             genderControls.forEach(control => {
-              if (this.appInfoForm.controls[control].value===true) {
-                this.appInfoForm.controls['GenderGroup'].setValue(this.appInfoForm.controls[control].value); 
+             this.appInfoForm.controls['genderDescription'].updateValueAndValidity();           
+            genderControls.forEach(gender =>  { 
+              if(this.appInfoForm.controls[gender].value ===true){
+                this.appInfoForm.controls['GenderGroup'].removeValidators(Validators.required)
+                this.appInfoForm.controls['GenderGroup'].updateValueAndValidity();
               }
-             });
+            });
              if(!this.appInfoForm.controls['GenderGroup'].valid){
                 genderControls.forEach((gender:any) => {   
                   this.appInfoForm.controls[gender].setValidators(Validators.requiredTrue);
                   this.appInfoForm.controls[gender].updateValueAndValidity();
               });
+              this.appInfoForm.controls['GenderGroup'].setValue(null); 
              }
             
 

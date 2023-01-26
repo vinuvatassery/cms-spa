@@ -77,7 +77,8 @@ export * from './lib/enums/income-type-code.enum';
 export * from './lib/enums/gender-code.enum';
 export * from './lib/enums/sexual-identity-code.enum';
 export * from './lib/enums/control-prefix.enum';
-
+export * from './lib/enums/material-format.enum';
+export * from './lib/enums/states-in-usa.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
