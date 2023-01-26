@@ -325,7 +325,8 @@
         <div class="flex-col mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
         && ddlInsuranceType !== InsurancePlanTypes.Cobra
         && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
-        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare 
+        && healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
               <h5>Others covered on the plan(Select all that apply)</h5>

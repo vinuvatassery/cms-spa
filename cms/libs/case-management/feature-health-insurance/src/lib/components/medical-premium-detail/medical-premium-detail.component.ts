@@ -153,7 +153,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.loadRelationshipLov();
     this.disableEnableRadio();
     this.loadHealthInsuranceProofCodes();
-    this.loadClientDependents();
     this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
       if (this.healthInsuranceForm.controls['paymentIdNbrSameAsInsuranceIdNbrFlag'].value) {
         this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
@@ -949,6 +948,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     else {
       this.medicareInsuranceInfoCheck = true;
     }
+    if((this.ddlInsuranceType === this.InsurancePlanTypes.QualifiedHealthPlan
+      || this.ddlInsuranceType === this.InsurancePlanTypes.OffExchangePlan) 
+      && (this.dialogTitle === 'Add')) {
+        this.familyAndDependentFacade.loadClientDependents(this.clientId);
+        this.loadClientDependents();
+      }
   }
 
   onModalCloseClicked() {
