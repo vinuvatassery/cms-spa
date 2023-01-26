@@ -37,6 +37,7 @@
                     [maxlength]="50"
                     [disabled]="appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'"
                     placeholder="Enter Sex Assigned at Birth" 
+                    (blur)="descriptionChange()"
                   ></kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror

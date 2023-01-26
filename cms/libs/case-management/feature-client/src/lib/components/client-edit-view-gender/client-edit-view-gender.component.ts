@@ -24,8 +24,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   DescriptionField = 'genderDescription';
   maxLengthFifty =50;
   disableGender:any;
-  appInfoSubscription!:Subscription;
-  private countOfSelection=0; 
+  appInfoSubscription!:Subscription; 
   constructor(
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder,
@@ -39,7 +38,6 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.lovFacade.getGenderLovs();
     this.loadGendersLov();
-    this.formChangeSubscription();
     this.loadApplicantInfoSubscription();
   }
   ngOnDestroy(): void {
@@ -62,21 +60,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
       this.disableGender =  this.Genders.filter((x:any)=>x.lovCode !== GenderCode.dontKnow && x.lovCode !== GenderCode.dontKnowAnswer && x.lovCode !== GenderCode.dontKnowQustion)
     });
   }
-
-  private formChangeSubscription(){
-    this.appInfoForm.controls['GenderGroup'].valueChanges.subscribe(value=>{
-      if(value && this.countOfSelection >= 0){
-        this.updateWorkflowCount(true);
-        this.countOfSelection++;
-      }else{
-        this.countOfSelection = this.countOfSelection > 0 ? --this.countOfSelection : this.countOfSelection;
-        if(this.countOfSelection <= 0){
-          this.updateWorkflowCount(false);
-        }
-      }
-    });
-  }
-
+  
   private updateWorkflowCount(isCompleted:boolean){
     const workFlowdata: CompletionChecklist[] = [{
       dataPointName: 'gender',
@@ -179,13 +163,32 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
         this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
       }     
     } 
-    this.setControlValidations();  
+    this.setControlValidationsAndCount();  
   }
-  setControlValidations() {   
+  setControlValidationsAndCount() {  
+    let isFieldCompleted = false; 
     const genderControls = Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.gender));
     genderControls.forEach((gender: any) => {
       this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
       this.appInfoForm.controls[gender].updateValueAndValidity();
+
+      const value = this.appInfoForm.controls[gender]?.value;
+      if(value === true){
+        isFieldCompleted = (isFieldCompleted || value === true) 
+                          && (
+                                (
+                                  gender === `${ControlPrefix.gender}${GenderCode.notListed}` 
+                                  && this.appInfoForm.controls[this.DescriptionField]?.value
+                                ) 
+                                || gender !== `${ControlPrefix.gender}${GenderCode.notListed}`
+                             );
+      }
     });
+
+    this.updateWorkflowCount(isFieldCompleted);
+  }
+
+  descriptionChange(){
+      this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
   }
 }
