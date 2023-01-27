@@ -725,7 +725,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   private resetValidators() {
     Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
-      this.healthInsuranceForm.controls[key].clearValidators();
+      this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
       this.healthInsuranceForm.controls[key].updateValueAndValidity();
     });
   }
