@@ -35,7 +35,8 @@
                   [maxlength]="50"
                   [disabled]="
                     appInfoForm.controls['Transgender'].value !== 'NOT_LISTED' "
-                  placeholder="Enter Answer" 
+                  placeholder="Enter Answer"
+                  (blur)="descriptionChange()" 
                 ></kendo-textbox>
               </kendo-floatinglabel>
               <kendo-formerror
