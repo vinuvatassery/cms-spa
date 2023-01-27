@@ -309,8 +309,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
     this.metalLevelDefaultValue = metalLevel;
     this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
-    let aptcCode=healthInsurancePolicy.aptcCode?.trim();
-    this.healthInsuranceForm.controls['aptcFlag'].setValue(aptcCode);
+    if(this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan)
+    {
+      let aptcCode=healthInsurancePolicy.aptcCode?.trim();
+      this.healthInsuranceForm.controls['aptcFlag'].setValue(aptcCode);
+    }
     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
       healthInsurancePolicy.aptcMonthlyAmt
     );
@@ -779,7 +782,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       {
         this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
       }
-      this.healthInsurancePolicy.aptcCode = this.healthInsuranceForm.controls['aptcFlag'].value.trim();
+      if(this.healthInsuranceForm.controls['aptcFlag'].value)
+      {
+        this.healthInsurancePolicy.aptcCode = this.healthInsuranceForm.controls['aptcFlag'].value.trim();
+      }
       if (
         this.healthInsuranceForm.controls['aptcFlag'].value === 'NO'
       ) {
@@ -1154,7 +1160,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
         }
       }
-      
+
     }
   }
 
