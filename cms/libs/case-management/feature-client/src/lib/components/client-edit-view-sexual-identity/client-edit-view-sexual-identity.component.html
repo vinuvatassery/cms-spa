@@ -32,6 +32,7 @@
                 [disabled]="
                   !appInfoForm.controls[ControlPrefix + Identity.lovCode].value "
                 placeholder="Enter sexual orientation or sexual identity" 
+                (blur)="descriptionChange()"
               >
               </kendo-textbox>
             </kendo-floatinglabel>
@@ -42,7 +43,7 @@
         </div>
       </span>
       <kendo-formerror *ngIf="!appInfoForm.controls['SexualIdentityGroup']?.valid">
-        Atleast one option is required.
+        At least one Option must be selected.
         </kendo-formerror>
     </div>
     </fieldset>

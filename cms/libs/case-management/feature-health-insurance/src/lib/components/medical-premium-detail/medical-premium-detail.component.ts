@@ -27,7 +27,7 @@ import {
   WorkflowFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, FormArray, ValidationErrors } from '@angular/forms';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, first } from 'rxjs';
@@ -309,9 +309,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
     this.metalLevelDefaultValue = metalLevel;
     this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
-    this.healthInsuranceForm.controls['aptcFlag'].setValue(
-      healthInsurancePolicy.aptcFlag
-    );
+    let aptcCode=healthInsurancePolicy.aptcCode?.trim();
+    this.healthInsuranceForm.controls['aptcFlag'].setValue(aptcCode);
     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
       healthInsurancePolicy.aptcMonthlyAmt
     );
@@ -410,9 +409,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       const metalLevel = { lovCode: healthInsurancePolicy.metalLevelCode };
       this.metalLevelDefaultValue = metalLevel;
       this.healthInsuranceForm.controls['metalLevel'].setValue(metalLevel);
-      this.healthInsuranceForm.controls['aptcFlag'].setValue(
-        healthInsurancePolicy.aptcFlag
-      );
       this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValue(
         healthInsurancePolicy.aptcMonthlyAmt
       );
@@ -498,7 +494,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.isMedicareCardFileUploaded = true;
     const QualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
-      'insuranceEndDate',
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',
@@ -549,7 +544,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         ]);
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
-      if (this.healthInsuranceForm.controls['aptcFlag'].value === 'Y') {
+      if (this.healthInsuranceForm.controls['aptcFlag'].value === 'YES') {
         this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValidators([
           Validators.required,
         ]);
@@ -652,7 +647,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan
       && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
       && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra 
+      && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
       if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y') {
         if (this.healthInsuranceForm.value.othersCoveredOnPlan.length == 0) {
           this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].setValidators([
@@ -661,7 +657,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
         }
       }
-      if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'N' || this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y') {
+      if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'N') {
         this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
           Validators.required,
         ]);
@@ -669,6 +665,28 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
           Validators.required,
         ]);
+        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+      }
+      else{
+        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators(null);
+        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators(null);
+        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+      }
+      if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y'){
+        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+      }
+      else{
+        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators(null);
+        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators(null);
         this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
       }
     }
@@ -784,13 +802,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       {
         this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
       }
+      this.healthInsurancePolicy.aptcCode = this.healthInsuranceForm.controls['aptcFlag'].value.trim();
       if (
-        this.healthInsuranceForm.controls['aptcFlag'].value !== StatusFlag.Yes
+        this.healthInsuranceForm.controls['aptcFlag'].value === 'NO'
       ) {
-        this.healthInsurancePolicy.aptcNotTakingFlag = '';
-        this.healthInsurancePolicy.aptcFlag = this.healthInsuranceForm.controls['aptcFlag'].value;
-      } else {
-        this.healthInsurancePolicy.aptcFlag = StatusFlag.Yes;
+        this.healthInsurancePolicy.aptcNotTakingFlag = this.healthInsuranceForm.controls['aptcFlag'].value;
+      } else if(this.healthInsurancePolicy.aptcCode==='YES'){
         this.healthInsurancePolicy.aptcMonthlyAmt = this.healthInsuranceForm.controls['aptcMonthlyAmt'].value
       }
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
@@ -1140,6 +1157,27 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
       }
 
+    }
+  }
+  endDateOnChange(endDate: Date) {
+    if (this.healthInsuranceForm.controls['insuranceStartDate'].value === null) {
+      this.snackbarService.errorSnackBar('Insurance Start Date required.');
+      this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
+      return;
+    }else{
+      var startDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.healthInsuranceForm.controls['insuranceStartDate'].value
+        )
+      );
+      const control:any = this.healthInsuranceForm.controls['insuranceEndDate'];
+      if(control.errors!==null){
+        const minError:any=control?.errors['minError'];
+        if (minError) {
+          this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
+        }
+      }
+      
     }
   }
 

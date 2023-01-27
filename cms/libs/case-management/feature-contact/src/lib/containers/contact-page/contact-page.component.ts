@@ -6,7 +6,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map } from 'rxjs';
 
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, StatesInUSA } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from '@cms/case-management/domain';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
@@ -58,6 +58,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   showRelationshipOtherDec: boolean = false;
   showAddressProofRequiredValidation: boolean = false;
   showPreferredContactLoader = false;
+  isHomeAddressStateOregon$ = new BehaviorSubject(true);;
   public homeAddressProofFile: any = undefined;
 
   /** Private properties **/
@@ -87,6 +88,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.loadCurrentSession();
     this.loadDdlRelationships();
     this.loadDdlStates();
+    this.loadDdlCounties(StatesInUSA.Oregon);
     this.buildContactInfoForm();
     this.buildAddressValidationForm();
     this.addSubscriptions();
@@ -114,7 +116,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.sameAsMailingAddressChangeSubscription();
     this.addMailingAddressChangeSubscription();
     this.homelessFlagChangeSubscription();
-    this.addStateChangeSubscription();
     this.homePhoneApplicableFlagChangeSubscription();
     this.cellPhoneApplicableFlagChangeSubscription();
     this.workPhoneApplicableFlagChangeSubscription();
@@ -422,10 +423,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
     homeAddressGroup.controls['city'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+')]);
     homeAddressGroup.controls['city'].updateValueAndValidity();
-    homeAddressGroup.controls['state'].setValidators([Validators.required]);
+    homeAddressGroup.controls['state'].setValidators([Validators.required, Validators.pattern('^OR$')]);
     homeAddressGroup.controls['state'].updateValueAndValidity();
+    this.isHomeAddressStateOregon$.next(homeAddressGroup.controls['state']?.value === StatesInUSA.Oregon);
     homeAddressGroup.controls['county'].setValidators([Validators.required]);
-    homeAddressGroup.controls['county'].updateValueAndValidity();
+    homeAddressGroup.controls['county'].updateValueAndValidity();    
 
     if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
       homePhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
@@ -482,14 +484,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         address1: new FormControl(''),
         address2: new FormControl(''),
         city: new FormControl(''),
-        state: new FormControl('OR'),
+        state: new FormControl(StatesInUSA.Oregon),
         zip: new FormControl(''),
       }),
       homeAddress: new FormGroup({
         address1: new FormControl(''),
         address2: new FormControl(''),
         city: new FormControl(''),
-        state: new FormControl('OR'),
+        state: new FormControl(StatesInUSA.Oregon),
         zip: new FormControl(''),
         county: new FormControl(''),
         homelessFlag: new FormControl(false, { validators: Validators.required }),
@@ -565,7 +567,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.fileUploadRestrictions?.maxFileSize ?? 0);
-    if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile) {
+    const isHomeAddressStateOregon = this.contactInfoForm?.get('homeAddress.state')?.value == StatesInUSA.Oregon;
+    if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile && isHomeAddressStateOregon === true) {
       this.loaderService.show()
       return this.saveContactInfo();
     }
@@ -862,7 +865,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           this.contactInfo = data;
           this.setFormValues();
           if (!this.isEdit) {
-            this.loadDdlCounties('OR');
+            this.loadDdlCounties(StatesInUSA.Oregon);
           }
         }
       },
@@ -1034,12 +1037,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           this.setSameAsMailingAddressFlagChanges(curValue);
         }
       });
-  }
-
-  private addStateChangeSubscription() {
-    (this.contactInfoForm.get('homeAddress') as FormGroup)?.controls['state']?.valueChanges.subscribe(value => {
-      this.loadDdlCounties(value);
-    })
   }
 
   private homelessFlagChangeSubscription() {
@@ -1256,6 +1253,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       homeAddressGroup?.controls['city']?.disable();
       homeAddressGroup?.controls['state']?.disable();
       homeAddressGroup?.controls['zip']?.disable();
+      this.isHomeAddressStateOregon$.next(address?.state === StatesInUSA.Oregon);
     }
     else {
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
@@ -1265,7 +1263,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }
 
       homeAddressGroup?.controls['city']?.enable();
-      homeAddressGroup?.controls['state']?.setValue('OR');
+      homeAddressGroup?.controls['state']?.setValue(StatesInUSA.Oregon);
+      this.isHomeAddressStateOregon$.next(false);
     }
     this.isNoMailAddressValidationRequired =false;
   }

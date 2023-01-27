@@ -25,7 +25,6 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   disableSexualIdentity: any;
   applicantInfo$ = this.clientfacade.applicantInfo$;
   appInfoSubscription!: Subscription;
-  private countOfSelection = 0;
   constructor(
     private readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder,
@@ -40,113 +39,43 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   ngOnInit(): void {
     this.lovFacade.getSexulaIdentityLovs();
     this.loadSexulaIdentities();
-    this.formChangeSubscription();
     this.loadApplicantInfoSubscription();
   }
   ngOnDestroy(): void {
     this.appInfoSubscription.unsubscribe();
-  }
-  private loadSexulaIdentities() {
-    this.SexulaIdentityLovs$.subscribe((data) => {
-      if (!Array.isArray(data)) return;
-      data.forEach((element) => {
-        this.appInfoForm.addControl(
-          this.ControlPrefix + element.lovCode,
-          new FormControl('')
-        );
-      });
-      this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
-      this.appInfoForm.addControl(
-        'SexualIdentityGroup',
-        new FormControl('')
-      );
-      this.SexulaIdentities = data;
-      this.disableSexualIdentity = this.SexulaIdentities.filter((x: any) => x.lovCode !== SexualIdentityCode.dontKnow && x.lovCode !== SexualIdentityCode.dontWant && x.lovCode !== SexualIdentityCode.dontKnowQustion);
-      this.cdr.detectChanges();
-    });
-  }
-
-  private formChangeSubscription() {
-    this.appInfoForm.controls['SexualIdentityGroup'].valueChanges.subscribe(value => {
-      if (value && this.countOfSelection >= 0) {
-        this.updateWorkflowCount(true);
-        this.countOfSelection++;
-      }
-      else {
-        this.countOfSelection = this.countOfSelection > 0 ? --this.countOfSelection : this.countOfSelection;
-        if (this.countOfSelection <= 0) {
-          this.updateWorkflowCount(false);
-        }
-      }
-    });
-  }
-
-  private updateWorkflowCount(isCompleted: boolean) {
-    const workFlowdata: CompletionChecklist[] = [{
-      dataPointName: 'sexualIdentity',
-      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
-    }];
-
-    this.workflowFacade.updateChecklist(workFlowdata);
-  }
+  }  
   setControlValidations() {
+    let isFieldCompleted = false; 
     const sexulaIdentity = Object.keys(this.appInfoForm.controls).filter(m => m.includes(this.ControlPrefix));
     sexulaIdentity.forEach((gender: any) => {
       this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
       this.appInfoForm.controls[gender].updateValueAndValidity();
+
+      const value = this.appInfoForm.controls[gender]?.value;
+      if(value === true){
+        isFieldCompleted = (isFieldCompleted || value === true) 
+                          && (
+                                (
+                                  gender === `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}` 
+                                  && this.appInfoForm.controls[this.DescriptionField]?.value
+                                ) 
+                                || gender !== `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}`
+                             );
+      }
     });
+
+    this.updateWorkflowCount(isFieldCompleted);
+  }
+  descriptionChange(){
+    this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
   }
   onCheckChange(event: any, lovCode: string) {
-    this.enableDisableSexualIdentity(event.target.checked, lovCode);
-    if (event.target.checked) {
-      this.appInfoForm.controls['SexualIdentityGroup'].setValue(lovCode);
-    } else {
-      if (lovCode === SexualIdentityCode.notListed) {
-        this.appInfoForm.controls[this.DescriptionField].removeValidators(
-          Validators.required
-        );
-        this.appInfoForm.controls[
-          this.DescriptionField
-        ].updateValueAndValidity();
-      }
-    }
+    this.appInfoForm.controls['SexualIdentityGroup'].removeValidators(Validators.required);
+    this.appInfoForm.controls['SexualIdentityGroup'].updateValueAndValidity();
+    this.enableDisableSexualIdentity(event.target.checked, lovCode); 
     this.setControlValidations();
-    //this.updateWorkflowCount(this.countOfSelection > 0);
   }
-  private loadApplicantInfoSubscription() {
-    this.appInfoSubscription = this.applicantInfo$.subscribe((applicantInfo) => {
-      if (applicantInfo !== null) {
-        if (applicantInfo.clientSexualIdentityList !== null && applicantInfo.clientSexualIdentityList !== undefined
-          && applicantInfo.clientSexualIdentityList.length > 0) {
-          this.assignSexualIdentityToForm(applicantInfo.clientSexualIdentityList);
-          var otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
-          if (otherSexualIdentities.length > 0) {
-            this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
-          }
-          this.updateWorkflowCount(true);
-        }        
-      }
-    });
-  }
-  private assignSexualIdentityToForm(clientSexualIdentityList: any) {
-    if (Array.isArray(clientSexualIdentityList)) {
-      clientSexualIdentityList.forEach(identity => {
-        this.appInfoForm.controls[this.ControlPrefix + identity.clientSexualIdentityCode]?.setValue(true);
-        if (identity.clientSexualIdentityCode === SexualIdentityCode.notListed && identity.otherDesc !== null) {
-          this.appInfoForm.controls['SexualIdentityDescription']?.setValue(identity.otherDesc);
-        }
-        this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
-
-      })
-    }
-  }
-  enableDisableSexualIdentity(checked: boolean, lovCode: any) {
-    this.appInfoForm.controls[this.DescriptionField].removeValidators(
-      Validators.required
-    );
-    this.appInfoForm.controls[
-      this.DescriptionField
-    ].updateValueAndValidity();
+  enableDisableSexualIdentity(checked: boolean, lovCode: any) {  
     switch (lovCode) {
       case SexualIdentityCode.dontKnow:
       case SexualIdentityCode.dontWant:
@@ -155,6 +84,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
           this.disableSexualIdentity.forEach((sexualIdentity: any) => {
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].setValue(false);
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].disable();
+            this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
           });
           break;
         }
@@ -186,6 +116,65 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
         }
       }
 
+    }
+    if(!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.notListed].value){
+      this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
+      this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
+    }
+  }
+  private loadSexulaIdentities() {
+    this.SexulaIdentityLovs$.subscribe((data) => {
+      if (!Array.isArray(data)) return;
+      data.forEach((element) => {
+        this.appInfoForm.addControl(
+          this.ControlPrefix + element.lovCode,
+          new FormControl('')
+        );
+      });
+      this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
+      this.appInfoForm.addControl(
+        'SexualIdentityGroup',
+        new FormControl('')
+      );
+      this.SexulaIdentities = data;
+      this.disableSexualIdentity = this.SexulaIdentities.filter((x: any) => x.lovCode !== SexualIdentityCode.dontKnow && x.lovCode !== SexualIdentityCode.dontWant && x.lovCode !== SexualIdentityCode.dontKnowQustion);
+      this.cdr.detectChanges();
+    });
+  }
+
+  private updateWorkflowCount(isCompleted: boolean) {
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'sexualIdentity',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
+  }  
+  private loadApplicantInfoSubscription() {
+    this.appInfoSubscription = this.applicantInfo$.subscribe((applicantInfo) => {
+      if (applicantInfo !== null) {
+        if (applicantInfo.clientSexualIdentityList !== null && applicantInfo.clientSexualIdentityList !== undefined
+          && applicantInfo.clientSexualIdentityList.length > 0) {
+          this.assignSexualIdentityToForm(applicantInfo.clientSexualIdentityList);
+          var otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
+          if (otherSexualIdentities.length > 0) {
+            this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
+          }
+          this.updateWorkflowCount(true);
+        }        
+      }
+    });
+  }
+  private assignSexualIdentityToForm(clientSexualIdentityList: any) {
+    if (Array.isArray(clientSexualIdentityList)) {
+      clientSexualIdentityList.forEach(identity => {
+        this.appInfoForm.controls[this.ControlPrefix + identity.clientSexualIdentityCode]?.setValue(true);
+        if (identity.clientSexualIdentityCode === SexualIdentityCode.notListed && identity.otherDesc !== null) {
+          this.appInfoForm.controls['SexualIdentityDescription']?.setValue(identity.otherDesc);
+        }
+        this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);       
+      })
+      this.cdr.detectChanges();
     }
   }
 }
