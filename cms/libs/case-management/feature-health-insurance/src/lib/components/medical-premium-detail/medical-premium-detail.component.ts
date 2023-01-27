@@ -53,6 +53,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   copyOfInsuranceCardFiles: any;
   copyOfMedicareCardFiles : any
   isaddNewInsurancePlanOpen: boolean = false;
+  public min: Date = new Date(1899, 12, 1);
   public uploadRemoveUrl = 'removeUrl';
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public formUiStyle: UIFormStyle = new UIFormStyle();
