@@ -34,6 +34,7 @@ export class CaseFacade {
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
   private updateCaseSubject = new Subject<any>();
   private getCaseSubject = new Subject<any>();
+  private getCaseHistorySubject =new BehaviorSubject<any[]>([]);
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -50,6 +51,7 @@ export class CaseFacade {
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
   updateCase$ = this.updateCaseSubject.asObservable();
   getCase$ = this.getCaseSubject.asObservable(); 
+  getCaseHistory$ = this.getCaseHistorySubject.asObservable(); 
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -92,6 +94,18 @@ export class CaseFacade {
   }
 
   /** Public methods **/
+  loadCaseHistory(): void {
+    this.caseDataService.loadCaseHistory().subscribe({
+      next: (casesHistoryResponse) => {
+        
+        this.getCaseHistorySubject.next(casesHistoryResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
   loadCases(): void {
     this.caseDataService.loadCases().subscribe({
       next: (casesResponse) => {

@@ -11,6 +11,7 @@ import { Program } from '../entities/program';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../entities/client-case';
+import { CaseHistory } from '../entities/case-history';
 
 @Injectable({ providedIn: 'root' })
 export class CaseDataService {
@@ -18,7 +19,41 @@ export class CaseDataService {
   constructor(private readonly http: HttpClient,
     private configurationProvider : ConfigurationProvider) {}
 
+    
   /** Public methods **/
+  loadCaseHistory() : Observable<CaseHistory[]>
+  {
+    return of([
+      { caseNumber: 13, 
+        caseStatus: 'New', 
+        eligibilityPeriods: 2 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }  , 
+      { caseNumber: 12, 
+        caseStatus: 'DisEnrolled', 
+        eligibilityPeriods: 12 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }
+      , 
+      { caseNumber: 11, 
+        caseStatus: 'DisEnrolled', 
+        eligibilityPeriods: 15 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }
+      , 
+      { caseNumber: 10, 
+        caseStatus: 'DisEnrolled', 
+        eligibilityPeriods: 15 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }
+    ]);
+  }
+
+
   loadCases(): Observable<Case[]> {
     return of([
       {
@@ -326,9 +361,9 @@ export class CaseDataService {
     return of([
       {
         name: 'Donna 1',
-        id: 'ae578070-7a8b-4c5c-aa2e-00a241d4cb5a',
-        programId: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B',
-        isApplicationComplete: false,
+        id: '1',
+        programId: '1',
+        isApplicationComplete: true,
       },
       {
         name: 'David 2',
