@@ -1,3 +1,5 @@
+ 
+
 <form [formGroup]="appInfoForm" *ngIf="appInfoForm">
       <!-- Applicant Full Name Section  -->
   <section kendoRippleContainer>
@@ -43,6 +45,13 @@
           <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
         </kendo-floatinglabel>
       </div>
+      <div class="flex-col flex-col-4 inlineloaderwrapper"  *ngIf="showNameDuplicateLoader">
+        <span class="app-c-badge  mt-3">       
+          <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+          <span> Validating Client...</span> 
+        </span>
+      </div>
+    
     </div>
   </section>
 
