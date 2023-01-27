@@ -32,6 +32,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="maxLengthFifty"
               [disabled]="!appInfoForm.controls[ControlPrefix + gender.lovCode].value"
+              (blur)="descriptionChange()"
             >
             </kendo-textbox>
           </kendo-floatinglabel>
