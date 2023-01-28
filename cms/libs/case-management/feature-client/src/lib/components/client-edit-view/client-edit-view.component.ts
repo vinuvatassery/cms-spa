@@ -1,4 +1,4 @@
-of/** Angular **/
+/** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef,  Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
 import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 /** External libraries **/

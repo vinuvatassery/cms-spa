@@ -89,7 +89,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
       this.workflowFacade.updateChecklist(workFlowdata);
     }
     private assignPronounModelToForm(clientPronounList:any){
-        if(clientPronounList !== undefined && clientPronounList !== undefined && clientPronounList != null){   
+        if(clientPronounList !== undefined && clientPronounList != null){   
         clientPronounList.forEach((pronoun:any) => {  
         if(this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.clientPronounCode.toUpperCase()] !== undefined){
             this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.clientPronounCode.toUpperCase()].setValue(true);
