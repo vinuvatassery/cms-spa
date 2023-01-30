@@ -400,6 +400,10 @@
 //   font-size: 14px;
 //   padding: 0 5px;
 // }
+
+.k-floating-label-container.k-empty > .k-label {
+max-width: 80%;
+}
 /*Floating Outline Dropdown*/
 .k-dropdown .k-dropdown-wrap,
 .k-dropdowntree .k-dropdown-wrap {
