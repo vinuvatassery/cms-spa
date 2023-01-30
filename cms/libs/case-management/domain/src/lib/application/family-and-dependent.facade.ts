@@ -279,4 +279,7 @@ export class FamilyAndDependentFacade {
     });
   }
 
+  uploadDependentProofOfSchool(dependentProof:any){
+    return this.dependentDataService.uploadDependentProofOfSchool(dependentProof);
+  }
 }
