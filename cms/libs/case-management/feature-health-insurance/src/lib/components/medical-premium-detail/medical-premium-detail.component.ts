@@ -1223,7 +1223,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   public handleFileSelected(event: any, fileType: string) {
-    debugger;
     this.documentSizeValidator=false;
     this.proofOfPremiumFilesValidator=false;
     this.copyOfSummaryFilesValidator=false;
