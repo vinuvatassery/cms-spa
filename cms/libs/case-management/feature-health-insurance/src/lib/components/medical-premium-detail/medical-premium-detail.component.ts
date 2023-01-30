@@ -1019,6 +1019,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.newOthersCoveredOnPlan.removeAt(i);
   }
 
+  getPersonControl(index: number, fieldName: string) {
+    return (<FormArray>this.healthInsuranceForm.get('newOthersCoveredOnPlan')).at(index).get(fieldName);
+  }
+
   insuranceCarrierNameData(data: any) {
     if (this.isEdit) {
       this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
@@ -1219,7 +1223,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   public handleFileSelected(event: any, fileType: string) {
-    debugger;
     this.documentSizeValidator=false;
     this.proofOfPremiumFilesValidator=false;
     this.copyOfSummaryFilesValidator=false;
