@@ -138,4 +138,10 @@ export class DependentDataService {
     );
   }   
 
+  uploadDependentProofOfSchool(dependentProof:any){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/proofofschool`,
+      dependentProof
+    );
+  }
 }
