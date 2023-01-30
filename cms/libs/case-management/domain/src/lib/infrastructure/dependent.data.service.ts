@@ -143,4 +143,11 @@ export class DependentDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client/${clientId}`
     );
   }
+  
+  uploadDependentProofOfSchool(dependentProof:any){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/proofofschool`,
+      dependentProof
+    );
+  }
 }

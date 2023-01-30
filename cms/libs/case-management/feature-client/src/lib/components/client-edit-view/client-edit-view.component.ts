@@ -133,6 +133,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   matchingClient:any={};
   ssnMask='000-00-0000'
   showNameDuplicateLoader:boolean=false;
+  showNameDuplicateLoaderField = '';
   showSsnDuplicateLoader:boolean=false;
   otherEthnicityList:any[]=[];
  
@@ -537,13 +538,13 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
 
   }
 
-private updateWorkflowPronounCount(isCompleted:boolean){
-  const workFlowdata: CompletionChecklist[] = [{
-    dataPointName: 'pronoun',
-    status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+updateWorkflowCount(data: any){
+  const workFlowData: CompletionChecklist[] = [{
+    dataPointName: data?.completedDataPoints,
+    status: data?.isCompleted ? StatusFlag.Yes : StatusFlag.No
   }];
 
-  this.AppInfoChanged.emit({completedDataPoints: workFlowdata, updateWorkflowCount: true});
+  this.AppInfoChanged.emit({completedDataPoints: workFlowData, updateWorkflowCount: true});
 }
 
   private adjustAttributeChanged(event: Event) { 
@@ -624,6 +625,57 @@ private updateWorkflowPronounCount(isCompleted:boolean){
         completedDataPoints.push(item);
       }  
     });
+
+    let trans = this.appInfoForm.controls['Transgender']?.value;
+    if( trans && (trans !=='NOT_LISTED' || (trans==='NOT_LISTED' && this.appInfoForm.controls['TransgenderDescription']?.value))){
+      completedDataPoints.push({ dataPointName: 'transgenderCode', status: StatusFlag.Yes });
+    }
+
+    let gender = this.appInfoForm.controls['BirthGender']?.value;
+    if( gender && (gender !=='NOT_LISTED' || (gender==='NOT_LISTED' && this.appInfoForm.controls['BirthGenderDescription']?.value))){
+      completedDataPoints.push({ dataPointName: 'birthGenderCode', status: StatusFlag.Yes });
+    }
+
+    let material = this.appInfoForm.controls['materialInAlternateFormatCode']?.value;
+    if( material && (material !==StatusFlag.Yes || (material=== StatusFlag.Yes && (this.appInfoForm.controls['materialInAlternateFormatDesc']?.value !== 'OTHER' || (this.appInfoForm.controls['materialInAlternateFormatDesc']?.value === 'OTHER' && this.appInfoForm.controls['materialInAlternateFormatOther']?.value))))){
+      completedDataPoints.push({ dataPointName: 'materialInAlternateFormat', status: StatusFlag.Yes });
+    }
+
+    let interpreter = this.appInfoForm.controls['interpreterCode']?.value;
+    if( interpreter && (interpreter !==StatusFlag.Yes || (interpreter===StatusFlag.Yes && this.appInfoForm.controls['interpreterType']?.value))){
+      completedDataPoints.push({ dataPointName: 'interpreter', status: StatusFlag.Yes });
+    }
+
+    let deafOrHearing = this.appInfoForm.controls['deafOrHearingCode']?.value;
+    if( deafOrHearing && (deafOrHearing !==StatusFlag.Yes || (deafOrHearing===StatusFlag.Yes && this.appInfoForm.controls['startAgeDeafOrHearing']?.value))){
+      completedDataPoints.push({ dataPointName: 'deafOrHearing', status: StatusFlag.Yes });
+    }
+
+    let blindSeeing = this.appInfoForm.controls['blindSeeingCode']?.value;
+    if( blindSeeing && (blindSeeing !==StatusFlag.Yes || (blindSeeing===StatusFlag.Yes && this.appInfoForm.controls['startAgeBlindSeeing']?.value))){
+      completedDataPoints.push({ dataPointName: 'blindSeeing', status: StatusFlag.Yes });
+    }
+
+    let walkingClimbing = this.appInfoForm.controls['walkingClimbingDifficultyCode']?.value;
+    if( walkingClimbing && (walkingClimbing !==StatusFlag.Yes || (walkingClimbing===StatusFlag.Yes && this.appInfoForm.controls['startAgeWalkingClimbingDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'walkingClimbingDifficulty', status: StatusFlag.Yes });
+    }
+
+    let dressingBathing = this.appInfoForm.controls['dressingBathingDifficultyCode']?.value;
+    if( dressingBathing && (dressingBathing !==StatusFlag.Yes || (dressingBathing===StatusFlag.Yes && this.appInfoForm.controls['startAgeDressingBathingDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'dressingBathingDifficulty', status: StatusFlag.Yes });
+    }
+
+    let concentrating = this.appInfoForm.controls['concentratingDifficultyCode']?.value;
+    if( concentrating && (concentrating !==StatusFlag.Yes || (concentrating===StatusFlag.Yes && this.appInfoForm.controls['startAgeConcentratingDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'concentratingDifficulty', status: StatusFlag.Yes });
+    }
+
+    
+    let errandsDifficulty = this.appInfoForm.controls['errandsDifficultyCode']?.value;
+    if( errandsDifficulty && (errandsDifficulty !==StatusFlag.Yes || (errandsDifficulty===StatusFlag.Yes && this.appInfoForm.controls['startAgeErrandsDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'errandsDifficulty', status: StatusFlag.Yes });
+    }
 
     if (completedDataPoints.length > 0) {
       this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: true});
@@ -772,7 +824,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       this.isSSNChecked = false;
       this.appInfoForm.controls['ssn'].enable();
     }
-    this.searchDuplicateClient();
+    this.searchDuplicateClient('ssn');
   }
 
   registerToVoteSelected(event:Event){
@@ -870,7 +922,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     this.tareaRaceAndEthinicityCounter = `${this.tareaRaceAndEthinicityCharachtersCount}/${this.tareaRaceAndEthinicityMaxLength}`;
   }
 
-  searchDuplicateClient() {
+  searchDuplicateClient(fieldname: any) {
     this.ssnDuplicateFound = false;
     let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
     let lastName = this.appInfoForm.controls['lastName'].value != null ? this.appInfoForm.controls['lastName'].value : '';
@@ -896,6 +948,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       }
       if (data.firstName != '' && data.lastName != '' && dateOfBirth != null) {
         this.showNameDuplicateLoader = true;
+        this.showNameDuplicateLoaderField = fieldname;
       }
       this.clientfacade.searchDuplicateClient(data).subscribe({
         next: (response: any) => {
@@ -920,12 +973,14 @@ private updateWorkflowPronounCount(isCompleted:boolean){
             
           }
           this.showNameDuplicateLoader = false;
+          this.showNameDuplicateLoaderField = '';
           this.showSsnDuplicateLoader = false;
           this.ref.detectChanges();
         },
         error: (err: any) => {
           this.showNameDuplicateLoader = false;
           this.showSsnDuplicateLoader = false;
+          this.showNameDuplicateLoaderField = '';
           this.loggingService.logException(err);
           this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         }

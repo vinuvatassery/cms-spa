@@ -19,7 +19,7 @@
     position: relative;
     top: auto;
     left: auto;
-    right: auto;
+    right: auto !important;
     background: transparent;
   }
   &.badge-primary {
