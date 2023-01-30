@@ -1,11 +1,13 @@
+ 
+
 <form [formGroup]="appInfoForm" *ngIf="appInfoForm">
       <!-- Applicant Full Name Section  -->
   <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showNameDuplicateLoader && showNameDuplicateLoaderField == 'fname'" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="First Name" class="k-form">
-          <kendo-textbox aria-label="first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient()" 
+          <kendo-textbox aria-label="first name"  [tabindex]="0"  textFieldautofocus  (blur)="searchDuplicateClient('fname')" 
             formControlName="firstName" placeholder="First Name" [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
@@ -34,15 +36,22 @@
 
       </div>
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showNameDuplicateLoader && showNameDuplicateLoaderField == 'lname'" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Last Name">
-          <kendo-textbox aria-label="last name" placeholder="Last Name"   [fillMode]="formUiStyle.inputFillMode" (blur)="searchDuplicateClient()" 
+          <kendo-textbox aria-label="last name" placeholder="Last Name"   [fillMode]="formUiStyle.inputFillMode" (blur)="searchDuplicateClient('lname')" 
             formControlName="lastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
           <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
         </kendo-floatinglabel>
       </div>
+      <div class="flex-col flex-col-4 inlineloaderwrapper"  *ngIf="showNameDuplicateLoader">
+        <span class="app-c-badge  mt-3">       
+          <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+          <span> Validating Client...</span> 
+        </span>
+      </div>
+    
     </div>
   </section>
 
@@ -126,10 +135,10 @@
   <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showNameDuplicateLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showNameDuplicateLoader && showNameDuplicateLoaderField == 'dob'" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
-            formControlName="dateOfBirth" (blur)="searchDuplicateClient()"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+            formControlName="dateOfBirth" (blur)="searchDuplicateClient('dob')"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
             (keyup)="dateValidate($event)"
             placeholder=""></kendo-datepicker>
             <kendo-formerror *ngIf="dateValidator"> Future date can not be selected</kendo-formerror>
@@ -143,9 +152,9 @@
   <section kendoRippleContainer>
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
-        <span *ngIf="showSsnDuplicateLoader" class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+        <span *ngIf="showSsnDuplicateLoader && showNameDuplicateLoaderField == 'ssn'" class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Social Security Number">
-          <kendo-maskedtextbox mask="000-00-0000"  aria-label="social security number" placeholder="Social Security Number" (blur)="searchDuplicateClient()" 
+          <kendo-maskedtextbox mask="000-00-0000"  aria-label="social security number" placeholder="Social Security Number" (blur)="searchDuplicateClient('ssn')" 
             [fillMode]="formUiStyle.inputFillMode" formControlName="ssn" [maxlength]="maxLengthSsn"
             [value]="appInfoForm.controls['ssn'].value" (input)="ssnValueChange()"> </kendo-maskedtextbox >
 

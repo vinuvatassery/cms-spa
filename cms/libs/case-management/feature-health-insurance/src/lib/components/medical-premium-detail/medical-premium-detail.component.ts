@@ -52,6 +52,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   copyOfSummaryFiles: any;
   copyOfInsuranceCardFiles: any;
   copyOfMedicareCardFiles : any
+  lengthRestrictForty = 40;
   isaddNewInsurancePlanOpen: boolean = false;
   public uploadRemoveUrl = 'removeUrl';
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();

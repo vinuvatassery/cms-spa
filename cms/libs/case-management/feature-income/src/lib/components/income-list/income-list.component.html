@@ -24,7 +24,11 @@
           field="incomeAmt"
           title="Amount"
           [width]="130"
-        ></kendo-grid-column>
+        >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.incomeAmt}}</span>
+        </ng-template>
+      </kendo-grid-column>
         <kendo-grid-column
           field="incomeFrequencyCodeDesc"
           title="Frequency"
@@ -85,6 +89,9 @@
           format="{0:c2}"
           [sticky]="true"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome}}</span>
+        </ng-template>
           <ng-template
             kendoGridFooterTemplate
             let-column
@@ -92,6 +99,7 @@
           >
             {{incomesTotal?.totalIncome | kendoNumber: 'c2'}}
           </ng-template>
+          
         </kendo-grid-column>
         <kendo-grid-column
           field="Option"

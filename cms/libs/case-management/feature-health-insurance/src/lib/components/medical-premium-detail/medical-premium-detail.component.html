@@ -201,7 +201,7 @@
               <div class="flex-col">
                 <fieldset class="k-form-fieldset">
                   <legend class="k-form-legend">
-                    <h5>Do they want CareAssist to pay for health insurance premiums?</h5>
+                    <h5>Do they want CAREAssist to pay for health insurance premiums?</h5>
                   </legend>
 
                   <div class="component-list-h">
@@ -374,7 +374,7 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="First Name">
                   <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
-                    [fillMode]="formUiStyle.inputFillMode" formControlName="firstName"> </kendo-textbox>
+                    [fillMode]="formUiStyle.inputFillMode" [maxlength]="lengthRestrictForty" formControlName="firstName"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.value.othersCoveredOnPlanFlag == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].firstName
                      && isViewContentEditable==false">First name is
@@ -384,7 +384,7 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Last Name">
                   <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
-                    [fillMode]="formUiStyle.inputFillMode" formControlName="lastName"> </kendo-textbox>
+                    [fillMode]="formUiStyle.inputFillMode" formControlName="lastName"  [maxlength]="lengthRestrictForty"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].lastName
                      && isViewContentEditable==false">Last name is
