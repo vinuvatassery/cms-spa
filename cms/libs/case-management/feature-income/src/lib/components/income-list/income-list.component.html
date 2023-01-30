@@ -57,7 +57,7 @@
             <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
               <button aria-label="client name" kendoButton look="flat" class="card-link-button"
                >
-              <a [href]="dataItem.documentPath" target="_blank">Income Proof</a>
+              <a [href]="dataItem.documentPath" target="_blank">{{dataItem.documentName}}</a>
             </button>
 
             </div>
