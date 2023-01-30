@@ -32,14 +32,16 @@
                   aria-label="Enter Answer"
                   [fillMode]="formUiStyle.inputFillMode"
                   [formControlName]="DescriptionField"
+                  [maxlength]="50"
                   [disabled]="
                     appInfoForm.controls['Transgender'].value !== 'NOT_LISTED' "
-                  placeholder="Enter Answer" 
+                  placeholder="Enter Answer"
+                  (blur)="descriptionChange()" 
                 ></kendo-textbox>
               </kendo-floatinglabel>
               <kendo-formerror
                 *ngIf="!appInfoForm.controls[DescriptionField].valid"
-                >Transgender is required.</kendo-formerror
+                >Are they transgender is required.</kendo-formerror
               >
               </div>
             </div>
@@ -47,7 +49,7 @@
         </div>
       </div>
     </span>
-    <kendo-formerror *ngIf="!appInfoForm.controls['Transgender']?.valid">Atleast one option is required.</kendo-formerror>
+    <kendo-formerror *ngIf="!appInfoForm.controls['Transgender']?.valid">	At least one Option must be selected.</kendo-formerror>
   </div>
   </fieldset>
 </section>

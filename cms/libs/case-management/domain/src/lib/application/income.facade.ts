@@ -156,10 +156,10 @@ export class IncomeFacade {
     const formData: any = new FormData();
     for (var key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       else {
         formData.append(key, clientIncome[key]);
@@ -172,10 +172,10 @@ export class IncomeFacade {
     const formData: any = new FormData();
     for (var key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       else {
         formData.append(key, clientIncome[key]);

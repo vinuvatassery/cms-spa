@@ -28,6 +28,6 @@
     "autoUserInfo": false,
     "useRefreshToken": true,
     "logLevel": "",
-    "secureRoutes": ["https://localhost:5200/api"]
+    "secureRoutes": ["https://localhost:44362/api"]
   }
 }

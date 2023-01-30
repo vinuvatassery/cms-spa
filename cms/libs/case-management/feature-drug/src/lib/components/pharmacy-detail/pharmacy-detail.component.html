@@ -1,8 +1,8 @@
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    To select a pharmacy, start typing the pharmacy name and/or number. If you
-    don’t see the correct one, click “Add New” to add a new pharmacy to the
-    master list.
+    To Edit this pharmacy click on the "X" to remove the pharmacy, 
+    and select another. If you don't see the correct one, 
+    click "Add New" to add a new pharmacy to the master list.
   </p>
   <div class="flex-row">
     <div class="flex-col">
@@ -40,13 +40,11 @@
 </section>
 <kendo-dialog-actions>
   <div class="justify-content-between">
-    <div>
       <button
         kendoButton
         [primary]="true"
         look="flat"
         (click)="onOpenNewPharmacyClicked()"
-        *ngIf="!isEditPharmacy"
         aria-label="add new pharmacy"
       >
         Add New
@@ -60,7 +58,6 @@
       >
         Remove
       </button>
-    </div>
     <div class="justify-content-end">
       <button
         kendoButton

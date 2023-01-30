@@ -21,7 +21,7 @@ export class healthInsurancePolicy {
         nextPremiumDueDate?: Date | null;
         paymentIdNbrSameAsInsuranceIdNbrFlag: string | null = null;
         paymentIdNbr: string | null = null;
-        aptcFlag: string | null = null;
+        aptcCode: string | null = null;
         aptcNotTakingFlag: string | null = null;
         aptcMonthlyAmt: number | null = null;
         othersCoveredOnPlanFlag: string | null = null;
@@ -62,6 +62,13 @@ export class healthInsurancePolicy {
         copyOfSummaryFileTypeCode: string = "";
         copyOfSummaryFileId: string = "";
         copyOfSummaryFilePath: string = "";
+
+        medicareCardFile: any = null;
+        medicareCardFileName: string = "";
+        medicareCardFileSize: number | null = null;
+        medicareCardFileTypeCode: string = "";
+        medicareCardFileId: string = "";
+        medicareCardFilePath: string = "";
 }
 
 export class othersCoveredOnPlan {

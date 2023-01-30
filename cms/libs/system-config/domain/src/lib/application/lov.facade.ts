@@ -44,7 +44,11 @@ export class LovFacade {
   private lovPremiumFrequencySubject = new BehaviorSubject<Lov[]>([]);
   private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovPriorityCodeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPrioritySubject=new BehaviorSubject<Lov[]>([]);
+  private lovOtherEthnicitySubject=new BehaviorSubject<Lov[]>([]);
+  private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
+
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -71,7 +75,10 @@ export class LovFacade {
   premiumFrequencylov$ = this.lovPremiumFrequencySubject.asObservable();
   medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
   caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
+  priorityCodeType$ = this.lovPriorityCodeSubject.asObservable();
   pharmacyPrioritylov$=this.lovPrioritySubject.asObservable();
+  otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
+  aptclov$=this.lovAptcSubject.asObservable();
 
 
         /** Public methods **/
@@ -330,6 +337,19 @@ getCaseStatusLovs(): void {
 
 }
 
+getCaseCodeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.PriorityCode).subscribe({
+    next: (lovCaseStatusResponse) => {
+      this.lovPriorityCodeSubject.next(lovCaseStatusResponse);
+    },
+    error: (err) => {
+      this.loggingService.logException(err)
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+
+}
+
 getPriorityLovs(): void {
   this.lovDataService.getLovsbyType(LovType.PriorityCode).subscribe({
     next: (lovPriorityResponse) => {
@@ -340,6 +360,28 @@ getPriorityLovs(): void {
     },
   });
 
+}
+
+getOtherEthnicityIdentitiesLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.EthnicityOtherCategories).subscribe({
+    next: (lovotherEthnicityResponse) => {
+      this.lovOtherEthnicitySubject.next(lovotherEthnicityResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+
+}
+getAptcLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Aptc).subscribe({
+    next: (lovResponse) => {
+      this.lovAptcSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
 }
 }
 
