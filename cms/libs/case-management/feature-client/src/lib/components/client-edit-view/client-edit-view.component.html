@@ -255,7 +255,9 @@
           [textFieldType]="'dropDown'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Select formats'"
           [textValidationMessage]="'An Alternate Format is Required.'"[otherControlerName]="'materialInAlternateFormatOther'"
           [otherControlerPlaceholderText]="'Enter formats'"[otherControlerValidationMessage]="'A response is required.'"
-          [textFieldMaxLimit]="50">
+          [textFieldMaxLimit]="50"
+          dataPointName="materialInAlternateFormat"
+          (updateDataPointCompletion)="updateWorkflowCount($event)">
         </common-optionbutton-list>
       </div>
     </fieldset>
@@ -309,7 +311,9 @@
         [textFieldDisable]="interpreterTypeInputDisable" [OptionControlerName]="'interpreterCode'"
         [textControlerName]="'interpreterType'" [textFieldType]="'textField'" [textFieldAfter]="'YES'"
         [textPlaceholderText]="'Type of interpreter'" [textValidationMessage]="'Type of interpreter is required.'"
-        [textFieldMaxLimit]="50">
+        [textFieldMaxLimit]="50"
+        dataPointName="interpreter"
+        (updateDataPointCompletion)="updateWorkflowCount($event)">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -325,7 +329,9 @@
         [textFieldDisable]="startAgeDeafOrHearingInputDisable" [OptionControlerName]="'deafOrHearingCode'"
         [textControlerName]="'startAgeDeafOrHearing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
         [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
-        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit"        
+        dataPointName="deafOrHearing"
+        (updateDataPointCompletion)="updateWorkflowCount($event)">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -341,7 +347,9 @@
         [textFieldDisable]="startAgeBlindSeeingInputDisable" [OptionControlerName]="'blindSeeingCode'"
         [textControlerName]="'startAgeBlindSeeing'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
         [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
-        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit"
+        dataPointName="blindSeeing"
+        (updateDataPointCompletion)="updateWorkflowCount($event)">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -371,7 +379,9 @@
         [OptionControlerName]="'walkingClimbingDifficultyCode'"
         [textControlerName]="'startAgeWalkingClimbingDifficulty'" [textFieldType]="'numericField'"
         [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit"
+        dataPointName="walkingClimbingDifficulty"
+        (updateDataPointCompletion)="updateWorkflowCount($event)">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -388,7 +398,9 @@
         [OptionControlerName]="'dressingBathingDifficultyCode'"
         [textControlerName]="'startAgeDressingBathingDifficulty'" [textFieldType]="'numericField'"
         [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit"
+        dataPointName="dressingBathingDifficulty"
+        (updateDataPointCompletion)="updateWorkflowCount($event)">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -406,7 +418,9 @@
         [textFieldDisable]="startAgeConcentratingDifficultyInputDisable"
         [OptionControlerName]="'concentratingDifficultyCode'" [textControlerName]="'startAgeConcentratingDifficulty'"
         [textFieldType]="'numericField'" [textFieldAfter]="'YES'" [textPlaceholderText]="'Age this condition began'"
-        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+        [textValidationMessage]="'Age this condition began is required.'"  [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit"
+        dataPointName="concentratingDifficulty"
+        (updateDataPointCompletion)="updateWorkflowCount($event)">
       </common-optionbutton-list>
     </fieldset>
   </section>
@@ -424,7 +438,9 @@
         [textFieldDisable]="startAgeErrandsDifficultyInputDisable" [OptionControlerName]="'errandsDifficultyCode'"
         [textControlerName]="'startAgeErrandsDifficulty'" [textFieldType]="'numericField'" [textFieldAfter]="'YES'"
         [textPlaceholderText]="'Age this condition began'" [textValidationMessage]="'Age this condition began is required.'"
-        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit">
+        [textFieldMinLimit]="ageMinLimit" [textFieldMaxLimit]="ageMaxLimit"
+        dataPointName="errandsDifficulty"
+        (updateDataPointCompletion)="updateWorkflowCount($event)">
       </common-optionbutton-list>
     </fieldset>
   </section>

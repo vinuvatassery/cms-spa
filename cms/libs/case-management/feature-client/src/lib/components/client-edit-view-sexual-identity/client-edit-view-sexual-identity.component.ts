@@ -25,7 +25,6 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   disableSexualIdentity: any;
   applicantInfo$ = this.clientfacade.applicantInfo$;
   appInfoSubscription!: Subscription;
-  private countOfSelection = 0;
   constructor(
     private readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder,
@@ -40,18 +39,35 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   ngOnInit(): void {
     this.lovFacade.getSexulaIdentityLovs();
     this.loadSexulaIdentities();
-    this.formChangeSubscription();
     this.loadApplicantInfoSubscription();
   }
   ngOnDestroy(): void {
     this.appInfoSubscription.unsubscribe();
   }  
   setControlValidations() {
+    let isFieldCompleted = false; 
     const sexulaIdentity = Object.keys(this.appInfoForm.controls).filter(m => m.includes(this.ControlPrefix));
     sexulaIdentity.forEach((gender: any) => {
       this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
       this.appInfoForm.controls[gender].updateValueAndValidity();
+
+      const value = this.appInfoForm.controls[gender]?.value;
+      if(value === true){
+        isFieldCompleted = (isFieldCompleted || value === true) 
+                          && (
+                                (
+                                  gender === `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}` 
+                                  && this.appInfoForm.controls[this.DescriptionField]?.value
+                                ) 
+                                || gender !== `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}`
+                             );
+      }
     });
+
+    this.updateWorkflowCount(isFieldCompleted);
+  }
+  descriptionChange(){
+    this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
   }
   onCheckChange(event: any, lovCode: string) {
     this.appInfoForm.controls['SexualIdentityGroup'].removeValidators(Validators.required);
@@ -123,21 +139,6 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
       this.SexulaIdentities = data;
       this.disableSexualIdentity = this.SexulaIdentities.filter((x: any) => x.lovCode !== SexualIdentityCode.dontKnow && x.lovCode !== SexualIdentityCode.dontWant && x.lovCode !== SexualIdentityCode.dontKnowQustion);
       this.cdr.detectChanges();
-    });
-  }
-
-  private formChangeSubscription() {
-    this.appInfoForm.controls['SexualIdentityGroup'].valueChanges.subscribe(value => {
-      if (value && this.countOfSelection >= 0) {
-        this.updateWorkflowCount(true);
-        this.countOfSelection++;
-      }
-      else {
-        this.countOfSelection = this.countOfSelection > 0 ? --this.countOfSelection : this.countOfSelection;
-        if (this.countOfSelection <= 0) {
-          this.updateWorkflowCount(false);
-        }
-      }
     });
   }
 
