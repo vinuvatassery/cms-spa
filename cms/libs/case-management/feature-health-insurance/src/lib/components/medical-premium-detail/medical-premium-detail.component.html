@@ -370,6 +370,7 @@
                   </kendo-dropdownlist>
                   <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                   && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].relationshipDescription
+                  && getPersonControl(i, 'relationshipDescription')?.touched
                   && isViewContentEditable==false">Relationship description is
                     required.</kendo-formerror>
                 </kendo-floatinglabel>
@@ -380,6 +381,7 @@
                     [fillMode]="formUiStyle.inputFillMode" [maxlength]="lengthRestrictForty" formControlName="firstName"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.value.othersCoveredOnPlanFlag == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].firstName
+                     && getPersonControl(i, 'firstName')?.touched
                      && isViewContentEditable==false">First name is
                     required.</kendo-formerror>
                 </kendo-floatinglabel>
@@ -390,6 +392,7 @@
                     [fillMode]="formUiStyle.inputFillMode" formControlName="lastName"  [maxlength]="lengthRestrictForty"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].lastName
+                     && getPersonControl(i, 'firstName')?.touched
                      && isViewContentEditable==false">Last name is
                     required.</kendo-formerror>
                 </kendo-floatinglabel>
@@ -401,6 +404,7 @@
                     formControlName="dob">
                     <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].dob
+                     && getPersonControl(i, 'dob')?.touched
                      && isViewContentEditable==false">Date of birth is
                       required.</kendo-formerror>
                   </kendo-datepicker>

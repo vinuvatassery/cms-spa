@@ -1019,6 +1019,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.newOthersCoveredOnPlan.removeAt(i);
   }
 
+  getPersonControl(index: number, fieldName: string) {
+    return (<FormArray>this.healthInsuranceForm.get('newOthersCoveredOnPlan')).at(index).get(fieldName);
+  }
+
   insuranceCarrierNameData(data: any) {
     if (this.isEdit) {
       this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
