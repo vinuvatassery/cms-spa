@@ -65,7 +65,7 @@ export class CaseDetailPageComponent implements OnInit {
   public saveForLaterData = [
     {
       buttonType: "btn-h-primary",
-      text: "SAVE FOR LATERr",
+      text: "SAVE FOR LATER",
       icon: "save",
       click: (): void => {
         this.onSaveLaterClicked();
