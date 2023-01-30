@@ -65,7 +65,7 @@ export class CaseDetailPageComponent implements OnInit {
   public saveForLaterData = [
     {
       buttonType: "btn-h-primary",
-      text: "Save For Later",
+      text: "SAVE FOR LATER",
       icon: "save",
       click: (): void => {
         this.onSaveLaterClicked();
@@ -73,7 +73,7 @@ export class CaseDetailPageComponent implements OnInit {
     },
     {
       buttonType: "btn-h-primary",
-      text: "Discard Changes",
+      text: "DISCARD CHANGES",
       icon: "do_disturb_alt",
       click: (): void => {
         this.onDiscardConfirmClicked()
@@ -81,7 +81,7 @@ export class CaseDetailPageComponent implements OnInit {
     },
     {
       buttonType: "btn-h-danger",
-      text: "Delete Application",
+      text: "DELETE APPLICATION",
       icon: "delete",
       click: (): void => {
         this.onDeleteConfirmClicked()
