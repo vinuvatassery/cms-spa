@@ -1192,7 +1192,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
       }
     }
-    //this.changeDetector.detectChanges();
   }
 
   public addNewInsurancePlanOpen(): void {
