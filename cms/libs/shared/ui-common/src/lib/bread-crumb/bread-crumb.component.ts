@@ -55,7 +55,7 @@ export class BreadCrumbComponent implements OnInit {
 
   private formatText(routeText: string): any {
     let formattedText = '';
-    routeText.split('-').map(
+    routeText.split('-').forEach(
       (i: any) => formattedText += (formattedText.length > 0 ? ' ':'')+ i.charAt(0).toUpperCase() + i.slice(1)
     );
     return formattedText;
