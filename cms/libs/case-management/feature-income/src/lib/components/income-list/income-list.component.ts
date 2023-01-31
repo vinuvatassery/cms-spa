@@ -115,7 +115,8 @@ export class IncomeListComponent implements OnInit {
       private readonly workflowFacade: WorkflowFacade,
       private readonly loggingService: LoggingService,
       private readonly loaderService: LoaderService,
-      private readonly clientDocumentFacade: ClientDocumentFacade) {}
+      private readonly clientDocumentFacade: ClientDocumentFacade,
+      private readonly dependentFacade:FamilyAndDependentFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
