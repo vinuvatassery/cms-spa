@@ -1225,12 +1225,16 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.insuranceEndDateIsgreaterthanStartDate = false;
       }
       else{
-        this.insuranceEndDateIsgreaterthanStartDate = true;
-        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+        this.insuranceEndDateIsgreaterthanStartDate = true;       
+        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);       
+        this.endDateMin = this.healthInsuranceForm.controls['insuranceStartDate'].value;
       }
     }
   }
+  endDateValueChange(date:Date){
+    this.insuranceEndDateIsgreaterthanStartDate = false;
 
+  }
   public addNewInsurancePlanOpen(): void {
     this.isaddNewInsurancePlanOpen = true;
   }

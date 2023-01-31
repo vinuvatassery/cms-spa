@@ -139,7 +139,7 @@
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="endDateMin"(focus)="changeMinDate()"
-              (blur)="endDateOnChange()" 
+              (blur)="endDateOnChange()" (valueChange)="endDateValueChange($event)"
               [disabled]="isViewContentEditable" formControlName="insuranceEndDate" formatPlaceholder="formatPattern"
               placeholder="">
             </kendo-datepicker>
