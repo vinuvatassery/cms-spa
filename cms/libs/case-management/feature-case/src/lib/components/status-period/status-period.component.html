@@ -8,7 +8,7 @@
                     <section *ngIf="dataItem.RamseelInfo">
                         <div class="flex-col flex-col-6 mt-2 p-0">
                             <h4>Ramsell Info</h4>
-                            <table>
+                            <table summary="Ramsell Info">
                                 <tbody>
                                 <tr>
                                     <td class="greycolor"> Most Recent Transfer</td>
@@ -31,7 +31,7 @@
                     <div *ngIf="dataItem.GroupHistory" class="mt-5">
                         <h4>Group History</h4>
 
-                        <table>
+                        <table summary="Group History">
                             <tr >
                                 <th>Group</th>
                                 <th>Start Date</th>
@@ -56,7 +56,7 @@
                     <div *ngIf="dataItem.FlipHistory" class="mt-5 mb-2">
                         <h4>FPL History</h4>
 
-                        <table>
+                        <table summary="FPL History">
                             <tr >
                                 <th>FPL</th>
                                 <th>Start Date</th>
