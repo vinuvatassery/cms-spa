@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { first, Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionAnswer, ReviewQuestionCode } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionAnswer, ReviewQuestionCode, QuestionTypeCode } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import {
   LoaderService,
@@ -66,7 +66,7 @@ export class ClientEligibilityComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSessionData();
-    this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode('REVIEW_CHECKLIST');
+    this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(QuestionTypeCode.reviewChecklist);
 
   }
   ngOnDestroy(): void {

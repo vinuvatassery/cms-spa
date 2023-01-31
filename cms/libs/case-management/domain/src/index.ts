@@ -81,6 +81,7 @@ export * from './lib/enums/control-prefix.enum';
 export * from './lib/enums/material-format.enum';
 export * from './lib/enums/states-in-usa.enum';
 export * from './lib/enums/review-question-code.enum';
+export * from './lib/enums/question-type-code.enum';
 
 
 /** Data services **/
@@ -109,7 +110,6 @@ export * from './lib/infrastructure/prescription-drug.data.service';
 export * from './lib/infrastructure/vendor.data.service';
 export * from './lib/infrastructure/insurance-plan.data.service';
 export * from './lib/infrastructure/health-insurance-policy.data.service';
-export * from './lib/infrastructure/eligibility-checklist-answer.data.service';
 export * from './lib/infrastructure/review-question-answer.data.service';
 export * from './lib/infrastructure/review-question-response.data.service';
 

@@ -404,7 +404,6 @@ export class CaseDataService {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/status`,caseData
     );
-
   }
   loadCasesStatusById(clientCaseId : string) {
     return this.http.get(
