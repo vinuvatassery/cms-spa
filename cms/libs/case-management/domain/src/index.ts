@@ -41,7 +41,10 @@ export * from './lib/entities/vendor';
 export * from './lib/entities/insurance-plan';
 export * from './lib/entities/health-insurance-policy';
 export * from './lib/entities/carrier-contact-info';
-export * from './lib/entities/pharmacy-priority'
+export * from './lib/entities/pharmacy-priority';
+export * from './lib/entities/accepted-application';
+export * from './lib/entities/client-eligibility-info';
+export * from './lib/entities/review-question-answer';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -64,7 +67,10 @@ export * from './lib/enums/priority-code.enum';
 export * from './lib/enums/insurance-plan.enum';
 export * from './lib/enums/parta-medicare-type.enum';
 export * from './lib/enums/partb-medicare-type.enum';
+export * from './lib/enums/client-document-entity-type.enum';
 export * from './lib/enums/case-status-code.enum';
+export * from './lib/enums/group-code.enum';
+export * from './lib/enums/accepted-case-status-code.enum';
 export * from './lib/enums/pronoun-code.enum';
 export * from './lib/enums/button-type.enum';
 export * from './lib/enums/case-origin.enum';
@@ -74,6 +80,9 @@ export * from './lib/enums/sexual-identity-code.enum';
 export * from './lib/enums/control-prefix.enum';
 export * from './lib/enums/material-format.enum';
 export * from './lib/enums/states-in-usa.enum';
+export * from './lib/enums/review-question-code.enum';
+export * from './lib/enums/question-type-code.enum';
+
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -101,6 +110,10 @@ export * from './lib/infrastructure/prescription-drug.data.service';
 export * from './lib/infrastructure/vendor.data.service';
 export * from './lib/infrastructure/insurance-plan.data.service';
 export * from './lib/infrastructure/health-insurance-policy.data.service';
+export * from './lib/infrastructure/review-question-answer.data.service';
+export * from './lib/infrastructure/review-question-response.data.service';
+
+
 
 /** Facades **/
 export * from './lib/application/application-eligibility.facade';
@@ -134,3 +147,8 @@ export * from './lib/application/prescription-drug.facade';
 export * from './lib/application/vendor.facade';
 export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
+export * from './lib/application/review-question-answer.facade';
+export * from './lib/application/review-question-response.facade';
+
+
+

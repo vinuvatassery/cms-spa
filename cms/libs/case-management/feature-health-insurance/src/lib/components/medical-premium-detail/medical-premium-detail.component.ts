@@ -472,7 +472,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         src: healthInsurancePolicy.copyOfInsuranceCardFilePath,
         uid: healthInsurancePolicy.copyOfInsuranceCardFileId,
         size: healthInsurancePolicy.copyOfInsuranceCardFileSize,
-        documentTypeCode: healthInsurancePolicy.copyOfInsuranceCardFileTypeCode
+        documentTypeCode: healthInsurancePolicy.copyOfInsuranceCardFileTypeCode,
+        documentId: healthInsurancePolicy.copyOfInsuranceCardFileId
       }];
     }
     if (!!healthInsurancePolicy.proofOfPremiumFileName) {
@@ -481,7 +482,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         src: healthInsurancePolicy.proofOfPremiumFilePath,
         uid: healthInsurancePolicy.proofOfPremiumFileId,
         size: healthInsurancePolicy.proofOfPremiumFileSize,
-        documentTypeCode: healthInsurancePolicy.proofOfPremiumFileTypeCode
+        documentTypeCode: healthInsurancePolicy.proofOfPremiumFileTypeCode,
+        documentId: healthInsurancePolicy.proofOfPremiumFileId
       }];
     }
     if (!!healthInsurancePolicy.copyOfSummaryFileName) {
@@ -490,7 +492,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         src: healthInsurancePolicy.copyOfSummaryFilePath,
         uid: healthInsurancePolicy.copyOfSummaryFileId,
         size: healthInsurancePolicy.copyOfSummaryFileSize,
-        documentTypeCode: healthInsurancePolicy.copyOfSummaryFileTypeCode
+        documentTypeCode: healthInsurancePolicy.copyOfSummaryFileTypeCode,
+        documentId: healthInsurancePolicy.copyOfSummaryFileId
       }];
     }
     if (!!healthInsurancePolicy.medicareCardFileName) {
@@ -499,7 +502,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         src: healthInsurancePolicy.medicareCardFilePath,
         uid: healthInsurancePolicy.medicareCardFileId,
         size: healthInsurancePolicy.medicareCardFileSize,
-        documentTypeCode: healthInsurancePolicy.medicareCardFileTypeCode
+        documentTypeCode: healthInsurancePolicy.medicareCardFileTypeCode,
+        documentId: healthInsurancePolicy.medicareCardFileId
       }];
     }
     this.disableEnableRadio();
@@ -1353,6 +1357,27 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.copyOfMedicareCardFiles = [];
         this.isMedicareCardFileUploaded = false;
       }
+    }
+  }
+
+  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
+    if (clientDocumentId && clientDocumentId != '' && (this.isEditViewPopup || this.isEdit)) {
+      this.loaderService.show()
+      this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (type === 'download') {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+        } else {
+          window.open(fileUrl, "_blank");
+        }
+        this.loaderService.hide();
+      }, (error) => {
+        this.loaderService.hide();
+        this.healthFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+      })
     }
   }
 }

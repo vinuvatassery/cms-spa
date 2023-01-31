@@ -6,6 +6,8 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Lov } from '../entities/lov';
 import { LovType } from '../enums/lov-types.enum';
+import {AcceptedCaseStatusCode} from '@cms/case-management/domain';
+
 /** Data services **/
 import { LovDataService } from '../infrastructure/lov.data.service';
 
@@ -43,6 +45,8 @@ export class LovFacade {
   private lovMetalLevelSubject = new BehaviorSubject<Lov[]>([]);
   private lovPremiumFrequencySubject = new BehaviorSubject<Lov[]>([]);
   private lovMedicareCoverageTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovCaseStatusSubject = new BehaviorSubject<Lov[]>([]);
+  private lovGroupSubject = new BehaviorSubject<Lov[]>([]);
   private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPriorityCodeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPrioritySubject=new BehaviorSubject<Lov[]>([]);
@@ -74,6 +78,8 @@ export class LovFacade {
   metalLevellov$ = this.lovMetalLevelSubject.asObservable();
   premiumFrequencylov$ = this.lovPremiumFrequencySubject.asObservable();
   medicareCoverageType$ = this.lovMedicareCoverageTypeSubject.asObservable();
+  caseStatusLov$ = this.lovCaseStatusSubject.asObservable();
+  groupLov$ = this.lovGroupSubject.asObservable();
   caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
   priorityCodeType$ = this.lovPriorityCodeSubject.asObservable();
   pharmacyPrioritylov$=this.lovPrioritySubject.asObservable();
@@ -324,11 +330,24 @@ getMedicareCoverageTypeLovs(): void {
     },
   });
 }
-
 getCaseStatusLovs(): void {
-  this.lovDataService.getLovsbyType(LovType.CaseStatusCode).subscribe({
-    next: (lovCaseStatusResponse) => {
-      this.lovCaseStatusTypeSubject.next(lovCaseStatusResponse);
+  this.lovDataService.getLovsbyType(LovType.CaseStatus).subscribe({
+    next: (lovResponse) => {
+      const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
+      const filteredLov = lovResponse.filter((item:any) => acceptedCaseStatusCodes.includes(item.lovCode))
+      this.lovCaseStatusSubject.next(filteredLov);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+
+
+getGroupLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Group).subscribe({
+    next: (lovResponse) => {
+      this.lovGroupSubject.next(lovResponse);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
@@ -343,12 +362,12 @@ getCaseCodeLovs(): void {
       this.lovPriorityCodeSubject.next(lovCaseStatusResponse);
     },
     error: (err) => {
-      this.loggingService.logException(err)
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
 
 }
+
 
 getPriorityLovs(): void {
   this.lovDataService.getLovsbyType(LovType.PriorityCode).subscribe({
