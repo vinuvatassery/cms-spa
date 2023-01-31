@@ -5,8 +5,9 @@ import { NotificationSnackbarService,SnackBarNotificationType,LoggingService  } 
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Lov } from '../entities/lov';
+import { AcceptedCaseStatusCode } from '../enums/accepted-case-status-code.enum';
 import { LovType } from '../enums/lov-types.enum';
-import {AcceptedCaseStatusCode} from '@cms/case-management/domain';
+
 
 /** Data services **/
 import { LovDataService } from '../infrastructure/lov.data.service';
