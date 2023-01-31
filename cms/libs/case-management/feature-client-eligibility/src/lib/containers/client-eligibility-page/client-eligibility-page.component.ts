@@ -101,7 +101,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
       this.loaderService.show();
       this.saveAndUpdate(questions).subscribe(
           (data:any) => {
-            if (data === true) {
+            if (data.length> 0) {
               this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Eligibility checklist save successfully');
               this.loaderService.hide();
             }
