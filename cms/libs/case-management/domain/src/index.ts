@@ -147,7 +147,6 @@ export * from './lib/application/prescription-drug.facade';
 export * from './lib/application/vendor.facade';
 export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
-export * from './lib/application/eligibility-checklist-answer.facade';
 export * from './lib/application/review-question-answer.facade';
 export * from './lib/application/review-question-response.facade';
 

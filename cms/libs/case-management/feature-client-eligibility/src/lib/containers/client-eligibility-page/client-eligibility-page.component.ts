@@ -14,11 +14,9 @@ import {
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { ActivatedRoute } from '@angular/router';
-import { NavigationType, ReviewQuestionResponseFacade } from '@cms/case-management/domain';
+import {  ReviewQuestionResponseFacade } from '@cms/case-management/domain';
 import {
   WorkflowFacade,
-  EligibilityChecklistAnswerFacade,
 } from '@cms/case-management/domain';
 
 @Component({

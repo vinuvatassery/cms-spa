@@ -25,6 +25,7 @@ export class ClientEligibilityComponent implements OnInit {
 
 
   private reviewQuestionAnswerSubscription!: Subscription;
+  private reviewQuestionResponseSubscription!: Subscription;
 
   /** Public properties **/
   isShowException = false;
@@ -70,6 +71,7 @@ export class ClientEligibilityComponent implements OnInit {
   }
   ngOnDestroy(): void {
     this.reviewQuestionAnswerSubscription.unsubscribe();
+    this.reviewQuestionResponseSubscription.unsubscribe();
   }
 
   loadReviewQuestionAnswers() {
@@ -150,22 +152,26 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
           this.clientId = sessionData.clientId;
           this.eligibilityForm.controls['clientCaseEligibilityId'].setValue(this.clientCaseEligibilityId);
-
-          this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId).subscribe((data: any) => {
-            this.documents = data;
-            this.loadReviewQuestionAnswers();
-            this.getIncomeEligibility();
-          }, (error) => {
-            this.showSnackBar(SnackBarNotificationType.ERROR, error);
-          })
-
+          this.loadDocuments();
         }
       });
 
   }
+  loadDocuments() {
+    this.loaderService.show();
+    this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId).subscribe((data: any) => {
+      this.documents = data;
+      this.loadReviewQuestionAnswers();
+      this.getIncomeEligibility();
+    }, (error) => {
+      this.showSnackBar(SnackBarNotificationType.ERROR, error);
+      this.loaderService.hide();
+    })
+
+  }
   getSavedQuestionsResponse() {
     this.reviewQuestionResponseFacade.getReviewQuestionResponseByClientCaseEligibilityId(this.clientCaseEligibilityId);
-    this.reviewQuestionResponseFacade.reviewQuestionResponse$.subscribe((data: any) => {
+    this.reviewQuestionResponseSubscription =  this.reviewQuestionResponseFacade.reviewQuestionResponse$.subscribe((data: any) => {
       if (data.length === 0) return;
 
 
@@ -173,7 +179,7 @@ export class ClientEligibilityComponent implements OnInit {
       this.getQuestionsResponse.emit(this.questions);
     })
   }
-  setSavedResponseInQuestions(questions:any, responses:any) {
+  setSavedResponseInQuestions(questions: any, responses: any) {
     questions.forEach((q: any) => {
       const answer = responses.find((m: any) => m.reviewQuestionId === q.reviewQuestionId);
       if (answer !== undefined) {
@@ -181,11 +187,11 @@ export class ClientEligibilityComponent implements OnInit {
         q.reviewQuestionAnswerId = answer.reviewQuestionAnswerId;
         q.responseAnswerId = answer.reviewQuestionAnswerId;
         q.notes = answer.notes;
-        q.answerCode = q.answers.find((m: any) => m.reviewQuestionAnswerId=== answer.reviewQuestionAnswerId)?.answerCode;
+        q.answerCode = q.answers.find((m: any) => m.reviewQuestionAnswerId === answer.reviewQuestionAnswerId)?.answerCode;
 
         q.activeFlag = answer.activeFlag;
         q.concurrencyStamp = answer.concurrencyStamp;
-        if(q.childQuestions.length>0){
+        if (q.childQuestions.length > 0) {
           this.setSavedResponseInQuestions(q.childQuestions, responses);
         }
       }
@@ -193,7 +199,7 @@ export class ClientEligibilityComponent implements OnInit {
 
   }
   getIncomeEligibility() {
-    this.loaderService.show()
+    this.loaderService.show();
     this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId, this.clientId).subscribe((data: any) => {
       this.eligibility = data;
       this.cdr.detectChanges();
