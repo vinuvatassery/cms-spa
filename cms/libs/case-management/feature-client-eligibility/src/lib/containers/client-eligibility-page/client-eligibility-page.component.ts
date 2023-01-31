@@ -14,7 +14,7 @@ import {
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import {  ReviewQuestionResponseFacade } from '@cms/case-management/domain';
+import { ReviewQuestionResponseFacade } from '@cms/case-management/domain';
 import {
   WorkflowFacade,
 } from '@cms/case-management/domain';
@@ -81,13 +81,13 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
   private save() {
     this.formSubmited = true;
     this.ref.detectChanges();
-    let questions=JSON.parse(JSON.stringify(this.questoinsResponse));
-    let inValid=false;
-    questions.forEach((parent:any) => {
-      if(parent.answerCode === 'NO'){
-        parent.childQuestions.forEach((child:any) => {
-          if(child.answerCode==='YES' && child.notes?.length<1){
-            inValid=true;
+    let questions = JSON.parse(JSON.stringify(this.questoinsResponse));
+    let inValid = false;
+    questions.forEach((parent: any) => {
+      if (parent.answerCode === 'NO') {
+        parent.childQuestions.forEach((child: any) => {
+          if (child.answerCode === 'YES' && child.notes?.length < 1) {
+            inValid = true;
           }
           questions.push(child);
         });
@@ -97,20 +97,26 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
     });
 
     if (!inValid && !questions.some((m: any) => m?.responseAnswerId === undefined)) {
-      this.formSubmited=false;
+      this.formSubmited = false;
       this.loaderService.show();
       this.saveAndUpdate(questions).subscribe(
-          (data:any) => {
-            if (data.length> 0) {
-              this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Eligibility checklist save successfully');
-              this.loaderService.hide();
-            }
-          },
-          (error:any) => {
-            this.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+        (data: any) => {
+          if (data.length > 0) {
+            data.forEach((el: any) => {
+              let ques = this.questoinsResponse.find((m:any) => m.reviewQuestionAnswerId === el.reviewQuestionAnswerId);
+              if (ques !== undefined)
+                ques.reviewQuestionResponseId = el.reviewQuestionResponseId;
+
+            });
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Eligibility checklist save successfully');
             this.loaderService.hide();
           }
-        );
+        },
+        (error: any) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+          this.loaderService.hide();
+        }
+      );
     }
   }
   saveAndUpdate(questoinsResponse: any) {
