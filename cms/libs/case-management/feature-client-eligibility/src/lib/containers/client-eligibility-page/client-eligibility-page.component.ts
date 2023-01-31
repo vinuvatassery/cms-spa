@@ -35,7 +35,6 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly workflowFacade: WorkflowFacade,
     private readonly reviewQuestionResponseFacade: ReviewQuestionResponseFacade,
-    
     private readonly formBuilder: FormBuilder,
     private readonly ref: ChangeDetectorRef,
     private readonly notificationSnackbarService: NotificationSnackbarService,
@@ -83,9 +82,13 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
     this.formSubmited = true;
     this.ref.detectChanges();
     let questions=JSON.parse(JSON.stringify(this.questoinsResponse));
+    let inValid=false;
     questions.forEach((parent:any) => {
       if(parent.answerCode === 'NO'){
         parent.childQuestions.forEach((child:any) => {
+          if(child.answerCode==='YES' && child.notes?.length<1){
+            inValid=true;
+          }
           questions.push(child);
         });
       }
@@ -93,7 +96,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
       delete parent.answers;
     });
    
-    if (!questions.some((m: any) => m?.responseAnswerId === undefined)) {
+    if (!inValid && !questions.some((m: any) => m?.responseAnswerId === undefined)) {
       this.formSubmited=false;
       this.loaderService.show();
       this.saveAndUpdate(questions).subscribe(

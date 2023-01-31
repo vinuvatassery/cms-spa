@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
-import { first, Observable, Subscription } from 'rxjs';
+import { first, Observable, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionAnswer, ReviewQuestionCode, QuestionTypeCode } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
@@ -20,6 +20,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 export class ClientEligibilityComponent implements OnInit {
   @Input() eligibilityForm: FormGroup;
   @Input() formSubmited!: boolean;
+  @Input() questions: any = [];
 
   @Output() getQuestionsResponse = new EventEmitter<any>();
 
@@ -44,16 +45,17 @@ export class ClientEligibilityComponent implements OnInit {
   oregonDocuments: any = [];
   hivDocuments: any = [];
   reviewQuestionAnswers: any = [];
-  questions: any = [];
+  //questions: any = [];
   reviewQuestionCode = ReviewQuestionCode;
 
   /** Constructor **/
   constructor(
-    private cdr: ChangeDetectorRef
-    , private readonly loaderService: LoaderService
-    , private readonly workflowFacade: WorkflowFacade, private route: ActivatedRoute
-    , private readonly clientDocumentFacade: ClientDocumentFacade
-    , private readonly clientEligibilityFacade: ClientEligibilityFacade,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly loaderService: LoaderService,
+    private readonly workflowFacade: WorkflowFacade,
+    private readonly route: ActivatedRoute,
+    private readonly clientDocumentFacade: ClientDocumentFacade,
+    private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly reviewQuestionResponseFacade: ReviewQuestionResponseFacade,
     private readonly formBuilder: FormBuilder,
     private readonly notificationSnackbarService: NotificationSnackbarService,
@@ -103,9 +105,6 @@ export class ClientEligibilityComponent implements OnInit {
     });
     return questions;
   }
-  getAnswers(question: ReviewQuestionAnswer) {
-    return this.reviewQuestionAnswers.filter((m: any) => m.questionCode === question.questionCode).sort((a: any, b: any) => a.answerDisplayOrder - b.answerDisplayOrder);
-  }
 
   answerClick(question: any, answer: any) {
     question.responseAnswerId = answer.reviewQuestionAnswerId;
@@ -152,27 +151,33 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
           this.clientId = sessionData.clientId;
           this.eligibilityForm.controls['clientCaseEligibilityId'].setValue(this.clientCaseEligibilityId);
-          this.loadDocuments();
+          this.loadDocumentsAndEligibility();
         }
       });
-
   }
-  loadDocuments() {
+  loadDocumentsAndEligibility() {
+    let documents = this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId);
+    let eligibility = this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId, this.clientId);
     this.loaderService.show();
-    this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId).subscribe((data: any) => {
-      this.documents = data;
-      this.loadReviewQuestionAnswers();
-      this.getIncomeEligibility();
-      this.loaderService.hide();
-    }, (error) => {
-      this.showSnackBar(SnackBarNotificationType.ERROR, error);
-      this.loaderService.hide();
-    })
+    forkJoin([documents, eligibility]).subscribe(
+      (results: any) => {
+        if (results.length === 0) return;
+        this.documents = results[0];
+        this.eligibility = results[1];
+        this.cdr.detectChanges();
+        this.loaderService.hide();
+        this.loadReviewQuestionAnswers();
+      }
+      , (error) => {
+        this.showSnackBar(SnackBarNotificationType.ERROR, error);
+        this.loaderService.hide();
+      }
+    );
 
   }
   getSavedQuestionsResponse() {
     this.reviewQuestionResponseFacade.getReviewQuestionResponseByClientCaseEligibilityId(this.clientCaseEligibilityId);
-    this.reviewQuestionResponseSubscription =  this.reviewQuestionResponseFacade.reviewQuestionResponse$.subscribe((data: any) => {
+    this.reviewQuestionResponseSubscription = this.reviewQuestionResponseFacade.reviewQuestionResponse$.subscribe((data: any) => {
       if (data.length === 0) return;
 
 
@@ -199,16 +204,7 @@ export class ClientEligibilityComponent implements OnInit {
     });
 
   }
-  getIncomeEligibility() {
-    this.loaderService.show();
-    this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId, this.clientId).subscribe((data: any) => {
-      this.eligibility = data;
-      this.cdr.detectChanges();
-      this.loaderService.hide();
-    }, (error: any) => {
-      this.loaderService.hide();
-    })
-  }
+ 
 
   viewOrDonwloadFile(type: string, clientDocumentId: string, documentName: string) {
     this.loaderService.show()
