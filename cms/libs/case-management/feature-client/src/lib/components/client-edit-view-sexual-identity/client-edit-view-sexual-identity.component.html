@@ -32,6 +32,7 @@
                 [disabled]="
                   !appInfoForm.controls[ControlPrefix + Identity.lovCode].value "
                 placeholder="Enter sexual orientation or sexual identity" 
+                (blur)="descriptionChange()"
               >
               </kendo-textbox>
             </kendo-floatinglabel>

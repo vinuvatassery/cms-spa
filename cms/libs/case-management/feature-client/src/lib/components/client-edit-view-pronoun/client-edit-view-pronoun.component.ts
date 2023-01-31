@@ -28,8 +28,6 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
    //textboxDisable:boolean=true;
    disablePronouns:any;
 
-   private countOfSelection=0;   
-
      /** Construtor **/
    constructor(
      private readonly formBuilder: FormBuilder,
@@ -91,7 +89,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
       this.workflowFacade.updateChecklist(workFlowdata);
     }
     private assignPronounModelToForm(clientPronounList:any){
-        if(clientPronounList !== undefined && clientPronounList !== undefined && clientPronounList != null){   
+        if(clientPronounList !== undefined && clientPronounList != null){   
         clientPronounList.forEach((pronoun:any) => {  
         if(this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.clientPronounCode.toUpperCase()] !== undefined){
             this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.clientPronounCode.toUpperCase()].setValue(true);
@@ -107,21 +105,18 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
    onCheckChange(event:any,lovCode:any) {     
     this.appInfoForm.controls['pronouns'].removeValidators(Validators.required);
     this.appInfoForm.controls['pronouns'].updateValueAndValidity(); 
-    this.enableDisablePronoun(event.target.checked,lovCode);
-    if(event.target.checked){
-      this.countOfSelection++;
-    }
-    else{
-      this.countOfSelection = this.countOfSelection > 0 ?  --this.countOfSelection: this.countOfSelection;
-    }
-
-    this.updateWorkflowCount(this.countOfSelection > 0);    
+    this.enableDisablePronoun(event.target.checked,lovCode);   
     const pronounControls = Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.pronoun));
+    let isFieldCompleted = false;
     pronounControls.forEach((pronoun:any) => {             
         this.appInfoForm.controls[pronoun].removeValidators(Validators.requiredTrue);
         this.appInfoForm.controls[pronoun].updateValueAndValidity();
-    });
-    
+        const value = this.appInfoForm.controls[pronoun]?.value;
+        if(value === true){
+          isFieldCompleted = (isFieldCompleted || value === true) && ((pronoun === `${ControlPrefix.pronoun}${PronounCode.notListed}` && this.appInfoForm.controls['pronoun']?.value) || pronoun !== `${ControlPrefix.pronoun}${PronounCode.notListed}`)
+        }
+      });
+    this.updateWorkflowCount(isFieldCompleted); 
     this.appInfoForm.controls['pronoun'].updateValueAndValidity();
    }
    enableDisablePronoun(checked:boolean,lovCode:any){   

@@ -374,7 +374,6 @@ export class WorkflowFacade {
       const nextIndex = this.deepCopy(this.currentSession?.workFlowProgress)?.findIndex((wf: WorkFlowProgress) => wf.workflowProgressId === nextWorkflow.workflowProgressId);
       if (nextIndex !== -1) {
         this.currentSession.workFlowProgress[nextIndex] = nextWorkflow;
-        this.currentSession = this.currentSession;
         this.routesSubject.next(this.currentSession.workFlowProgress);
       }
     }
