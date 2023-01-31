@@ -693,23 +693,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
         }
       }
-      if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'N') {
-        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
-        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
-      }
-      else{
-        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators(null);
-        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
-        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators(null);
-        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
-      }
-      if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y'){
+      if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y' 
+      || this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value == 'N'){
         this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
           Validators.required,
         ]);
@@ -1258,8 +1243,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isProofFileUploaded = true;
-      this.proofOfPremiumFiles = event.files[0].rawFile;
-      if (this.proofOfPremiumFiles.size>26214400)
+      // this.proofOfPremiumFiles = event.files[0].rawFile;
+      if (this.proofOfPremiumFiles[0].size>26214400)
       {
         this.proofOfPremiumFilesValidator=true;
       }
@@ -1272,8 +1257,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isSummaryFileUploaded = true;
-      this.copyOfSummaryFiles = event.files[0].rawFile;
-      if (this.copyOfSummaryFiles.size>26214400)
+      // this.copyOfSummaryFiles = event.files[0].rawFile;
+      if (this.copyOfSummaryFiles[0].size>26214400)
       {
         this.copyOfSummaryFilesValidator=true;
       }
@@ -1286,8 +1271,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isInsuranceFileUploaded = true;
-      this.copyOfInsuranceCardFiles = event.files[0].rawFile;
-      if (this.copyOfInsuranceCardFiles.size>26214400)
+      // this.copyOfInsuranceCardFiles = event.files[0].rawFile;
+      if (this.copyOfInsuranceCardFiles[0].size>26214400)
       {
         this.copyOfInsuranceCardFilesValidator=true;
       }
@@ -1300,8 +1285,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isMedicareCardFileUploaded = true;
-      this.copyOfMedicareCardFiles = event.files[0].rawFile;
-      if (this.copyOfMedicareCardFiles.size>26214400)
+      // this.copyOfMedicareCardFiles = event.files[0].rawFile;
+      if (this.copyOfMedicareCardFiles[0].size>26214400)
       {
         this.copyOfMedicareCardFilesValidator=true;
       }
