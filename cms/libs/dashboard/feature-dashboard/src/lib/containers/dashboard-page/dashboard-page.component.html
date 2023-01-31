@@ -6,6 +6,11 @@
     </div>
     <div class="flex-col mb-3">
       <table class="table" summary="dashboard">
+        <tr hidden>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
         <tr *ngFor="let dashboard of dashboard$ | async">
           <td>{{ dashboard.id }}</td>
           <td>{{ dashboard.name }}</td>
