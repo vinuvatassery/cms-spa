@@ -53,7 +53,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   copyOfInsuranceCardFiles: any;
   copyOfMedicareCardFiles : any
   isaddNewInsurancePlanOpen: boolean = false;
-  public min: Date = new Date(1899, 12, 1);
   public uploadRemoveUrl = 'removeUrl';
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -111,6 +110,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   isProofFileUploaded: boolean = true;
   isSummaryFileUploaded: boolean = true;
   isMedicareCardFileUploaded : boolean = true
+  insuranceStartDateIslessthanEndDate: boolean = true;
+  insuranceEndDateIsgreaterthanStartDate: boolean=false;
 
   get othersCoveredOnPlan(): FormArray {
     return this.healthInsuranceForm.get("othersCoveredOnPlan") as FormArray;
@@ -489,6 +490,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private validateForm() {
+    this.insuranceEndDateIsgreaterthanStartDate = true;
     this.isSummaryFileUploaded = true;
     this.isProofFileUploaded = true;
     this.isInsuranceFileUploaded = true;
@@ -724,9 +726,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private resetValidators() {
-    Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
-      this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
-      this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {  
+      if(key !=='insuranceEndDate')  {  
+        this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
+        this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      }
     });
   }
   private resetData() {
@@ -1147,38 +1151,43 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsuranceForm.controls["isClientPolicyHolderFlag"].enable();
     }
   }
-  startDateOnChange(startDate: Date) {
-    if (this.healthInsuranceForm.controls['insuranceEndDate'].value !== null) {
-      var endDate = this.intl.parseDate(
-        Intl.DateTimeFormat('en-US').format(
-          this.healthInsuranceForm.controls['insuranceEndDate'].value
-        )
-      );
-      if (startDate > endDate) {
-        this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
-      }
-
+  startDateOnChange() {
+    if( this.healthInsuranceForm.controls['insuranceEndDate'].value !== null){
+      this.endDateOnChange();
     }
   }
-  endDateOnChange(endDate: Date) {
+  endDateValueChange(event:Date){
+    this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+  }
+ 
+  endDateOnChange() {
+    this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+    this.insuranceEndDateIsgreaterthanStartDate = true;
     if (this.healthInsuranceForm.controls['insuranceStartDate'].value === null) {
       this.snackbarService.errorSnackBar('Insurance Start Date required.');
       this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
       return;
-    }else{
+     }
+    else{
       var startDate = this.intl.parseDate(
         Intl.DateTimeFormat('en-US').format(
           this.healthInsuranceForm.controls['insuranceStartDate'].value
         )
       );
-      const control:any = this.healthInsuranceForm.controls['insuranceEndDate'];
-      if(control.errors!==null){
-        const minError:any=control?.errors['minError'];
-        if (minError) {
-          this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
-        }
-      }
+        var endDate = this.intl.parseDate(
+          Intl.DateTimeFormat('en-US').format(
+            this.healthInsuranceForm.controls['insuranceEndDate'].value
+          )
+        );
       
+      if (startDate > endDate) {
+        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
+        this.insuranceEndDateIsgreaterthanStartDate = false;
+      }
+      else{
+        this.insuranceEndDateIsgreaterthanStartDate = true;
+        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+      }
     }
   }
 

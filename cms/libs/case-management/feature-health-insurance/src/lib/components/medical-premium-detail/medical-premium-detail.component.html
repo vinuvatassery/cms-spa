@@ -125,24 +125,27 @@
             <!-- [(ngModel)]="currentDate" -->
             <kendo-datepicker aria-label="Insurance Start Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" formControlName="insuranceStartDate" [disabled]="isViewContentEditable"
-              formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange($event)">
+              formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()"
+             >
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid">Insurance start date is
-            required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid ">Insurance start date is
+            required.</kendo-formerror>           
         </div>
         <div class="flex-col flex-col-6">
           <!-- [(ngModel)]="currentDate" -->
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
-              (blur)="endDateOnChange($event)"
+              (blur)="endDateOnChange()" (valueChange)="endDateValueChange($event)"
               [disabled]="isViewContentEditable" formControlName="insuranceEndDate" formatPlaceholder="formatPattern"
               placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid">Insurance End Date is
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate">Insurance End Date is
             required.</kendo-formerror>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate">Insurance End Date 
+              should greater than Start Date.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
