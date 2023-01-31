@@ -72,7 +72,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  
+
 
   getQuestionsResponse(value: any) {
     this.questoinsResponse = value;
@@ -95,7 +95,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
       delete parent.childQuestions;
       delete parent.answers;
     });
-   
+
     if (!inValid && !questions.some((m: any) => m?.responseAnswerId === undefined)) {
       this.formSubmited=false;
       this.loaderService.show();
@@ -114,8 +114,8 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
     }
   }
   saveAndUpdate(questoinsResponse: any) {
-    if (!questoinsResponse.some((m: any) => m.reviewQuestionResponseId === undefined)) {
-      
+    if (questoinsResponse.some((m: any) => m.reviewQuestionResponseId !== undefined)) {
+
       return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(questoinsResponse);
     }
 
