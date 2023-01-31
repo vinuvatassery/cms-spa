@@ -62,6 +62,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   @Input() dialogTitle!: string;
   @Input() insuranceType!: string;
   @Input() healthInsuranceForm: FormGroup;
+  public uploadFileSizeLimit =this.configurationProvider.appSettings.uploadFileSizeLimit;
 
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
@@ -1097,7 +1098,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     }
   }
   save() {
-    //this.isSubmitted = true;
     this.validateForm();
     if (this.healthInsuranceForm.valid && this.isInsuranceFileUploaded && this.isProofFileUploaded && this.isSummaryFileUploaded && this.isMedicareCardFileUploaded) {
       this.populateInsurancePolicy();
@@ -1244,7 +1244,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }];
       this.isProofFileUploaded = true;
       // this.proofOfPremiumFiles = event.files[0].rawFile;
-      if (this.proofOfPremiumFiles[0].size>26214400)
+      if (this.proofOfPremiumFiles[0].size>this.uploadFileSizeLimit)
       {
         this.proofOfPremiumFilesValidator=true;
       }
@@ -1258,7 +1258,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }];
       this.isSummaryFileUploaded = true;
       // this.copyOfSummaryFiles = event.files[0].rawFile;
-      if (this.copyOfSummaryFiles[0].size>26214400)
+      if (this.copyOfSummaryFiles[0].size>this.uploadFileSizeLimit)
       {
         this.copyOfSummaryFilesValidator=true;
       }
@@ -1272,7 +1272,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }];
       this.isInsuranceFileUploaded = true;
       // this.copyOfInsuranceCardFiles = event.files[0].rawFile;
-      if (this.copyOfInsuranceCardFiles[0].size>26214400)
+      if (this.copyOfInsuranceCardFiles[0].size>this.uploadFileSizeLimit)
       {
         this.copyOfInsuranceCardFilesValidator=true;
       }
@@ -1286,7 +1286,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }];
       this.isMedicareCardFileUploaded = true;
       // this.copyOfMedicareCardFiles = event.files[0].rawFile;
-      if (this.copyOfMedicareCardFiles[0].size>26214400)
+      if (this.copyOfMedicareCardFiles[0].size>this.uploadFileSizeLimit)
       {
         this.copyOfMedicareCardFilesValidator=true;
       }
