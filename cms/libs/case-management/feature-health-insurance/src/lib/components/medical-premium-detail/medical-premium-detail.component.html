@@ -136,16 +136,16 @@
           <!-- [(ngModel)]="currentDate" -->
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
-              format="MM-dd-yyyy" [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
-              (blur)="endDateOnChange()" (valueChange)="endDateValueChange($event)"
+              format="MM-dd-yyyy" [min]="endDateMin"(focus)="changeMinDate()"
+              (blur)="endDateOnChange()" 
               [disabled]="isViewContentEditable" formControlName="insuranceEndDate" formatPlaceholder="formatPattern"
               placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate">Insurance End Date is
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate">Insurance end date is
             required.</kendo-formerror>
-            <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate">Insurance End Date 
-              should greater than Start Date.</kendo-formerror>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate">Insurance end date 
+              should greater than start date.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">

@@ -112,6 +112,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   isMedicareCardFileUploaded : boolean = true
   insuranceStartDateIslessthanEndDate: boolean = true;
   insuranceEndDateIsgreaterthanStartDate: boolean=false;
+  endDateMin!:Date;
 
   get othersCoveredOnPlan(): FormArray {
     return this.healthInsuranceForm.get("othersCoveredOnPlan") as FormArray;
@@ -490,7 +491,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private validateForm() {
-    this.insuranceEndDateIsgreaterthanStartDate = true;
+    if(this.healthInsuranceForm.controls['insuranceEndDate'].valid){
+      this.insuranceEndDateIsgreaterthanStartDate = true;
+    }
     this.isSummaryFileUploaded = true;
     this.isProofFileUploaded = true;
     this.isInsuranceFileUploaded = true;
@@ -505,14 +508,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     ];
     const CobraPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
-      'insuranceEndDate',
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',
     ];
     const OffExchangePlanRequiredFields: Array<string> = [
       'insuranceStartDate',
-      'insuranceEndDate',
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',
@@ -537,9 +538,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       'medicareBeneficiaryIdNbr',
       'medicareCoverageTypeCode',
       'onLisFlag']
-    this.resetValidators();
     this.healthInsuranceForm.markAllAsTouched();
-    this.healthInsuranceForm.updateValueAndValidity();
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
       QualifiedHealthPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
@@ -571,6 +570,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         ]);
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
+      if(this.healthInsuranceForm.controls['insuranceEndDate'].value === null){
+        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
+      }
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan) {
       OffExchangePlanRequiredFields.forEach((key: string) => {
@@ -579,6 +581,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         ]);
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
+      if(this.healthInsuranceForm.controls['insuranceEndDate'].value === null){
+        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
+      }
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) {
       this.medicareInsuranceInfoCheck = false;
@@ -726,11 +731,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private resetValidators() {
-    Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {  
-      if(key !=='insuranceEndDate')  {  
+    Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
         this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
-      }
     });
   }
   private resetData() {
@@ -1151,24 +1154,24 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsuranceForm.controls["isClientPolicyHolderFlag"].enable();
     }
   }
+
   startDateOnChange() {
-    if( this.healthInsuranceForm.controls['insuranceEndDate'].value !== null){
+    if(this.healthInsuranceForm.controls['insuranceEndDate'].value !== null){
       this.endDateOnChange();
     }
   }
-  endDateValueChange(event:Date){
-    this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+  changeMinDate(){
+    this.endDateMin = this.healthInsuranceForm.controls['insuranceStartDate'].value;
   }
- 
+
   endDateOnChange() {
-    this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
     this.insuranceEndDateIsgreaterthanStartDate = true;
     if (this.healthInsuranceForm.controls['insuranceStartDate'].value === null) {
       this.snackbarService.errorSnackBar('Insurance Start Date required.');
       this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
       return;
      }
-    else{
+    else if( this.healthInsuranceForm.controls['insuranceEndDate'].value !== null){
       var startDate = this.intl.parseDate(
         Intl.DateTimeFormat('en-US').format(
           this.healthInsuranceForm.controls['insuranceStartDate'].value
@@ -1189,6 +1192,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
       }
     }
+    //this.changeDetector.detectChanges();
   }
 
   public addNewInsurancePlanOpen(): void {
