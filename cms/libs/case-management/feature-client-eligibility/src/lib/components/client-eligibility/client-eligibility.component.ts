@@ -163,6 +163,7 @@ export class ClientEligibilityComponent implements OnInit {
       this.documents = data;
       this.loadReviewQuestionAnswers();
       this.getIncomeEligibility();
+      this.loaderService.hide();
     }, (error) => {
       this.showSnackBar(SnackBarNotificationType.ERROR, error);
       this.loaderService.hide();
