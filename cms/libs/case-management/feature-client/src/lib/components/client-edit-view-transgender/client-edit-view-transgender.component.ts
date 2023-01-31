@@ -5,8 +5,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import {  LovFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-client-edit-view-transgender',
   templateUrl: './client-edit-view-transgender.component.html',
@@ -21,6 +22,7 @@ export class ClientEditViewTransgenderComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
     private readonly lovFacade: LovFacade,
+    private readonly workflowFacade: WorkflowFacade,
     private formBuilder: FormBuilder
   ) {
     this.appInfoForm = this.formBuilder.group({ TransgenderInit: [''] });
@@ -43,14 +45,33 @@ export class ClientEditViewTransgenderComponent implements OnInit {
     });
   }
 
+  private updateWorkflowCount(isCompleted: boolean) {
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'transgenderCode',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
+  }
+
   onTransgenderRdoClicked(lovCode: string) {
     if (lovCode === 'NOT_LISTED') {
-      this.appInfoForm.controls[this.DescriptionField].setErrors({
-        incorrect: true,
-      });
+      this.appInfoForm.controls[this.DescriptionField].setValidators(
+        Validators.required
+      );
+      this.descriptionChange();
     } else {
-      this.appInfoForm.controls[this.DescriptionField].setErrors(null);
-      this.appInfoForm.controls[this.DescriptionField].setValue('');
+      this.appInfoForm.controls[this.DescriptionField].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls[
+        this.DescriptionField
+      ].updateValueAndValidity();
+      this.updateWorkflowCount(true);
     }
+  }
+
+  descriptionChange() {
+    this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
   }
 }

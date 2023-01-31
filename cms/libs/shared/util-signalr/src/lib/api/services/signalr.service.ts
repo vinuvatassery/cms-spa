@@ -32,7 +32,7 @@ export class SignalrService {
     private readonly oidcSecurityService: OidcSecurityService,
     private readonly configurationProvider: ConfigurationProvider
   ) {
-    this.initialize();
+    //this.initialize();
   }
 
   /** Private methods **/
@@ -70,15 +70,16 @@ export class SignalrService {
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (retryContext) => {
           this.notify('AutoReconnect', retryContext.elapsedMilliseconds);
-          if (retryContext.elapsedMilliseconds < 60000) {
-            // If we've been reconnecting for less than 60 seconds so far,
-            // wait between 0 and 10 seconds before the next reconnect attempt.
-            return Math.random() * 10000;
-          } else {
-            // If we've been reconnecting for more than 60 seconds so far, stop reconnecting.
-            // return null;
-            return Math.random() * 10000; //TODO: reconnecting indefinitely?
-          }
+          return Math.random() * 10000; 
+          // if (retryContext.elapsedMilliseconds < 60000) {
+          //   // If we've been reconnecting for less than 60 seconds so far,
+          //   // wait between 0 and 10 seconds before the next reconnect attempt.
+          //   return Math.random() * 10000;
+          // } else {
+          //   // If we've been reconnecting for more than 60 seconds so far, stop reconnecting.
+          //   // return null;
+          //   return Math.random() * 10000; //TODO: reconnecting indefinitely?
+          // }
         },
       })
       .configureLogging(signalR.LogLevel.Information)

@@ -1,8 +1,7 @@
 <form [formGroup]="form">
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    Select the priority for each insurance plan below. When possible, the system
-    will automatically set priority.
+    Select the priority for each Insurance Plan below. When possible, the system will automatically set priority.
   </p>
   <div class="flex-row mt-2 mb-1" *ngFor="let insurance of gridList; let i=index">
     <div class="flex-col flex-col-6">
@@ -15,7 +14,7 @@
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
         [formControlName]="insurance.clientInsurancePolicyId"
         [value]="insurance.priorityCode"
-        (valueChange)="onChangePriority($event,i)"
+        (valueChange)="onChangePriority($event,insurance)"
         name="priorityCode"
         [valuePrimitive]="true" valueField="lovCode" textField="lovDesc" [data]="ddlMedicalHealthPlanPriority$ | async">
         </kendo-dropdownlist>

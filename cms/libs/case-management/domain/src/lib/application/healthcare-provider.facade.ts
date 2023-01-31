@@ -24,6 +24,7 @@ export class HealthcareProviderFacade {
   private addExistingProviderSubject = new Subject<any>();
   private loadExistingProviderSubject = new Subject<any>();
   private searchProviderLoadedSubject = new Subject<boolean>();
+  private showProvidervalidationSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -35,6 +36,7 @@ export class HealthcareProviderFacade {
   addExistingProvider$ = this.addExistingProviderSubject.asObservable();
   loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
   searchProviderLoaded$ = this.searchProviderLoadedSubject.asObservable();
+  showProvidervalidation$ = this.showProvidervalidationSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
@@ -127,6 +129,7 @@ export class HealthcareProviderFacade {
           };      
 
           this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
+          this.showProvidervalidationSubject.next(parseInt(healthCareProvidersResponse["totalCount"]) === 0);
           this.healthCareProvidersSubject.next(gridView);
           this.hideLoader();    
          }

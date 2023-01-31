@@ -113,7 +113,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
         ),       
       ).subscribe(([navigationType, isSaved]) => {
         if (isSaved == true) {
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
           this.workFlowFacade.navigate(navigationType);
         }
       });
@@ -128,7 +128,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
        .pipe
        (
         catchError((err: any) => {      
-          this.workFlowFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) 
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err) 
           
           return of(false)  
         })
@@ -160,7 +160,7 @@ private updateFormCompleteCount(prev: any, curr: any) {
           dataPointName: key,
           status: curr[key] ? StatusFlag.Yes : StatusFlag.No
         };
-        console.log(key);
+       
         completedDataPoints.push(item);
       }
     }
@@ -177,7 +177,7 @@ private updateFormCompleteCount(prev: any, curr: any) {
   });
 
   if (completedDataPoints.length > 0) {
-    console.log(completedDataPoints);
+   
    this.workFlowFacade.updateChecklist(completedDataPoints);
   }
 }
