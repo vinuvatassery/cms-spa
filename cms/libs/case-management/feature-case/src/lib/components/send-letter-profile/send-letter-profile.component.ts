@@ -57,7 +57,14 @@ export class SendLetterProfileComponent implements OnInit {
           this.clientCaseId = sessionData.ClientCaseId;
           this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
           this.clientId = sessionData.clientId;
+          if(this.clientCaseEligibilityId && this.clientId && this.clientCaseId)
+          {
           this.loadEligibilityInfo();
+          }
+          else
+          {
+            this.loaderService.hide();
+          }
         }
       });
 

@@ -259,16 +259,19 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.changeDetector.detectChanges();
     if (this.prescriptionDrugForm.valid && this.showDocRequiredValidation === false && !isLargeFile) {
       const drugs = this.workflowFacade.deepCopy(this.prescriptionDrugForm.value);
-      drugs.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      drugs.clientCaseEligibilityId = this.clientCaseEligibilityId; 
       drugs.clientId = this.clientId;
       drugs.clientCaseId = this.clientCaseId;
       drugs.concurrencyStamp = this.prescriptionDrug?.concurrencyStamp;
       drugs.noSummaryOfBenefitsFlag = (drugs.noSummaryOfBenefitsFlag ?? false) ? StatusFlag.Yes : StatusFlag.No;
-      const doc: PrescriptionDrugDocument = {
-        documentId: this.prescriptionDrug?.document?.documentId,
-        concurrencyStamp: this.prescriptionDrug?.document?.concurrencyStamp,
-      };
-      drugs.document = doc;
+      if(this.prescriptionDrug?.document?.documentId && this.prescriptionDrug?.document?.concurrencyStamp){
+          const doc: PrescriptionDrugDocument = {
+            documentId: this.prescriptionDrug?.document?.documentId,
+            concurrencyStamp: this.prescriptionDrug?.document?.concurrencyStamp,
+          };
+          drugs.document = doc;
+      }
+
       return this.prescriptionDrugFacade.updatePrescriptionDrug(drugs, this.summaryBenefitFiles);
     }
 
