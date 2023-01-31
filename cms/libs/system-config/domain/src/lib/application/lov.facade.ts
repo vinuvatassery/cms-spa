@@ -47,6 +47,8 @@ export class LovFacade {
   private lovPriorityCodeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPrioritySubject=new BehaviorSubject<Lov[]>([]);
   private lovOtherEthnicitySubject=new BehaviorSubject<Lov[]>([]);
+  private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
+
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -76,6 +78,7 @@ export class LovFacade {
   priorityCodeType$ = this.lovPriorityCodeSubject.asObservable();
   pharmacyPrioritylov$=this.lovPrioritySubject.asObservable();
   otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
+  aptclov$=this.lovAptcSubject.asObservable();
 
 
         /** Public methods **/
@@ -369,6 +372,16 @@ getOtherEthnicityIdentitiesLovs(): void {
     },
   });
 
+}
+getAptcLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.Aptc).subscribe({
+    next: (lovResponse) => {
+      this.lovAptcSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
 }
 }
 

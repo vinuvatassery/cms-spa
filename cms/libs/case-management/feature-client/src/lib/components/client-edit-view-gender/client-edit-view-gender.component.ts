@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,OnDestroy } from '@angular/core';
+import { Component, Input, OnInit,OnDestroy,ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -24,13 +24,13 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   DescriptionField = 'genderDescription';
   maxLengthFifty =50;
   disableGender:any;
-  appInfoSubscription!:Subscription;
-  private countOfSelection=0; 
+  appInfoSubscription!:Subscription; 
   constructor(
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder,
     private readonly workflowFacade : WorkflowFacade,
-    private readonly clientfacade: ClientFacade
+    private readonly clientfacade: ClientFacade,
+    private readonly cdr: ChangeDetectorRef
   ) {
     this.appInfoForm = this.formBuilder.group({ });
   }
@@ -38,7 +38,6 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.lovFacade.getGenderLovs();
     this.loadGendersLov();
-    this.formChangeSubscription();
     this.loadApplicantInfoSubscription();
   }
   ngOnDestroy(): void {
@@ -46,37 +45,22 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   }
   private loadGendersLov() {
     this.GenderLovs$.subscribe((data) => {
-      if (!Array.isArray(data)) return;
-      data.forEach((element) => {
-        this.appInfoForm.addControl(
-          ControlPrefix.gender + element.lovCode,
-          new FormControl('')
-        );
-      });
-      this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
-      this.appInfoForm.addControl(
-        'GenderGroup',
-        new FormControl('')
+          if (!Array.isArray(data)) return;
+          data.forEach((element) => {
+            this.appInfoForm.addControl(
+              ControlPrefix.gender + element.lovCode,
+              new FormControl('')
+            );
+          });
+          this.cdr.detectChanges();
+          this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
+          this.appInfoForm.addControl('GenderGroup',new FormControl('')
       );
       this.Genders = data;
       this.disableGender =  this.Genders.filter((x:any)=>x.lovCode !== GenderCode.dontKnow && x.lovCode !== GenderCode.dontKnowAnswer && x.lovCode !== GenderCode.dontKnowQustion)
     });
   }
-
-  private formChangeSubscription(){
-    this.appInfoForm.controls['GenderGroup'].valueChanges.subscribe(value=>{
-      if(value && this.countOfSelection >= 0){
-        this.updateWorkflowCount(true);
-        this.countOfSelection++;
-      }else{
-        this.countOfSelection = this.countOfSelection > 0 ? --this.countOfSelection : this.countOfSelection;
-        if(this.countOfSelection <= 0){
-          this.updateWorkflowCount(false);
-        }
-      }
-    });
-  }
-
+  
   private updateWorkflowCount(isCompleted:boolean){
     const workFlowdata: CompletionChecklist[] = [{
       dataPointName: 'gender',
@@ -84,24 +68,17 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
     }];
   
     this.workflowFacade.updateChecklist(workFlowdata);
-  }
-  setControlValidations() {
-    const genderControls = Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.gender));
-    genderControls.forEach((gender: any) => {
-      this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
-      this.appInfoForm.controls[gender].updateValueAndValidity();
-    });
-  }
+  } 
   private assignGenderModelToForm(clientGenderList:any){
     if (Array.isArray(clientGenderList) ) {
       clientGenderList.forEach((gender:any) => { 
       this.appInfoForm.controls[ControlPrefix.gender +gender.clientGenderCode]?.setValue(true);
       if(gender.clientGenderCode===GenderCode.notListed && gender.otherDesc!==null){
-        this.appInfoForm.controls['GenderDescription']?.setValue(gender.otherDesc);
+        this.appInfoForm.controls[this.DescriptionField]?.setValue(gender.otherDesc);
       }
-      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);
-      
+      this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);      
     })
+    this.cdr.detectChanges();
   }
   }
   private loadApplicantInfoSubscription(){
@@ -120,13 +97,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
     });
   }
 
-  enableDisableGender(checked:boolean,lovCode:any){
-    this.appInfoForm.controls[this.DescriptionField].removeValidators(
-      Validators.required
-    );
-    this.appInfoForm.controls[
-      this.DescriptionField
-    ].updateValueAndValidity();
+  enableDisableGender(checked:boolean,lovCode:any){  
     switch(lovCode){  
       case GenderCode.dontKnow:
       case GenderCode.dontKnowAnswer:
@@ -135,6 +106,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
           this.disableGender.forEach((gender:any) => { 
             this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].setValue(false);
             this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].disable();
+            this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
           });   
           break;
         }
@@ -167,28 +139,56 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
       }
 
     }
+    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.notListed].value){
+      this.appInfoForm.controls[this.DescriptionField].removeValidators( Validators.required );
+      this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
+    }
    }
   onCheckChange(event: any, lovCode: string) {
     this.enableDisableGender(event.target.checked,lovCode);
-    if (event.target.checked) {
-      this.appInfoForm.controls['GenderGroup'].setValue(lovCode);
-      if (lovCode === GenderCode.notListed) {
-        this.appInfoForm.controls[this.DescriptionField].setValidators(
-          Validators.required
-        );
+    this.appInfoForm.controls['GenderGroup'].removeValidators(Validators.required);
+    this.appInfoForm.controls['GenderGroup'].updateValueAndValidity();
+    if (event.target.checked) 
+    {
+      if (lovCode === GenderCode.notListed) 
+      {
+        this.appInfoForm.controls[this.DescriptionField].setValidators(Validators.required);
       }      
-    } else {
-      this.appInfoForm.controls['GenderGroup'].setValue('');
-
-      if (lovCode === GenderCode.notListed) {
-        this.appInfoForm.controls[this.DescriptionField].removeValidators(
-          Validators.required
-        );
-        this.appInfoForm.controls[
-          this.DescriptionField
-        ].updateValueAndValidity();
+    } 
+    else 
+    {
+      if (lovCode === GenderCode.notListed) 
+      {
+        this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
+        this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
       }     
     } 
-    this.setControlValidations();  
+    this.setControlValidationsAndCount();  
+  }
+  setControlValidationsAndCount() {  
+    let isFieldCompleted = false; 
+    const genderControls = Object.keys(this.appInfoForm.controls).filter(m => m.includes(ControlPrefix.gender));
+    genderControls.forEach((gender: any) => {
+      this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
+      this.appInfoForm.controls[gender].updateValueAndValidity();
+
+      const value = this.appInfoForm.controls[gender]?.value;
+      if(value === true){
+        isFieldCompleted = (isFieldCompleted || value === true) 
+                          && (
+                                (
+                                  gender === `${ControlPrefix.gender}${GenderCode.notListed}` 
+                                  && this.appInfoForm.controls[this.DescriptionField]?.value
+                                ) 
+                                || gender !== `${ControlPrefix.gender}${GenderCode.notListed}`
+                             );
+      }
+    });
+
+    this.updateWorkflowCount(isFieldCompleted);
+  }
+
+  descriptionChange(){
+      this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
   }
 }

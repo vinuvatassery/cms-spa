@@ -106,9 +106,11 @@
             [restrictions]="uploadFileRestrictions.fileRestrictions">
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <kendo-formerror *ngIf="copyOfMedicareCardFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
           <kendo-formerror *ngIf="!isMedicareCardFileUploaded && isViewContentEditable==false"> Copy of Mediacre card is
             required
           </kendo-formerror>
+         
         </div>
       </div>
     </div>
@@ -134,11 +136,12 @@
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="healthInsuranceForm.controls['insuranceStartDate'].value"
+              (valueChange)="endDateOnChange($event)"
               [disabled]="isViewContentEditable" formControlName="insuranceEndDate" formatPlaceholder="formatPattern"
               placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid">Insurance end date is
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid">Insurance End Date is
             required.</kendo-formerror>
         </div>
         <div class="flex-col">
@@ -200,7 +203,7 @@
               <div class="flex-col">
                 <fieldset class="k-form-fieldset">
                   <legend class="k-form-legend">
-                    <h5>Do they want CareAssist to pay for health insurance premiums?</h5>
+                    <h5>Do they want CAREAssist to pay for health insurance premiums?</h5>
                   </legend>
 
                   <div class="component-list-h">
@@ -226,18 +229,18 @@
             <div class="flex-row mt-3"
               *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
               <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Date Currently Paid through">
+                <kendo-floatinglabel text="Date Currently Paid Through">
                   <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                     formControlName="premiumPaidThruDate" [disabled]="isViewContentEditable"
-                    formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid through">
+                    formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid Through">
                   </kendo-datepicker>
                 </kendo-floatinglabel>
               </div>
               <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Next Payment Premium Due Date">
+                <kendo-floatinglabel text="Next Premium Payment Due Date">
                   <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                     formControlName="nextPremiumDueDate" [disabled]="isViewContentEditable"
-                    formatPlaceholder="formatPattern" placeholder="" aria-label="Next Payment Premium Due Date">
+                    formatPlaceholder="formatPattern" placeholder="" aria-label="Next Premium Payment Due Date">
                   </kendo-datepicker>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">Next payment
@@ -324,7 +327,8 @@
         <div class="flex-col mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
         && ddlInsuranceType !== InsurancePlanTypes.Cobra
         && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
-        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare 
+        && healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
               <h5>Others covered on the plan(Select all that apply)</h5>
@@ -366,6 +370,7 @@
                   </kendo-dropdownlist>
                   <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                   && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].relationshipDescription
+                  && getPersonControl(i, 'relationshipDescription')?.touched
                   && isViewContentEditable==false">Relationship description is
                     required.</kendo-formerror>
                 </kendo-floatinglabel>
@@ -373,9 +378,10 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="First Name">
                   <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
-                    [fillMode]="formUiStyle.inputFillMode" formControlName="firstName"> </kendo-textbox>
+                    [fillMode]="formUiStyle.inputFillMode" [maxlength]="lengthRestrictForty" formControlName="firstName"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.value.othersCoveredOnPlanFlag == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].firstName
+                     && getPersonControl(i, 'firstName')?.touched
                      && isViewContentEditable==false">First name is
                     required.</kendo-formerror>
                 </kendo-floatinglabel>
@@ -383,9 +389,10 @@
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Last Name">
                   <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
-                    [fillMode]="formUiStyle.inputFillMode" formControlName="lastName"> </kendo-textbox>
+                    [fillMode]="formUiStyle.inputFillMode" formControlName="lastName"  [maxlength]="lengthRestrictForty"> </kendo-textbox>
                   <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].lastName
+                     && getPersonControl(i, 'firstName')?.touched
                      && isViewContentEditable==false">Last name is
                     required.</kendo-formerror>
                 </kendo-floatinglabel>
@@ -397,6 +404,7 @@
                     formControlName="dob">
                     <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
                      && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].dob
+                     && getPersonControl(i, 'dob')?.touched
                      && isViewContentEditable==false">Date of birth is
                       required.</kendo-formerror>
                   </kendo-datepicker>
@@ -440,10 +448,12 @@
             client policy holder flag is required.</kendo-formerror>
         </div>
       </div>
-      <div class="flex-row pl-3 mt-2" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
+      <div class="flex-row pl-3 mt-2" *ngIf="(ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
       && ddlInsuranceType !== InsurancePlanTypes.Cobra
       && ddlInsuranceType !== InsurancePlanTypes.Veterans
-      && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan">
+      && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
+      && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan)
+      || (healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && ddlInsuranceType == InsurancePlanTypes.QualifiedHealthPlan)">
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
@@ -474,6 +484,7 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="copyOfInsuranceCardFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror *ngIf="!isInsuranceFileUploaded && isViewContentEditable==false"> Copy of insurance card is
           required
         </kendo-formerror>
@@ -509,6 +520,7 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="copyOfSummaryFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror
         *ngIf="!isSummaryFileUploaded">
         summary file is required

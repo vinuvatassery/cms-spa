@@ -35,6 +35,7 @@ export class FamilyAndDependentFacade {
   private dependentSearchSubject = new Subject<any>();
   private ddlRelationshipsSubject = new Subject<any>();
   private dependentsSubject = new Subject<any>();
+  private clientDependentsSubject = new Subject<any>();
   private productsSubject = new Subject<any>();
   private existdependentStatusSubject =   new Subject<any>();
   private dependentStatusGetSubject = new Subject<any>();
@@ -50,6 +51,7 @@ export class FamilyAndDependentFacade {
   dependentSearch$ = this.dependentSearchSubject.asObservable();
   ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   dependents$ = this.dependentsSubject.asObservable();
+  clientDependents$ = this.clientDependentsSubject.asObservable();
   existdependentStatus$ = this.existdependentStatusSubject.asObservable();
   dependentStatusGet$ = this.dependentStatusGetSubject.asObservable();
   dependentAddNewGet$ = this.dependentAddNewSubject.asObservable();
@@ -279,4 +281,21 @@ export class FamilyAndDependentFacade {
     });
   }
 
+  loadClientDependents(clientId: number) {
+    this.ShowLoader();
+    this.dependentDataService.loadClientDependents(clientId).subscribe({ 
+      next: (dependentsResponse : any) => {         
+              this.clientDependentsSubject.next(dependentsResponse);
+               this.HideLoader();       
+      },
+      error: (err) => {
+        this.HideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
+
+  uploadDependentProofOfSchool(dependentProof:any){
+    return this.dependentDataService.uploadDependentProofOfSchool(dependentProof);
+  }
 }
