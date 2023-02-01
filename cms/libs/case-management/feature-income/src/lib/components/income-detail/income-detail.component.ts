@@ -76,7 +76,7 @@ export class IncomeDetailComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
-    private readonly clientDocumentFacade: ClientDocumentFacade
+    public readonly clientDocumentFacade: ClientDocumentFacade
   ) { }
 
   /** Lifecycle hooks **/
@@ -398,27 +398,6 @@ export class IncomeDetailComponent implements OnInit {
     if (event) {
       this.sendDetailToIncomeList.next(true);
       this.onRemoveIncomeConfirmationClosed();
-    }
-  }
-
-  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
-    if (clientDocumentId && clientDocumentId != '' && this.isEditValue) {
-      this.loaderService.show()
-      this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
-        const fileUrl = window.URL.createObjectURL(data);
-        if (type === 'download') {
-          const downloadLink = document.createElement('a');
-          downloadLink.href = fileUrl;
-          downloadLink.download = documentName;
-          downloadLink.click();
-        } else {
-          window.open(fileUrl, "_blank");
-        }
-        this.loaderService.hide();
-      }, (error) => {
-        this.loaderService.hide();
-        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
-      })
     }
   }
 }

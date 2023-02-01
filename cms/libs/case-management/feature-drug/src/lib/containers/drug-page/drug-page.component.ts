@@ -62,7 +62,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     private readonly prescriptionDrugFacade: PrescriptionDrugFacade,
     private readonly router: Router,
     private changeDetector: ChangeDetectorRef,
-    private readonly clientDocumentFacade: ClientDocumentFacade) {
+    public readonly clientDocumentFacade: ClientDocumentFacade) {
     this.isSummaryOfBenefitsRequired$.next(false);
   }
 
@@ -399,27 +399,6 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   checkValidations() {
     return this.prescriptionDrugForm.valid;
-  }
-
-  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
-    if (clientDocumentId && clientDocumentId != '') {
-      this.loaderService.show()
-      this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
-        const fileUrl = window.URL.createObjectURL(data);
-        if (type === 'download') {
-          const downloadLink = document.createElement('a');
-          downloadLink.href = fileUrl;
-          downloadLink.download = documentName;
-          downloadLink.click();
-        } else {
-          window.open(fileUrl, "_blank");
-        }
-        this.loaderService.hide();
-      }, (error) => {
-        this.loaderService.hide();
-        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
-      })
-    }
   }
 }
 
