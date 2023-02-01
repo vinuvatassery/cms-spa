@@ -727,6 +727,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if(this.medicareInsuranceInfoCheck)
       {
         this.isInsuranceFileUploaded = (this.copyOfInsuranceCardFiles?.length > 0 && !!this.copyOfInsuranceCardFiles[0].name) ? true : false;
+        if(!this.isInsuranceFileUploaded){
+          this.copyOfInsuranceCardFilesValidator =false;
+        }
       }
       if (this.healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y'
         && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra
@@ -735,6 +738,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
       if(this.ddlInsuranceType === this.InsurancePlanTypes.Cobra || this.ddlInsuranceType === this.InsurancePlanTypes.GroupInsurancePlan){
         this.isSummaryFileUploaded = (this.copyOfSummaryFiles?.length > 0 && !!this.copyOfSummaryFiles[0].name) ? true : false;
+        if(!this.isSummaryFileUploaded){
+          this.copyOfSummaryFilesValidator = false;
+        }
       }
       if (this.ddlInsuranceType === this.InsurancePlanTypes.Medicare && this.healthInsuranceForm.value.onLisFlag == StatusFlag.Yes)
       {
@@ -1260,7 +1266,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       // this.copyOfSummaryFiles = event.files[0].rawFile;
       if (this.copyOfSummaryFiles[0].size>this.uploadFileSizeLimit)
       {
-        this.copyOfSummaryFilesValidator=true;
+        this.handleFileRemoved(this.copyOfInsuranceCardFiles,'summary');
+        this.copyOfSummaryFilesValidator=true;       
       }
     }
     else if (fileType == 'copyInsurance') {
@@ -1273,7 +1280,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.isInsuranceFileUploaded = true;
       // this.copyOfInsuranceCardFiles = event.files[0].rawFile;
       if (this.copyOfInsuranceCardFiles[0].size>this.uploadFileSizeLimit)
-      {
+      {       
+        this.handleFileRemoved(this.copyOfInsuranceCardFiles,'copyInsurance');
         this.copyOfInsuranceCardFilesValidator=true;
       }
     }

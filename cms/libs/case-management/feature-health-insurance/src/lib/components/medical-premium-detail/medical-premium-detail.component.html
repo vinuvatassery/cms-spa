@@ -494,7 +494,7 @@
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
-          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance')" #copyOfInsurance
+          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance');" #copyOfInsurance
           [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
           [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
@@ -507,7 +507,7 @@
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="copyOfInsuranceCardFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-        <kendo-formerror *ngIf="!isInsuranceFileUploaded && isViewContentEditable==false"> Copy of insurance card is
+        <kendo-formerror *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !copyOfInsuranceCardFilesValidator"> Copy of insurance card is
           required
         </kendo-formerror>
       </div>
@@ -558,7 +558,7 @@
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="copyOfSummaryFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror
-        *ngIf="!isSummaryFileUploaded">
+        *ngIf="!isSummaryFileUploaded && !copyOfSummaryFilesValidator">
         summary file is required
       </kendo-formerror>
       </div>
