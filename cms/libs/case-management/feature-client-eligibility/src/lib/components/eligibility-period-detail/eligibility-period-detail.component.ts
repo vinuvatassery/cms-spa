@@ -30,7 +30,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   /** Private methods **/
   private loadDdlGroups() {
-    this.clientEligibilityFacade.loadDdlGroups();
+    //this.clientEligibilityFacade.loadDdlGroups();
   }
 
   private loadDdlStatus() {

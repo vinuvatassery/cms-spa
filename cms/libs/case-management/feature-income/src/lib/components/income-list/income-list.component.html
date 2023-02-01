@@ -59,9 +59,8 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
-              <button aria-label="client name" kendoButton look="flat" class="card-link-button"
-               >
-              <a [href]="dataItem.documentPath" target="_blank">{{dataItem.documentName}}</a>
+              <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+              <a>{{dataItem.documentName}}</a>
             </button>
 
             </div>
@@ -95,11 +94,10 @@
           <ng-template
             kendoGridFooterTemplate
             let-column
-            let-columnIndex="columnIndex"
-          >
-            {{incomesTotal?.totalIncome | kendoNumber: 'c2'}}
+            let-columnIndex="columnIndex"  >
+          <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span> 
           </ng-template>
-          
+
         </kendo-grid-column>
         <kendo-grid-column
           field="Option"
@@ -228,7 +226,7 @@
 
           <button kendoButton look="flat" *ngIf="buttondataItem.text === 'Attach from computer'" [attr.aria-label]="buttondataItem.text"
             class="upoadlistbtn" [class]="buttondataItem.buttonType" aria-hidden="false">
-          
+
             <label [for]="proofOfSchoolUploaded"> {{ buttondataItem.text }} </label>
           </button>
           </ng-template>

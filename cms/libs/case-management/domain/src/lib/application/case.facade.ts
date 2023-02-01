@@ -17,7 +17,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 import { ClientProfileCase } from '../entities/client-profile-cases';
 
-  
+
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -44,7 +44,7 @@ export class CaseFacade {
   recentCases$ = this.recentCaseSubject.asObservable();
   caseSearched$ = this.caseSearchedSubject.asObservable();
   lastVisitedCases$ = this.lastVisitedCasesSubject.asObservable();
-  ddlPrograms$ = this.ddlProgramsSubject.asObservable(); 
+  ddlPrograms$ = this.ddlProgramsSubject.asObservable();
   ddlFamilyAndDependentEP$ = this.ddlFamilyAndDependentEPSubject.asObservable();
   ddlIncomeEP$ = this.ddlIncomeEPSubject.asObservable();
   ddlEmploymentEP$ = this.ddlEmploymentEPSubject.asObservable();
@@ -62,18 +62,18 @@ export class CaseFacade {
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
-    dir: 'asc' 
+    dir: 'asc'
   }];
   constructor(
     private readonly caseDataService: CaseDataService,
-    private loggingService : LoggingService,
+    private readonly loggingService : LoggingService,
     private readonly loaderService: LoaderService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService, 
-    private configurationProvider : ConfigurationProvider,
- 
+    public readonly intl: IntlService,
+    private readonly configurationProvider : ConfigurationProvider,
+
   ) { }
- 
+
   ShowLoader()
   {
     this.loaderService.show();
@@ -88,11 +88,11 @@ export class CaseFacade {
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.HideLoader();
   }
 
   /** Public methods **/
@@ -197,8 +197,8 @@ export class CaseFacade {
   loadCasesById(clientCaseId : string)
   {
     this.ShowLoader();
-    this.caseDataService.loadCasesById(clientCaseId).subscribe({    
-      next: (ddlcaseGetResponse) => {      
+    this.caseDataService.loadCasesById(clientCaseId).subscribe({
+      next: (ddlcaseGetResponse) => {
         this.getCaseSubject.next(ddlcaseGetResponse);
         this.HideLoader();
       },
@@ -266,17 +266,17 @@ export class CaseFacade {
   }
 
 
-  UpdateCase(existingCaseFormData : FormGroup ,clientCaseId : string ) 
-  {   
+  UpdateCase(existingCaseFormData : FormGroup ,clientCaseId : string )
+  {
        this.ShowLoader();
-        const caseData = { 
+        const caseData = {
           clientCaseId  : clientCaseId,
           assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
           caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
           caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
           concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
-        }    
-        caseData.caseStartDate =this.intl.formatDate(caseData.caseStartDate,this.dateFormat)   
+        }
+        caseData.caseStartDate =this.intl.formatDate(caseData.caseStartDate,this.dateFormat)
         return  this.caseDataService.UpdateCase(caseData)
 
   }

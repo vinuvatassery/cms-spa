@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
-import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade } from '@cms/case-management/domain';
 /**  Facades **/
 import { IncomeFacade, Income, FamilyAndDependentFacade } from '@cms/case-management/domain';
 /** Entities **/
@@ -12,8 +12,8 @@ import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 
 import { State } from '@progress/kendo-data-query';
 
-import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
+import { LoaderService,  LoggingService,  NotificationSnackbarService,  SnackBarNotificationType,} from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -110,7 +110,13 @@ export class IncomeListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly incomeFacade: IncomeFacade, private readonly workflowFacade: WorkflowFacade,private readonly dependentFacade:FamilyAndDependentFacade) {}
+  constructor(
+      private readonly incomeFacade: IncomeFacade,
+      private readonly workflowFacade: WorkflowFacade,
+      private readonly loggingService: LoggingService,
+      private readonly loaderService: LoaderService,
+      private readonly clientDocumentFacade: ClientDocumentFacade,
+      private readonly dependentFacade:FamilyAndDependentFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -254,5 +260,23 @@ onIncomeActionClicked(
       })
     }
     
+  }
+  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
+    this.loaderService.show()
+    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
+      const fileUrl = window.URL.createObjectURL(data);
+      if (type === 'download') {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileUrl;
+        downloadLink.download = documentName;
+        downloadLink.click();
+      } else {
+        window.open(fileUrl, "_blank");
+      }
+      this.loaderService.hide();
+    }, (error) => {
+      this.loaderService.hide();
+      this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+    })
   }
 }
