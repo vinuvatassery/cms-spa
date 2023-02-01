@@ -96,7 +96,9 @@
             let-column
             let-columnIndex="columnIndex"
           >
-            {{incomesTotal?.totalIncome | kendoNumber: 'c2'}}
+          <span class="tableamountview"> <strong>$</strong>    {{incomesTotal?.totalIncome | kendoNumber: 'n2'}}</span>
+     
+           
           </ng-template>
 
         </kendo-grid-column>
