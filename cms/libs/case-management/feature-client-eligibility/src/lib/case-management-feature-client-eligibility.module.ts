@@ -25,6 +25,7 @@ import { ClientEligibilityComponent } from './components/client-eligibility/clie
 @NgModule({
   imports: [
     CommonModule,
+    SharedUiCommonModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
     CaseManagementDomainModule,

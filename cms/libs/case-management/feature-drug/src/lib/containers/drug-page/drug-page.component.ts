@@ -114,7 +114,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
                 name: response.document?.documentName,
                 size: response.document?.documentSize,
                 src: response.document?.documentPath,
-                uid: response.document?.documentId
+                uid: response.document?.documentId,
+                documentId: response.document?.documentId
               },
             ];
           }
@@ -258,16 +259,19 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.changeDetector.detectChanges();
     if (this.prescriptionDrugForm.valid && this.showDocRequiredValidation === false && !isLargeFile) {
       const drugs = this.workflowFacade.deepCopy(this.prescriptionDrugForm.value);
-      drugs.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      drugs.clientCaseEligibilityId = this.clientCaseEligibilityId; 
       drugs.clientId = this.clientId;
       drugs.clientCaseId = this.clientCaseId;
       drugs.concurrencyStamp = this.prescriptionDrug?.concurrencyStamp;
       drugs.noSummaryOfBenefitsFlag = (drugs.noSummaryOfBenefitsFlag ?? false) ? StatusFlag.Yes : StatusFlag.No;
-      const doc: PrescriptionDrugDocument = {
-        documentId: this.prescriptionDrug?.document?.documentId,
-        concurrencyStamp: this.prescriptionDrug?.document?.concurrencyStamp,
-      };
-      drugs.document = doc;
+      if(this.prescriptionDrug?.document?.documentId && this.prescriptionDrug?.document?.concurrencyStamp){
+          const doc: PrescriptionDrugDocument = {
+            documentId: this.prescriptionDrug?.document?.documentId,
+            concurrencyStamp: this.prescriptionDrug?.document?.concurrencyStamp,
+          };
+          drugs.document = doc;
+      }
+
       return this.prescriptionDrugFacade.updatePrescriptionDrug(drugs, this.summaryBenefitFiles);
     }
 
@@ -395,6 +399,27 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   checkValidations() {
     return this.prescriptionDrugForm.valid;
+  }
+
+  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
+    if (clientDocumentId && clientDocumentId != '') {
+      this.loaderService.show()
+      this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (type === 'download') {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+        } else {
+          window.open(fileUrl, "_blank");
+        }
+        this.loaderService.hide();
+      }, (error) => {
+        this.loaderService.hide();
+        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      })
+    }
   }
 }
 

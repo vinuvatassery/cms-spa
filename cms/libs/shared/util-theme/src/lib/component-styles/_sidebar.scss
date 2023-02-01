@@ -285,8 +285,7 @@ cms-sidenav {
      
       }
       .sidebar-last-visited-cases-container {
-        .active-menu-toggled {
-          display: block;
+        .active-menu-toggled { 
           width: $sidebar-width;
           min-width: $sidebar-width;
           height: $size-xxxx + $size-xlg;
