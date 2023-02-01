@@ -14,13 +14,14 @@ import { Case } from '../entities/case';
 import { CaseDataService } from '../infrastructure/case.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { CaseScreenTab } from '../enums/case-screen-tab.enum';
+import { ClientProfileCase } from '../entities/client-profile-cases';
 
   
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
-  /** Private properties **/
-  private casesSubject = new BehaviorSubject<Case[]>([]);
+  /** Private properties **/  
   private myCasesSubject = new BehaviorSubject<Case[]>([]);
   private recentCaseSubject = new BehaviorSubject<Case[]>([]);
   private caseSearchedSubject = new BehaviorSubject<any>([]);
@@ -35,6 +36,7 @@ export class CaseFacade {
   private updateCaseSubject = new Subject<any>();
   private getCaseSubject = new Subject<any>();
   private getCaseHistorySubject =new BehaviorSubject<any[]>([]);
+  private casesSubject  = new Subject<any>();
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -56,7 +58,7 @@ export class CaseFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  public sortValue = '';
+  public sortValue = 'clientFullName';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -106,13 +108,23 @@ export class CaseFacade {
     });
   }
 
-  loadCases(): void {
-    this.caseDataService.loadCases().subscribe({
-      next: (casesResponse) => {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+    this.ShowLoader();
+    this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType).subscribe({
+      next: (casesResponse  : any) => {
         this.casesSubject.next(casesResponse);
+        if(casesResponse )
+        {      
+            const gridView = {
+              data : casesResponse["items"] ,        
+              total:  casesResponse["totalCount"]  
+              };    
+          this.casesSubject.next(gridView);
+         }
+         this.HideLoader();      
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
       },
     });
   }

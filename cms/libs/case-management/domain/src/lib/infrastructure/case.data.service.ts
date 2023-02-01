@@ -11,6 +11,8 @@ import { Program } from '../entities/program';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../entities/client-case';
+import { ClientProfileCase } from '../entities/client-profile-cases';
+import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 import { CaseHistory } from '../entities/case-history';
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +23,13 @@ export class CaseDataService {
 
     
   /** Public methods **/
+  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
+    return this.http.get<ClientProfileCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-profile/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+
+  }
   loadCaseHistory() : Observable<CaseHistory[]>
   {
     return of([
@@ -52,9 +61,7 @@ export class CaseDataService {
       }
     ]);
   }
-
-
-  loadCases(): Observable<Case[]> {
+  loadCasesold(): Observable<Case[]> {
     return of([
       {
         CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
