@@ -12,6 +12,7 @@
             [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"
             textField="lovDesc" valueField="lovCode" [data]="copyLoadPriorties">
           </kendo-dropdownlist>
+          <kendo-formerror *ngIf="priorityValidation">Priorties can not be similar.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
