@@ -54,7 +54,7 @@ export class ClientEligibilityComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private readonly workflowFacade: WorkflowFacade,
     private readonly route: ActivatedRoute,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
+    public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly reviewQuestionResponseFacade: ReviewQuestionResponseFacade,
     private readonly formBuilder: FormBuilder,
@@ -204,29 +204,6 @@ export class ClientEligibilityComponent implements OnInit {
     });
 
   }
- 
-
-  viewOrDonwloadFile(type: string, clientDocumentId: string, documentName: string) {
-    this.loaderService.show()
-    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
-      const fileUrl = window.URL.createObjectURL(data);
-      if (type === 'download') {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = fileUrl;
-        downloadLink.download = documentName;
-        downloadLink.click();
-      } else {
-        window.open(fileUrl, "_blank");
-      }
-      this.loaderService.hide();
-    }, (error) => {
-      this.loaderService.hide();
-      this.showSnackBar(SnackBarNotificationType.ERROR, error)
-    })
-  }
-
-
-
 
   /** Internal event methods **/
   onToggleExceptionClicked() {

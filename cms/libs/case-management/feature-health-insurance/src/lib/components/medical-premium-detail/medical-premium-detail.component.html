@@ -107,7 +107,7 @@
             [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfMedicareCardFiles" [ngModelOptions]="{standalone: true}"
             [restrictions]="uploadFileRestrictions.fileRestrictions">
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-              <span (click)="viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
                 <span>{{files[0].name}} </span> 
                 <br>
                 <span>{{files[0].size}}</span> 
@@ -498,7 +498,7 @@
           [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
           [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
               <span>{{files[0].name}} </span> 
               <br>
               <span>{{files[0].size}}</span> 
@@ -523,7 +523,7 @@
           [ngModel]="proofOfPremiumFiles" [ngModelOptions]="{standalone: true}"
           [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
               <span>{{files[0].name}} </span> 
               <br>
               <span>{{files[0].size}}</span> 
@@ -548,7 +548,7 @@
           [ngModel]="copyOfSummaryFiles" [ngModelOptions]="{standalone: true}"
           [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
               <span>{{files[0].name}} </span> 
               <br>
               <span>{{files[0].size}}</span> 
