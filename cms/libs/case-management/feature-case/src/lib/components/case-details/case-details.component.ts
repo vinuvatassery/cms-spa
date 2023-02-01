@@ -14,7 +14,6 @@ import { first, Subscription, tap } from 'rxjs';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { ProgramCode, CaseOriginCode } from '@cms/case-management/domain';
 import { LoaderService, UserProfileService } from '@cms/shared/util-core';
-import { AuthService } from '@cms/shared/util-oidc';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
@@ -56,7 +55,6 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   /** Constructor**/
   constructor(private readonly router: Router, private readonly ref: ChangeDetectorRef,
     private loaderService: LoaderService,
-    private authService: AuthService,
     private userProfileService: UserProfileService
   ) { }
 
@@ -124,6 +122,7 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   ngOnDestroy(): void {
     if (!this.isProgramVIsible) {
       this.caseDataDataSubscription.unsubscribe();
+      this.userProfileSubsriction.unsubscribe();
     }
   }
 
