@@ -144,7 +144,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     private changeDetector: ChangeDetectorRef,
     public intl: IntlService,
     private configurationProvider: ConfigurationProvider,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
+    public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
   ) {
@@ -1342,27 +1342,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.copyOfMedicareCardFiles = [];
         this.isMedicareCardFileUploaded = false;
       }
-    }
-  }
-
-  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
-    if (clientDocumentId && clientDocumentId != '' && (this.isEditViewPopup || this.isEdit)) {
-      this.loaderService.show()
-      this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
-        const fileUrl = window.URL.createObjectURL(data);
-        if (type === 'download') {
-          const downloadLink = document.createElement('a');
-          downloadLink.href = fileUrl;
-          downloadLink.download = documentName;
-          downloadLink.click();
-        } else {
-          window.open(fileUrl, "_blank");
-        }
-        this.loaderService.hide();
-      }, (error) => {
-        this.loaderService.hide();
-        this.healthFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
-      })
     }
   }
 }
