@@ -35,7 +35,7 @@ export class CaseNavigationComponent implements OnInit {
   navigationIndex = 1;
   routes!: any[];
   review!: WorkFlowProgress;
-  isNotReadyForReview  = true; 
+  isNotReadyForReview  = true;
 
   /** constructor **/
   constructor(private router: Router, private actRoute: ActivatedRoute, private readonly loaderService:LoaderService) { }
@@ -44,8 +44,8 @@ export class CaseNavigationComponent implements OnInit {
   ngOnInit(): void {
     this.loadCaseNavigationDeatils();
     this.navigationInitiated();
-    this.addNavigationSubscription();   
-  } 
+    this.addNavigationSubscription();
+  }
 
   private loadCaseNavigationDeatils() {
     this.routes$.subscribe({
@@ -83,20 +83,20 @@ export class CaseNavigationComponent implements OnInit {
 
     if (routes[this.navigationIndex]?.sequenceNbr === this.review?.sequenceNbr) {
       this.isApplicationReviewOpened = true;
-    }   
-    const sessionId = this.actRoute.snapshot.queryParams['sid']; 
+    }
+    const sessionId = this.actRoute.snapshot.queryParams['sid'];
     const entityId: string = this.actRoute.snapshot.queryParams['eid'];
     if (this.navigationIndex > -1
-      && this.navigationIndex < routes.length 
+      && this.navigationIndex < routes.length
       && sessionId
     ) {
       this.router.navigate(
         [routes[this.navigationIndex].url],
         {
-          queryParams: {          
-            sid: sessionId,          
+          queryParams: {
+            sid: sessionId,
             pid: routes[this.navigationIndex].processId   ,
-            eid: entityId,       
+            eid: entityId,
           }
         }
       );
@@ -165,12 +165,12 @@ export class CaseNavigationComponent implements OnInit {
   /** Internal event methods **/
   onApplicationReviewClicked() {
     this.onRouteChange(this.review, true);
-    this.isApplicationReviewOpened = true;
+    //this.isApplicationReviewOpened = true;
   }
 
   onApplicationReviewClosed() {
     this.onRouteChange(this.review, false, true);
-    this.isApplicationReviewOpened = false;
+    //this.isApplicationReviewOpened = false;
   }
 
   onRouteChange(route: WorkFlowProgress, isReview: boolean = false, isReset: boolean = false) {

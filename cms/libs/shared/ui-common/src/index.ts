@@ -22,6 +22,7 @@ export * from './lib/optionbutton-list/optionbutton-list.component';
 
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';
+export * from './lib/pipes/fileSize.pipe';
 export * from './lib/pipes/phone.pipe';
 
 /** Directives **/

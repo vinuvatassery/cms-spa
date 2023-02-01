@@ -31,8 +31,11 @@
                 <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.vendorFullName}}</span>          
               </ng-template>
               </kendo-autocomplete>
+              <kendo-formerror *ngIf="showSelectPharmacyRequired">
+                Pharmacy selection required.
+              </kendo-formerror>
             </kendo-label>
-    </kendo-formfield>
+          </kendo-formfield>
         </div>
       </div>
     </div>

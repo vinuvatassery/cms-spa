@@ -13,10 +13,11 @@
         aria-label="cancel status"
         [primary]="true"
         look="outline"
+        (click)="onModalClose()"
       >
         Cancel
       </button>
-      <button kendoButton aria-label="deny status" [primary]="true">
+      <button kendoButton aria-label="deny status" [primary]="true" (click)="updateCaseStatus()">
         Deny
       </button>
     </div>
