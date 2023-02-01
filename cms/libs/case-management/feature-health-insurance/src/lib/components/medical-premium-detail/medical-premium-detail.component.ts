@@ -735,6 +735,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra
         && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan) {
         this.isProofFileUploaded = (this.proofOfPremiumFiles?.length > 0 && !!this.proofOfPremiumFiles[0].name) ? true : false;
+        if(!this.isProofFileUploaded){
+          this.proofOfPremiumFilesValidator = false;
+        }
       }
       if(this.ddlInsuranceType === this.InsurancePlanTypes.Cobra || this.ddlInsuranceType === this.InsurancePlanTypes.GroupInsurancePlan){
         this.isSummaryFileUploaded = (this.copyOfSummaryFiles?.length > 0 && !!this.copyOfSummaryFiles[0].name) ? true : false;
@@ -745,6 +748,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (this.ddlInsuranceType === this.InsurancePlanTypes.Medicare && this.healthInsuranceForm.value.onLisFlag == StatusFlag.Yes)
       {
         this.isMedicareCardFileUploaded = (this.copyOfMedicareCardFiles?.length > 0 && !!this.copyOfMedicareCardFiles[0].name) ? true : false;
+        if(!this.isMedicareCardFileUploaded){
+          this.copyOfMedicareCardFilesValidator = false;
+        }
       }
 
     }
@@ -769,6 +775,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.isSummaryFileUploaded = true;
     this.isProofFileUploaded = true;
     this.isInsuranceFileUploaded = true;
+    this.isMedicareCardFileUploaded = true;
   }
 
   private populateInsurancePolicy() {
@@ -1236,12 +1243,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   public handleFileSelected(event: any, fileType: string) {
     this.documentSizeValidator=false;
-    this.proofOfPremiumFilesValidator=false;
-    this.copyOfSummaryFilesValidator=false;
-    this.copyOfInsuranceCardFilesValidator=false;
-    this.copyOfMedicareCardFilesValidator=false;
-    
     if (fileType == 'proof') {
+      this.proofOfPremiumFilesValidator=false;
       this.proofOfPremiumFiles = [{
         document: event.files[0],
         size: event.files[0].size,
@@ -1249,13 +1252,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isProofFileUploaded = true;
-      // this.proofOfPremiumFiles = event.files[0].rawFile;
       if (this.proofOfPremiumFiles[0].size>this.uploadFileSizeLimit)
       {
+        this.handleFileRemoved(this.proofOfPremiumFiles,'proof');
         this.proofOfPremiumFilesValidator=true;
       }
     }
     else if (fileType == 'summary') {
+      this.copyOfSummaryFilesValidator=false;
       this.copyOfSummaryFiles = [{
         document: event.files[0],
         size: event.files[0].size,
@@ -1263,7 +1267,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isSummaryFileUploaded = true;
-      // this.copyOfSummaryFiles = event.files[0].rawFile;
       if (this.copyOfSummaryFiles[0].size>this.uploadFileSizeLimit)
       {
         this.handleFileRemoved(this.copyOfInsuranceCardFiles,'summary');
@@ -1271,6 +1274,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'copyInsurance') {
+      this.copyOfInsuranceCardFilesValidator=false;
       this.copyOfInsuranceCardFiles = [{
         document: event.files[0],
         size: event.files[0].size,
@@ -1278,7 +1282,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isInsuranceFileUploaded = true;
-      // this.copyOfInsuranceCardFiles = event.files[0].rawFile;
       if (this.copyOfInsuranceCardFiles[0].size>this.uploadFileSizeLimit)
       {       
         this.handleFileRemoved(this.copyOfInsuranceCardFiles,'copyInsurance');
@@ -1286,6 +1289,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'medicareCard') {
+      this.copyOfMedicareCardFilesValidator=false;
       this.copyOfMedicareCardFiles = [{
         document: event.files[0],
         size: event.files[0].size,
@@ -1293,9 +1297,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         uid: ''
       }];
       this.isMedicareCardFileUploaded = true;
-      // this.copyOfMedicareCardFiles = event.files[0].rawFile;
       if (this.copyOfMedicareCardFiles[0].size>this.uploadFileSizeLimit)
       {
+        this.handleFileRemoved(this.copyOfMedicareCardFiles,'medicareCard');
         this.copyOfMedicareCardFilesValidator=true;
       }
     }
