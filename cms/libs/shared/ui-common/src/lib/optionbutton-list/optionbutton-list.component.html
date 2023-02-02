@@ -37,7 +37,7 @@
           <kendo-formerror *ngIf="((!appInfoForm.controls[textControlerName].valid) && (appInfoForm.controls[OptionControlerName].valid)) ">{{textValidationMessage}}</kendo-formerror>        
        
     </div>
-    <div *ngIf = "!textFieldDisable  && appInfoForm.controls[textControlerName].value === materialFormatOther && material.lovCode === yesOption  && textFieldType === 'dropDown'"> 
+    <div *ngIf = "!textFieldDisable  && (textControlerName !== undefined && appInfoForm.controls[textControlerName].value === materialFormatOther) && material.lovCode === yesOption  && textFieldType === 'dropDown'"> 
       <div class="flex-row">
         <div class="flex-col flex-col-6">
         <kendo-floatinglabel            
