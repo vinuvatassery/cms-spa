@@ -116,10 +116,7 @@
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="copyOfMedicareCardFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-          <kendo-formerror *ngIf="!isMedicareCardFileUploaded && isViewContentEditable==false && !copyOfMedicareCardFilesValidator"> Copy of Mediacre card is
-            required
-          </kendo-formerror>
-         
+          <kendo-formerror *ngIf="!isMedicareCardFileUploaded && isViewContentEditable==false && !copyOfMedicareCardFilesValidator"> Copy of medicare card is required.</kendo-formerror>         
         </div>
       </div>
     </div>
@@ -507,9 +504,7 @@
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="copyOfInsuranceCardFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-        <kendo-formerror *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !copyOfInsuranceCardFilesValidator"> Copy of insurance card is
-          required
-        </kendo-formerror>
+        <kendo-formerror *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !copyOfInsuranceCardFilesValidator"> Copy of insurance card is required. </kendo-formerror>
       </div>
       <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
            && ddlInsuranceType !== InsurancePlanTypes.Cobra
@@ -564,7 +559,7 @@
         <kendo-formerror *ngIf="copyOfSummaryFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror
         *ngIf="!isSummaryFileUploaded && !copyOfSummaryFilesValidator">
-        summary file is required
+        Summary file is required.
       </kendo-formerror>
       </div>
     </div>
