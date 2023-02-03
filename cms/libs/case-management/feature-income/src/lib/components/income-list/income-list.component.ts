@@ -33,6 +33,7 @@ export class IncomeListComponent implements OnInit {
   public pageSizes = this.incomeFacade.gridPageSizes;
   public gridSkipCount = this.incomeFacade.skipCount;
   public state!: State;
+  sort!:any;
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
@@ -207,28 +208,36 @@ onIncomeActionClicked(
   pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
+    this.sort ={ field : 'incomeSourceCodeDesc' ,  dir: 'asc' };
     this.loadIncomeData();
   }
 
   public dataStateChange(stateData: any): void {
     this.state = stateData;
+    this.sort ={ field : stateData?.sort[0]?.field ?? 'incomeSourceCodeDesc' ,  dir: stateData?.sort[0]?.dir  ?? 'asc'  };
     this.loadIncomeData();
   }
   // Loading the grid data based on pagination
   private loadIncomeData(): void {
     this.LoadIncomeList(
-      this.state.skip ?? 0,
-      this.state.take ?? 0
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sort?.field ?? 'incomeSourceCodeDesc',
+      this.sort?.dir ?? 'asc' 
     );
   }
 
   LoadIncomeList(
-    skipcountValue: number,
-    maxResultCountValue: number
+    skipCountValue: number,
+    maxResultCountValue: number,
+    sortColumn: any,
+    sortType: any
   ) {
     const gridDataRefinerValue = {
-      skipCount: skipcountValue,
-      pagesize: maxResultCountValue
+      skipCount: skipCountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortColumn,
+      sortType: sortType
     };
     this.loadIncomeListEvent.next(gridDataRefinerValue);
   }

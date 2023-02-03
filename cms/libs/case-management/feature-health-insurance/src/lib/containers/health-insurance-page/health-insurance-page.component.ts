@@ -233,7 +233,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
           const gridDataRefinerValue = {
             skipCount: this.healthFacade.skipCount,
-            pagesize: this.healthFacade.gridPageSizes[0]?.value
+            pagesize: this.healthFacade.gridPageSizes[0]?.value,
+            sortColumn : 'creationTime',
+            sortType : 'asc',
           };
           this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.loadInsurancePolicyFlags();
@@ -289,7 +291,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
           this.showTable = true;
           const gridDataRefinerValue = {
             skipCount: this.healthFacade.skipCount,
-            pagesize: this.healthFacade.gridPageSizes[0]?.value
+            pagesize: this.healthFacade.gridPageSizes[0]?.value,
+            sortColumn : 'creationTime',
+            sortType : 'asc',
           };
           this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.loadInsurancePolicyFlags();
@@ -317,13 +321,17 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sortColumn : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
     };
     this.healthFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
       gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType
     );
   }
 

@@ -81,9 +81,9 @@ export class HealthInsuranceFacade {
     });
   }
 
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
     this.ShowLoader();
-    this.contactDataService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize).subscribe({
+    this.contactDataService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize,sortBy,sortType).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {

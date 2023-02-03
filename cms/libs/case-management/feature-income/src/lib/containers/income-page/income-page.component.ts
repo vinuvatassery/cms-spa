@@ -240,9 +240,9 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   }
 
   /** Private Methods **/
-  private loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any): void {
+  private loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any, sortBy:any, sortType:any): void {
     this.loaderService.show();
-    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize);
+    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize, sortBy, sortType);
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
       if (incomeresponse.noIncomeData!=null) {
@@ -353,7 +353,9 @@ export class IncomePageComponent implements OnInit, OnDestroy {
           this.clientId = JSON.parse(session.sessionData).clientId;
           const gridDataRefinerValue = {
             skipCount: this.incomeFacade.skipCount,
-            pagesize: this.incomeFacade.gridPageSizes[0]?.value
+            pagesize: this.incomeFacade.gridPageSizes[0]?.value,
+            sortColumn : 'incomeSourceCodeDesc',
+            sortType : 'asc',
           };
           this.loadIncomeListHandle(gridDataRefinerValue)
         }
@@ -363,13 +365,17 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   loadIncomeListHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sortColumn : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
     };
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,
       gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType
     );
   }
 
