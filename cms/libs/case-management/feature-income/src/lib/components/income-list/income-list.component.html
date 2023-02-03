@@ -197,49 +197,39 @@
           class="text-center"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
+          <div class="d-flex">
+              <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> Uploading...</span>
            </span>
-          <kendo-dropdownbutton
-            [data]="actions"
-
-            icon="upload"
-
-            class="TableActionPopup app-dropdown-action"
-
-            buttonClass="k-icon-button"
-
-            aria-label="more actions"
-
-            [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-          >
-
-            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-
-              <button *ngIf="buttondataItem.text !== 'Attach from computer'"  kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click" >
-
-                <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
-
-                <label>   {{ buttondataItem.text }} </label>
-
-            </button>
-
-
-
-          <button kendoButton look="flat" *ngIf="buttondataItem.text === 'Attach from computer'" [attr.aria-label]="buttondataItem.text"
-            class="upoadlistbtn" [class]="buttondataItem.buttonType" aria-hidden="false">
-
+          <kendo-dropdownbutton  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"
+            aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }"  > 
+         
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>  <!-- <button kendoButton look="flat" *ngIf="buttondataItem.text === 'Attach from computer'" [attr.aria-label]="buttondataItem.text"
+            class="upoadlistbtn" [class]="buttondataItem.buttonType" aria-hidden="false"> 
             <label [for]="proofOfSchoolUploaded"> {{ buttondataItem.text }} </label>
-          </button>
+          </button> --> 
+
+          <button   kendoButton *ngIf="buttondataItem.id == 'attachfromclient' || buttondataItem.id == 'removefile'"   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
+            <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
+            <label  [for]="buttondataItem.id">{{ buttondataItem.text }} </label>
+        </button>
+          <button  kendoButton  *ngIf="buttondataItem.id == 'proofOfSchoolUploaded' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') "  class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
+            <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
+            <label  [for]="proofOfSchoolUploaded">{{ buttondataItem.text }} </label>
+        </button>
           </ng-template>
 
           </kendo-dropdownbutton>
+          <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+            <a>{{dataItem.documentName}}</a>
+          </button>
+        
 
           <kendo-upload hidden  aria-label="upload proof" name="upload proof"
           [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event,dataItem)"
           #proofOfSchoolUploaded [ngModel]="proofOfSchoolDocument" [ngModelOptions]="{standalone: true}">
           </kendo-upload>
-
+        </div>
         </ng-template>
         </kendo-grid-column>
       </kendo-grid>

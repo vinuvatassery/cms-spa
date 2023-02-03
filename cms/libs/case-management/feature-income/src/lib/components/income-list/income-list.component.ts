@@ -39,6 +39,7 @@ export class IncomeListComponent implements OnInit {
   dependentsProofofSchools$!:any;
   isEdit!: boolean;
   selectedIncome: any;
+  showRemoveUpoadProofDoc = false;
   isOpenedIncome = false;
   isAddIncomeButtonAndFooterNoteDisplay!: boolean;
   isIncludeNote!: boolean;
@@ -57,33 +58,35 @@ export class IncomeListComponent implements OnInit {
     {
       buttonType:"btn-h-primary",
       text: "Attach from computer",
+      id: "proofOfSchoolUploaded",
       // icon: "edit",
-      click: (): void => {
+      click: (event: any,dataItem: any): void => {
         // this.onPhoneNumberDetailClicked(true);
       },
     },
     {
       buttonType:"btn-h-primary",
       text: "Attach from client attachments",
+      id: "attachfromclient",
       // icon: "star",
-      click: (): void => {
+      click: (event: any,dataItem: any): void => {
       //  this.onDeactivateEmailAddressClicked()
       },
     },
  
-    // {
-    //   buttonType:"btn-h-danger",
-    //   text: "Remove File",
-    //   // icon: "delete",
-    //   click: (): void => {
-    //   //  this.onDeactivatePhoneNumberClicked()
-    //   },
-    // },
+    {
+      buttonType:"btn-h-danger",
+      text: "Remove file",
+      id: "removefile",
+      // icon: "delete",
+      click: (event: any,dataItem: any): void => { 
+      this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
+      },
+    },
    
-    
- 
-  ];
 
+  ];
+ 
   public actionsmore = [
     {
       buttonType:"btn-h-primary",
@@ -291,6 +294,25 @@ onIncomeActionClicked(
         this.cdr.detectChanges();
       }
     })
+  }
+
+ removeDependentsProofofSchoool(documentid: any){ 
+    if (documentid) {
+      this.incomeFacade.ShowLoader();
+      this.incomeFacade.removeDependentsProofofSchooolDoc(documentid ).subscribe({
+        next: (response: any) => { 
+          this.incomeFacade.HideLoader();
+          this.loadDependents();
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school allachment removed successfully')  
+     
+        },
+        error: (err: any) => {
+          this.incomeFacade.HideLoader();
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        },
+      }
+      );
+    }
   }
 
   showHideImageUploadLoader(showHide:boolean,dataItem:any){

@@ -492,4 +492,10 @@ export class ContactDataService {
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
   }
+
+
+  removeDependentsProofofSchooolDoc(documentId : any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/${documentId}`,);
+  }
+
 }
