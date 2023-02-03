@@ -102,7 +102,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
       this.lov.pharmacyPrioritylov$.subscribe((priorityLov: Lov[]) => {
       
         this.priorities = priorityLov;
-        this.copyLoadPriorties = priorityLov;
         this.cdr.detectChanges();
         if(priorityLov.length > 0){
           resolve(true);
@@ -137,29 +136,20 @@ export class SetPharmacyPriorityComponent implements OnInit {
     this.clientpharmacies$.subscribe(list =>{
       debugger;
       this.savePriorityObjectList =JSON.parse(JSON.stringify(list));
-
+      this.copyLoadPriorties= this.priorities;
       if( this.savePriorityObjectList.length == 1)
       {
-        this.copyLoadPriorties = this.priorities.filter(x =>x.lovCode === PriorityCode.Primary  );
+        this.copyLoadPriorties = this.priorities.filter((x:any) =>x.lovCode === PriorityCode.Primary  );
         
       }
       else if( this.savePriorityObjectList.length == 2)
       {
-        this.copyLoadPriorties = this.priorities.filter(x=>x.lovCode ===  PriorityCode.Secondary && x.lovCode===PriorityCode.Primary );
+        this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode != PriorityCode.Tertiary );
       }
    
       
     })
-  }  
-// priority()
-// {
-//   this.lov.getPriorityLovs();
-  
- 
-//   // else{
-//   //   this.lov.getPriorityLovs();
-//   // }
-// }
+  }
   // /** Internal event methods **/
   onCloseChangePriorityClicked() {
 
@@ -171,6 +161,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
     this.priorityValidation = false;
     let primaryCodeDuplicate:number =0;
     let secondryCodeDuplicate:number =0;
+    let tertiaryCodeDuplicate:number =0;
     for (let i = 0; i < this.savePriorityObjectList.length; i++) {
       const element= this.savePriorityObjectList[i];
       if(element.priorityCode === PriorityCode.Primary){
@@ -179,9 +170,11 @@ export class SetPharmacyPriorityComponent implements OnInit {
       if(element.priorityCode === PriorityCode.Secondary){
         secondryCodeDuplicate++;
       }
-      
+      if(element.priorityCode === PriorityCode.Tertiary){
+        tertiaryCodeDuplicate++;
+      }
     }
-    if(primaryCodeDuplicate > 1 || secondryCodeDuplicate > 1){
+    if(primaryCodeDuplicate > 1 || secondryCodeDuplicate > 1 || tertiaryCodeDuplicate>1){
       this.priorityValidation = true;
       return;
     }
