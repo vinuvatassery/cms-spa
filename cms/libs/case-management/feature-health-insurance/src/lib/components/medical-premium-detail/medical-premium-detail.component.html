@@ -289,7 +289,7 @@
               <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
                   <kendo-textbox [maxlength]="20" formControlName="paymentIdNbr"
-                    [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" aria-label="payment id number" placeholder="Payment ID Number"
+                    [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" numberOnly aria-label="payment id number" placeholder="Payment ID Number"
                     [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is

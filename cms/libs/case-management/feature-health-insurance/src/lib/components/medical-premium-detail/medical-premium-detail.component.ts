@@ -647,6 +647,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
+      this.healthInsuranceForm.controls['nextPremiumDueDate'].removeValidators(Validators.required);
+      this.healthInsuranceForm.controls['nextPremiumDueDate'].updateValueAndValidity();
       MedicarePlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
