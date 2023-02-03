@@ -16,9 +16,9 @@
       </div>
       <!-- [disabled]="isMiddleNameChecked" -->
       <div class="flex-col flex-col-4">
-        <kendo-floatinglabel text="Middle Initial (Optional)">
+        <kendo-floatinglabel text="Middle Initial">
           <kendo-textbox aria-label="middle initial"  [fillMode]="formUiStyle.inputFillMode"
-            formControlName="middleName"  placeholder="Middle Initial (Optional)"  [maxlength]="lengthRestrictThirty">
+            formControlName="middleName"  placeholder="Middle Initial"  [maxlength]="lengthRestrictThirty">
           </kendo-textbox>
 
           <kendo-formerror
@@ -106,7 +106,7 @@
         </kendo-floatinglabel>
         <kendo-formerror
           *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First
-          name on official id is required.</kendo-formerror>
+          name on Official ID is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Official ID">
@@ -117,7 +117,7 @@
         </kendo-floatinglabel>
         <kendo-formerror
           *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last
-          name on official id is required.</kendo-formerror>
+          name on Official ID is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
         <!-- (change)="onOfficialIdChecked($event)" -->
@@ -138,10 +138,10 @@
         <span *ngIf="showNameDuplicateLoader && showNameDuplicateLoaderField == 'dob'" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker aria-label="Date of Birth" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
-            formControlName="dateOfBirth" (blur)="searchDuplicateClient('dob')"  format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+            formControlName="dateOfBirth" (blur)="searchDuplicateClient('dob')"  format="MM-dd-yyyy" formatPlaceholder="formatPattern" (select)="dateValidate($event)"
             (keyup)="dateValidate($event)"
             placeholder=""></kendo-datepicker>
-            <kendo-formerror *ngIf="dateValidator"> Future date can not be selected</kendo-formerror>
+            <kendo-formerror *ngIf="dateValidator">Date of Birth cannot be greater than Current Date.</kendo-formerror>
             <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is required.</kendo-formerror> 
         </kendo-floatinglabel>
       </div>
