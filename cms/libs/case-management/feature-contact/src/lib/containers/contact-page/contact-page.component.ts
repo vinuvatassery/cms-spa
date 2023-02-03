@@ -459,10 +459,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }
     }
 
-    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) {
-      emailGroup.controls['email'].setValidators([Validators.email]);
+    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
+      emailGroup.controls['email'].setValidators([Validators.required, Validators.email]);
       emailGroup.controls['email'].updateValueAndValidity();
     }
+    
     if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
       ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
       ffContactGroup.controls['contactName'].updateValueAndValidity();
