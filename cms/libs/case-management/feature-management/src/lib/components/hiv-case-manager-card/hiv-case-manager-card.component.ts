@@ -11,19 +11,19 @@ export class HivCaseManagerCardComponent implements OnInit{
  @Input() gridHoverDataItem !: any 
  @Input() userImage$ : any
 
- @Output() loadUserImageEvent =  new EventEmitter<string>();
+ @Output() loadprofilePhotoEvent =  new EventEmitter<string>();
 
  imageData! : any
  imageLoaderVisible =true;
 
  /** Lifecycle hooks **/
  ngOnInit(): void {
-  this.loadUserImage();
+  this.loadprofilePhoto();
 }
 
-   loadUserImage()
+   loadprofilePhoto()
    {    
-    this.loadUserImageEvent.emit(this.gridHoverDataItem?.caseManagerId)   
+    this.loadprofilePhotoEvent.emit(this.gridHoverDataItem?.caseManagerId)   
    }
   
    onLoad()

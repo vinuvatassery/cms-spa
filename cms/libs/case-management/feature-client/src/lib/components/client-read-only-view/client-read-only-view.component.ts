@@ -13,7 +13,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
   /** Public properties **/
   @Input() clientProfile : any
   @Output() loadReadOnlyClientInfoEvent =  new EventEmitter();
-  @Output() loadUserImageEvent =  new EventEmitter<string>();
+  @Output() loadprofilePhotoEvent =  new EventEmitter<string>();
   @Input() userImage$: any 
 
   //public client! : ClientProfile
@@ -58,8 +58,8 @@ export class ClientReadOnlyViewComponent implements OnInit{
     this.caseManagerHoverDataItem = caseManagerData;
   }
 
-  loadUserImageEventHandler(caseManagerId : any)
+  loadprofilePhotoEventHandler(caseManagerId : any)
   {    
-   this.loadUserImageEvent.emit(caseManagerId) 
+   this.loadprofilePhotoEvent.emit(caseManagerId) 
   }
 }
