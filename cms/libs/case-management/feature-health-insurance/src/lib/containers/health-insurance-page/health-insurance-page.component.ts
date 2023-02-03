@@ -351,7 +351,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        if (statusResponse) {
+          this.workflowFacade.showSendEmailLetterPopup(true);
+        }
+        else {
+          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        }
       }
     });
   }

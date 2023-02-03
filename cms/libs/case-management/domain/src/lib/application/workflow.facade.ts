@@ -35,6 +35,7 @@ export class WorkflowFacade {
   private saveForLaterClickedSubject = new Subject<boolean>();
   private saveForLaterValidationSubject = new Subject<boolean>();
   private saveForLaterConfirmationSubject = new Subject<boolean>();
+  private sendEmailLetterSubject = new Subject<boolean>();
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
@@ -47,6 +48,7 @@ export class WorkflowFacade {
   saveForLaterClicked$ = this.saveForLaterClickedSubject.asObservable();
   saveForLaterValidationClicked$ = this.saveForLaterValidationSubject.asObservable();
   saveForLaterConfirmationClicked$ = this.saveForLaterConfirmationSubject.asObservable();
+  sendEmailLetterClicked$ = this.sendEmailLetterSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
   clientCaseEligibilityId: string | undefined;
@@ -100,6 +102,10 @@ export class WorkflowFacade {
 
   showSaveForLaterConfirmationPopup(showHide: boolean) {
     this.saveForLaterConfirmationSubject.next(showHide);
+  }
+
+  showSendEmailLetterPopup(showHideValue:boolean) {
+    this.sendEmailLetterSubject.next(showHideValue)
   }
 
   navigate(navigationType: NavigationType) {
