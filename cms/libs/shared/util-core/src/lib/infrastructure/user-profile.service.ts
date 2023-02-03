@@ -16,25 +16,25 @@ export class UserProfileService {
     private readonly loaderService: LoaderService) { }
 
 
-  ShowLoader() {
+  showLoader() {
     this.loaderService.show();
   }
 
-  HideLoader() {
+  hideLoader() {
     this.loaderService.hide();
   }
 
   getUserProfile() {
-    this.ShowLoader();
+    this.showLoader();
     this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`).subscribe({
       next: (response: any) => {
         if (response) {
           this.getUserProfileData.next(response);
         }
-        this.HideLoader();
+        this.hideLoader();
       },
       error: (err: any) => {
-        this.HideLoader();
+        this.hideLoader();
       }
     });
   }
