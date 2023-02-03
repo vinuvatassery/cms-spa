@@ -73,18 +73,18 @@
           valueField="lovCode" [valuePrimitive]="true" [(ngModel)]="currentStatusCode">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="currentStatusCode==''&& isSubmitted"> Income type is required
+        <kendo-formerror *ngIf="currentStatusCode==''&& isSubmitted"> Case status is required
         </kendo-formerror>
       </div>
       <div class="flex-col mb-2">
         <h5>Do you need to send the client a letter?</h5>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
+            <input type="radio" [(ngModel)]="sendLetterFlag" value="Y" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
             <kendo-label class="k-radio-label" id="yes" text="Yes"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
+            <input type="radio" [(ngModel)]="sendLetterFlag" value="N" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
             <kendo-label class="k-radio-label" id="No" text="No"></kendo-label>
           </span>
         </div>
