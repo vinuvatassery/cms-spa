@@ -1088,7 +1088,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
             SnackBarNotificationType.ERROR,
             err
           );
-          this.insurancePolicyFacade.hideLoader();
+          this.insurancePolicyFacade.hideLoader(); 
         }
       },
     });
