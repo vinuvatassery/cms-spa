@@ -82,7 +82,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
     this.loadSessionData();
     this.lov.getPriorityLovs();
     this.loadPriority().then((isloaded) =>{
-      debugger;
       if(isloaded){
         this.loadClientPharmacies();
       }
@@ -134,7 +133,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
   private loadClientPharmacies(){
    
     this.clientpharmacies$.subscribe(list =>{
-      debugger;
       this.savePriorityObjectList =JSON.parse(JSON.stringify(list));
       this.copyLoadPriorties= this.priorities;
       if( this.savePriorityObjectList.length == 1)
