@@ -5,5 +5,8 @@ export class CarrierContactInfo{
   mailCode :string | null = "";
   contactName :string|null="";
   phoneNbr :string|null="";
+  cityCode :string | null = "";
+  stateCode :string | null = "";
+  zip :string | null = "";
 
 }

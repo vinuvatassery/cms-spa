@@ -17,11 +17,11 @@
         </span>
         <span class="card-buttons-wrap" *ngFor="let doc of getQuestionDocuments(question.questionCode);">
           <button kendoButton look="flat" aria-label="download file" class="k-icon-button" title="Download"
-            (click)="viewOrDonwloadFile('download',doc.clientDocumentId,doc.documentName)">
+            (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="download file" aria-hidden="true">file_download</span>
           </button>
           <button kendoButton look="flat" aria-label="open in new tab" class="k-icon-button" title="Open in new tab"
-            (click)="viewOrDonwloadFile('view',doc.clientDocumentId,doc.documentName)">
+            (click)="clientDocumentFacade.viewOrDownloadFile('view',doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
           </button>
           <a class="text-bold text-underline">{{doc.documentName}}</a>
