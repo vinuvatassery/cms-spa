@@ -23,6 +23,7 @@ private updateCaseManagerNeedManagerStatusSubject = new Subject<any>();
 private removeCaseManagerSubject = new Subject<any>();
 private selectedCaseManagerDetailsSubject = new Subject<any>();
 private assignCaseManagerSubject = new Subject<any>();
+private genericCaseManagerSubject = new Subject<any>();
 
 
 /** Public properties **/
@@ -35,6 +36,7 @@ updateCaseManagerNeedManagerStatus$ = this.updateCaseManagerNeedManagerStatusSub
 removeCaseManager$ = this.removeCaseManagerSubject.asObservable();
 selectedCaseManagerDetails$ = this.selectedCaseManagerDetailsSubject.asObservable();
 assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
+genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
     
     /** Constructor **/
  constructor(private readonly userDataService: UserDataService,
@@ -209,5 +211,18 @@ assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
 
   this.workflowFacade.updateChecklist(workFlowdata);
  }
+
+
+ 
+ getCaseManagerData(clientCaseId : string): void { 
+  this.caseManagerDataService.getCaseManagerData(clientCaseId).subscribe({
+    next: (genericCaseManagerResponse) => {
+     this.genericCaseManagerSubject.next(genericCaseManagerResponse);   
+   },
+     error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+     },
+   });
+}
     
 }
