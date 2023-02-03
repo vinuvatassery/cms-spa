@@ -34,13 +34,13 @@
   [groupable]="false"
   [reorderable]="true"
   [resizable]="true" 
-  [columnMenu]="{ filter: true }"
+  [columnMenu]="{ filter: false }"
   [sort]="state.sort"
   (dataStateChange)="dataStateChange($event)"  
   [loading]="isGridLoaderShow" 
   [data]="cases | async">
    
-  <ng-template kendoGridColumnMenuTemplate let-service="service">
+  <!-- <ng-template kendoGridColumnMenuTemplate let-service="service">
       <span class="k-icon k-i-x" (click)="service.close()"
         style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
       <kendo-grid-columnmenu-sort [service]="service">
@@ -49,7 +49,7 @@
       <kendo-grid-columnmenu-filter [service]="service"></kendo-grid-columnmenu-filter>
       <kendo-grid-columnmenu-lock [service]="service">
       </kendo-grid-columnmenu-lock>
-   </ng-template>
+   </ng-template> -->
 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -59,7 +59,7 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="pronouns" title="Pronouns" [width]="120">
+    <kendo-grid-column field="pronouns" title="Pronouns" [sortable]="false"   [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="clientId" title="ID" [width]="70"></kendo-grid-column>
     <kendo-grid-column field="urn" title="URN" [width]="70"></kendo-grid-column>

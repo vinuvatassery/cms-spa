@@ -21,6 +21,7 @@ import { PhonePipe } from './pipes/phone.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
 import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
+import { CaseManagerCardComponent } from './hiv-case-manager-card/case-manager-card.component';
 // import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 
 @NgModule({
@@ -45,7 +46,8 @@ import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, 
     KendoFileUploadDirective,
     FormFieldAutoFocus, 
     TextFieldFormFieldAutoFocus,
-    DropDownFieldFormFieldAutoFocus
+    DropDownFieldFormFieldAutoFocus,
+    CaseManagerCardComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -67,7 +69,8 @@ import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, 
     KendoFileUploadDirective,
     FormFieldAutoFocus, 
     TextFieldFormFieldAutoFocus,
-    DropDownFieldFormFieldAutoFocus
+    DropDownFieldFormFieldAutoFocus,
+    CaseManagerCardComponent
   ],
 })
 export class SharedUiCommonModule {}

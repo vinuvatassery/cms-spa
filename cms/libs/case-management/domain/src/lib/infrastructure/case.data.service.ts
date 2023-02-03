@@ -30,6 +30,22 @@ export class CaseDataService {
     );
 
   }
+
+  loadClientProfile(clientCaseEligibilityId : string) {     
+    return this.http.get<ClientProfileCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/clientCaseEligibilityId=${clientCaseEligibilityId}`
+    );
+
+  }
+
+  loadClientProfileHeader(clientId : number) {     
+    return this.http.get<ClientProfileCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/header/clientId=${clientId}`
+    );
+
+  }
+
+
   loadCaseHistory() : Observable<CaseHistory[]>
   {
     return of([
