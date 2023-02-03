@@ -472,7 +472,8 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
-              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"> </kendo-textbox>
+              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"
+              [maxlength]=policyHolderInputMaxLength> </kendo-textbox>
             <kendo-formerror
               *ngIf="!healthInsuranceForm.controls['policyHolderFirstName'].valid && isViewContentEditable==false">First
               Name is
@@ -482,7 +483,8 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder Last Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
-              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName">
+              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName"
+              [maxlength]=policyHolderInputMaxLength>
             </kendo-textbox>
             <kendo-formerror *ngIf="!healthInsuranceForm.controls['policyHolderLastName'].valid">Last Name is
               required.</kendo-formerror>

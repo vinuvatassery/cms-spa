@@ -121,6 +121,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   insuranceStartDateIslessthanEndDate: boolean = true;
   insuranceEndDateIsgreaterthanStartDate: boolean=false;
   endDateMin!:Date;
+  policyHolderInputMaxLength:number=40;
 
   get othersCoveredOnPlan(): FormArray {
     return this.healthInsuranceForm.get("othersCoveredOnPlan") as FormArray;

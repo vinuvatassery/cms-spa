@@ -201,6 +201,7 @@ export class MedicalPremiumListComponent implements OnInit {
       this.onDeleteConfirmOpenClicked();
     }
     if (type == 'Edit') {
+      this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
         this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
