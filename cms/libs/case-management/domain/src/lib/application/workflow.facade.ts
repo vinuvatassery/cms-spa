@@ -49,7 +49,7 @@ export class WorkflowFacade {
   saveForLaterConfirmationClicked$ = this.saveForLaterConfirmationSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
-  clientCaseEligibilityId: string | undefined; 
+  clientCaseEligibilityId: string | undefined;
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
@@ -57,21 +57,20 @@ export class WorkflowFacade {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /**Constructor */
-  constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
+  constructor(private readonly workflowService: WorkflowDataService, private readonly router: Router, private readonly actRoute: ActivatedRoute
     ,   private readonly loaderService: LoaderService,
-    private loggingService : LoggingService ,
+    private readonly loggingService : LoggingService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService,
-    private configurationProvider : ConfigurationProvider ) { }
-  
+    public readonly intl: IntlService,
+    private readonly configurationProvider : ConfigurationProvider ) { }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
     this.hideLoader();   
   }
@@ -154,7 +153,7 @@ export class WorkflowFacade {
           forkJoin(
             [
               of(wfMaster),
-              this.workflowService.loadWorkflow(sessionId)             
+              this.workflowService.loadWorkflow(sessionId)
             ])
         ),
       ).subscribe({
@@ -375,7 +374,6 @@ export class WorkflowFacade {
       const nextIndex = this.deepCopy(this.currentSession?.workFlowProgress)?.findIndex((wf: WorkFlowProgress) => wf.workflowProgressId === nextWorkflow.workflowProgressId);
       if (nextIndex !== -1) {
         this.currentSession.workFlowProgress[nextIndex] = nextWorkflow;
-        this.currentSession = this.currentSession;
         this.routesSubject.next(this.currentSession.workFlowProgress);
       }
     }
@@ -422,6 +420,7 @@ export class WorkflowFacade {
 
 
   loadWorkFlowSessionData(sessionId: string): void {
+    this.showLoader();
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
         if (ddlsessionDataResponse) {
@@ -449,6 +448,7 @@ export class WorkflowFacade {
           this.sessionDataSubject.next(workflowResonseData);
         }
        
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    

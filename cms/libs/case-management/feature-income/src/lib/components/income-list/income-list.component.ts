@@ -1,18 +1,19 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild
 } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
-import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade } from '@cms/case-management/domain';
 /**  Facades **/
-import { IncomeFacade, Income } from '@cms/case-management/domain';
+import { IncomeFacade, Income, FamilyAndDependentFacade } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 
 import { State } from '@progress/kendo-data-query';
 
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
+import { LoaderService,  LoggingService,  NotificationSnackbarService,  SnackBarNotificationType,} from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -32,7 +33,6 @@ export class IncomeListComponent implements OnInit {
   public pageSizes = this.incomeFacade.gridPageSizes;
   public gridSkipCount = this.incomeFacade.skipCount;
   public state!: State;
-
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
@@ -48,6 +48,9 @@ export class IncomeListComponent implements OnInit {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
+  proofOfSchoolDocument!:any
+  public uploadFileRestrictions: UploadFileRistrictionOptions =
+    new UploadFileRistrictionOptions();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -107,7 +110,13 @@ export class IncomeListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly incomeFacade: IncomeFacade, private readonly workflowFacade: WorkflowFacade) {}
+  constructor(
+      private readonly incomeFacade: IncomeFacade,
+      private readonly workflowFacade: WorkflowFacade,
+      private readonly loggingService: LoggingService,
+      private readonly loaderService: LoaderService,
+      private readonly clientDocumentFacade: ClientDocumentFacade,
+      private readonly dependentFacade:FamilyAndDependentFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -228,5 +237,46 @@ onIncomeActionClicked(
     if(event){
       this.loadIncomeData();
     }
+  }
+
+  handleFileSelected(event:any,clientDependentId:any){
+    this.dependentFacade.ShowLoader();
+    if(event && event.files.length>0){
+      const formData: any = new FormData();
+      let file=event.files[0].rawFile
+      formData.append("document",file)
+      formData.append("clientId",this.clientId)
+      formData.append("clientCaseEligibilityId",this.clientCaseEligibilityId)
+      formData.append("clientCaseId",this.clientCaseId)
+      formData.append("EntityId",clientDependentId)
+      this.dependentFacade.uploadDependentProofOfSchool(formData).subscribe({
+        next:(response:any)=>{
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Dependent proof of school uploaded successfully.");
+          this.dependentFacade.HideLoader();
+        },
+        error:(err:any)=>{
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        }
+      })
+    }
+    
+  }
+  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
+    this.loaderService.show()
+    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
+      const fileUrl = window.URL.createObjectURL(data);
+      if (type === 'download') {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileUrl;
+        downloadLink.download = documentName;
+        downloadLink.click();
+      } else {
+        window.open(fileUrl, "_blank");
+      }
+      this.loaderService.hide();
+    }, (error) => {
+      this.loaderService.hide();
+      this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+    })
   }
 }

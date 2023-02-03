@@ -286,7 +286,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       preferredContact.push(this.formatPhoneNumber(otherPhone?.value ?? ''));
     }
     if (isValidEmail) {
-    const match = email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,6}$/);
+    const match = email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/);
       if(match){
         preferredContact.push(email?.value ?? '');
       }
@@ -379,7 +379,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private formatPhoneNumber(phoneNumberString: string) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    var match = cleaned?.match(/^(1)?(\d{3})(\d{3})(\d{4})$/);
     if (match) {
       var intlCode = (match[1] ? '+1 ' : '');
       return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');

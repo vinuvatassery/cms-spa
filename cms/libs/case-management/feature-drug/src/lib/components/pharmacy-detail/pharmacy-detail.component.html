@@ -1,5 +1,13 @@
 <section class="k-dialog-body">
-  <p class="text-muted mb-2">
+  <p class="text-muted mb-2" *ngIf="!isEditPharmacy">
+
+    To select a pharmacy, start typing the pharmacy name and/or number. If you don’t see the correct one, click “Add New” to add a new pharmacy to the master list.
+ 
+  </p>
+  <p class="text-muted mb-2" *ngIf="isEditPharmacy">
+
+     
+    
     To Edit this pharmacy click on the "X" to remove the pharmacy, 
     and select another. If you don't see the correct one, 
     click "Add New" to add a new pharmacy to the master list.
@@ -31,8 +39,11 @@
                 <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.vendorFullName}}</span>          
               </ng-template>
               </kendo-autocomplete>
+              <kendo-formerror *ngIf="showSelectPharmacyRequired">
+                Pharmacy selection required.
+              </kendo-formerror>
             </kendo-label>
-    </kendo-formfield>
+          </kendo-formfield>
         </div>
       </div>
     </div>

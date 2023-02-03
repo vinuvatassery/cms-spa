@@ -28,6 +28,6 @@ export class GroupDetailComponent implements OnInit {
 
   /** Private methods **/
   private loadDdlGroups() {
-    this.clientEligibilityFacade.loadDdlGroups();
+    //this.clientEligibilityFacade.loadDdlGroups();
   }
 }

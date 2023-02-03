@@ -24,7 +24,11 @@
           field="incomeAmt"
           title="Amount"
           [width]="130"
-        ></kendo-grid-column>
+        >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.incomeAmt}}</span>
+        </ng-template>
+      </kendo-grid-column>
         <kendo-grid-column
           field="incomeFrequencyCodeDesc"
           title="Frequency"
@@ -55,9 +59,8 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
-              <button aria-label="client name" kendoButton look="flat" class="card-link-button"
-               >
-              <a [href]="dataItem.documentPath" target="_blank">Income Proof</a>
+              <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+              <a>{{dataItem.documentName}}</a>
             </button>
 
             </div>
@@ -85,13 +88,16 @@
           format="{0:c2}"
           [sticky]="true"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome}}</span>
+        </ng-template>
           <ng-template
             kendoGridFooterTemplate
             let-column
-            let-columnIndex="columnIndex"
-          >
-            {{incomesTotal?.totalIncome | kendoNumber: 'c2'}}
+            let-columnIndex="columnIndex"  >
+          <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span> 
           </ng-template>
+
         </kendo-grid-column>
         <kendo-grid-column
           field="Option"
@@ -193,7 +199,6 @@
         <ng-template kendoGridCellTemplate let-dataItem>
 
           <kendo-dropdownbutton
-
             [data]="actions"
 
             icon="upload"
@@ -205,30 +210,33 @@
             aria-label="more actions"
 
             [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-
           >
 
-            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
 
-              <button *ngIf="dataItem.text !== 'Attach from computer'"  kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click" >
+              <button *ngIf="buttondataItem.text !== 'Attach from computer'"  kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click" >
 
                 <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
 
-                <label>   {{ dataItem.text }} </label>
+                <label>   {{ buttondataItem.text }} </label>
 
             </button>
 
 
 
-                <button kendoButton  look="flat" *ngIf="dataItem.text === 'Attach from computer'" [attr.aria-label]="dataItem.text" class="upoadlistbtn" [class]="dataItem.buttonType" aria-hidden="false"  >
-                  <kendo-upload  hidden  #uploadformcomp>  </kendo-upload>
-                <label [for]="uploadformcomp">   {{ dataItem.text }} </label>
+          <button kendoButton look="flat" *ngIf="buttondataItem.text === 'Attach from computer'" [attr.aria-label]="buttondataItem.text"
+            class="upoadlistbtn" [class]="buttondataItem.buttonType" aria-hidden="false">
 
-            </button>
-
-            </ng-template>
+            <label [for]="proofOfSchoolUploaded"> {{ buttondataItem.text }} </label>
+          </button>
+          </ng-template>
 
           </kendo-dropdownbutton>
+
+          <kendo-upload hidden  aria-label="upload proof" name="upload proof"
+          [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event,dataItem.clientDependentId)"
+          #proofOfSchoolUploaded [ngModel]="proofOfSchoolDocument" [ngModelOptions]="{standalone: true}">
+          </kendo-upload>
 
         </ng-template>
         </kendo-grid-column>

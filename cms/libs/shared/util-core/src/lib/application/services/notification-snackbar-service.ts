@@ -6,12 +6,12 @@ import { SnackBarNotificationText, SnackBarNotificationType } from '../../enums/
   providedIn: 'root',
 })
 export class NotificationSnackbarService {
-    
+
       snackbarSubject = new Subject<any>();
       snackbar$ = this.snackbarSubject.asObservable();
      
       manageSnackBar(type : SnackBarNotificationType , subtitle : any)
-      {    
+      {
         let subtitleText = subtitle;
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
         
@@ -45,7 +45,7 @@ export class NotificationSnackbarService {
           type: type,
         };
         this.snackbarSubject.next(snackbarMessage);
-      
+
       }
       errorSnackBar( subtitle : any)
       {

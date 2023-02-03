@@ -19,7 +19,7 @@
     position: relative;
     top: auto;
     left: auto;
-    right: auto;
+    right: auto !important;
     background: transparent;
   }
   &.badge-primary {
@@ -64,7 +64,7 @@
     .k-i-close {
       &:before {
         content: '\e5cd';
-        font-family: 'Material Icons';
+        font-family: $font-family-Material-icon;
       }
     }
     &.k-notification-success {
@@ -74,7 +74,7 @@
       .k-i-success {
         &:before {
           content: '\e86c';
-          font-family: 'Material Icons';
+          font-family: $font-family-Material-icon;
         }
       }
     }
@@ -85,7 +85,7 @@
       .k-i-error {
         &:before {
           content: '\e5c9';
-          font-family: 'Material Icons';
+          font-family: $font-family-Material-icon;
         }
       }
     }
@@ -96,7 +96,7 @@
       .k-i-warning {
         &:before {
           content: '\e000';
-          font-family: 'Material Icons';
+          font-family: $font-family-Material-icon;
         }
       }
     }
@@ -106,7 +106,7 @@
       .k-i-info {
         &:before {
           content: '\e88e';
-          font-family: 'Material Icons';
+          font-family: $font-family-Material-icon;
         }
       }
     }

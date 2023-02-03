@@ -1,4 +1,4 @@
-of/** Angular **/
+/** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef,  Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
 import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
@@ -133,6 +133,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   matchingClient:any={};
   ssnMask='000-00-0000'
   showNameDuplicateLoader:boolean=false;
+  showNameDuplicateLoaderField = '';
   showSsnDuplicateLoader:boolean=false;
   otherEthnicityList:any[]=[];
  
@@ -823,7 +824,7 @@ updateWorkflowCount(data: any){
       this.isSSNChecked = false;
       this.appInfoForm.controls['ssn'].enable();
     }
-    this.searchDuplicateClient();
+    this.searchDuplicateClient('ssn');
   }
 
   registerToVoteSelected(event:Event){
@@ -921,7 +922,7 @@ updateWorkflowCount(data: any){
     this.tareaRaceAndEthinicityCounter = `${this.tareaRaceAndEthinicityCharachtersCount}/${this.tareaRaceAndEthinicityMaxLength}`;
   }
 
-  searchDuplicateClient() {
+  searchDuplicateClient(fieldname: any) {
     this.ssnDuplicateFound = false;
     let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
     let lastName = this.appInfoForm.controls['lastName'].value != null ? this.appInfoForm.controls['lastName'].value : '';
@@ -947,6 +948,7 @@ updateWorkflowCount(data: any){
       }
       if (data.firstName != '' && data.lastName != '' && dateOfBirth != null) {
         this.showNameDuplicateLoader = true;
+        this.showNameDuplicateLoaderField = fieldname;
       }
       this.clientfacade.searchDuplicateClient(data).subscribe({
         next: (response: any) => {
@@ -971,12 +973,14 @@ updateWorkflowCount(data: any){
             
           }
           this.showNameDuplicateLoader = false;
+          this.showNameDuplicateLoaderField = '';
           this.showSsnDuplicateLoader = false;
           this.ref.detectChanges();
         },
         error: (err: any) => {
           this.showNameDuplicateLoader = false;
           this.showSsnDuplicateLoader = false;
+          this.showNameDuplicateLoaderField = '';
           this.loggingService.logException(err);
           this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         }

@@ -65,7 +65,7 @@ export class CaseDetailPageComponent implements OnInit {
   public saveForLaterData = [
     {
       buttonType: "btn-h-primary",
-      text: "Save For Later",
+      text: "SAVE FOR LATER",
       icon: "save",
       click: (): void => {
         this.onSaveLaterClicked();
@@ -73,7 +73,7 @@ export class CaseDetailPageComponent implements OnInit {
     },
     {
       buttonType: "btn-h-primary",
-      text: "Discard Changes",
+      text: "DISCARD CHANGES",
       icon: "do_disturb_alt",
       click: (): void => {
         this.onDiscardConfirmClicked()
@@ -81,7 +81,7 @@ export class CaseDetailPageComponent implements OnInit {
     },
     {
       buttonType: "btn-h-danger",
-      text: "Delete Application",
+      text: "DELETE APPLICATION",
       icon: "delete",
       click: (): void => {
         this.onDeleteConfirmClicked()
@@ -212,7 +212,7 @@ export class CaseDetailPageComponent implements OnInit {
         tap(()=> this.loaderService.show()),
         mergeMap((navigationType: NavigationType) =>
           forkJoin(
-            [              
+            [
               of(navigationType),
               this.workflowFacade.saveWorkflowProgress(navigationType, this.sessionId, this.route.snapshot.queryParams['pid'])
             ])
@@ -227,8 +227,8 @@ export class CaseDetailPageComponent implements OnInit {
           this.loaderService.hide();
         },
         error: (err: any) => {
-          this.loaderService.hide();            
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);  
+          this.loaderService.hide();
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
           this.loggingService.logException(err);
         },
       });
@@ -313,7 +313,7 @@ export class CaseDetailPageComponent implements OnInit {
     this.loaderService.show();
     if (object?.isReset ?? false) {
       this.workflowFacade.resetWorkflowNavigation();
-      this.loaderService.hide();
+      //this.loaderService.hide();
     }
     else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
       this.workflowFacade.saveNonequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')

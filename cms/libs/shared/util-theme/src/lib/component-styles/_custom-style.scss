@@ -144,20 +144,21 @@
         border-top: 1px solid darken($theme-border, 30%);
         padding: $size-xx $size-xlg;
       }
-      h5 {
+      .submenutop-text {
         margin: 0px;
         font-family: $font-family-bold;
         font-weight: normal;
+        font-size: 14px;
       }
       &.heading-as-menu {
         justify-content: flex-start;
         border-bottom: 1px solid darken($theme-border, 30%);
         transition: ease-in all 0.4s;
-        h5 {
+        .submenutop-text {
           font-family: $font-family;
           font-weight: normal;
         }
-        h5,
+        .submenutop-text,
         .material-icons {
           color: material-color($hive-neutral-palette, 900);
         }
@@ -165,7 +166,7 @@
           cursor: pointer;
           background: material-color($hive-success-palette, 100);
           color: $app-primary;
-          h5,
+          .submenutop-text,
           .material-icons {
             color: $app-primary;
           }
@@ -485,8 +486,7 @@
 }
 
 
-.createcase-mobile-menu-btn{
-  background: transparent;
+.createcase-mobile-menu-btn{ 
   border: 0px;
   width: 34px;
   height: 34px;
@@ -558,4 +558,11 @@ display: inline-block;
 
 .nobg-loader{
   background: transparent; 
+}
+
+.subheadingone-text {
+  margin: 0px;
+  font-family: $font-family-bold;
+  font-weight: normal;
+  font-size: 14px;
 }
