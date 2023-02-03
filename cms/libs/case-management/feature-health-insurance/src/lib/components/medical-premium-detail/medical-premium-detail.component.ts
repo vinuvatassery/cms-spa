@@ -95,6 +95,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   isSubmitted: boolean = false;
   isViewContentEditable!: boolean;
   isToggleNewPerson!: boolean;
+  removedPersons: any = [];
   isOpenDdl = false;
   insurancePlans: Array<any> = [];
   healthInsurancePolicy!: healthInsurancePolicy;
@@ -255,9 +256,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         data.forEach((person: any) => {
           person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
         });
-        let personsGroup = !!data ? data.map((person: any) => this.formBuilder.group(person)) : [];
-        let personForm = this.formBuilder.array(personsGroup);
-        this.healthInsuranceForm.setControl('othersCoveredOnPlan', personForm);
+        let dependents = data.filter((dep: any) => dep.dependentTypeCode == 'D');
+        let dependentGroup = !!dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
+        let dependentForm = this.formBuilder.array(dependentGroup);
+        this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
+        let healthDependents = data.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
+        let healthGroup = !!healthDependents ? healthDependents.map((person: any) => this.formBuilder.group(person)) : [];
+        let healthForm = this.formBuilder.array(healthGroup);
+        this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
       }
     });
   }
@@ -464,10 +470,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     healthInsurancePolicy.othersCoveredOnPlan?.forEach((person: any) => {
       person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
     })
-    let personsGroup = !!healthInsurancePolicy.othersCoveredOnPlan ? healthInsurancePolicy.othersCoveredOnPlan.map(pe => this.formBuilder.group(pe)) : [];
-    let personForm = this.formBuilder.array(personsGroup);
-    this.healthInsuranceForm.setControl('othersCoveredOnPlan', personForm);
-    this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', this.formBuilder.array([]));
+    this.setDependentsForm(healthInsurancePolicy);
     if (!!healthInsurancePolicy.copyOfInsuranceCardFileName) {
       this.copyOfInsuranceCardFiles = [{
         name: healthInsurancePolicy.copyOfInsuranceCardFileName,
@@ -509,6 +512,17 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }];
     }
     this.disableEnableRadio();
+  }
+
+  private setDependentsForm(healthInsurancePolicy: healthInsurancePolicy) {
+    let dependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'D');
+    let dependentGroup = !!dependents ? dependents.map(pe => this.formBuilder.group(pe)) : [];
+    let dependentForm = this.formBuilder.array(dependentGroup);
+    this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
+    let healthDependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
+    let healthGroup = !!healthDependents ? healthDependents.map(pe => this.formBuilder.group(pe)) : [];
+    let healthForm = this.formBuilder.array(healthGroup);
+    this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
   }
 
   updateEnrollStatus(event: any, i: number) {
@@ -903,7 +917,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
       this.healthInsuranceForm.value.othersCoveredOnPlan.forEach((person: any) => {
         person.enrolledInInsuranceFlag = !!person.enrolledInInsuranceFlag ? StatusFlag.Yes : StatusFlag.No;
-      })
+      });
+      if (this.removedPersons.length > 0) {
+        this.healthInsurancePolicy.removedOthersCoveredOnPlan = this.removedPersons;
+      }
       this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;
       this.healthInsurancePolicy.policyHolderFirstName = this.healthInsuranceForm.value.policyHolderFirstName;
       this.healthInsurancePolicy.policyHolderLastName = this.healthInsuranceForm.value.policyHolderLastName;
@@ -1032,6 +1049,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   removePerson(i: number) {
+    this.removedPersons.push(this.newOthersCoveredOnPlan.value[i]);
     this.newOthersCoveredOnPlan.removeAt(i);
   }
 

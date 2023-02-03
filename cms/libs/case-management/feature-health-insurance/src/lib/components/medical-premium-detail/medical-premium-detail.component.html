@@ -366,7 +366,8 @@
         <div formArrayName="newOthersCoveredOnPlan" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
         && ddlInsuranceType !== InsurancePlanTypes.Cobra
         && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
-        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare
+        && healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
           <div *ngFor="let person of newOthersCoveredOnPlan.controls; let i=index">
             <div class="flex-row pl-3 mt-2" [formGroupName]="i">
               <div class="flex-col d-flex align-iems-center justify-content-between">
@@ -434,7 +435,7 @@
             && ddlInsuranceType !== InsurancePlanTypes.Cobra
             && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
             && ddlInsuranceType !== InsurancePlanTypes.Medicare
-          ">
+            && healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
             <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
               aria-label="add new person">
               <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
