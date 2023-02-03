@@ -180,7 +180,7 @@
   <div class="flex-col">
     <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
     <div class="app-c-table">
-      <kendo-grid [data]="dependentsProofofSchools$ | async">
+      <kendo-grid [data]="dependentsProofofSchools$">
         <kendo-grid-column field="name" title="Name" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column field="age" title="Age" [width]="130">
@@ -197,7 +197,9 @@
           class="text-center"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-
+          <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
+              class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> Uploading...</span>
+           </span>
           <kendo-dropdownbutton
             [data]="actions"
 
@@ -234,7 +236,7 @@
           </kendo-dropdownbutton>
 
           <kendo-upload hidden  aria-label="upload proof" name="upload proof"
-          [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event,dataItem.clientDependentId)"
+          [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event,dataItem)"
           #proofOfSchoolUploaded [ngModel]="proofOfSchoolDocument" [ngModelOptions]="{standalone: true}">
           </kendo-upload>
 

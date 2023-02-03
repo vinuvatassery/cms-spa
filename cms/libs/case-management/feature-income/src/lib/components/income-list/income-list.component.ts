@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef
 } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 /** Enums **/
@@ -36,7 +36,7 @@ export class IncomeListComponent implements OnInit {
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
-  dependentsProofofSchools$ = this.incomeFacade.dependentsProofofSchools$;
+  dependentsProofofSchools$!:any;
   isEdit!: boolean;
   selectedIncome: any;
   isOpenedIncome = false;
@@ -116,11 +116,13 @@ export class IncomeListComponent implements OnInit {
       private readonly loggingService: LoggingService,
       private readonly loaderService: LoaderService,
       private readonly clientDocumentFacade: ClientDocumentFacade,
-      private readonly dependentFacade:FamilyAndDependentFacade) {}
+      private readonly dependentFacade:FamilyAndDependentFacade,
+      private readonly cdr: ChangeDetectorRef) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadIncomes();
+    this.loadDependents();
     this.includeAddIncomeButtonAndFooterNote();
   }
 
@@ -239,27 +241,29 @@ onIncomeActionClicked(
     }
   }
 
-  handleFileSelected(event:any,clientDependentId:any){
+  handleFileSelected(event: any, dataItem: any) {
     this.dependentFacade.ShowLoader();
-    if(event && event.files.length>0){
+    if (event && event.files.length > 0) {
       const formData: any = new FormData();
-      let file=event.files[0].rawFile
-      formData.append("document",file)
-      formData.append("clientId",this.clientId)
-      formData.append("clientCaseEligibilityId",this.clientCaseEligibilityId)
-      formData.append("clientCaseId",this.clientCaseId)
-      formData.append("EntityId",clientDependentId)
+      let file = event.files[0].rawFile
+      formData.append("document", file)
+      formData.append("clientId", this.clientId)
+      formData.append("clientCaseEligibilityId", this.clientCaseEligibilityId)
+      formData.append("clientCaseId", this.clientCaseId)
+      formData.append("EntityId", dataItem.clientDependentId)
+      this.showHideImageUploadLoader(true, dataItem);
       this.dependentFacade.uploadDependentProofOfSchool(formData).subscribe({
-        next:(response:any)=>{
-          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Dependent proof of school uploaded successfully.");
+        next: (response: any) => {
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.HideLoader();
+          this.showHideImageUploadLoader(false, dataItem);
         },
-        error:(err:any)=>{
-          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        error: (err: any) => {
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         }
       })
     }
-    
+
   }
   viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
     this.loaderService.show()
@@ -277,6 +281,22 @@ onIncomeActionClicked(
     }, (error) => {
       this.loaderService.hide();
       this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+    })
+  }
+
+  loadDependents(){
+    this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
+      if(response&&response.length>0){
+        this.dependentsProofofSchools$=response;
+        this.cdr.detectChanges();
+      }
+    })
+  }
+
+  showHideImageUploadLoader(showHide:boolean,dataItem:any){
+    this.dependentsProofofSchools$.filter((dep:any)=>dep.clientDependentId==dataItem.clientDependentId).forEach((element:any)=>{
+      element["uploaingProofDoc"]=showHide;
+      this.cdr.detectChanges();
     })
   }
 }
