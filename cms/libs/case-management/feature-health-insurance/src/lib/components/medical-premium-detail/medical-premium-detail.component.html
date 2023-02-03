@@ -115,11 +115,8 @@
             </ng-template>
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
-          <kendo-formerror *ngIf="copyOfMedicareCardFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-          <kendo-formerror *ngIf="!isMedicareCardFileUploaded && isViewContentEditable==false"> Copy of Mediacre card is
-            required
-          </kendo-formerror>
-         
+          <kendo-formerror *ngIf="medicareCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+          <kendo-formerror *ngIf="!isMedicareCardFileUploaded && isViewContentEditable==false && !medicareCardFilesExceedsFileSizeLimit"> Medicare Card is required.</kendo-formerror>         
         </div>
       </div>
     </div>
@@ -497,7 +494,7 @@
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
-          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance')" #copyOfInsurance
+          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance');" #copyOfInsurance
           [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
           [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
@@ -509,10 +506,8 @@
           </ng-template>
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="copyOfInsuranceCardFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-        <kendo-formerror *ngIf="!isInsuranceFileUploaded && isViewContentEditable==false"> Copy of insurance card is
-          required
-        </kendo-formerror>
+        <kendo-formerror *ngIf="insuranceCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+        <kendo-formerror *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !insuranceCardFilesExceedsFileSizeLimit"> Copy of insurance card is required. </kendo-formerror>
       </div>
       <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
            && ddlInsuranceType !== InsurancePlanTypes.Cobra
@@ -535,9 +530,14 @@
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
-          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y' && !isProofFileUploaded && isViewContentEditable==false">
-          Proof of premium is required
+          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">
+          Proof of premium is required.
         </kendo-formerror>
+        <kendo-formerror
+          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isViewContentEditable && proofOfPremiumExceedsFileSizeLimit">
+          File size is limited to 25 MB. Please select a smaller file.
+        </kendo-formerror>
+        
       </div>
       <div class="flex-col mb-2  file-uploads" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
         && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan
@@ -559,10 +559,10 @@
           </ng-template>
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="copyOfSummaryFilesValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+        <kendo-formerror *ngIf="summaryFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror
-        *ngIf="!isSummaryFileUploaded">
-        summary file is required
+        *ngIf="!isSummaryFileUploaded && !summaryFilesExceedsFileSizeLimit">
+        Summary of Benefits is required.
       </kendo-formerror>
       </div>
     </div>
