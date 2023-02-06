@@ -190,7 +190,12 @@ private addSaveForLaterSubscription(): void {
       ).subscribe(([statusResponse, isSaved]) => {
         if (isSaved) {
           this.loaderService.hide();
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+          if(statusResponse){
+            this.workFlowFacade.showSendEmailLetterPopup(true);
+          }
+          else{
+            this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+          }
         }
       });
     }

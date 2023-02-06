@@ -106,9 +106,9 @@ export class IncomeFacade {
     });
   }
 
-  loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any): void {
+  loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any, sortBy:any, sortType:any): void {
     this.ShowLoader();
-    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize).subscribe({
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize, sortBy, sortType).subscribe({
       next: (incomesResponse: any) => {
         if(incomesResponse.clientIncomes!=null){
           const gridView: any = {

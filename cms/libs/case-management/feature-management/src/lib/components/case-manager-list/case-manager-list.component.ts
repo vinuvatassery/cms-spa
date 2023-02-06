@@ -18,7 +18,7 @@ export class CaseManagerListComponent implements OnInit {
   @Output() searchTextEvent = new EventEmitter<string>(); 
   @Output() getExistingCaseManagerEvent= new EventEmitter<string>(); 
   @Output() addExistingCaseManagerEvent= new EventEmitter<string>(); 
-  @Output() loadUserImageEvent =  new EventEmitter<string>();
+  @Output() loadprofilePhotoEvent =  new EventEmitter<string>();
 
   /** Input properties **/
   @Input()  getCaseManagers$ : any
@@ -199,9 +199,9 @@ export class CaseManagerListComponent implements OnInit {
   }
 
 
-  loadUserImageEventHandler(caseManagerId : string)
+  loadprofilePhotoEventHandler(caseManagerId : string)
   {    
-   this.loadUserImageEvent.emit(caseManagerId)
+   this.loadprofilePhotoEvent.emit(caseManagerId)
   }
 
 }

@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
@@ -27,6 +27,7 @@ export class CaseDetailPageComponent implements OnInit {
   /**Private properties**/
   private navigationSubscription !: Subscription;
   private loadSessionSubscription !:Subscription;
+  private showSendNewsLetterSubscription !: Subscription;
   private showConfirmationPopupSubscription !: Subscription;  public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
@@ -57,6 +58,7 @@ export class CaseDetailPageComponent implements OnInit {
   showDelete:boolean=true;
   currentStatusCode:string="";
   isSubmitted:boolean=false;
+  sendLetterFlag!:any;
   data: Array<any> = [
     {
       text: '',
@@ -102,7 +104,8 @@ export class CaseDetailPageComponent implements OnInit {
     private loggingService : LoggingService,
     private readonly snackbarService : NotificationSnackbarService,
     private router: Router,
-	private lovFacade:LovFacade
+	  private lovFacade:LovFacade,
+    private readonly cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -113,15 +116,18 @@ export class CaseDetailPageComponent implements OnInit {
     this.addNavigationSubscription();
     this.loadCase();   
     this.getCase();
- 	this.addConfirmationPopupSubscription();
+ 	  this.addConfirmationPopupSubscription();
     this.loadSessionData();
-    this.getCaseStatusLov();  }
+    this.getCaseStatusLov(); 
+    this.showSendNewsLetterPopup();
+  }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
     this.loadSessionSubscription .unsubscribe();
 	  this.showConfirmationPopupSubscription.unsubscribe();      
     this.workflowFacade.unloadWorkflowSession();
+    this.showSendNewsLetterSubscription.unsubscribe();
 }
 
   cancelCase(){
@@ -270,6 +276,7 @@ export class CaseDetailPageComponent implements OnInit {
     if (event === CommunicationEvents.Close) {
       this.isShowSendNewLetterPopup = false;
     }
+    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
   }
   public onPaste(): void {
     console.log("Paste");
@@ -332,6 +339,9 @@ export class CaseDetailPageComponent implements OnInit {
     this.showConfirmationPopupSubscription = this.workflowFacade.saveForLaterConfirmationClicked$.subscribe((val) => {
       if (val) {
         this.isShowSaveLaterPopup = true;
+        this.sendLetterFlag = '';
+        this.currentStatusCode = '';
+        this.isSubmitted=false;
       }
     });
   }
@@ -378,20 +388,32 @@ export class CaseDetailPageComponent implements OnInit {
     this.loaderService.show();
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
-      this.caseFacade.updateCaseStatus(this.clientCaseId,this.currentStatusCode).subscribe({
-        next:(casesResponse:any)=>{
+      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode).subscribe({
+        next: (casesResponse: any) => {
           this.loaderService.hide();
-          this.workflowFacade.saveForLater(true);
+          if (this.sendLetterFlag == StatusFlag.Yes) {
+            this.workflowFacade.saveForLater(true);
+          }
+          else {
+            this.workflowFacade.saveForLater(false);
+          }
           this.isShowSaveLaterPopup = false;
         },
-        error:(err:any)=>{
+        error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         }
       })
     }
-
   }
 
+  showSendNewsLetterPopup() {
+    this.showSendNewsLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe((response: any) => {
+      if (response) {
+        this.onSendNewLetterClicked();
+        this.cdr.detectChanges();
+      }
+    })
+  }
 }

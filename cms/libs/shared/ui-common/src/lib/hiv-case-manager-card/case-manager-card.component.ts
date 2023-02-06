@@ -1,13 +1,13 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 @Component({
-  selector: 'case-management-hiv-case-manager-card',
-  templateUrl: './hiv-case-manager-card.component.html',
-  styleUrls: ['./hiv-case-manager-card.component.scss'],
+  selector: 'common-case-manager-card',
+  templateUrl: './case-manager-card.component.html',
+  styleUrls: ['./case-manager-card.component.scss'],
 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HivCaseManagerCardComponent implements OnInit{
+export class CaseManagerCardComponent implements OnInit{
  @Input() gridHoverDataItem !: any 
  @Input() userImage$ : any
 
@@ -17,12 +17,12 @@ export class HivCaseManagerCardComponent implements OnInit{
  imageLoaderVisible =true;
 
  /** Lifecycle hooks **/
- ngOnInit(): void {
+ ngOnInit(): void {  
   this.loadprofilePhoto();
 }
 
    loadprofilePhoto()
-   {    
+   { 
     this.loadprofilePhotoEvent.emit(this.gridHoverDataItem?.caseManagerId)   
    }
   

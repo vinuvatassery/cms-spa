@@ -45,6 +45,8 @@ export * from './lib/entities/pharmacy-priority';
 export * from './lib/entities/accepted-application';
 export * from './lib/entities/client-eligibility-info';
 export * from './lib/entities/review-question-answer';
+export * from './lib/entities/client-profile-cases';
+export * from './lib/entities/client-profile';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';

@@ -63,5 +63,12 @@ export class CaseManagerDataService {
       );   
   
   }
+
+  getCaseManagerData(caseId : string)
+  {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}`
+    );
+  }
   
 }

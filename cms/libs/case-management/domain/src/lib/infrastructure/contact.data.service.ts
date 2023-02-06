@@ -20,12 +20,14 @@ export class ContactDataService {
     private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any) {
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any, sortBy:any, sortType:any) {
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
     params = params.append('skipCount',skipCount);
     params = params.append('maxResultCount',pageSize);
+    params = params.append('sorting',sortBy);
+    params = params.append('sortType',sortType);
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
   }
 
@@ -88,8 +90,8 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}/${skip}/${pageSize}`);
+  loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any, sortBy:any, sortType:any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
   }
 
   loadDependentsProofofSchools() {
