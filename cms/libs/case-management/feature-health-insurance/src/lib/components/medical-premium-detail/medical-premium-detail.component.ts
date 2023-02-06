@@ -167,7 +167,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.loadHealthInsuranceProofCodes();
     this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
       if (this.healthInsuranceForm.controls['paymentIdNbrSameAsInsuranceIdNbrFlag'].value) {
-        this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
+        this.healthInsuranceForm.controls['paymentIdNbr'].setValue(parseInt(selectedValue) );
       }
     });
   }
@@ -377,8 +377,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       else {
         this.sameAsInsuranceIdFlag = false;
       }
+      
+      const paymentIdNbr=Number(healthInsurancePolicy.paymentIdNbr);
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(
-        healthInsurancePolicy.paymentIdNbr
+        paymentIdNbr
       );
       this.healthInsuranceForm.controls['premiumAmt'].setValue(
         healthInsurancePolicy.premiumAmt
@@ -848,7 +850,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           new Date(this.intl.formatDate(this.healthInsuranceForm.controls['nextPremiumDueDate'].value, this.dateFormat));
 
         this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === true ? StatusFlag.Yes : this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === false ? StatusFlag.No : null;
-        this.healthInsurancePolicy.paymentIdNbr = this.healthInsuranceForm.controls["paymentIdNbr"].value;
+        this.healthInsurancePolicy.paymentIdNbr =this.healthInsuranceForm.controls["paymentIdNbr"].value;
         this.healthInsurancePolicy.premiumAmt = this.healthInsuranceForm.controls["premiumAmt"].value;
       }
       else if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === StatusFlag.No){
@@ -1070,7 +1072,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.sameAsInsuranceIdFlag = true;
-      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(this.healthInsuranceForm.controls['insuranceIdNumber'].value);
+      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(parseInt(this.healthInsuranceForm.controls['insuranceIdNumber'].value) );
     }
     else {
       this.sameAsInsuranceIdFlag = false;
