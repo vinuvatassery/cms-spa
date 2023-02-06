@@ -27,7 +27,7 @@ export class IncomeListComponent implements OnInit {
   @Input() clientCaseEligibilityId: string="";
   @Input() clientId: any;
   @Input() clientCaseId: any;
- 
+  @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() loadIncomeListEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public pageSizes = this.incomeFacade.gridPageSizes;
@@ -163,7 +163,9 @@ onIncomeActionClicked(
   }
 }
   private loadDependentsProofofSchools() {
+    this.incomeFacade.ShowLoader();
     this.incomeFacade.loadDependentsProofofSchools();
+    this.incomeFacade.HideLoader();
   }
 
   private includeAddIncomeButtonAndFooterNote() {
@@ -257,9 +259,12 @@ onIncomeActionClicked(
       this.showHideImageUploadLoader(true, dataItem);
       this.dependentFacade.uploadDependentProofOfSchool(formData).subscribe({
         next: (response: any) => {
+          this.loadIncomeData();
+          this.loadDependentsProofofSchools();
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.HideLoader();
           this.showHideImageUploadLoader(false, dataItem);
+          
         },
         error: (err: any) => {
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -301,9 +306,12 @@ onIncomeActionClicked(
       this.incomeFacade.ShowLoader();
       this.incomeFacade.removeDependentsProofofSchooolDoc(documentid ).subscribe({
         next: (response: any) => { 
+          this.loadIncomeData();
+          this.loadDependentsProofofSchools();
           this.incomeFacade.HideLoader();
-          this.loadDependents();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school allachment removed successfully')  
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
+          this.sendDetailToIncomeList.next(true); 
+      
      
         },
         error: (err: any) => {

@@ -344,6 +344,16 @@
             [ngModelOptions]="{standalone: true}"
             id="homeAddressProofUploaded"
             #homeAddressProofUploaded>
+            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].uid,files[0].name)">
+              <span *ngIf="!contactInfo?.homeAddressProof?.documentId">{{ files[0].name }} </span>   
+                <button aria-label="doc name" *ngIf="contactInfo?.homeAddressProof?.documentId" kendoButton look="flat" class="card-link-button"  >
+                  <a>{{ files[0].name }} </a>
+                </button>
+                <br>
+                <span>{{   files[0].size  }}</span> 
+              </span>
+            </ng-template>
           </kendo-fileselect>
         <!-- </kendo-label> -->
           <kendo-formhint>Max file size 25MB</kendo-formhint> 

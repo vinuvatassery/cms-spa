@@ -79,7 +79,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly route: ActivatedRoute,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
+    public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly router :Router
   ) { }
 
@@ -1350,6 +1350,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   }
 
   handleFileRemoved(e: SelectEvent) {
+    this.loaderService.show();
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
       this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
         next: (response) => {
@@ -1359,10 +1360,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
             this.uploadedHomeAddressProof = undefined;
             this.loadContactInfo();
             this.updateHomeAddressProofCount(false);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
           this.loggingService.logException(err);
+          this.loaderService.hide();
         },
       });
     }
