@@ -293,6 +293,19 @@ export class WorkflowFacade {
     }
   }
 
+  replaceChecklist(checklist: CompletionChecklist[]){
+    if (checklist) {
+      const processId = this.actRoute.snapshot.queryParams['pid'];
+      let completionChecklist: WorkflowProcessCompletionStatus = this.deepCopy(this.completionChecklist)
+        ?.filter((cs: WorkflowProcessCompletionStatus) => cs.processId === processId)[0];
+        if (completionChecklist) {
+          completionChecklist.completionChecklist =   checklist;
+        }
+        
+        this.updateWorkflowCompletionStatus(completionChecklist, true);
+    }
+  }
+
   resetWorkflowNavigation() {
     const newRoute = this.deepCopy(this.currentSession?.workFlowProgress)[0];
     this.saveNonequenceNavigation(newRoute?.workflowProgressId, this.currentSession.workflowSessionId)
