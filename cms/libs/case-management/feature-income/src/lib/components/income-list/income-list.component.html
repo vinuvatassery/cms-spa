@@ -209,12 +209,12 @@
             <label [for]="proofOfSchoolUploaded"> {{ buttondataItem.text }} </label>
           </button> --> 
 
-          <button   kendoButton *ngIf="buttondataItem.id == 'attachfromclient' || buttondataItem.id == 'removefile'"   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
+          <button   kendoButton *ngIf="buttondataItem.id == 'attachfromclient' || (buttondataItem.id == 'removefile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
             <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? 'ReAttach from client attachments' : 'Attach from client attachments' }}  </label>
+            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? 'Reattach from client attachments' : 'Attach from client attachments' }}  </label>
             <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'">{{ buttondataItem.text }}  </label>
         </button>
-          <button  kendoButton  *ngIf="buttondataItem.id == 'proofOfSchoolUploaded' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') "  class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
+          <button  kendoButton  *ngIf="buttondataItem.id == 'proofOfSchoolUploaded' "  class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
             <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
             <label  [for]="proofOfSchoolUploaded"> {{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? 'Reattach fom computer' : 'Attach from computer ' }} </label>
         </button>

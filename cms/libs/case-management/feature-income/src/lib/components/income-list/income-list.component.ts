@@ -251,6 +251,10 @@ onIncomeActionClicked(
     if (event && event.files.length > 0) {
       const formData: any = new FormData();
       let file = event.files[0].rawFile
+      if(dataItem.clientDocumentId){
+        formData.append("clientDocumentId", dataItem.clientDocumentId)
+        // formData.append("clientDocumentId", dataItem.ConcurrencyStamp)
+      }
       formData.append("document", file)
       formData.append("clientId", this.clientId)
       formData.append("clientCaseEligibilityId", this.clientCaseEligibilityId)
