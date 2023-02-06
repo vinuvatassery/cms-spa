@@ -39,6 +39,8 @@ import { CaseManagementFeatureDrugModule } from '@cms/case-management/feature-dr
 import { CaseManagementFeatureManagementModule } from '@cms/case-management/feature-management';
 import { CaseManagementFeatureDocumentModule } from '@cms/case-management/feature-document';
 import { StatusPeriodComponent } from './components/status-period/status-period.component';
+import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
+
 
 @NgModule({
   imports: [
@@ -64,6 +66,7 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
     CaseManagementFeatureDocumentModule,
+    
   ],
   declarations: [
     LastVisitedCasesComponent,
@@ -81,6 +84,7 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
     CaseDetailsSummaryComponent,
     StatusPeriodComponent,
     PageCompletionStatusComponent,
+    AppHistoryListComponent
   ],
   exports: [
     CasePageComponent,
@@ -97,6 +101,7 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
     CaseSummaryComponent,
     CaseDetailsSummaryComponent,
     StatusPeriodComponent,
+    AppHistoryListComponent
   ],
 })
 export class CaseManagementFeatureCaseModule {}

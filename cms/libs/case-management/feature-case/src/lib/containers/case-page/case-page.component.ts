@@ -5,12 +5,10 @@ import { Router } from '@angular/router';
 
 
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab, WorkflowFacade,
-  UserDefaultRoles  } from '@cms/case-management/domain';
-  import {UITabStripScroll} from '@cms/shared/ui-tpa'
+import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles  } from '@cms/case-management/domain';
+import {UITabStripScroll} from '@cms/shared/ui-tpa'
+import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
-
-  import {LovType , LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 @Component({
   selector: 'case-management-case-page',
@@ -19,7 +17,7 @@ import { CaseFacade, CaseScreenTab, WorkflowFacade,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CasePageComponent implements OnInit {
-  /** Public Properties **/
+  /** Public Properties **/ 
   selectedTab: CaseScreenTab = 0;
   isRightReminderBarEnabled = true;
   isNewCaseDialogClicked = false;
@@ -34,7 +32,12 @@ export class CasePageComponent implements OnInit {
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
+  ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;  
+
+  pageSizes = this.caseFacade.gridPageSizes;
+  sortValue  = this.caseFacade.sortValue;
+  sortType  = this.caseFacade.sortType;
+  sort  = this.caseFacade.sort;
  
   /** Constructor**/
     
@@ -51,8 +54,7 @@ export class CasePageComponent implements OnInit {
   }
 
   /** Private methods **/
-  private loadCases(): void {
-    this.caseFacade.loadCases();
+  private loadCases(): void {   
     this.caseFacade.loadCasesForAuthuser();
     this.caseFacade.loadRecentCases();    
       /** methods for case popup **/
@@ -68,13 +70,35 @@ export class CasePageComponent implements OnInit {
   }
 
   /** Internal event methods **/
-  onTabSelected(e: any) {
+  onTabSelected(e: any) {    
     this.selectedTab = e.index;
-    if (this.selectedTab === CaseScreenTab.CER_TRACKING) {
-      this.isRightReminderBarEnabled = false;
-    } else {
+   
+    switch(this.selectedTab) { 
+      case CaseScreenTab.CER_TRACKING: { 
+        this.isRightReminderBarEnabled = false;
+         break; 
+      } 
+      case CaseScreenTab.MY_CASES: { 
+        //associated with the logged in caseworker,
+        this.isRightReminderBarEnabled = true;
+         break; 
+      } 
+      case CaseScreenTab.RECENT: { 
+        //recently worked on by the logged in caseworker
+        this.isRightReminderBarEnabled = true;
+        break; 
+     } 
+     case CaseScreenTab.ALL: { 
+      //All of the clients in the system
       this.isRightReminderBarEnabled = true;
-    }
+      break; 
+     } 
+      default: 
+      { 
+         //statements; 
+         break; 
+      } 
+   } 
   }
 
   onNewCaseDialogOpened() {
@@ -106,4 +130,25 @@ export class CasePageComponent implements OnInit {
   {
     this.caseFacade.loadCaseBySearchText(text);
   }
+
+  loadCasesListEventHandler(gridDataRefinerValue : any)
+  {
+    const gridDataRefiner = 
+    {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount : gridDataRefinerValue.pagesize,
+      sort : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
+    }
+    this.pageSizes = this.caseFacade.gridPageSizes;
+    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);   
+  }
+
+      /** grid event methods **/  
+  
+    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
+     {      
+       this.pageSizes = this.caseFacade.gridPageSizes;
+        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue);
+     }
 }

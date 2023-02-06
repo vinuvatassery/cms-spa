@@ -24,7 +24,7 @@
       >
         people
       </span>
-      Cases
+      My Clients
     </h1>
   </section>
 
@@ -33,24 +33,39 @@
     <!-- Left Tab Section -->
     <div class="app-l-client-left">
       <kendo-tabstrip class="app-c-tab" [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" (tabSelect)="onTabSelected($event)">
-        <kendo-tabstrip-tab title="My Cases" [selected]="selectedTab === caseScreenTab.MY_CASES">
+        <kendo-tabstrip-tab title="My Clients" [selected]="selectedTab === caseScreenTab.MY_CASES">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="myCases$ | async"
+              [cases]="allCases$"
+              [pageSizes]="pageSizes"
+              [sortValue]="sortValue"
+              [sortType]="sortType"
+              [sort]="sort"
+              (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
         </kendo-tabstrip-tab>
         <kendo-tabstrip-tab title="Recent" [selected]="selectedTab === caseScreenTab.RECENT">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="recentCases$ | async"
+              [cases]="allCases$"
+              [pageSizes]="pageSizes"
+              [sortValue]="sortValue"
+              [sortType]="sortType"
+              [sort]="sort"
+              (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
         </kendo-tabstrip-tab>
         <kendo-tabstrip-tab title="All" [selected]="selectedTab === caseScreenTab.ALL">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="allCases$ | async"
+              [cases]="allCases$"
+              [pageSizes]="pageSizes"
+              [sortValue]="sortValue"
+              [sortType]="sortType"
+              [sort]="sort"
+              (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
         </kendo-tabstrip-tab>
