@@ -989,7 +989,6 @@ updateWorkflowCount(data: any){
   }
   dateValidate(event: Event)
   {
-    debugger;
     this.dateValidator=false;
     var signeddate=this.appInfoForm.controls['dateOfBirth'].value;
       var todayDate= new Date();
