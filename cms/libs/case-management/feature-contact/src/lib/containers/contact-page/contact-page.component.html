@@ -431,7 +431,7 @@
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
-              Home Phone Number or Not Applicable selection is required
+              Home Phone is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -504,7 +504,7 @@
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
-              Cell Phone Number or Not Applicable selection is required
+              Cell Phone is required
             </kendo-formerror>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.pattern">
               Not a valid phone number format
@@ -578,7 +578,7 @@
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
-                Work Phone Number or Not Applicable selection is required
+                Work Phone is required
               </kendo-formerror>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
@@ -653,7 +653,7 @@
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
-                Other Phone Number or Not Applicable selection is required
+                Other Phone is required
               </kendo-formerror>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.pattern">
                 Not a valid phone number format
@@ -744,7 +744,10 @@
                 (blur)="loadPreferredContactMethod()" 
                 > </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror *ngIf="email.email.errors?.email">
+              <kendo-formerror *ngIf="email.email.errors?.required">
+                Email Address is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="email.email.errors?.pattern">
                 Not a valid email format
               </kendo-formerror>
             </kendo-formfield>
@@ -885,7 +888,7 @@
         <div class="flex-row" *ngIf="showRelationshipOtherDec">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
-            <kendo-floatinglabel text="Description">
+            <kendo-floatinglabel text="Other Description">
               <kendo-textbox              
               aria-label="other description"
               [fillMode]="formUiStyle.inputFillMode"
@@ -895,7 +898,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="fAfContact.otherDesc.errors?.required">
-              Description is required
+              Other Description is required
             </kendo-formerror>
             <kendo-formerror *ngIf="fAfContact.otherDesc.errors?.pattern">
               Special characters are not allowed

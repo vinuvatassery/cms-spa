@@ -14,7 +14,8 @@ import { NotificationService } from './api/services/notification.service';
 import { LoggingService } from './api/services/logging.service';
 import { ConfigurationProvider } from './api/providers/configuration.provider';
 import { LoaderInterceptor } from './application/http-interceptors/http-loader.interceptor';
-export { ConfigurationProvider, LocalStorageService, NotificationService,LoggingService };
+import { UserProfileService } from './infrastructure/user-profile.service';
+export { ConfigurationProvider, LocalStorageService, NotificationService,LoggingService, UserProfileService };
 
 @NgModule({
   imports: [CommonModule],

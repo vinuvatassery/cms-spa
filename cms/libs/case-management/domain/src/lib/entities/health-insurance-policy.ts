@@ -62,7 +62,7 @@ export class healthInsurancePolicy {
         copyOfSummaryFileTypeCode: string = "";
         copyOfSummaryFileId: string = "";
         copyOfSummaryFilePath: string = "";
-
+        removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
         medicareCardFile: any = null;
         medicareCardFileName: string = "";
         medicareCardFileSize: number | null = null;

@@ -52,7 +52,7 @@ const routes: Routes = [
       ),
     canLoad: [AutoLoginAllRoutesGuard],
   },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'case-management', pathMatch: 'full' },
 ];
 
 @NgModule({
