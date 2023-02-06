@@ -4,10 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Enums **/
-import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
+import { ClientProfile, CommunicationEvents, ScreenType } from '@cms/case-management/domain';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
+import { first, Subject } from 'rxjs';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -18,12 +20,23 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 export class Case360PageComponent implements OnInit {
   /** Private properties **/
   private selectedCase = new BehaviorSubject<any>({});
+  private clientSubject = new Subject<any>();
+  private clientHeaderSubject = new Subject<any>();
+  private clientInfoVisibleSubject = new Subject<any>();
+  private clientHeaderVisibleSubject = new Subject<any>();
+  loadedClient$ = this.clientSubject.asObservable();
+  loadedClientHeader$ = this.clientHeaderSubject.asObservable();
+  clientInfoVisible$ = this.clientInfoVisibleSubject.asObservable();
+  clientHeaderVisible$ = this.clientHeaderVisibleSubject.asObservable();
 
-  /** Public properties **/
+  /** Public properties **/  
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
   ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;
+  userImage$ = this.userManagementFacade.userImage$;
   ddlFamilyAndDependentEP$ = this.caseFacade.ddlFamilyAndDependentEP$;
+  clientProfile$ = this.caseFacade.clientProfile$;
+  clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
@@ -34,6 +47,8 @@ export class Case360PageComponent implements OnInit {
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
+  profileClientId = 0
+  clientCaseEligibilityId! : string;
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public SendActions = [
@@ -74,17 +89,31 @@ export class Case360PageComponent implements OnInit {
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private userManagementFacade : UserManagementFacade 
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.clientInfoVisibleSubject.next(false);
+    this.clientHeaderVisibleSubject.next(false); 
     this.caseSelection();
     this.loadDdlFamilyAndDependentEP();
     this.loadDdlEPEmployments();
+    this.getQueryParams()
   }
 
   /** Private methods **/
+private getQueryParams()
+{  
+  this.profileClientId = this.route.snapshot.params['id']; 
+   
+  if(this.profileClientId > 0)
+  { 
+  this.clientHeaderVisibleSubject.next(true); 
+  }
+}
+
   private caseSelection() {
     this.route.paramMap.subscribe({
       next: (params) => {
@@ -170,5 +199,114 @@ export class Case360PageComponent implements OnInit {
 
   handleIdCardClosed() {
     this.isIdCardOpened = false;
+  }
+
+  loadReadOnlyClientInfoEventHandler()
+  {
+    
+    this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);
+    this.onClientProfileLoad()
+  }
+
+  loadClientProfileInfoEventHandler()
+  {
+    
+    this.caseFacade.loadClientProfileHeader(this.profileClientId);
+    this.onClientProfileHeaderLoad()
+  }
+  onClientProfileHeaderLoad()
+  {  
+    this.clientProfileHeader$?.pipe(first((clientHeaderData: any ) => clientHeaderData?.clientId > 0))
+    .subscribe((clientHeaderData: any) =>
+    {
+      if(clientHeaderData?.clientId > 0)
+      {    
+        
+         const  clientHeader = {
+             
+          clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
+          clientId: clientHeaderData?.clientId,
+          clientCaseId: clientHeaderData?.clientCaseId,
+          urn: clientHeaderData?.urn,
+          caseStatus: clientHeaderData?.caseStatus,
+          group: clientHeaderData?.group,
+          eilgibilityStartDate:clientHeaderData?.eilgibilityStartDate,
+          eligibilityEndDate: clientHeaderData?.eligibilityEndDate,
+          fpl:clientHeaderData?.fpl,
+          clientFullName: clientHeaderData?.clientFullName,       
+          pronouns:  clientHeaderData?.pronouns,
+          clientCaseIdentity : clientHeaderData?.clientCaseIdentity
+         }
+         
+         this.clientHeaderSubject.next(clientHeader);
+         if(clientHeader?.clientCaseEligibilityId)
+         {
+          this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
+          this.clientInfoVisibleSubject.next(true);        
+         }
+      }
+    });
+  }
+  onClientProfileLoad()
+  {     
+    this.clientProfile$?.pipe(first((clientData: any ) => clientData?.clientId > 0))
+    .subscribe((clientData: ClientProfile) =>
+    {
+      if(clientData?.clientId > 0)
+      {    
+        
+         const  client = {
+             
+          clientId   : clientData?.clientId , 
+          firstName   : clientData?.firstName , 
+          middleName   : clientData?.middleName , 
+          lastName   : clientData?.lastName , 
+          caseManagerId   : clientData?.caseManagerId ,
+          caseManagerName   : clientData?.caseManagerName , 
+          caseManagerPNumber   : clientData?.caseManagerPNumber ,
+          caseManagerDomainCode   : clientData?.caseManagerDomainCode ,  
+          caseManagerAssisterGroup   : clientData?.caseManagerAssisterGroup ,  
+          caseManagerEmail   : clientData?.caseManagerEmail , 
+          caseManagerPhone   : clientData?.caseManagerPhone ,  
+          caseManagerFax   : clientData?.caseManagerFax , 
+          caseManagerAddress1   : clientData?.caseManagerAddress1 , 
+          caseManagerAddress2   : clientData?.caseManagerAddress2 ,  
+          caseManagerCity   : clientData?.caseManagerCity ,  
+          caseManagerState   : clientData?.caseManagerState , 
+          caseManagerZip   : clientData?.caseManagerZip ,
+          insuranceFirstName   : clientData?.insuranceFirstName , 
+          insuranceLastName   : clientData?.insuranceLastName , 
+          officialIdFirstName   : clientData?.officialIdFirstName , 
+          officialIdLastName   : clientData?.officialIdLastName ,  
+          dob   : clientData?.dob , 
+          pronouns   : clientData?.pronouns ,
+          genderDescription   : clientData?.genderDescription ,  
+          gender   : clientData?.gender , 
+          ssn   : clientData?.ssn , 
+          clientTransgenderCode   : clientData?.clientTransgenderCode , 
+          clientTransgenderDesc   : clientData?.clientTransgenderDesc , 
+          clientSexualIdentities   : clientData?.clientSexualIdentities ,  
+          otherSexualDesc   : clientData?.otherSexualDesc , 
+          spokenLanguage   : clientData?.spokenLanguage ,  
+          writtenLanguage   : clientData?.writtenLanguage ,  
+          englishProficiency   : clientData?.englishProficiency , 
+          ethnicIdentity   : clientData?.ethnicIdentity , 
+          racialIdentities   : clientData?.racialIdentities , 
+          primaryRacialIdentity   : clientData?.primaryRacialIdentity 
+         }
+         
+         this.clientSubject.next(client);
+        
+      }
+    });
+   
+  }
+
+  getCaseManagerImage(assignedCaseManagerId : any)
+  {   
+      if(assignedCaseManagerId)
+      {
+      this.userManagementFacade.getUserImage(assignedCaseManagerId);
+      }
   }
 }

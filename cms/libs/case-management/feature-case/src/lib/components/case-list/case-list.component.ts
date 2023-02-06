@@ -4,6 +4,9 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
+  Output,
+  EventEmitter,
+  OnChanges,
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
@@ -16,22 +19,23 @@ import { State } from '@progress/kendo-data-query';
   styleUrls: ['./case-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseListComponent implements OnInit {
+export class CaseListComponent implements OnInit, OnChanges {
 
 public isGridLoaderShow = false;
-public sortValue = this.caseFacade.sortValue;
-public sortType = this.caseFacade.sortType;
-public pageSizes = this.caseFacade.gridPageSizes;
-public gridSkipCount = this.caseFacade.skipCount;
-public sort = this.caseFacade.sort;
+
+
 public state!: State;
   /*** Input properties ***/
   @Input() cases: any;
+  @Input() pageSizes : any;
+  @Input() sortValue : any;
+  @Input() sortType : any;
+  @Input() sort : any;
  
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
- 
+  @Output() loadCasesListEvent = new EventEmitter<any>(); 
  
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade) {}
@@ -40,14 +44,41 @@ public state!: State;
   ngOnInit(): void {
     this.loadDdlGridColumns();
   }
-  ngOnChanges(): void {
+  ngOnChanges(): void {    
     this.state = {
-      skip: this.gridSkipCount,
+      skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
- 
+      sort: this.sort
+      };        
+    this.loadProfileCasesList() 
   }
+
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadProfileCasesList()
+  }
+  public dataStateChange(stateData: any): void {         
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field
+    this.sortType = stateData.sort[0]?.dir ?? 'asc'
+    this.state=stateData;
+    this.loadProfileCasesList();   
+}
+  private loadProfileCasesList(): void {   
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)    
+  }
+   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
+   {
+     const gridDataRefinerValue = 
+     {
+       skipCount: skipcountValue,
+       pagesize : maxResultCountValue,
+       sortColumn : sortValue,
+       sortType : sortTypeValue,
+     }
+     this.loadCasesListEvent.next(gridDataRefinerValue)
+   }
 
   /** Private methods **/
   private loadDdlGridColumns() {
