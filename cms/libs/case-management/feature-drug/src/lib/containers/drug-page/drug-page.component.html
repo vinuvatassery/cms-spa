@@ -1,5 +1,5 @@
 <div class="client-data-block">
-  <h3>Prescription drugs</h3>
+  <h3>Prescription Drugs</h3>
   <form [formGroup]="prescriptionDrugForm">
   <section>
    
@@ -163,6 +163,7 @@
         </ng-template> 
       </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="summaryBenefitsValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror *ngIf="showDocRequiredValidation">Summary of Benefits is required</kendo-formerror>
       </div>
     </div>

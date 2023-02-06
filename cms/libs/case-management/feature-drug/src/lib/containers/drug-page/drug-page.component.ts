@@ -40,6 +40,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   sessionId: any = "";
   clientId: any;
   clientCaseId: any;
+  summaryBenefitsValidator: boolean = false;
   isSummaryOfBenefitsRequired$ = new BehaviorSubject<boolean>(false);
   showDocRequiredValidation = false;
   prescriptionInfo = {} as PrescriptionDrug;
@@ -291,9 +292,14 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   /** Internal event methods **/
   handleFileSelected(event: any) {
+    this.summaryBenefitsValidator=false;
     this.summaryBenefitFiles = event.files[0].rawFile;
     this.showDocRequiredValidation = false;
     this.updateWorkflowCount('summary_of_benefits_doc', true);
+    if(this.summaryBenefitFiles.size>26214400) 
+   {
+    this.summaryBenefitsValidator=true;
+   }
   }
 
   handleFileRemoved() {
