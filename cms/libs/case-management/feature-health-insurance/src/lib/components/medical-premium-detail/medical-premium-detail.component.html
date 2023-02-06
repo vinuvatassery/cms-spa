@@ -156,11 +156,13 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="lainsurance id number" placeholder="Insurance ID Number"
-              formControlName="insuranceIdNumber" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
+              formControlName="insuranceIdNumber" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid">Insurance id number is
-            required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded">
+            Insurance id number is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
+            Special characters not allowed.</kendo-formerror>
         </div>
         <div class="flex-col mat-form-sm-b-space">
           <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm"
