@@ -55,6 +55,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   copyOfMedicareCardFiles : any
   lengthRestrictForty = 40;
   isaddNewInsurancePlanOpen: boolean = false;
+  specialCharAdded:boolean=false;
   public uploadRemoveUrl = 'removeUrl';
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -529,6 +530,23 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.othersCoveredOnPlan.controls[i].patchValue({ 'enrolledInInsuranceFlag': event.target.checked ? true : false });
   }
 
+  restrictSpecialChar(event:any)
+  {  
+   var status = ((event.charCode > 64 && event.charCode < 91) || 
+          (event.charCode > 96 && event.charCode < 123) ||
+           event.charCode == 8 || event.charCode == 32 || 
+           (event.charCode >= 48 && event.charCode <= 57) ||
+           event.charCode == 45); 
+           if(status){
+            this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+            this.specialCharAdded = false;
+           }
+           else{
+            this.healthInsuranceForm.controls['insuranceIdNumber'].setErrors({ 'incorrect': true });
+            this.specialCharAdded = true;
+           }
+    return status;
+  }
   private conditionsInsideView() {
     //this.ddlInsuranceType = this.insuranceType;
     this.isOpenDdl = true;
