@@ -80,8 +80,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   partAStartDateCheck = false;
   partBDtartDateCheck = false;
   medicareInsuranceInfoCheck = true;
-  ddlMedicalHealthInsurancePlans$ =
-    this.healthFacade.ddlMedicalHealthInsurancePlans$;
+  // ddlMedicalHealthInsurancePlans$ =
+  //   this.healthFacade.ddlMedicalHealthInsurancePlans$;
   carrierContactInfo = new CarrierContactInfo();
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
@@ -101,6 +101,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   removedPersons: any = [];
   isOpenDdl = false;
   insurancePlans: Array<any> = [];
+  insurancePlansLoader: boolean = false;
   healthInsurancePolicy!: healthInsurancePolicy;
   healthInsurancePolicyCopy!: healthInsurancePolicy;
   metalLevelDefaultValue: any = {};
@@ -160,7 +161,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   ngOnInit(): void {
      this.validateFormMode();
     this.loadLovs();
-    this.loadDdlMedicalHealthInsurancePlans();
+    //this.loadDdlMedicalHealthInsurancePlans();
     this.loadDdlMedicalHealthPlanMetalLevel();
     this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
@@ -195,9 +196,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.reset();
     this.healthInsuranceForm.updateValueAndValidity();
   }
-  private loadDdlMedicalHealthInsurancePlans() {
-    this.healthFacade.loadDdlMedicalHealthInsurancePlans();
-  }  
+  // private loadDdlMedicalHealthInsurancePlans() {
+  //   this.healthFacade.loadDdlMedicalHealthInsurancePlans();
+  // }  
 
   private loadDdlMedicalHealthPlanMetalLevel() {
     this.healthFacade.loadDdlMedicalHealthPlanMetalLevel();
@@ -536,13 +537,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private validateForm() {
-    if(this.healthInsuranceForm.controls['insuranceEndDate'].valid){
-      this.insuranceEndDateIsgreaterthanStartDate = true;
-    }
-    this.isSummaryFileUploaded = true;
-    this.isProofFileUploaded = true;
-    this.isInsuranceFileUploaded = true;
-    this.isMedicareCardFileUploaded = true;
+    // if(this.healthInsuranceForm.controls['insuranceEndDate'].valid){
+    //   this.insuranceEndDateIsgreaterthanStartDate = true;
+    // }
+    // this.isSummaryFileUploaded = true;
+    // this.isProofFileUploaded = true;
+    // this.isInsuranceFileUploaded = true;
+    // this.isMedicareCardFileUploaded = true;
+    const OregonPlanRequiredFields: Array<string> = [
+      'insuranceStartDate',
+      'insuranceIdNumber',
+      'insuranceCarrierName',
+      'insurancePlanName',
+    ];
     const QualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
@@ -563,12 +570,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       'insuranceCarrierName',
       'insurancePlanName',
     ];
-    const OregonPlanRequiredFields: Array<string> = [
-      'insuranceStartDate',
-      'insuranceIdNumber',
-      'insuranceCarrierName',
-      'insurancePlanName',
-    ];
     const GroupPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
@@ -583,57 +584,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       'medicareBeneficiaryIdNbr',
       'medicareCoverageTypeCode',
       'onLisFlag']
-    this.healthInsuranceForm.markAllAsTouched();
-    if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
-      QualifiedHealthPlanRequiredFields.forEach((key: string) => {
-        this.healthInsuranceForm.controls[key].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls[key].updateValueAndValidity();
-      });
-      if (this.healthInsuranceForm.controls['aptcFlag'].value === 'YES') {
-        this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls[
-          'aptcMonthlyAmt'
-        ].updateValueAndValidity();
-      }
-    }
-    if (this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
-      GroupPlanRequiredFields.forEach((key: string) => {
-        this.healthInsuranceForm.controls[key].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls[key].updateValueAndValidity();
-      });
-    }
-    if (this.ddlInsuranceType === HealthInsurancePlan.Cobra) {
-      CobraPlanRequiredFields.forEach((key: string) => {
-        this.healthInsuranceForm.controls[key].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls[key].updateValueAndValidity();
-      });
-      if(this.healthInsuranceForm.controls['insuranceEndDate'].value === null){
-        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
-      }
-    }
-    if (this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan) {
-      OffExchangePlanRequiredFields.forEach((key: string) => {
-        this.healthInsuranceForm.controls[key].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls[key].updateValueAndValidity();
-      });
-      if(this.healthInsuranceForm.controls['insuranceEndDate'].value === null){
-        this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
-      }
-    }
-    if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) {
-      this.medicareInsuranceInfoCheck = false;
-    }
-    if (this.ddlInsuranceType === HealthInsurancePlan.OregonHealthPlan || this.medicareInsuranceInfoCheck) {
+   // this.healthInsuranceForm.markAllAsTouched();
+
+    if (this.ddlInsuranceType === HealthInsurancePlan.OregonHealthPlan) {
       OregonPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -641,137 +594,187 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
     }
-    if (
-      this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan ||
-      this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan
-    ) {
-      this.healthInsuranceForm.controls['metalLevel'].setValidators([
-        Validators.required,
-      ]);
-      this.healthInsuranceForm.controls['metalLevel'].updateValueAndValidity();
-    }
-    if (this.ddlInsuranceType !== HealthInsurancePlan.OregonHealthPlan
-      && this.ddlInsuranceType !== HealthInsurancePlan.Veterans
-      && this.medicareInsuranceInfoCheck) {
-      this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].setValidators([Validators.required]);
-      this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].updateValueAndValidity();
-      if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
-        HelpWithPremiumRequiredFields.forEach((key: string) => {
-          this.healthInsuranceForm.controls[key].setValidators([Validators.required]);
-          this.healthInsuranceForm.controls[key].updateValueAndValidity();
-        });
-      }
-    }
-    if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
-      this.healthInsuranceForm.controls['nextPremiumDueDate'].removeValidators(Validators.required);
-      this.healthInsuranceForm.controls['nextPremiumDueDate'].updateValueAndValidity();
-      MedicarePlanRequiredFields.forEach((key: string) => {
-        this.healthInsuranceForm.controls[key].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls[key].updateValueAndValidity();
-      });
+    // if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
+    //   QualifiedHealthPlanRequiredFields.forEach((key: string) => {
+    //     this.healthInsuranceForm.controls[key].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    //   });
+    //   if (this.healthInsuranceForm.controls['aptcFlag'].value === 'YES') {
+    //     this.healthInsuranceForm.controls['aptcMonthlyAmt'].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls[
+    //       'aptcMonthlyAmt'
+    //     ].updateValueAndValidity();
+    //   }
+    // }
+    // if (this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
+    //   GroupPlanRequiredFields.forEach((key: string) => {
+    //     this.healthInsuranceForm.controls[key].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    //   });
+    // }
+    // if (this.ddlInsuranceType === HealthInsurancePlan.Cobra) {
+    //   CobraPlanRequiredFields.forEach((key: string) => {
+    //     this.healthInsuranceForm.controls[key].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    //   });
+    //   if(this.healthInsuranceForm.controls['insuranceEndDate'].value === null){
+    //     this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
+    //   }
+    // }
+    // if (this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan) {
+    //   OffExchangePlanRequiredFields.forEach((key: string) => {
+    //     this.healthInsuranceForm.controls[key].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    //   });
+    //   if(this.healthInsuranceForm.controls['insuranceEndDate'].value === null){
+    //     this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
+    //   }
+    // }
+    // if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) {
+    //   this.medicareInsuranceInfoCheck = false;
+    // }
 
-      if (this.partAStartDateCheck) {
-        this.healthInsuranceForm.controls['medicarePartAStartDate'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['medicarePartAStartDate'].updateValueAndValidity();
-      }
-      if (this.partBDtartDateCheck) {
-        this.healthInsuranceForm.controls['medicarePartBStartDate'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['medicarePartBStartDate'].updateValueAndValidity();
-      }
-    }
-    if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra  && this.medicareInsuranceInfoCheck
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan) {
-      if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y') {
-        this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].updateValueAndValidity();
-        this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].updateValueAndValidity();
-      }
-    }
-    if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra 
-      && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
-      if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y') {
-        if (this.healthInsuranceForm.value.othersCoveredOnPlan.length == 0) {
-          this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].setValidators([
-            Validators.required,
-          ]);
-          this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
-        }
-      }
-      if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y' 
-      || this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value == 'N'){
-        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
-        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
-      }
-      else{
-        this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators(null);
-        this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
-        this.healthInsuranceForm.controls['policyHolderLastName'].setValidators(null);
-        this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
-      }
-    }
-    if (this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value == StatusFlag.Yes && this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == StatusFlag.Yes
-    && this.ddlInsuranceType === this.InsurancePlanTypes.Medicare && this.medicareInsuranceInfoCheck ) {
-      this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
-        Validators.required,
-      ]);
-      this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
-      this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
-        Validators.required,
-      ]);
-      this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
-    }
-    if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans) {
-      if(this.medicareInsuranceInfoCheck)
-      {
-        this.isInsuranceFileUploaded = (this.copyOfInsuranceCardFiles?.length > 0 && !!this.copyOfInsuranceCardFiles[0].name) ? true : false;
-        if(!this.isInsuranceFileUploaded){
-          this.insuranceCardFilesExceedsFileSizeLimit =false;
-        }
-      }
-      if (this.healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y'
-        && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra
-        && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan) {
-        this.isProofFileUploaded = (this.proofOfPremiumFiles?.length > 0 && !!this.proofOfPremiumFiles[0].name) ? true : false;
-        if(!this.isProofFileUploaded){
-          this.proofOfPremiumExceedsFileSizeLimit = false;
-        }
-      }
-      if(this.ddlInsuranceType === this.InsurancePlanTypes.Cobra || this.ddlInsuranceType === this.InsurancePlanTypes.GroupInsurancePlan){
-        this.isSummaryFileUploaded = (this.copyOfSummaryFiles?.length > 0 && !!this.copyOfSummaryFiles[0].name) ? true : false;
-        if(!this.isSummaryFileUploaded){
-          this.summaryFilesExceedsFileSizeLimit = false;
-        }
-      }
-      if (this.ddlInsuranceType === this.InsurancePlanTypes.Medicare && this.healthInsuranceForm.value.onLisFlag == StatusFlag.Yes)
-      {
-        this.isMedicareCardFileUploaded = (this.copyOfMedicareCardFiles?.length > 0 && !!this.copyOfMedicareCardFiles[0].name) ? true : false;
-        if(!this.isMedicareCardFileUploaded){
-          this.medicareCardFilesExceedsFileSizeLimit = false;
-        }
-      }
+    // if (
+    //   this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan ||
+    //   this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan
+    // ) {
+    //   this.healthInsuranceForm.controls['metalLevel'].setValidators([
+    //     Validators.required,
+    //   ]);
+    //   this.healthInsuranceForm.controls['metalLevel'].updateValueAndValidity();
+    // }
+    // if (this.ddlInsuranceType !== HealthInsurancePlan.OregonHealthPlan
+    //   && this.ddlInsuranceType !== HealthInsurancePlan.Veterans
+    //   && this.medicareInsuranceInfoCheck) {
+    //   this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].setValidators([Validators.required]);
+    //   this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].updateValueAndValidity();
+    //   if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
+    //     HelpWithPremiumRequiredFields.forEach((key: string) => {
+    //       this.healthInsuranceForm.controls[key].setValidators([Validators.required]);
+    //       this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    //     });
+    //   }
+    // }
+    // if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
+    //   this.healthInsuranceForm.controls['nextPremiumDueDate'].removeValidators(Validators.required);
+    //   this.healthInsuranceForm.controls['nextPremiumDueDate'].updateValueAndValidity();
+    //   MedicarePlanRequiredFields.forEach((key: string) => {
+    //     this.healthInsuranceForm.controls[key].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    //   });
 
-    }
+    //   if (this.partAStartDateCheck) {
+    //     this.healthInsuranceForm.controls['medicarePartAStartDate'].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls['medicarePartAStartDate'].updateValueAndValidity();
+    //   }
+    //   if (this.partBDtartDateCheck) {
+    //     this.healthInsuranceForm.controls['medicarePartBStartDate'].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls['medicarePartBStartDate'].updateValueAndValidity();
+    //   }
+    // }
+    // if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
+    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra  && this.medicareInsuranceInfoCheck
+    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan) {
+    //   if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y') {
+    //     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].updateValueAndValidity();
+    //     this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].updateValueAndValidity();
+    //   }
+    // }
+    // if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan
+    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
+    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan
+    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra 
+    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
+    //   if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y') {
+    //     if (this.healthInsuranceForm.value.othersCoveredOnPlan.length == 0) {
+    //       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].setValidators([
+    //         Validators.required,
+    //       ]);
+    //       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
+    //     }
+    //   }
+    //   if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y' 
+    //   || this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value == 'N'){
+    //     this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+    //     this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
+    //       Validators.required,
+    //     ]);
+    //     this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+    //   }
+    //   else{
+    //     this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators(null);
+    //     this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+    //     this.healthInsuranceForm.controls['policyHolderLastName'].setValidators(null);
+    //     this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+    //   }
+    // }
+    // if (this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value == StatusFlag.Yes && this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == StatusFlag.Yes
+    // && this.ddlInsuranceType === this.InsurancePlanTypes.Medicare && this.medicareInsuranceInfoCheck ) {
+    //   this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
+    //     Validators.required,
+    //   ]);
+    //   this.healthInsuranceForm.controls['policyHolderFirstName'].updateValueAndValidity();
+    //   this.healthInsuranceForm.controls['policyHolderLastName'].setValidators([
+    //     Validators.required,
+    //   ]);
+    //   this.healthInsuranceForm.controls['policyHolderLastName'].updateValueAndValidity();
+    // }
+    // if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans) {
+    //   if(this.medicareInsuranceInfoCheck)
+    //   {
+    //     this.isInsuranceFileUploaded = (this.copyOfInsuranceCardFiles?.length > 0 && !!this.copyOfInsuranceCardFiles[0].name) ? true : false;
+    //     if(!this.isInsuranceFileUploaded){
+    //       this.insuranceCardFilesExceedsFileSizeLimit =false;
+    //     }
+    //   }
+    //   if (this.healthInsuranceForm.value.careassistPayingPremiumFlag == 'Y'
+    //     && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra
+    //     && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan) {
+    //     this.isProofFileUploaded = (this.proofOfPremiumFiles?.length > 0 && !!this.proofOfPremiumFiles[0].name) ? true : false;
+    //     if(!this.isProofFileUploaded){
+    //       this.proofOfPremiumExceedsFileSizeLimit = false;
+    //     }
+    //   }
+    //   if(this.ddlInsuranceType === this.InsurancePlanTypes.Cobra || this.ddlInsuranceType === this.InsurancePlanTypes.GroupInsurancePlan){
+    //     this.isSummaryFileUploaded = (this.copyOfSummaryFiles?.length > 0 && !!this.copyOfSummaryFiles[0].name) ? true : false;
+    //     if(!this.isSummaryFileUploaded){
+    //       this.summaryFilesExceedsFileSizeLimit = false;
+    //     }
+    //   }
+    //   if (this.ddlInsuranceType === this.InsurancePlanTypes.Medicare && this.healthInsuranceForm.value.onLisFlag == StatusFlag.Yes)
+    //   {
+    //     this.isMedicareCardFileUploaded = (this.copyOfMedicareCardFiles?.length > 0 && !!this.copyOfMedicareCardFiles[0].name) ? true : false;
+    //     if(!this.isMedicareCardFileUploaded){
+    //       this.medicareCardFilesExceedsFileSizeLimit = false;
+    //     }
+    //   }
+
+    // }
   }
 
   private resetValidators() {
@@ -1087,6 +1090,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.insurancePlans = [];
     this.healthInsuranceForm.controls['insurancePlanName'].setValue('');
     if (value === undefined) return;
+    this.insurancePlansLoader=true;
     this.insurancePlanFacade
       .loadInsurancePlanByProviderId(value)
       .subscribe((data: any) => {
@@ -1098,6 +1102,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
             this.insurancePlanNameDefaultValue
           );
         }
+        this.insurancePlansLoader=false;
+      },
+      (error: any) => {
+        this.insurancePlansLoader=false;
       });
     this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
       next: (data) => {

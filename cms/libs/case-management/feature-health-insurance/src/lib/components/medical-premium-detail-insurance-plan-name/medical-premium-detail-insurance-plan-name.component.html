@@ -4,7 +4,8 @@
         <kendo-combobox   
         aria-label="Insurance Plan Name"
         [fillMode]="formUiStyle.dropDownFillMode" 
-        [disabled]="isViewContentEditable"   
+        [disabled]="isViewContentEditable"
+        [loading] = "insurancePlansLoader"    
         #caseOwnr
         formControlName="insurancePlanName"     
         [data]="insurancePlans"   

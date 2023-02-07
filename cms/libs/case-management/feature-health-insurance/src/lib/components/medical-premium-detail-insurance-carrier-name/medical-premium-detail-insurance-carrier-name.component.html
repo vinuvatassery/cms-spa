@@ -4,10 +4,11 @@
         <kendo-combobox   
         aria-label="Insurance Carrier Name"
         [fillMode]="formUiStyle.dropDownFillMode" 
-        [disabled]="isViewContentEditable"   
+        [disabled]="isViewContentEditable"  
+        [loading] = "isLoading" 
         #caseOwnr
         formControlName="insuranceCarrierName"     
-        [data]="CarrierNames"   
+        [data]="carrierNames"   
         textField="vendorName" 
         valueField="vendorId"
         [valuePrimitive]="true"       

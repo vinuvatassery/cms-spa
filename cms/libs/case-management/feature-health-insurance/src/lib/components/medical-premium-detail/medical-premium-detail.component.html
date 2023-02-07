@@ -128,7 +128,6 @@
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance Start Date">
-            <!-- [(ngModel)]="currentDate" -->
             <kendo-datepicker aria-label="Insurance Start Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" formControlName="insuranceStartDate" [disabled]="isViewContentEditable"
               formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()"
@@ -139,7 +138,6 @@
             required.</kendo-formerror>           
         </div>
         <div class="flex-col flex-col-6">
-          <!-- [(ngModel)]="currentDate" -->
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="endDateMin"(focus)="changeMinDate()"
@@ -155,9 +153,10 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="lainsurance id number" placeholder="Insurance ID Number"
-              formControlName="insuranceIdNumber" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
-            </kendo-textbox>
+            <kendo-numerictextbox (keypress)="restrictSpecialChar($event)" [maxlength]="20" format="0:n0"
+              formControlName="insuranceIdNumber" [disabled]="isViewContentEditable" placeholder="Insurance ID Number"
+              [fillMode]="formUiStyle.inputFillMode" [spinners]="false">
+            </kendo-numerictextbox>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded">
             Insurance id number is required.</kendo-formerror>
@@ -173,7 +172,7 @@
 
         <div class="flex-col mat-form-sm-b-space ">
           <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"
-            [insurancePlans]="insurancePlans"
+            [insurancePlans]="insurancePlans" [insurancePlansLoader]="insurancePlansLoader"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-insurance-plan-name>
         </div>
         <div class="flex-col"
