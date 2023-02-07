@@ -55,6 +55,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   copyOfMedicareCardFiles : any
   lengthRestrictForty = 40;
   isaddNewInsurancePlanOpen: boolean = false;
+  specialCharAdded:boolean=false;
   public uploadRemoveUrl = 'removeUrl';
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -167,7 +168,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.loadHealthInsuranceProofCodes();
     this.healthInsuranceForm.controls["insuranceIdNumber"].valueChanges.subscribe(selectedValue => {
       if (this.healthInsuranceForm.controls['paymentIdNbrSameAsInsuranceIdNbrFlag'].value) {
-        this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
+        this.healthInsuranceForm.controls['paymentIdNbr'].setValue(parseInt(selectedValue) );
       }
     });
   }
@@ -377,8 +378,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       else {
         this.sameAsInsuranceIdFlag = false;
       }
+      
+      const paymentIdNbr=Number(healthInsurancePolicy.paymentIdNbr);
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(
-        healthInsurancePolicy.paymentIdNbr
+        paymentIdNbr
       );
       this.healthInsuranceForm.controls['premiumAmt'].setValue(
         healthInsurancePolicy.premiumAmt
@@ -529,6 +532,23 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.othersCoveredOnPlan.controls[i].patchValue({ 'enrolledInInsuranceFlag': event.target.checked ? true : false });
   }
 
+  restrictSpecialChar(event:any)
+  {  
+   var status = ((event.charCode > 64 && event.charCode < 91) || 
+          (event.charCode > 96 && event.charCode < 123) ||
+           event.charCode == 8 || event.charCode == 32 || 
+           (event.charCode >= 48 && event.charCode <= 57) ||
+           event.charCode == 45); 
+           if(status){
+            this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+            this.specialCharAdded = false;
+           }
+           else{
+            this.healthInsuranceForm.controls['insuranceIdNumber'].setErrors({ 'incorrect': true });
+            this.specialCharAdded = true;
+           }
+    return status;
+  }
   private conditionsInsideView() {
     //this.ddlInsuranceType = this.insuranceType;
     this.isOpenDdl = true;
@@ -662,6 +682,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
+      this.healthInsuranceForm.controls['nextPremiumDueDate'].removeValidators(Validators.required);
+      this.healthInsuranceForm.controls['nextPremiumDueDate'].updateValueAndValidity();
       MedicarePlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -846,7 +868,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           new Date(this.intl.formatDate(this.healthInsuranceForm.controls['nextPremiumDueDate'].value, this.dateFormat));
 
         this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === true ? StatusFlag.Yes : this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === false ? StatusFlag.No : null;
-        this.healthInsurancePolicy.paymentIdNbr = this.healthInsuranceForm.controls["paymentIdNbr"].value;
+        this.healthInsurancePolicy.paymentIdNbr =this.healthInsuranceForm.controls["paymentIdNbr"].value;
         this.healthInsurancePolicy.premiumAmt = this.healthInsuranceForm.controls["premiumAmt"].value;
       }
       else if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === StatusFlag.No){
@@ -1068,7 +1090,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.sameAsInsuranceIdFlag = true;
-      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(this.healthInsuranceForm.controls['insuranceIdNumber'].value);
+      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(parseInt(this.healthInsuranceForm.controls['insuranceIdNumber'].value) );
     }
     else {
       this.sameAsInsuranceIdFlag = false;
