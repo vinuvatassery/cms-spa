@@ -91,13 +91,13 @@
           [sticky]="true"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome | kendoNumber: 'n2'}}</span>
         </ng-template>
           <ng-template
             kendoGridFooterTemplate
             let-column
             let-columnIndex="columnIndex"  >
-          <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span> 
+          <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span>
           </ng-template>
 
         </kendo-grid-column>

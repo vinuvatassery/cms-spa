@@ -1265,7 +1265,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       homeAddressGroup?.controls['city']?.enable();
       homeAddressGroup?.controls['state']?.setValue(StatesInUSA.Oregon);
-      this.isHomeAddressStateOregon$.next(false);
+      this.isHomeAddressStateOregon$.next(true);
     }
     this.isNoMailAddressValidationRequired =false;
   }
