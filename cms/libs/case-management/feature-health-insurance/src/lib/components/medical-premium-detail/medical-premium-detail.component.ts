@@ -1040,6 +1040,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.isDeleteEnabled = true;
     this.isEdit = true;
     this.buttonText = 'Update';
+    this.editRedirect.next('edit');
     this.disableEnableRadio();
   }
 
