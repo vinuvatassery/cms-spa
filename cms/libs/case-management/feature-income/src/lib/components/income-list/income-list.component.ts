@@ -261,8 +261,8 @@ onIncomeActionClicked(
       const formData: any = new FormData();
       let file = event.files[0].rawFile
       if(dataItem.clientDocumentId){
-        formData.append("clientDocumentId", dataItem.clientDocumentId)
-        // formData.append("clientDocumentId", dataItem.ConcurrencyStamp)
+        formData.append("clientDocumentId", dataItem.clientDocumentId);
+        formData.append("concurrencyStamp", dataItem.documentConcurrencyStamp);
       }
       formData.append("document", file)
       formData.append("clientId", this.clientId)
