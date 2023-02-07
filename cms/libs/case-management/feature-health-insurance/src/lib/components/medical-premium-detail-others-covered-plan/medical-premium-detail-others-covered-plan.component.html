@@ -1,0 +1,118 @@
+<div [formGroup]="healthInsuranceForm">
+    <fieldset class="k-form-fieldset">
+        <legend class="k-form-legend">
+            <h5>Are others covered on the plan?</h5>
+        </legend>
+        <div class="component-list-h">
+            <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton name="othersCoveredOnPlanFlag"
+                    aria-labelledby="othersCoveredOnThePlanYes" id="othersCoveredOnThePlanYes"
+                    formControlName="othersCoveredOnPlanFlag" value="Y" tabindex="9" />
+                <kendo-label class="k-radio-label" for="othersCoveredOnThePlanYes" text="Yes"></kendo-label>
+            </span>
+            <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton name="othersCoveredOnPlanFlag"
+                    aria-labelledby="othersCoveredOnThePlanNo" for="othersCoveredOnThePlanNo"
+                    id="othersCoveredOnThePlanNo" value="N" formControlName="othersCoveredOnPlanFlag" tabindex="10" />
+                <kendo-label class="k-radio-label" for="othersCoveredOnThePlanNo" text="No"></kendo-label>
+            </span>
+            <kendo-formerror
+                *ngIf="!healthInsuranceForm.controls['othersCoveredOnPlanFlag'].valid && isViewContentEditable==false">Others
+                covered on the plan flag is required.</kendo-formerror>
+        </div>
+    </fieldset>
+
+    <div class="flex-col mt-2" *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+        <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend">
+                <h5>Others covered on the plan(Select all that apply)</h5>
+            </legend>
+            <div class="component-list-h" formArrayName="othersCoveredOnPlan">
+                <div *ngFor="let person of othersCoveredOnPlan.controls; let i=index">
+                    <div class="flex-row pl-3 mt-2" [formGroupName]="i">
+                        <span class="app-checkboxwidtext-wrapper">
+                            <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
+                                formControlName="enrolledInInsuranceFlag" (change)="updateEnrollStatus($event, i)"
+                                aria-labelledby="othersCoverdSelect" id="othersCoverdSelect{{i}}"
+                                name={{person.value.firstName}}{{-person.value.lastName}} />
+                            <label class="k-checkbox-label" for="othersCoverdSelect">{{person.value.firstName}}
+                                {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div formArrayName="newOthersCoveredOnPlan"
+        *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+        <div *ngFor="let person of newOthersCoveredOnPlan.controls; let i=index">
+            <div class="flex-row pl-3 mt-2" [formGroupName]="i">
+                <div class="flex-col d-flex align-iems-center justify-content-between">
+                    <h5 class="mb-0">Person {{i+1}}</h5>
+                    <button kendoButton class="card-link-button no-ul text-bold k-danger-link"
+                        aria-label="delete person" (click)="removePerson(i)">
+                        DELETE PERSON
+                    </button>
+                </div>
+                <div class="flex-col">
+                    <kendo-floatinglabel text="Relationship to Client">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+                            aria-label="Relationship to Client" [disabled]="isViewContentEditable"
+                            [data]="relationshipDescriptionList" formControlName="relationshipDescription">
+                        </kendo-dropdownlist>
+                        <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
+                  && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].relationshipDescription
+                  && getPersonControl(i, 'relationshipDescription')?.touched
+                  && isViewContentEditable==false">Relationship description is
+                            required.</kendo-formerror>
+                    </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="First Name">
+                        <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
+                            placeholder="First Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="40"
+                            formControlName="firstName"> </kendo-textbox>
+                        <kendo-formerror *ngIf="healthInsuranceForm.value.othersCoveredOnPlanFlag == 'Y'
+                     && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].firstName
+                     && getPersonControl(i, 'firstName')?.touched
+                     && isViewContentEditable==false">First name is
+                            required.</kendo-formerror>
+                    </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Last Name">
+                        <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
+                            [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="40">
+                        </kendo-textbox>
+                        <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
+                     && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].lastName
+                     && getPersonControl(i, 'firstName')?.touched
+                     && isViewContentEditable==false">Last name is
+                            required.</kendo-formerror>
+                    </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Date of birth">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Date of birth"
+                            format="MM-dd-yyyy" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
+                            formControlName="dob">
+                            <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
+                     && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].dob
+                     && getPersonControl(i, 'dob')?.touched
+                     && isViewContentEditable==false">Date of birth is
+                                required.</kendo-formerror>
+                        </kendo-datepicker>
+                    </kendo-floatinglabel>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
+        <div class="flex-col" *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+          <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
+            aria-label="add new person">
+            <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
+          </button>
+        </div>
+      </div>
+</div>
