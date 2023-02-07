@@ -44,15 +44,15 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.loadDdlMedicalHealthPlanPriority();
     if (this.gridList.length > 3) {
       this.gridList.length = 3;
-
-      this.gridList.forEach((row: any) => {
-        this.form.addControl(
-          row.clientInsurancePolicyId,
-          new FormControl(row.priorityCode, Validators.required)
-        );
-      });
-      this.cdr.detectChanges();
     }
+    this.gridList.forEach((row: any) => {
+      this.form.addControl(
+        row.clientInsurancePolicyId,
+        new FormControl(row.priorityCode, Validators.required)
+      );
+    });
+    this.cdr.detectChanges();
+
   }
 
   /** Private methods **/
@@ -66,29 +66,29 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
-      this.insuranceDateOverlapCheck(insurance,value,'There cannot be two Primary Insurance Policies with overlapping date ranges.');
-      
+      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
+
     }
     else if (value === PriorityCode.Secondary) {
-      this.insuranceDateOverlapCheck(insurance,value,'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
+      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
   }
-  insuranceDateOverlapCheck(insurance:any,priorityCode:string,errorMessage:string){
+  insuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
     const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode);
     if (primarySelections.length === 2) {
-      const primeryStartDate=new Date(primarySelections[0].startDate);
-      const primeryEndDate=new Date(primarySelections[0].endDate);
+      const primeryStartDate = new Date(primarySelections[0].startDate);
+      const primeryEndDate = new Date(primarySelections[0].endDate);
 
-      const primeryStartDate2=new Date(primarySelections[1].startDate);
-      const primeryEndDate2=new Date(primarySelections[1].endDate);
-      if (this.dateRangeOverlaps(primeryStartDate,primeryEndDate,primeryStartDate2,primeryEndDate2)) {
+      const primeryStartDate2 = new Date(primarySelections[1].startDate);
+      const primeryEndDate2 = new Date(primarySelections[1].endDate);
+      if (this.dateRangeOverlaps(primeryStartDate, primeryEndDate, primeryStartDate2, primeryEndDate2)) {
         this.notificationSnackbarService.errorSnackBar(errorMessage);
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
-        insurance.priorityCode=null;
+        insurance.priorityCode = null;
         return;
       }
     }
@@ -96,7 +96,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   }
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
     if (aStart <= bStart && bStart <= aEnd) return true;
-    if (aStart <= bEnd && bEnd <= aEnd) return true; 
+    if (aStart <= bEnd && bEnd <= aEnd) return true;
     if (bStart < aStart && aEnd < bEnd) return true;
     return false;
   }
