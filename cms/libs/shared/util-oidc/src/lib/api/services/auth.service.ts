@@ -9,7 +9,7 @@ import {
   PublicEventsService,
 } from 'angular-auth-oidc-client';
 import { filter } from 'rxjs/operators';
-
+import { UserProfileService } from '@cms/shared/util-core';
 @Injectable({
   providedIn: 'root',
 })
@@ -21,12 +21,15 @@ export class AuthService {
   /** Constructor **/
   constructor(
     public readonly oidcSecurityService: OidcSecurityService,
-    public readonly eventService: PublicEventsService
+    public readonly eventService: PublicEventsService,
+    public readonly userProfileService: UserProfileService
   ) {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated, allConfigsAuthenticated }) => {
         this.authenticated = isAuthenticated;
-
+        if(this.authenticated){
+          this.userProfileService.getUserProfile();
+        }
         //console.warn('authenticated: ', isAuthenticated);
       }
     );

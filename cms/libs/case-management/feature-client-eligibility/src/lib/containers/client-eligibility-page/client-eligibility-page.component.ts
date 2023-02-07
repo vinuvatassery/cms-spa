@@ -14,7 +14,7 @@ import {
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { ReviewQuestionResponseFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag } from '@cms/case-management/domain';
 import {
   WorkflowFacade,
 } from '@cms/case-management/domain';
@@ -72,10 +72,35 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  private createWorkflowChecklist(value: any){
+    const completionChecklist: CompletionChecklist[] = [];
+      if(value){
+        value?.forEach((que:any) => {
+          let isAllChildQueAnswered = true;
+          if(que?.responseAnswerId && que?.childQuestions?.length > 0){
+            var isChildRespRequired = que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
+            if(isChildRespRequired){
+              isAllChildQueAnswered = que?.childQuestions?.findIndex((chdQue:any) => chdQue?.responseAnswerId != undefined) !== -1;
+            }
+          }
+          const item: CompletionChecklist = {
+            dataPointName: que?.reviewQuestionId,
+            status: que?.responseAnswerId && isAllChildQueAnswered === true ? StatusFlag.Yes :  StatusFlag.No
+          };
+          completionChecklist.push(item);
+        });
+
+        if(completionChecklist?.length > 0){
+          this.workflowFacade.replaceChecklist(completionChecklist);
+        }
+      }
+  }
+
 
 
   getQuestionsResponse(value: any) {
     this.questoinsResponse = value;
+    this.createWorkflowChecklist(value);
   }
 
   private save() {

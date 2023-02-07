@@ -104,7 +104,7 @@ export class SendLetterProfileComponent implements OnInit {
       },
     });
   }
-  getCaseWorkerImage(assignedCaseWorkerId : string)
+  getCaseWorkerPhoto(assignedCaseWorkerId : any)
    {
       if(assignedCaseWorkerId)
       {

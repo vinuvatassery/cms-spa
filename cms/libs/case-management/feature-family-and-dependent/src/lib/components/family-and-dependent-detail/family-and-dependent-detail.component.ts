@@ -83,11 +83,9 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
-    this.composeFamilyMemberForm();
-    this.loadFamilyDependents();   
-    this.loadNewFamilyMemberData();  
-    this.composeExistFamilyMemberForm()
+  ngOnInit(): void {     
+    this.composeFamilyMemberForm();   
+    this.loadNewFamilyMemberData();     
     this.updateRelationshipList();
   }
 
@@ -95,17 +93,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   private loadNewFamilyMemberData()
   {    
     this.isExistDependent =false;
-    this.isOpenedNewFamilyMember =false;   
-    if(this.dependentTypeCodeSelected== DependentTypeCode.Dependent)
-    {
-      
-    this.onNewFamilyMemberClicked()
-    }
-    else
-    {
-     
-      this.onExistingFamilyMemberLoad()
-    }
+    this.isOpenedNewFamilyMember =false;  
+    this.onNewFamilyMemberClicked()   
   }
 
 
