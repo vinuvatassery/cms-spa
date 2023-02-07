@@ -32,7 +32,6 @@ export class AcceptApplicationComponent implements OnInit {
   acceptedApplication= new AcceptedApplication();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   caseOwners$ = this.loginUserFacade.usersByRole$;
-  isSave= false;
   @Input() clientCaseId: string = '';
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
@@ -74,11 +73,12 @@ export class AcceptApplicationComponent implements OnInit {
     this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
   }
   private buildForm() {
+    const now = !this.isEdit? new Date(): '';
     this.eligibilityForm = this.formBuilder.group({
-      caseStatusCode: ['', Validators.required],
-      groupCode: ['', Validators.required],
-      eligibilityStartDate: ['', Validators.required],
-      eligibilityEndDate: ['', Validators.required],
+      caseStatusCode: [''],
+      groupCode: [''],
+      eligibilityStartDate: [now],
+      eligibilityEndDate: [''],
       assignedCwUser:['']
     });
 
@@ -87,7 +87,7 @@ export class AcceptApplicationComponent implements OnInit {
   }
   save()
   {
-    this.isSave = true
+    this.setValidators();
     if (this.eligibilityForm.valid) {
       this.populateEligibility();
       this.loaderService.show();
@@ -126,6 +126,23 @@ export class AcceptApplicationComponent implements OnInit {
     });
     }
   }
+  setValidators()
+  {
+    this.eligibilityForm.markAllAsTouched();
+    this.eligibilityForm.controls['caseStatusCode'].setValidators([Validators.required,]);
+    this.eligibilityForm.controls['groupCode'].setValidators([Validators.required,]);
+    this.eligibilityForm.controls['eligibilityStartDate'].setValidators([Validators.required,]);
+    this.eligibilityForm.controls['eligibilityEndDate'].setValidators([Validators.required,]);
+    this.eligibilityForm.controls['caseStatusCode'].updateValueAndValidity();
+    this.eligibilityForm.controls['groupCode'].updateValueAndValidity();
+    this.eligibilityForm.controls['eligibilityStartDate'].updateValueAndValidity();
+    this.eligibilityForm.controls['eligibilityEndDate'].updateValueAndValidity();
+    var endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
+    var startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;
+    if(endDate<=startDate && this.eligibilityForm.controls['eligibilityEndDate'].value ){
+      this.eligibilityForm.controls['eligibilityEndDate'].setErrors({'incorrect':true})
+    }
+  }
   populateEligibility()
   {
     this.acceptedApplication.clientCaseId = this.clientCaseId;
@@ -150,6 +167,7 @@ export class AcceptApplicationComponent implements OnInit {
 
     }
     this.assignEnddate();
+
   }
 
   assignEnddate()
@@ -158,27 +176,31 @@ export class AcceptApplicationComponent implements OnInit {
     {
       if(this.eligibilityForm.controls['eligibilityStartDate'].value)
       {
-        const startdate = new Date(this.intl.formatDate(this.eligibilityForm.controls['eligibilityStartDate'].value,this.dateFormat));
+        const startdate = new Date(this.eligibilityForm.controls['eligibilityStartDate'].value);
         let enddate = startdate.setMonth(startdate.getMonth() + 6);
-        this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(enddate));
+        //this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(enddate));
+        const endDateValue = new Date(enddate);
+        const newEndDateValue = new Date(endDateValue.getFullYear(), endDateValue.getMonth() + 1, 0)
+        this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(newEndDateValue));
       }
+
     }
     else if (this.eligibilityForm.controls['groupCode'].value === GroupCode.BRIDGE)
     {
       if(this.eligibilityForm.controls['eligibilityStartDate'].value)
       {
-        const startdate = new Date(this.intl.formatDate(this.eligibilityForm.controls['eligibilityStartDate'].value,this.dateFormat));
+        const startdate = new Date(this.eligibilityForm.controls['eligibilityStartDate'].value);
         let enddate = startdate.setDate(startdate.getDate() + 30);
         this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(enddate));
       }
     }
-    else if (this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value !== CaseStatusCode.accept)
-    {
-      if(this.eligibilityForm.controls['eligibilityStartDate'].value)
-      {
-        this.eligibilityForm.controls['eligibilityEndDate'].setValue(null);
-      }
-    }
+    // else if (this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value !== CaseStatusCode.accept)
+    // {
+    //   if(this.eligibilityForm.controls['eligibilityStartDate'].value)
+    //   {
+    //     this.eligibilityForm.controls['eligibilityEndDate'].setValue(null);
+    //   }
+    // }
   }
   loaddata()
   {

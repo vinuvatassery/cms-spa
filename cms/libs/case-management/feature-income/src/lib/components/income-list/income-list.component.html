@@ -3,7 +3,7 @@
   <div class="flex-col">
     <div class="app-c-table" *ngIf="!hasNoIncome">
       <kendo-grid [data]="incomes$ | async"[pageSize]="state.take" [pageable]="true"
-      [sortable]="false" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
+      [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
         <kendo-grid-column
           field="incomeSourceCodeDesc"
@@ -23,7 +23,7 @@
         <kendo-grid-column
           field="incomeAmt"
           title="Amount"
-          [width]="130"
+          [width]="130"          
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           <span class="tableamountview"> <strong>$</strong> {{dataItem.incomeAmt}}</span>
@@ -56,6 +56,7 @@
           field="ProofofIncome"
           title="Proof of Income"
           [width]="150"
+          [sortable]="false"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
@@ -72,6 +73,7 @@
           title="Financial Justification or Income note"
           [width]="150"
           [sticky]="true"
+          [sortable]="false"
         >
           <ng-template
             kendoGridFooterTemplate
@@ -89,13 +91,13 @@
           [sticky]="true"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome | kendoNumber: 'n2'}}</span>
         </ng-template>
           <ng-template
             kendoGridFooterTemplate
             let-column
             let-columnIndex="columnIndex"  >
-          <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span> 
+          <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span>
           </ng-template>
 
         </kendo-grid-column>

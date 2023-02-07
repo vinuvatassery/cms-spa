@@ -65,7 +65,7 @@
               #incomeEndDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          
+
 
         </div>
         <div class="flex-col justify-content-between align-items-center ">
@@ -89,9 +89,9 @@
             #incomeUploadedProof [ngModel]="uploadedIncomeFile" [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl">
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
               <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-                <span>{{ files[0].name }} </span> 
+                <span>{{ files[0].name }} </span>
                 <br>
-                <span>{{   files[0].size  }}</span> 
+                <span>{{   files[0].size  }}</span>
               </span>
             </ng-template>
           </kendo-upload>
@@ -113,8 +113,8 @@
         </div>
 
         <div class="flex-col" *ngIf="!hasNoProofOfIncome && incomeTypesOther === 'O'">
-          <kendo-floatinglabel text="Name of other Proof">
-            <kendo-textbox  placeholder="Name of other Proof" [fillMode]="formUiStyle.dropDownFillMode" aria-label="Other income" name="Other income"
+          <kendo-floatinglabel text="Other Proof of Income Type">
+            <kendo-textbox  placeholder="Other Proof of Income Type" [fillMode]="formUiStyle.dropDownFillMode" aria-label="Other income" name="Other income"
               formControlName="otherDesc" #otherDesc>
             </kendo-textbox>
           </kendo-floatinglabel>

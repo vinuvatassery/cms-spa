@@ -156,11 +156,13 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="lainsurance id number" placeholder="Insurance ID Number"
-              formControlName="insuranceIdNumber" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
+              formControlName="insuranceIdNumber" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid">Insurance id number is
-            required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded">
+            Insurance id number is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
+            Special characters not allowed.</kendo-formerror>
         </div>
         <div class="flex-col mat-form-sm-b-space">
           <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm"
@@ -288,9 +290,12 @@
               </div>
               <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
-                  <kendo-textbox [maxlength]="20" formControlName="paymentIdNbr"
-                    [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" aria-label="payment id number" placeholder="Payment ID Number"
-                    [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  <kendo-numerictextbox [maxlength]="20"
+                  format="0:n0"
+                  formControlName="paymentIdNbr"
+                    [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" placeholder="Payment ID Number"
+                    [fillMode]="formUiStyle.inputFillMode" [spinners]="false">
+                  </kendo-numerictextbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is
                   required.</kendo-formerror>
@@ -366,7 +371,8 @@
         <div formArrayName="newOthersCoveredOnPlan" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
         && ddlInsuranceType !== InsurancePlanTypes.Cobra
         && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
-        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
+        && ddlInsuranceType !== InsurancePlanTypes.Medicare
+        && healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
           <div *ngFor="let person of newOthersCoveredOnPlan.controls; let i=index">
             <div class="flex-row pl-3 mt-2" [formGroupName]="i">
               <div class="flex-col d-flex align-iems-center justify-content-between">
@@ -434,7 +440,7 @@
             && ddlInsuranceType !== InsurancePlanTypes.Cobra
             && ddlInsuranceType !== InsurancePlanTypes.GroupInsurancePlan
             && ddlInsuranceType !== InsurancePlanTypes.Medicare
-          ">
+            && healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
             <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
               aria-label="add new person">
               <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
@@ -472,7 +478,8 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"
-              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"> </kendo-textbox>
+              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"
+              [maxlength]=policyHolderInputMaxLength> </kendo-textbox>
             <kendo-formerror
               *ngIf="!healthInsuranceForm.controls['policyHolderFirstName'].valid && isViewContentEditable==false">First
               Name is
@@ -482,7 +489,8 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder Last Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
-              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName">
+              [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName"
+              [maxlength]=policyHolderInputMaxLength>
             </kendo-textbox>
             <kendo-formerror *ngIf="!healthInsuranceForm.controls['policyHolderLastName'].valid">Last Name is
               required.</kendo-formerror>

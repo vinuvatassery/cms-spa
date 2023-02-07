@@ -459,10 +459,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }
     }
 
-    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) {
-      emailGroup.controls['email'].setValidators([Validators.email]);
+    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
+      emailGroup.controls['email'].setValidators([Validators.required, Validators.email]);
       emailGroup.controls['email'].updateValueAndValidity();
     }
+    
     if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
       ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
       ffContactGroup.controls['contactName'].updateValueAndValidity();
@@ -1264,7 +1265,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       homeAddressGroup?.controls['city']?.enable();
       homeAddressGroup?.controls['state']?.setValue(StatesInUSA.Oregon);
-      this.isHomeAddressStateOregon$.next(false);
+      this.isHomeAddressStateOregon$.next(true);
     }
     this.isNoMailAddressValidationRequired =false;
   }
@@ -1436,7 +1437,12 @@ private addSaveForLaterSubscription(): void {
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.router.navigate([`/case-management/cases/case360/${this.workflowFacade.clientCaseId}`])
+        if(statusResponse){
+          this.workflowFacade.showSendEmailLetterPopup(true);
+        }
+        else{
+          this.router.navigate([`/case-management/cases/case360/${this.workflowFacade.clientCaseId}`])
+        }
       }
     });
   }
