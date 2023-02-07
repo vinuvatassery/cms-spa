@@ -45,7 +45,6 @@ import { SsnPipe, PhonePipe } from '@cms/shared/ui-common';
 export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestroy {
   currentDate = new Date();
   buttonText: string = 'Add';
-  clientId: any;
   clientCaseEligibilityId: string = "";
   clientCaseId: any;
   RelationshipLovs$ = this.lovFacade.lovRelationShip$;
@@ -59,11 +58,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   public uploadRemoveUrl = 'removeUrl';
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  public uploadFileSizeLimit =this.configurationProvider.appSettings.uploadFileSizeLimit;
+  
   /** Input properties **/
   @Input() dialogTitle!: string;
   @Input() insuranceType!: string;
   @Input() healthInsuranceForm: FormGroup;
-  public uploadFileSizeLimit =this.configurationProvider.appSettings.uploadFileSizeLimit;
+  @Input() caseEligibilityId:any;
+  @Input() clientId:any;
 
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
@@ -156,8 +158,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.validateFormMode();
-    this.loadSessionData();
+     this.validateFormMode();
     this.loadLovs();
     this.loadDdlMedicalHealthInsurancePlans();
     this.loadDdlMedicalHealthPlanMetalLevel();
@@ -176,7 +177,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   ngOnDestroy(): void {
     (this.healthInsuranceForm.controls['othersCoveredOnPlan'] as FormArray).clear();
-    this.loadSessionSubscription.unsubscribe();
   }
   /** Private methods **/
   private loadLovs() {
@@ -197,26 +197,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   private loadDdlMedicalHealthInsurancePlans() {
     this.healthFacade.loadDdlMedicalHealthInsurancePlans();
-  }
-  private loadSessionData() {
-    this.sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkFlowSessionData(this.sessionId);
-    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$
-      .pipe(first((sessionData) => sessionData.sessionData != null))
-      .subscribe((session: any) => {
-        if (
-          session !== null &&
-          session !== undefined &&
-          session.sessionData !== undefined
-        ) {
-          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
-          this.clientCaseEligibilityId = JSON.parse(
-            session.sessionData
-          ).clientCaseEligibilityId;
-          this.clientId = JSON.parse(session.sessionData).clientId;
-        }
-      });
-  }
+  }  
 
   private loadDdlMedicalHealthPlanMetalLevel() {
     this.healthFacade.loadDdlMedicalHealthPlanMetalLevel();
@@ -799,7 +780,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
     });
   }
-  private resetData() {      
+  private resetData() {  
+    this.copyOfMedicareCardFiles = null;
+    this.copyOfInsuranceCardFiles = null;
+    this.copyOfInsuranceCardFiles = null
+    this.proofOfPremiumFiles = null;
     this.handleFileRemoved(this.copyOfMedicareCardFiles,'medicareCard');
     this.handleFileRemoved(this.copyOfInsuranceCardFiles,'copyInsurance');
     this.handleFileRemoved(this.copyOfInsuranceCardFiles,'summary');
@@ -1095,7 +1080,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     else {
       this.sameAsInsuranceIdFlag = false;
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(null);
-      //this.healthInsuranceForm.controls['paymentIdNbr'].enable();
     }
   }
   insuranceCarrierNameChange(value: string) {
@@ -1114,21 +1098,17 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           );
         }
       });
-    this.loaderService.show();
     this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
       next: (data) => {
         this.carrierContactInfo = data;
         this.changeDetector.detectChanges();
-        this.loaderService.hide();
       },
       error: (err) => {
-        this.loaderService.hide();
         if (err) {
           this.insurancePolicyFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
             err
           );
-          this.insurancePolicyFacade.hideLoader(); 
         }
       },
     });

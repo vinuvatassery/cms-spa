@@ -35,6 +35,8 @@ export class MedicalPremiumListComponent implements OnInit {
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
   @Input() closeDeleteModal: boolean = false;
+  @Input() caseEligibilityId: any;
+  @Input() clientId:any;
 
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
@@ -127,7 +129,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
   handleHealthInsuranceCloseClicked() {
     this.isOpenedHealthInsuranceModal = false;
-    this.loadInsurancePolicies();
+    //this.loadInsurancePolicies();
   }
 
   handleHealthInsuranceOpenClicked(value: string) {

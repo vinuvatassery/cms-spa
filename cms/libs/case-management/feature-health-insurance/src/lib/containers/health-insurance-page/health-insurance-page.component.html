@@ -100,7 +100,11 @@
 
         <div *ngIf="showTable"  class="flex-col">
           <h5 class="text-capital">Insurance Plans</h5>         
-          <case-management-medical-premium-list  [healthInsuranceForm]="healthInsuranceForm" [closeDeleteModal]="closeDeleteModal" (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)" (deleteInsurancePlan)="delteInsurancePolicy($event)" >
+          <case-management-medical-premium-list  [healthInsuranceForm]="healthInsuranceForm" 
+            [caseEligibilityId]="clientCaseEligibilityId" 
+            [clientId]="clientId"
+            [closeDeleteModal]="closeDeleteModal" (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)" 
+            (deleteInsurancePlan)="delteInsurancePolicy($event)" >
           </case-management-medical-premium-list>
         </div>
 

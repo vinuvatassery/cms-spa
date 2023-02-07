@@ -40,16 +40,13 @@ public isaddNewInsuranceProviderOpen =false;
   }
 
   private loadInsuranceCarrierName() {
-    this.loaderService.show();
     this.vendorFacade.loadAllVendors().subscribe(
       (data: any) => {
         if (!Array.isArray(data)) return;
         this.CarrierNames = data.sort((a: any, b: any) => (a.vendorName > b.vendorName) ? 1 : ((b.vendorName > a.vendorName) ? -1 : 0));
         this.insuranceCarrierNameData.emit(this.CarrierNames);
-        this.loaderService.hide();
       },
       (error: any) => {
-        this.loaderService.hide();
       }
     );
   }
