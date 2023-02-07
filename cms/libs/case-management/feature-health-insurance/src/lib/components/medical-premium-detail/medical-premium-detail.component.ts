@@ -519,6 +519,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private validateForm() {
+    this.healthInsuranceForm.markAllAsTouched();
     // if(this.healthInsuranceForm.controls['insuranceEndDate'].valid){
     //   this.insuranceEndDateIsgreaterthanStartDate = true;
     // }
@@ -591,6 +592,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         qualifiedHealthPlanRequiredFields.push(...careassistPayingRequiredFields);
       }
+      else{
+         careassistPayingRequiredFields.forEach((key:string)=>{
+          this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
+          this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        })
+      }
       qualifiedHealthPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -605,6 +612,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           'aptcMonthlyAmt'
         ].updateValueAndValidity();
       }
+      else{
+        this.healthInsuranceForm.controls['aptcMonthlyAmt'].removeValidators(Validators.required);
+        this.healthInsuranceForm.controls['aptcMonthlyAmt'].updateValueAndValidity()
+      }
+     
     }
 
     if (this.ddlInsuranceType === this.InsurancePlanTypes.QualifiedHealthPlan) {
@@ -924,17 +936,17 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         (this.healthInsurancePolicy.oonException = 0),
         (this.healthInsurancePolicy.oonStartDate = new Date());
       this.healthInsurancePolicy.oonEndDate = new Date();
-      this.healthInsurancePolicy.oonPharmacy = 'string';
-      this.healthInsurancePolicy.oonDrugs = 'string';
+      this.healthInsurancePolicy.oonPharmacy = null;
+      this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
       this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
-      if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
-        this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
-          x.relationshipCode = this.relationshipList.filter(
-            (y: any) => y.lovDesc == x.relationshipDescription)[0].lovCode;
-        });
-        this.healthInsurancePolicy.othersCoveredOnPlan.push(...this.healthInsuranceForm.value.newOthersCoveredOnPlan);
-      }
+      // if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
+      //   this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
+      //     x.relationshipCode = this.relationshipList.filter(
+      //       (y: any) => y.lovDesc == x.relationshipDescription)[0].lovCode;
+      //   });
+      //   this.healthInsurancePolicy.othersCoveredOnPlan.push(...this.healthInsuranceForm.value.newOthersCoveredOnPlan);
+      // }
       this.healthInsuranceForm.value.othersCoveredOnPlan.forEach((person: any) => {
         person.enrolledInInsuranceFlag = !!person.enrolledInInsuranceFlag ? StatusFlag.Yes : StatusFlag.No;
       });
