@@ -15,6 +15,7 @@
             type="radio"
             kendoRadioButton
             formControlName="prescriptionDrugsForHivCode"
+            (change)="hivFlagSelected($event)"
             value="YES"  
             name="prescription"
             id="takingPrescriptionYes"  />
@@ -29,6 +30,7 @@
             type="radio"
             kendoRadioButton
             formControlName="prescriptionDrugsForHivCode"
+            (change)="hivFlagSelected($event)"
             value="NO"  
             name="prescription"
             id="takingPrescriptionNo"
@@ -112,7 +114,8 @@
           for="requiresNonPreferredPharmacyDontKnow"
         ></kendo-label>
       </span>
-      <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+      <kendo-formerror   *ngIf="nonPreferredFlagValidation">Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+      <!-- <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror> -->
     </kendo-formfield>
     </div>
     </fieldset>

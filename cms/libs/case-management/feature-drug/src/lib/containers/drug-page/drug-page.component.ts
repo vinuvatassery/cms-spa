@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoin, mergeMap, of, Subscription, tap, BehaviorSubject } from 'rxjs';
 /** Facades **/
 import { UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist, PrescriptionDrugDocument, ClientDocumentFacade } from '@cms/case-management/domain';
+import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist, PrescriptionDrugDocument, ClientDocumentFacade, YesNoFlag } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
 import { NavigationType } from '@cms/case-management/domain';
@@ -43,6 +43,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   summaryBenefitsValidator: boolean = false;
   isSummaryOfBenefitsRequired$ = new BehaviorSubject<boolean>(false);
   showDocRequiredValidation = false;
+  nonPreferredFlagValidation= false;
   prescriptionInfo = {} as PrescriptionDrug;
 
   /** Private properties **/
@@ -411,5 +412,18 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   checkValidations() {
     return this.prescriptionDrugForm.valid;
   }
+  hivFlagSelected(event:Event){
+    if(this.prescriptionDrugForm.controls['prescriptionDrugsForHivCode'].value.toUpperCase()==YesNoFlag.Yes.toUpperCase()){
+     this.nonPreferredFlagValidation = true;
+     this.prescriptionDrugForm.get('nonPreferredPharmacyCode')?.setValidators([Validators.required]); // or clearValidators()
+     this.prescriptionDrugForm.get('nonPreferredPharmacyCode')?.updateValueAndValidity();
+    }
+    else{
+      this.prescriptionDrugForm.get('nonPreferredPharmacyCode')?.clearValidators();
+      this.prescriptionDrugForm.get('nonPreferredPharmacyCode')?.setValidators(null); 
+      this.prescriptionDrugForm.get('nonPreferredPharmacyCode')?.updateValueAndValidity();
+     this.nonPreferredFlagValidation = false; 
+    }
+   }
 }
 
