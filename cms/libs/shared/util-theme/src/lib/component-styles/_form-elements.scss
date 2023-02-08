@@ -33,6 +33,10 @@
   .k-clear-value{
     display: none;
   }
+  .k-chip-outline-base {
+    border-color:transparent; 
+    background-color: $light-bgcolor;
+}
 }
 .k-combobox {
   width: 100%;
