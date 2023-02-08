@@ -99,7 +99,7 @@
 
             <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan">
                 <case-management-medical-premium-detail-others-covered-plan [healthInsuranceForm]="healthInsuranceForm"
-                    [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-others-covered-plan>
+                    [isViewContentEditable]="isViewContentEditable" [clientId]="clientId"></case-management-medical-premium-detail-others-covered-plan>
             </div>
         </div>
     </div>

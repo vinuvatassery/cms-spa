@@ -222,25 +222,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       });
     })
   }
-
-  private loadClientDependents() {
-    this.familyAndDependentFacade.clientDependents$.subscribe((data: any) => {
-      if (!!data) {
-        data.forEach((person: any) => {
-          person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
-        });
-        let dependents = data.filter((dep: any) => dep.dependentTypeCode == 'D');
-        let dependentGroup = !!dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
-        let dependentForm = this.formBuilder.array(dependentGroup);
-        this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
-        let healthDependents = data.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
-        let healthGroup = !!healthDependents ? healthDependents.map((person: any) => this.formBuilder.group(person)) : [];
-        let healthForm = this.formBuilder.array(healthGroup);
-        this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
-      }
-    });
-  }
-
   private viewSelection() {
     this.isToggleNewPerson = false;
     switch (this.dialogTitle) {
@@ -1042,12 +1023,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     }
     else {
       this.medicareInsuranceInfoCheck = true;
-    }
-    if ((this.ddlInsuranceType === this.InsurancePlanTypes.QualifiedHealthPlan
-      || this.ddlInsuranceType === this.InsurancePlanTypes.OffExchangePlan)
-      && (this.dialogTitle === 'Add')) {
-      this.familyAndDependentFacade.loadClientDependents(this.clientId);
-      this.loadClientDependents();
     }
   }
 

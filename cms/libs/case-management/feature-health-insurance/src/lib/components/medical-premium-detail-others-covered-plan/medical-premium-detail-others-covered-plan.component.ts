@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,FormArray,FormControl,Validators } from '@angular/forms';
+import { FamilyAndDependentFacade, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 
@@ -11,6 +12,7 @@ import { LovFacade } from '@cms/system-config/domain';
 export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
+  @Input() clientId: any;
   
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -19,6 +21,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   removedPersons: any = [];
   RelationshipLovs$ = this.lovFacade.lovRelationShip$;
   constructor(
+    private readonly familyAndDependentFacade: FamilyAndDependentFacade,
     public readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder
   ) {
@@ -28,6 +31,25 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   ngOnInit(): void {
     this.lovFacade.getRelationShipsLovs();
     this.loadRelationshipLov();
+    this.familyAndDependentFacade.loadClientDependents(this.clientId);
+    this.loadClientDependents();
+  }
+  private loadClientDependents() {
+    this.familyAndDependentFacade.clientDependents$.subscribe((data: any) => {
+      if (!!data) {
+        data.forEach((person: any) => {
+          person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
+        });
+        let dependents = data.filter((dep: any) => dep.dependentTypeCode == 'D');
+        let dependentGroup = !!dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
+        let dependentForm = this.formBuilder.array(dependentGroup);
+        this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
+        let healthDependents = data.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
+        let healthGroup = !!healthDependents ? healthDependents.map((person: any) => this.formBuilder.group(person)) : [];
+        let healthForm = this.formBuilder.array(healthGroup);
+        this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
+      }
+    });
   }
 
   onToggleNewPersonClicked() {

@@ -14,6 +14,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   @Input() isViewContentEditable!: boolean;
   @Input() sameAsInsuranceIdFlag!: boolean;
   @Input() ddlInsuranceType: string='';
+  @Input() clientId: any;
 
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
