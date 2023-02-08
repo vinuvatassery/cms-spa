@@ -106,7 +106,7 @@
               Zip is required
             </kendo-formerror>
             <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.pattern">
-              Not a valid zip code format
+              Special characters are not allowed
             </kendo-formerror>
           </kendo-formfield>
           </div>
@@ -251,7 +251,7 @@
               Zip is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homeAddress?.zip?.errors?.pattern">
-              Not a valid zip code format
+              Special characters are not allowed
             </kendo-formerror>
           </kendo-formfield>
           </div>

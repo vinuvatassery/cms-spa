@@ -404,7 +404,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     mailingAddressGroup.controls['city'].updateValueAndValidity();
     mailingAddressGroup.controls['state'].setValidators([Validators.required]);
     mailingAddressGroup.controls['state'].updateValueAndValidity();
-    mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
+    mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
     mailingAddressGroup.controls['zip'].updateValueAndValidity();
 
     if ((homeAddressGroup.controls['homelessFlag']?.value ?? false) === false) {
@@ -412,7 +412,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       homeAddressGroup.controls['address1'].updateValueAndValidity();
       homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['address2'].updateValueAndValidity();
-      homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
+      homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['zip'].updateValueAndValidity();
     }
 
