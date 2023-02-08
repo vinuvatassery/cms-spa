@@ -50,7 +50,7 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   @Input() selectedCase!: any
 
   private caseDataDataSubscription !: Subscription;
-  today = new Date();
+  currentDate = new Date();
 
   /** Constructor**/
   constructor(private readonly router: Router, private readonly ref: ChangeDetectorRef,
