@@ -835,9 +835,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.insuranceIdNbr =
         this.healthInsuranceForm.controls['insuranceIdNumber'].value;
       this.healthInsurancePolicy.insuranceGroupPlanTypeCode = this.healthInsuranceForm.controls['groupPlanType'].value;
-
       this.healthInsurancePolicy.metalLevelCode =
-        this.healthInsuranceForm.controls['metalLevel'].value?.lovCode;
+        this.healthInsuranceForm.controls['metalLevel'].value === null? null:this.healthInsuranceForm.controls['metalLevel'].value?.lovCode;
       if (this.healthInsuranceForm.controls['insuranceStartDate'].value !== null) {
         this.healthInsurancePolicy.startDate = new Date(this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat));
       }
