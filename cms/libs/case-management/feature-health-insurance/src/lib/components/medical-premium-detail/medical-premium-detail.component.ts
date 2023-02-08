@@ -524,6 +524,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   private validateForm() {
     this.healthInsuranceForm.markAllAsTouched();
+    this.resetValidators()
     // if(this.healthInsuranceForm.controls['insuranceEndDate'].valid){
     //   this.insuranceEndDateIsgreaterthanStartDate = true;
     // }
@@ -595,13 +596,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         qualifiedHealthPlanRequiredFields.push(...careassistPayingRequiredFields);
-      }
-      else{
-         careassistPayingRequiredFields.forEach((key:string)=>{
-          this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
-          this.healthInsuranceForm.controls[key].updateValueAndValidity();
-        })
-      }
+      }     
       qualifiedHealthPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -615,11 +610,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls[
           'aptcMonthlyAmt'
         ].updateValueAndValidity();
-      }
-      else{
-        this.healthInsuranceForm.controls['aptcMonthlyAmt'].removeValidators(Validators.required);
-        this.healthInsuranceForm.controls['aptcMonthlyAmt'].updateValueAndValidity()
-      }
+      }    
      
     }
 
