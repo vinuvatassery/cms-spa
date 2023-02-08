@@ -90,8 +90,8 @@
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
               <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
 
-                <span *ngIf="!isEditValue">{{ files[0].name }} </span> 
-                <button aria-label="doc name" *ngIf="files[0].name && isEditValue" kendoButton look="flat" class="card-link-button"  >
+                <span *ngIf="!files[0].documentId">{{ files[0].name }} </span> 
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
                   <a>{{ files[0].name }} </a>
                 </button>
 
