@@ -10,7 +10,7 @@ export class ClientCaseEligibility{
         officialIdLastName :string|null=null;
         groupCode :string|null=null;
         clientTransgenderCode !:string;
-        clientTransgenderDesc !:string;
+        clientTransgenderDesc :string|null=null;
         genderDesc !:string;
         materialInAlternateFormatCode !:string;
         materialInAlternateFormatDesc :string|null=null;
