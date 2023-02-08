@@ -147,6 +147,7 @@
         aria-label="upload proof" 
         name="myFileSelect" 
         #myFileSelect="ngModel"
+        [removeUrl]="uploadRemoveUrl"
         [restrictions]="uploadFileRestrictions.fileRestrictions"   
         [multiple]="false" 
         [autoUpload]="false"
