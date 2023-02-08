@@ -462,7 +462,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     if(this.applicantInfo.clientPronounList == undefined){
       this.applicantInfo.clientPronounList = [];
     }
-    Object.keys( this.appInfoForm.controls).filter(m=>m.includes('pronoun')).forEach(pronoun => { 
+    Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => { 
       if( this.appInfoForm.controls[pronoun].value ===""
          ||this.appInfoForm.controls[pronoun].value === null
          ||this.appInfoForm.controls[pronoun].value ===false){
