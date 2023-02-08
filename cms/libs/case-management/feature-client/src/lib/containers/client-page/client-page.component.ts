@@ -81,17 +81,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
     ).subscribe({     
-        next:([navigationType, isSaved]) =>{
-          if (isSaved) {
-              this.loaderService.hide();                 
+        next:([navigationType, isSaved]) =>{          
+          if (isSaved) {       
               this.clientFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
               this.workFlowFacade.navigate(navigationType);          
         }    
       },
-      error: (error: any) => {
-        this.loaderService.hide();      
-        this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
-        this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
+      error: (error: any) => {       
+        this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);       
       },
 
     });
@@ -240,7 +237,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
 
   }
 
-  private saveAndUpdate(){
+  private saveAndUpdate(){    
     this.loaderService.show();
     this.validateForm();
         if(this.appInfoForm.valid){
@@ -249,10 +246,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.message ='Applicant info updated successfully';
             return this.clientFacade.update(this.applicantInfo).pipe(
               catchError((error:any)=>{
-                if(error){
-                  this.loaderService.hide();      
-                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
-                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
+                if(error){                                                       
+                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);               
                   return of(false);
                 }
                 return of(false);
@@ -264,10 +259,8 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.message ='Applicant info saved successfully';
             return this.clientFacade.save(this.applicantInfo).pipe(
               catchError((error:any)=>{
-                if(error){
-                  this.loaderService.hide();      
-                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);
-                  this.loggingService.logException({name:SnackBarNotificationType.ERROR,message:error});
+                if(error){                     
+                  this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);              
                   return of(false);
                 }
                 return of(false);
@@ -334,10 +327,10 @@ export class ClientPageComponent implements OnInit, OnDestroy {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
         }    
         
-           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
-           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=null;
+           this.applicantInfo.client.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+           this.applicantInfo.client.clientTransgenderDesc=null;
            if (this.appInfoForm.controls["Transgender"].value===PronounCode.notListed) {
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
+            this.applicantInfo.client.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
            }
         if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag == undefined){
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag = new clientCaseEligibilityFlag;
@@ -371,89 +364,89 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.registerToVoteFlag = StatusFlag.No;
         }
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode = this.appInfoForm.controls["materialInAlternateFormatCode"].value
+        this.applicantInfo.client.materialInAlternateFormatCode = this.appInfoForm.controls["materialInAlternateFormatCode"].value
         if(this.appInfoForm.controls["materialInAlternateFormatCode"].value !== null && 
         this.appInfoForm.controls["materialInAlternateFormatCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = this.appInfoForm.controls["materialInAlternateFormatDesc"].value
-            if(this.applicantInfo.clientCaseEligibilityAndFlag?.clientCaseEligibility?.materialInAlternateFormatDesc?.toUpperCase()===MaterialFormat.other.toUpperCase()){
-              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = this.appInfoForm.controls["materialInAlternateFormatOther"].value;
+            this.applicantInfo.client.materialInAlternateFormatDesc = this.appInfoForm.controls["materialInAlternateFormatDesc"].value
+            if(this.applicantInfo.client?.materialInAlternateFormatDesc?.toUpperCase()===MaterialFormat.other.toUpperCase()){
+              this.applicantInfo.client.materialInAlternateFormatOther = this.appInfoForm.controls["materialInAlternateFormatOther"].value;
             }  
             else{
-              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = null;
+              this.applicantInfo.client.materialInAlternateFormatOther = null;
             }         
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc = null;
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther = null;
+          this.applicantInfo.client.materialInAlternateFormatDesc = null;
+          this.applicantInfo.client.materialInAlternateFormatOther = null;
         }
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode = this.appInfoForm.controls["interpreterCode"].value
+        this.applicantInfo.client.interpreterCode = this.appInfoForm.controls["interpreterCode"].value
         if(this.appInfoForm.controls["interpreterCode"].value !== null && 
         this.appInfoForm.controls["interpreterCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType = this.appInfoForm.controls["interpreterType"].value
+            this.applicantInfo.client.interpreterType = this.appInfoForm.controls["interpreterType"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType = '';
+          this.applicantInfo.client.interpreterType = '';
         }
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode = this.appInfoForm.controls["deafOrHearingCode"].value
+        this.applicantInfo.client.deafOrHearingCode = this.appInfoForm.controls["deafOrHearingCode"].value
         if(this.appInfoForm.controls["deafOrHearingCode"].value !== null && 
         this.appInfoForm.controls["deafOrHearingCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = this.appInfoForm.controls["startAgeDeafOrHearing"].value
+            this.applicantInfo.client.startAgeDeafOrHearing = this.appInfoForm.controls["startAgeDeafOrHearing"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing = null;
+          this.applicantInfo.client.startAgeDeafOrHearing = null;
         }
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode = this.appInfoForm.controls["blindSeeingCode"].value
+        this.applicantInfo.client.blindSeeingCode = this.appInfoForm.controls["blindSeeingCode"].value
         if(this.appInfoForm.controls["blindSeeingCode"].value !== null && 
         this.appInfoForm.controls["blindSeeingCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing = this.appInfoForm.controls["startAgeBlindSeeing"].value
+            this.applicantInfo.client.startAgeBlindSeeing = this.appInfoForm.controls["startAgeBlindSeeing"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing = null;
+          this.applicantInfo.client.startAgeBlindSeeing = null;
         }
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.limitingConditionCode = this.appInfoForm.controls["limitingConditionCode"].value
+        this.applicantInfo.client.limitingConditionCode = this.appInfoForm.controls["limitingConditionCode"].value
       
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode = this.appInfoForm.controls["walkingClimbingDifficultyCode"].value
+        this.applicantInfo.client.walkingClimbingDifficultyCode = this.appInfoForm.controls["walkingClimbingDifficultyCode"].value
         if(this.appInfoForm.controls["walkingClimbingDifficultyCode"].value !== null && 
         this.appInfoForm.controls["walkingClimbingDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty = this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].value
+            this.applicantInfo.client.startAgeWalkingClimbingDifficulty = this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty = null;
+          this.applicantInfo.client.startAgeWalkingClimbingDifficulty = null;
         }
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode = this.appInfoForm.controls["dressingBathingDifficultyCode"].value
+        this.applicantInfo.client.dressingBathingDifficultyCode = this.appInfoForm.controls["dressingBathingDifficultyCode"].value
         if(this.appInfoForm.controls["dressingBathingDifficultyCode"].value !== null && 
         this.appInfoForm.controls["dressingBathingDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty = this.appInfoForm.controls["startAgeDressingBathingDifficulty"].value
+            this.applicantInfo.client.startAgeDressingBathingDifficulty = this.appInfoForm.controls["startAgeDressingBathingDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty = null;
+          this.applicantInfo.client.startAgeDressingBathingDifficulty = null;
         }
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode = this.appInfoForm.controls["concentratingDifficultyCode"].value
+        this.applicantInfo.client.concentratingDifficultyCode = this.appInfoForm.controls["concentratingDifficultyCode"].value
         if(this.appInfoForm.controls["concentratingDifficultyCode"].value !== null && 
         this.appInfoForm.controls["concentratingDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty = this.appInfoForm.controls["startAgeConcentratingDifficulty"].value
+            this.applicantInfo.client.startAgeConcentratingDifficulty = this.appInfoForm.controls["startAgeConcentratingDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty = null;
+          this.applicantInfo.client.startAgeConcentratingDifficulty = null;
         }
 
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode = this.appInfoForm.controls["errandsDifficultyCode"].value
+        this.applicantInfo.client.errandsDifficultyCode = this.appInfoForm.controls["errandsDifficultyCode"].value
         if(this.appInfoForm.controls["errandsDifficultyCode"].value !== null && 
         this.appInfoForm.controls["errandsDifficultyCode"].value.toUpperCase() === YesNoFlag.Yes.toUpperCase()){
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty = this.appInfoForm.controls["startAgeErrandsDifficulty"].value
+            this.applicantInfo.client.startAgeErrandsDifficulty = this.appInfoForm.controls["startAgeErrandsDifficulty"].value
         }
         else{
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty = null;
+          this.applicantInfo.client.startAgeErrandsDifficulty = null;
         }
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.spokenLanguageCode =  this.appInfoForm.controls["spokenLanguage"].value;
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.writtenLanguageCode =  this.appInfoForm.controls["writtenLanguage"].value;
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode = this.appInfoForm.controls["englishProficiency"].value;
+        this.applicantInfo.client.spokenLanguageCode =  this.appInfoForm.controls["spokenLanguage"].value;
+        this.applicantInfo.client.writtenLanguageCode =  this.appInfoForm.controls["writtenLanguage"].value;
+        this.applicantInfo.client.englishProficiencyCode = this.appInfoForm.controls["englishProficiency"].value;
 
 
       
