@@ -485,7 +485,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         address1: new FormControl(''),
         address2: new FormControl(''),
         city: new FormControl(''),
-        state: new FormControl(StatesInUSA.Oregon),
+        state: new FormControl(),
         zip: new FormControl(''),
       }),
       homeAddress: new FormGroup({

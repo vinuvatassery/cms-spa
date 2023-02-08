@@ -966,7 +966,7 @@
     </p>
     <form [formGroup]="selectedAddressForm">
     <kendo-formfield>
-    <div class="flex-row mt-4">
+    <div class="flex-row mt-4 break">
       <div class="flex-col flex-col-6">
           <span>
           <input
@@ -980,7 +980,7 @@
           />
           <kendo-label for="chosenmailAddressEntered" text="Address Entered"></kendo-label> 
         </span>
-        <div class="mt-2 ml-3">
+        <div class="mt-2 ml-3 break">
       <p>  {{mailAddressEntered?.address1 | uppercase }} </p> 
       <p> {{mailAddressEntered?.address2 | uppercase }} </p> 
       <p>  {{mailAddressEntered?.city | uppercase }}, {{mailAddressEntered?.state}} {{mailAddressEntered?.zip5}}</p>
@@ -999,7 +999,7 @@
           />
           <kendo-label for="chosenmailAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
-      <div class="mt-2 ml-3">
+      <div class="mt-2 ml-3 break">
         <p>   {{mailAddressSuggested?.address1}}</p>
         <p>  {{mailAddressSuggested?.address2}} </p>
         <p>  {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}-{{mailAddressSuggested?.zip4}}</p>
@@ -1058,11 +1058,11 @@
           />
           <kendo-label for="chosenhomeAddressEntered" text="Address Entered"></kendo-label> 
         </span>
-        <p class="mt-2 ml-3">
-        {{homeAddressEntered?.address1 | uppercase }} <br>
-        {{homeAddressEntered?.address2 | uppercase }} <br>
-        {{homeAddressEntered?.city | uppercase }}, {{homeAddressEntered?.state}} {{homeAddressEntered?.zip5}}
-        </p>
+        <div class="mt-2 ml-3 break">
+          <p>  {{homeAddressEntered?.address1 | uppercase }} </p> 
+          <p> {{homeAddressEntered?.address2 | uppercase }} </p> 
+          <p>  {{homeAddressEntered?.city | uppercase }}, {{homeAddressEntered?.state}} {{homeAddressEntered?.zip5}} </p>
+        </div >
       </div>
       <div class="flex-col flex-col-6">
           <span>
@@ -1077,11 +1077,12 @@
           />
           <kendo-label for="chosenhomeAddressSuggested" text="Suggested Address"></kendo-label>  
         </span>
-      <p class="mt-2 ml-3">
-          {{homeAddressSuggested?.address1}} <br>
-          {{homeAddressSuggested?.address2}} <br>
-          {{homeAddressSuggested?.city}}, {{homeAddressSuggested?.state}} {{homeAddressSuggested?.zip5}}-{{homeAddressSuggested?.zip4}}
-      </p>
+
+        <div class="mt-2 ml-3 break">
+          <p>  {{homeAddressSuggested?.address1}} </p>
+          <p>  {{homeAddressSuggested?.address2}} </p>
+          <p>  {{homeAddressSuggested?.city}}, {{homeAddressSuggested?.state}} {{homeAddressSuggested?.zip5}}-{{homeAddressSuggested?.zip4}} </p>
+        </div>
       </div>
     </div> 
   </kendo-formfield>    
