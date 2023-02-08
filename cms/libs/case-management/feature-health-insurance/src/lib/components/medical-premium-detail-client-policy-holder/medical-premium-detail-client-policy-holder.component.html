@@ -11,7 +11,7 @@
                 id="clientPolicyHolderNo" tabindex="6" value="N" formControlName="isClientPolicyHolderFlag" />
             <kendo-label class="k-radio-label" text="No" for="clientPolicyHolderNo"></kendo-label>
         </span>
-        <kendo-formerror *ngIf="!healthInsuranceForm.controls['isClientPolicyHolderFlag'].valid">Is
+        <kendo-formerror *ngIf="!healthInsuranceForm.controls['isClientPolicyHolderFlag'].valid && isViewContentEditable==false">Is
             client policy holder flag is required.</kendo-formerror>
     </div>
 

@@ -74,13 +74,16 @@
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
-                    <kendo-numerictextbox [maxlength]="20" format="0:n0" formControlName="paymentIdNbr"
-                        [disabled]="isViewContentEditable || sameAsInsuranceIdFlag" placeholder="Payment ID Number"
-                        [fillMode]="formUiStyle.inputFillMode" [spinners]="false">
-                    </kendo-numerictextbox>
+                    <kendo-textbox [disabled]="isViewContentEditable || sameAsInsuranceIdFlag"
+                        placeholder="Payment ID Number" formControlName="paymentIdNbr" [maxlength]="20"
+                        [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
+                    </kendo-textbox>
+
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is
                     required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
+                    Special characters not allowed.</kendo-formerror>
             </div>
             <div class="flex-col mt-2">
                 <span class="app-checkboxwidtext-wrapper">
@@ -92,14 +95,17 @@
                 </span>
             </div>
 
-            <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan">
+            <div class="flex-col mt-3"
+                *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
                 <case-management-medical-premium-detail-client-policy-holder [healthInsuranceForm]="healthInsuranceForm"
                     [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-client-policy-holder>
             </div>
 
-            <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan">
+            <div class="flex-col mt-3"
+                *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
                 <case-management-medical-premium-detail-others-covered-plan [healthInsuranceForm]="healthInsuranceForm"
-                    [isViewContentEditable]="isViewContentEditable" [clientId]="clientId"></case-management-medical-premium-detail-others-covered-plan>
+                    [isViewContentEditable]="isViewContentEditable"
+                    [clientId]="clientId"></case-management-medical-premium-detail-others-covered-plan>
             </div>
         </div>
     </div>

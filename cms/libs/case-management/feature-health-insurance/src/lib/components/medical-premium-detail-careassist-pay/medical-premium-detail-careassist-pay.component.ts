@@ -19,6 +19,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  specialCharAdded: boolean = false;
   constructor(
     public readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder
@@ -34,11 +35,27 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.sameAsInsuranceIdFlag = true;
-      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(parseInt(this.healthInsuranceForm.controls['insuranceIdNumber'].value) );
+      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(this.healthInsuranceForm.controls['insuranceIdNumber'].value );
     }
     else {
       this.sameAsInsuranceIdFlag = false;
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(null);
     }
+  }
+  restrictSpecialChar(event: any) {
+    var status = ((event.charCode > 64 && event.charCode < 91) ||
+      (event.charCode > 96 && event.charCode < 123) ||
+      event.charCode == 8 || event.charCode == 32 ||
+      (event.charCode >= 48 && event.charCode <= 57) ||
+      event.charCode == 45);
+    if (status) {
+      this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+      this.specialCharAdded = false;
+    }
+    else {
+      this.healthInsuranceForm.controls['insuranceIdNumber'].setErrors({ 'incorrect': true });
+      this.specialCharAdded = true;
+    }
+    return status;
   }
 }
