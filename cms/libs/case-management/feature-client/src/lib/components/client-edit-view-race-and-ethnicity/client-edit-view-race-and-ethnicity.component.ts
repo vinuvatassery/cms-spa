@@ -9,6 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ClientFacade } from '@cms/case-management/domain';
 import { groupBy } from '@progress/kendo-data-query';
+import {ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-client-edit-view-race-and-ethnicity',
@@ -27,11 +28,12 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
   raceAndEthnicityData: Array<any> = [];
   ethnicityData: Array<any> = [];
-  lengthRestrictFifty=50;
+  lengthRestrict=this.configurationProvider.appSettings.lengthRestrictLimit;
 
   popupClassMultiSelect = 'multiSelectSearchPopup';
   constructor(
     private readonly lovFacade: LovFacade,
+    private readonly configurationProvider: ConfigurationProvider,
     private formBuilder: FormBuilder
   ) {
     this.appInfoForm = this.formBuilder.group({ RaceAndEthnicity: [[]] });
