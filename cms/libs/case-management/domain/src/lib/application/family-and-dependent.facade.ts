@@ -282,7 +282,7 @@ export class FamilyAndDependentFacade {
   }
 
   loadClientDependents(clientId: number) {
-    //this.ShowLoader();
+    this.ShowLoader();
     this.dependentDataService.loadClientDependents(clientId).subscribe({ 
       next: (dependentsResponse : any) => {         
               this.clientDependentsSubject.next(dependentsResponse);
