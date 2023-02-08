@@ -335,6 +335,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
         }    
         
            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=null;
            if (this.appInfoForm.controls["Transgender"].value===PronounCode.notListed) {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
            }
