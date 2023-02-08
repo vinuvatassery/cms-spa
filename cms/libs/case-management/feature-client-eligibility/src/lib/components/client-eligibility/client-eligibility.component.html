@@ -24,7 +24,7 @@
             (click)="clientDocumentFacade.viewOrDownloadFile('view',doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
           </button>
-          <a class="text-bold text-underline">{{doc.documentName}}</a>
+          <a class="text-bold text-underline" aria-label="open in new tab" (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
         <kendo-formerror *ngIf="formSubmited && !question.responseAnswerId">{{question.questionDesc}} response is

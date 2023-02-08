@@ -273,6 +273,7 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
+    this.proofOfIncomeFiles = null;
     this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;

@@ -79,7 +79,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly route: ActivatedRoute,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
+    public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly router :Router
   ) { }
 
@@ -972,7 +972,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           name: this.contactInfo?.homeAddressProof?.documentName,
           size: this.contactInfo?.homeAddressProof?.documentSize,
           src: this.contactInfo?.homeAddressProof?.documentPath,
-          uid: this.contactInfo?.homeAddressProof?.documentId
+          uid: this.contactInfo?.homeAddressProof?.documentId,
+          documentId: this.contactInfo?.homeAddressProof?.documentId,
         },
       ];
     }
@@ -1345,13 +1346,17 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
   handleFileSelected(e: SelectEvent) {
+    this.homeAddressProofFile = undefined;
+    this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
     this.showAddressProofRequiredValidation = false;
     this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {
+ 
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
+      this.loaderService.show();
       this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
         next: (response) => {
           if (response === true) {
@@ -1360,10 +1365,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
             this.uploadedHomeAddressProof = undefined;
             this.loadContactInfo();
             this.updateHomeAddressProofCount(false);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
           this.loggingService.logException(err);
+          this.loaderService.hide();
         },
       });
     }
@@ -1371,6 +1378,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.homeAddressProofFile = undefined;
       this.uploadedHomeAddressProof = undefined;
       this.updateHomeAddressProofCount(false);
+      this.loaderService.hide();
     }
 
   }

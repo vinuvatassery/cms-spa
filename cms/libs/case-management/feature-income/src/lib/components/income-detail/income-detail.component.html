@@ -89,7 +89,12 @@
             #incomeUploadedProof [ngModel]="uploadedIncomeFile" [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl">
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
               <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-                <span>{{ files[0].name }} </span>
+
+                <span *ngIf="!files[0].documentId">{{ files[0].name }} </span> 
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                  <a>{{ files[0].name }} </a>
+                </button>
+
                 <br>
                 <span>{{   files[0].size  }}</span>
               </span>

@@ -188,8 +188,7 @@ export class IncomeFacade {
 
   deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string) {
     return this.contactDataService.deleteIncome(clientIncomeId,clientId,clientCaseEligibilityId);
-  }
-
+  } 
   loadIncomeDetails(clientIncomeId : string){
     return this.contactDataService.loadIncomeDetailsService(clientIncomeId)
   }

@@ -150,6 +150,7 @@
         aria-label="upload proof" 
         name="myFileSelect" 
         #myFileSelect="ngModel"
+        [removeUrl]="uploadRemoveUrl"
         [restrictions]="uploadFileRestrictions.fileRestrictions"   
         [multiple]="false" 
         [autoUpload]="false"
@@ -159,7 +160,10 @@
         (remove)="handleFileRemoved()">
         <ng-template kendoUploadFileInfoTemplate  let-files let-state="state">
           <div (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-            <span>{{files[0].name}} </span> 
+            <span  *ngIf="!files[0].documentId" >{{files[0].name}} </span> 
+            <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+              <a>{{ files[0].name }} </a>
+            </button>
             <br>
             <span>{{files[0].size}}</span> 
           </div>
