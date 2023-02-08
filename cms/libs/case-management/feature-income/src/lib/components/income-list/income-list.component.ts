@@ -317,7 +317,7 @@ onIncomeActionClicked(
  removeDependentsProofofSchoool(documentid: any){ 
     if (documentid) {
       this.incomeFacade.ShowLoader();
-      this.incomeFacade.removeDependentsProofofSchooolDoc(documentid ).subscribe({
+      this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => { 
           this.loadIncomeData();
           this.loadDependentsProofofSchools();
