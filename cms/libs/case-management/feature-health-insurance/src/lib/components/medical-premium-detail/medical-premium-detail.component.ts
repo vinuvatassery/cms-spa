@@ -921,13 +921,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
       this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
-      if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
-        // this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
-        //   x.relationshipCode = this.relationshipList.filter(
-        //     (y: any) => y.lovDesc == x.relationshipDescription)[0].lovCode;
-        // });
-        this.healthInsurancePolicy.othersCoveredOnPlan.push(...this.healthInsuranceForm.value.newOthersCoveredOnPlan);
-      }
+      // if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
+      //   this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
+      //     x.relationshipCode = this.relationshipList.filter(
+      //       (y: any) => y.lovDesc == x.relationshipDescription)[0].lovCode;
+      //   });
+      //   this.healthInsurancePolicy.othersCoveredOnPlan.push(...this.healthInsuranceForm.value.newOthersCoveredOnPlan);
+      // }
       this.healthInsuranceForm.value.othersCoveredOnPlan.forEach((person: any) => {
         person.enrolledInInsuranceFlag = !!person.enrolledInInsuranceFlag ? StatusFlag.Yes : StatusFlag.No;
       });
