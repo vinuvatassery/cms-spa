@@ -22,6 +22,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class DrugPageComponent implements OnInit, OnDestroy {
 
   /** Public properties **/
+  public uploadRemoveUrl = 'removeUrl';
   uploadedBenefitSummaryFile: any[] = [];
   summaryBenefitFiles: any;
   uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
@@ -298,6 +299,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
 
   handleFileRemoved() {
     if (this.uploadedBenefitSummaryFile?.length > 0) {
+        this.loaderService.show();
       this.clientDocumentFacade.removeDocument(this.prescriptionDrug?.document?.documentId ?? '').subscribe({
         next: (response) => {
           if (response === true) {
@@ -307,8 +309,10 @@ export class DrugPageComponent implements OnInit, OnDestroy {
             this.loadPrescriptionDrug();
             this.updateWorkflowCount('summary_of_benefits_doc', false);
           }
+        this.loaderService.hide();
         },
         error: (err) => {
+          this.loaderService.hide();
           this.loggingService.logException(err);
         },
       });
@@ -318,7 +322,6 @@ export class DrugPageComponent implements OnInit, OnDestroy {
       this.summaryBenefitFiles = undefined;
       this.updateWorkflowCount('summary_of_benefits_doc', false);
     }
-
   }
 
   /* Pharmacy */

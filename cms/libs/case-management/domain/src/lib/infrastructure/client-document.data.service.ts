@@ -31,7 +31,7 @@ export class ClientDocumentDataService {
     }
 
     removeDocument(documentId: string) {
-        const url = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/${documentId}`;
+        const url = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${documentId}`;
         return this.http.delete(url);
     }
 

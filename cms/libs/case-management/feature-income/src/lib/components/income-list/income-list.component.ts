@@ -314,7 +314,7 @@ onIncomeActionClicked(
     })
   }
 
- removeDependentsProofofSchoool(documentid: any){ 
+ removeDependentsProofofSchoool(documentid: string){ 
     if (documentid) {
       this.incomeFacade.ShowLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
