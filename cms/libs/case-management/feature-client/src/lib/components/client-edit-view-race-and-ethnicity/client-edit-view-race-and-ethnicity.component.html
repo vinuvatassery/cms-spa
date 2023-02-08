@@ -128,12 +128,13 @@
     <section *ngIf="raceAndEthnicityPrimaryNotListed">
       <div class="flex-row">
         <div class="flex-col flex-col-4">
-          <kendo-floatinglabel text="Racial or Ethnic Identity if Not listed, please specify">
+          <kendo-floatinglabel text="Enter Other Racial Identity">
             <kendo-textbox
               aria-label="Racial or Ethnic Identity"
               formControlName="RaceAndEthnicityNotListed"
               [fillMode]="formUiStyle.inputFillMode"
-              placeholder="Racial or Ethnic Identity if Not listed, please specify"
+              placeholder="Enter Other Racial Identity"
+              [maxlength]="lengthRestrictFifty"
             >
             </kendo-textbox>
           </kendo-floatinglabel>

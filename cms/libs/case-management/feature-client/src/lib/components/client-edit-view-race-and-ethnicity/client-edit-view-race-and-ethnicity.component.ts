@@ -27,6 +27,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
   raceAndEthnicityData: Array<any> = [];
   ethnicityData: Array<any> = [];
+  lengthRestrictFifty=50;
 
   popupClassMultiSelect = 'multiSelectSearchPopup';
   constructor(
