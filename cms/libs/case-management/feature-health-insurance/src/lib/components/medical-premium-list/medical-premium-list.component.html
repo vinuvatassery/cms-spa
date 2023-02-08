@@ -140,7 +140,7 @@
   <case-management-medical-premium-detail [dialogTitle]="dialogTitle"
     (isCloseInsuranceModal)="handleHealthInsuranceCloseClicked()"
     (editRedirect)="handleHealthInsuranceOpenClicked('edit')" [insuranceType]="insuranceType"
-    [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)"
+    [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)" (isAddEditClicked)="addOrEditClicked($event)"
     [caseEligibilityId]="caseEligibilityId"
     [clientId] ="clientId">
   </case-management-medical-premium-detail>

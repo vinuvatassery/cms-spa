@@ -94,7 +94,6 @@ export class MedicalPremiumListComponent implements OnInit {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-
     if (this.closeDeleteModal) {
       this.onDeleteConfirmCloseClicked();
       this.handleHealthInsuranceCloseClicked();
@@ -129,7 +128,6 @@ export class MedicalPremiumListComponent implements OnInit {
 
   handleHealthInsuranceCloseClicked() {
     this.isOpenedHealthInsuranceModal = false;
-    //this.loadInsurancePolicies();
   }
 
   handleHealthInsuranceOpenClicked(value: string) {
@@ -226,6 +224,11 @@ export class MedicalPremiumListComponent implements OnInit {
   deleteButonClicked(deleteButonClicked:any){
     if(deleteButonClicked){
       this.onDeleteConfirmOpenClicked();
+    }
+  }
+  addOrEditClicked(addEditButonClicked:any){
+    if(addEditButonClicked){
+     this.loadInsurancePolicies();
     }
   }
 

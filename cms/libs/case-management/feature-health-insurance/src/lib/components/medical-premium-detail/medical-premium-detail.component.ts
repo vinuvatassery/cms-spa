@@ -70,6 +70,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   @Output() isCloseInsuranceModal = new EventEmitter();
   @Output() editRedirect = new EventEmitter<string>();
   @Output() isDeleteClicked = new EventEmitter<any>();
+  @Output() isAddEditClicked = new EventEmitter<any>();
 
   /** Private properties **/
   private loadSessionSubscription!: Subscription;
@@ -1154,6 +1155,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
+              this.isAddEditClicked.next(true);
             },
             (error: any) => {
               if (error) {
@@ -1177,6 +1179,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
+              this.isAddEditClicked.next(true);
             },
             (error: any) => {
               if (error) {
