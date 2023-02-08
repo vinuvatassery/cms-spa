@@ -13,7 +13,7 @@
   ],
   "snackbarAnimationDuration":"600",
   "uploadFileSizeLimit":"26214400",
-  "lengthRestrictLimit":"50",
+  "raceLengthRestrictLimit":"50",
   "instrumentationKey": "d208c057-65ff-4fa0-9e47-b4d35712daa4",
   "dateFormat":"yyyy-MM-dd",
   "displaydateFormat":"MM/dd/yyyy",
