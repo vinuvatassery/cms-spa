@@ -47,10 +47,10 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
         let dependentGroup = !!dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
         let dependentForm = this.formBuilder.array(dependentGroup);
         this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
-        let healthDependents = data.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
-        let healthGroup = !!healthDependents ? healthDependents.map((person: any) => this.formBuilder.group(person)) : [];
-        let healthForm = this.formBuilder.array(healthGroup);
-        this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
+        // let healthDependents = data.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
+        // let healthGroup = !!healthDependents ? healthDependents.map((person: any) => this.formBuilder.group(person)) : [];
+        // let healthForm = this.formBuilder.array(healthGroup);
+        // this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
       }
     });
   }

@@ -25,7 +25,8 @@ import {
   PartBMedicareType,
   PartAMedicareType,
   WorkflowFacade,
-  FamilyAndDependentFacade
+  FamilyAndDependentFacade,
+  DependentTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray, ValidationErrors } from '@angular/forms';
@@ -920,8 +921,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonPharmacy = null;
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
-      debugger
       this.healthInsurancePolicy.othersCoveredOnPlan= this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag===true);
+      this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
+        x.dependentTypeCode=DependentTypeCode.Health;
+        x.clientCaseEligibilityId=this.caseEligibilityId;
+        this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
+      });
       //this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
       // if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
       //   this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
