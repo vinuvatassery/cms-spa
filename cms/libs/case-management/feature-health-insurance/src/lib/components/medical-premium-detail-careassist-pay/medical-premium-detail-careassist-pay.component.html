@@ -34,6 +34,7 @@
                         formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid Through">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumPaidThruDate'].valid">Date currently paid through is required.</kendo-formerror>
             </div>
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Next Premium Payment Due Date">
