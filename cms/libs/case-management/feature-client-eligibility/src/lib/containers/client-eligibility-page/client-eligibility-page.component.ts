@@ -29,8 +29,10 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
   private saveClickSubscription!: Subscription;
   eligibilityForm!: FormGroup;
   formSubmited!: boolean;
+  isSaveAndContinueAcceptance!: boolean;
   savedAnswersList: any = [];
   questoinsResponse: any = [];
+  acceptedApplicationStatus = true;
   /** Constructor **/
   constructor(
     private readonly workflowFacade: WorkflowFacade,
@@ -135,6 +137,15 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
             });
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Eligibility checklist save successfully');
             this.loaderService.hide();
+            if(!this.acceptedApplicationStatus)
+            {
+              this.isSaveAndContinueAcceptance = true;
+              this.ref.detectChanges();
+            }
+            else
+            {
+              this.isSaveAndContinueAcceptance = false;
+            }
           }
         },
         (error: any) => {
@@ -156,5 +167,9 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
     }
 
 
+  }
+  changeApplicationAcceptedStatus(value: any)
+  {
+    this.acceptedApplicationStatus = value;
   }
 }
