@@ -7,7 +7,7 @@ import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'case-management-income-detail',
@@ -76,6 +76,7 @@ export class IncomeDetailComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly configurationProvider: ConfigurationProvider,
     public readonly clientDocumentFacade: ClientDocumentFacade
   ) { }
 
@@ -272,10 +273,11 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
+    this.proofOfIncomeFiles = null;
     this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
-   if(this.proofOfIncomeFiles.size>26214400) 
+   if(this.proofOfIncomeFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit) 
    {
     this.proofOfIncomeValidatorSize=true;
    }
