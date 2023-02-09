@@ -46,7 +46,7 @@
                 <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
                   dataItem.lovDesc
                 }}</label>
-               
+
               </span>
             </ng-template>
           </kendo-dropdownlist>
@@ -71,7 +71,7 @@
               aria-label="dropdown arrow"
               aria-hidden="true"
             ></span>
-  
+
             <kendo-multiselect
               aria-label="Racial Identity"
               [checkboxes]="{ checkOnClick: true, enabled: true }"
@@ -96,7 +96,7 @@
                     aria-hidden="true"
                     >search</span
                   >
-                  <kendo-floatinglabel text="Search"> 
+                  <kendo-floatinglabel text="Search">
                     <kendo-textbox
                       aria-label="search racial identity"
                       [fillMode]="formUiStyle.inputFillMode"
@@ -111,7 +111,7 @@
                   <input
                     type="checkbox"
                     kendoCheckBox
-                    attr.aria-labelledby="{{dataItem.lovDesc}}" 
+                    attr.aria-labelledby="{{dataItem.lovDesc}}"
                     [id]="dataItem.lovDesc"
                   />
                   <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
@@ -139,14 +139,14 @@
             </kendo-textbox>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!appInfoForm.controls['RaceAndEthnicityNotListed'].valid"
-            >Racial or Ethnic Identity is required.</kendo-formerror>
+            >Racial Identity is required.</kendo-formerror>
         </div>
       </div>
     </section>
     <section>
       <h5 class="mb-0">
         If they selected multiple, is there one they think of as their primary
-        racial or ethnic identity?
+        racial Identity?
       </h5>
       <div class="flex-row">
         <div class="flex-col flex-col-4">
@@ -170,6 +170,5 @@
       </div>
     </section>
 
-    
+
   </div>
-  

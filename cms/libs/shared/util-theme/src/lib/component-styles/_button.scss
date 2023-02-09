@@ -18,7 +18,8 @@
     border-color: $app-primary;
   }
   &.k-primary,
-  &.k-button-solid-primary {
+  &.k-button-solid-primary,
+   {
     background: $app-primary;
     background-color: $app-primary;
     color: $white;
@@ -300,6 +301,15 @@
         color: $white;
       }
     }
+    &.k-disabled {
+      background: material-color($hive-neutral-palette, 50) !important;
+      color: $black-30 !important;
+      .k-icon{
+      color: $black-30 !important;
+
+      }
+      
+    }
     &.k-split-button-arrow {
       padding: $size-xl;
     }
@@ -312,7 +322,16 @@
   &:focus {
     .k-button {
       background: material-color($hive-primary-palette, 400) !important;
+      &.k-disabled {
+        background: material-color($hive-neutral-palette, 50) !important;
+        color: $black-30 !important;
+        .k-icon{
+        color: $black-30 !important; 
+        } 
+      }
     }
+
+
   }
 }
 

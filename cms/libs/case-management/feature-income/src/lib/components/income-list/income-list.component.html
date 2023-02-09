@@ -107,6 +107,7 @@
           [width]="75"
           [sticky]="true"
           class="text-center"
+          [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
@@ -131,7 +132,7 @@
         </kendo-grid-column>
          <!-- grid Pagination template -->
          <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
-         let-currentPage="currentPage">
+         let-currentPage="currentPage"  >
          <div class="grid-custom-paginationtemplates d-flex">
            <div class="d-flex align-items-center">
              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
@@ -197,6 +198,7 @@
           title="Proof of School"
           [width]="130"
           class="text-center"
+          [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           <div class="d-flex">
@@ -250,7 +252,7 @@
 
 
 <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened"  (close)="onRemoveIncomeConfirmationClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete Income">
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"

@@ -2,8 +2,8 @@
 
 
   <fieldset class="k-form-fieldset">
-    <legend class="k-form-legend">    
-      <h5>What is their gender? Select all that apply</h5>
+    <legend class="k-form-legend">
+      <h5>What is their gender? (Select all that apply)</h5>
 </legend>
   <div class="component-list-h">
     <span
@@ -14,7 +14,7 @@
         type="checkbox"
         kendoCheckBox
         [formControlName]="ControlPrefix + gender.lovCode"
-        attr.aria-labelledby="{{ ControlPrefix + gender.lovCode }}"     
+        attr.aria-labelledby="{{ ControlPrefix + gender.lovCode }}"
         id="{{ ControlPrefix + gender.lovCode }}"
         (change)="onCheckChange($event, gender.lovCode)"
       />
@@ -27,7 +27,7 @@
           <kendo-floatinglabel text="Enter Gender">
             <kendo-textbox
               aria-label="enter gender"
-              placeholder="Enter Gender" 
+              placeholder="Enter Gender"
               [formControlName]="DescriptionField"
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="maxLengthFifty"
