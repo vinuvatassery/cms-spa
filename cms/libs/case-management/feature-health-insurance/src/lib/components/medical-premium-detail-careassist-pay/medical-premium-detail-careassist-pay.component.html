@@ -21,8 +21,7 @@
                             <kendo-label class="k-radio-label" for="buyingPremiumNo" text="No"></kendo-label>
                         </span>
                         <kendo-formerror
-                            *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">Paying
-                            premium flag is required.</kendo-formerror>
+                            *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">A Response is Required.</kendo-formerror>
                     </div>
                 </fieldset>
             </div>
@@ -43,9 +42,7 @@
                         formatPlaceholder="formatPattern" placeholder="" aria-label="Next Premium Payment Due Date">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">Next payment
-                    premium
-                    due date is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">	Next payment due date is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
@@ -57,8 +54,7 @@
 
                     </kendo-numerictextbox>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid">Premium amount is
-                    required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid">Premium amount is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
@@ -69,8 +65,7 @@
                         [valuePrimitive]="true">
                     </kendo-dropdownlist>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid">Premium frequency
-                    is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid">Premium frequency is required.</kendo-formerror>
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
@@ -80,8 +75,7 @@
                     </kendo-textbox>
 
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment id number is
-                    required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment ID number is required.</kendo-formerror>
                 <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
                     Special characters not allowed.</kendo-formerror>
             </div>
@@ -95,14 +89,12 @@
                 </span>
             </div>
 
-            <div class="flex-col mt-3"
-                *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
+            <div class="flex-col mt-3">
                 <case-management-medical-premium-detail-client-policy-holder [healthInsuranceForm]="healthInsuranceForm"
                     [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-client-policy-holder>
             </div>
 
-            <div class="flex-col mt-3"
-                *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
+            <div class="flex-col mt-3">
                 <case-management-medical-premium-detail-others-covered-plan [healthInsuranceForm]="healthInsuranceForm"
                     [isViewContentEditable]="isViewContentEditable"
                     [clientId]="clientId"></case-management-medical-premium-detail-others-covered-plan>

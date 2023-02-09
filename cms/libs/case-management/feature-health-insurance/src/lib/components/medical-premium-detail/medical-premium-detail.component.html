@@ -138,8 +138,7 @@
               formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid ">Insurance start date is
-            required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid ">Insurance Start Date is required.</kendo-formerror>
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance End Date">
@@ -221,7 +220,7 @@
           <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
         </div>
-        <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
+        <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
             [ddlInsuranceType]="ddlInsuranceType" [clientId]="clientId"></case-management-medical-premium-detail-careassist-pay>
@@ -229,7 +228,7 @@
 
       </div>
 
-      <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
+      <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
@@ -251,10 +250,9 @@
         <kendo-formerror *ngIf="insuranceCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
           smaller file. </kendo-formerror>
         <kendo-formerror
-          *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !insuranceCardFilesExceedsFileSizeLimit"> Copy of
-          insurance card is required. </kendo-formerror>
+          *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !insuranceCardFilesExceedsFileSizeLimit">Copy of insurance card is required. </kendo-formerror>
       </div>
-      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan)
+      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan)
           && healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
         <h5 class="text-capital">Proof of premium amount</h5>
         <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
@@ -275,20 +273,14 @@
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
-          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">
-          Proof of premium is required.
-        </kendo-formerror>
+          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">Proof of premium is required. </kendo-formerror>
         <kendo-formerror
           *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isViewContentEditable && proofOfPremiumExceedsFileSizeLimit">
           File size is limited to 25 MB. Please select a smaller file.
         </kendo-formerror>
 
       </div>
-      <div class="flex-col mb-2  file-uploads" *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan
-        && ddlInsuranceType !== InsurancePlanTypes.OffExchangePlan
-        && ddlInsuranceType !== InsurancePlanTypes.QualifiedHealthPlan
-        && ddlInsuranceType !== InsurancePlanTypes.Veterans
-        && ddlInsuranceType !== InsurancePlanTypes.Medicare">
+      <div class="flex-col mb-2  file-uploads" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
         <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
         <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"

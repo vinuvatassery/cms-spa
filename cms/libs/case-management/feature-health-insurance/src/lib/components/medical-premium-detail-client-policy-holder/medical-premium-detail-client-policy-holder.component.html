@@ -11,8 +11,7 @@
                 id="clientPolicyHolderNo" tabindex="6" value="N" formControlName="isClientPolicyHolderFlag" />
             <kendo-label class="k-radio-label" text="No" for="clientPolicyHolderNo"></kendo-label>
         </span>
-        <kendo-formerror *ngIf="!healthInsuranceForm.controls['isClientPolicyHolderFlag'].valid && isViewContentEditable==false">Is
-            client policy holder flag is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!healthInsuranceForm.controls['isClientPolicyHolderFlag'].valid && isViewContentEditable==false">	A Response is Required.</kendo-formerror>
     </div>
 
     <div class="flex-row pl-3 mt-2">
@@ -22,9 +21,7 @@
               [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderFirstName"
               [maxlength]=policyHolderInputMaxLength> </kendo-textbox>
             <kendo-formerror
-              *ngIf="!healthInsuranceForm.controls['policyHolderFirstName'].valid && isViewContentEditable==false">First
-              Name is
-              required.</kendo-formerror>
+              *ngIf="!healthInsuranceForm.controls['policyHolderFirstName'].valid && isViewContentEditable==false">Policy Holder first name is required.</kendo-formerror>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col flex-col-6">
@@ -33,8 +30,7 @@
               [fillMode]="formUiStyle.inputFillMode" formControlName="policyHolderLastName"
               [maxlength]=policyHolderInputMaxLength>
             </kendo-textbox>
-            <kendo-formerror *ngIf="!healthInsuranceForm.controls['policyHolderLastName'].valid">Last Name is
-              required.</kendo-formerror>
+            <kendo-formerror *ngIf="!healthInsuranceForm.controls['policyHolderLastName'].valid">	Policy Holder last name is required.</kendo-formerror>
           </kendo-floatinglabel>
         </div>
       </div>

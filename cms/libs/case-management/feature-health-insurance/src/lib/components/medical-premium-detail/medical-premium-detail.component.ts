@@ -510,7 +510,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     // if(this.healthInsuranceForm.controls['insuranceEndDate'].valid){
     //   this.insuranceEndDateIsgreaterthanStartDate = true;
     // }
-    // this.isSummaryFileUploaded = true;
+    this.isSummaryFileUploaded = true;
     this.isProofFileUploaded = true;
     this.isInsuranceFileUploaded = true;
     // this.isMedicareCardFileUploaded = true;
@@ -547,19 +547,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       'metalLevel',
       'careassistPayingPremiumFlag'
     ];
-    const CobraPlanRequiredFields: Array<string> = [
-      'insuranceStartDate',
-      'insuranceIdNumber',
-      'insuranceCarrierName',
-      'insurancePlanName',
-    ];
-    const GroupPlanRequiredFields: Array<string> = [
+    const groupPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',
       'groupPlanType',
       'careassistPayingPremiumFlag'
+    ];
+    const CobraPlanRequiredFields: Array<string> = [
+      'insuranceStartDate',
+      'insuranceIdNumber',
+      'insuranceCarrierName',
+      'insurancePlanName',
     ];
     const HelpWithPremiumRequiredFields: Array<string> =
       ['nextPremiumDueDate', 'premiumAmt', 'premiumFrequencyCode', 'paymentIdNbr'];
@@ -610,7 +610,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       });
     }
 
-    if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan) {
+    if (this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
+      if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
+        groupPlanRequiredFields.push(...careassistPayingRequiredFields);
+      }
+      groupPlanRequiredFields.forEach((key: string) => {
+        this.healthInsuranceForm.controls[key].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      });
+    }
+
+    if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan || this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
       this.isInsuranceFileUploaded = (this.copyOfInsuranceCardFiles?.length > 0 && !!this.copyOfInsuranceCardFiles[0].name) ? true : false;
       if (!this.isInsuranceFileUploaded) {
         this.insuranceCardFilesExceedsFileSizeLimit = false;
@@ -624,17 +636,17 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
 
+      if(this.ddlInsuranceType === this.InsurancePlanTypes.GroupInsurancePlan){
+        this.isSummaryFileUploaded = (this.copyOfSummaryFiles?.length > 0 && !!this.copyOfSummaryFiles[0].name) ? true : false;
+        if(!this.isSummaryFileUploaded){
+          this.summaryFilesExceedsFileSizeLimit = false;
+        }
+      }
 
 
 
-    // if (this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
-    //   GroupPlanRequiredFields.forEach((key: string) => {
-    //     this.healthInsuranceForm.controls[key].setValidators([
-    //       Validators.required,
-    //     ]);
-    //     this.healthInsuranceForm.controls[key].updateValueAndValidity();
-    //   });
-    // }
+
+    
     // if (this.ddlInsuranceType === HealthInsurancePlan.Cobra) {
     //   CobraPlanRequiredFields.forEach((key: string) => {
     //     this.healthInsuranceForm.controls[key].setValidators([
