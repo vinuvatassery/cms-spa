@@ -1,9 +1,9 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {  CompletionChecklist, HealthcareProviderFacade, NavigationType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'case-management-healthcare-provider-page',
@@ -11,7 +11,7 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscriptio
   styleUrls: ['./healthcare-provider-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
+export class HealthcareProviderPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   clientId ! : number 
 
@@ -62,6 +62,11 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
   }
+
+  ngAfterViewInit(){
+    this.workFlowFacade.enableSaveButton();
+  }
+
    /** Private methods **/
    private loadCase()
    {  
@@ -120,6 +125,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
   /** Private Methods **/
   private saveClickSubscribed(): void {
     this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workFlowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),  
@@ -129,6 +135,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy {
         this.checkBoxSubscription.unsubscribe();      
         this.workFlowFacade.navigate(navigationType);
         this.healthProvider.hideLoader(); 
+      } else {
+        this.workFlowFacade.enableSaveButton();
       }
     });
   }

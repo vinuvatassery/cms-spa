@@ -1,9 +1,9 @@
 
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, AfterViewInit, } from '@angular/core';
 /** External libraries **/
-import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, Observable } from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, Observable, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle } from '@cms/shared/ui-tpa';
@@ -18,7 +18,7 @@ import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@
   styleUrls: ['./income-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IncomePageComponent implements OnInit, OnDestroy {
+export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
@@ -89,6 +89,10 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     this.saveForLaterValidationSubscription.unsubscribe();
   }
 
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+  } 
+
   /** Private methods **/
   private incomeNoteWordCount() {
     this.incomeNoteCharachtersCount = this.incomeNote
@@ -115,6 +119,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -123,6 +128,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
         this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated')
         this.workflowFacade.navigate(navigationType);
+      } else {
+        this.workflowFacade.enableSaveButton();
       }
     });
   }

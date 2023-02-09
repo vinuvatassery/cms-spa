@@ -1,9 +1,9 @@
 /** Angular **/
-import { ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries **/
-import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map } from 'rxjs';
+import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map, tap } from 'rxjs';
 
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, StatesInUSA } from '@cms/case-management/domain';
@@ -20,7 +20,7 @@ import { ActivatedRoute,Router } from '@angular/router';
   styleUrls: ['./contact-page.component.scss'],
 })
 
-export class ContactPageComponent implements OnInit, OnDestroy {
+export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -106,6 +106,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     adjustControls.forEach((control: any) => {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     });
+
+    this.workflowFacade.enableSaveButton();
   }
 
   /** Private methods **/
@@ -545,6 +547,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -555,6 +558,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
           this.workflowFacade.navigate(navigationType);
         }
+        else{
+          this.workflowFacade.enableSaveButton();
+        } 
       },
       error: (err) => {
         this.loaderService.hide();
