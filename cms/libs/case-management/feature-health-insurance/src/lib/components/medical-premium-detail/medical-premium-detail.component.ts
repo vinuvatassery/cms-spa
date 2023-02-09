@@ -921,10 +921,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonPharmacy = null;
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
-      this.healthInsuranceForm.value.othersCoveredOnPlan.forEach((person: any) => {
-        person.enrolledInInsuranceFlag = !!person.enrolledInInsuranceFlag ? StatusFlag.Yes : StatusFlag.No;
-      });
+      
       this.healthInsurancePolicy.othersCoveredOnPlan= this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag===true);
+      this.healthInsurancePolicy.othersCoveredOnPlan.forEach((person: any) => {
+        person.enrolledInInsuranceFlag = StatusFlag.Yes;
+      });
       this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
         x.dependentTypeCode=DependentTypeCode.Health;
         x.enrolledInInsuranceFlag=StatusFlag.Yes;
