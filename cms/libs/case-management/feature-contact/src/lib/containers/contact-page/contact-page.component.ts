@@ -296,10 +296,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.preferredContactMethods = preferredContact;
 
     if (this.preferredContactMethods.length > 0) {
-      this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(Validators.required);
-      this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
       const selectPreferredCode = this.contactInfoForm?.get('email.preferredContactMethod')?.value;
-      if (!this.preferredContactMethods?.includes(selectPreferredCode)) {
+      if (selectPreferredCode && !this.preferredContactMethods?.includes(selectPreferredCode)) {
         this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
       }
       this.updatePreferredContactCount(true);
@@ -464,6 +462,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
       emailGroup.controls['email'].setValidators([Validators.required, Validators.email]);
       emailGroup.controls['email'].updateValueAndValidity();
+    }
+
+    if (this.preferredContactMethods.length > 0) {
+      this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(Validators.required);
+      this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
     }
     
     if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
