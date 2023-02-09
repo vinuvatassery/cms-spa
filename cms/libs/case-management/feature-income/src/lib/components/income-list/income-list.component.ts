@@ -37,6 +37,7 @@ export class IncomeListComponent implements OnInit {
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
+  columnOptionDisabled = false;
   dependentsProofofSchools$!:any;
   isEdit!: boolean;
   selectedIncome: any;
