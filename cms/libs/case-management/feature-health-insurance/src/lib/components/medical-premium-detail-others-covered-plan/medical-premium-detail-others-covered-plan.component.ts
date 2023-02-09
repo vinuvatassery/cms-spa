@@ -62,7 +62,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
       firstName: new FormControl('', Validators.maxLength(40)),
       lastName: new FormControl('', Validators.maxLength(40)),
       dob: new FormControl(),
-      enrolledInInsuranceFlag: new FormControl(true),
+      //enrolledInInsuranceFlag: new FormControl(true),
     });
     this.newOthersCoveredOnPlan.push(personForm);
   }
