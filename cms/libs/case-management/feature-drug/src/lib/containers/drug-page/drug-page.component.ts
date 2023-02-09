@@ -1,5 +1,5 @@
 /** Angular **/
-import { ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
@@ -19,7 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./drug-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DrugPageComponent implements OnInit, OnDestroy {
+export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Public properties **/
   public uploadRemoveUrl = 'removeUrl';
   uploadedBenefitSummaryFile: any[] = [];
@@ -89,6 +89,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
   }
+  
 
   ngAfterViewInit() {
     const adjustControls =
@@ -96,6 +97,8 @@ export class DrugPageComponent implements OnInit, OnDestroy {
     adjustControls.forEach((control: any) => {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     });
+
+    this.workflowFacade.enableSaveButton();
   }
 
   /** Private Methods **/
@@ -248,7 +251,7 @@ export class DrugPageComponent implements OnInit, OnDestroy {
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
       .pipe(
-        tap(() => this.loaderService.show()),
+        tap(() => { this.loaderService.show(), this.workflowFacade.disableSaveButton() }),
         mergeMap((navigationType: NavigationType) =>
           forkJoin([of(navigationType), this.save()])
         )
@@ -260,7 +263,10 @@ export class DrugPageComponent implements OnInit, OnDestroy {
             'Prescription Drugs Saved Successfully'
           );
           this.workflowFacade.navigate(navigationType);
+        } else {
+          this.workflowFacade.enableSaveButton();
         }
+        
         this.loaderService.hide();
       });
   }

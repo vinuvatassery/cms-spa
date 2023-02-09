@@ -1,8 +1,8 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component,  OnDestroy,  OnInit,} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component,  OnDestroy,  OnInit,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
-import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facades **/
 import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
 /** Enums **/
@@ -14,7 +14,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
   styleUrls: ['./employment-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmploymentPageComponent implements OnInit, OnDestroy {
+export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Public Methods */
   employmentList$ = this.employmentFacade.employers$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
@@ -60,6 +60,11 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
   }
+
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+  }
+
   // loading case details like session id, eligibility id , clientid and clientcaseid
   loadCase() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
@@ -113,6 +118,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
       .pipe(
+        tap(() => this.workflowFacade.disableSaveButton()),
         mergeMap((navigationType: NavigationType) =>
           forkJoin([of(navigationType), this.save()])
         )
@@ -122,6 +128,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy {
           this.checkBoxSubscription.unsubscribe();
           this.workflowFacade.navigate(navigationType); 
           this.employmentFacade.hideLoader();
+        } else {
+          this.workflowFacade.enableSaveButton();
         }
         this.employmentFacade.hideLoader();
       });
