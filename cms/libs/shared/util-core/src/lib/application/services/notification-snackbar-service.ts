@@ -10,31 +10,33 @@ export class NotificationSnackbarService {
       snackbarSubject = new Subject<any>();
       snackbar$ = this.snackbarSubject.asObservable();
      
-      manageSnackBar(type : SnackBarNotificationType , subtitle : any)
-      {        
-        let subtitleText = subtitle;
+      manageSnackBar(type : SnackBarNotificationType , errorBody : any)
+      {      
+          
+        let subtitleText = errorBody;
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
         
         if(type == SnackBarNotificationType.ERROR)
         {
          
-          const err= subtitle;     
+          const errorData= errorBody;     
           let errorMessage =''
           
           //In case of fluent validation result from API
-          if(err?.error?.isValid === false)
+          if(errorData?.error?.isValid === false)
           {
-            err?.error?.errors?.forEach((item : any)=> {
+            errorData?.error?.errors?.forEach((item : any)=> {
               errorMessage += item?.errorMessage+' ';
             });           
           }
           else
           {
              //exception plugin result DTO
-              errorMessage =  err?.error?.details == null ? err?.error?.message : err?.error?.details
+              errorMessage =  errorData?.error?.details == null ? errorData?.error?.message : errorData?.error?.details
+              errorMessage = errorData?.message ?? ''
           }
          
-          subtitleText = errorMessage ?? err?.name ;        
+          subtitleText = errorMessage ?? errorData?.name ;        
           
          
         }
