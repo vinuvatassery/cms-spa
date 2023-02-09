@@ -27,6 +27,12 @@
           <a class="text-bold text-underline" aria-label="open in new tab" (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
+        <span *ngIf="question.questionCode==reviewQuestionCode.origonResident && checkQuestionDocuments(question.questionCode)==false">
+         <p class="mt-1 mb-1">Client does not have proof of home address or residency</p> 
+        </span>
+        <span *ngIf="question.questionCode==reviewQuestionCode.hivStatus && checkQuestionDocuments(question.questionCode)==false">
+          <p class="mt-1 mb-1">Client does not have proof of HIV</p> 
+         </span>
         <kendo-formerror *ngIf="formSubmited && !question.responseAnswerId">{{question.questionDesc}} response is
           required.</kendo-formerror>
       </div>

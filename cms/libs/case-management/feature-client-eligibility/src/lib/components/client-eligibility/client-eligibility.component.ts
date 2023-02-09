@@ -238,4 +238,27 @@ export class ClientEligibilityComponent implements OnInit {
   denialPopupClose() {
     this.isDenialLetter = false;
   }
+
+  checkQuestionDocuments(questionCode: string) {
+    let entityTypeCode = '';
+    switch (questionCode) {
+      case ReviewQuestionCode.origonResident:
+        entityTypeCode = ClientDocumnetEntityType.HomeAddressProof;
+        break;
+      case ReviewQuestionCode.income:
+        entityTypeCode = ClientDocumnetEntityType.Income;
+        break;
+      case ReviewQuestionCode.hivStatus:
+        entityTypeCode = ClientDocumnetEntityType.HivVerification;
+        break;
+
+      default:
+        break;
+    }
+    var documents=this.documents.filter((m: any) => m.entityTypeCode === entityTypeCode);
+    if(documents.length>0){
+      return true;
+    }
+    return false;
+  }
 }
