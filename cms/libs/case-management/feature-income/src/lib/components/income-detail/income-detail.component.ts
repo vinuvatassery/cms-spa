@@ -50,7 +50,6 @@ export class IncomeDetailComponent implements OnInit {
   tareaJustification = '';
   tareaJustificationCharachtersCount!: number;
   tareaJustificationMaxLength = 300;
-  dateValidator: boolean = false;
   startDate!:any;
   incomeTypesOther = '';
   public IncomeDetailsFormData: { incomeAmount: number } = {
@@ -407,20 +406,4 @@ export class IncomeDetailComponent implements OnInit {
       this.onRemoveIncomeConfirmationClosed();
     }
   }
-
-  // dateValidate()
-  // {
-  //   this.startDate=this.IncomeDetailsForm.controls['incomeStartDate'].value;
-  // }
-  // validate()
-  // {
-  //   this.dateValidator=false;
-  //   var startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
-  //   var endDate= this.IncomeDetailsForm.controls['incomeEndDate'].value;
-  //   if(startDate>endDate)
-  //   {
-  //     this.dateValidator=true;
-  //   }
-
-  // }
 }
