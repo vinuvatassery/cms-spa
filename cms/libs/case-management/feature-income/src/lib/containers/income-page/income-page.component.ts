@@ -40,6 +40,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
   proofOfIncomeTypes$ = this.incomeFacade.ddlProofOfIncomdeTypes$;
   hasNoProofOfIncome = false;
   incomeNoteCounter!: string;
+  incomeListRequiredValidation = false;
   incomeNote = '';
   incomeNoteCharachtersCount!: number;
   incomeNoteMaxLength = 300;
@@ -156,7 +157,8 @@ export class IncomePageComponent implements OnInit, OnDestroy {
         )
       }
       else
-      {
+      { 
+        this.incomeFacade.errorShowHideSnackBar( "Please fill the income details")
         return  of(false);
       }
     }
@@ -245,6 +247,7 @@ export class IncomePageComponent implements OnInit, OnDestroy {
     this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize, sortBy, sortType);
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
+      this.incomeListRequiredValidation = false;
       if (incomeresponse.noIncomeData!=null) {
         this.noIncomeFlag = true;
         this.noIncomeDetailsForm = new FormGroup({
