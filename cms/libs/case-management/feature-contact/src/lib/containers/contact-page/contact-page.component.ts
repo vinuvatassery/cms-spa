@@ -79,7 +79,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly route: ActivatedRoute,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
+    public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly router :Router
   ) { }
 
@@ -404,7 +404,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     mailingAddressGroup.controls['city'].updateValueAndValidity();
     mailingAddressGroup.controls['state'].setValidators([Validators.required]);
     mailingAddressGroup.controls['state'].updateValueAndValidity();
-    mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
+    mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
     mailingAddressGroup.controls['zip'].updateValueAndValidity();
 
     if ((homeAddressGroup.controls['homelessFlag']?.value ?? false) === false) {
@@ -412,7 +412,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       homeAddressGroup.controls['address1'].updateValueAndValidity();
       homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['address2'].updateValueAndValidity();
-      homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
+      homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['zip'].updateValueAndValidity();
     }
 
@@ -972,7 +972,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           name: this.contactInfo?.homeAddressProof?.documentName,
           size: this.contactInfo?.homeAddressProof?.documentSize,
           src: this.contactInfo?.homeAddressProof?.documentPath,
-          uid: this.contactInfo?.homeAddressProof?.documentId
+          uid: this.contactInfo?.homeAddressProof?.documentId,
+          documentId: this.contactInfo?.homeAddressProof?.documentId,
         },
       ];
     }
@@ -1345,13 +1346,17 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
   handleFileSelected(e: SelectEvent) {
+    this.homeAddressProofFile = undefined;
+    this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
     this.showAddressProofRequiredValidation = false;
     this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {
+ 
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
+      this.loaderService.show();
       this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
         next: (response) => {
           if (response === true) {
@@ -1360,10 +1365,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
             this.uploadedHomeAddressProof = undefined;
             this.loadContactInfo();
             this.updateHomeAddressProofCount(false);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
           this.loggingService.logException(err);
+          this.loaderService.hide();
         },
       });
     }
@@ -1371,6 +1378,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.homeAddressProofFile = undefined;
       this.uploadedHomeAddressProof = undefined;
       this.updateHomeAddressProofCount(false);
+      this.loaderService.hide();
     }
 
   }
