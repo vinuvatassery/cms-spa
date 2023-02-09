@@ -51,6 +51,7 @@
           <kendo-floatinglabel text="Income Start">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               formatPlaceholder="formatPattern" aria-label="income start" name="income start"
+              
               formControlName="incomeStartDate"  placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
@@ -59,11 +60,14 @@
 
         </div>
         <div class="flex-col flex-col-6">
-          <kendo-floatinglabel text="Income End">
+          <kendo-floatinglabel text="Income End (optional)">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-              formatPlaceholder="formatPattern"  placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
+              formatPlaceholder="formatPattern" [min]="startDate" 
+               placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
               #incomeEndDate>
             </kendo-datepicker>
+            <kendo-formerror *ngIf="IncomeDetailsForm.controls['incomeEndDate'].hasError('incorrect')"> 'Income End Date' should be greater than 'Income Start Date' 
+            </kendo-formerror>
           </kendo-floatinglabel>
 
 
@@ -163,7 +167,7 @@
       </div>
     </kendo-dialog-actions>
   </form>
-  <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
+  <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete Income">
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"
