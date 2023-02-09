@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 /** External libraries **/
-import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BreadCrumbItem } from '@progress/kendo-angular-navigation';
 import { filter, Subscription, BehaviorSubject } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class BreadCrumbComponent implements OnInit {
     this.initRoutes();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.routesData.unsubscribe();
@@ -31,7 +31,7 @@ export class BreadCrumbComponent implements OnInit {
     this.routesData = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((d) => {
-        this.items = this.createBreadcrumbs(this.activatedRoute.root);   
+        this.items = this.createBreadcrumbs(this.activatedRoute.root);
         this.items = [
           {
             text: 'Home',
@@ -50,13 +50,13 @@ export class BreadCrumbComponent implements OnInit {
       .map((i: any) => i.title.toLowerCase());
     console.log(url, selectedItemIndex);
 
-    this.router.navigate(url);
+    this.router.navigate(url, { queryParamsHandling: "preserve" });
   }
 
   private formatText(routeText: string): any {
     let formattedText = '';
     routeText.split('-').forEach(
-      (i: any) => formattedText += (formattedText.length > 0 ? ' ':'')+ i.charAt(0).toUpperCase() + i.slice(1)
+      (i: any) => formattedText += (formattedText.length > 0 ? ' ' : '') + i.charAt(0).toUpperCase() + i.slice(1)
     );
     return formattedText;
   }
@@ -67,7 +67,7 @@ export class BreadCrumbComponent implements OnInit {
     if (children.length === 0) {
       return breadcrumbs;
     }
-    
+
     for (const child of children) {
       const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
       if (routeURL !== '') {
@@ -77,15 +77,15 @@ export class BreadCrumbComponent implements OnInit {
       const label = child.snapshot.data['title'];
       const routePath = child?.snapshot?.url[0]?.path;
       let isInValidRoutePath = routePath === null || routePath === undefined || routePath === '';
-      if(isInValidRoutePath){
+      if (isInValidRoutePath) {
         return this.createBreadcrumbs(child, url, breadcrumbs);
       }
-            
-      let isValidTitleExist = label !== null && label !== undefined;  
+
+      let isValidTitleExist = label !== null && label !== undefined;
       if ((isValidTitleExist) || !isInValidRoutePath) {
 
         breadcrumbs.push({
-          text: isValidTitleExist? label: this.formatText(routePath),
+          text: isValidTitleExist ? label : this.formatText(routePath),
           title: url.replace('#', ''),
         });
       }

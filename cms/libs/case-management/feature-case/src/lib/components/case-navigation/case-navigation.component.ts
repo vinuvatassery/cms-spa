@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/internal/Observable';
 
 /** Internal Libraries **/
 import { ScreenType, StatusFlag, WorkFlowProgress } from '@cms/case-management/domain';
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-navigation',
@@ -21,33 +21,36 @@ export class CaseNavigationComponent implements OnInit {
   /** Input Properties **/
   @Input() routes$!: Observable<any>;
   @Input() completeStaus$!: Observable<any>;
-  @Input() currentSession : any
+  @Input() currentSession: any
   @Input() navigationEvent = new EventEmitter<string>();
+
   /** Output Properties **/
   @Output() workflowChange = new EventEmitter<object>();
 
   /** Public Properties **/
   isSendLetterProfileOpenedSubject = new BehaviorSubject<boolean>(false);
-  isSendLetterProfileOpened$ =
-    this.isSendLetterProfileOpenedSubject.asObservable();
+  isSendLetterProfileOpened$ = this.isSendLetterProfileOpenedSubject.asObservable();
   isApplicationReviewOpened = false;
-  isCheckRouteExcecuted = false; // for checking  the if conditions in the loop has been excecuted or not
   navigationIndex = 1;
   routes!: any[];
   review!: WorkFlowProgress;
-  isNotReadyForReview  = true;
+  isNotReadyForReview = true;
 
   /** constructor **/
-  constructor(private router: Router, private actRoute: ActivatedRoute, private readonly loaderService:LoaderService) { }
+  constructor(
+    private readonly router: Router,
+    private readonly actRoute: ActivatedRoute,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
-    this.loadCaseNavigationDeatils();
+    this.loadCaseNavigationDetails();
     this.navigationInitiated();
     this.addNavigationSubscription();
   }
 
-  private loadCaseNavigationDeatils() {
+  private loadCaseNavigationDetails() {
     this.routes$.subscribe({
       next: (routes: any) => {
         if (routes.length > 0) {
@@ -59,7 +62,7 @@ export class CaseNavigationComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error('error', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -70,7 +73,7 @@ export class CaseNavigationComponent implements OnInit {
         this.navigate(this.routes);
       },
       error: (err: any) => {
-        console.error('error', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -83,7 +86,22 @@ export class CaseNavigationComponent implements OnInit {
 
     if (routes[this.navigationIndex]?.sequenceNbr === this.review?.sequenceNbr) {
       this.isApplicationReviewOpened = true;
+      const route = this.router.url;
+      const routeArray = this.router.url?.substring(0, route?.indexOf('?') !== -1 ? route?.indexOf('?') : route?.length).split('/');
+      const isSendLetter = routeArray?.findIndex((i: any) => i === ScreenType.SendLetter) !== -1;
+      if (isSendLetter) {
+        this.isSendLetterProfileOpenedSubject.next(true);
+        this.loaderService.hide();
+        return;
+      }
+
+      this.isSendLetterProfileOpenedSubject.next(false);
     }
+    else {
+      this.isApplicationReviewOpened = false;
+      this.isSendLetterProfileOpenedSubject.next(false);
+    }
+
     const sessionId = this.actRoute.snapshot.queryParams['sid'];
     const entityId: string = this.actRoute.snapshot.queryParams['eid'];
     if (this.navigationIndex > -1
@@ -95,7 +113,7 @@ export class CaseNavigationComponent implements OnInit {
         {
           queryParams: {
             sid: sessionId,
-            pid: routes[this.navigationIndex].processId   ,
+            pid: routes[this.navigationIndex].processId,
             eid: entityId,
           }
         }
@@ -104,62 +122,21 @@ export class CaseNavigationComponent implements OnInit {
     this.loaderService.hide();
   }
 
-  private navigateByUrl(routes: any) {
-    if (this.navigationIndex > -1 && this.navigationIndex < routes.length) {
-      this.router.navigate([routes[this.navigationIndex].url], { queryParamsHandling: 'preserve' });
-    }
-    // TODO: In else case we can start the application review process.
-  }
-
   private navigationInitiated() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
-        next: (event) => {
-          let previousRoute = '';
-          this.isCheckRouteExcecuted = false;
-          const route = this.router.url;
-          const routeArray = this.router.url
-            .substring(
-              0,
-              route.indexOf('?') !== -1 ? route.indexOf('?') : route.length
-            )
-            .split('/');
-          routeArray.forEach((route) => {
-            const currentRoute = route;
-            this.checkRoute(currentRoute, previousRoute);
-            previousRoute = currentRoute;
-          });
-          if (!this.isCheckRouteExcecuted) {
-            this.isSendLetterProfileOpenedSubject.next(false);
-            this.isApplicationReviewOpened = false;
+        next: () => {
+          if (this.isApplicationReviewOpened === true) {
+            const routeArray = this.router.url?.substring(0, this.router.url?.indexOf('?') !== -1 ? this.router.url?.indexOf('?') : this.router.url?.length).split('/');
+            const isSendLetter = routeArray?.findIndex((i: any) => i === ScreenType.SendLetter) !== -1;
+            this.isSendLetterProfileOpenedSubject.next(isSendLetter);
           }
         },
         error: (err: any) => {
-          console.log('Error', err);
+          this.loggingService.logException(err);
         },
       });
-  }
-
-  private checkRoute(currentRoute: string, previousRoute: string) {
-    switch (previousRoute) {
-      case ScreenType.ApplicationEligibility: {
-        switch (currentRoute) {
-          case ScreenType.SendLetter: {
-            this.isSendLetterProfileOpenedSubject.next(true);
-            this.isApplicationReviewOpened = true;
-            this.isCheckRouteExcecuted = true;
-            break;
-          }
-          case ScreenType.Eligibility: {
-            this.isSendLetterProfileOpenedSubject.next(false);
-            this.isApplicationReviewOpened = true;
-            this.isCheckRouteExcecuted = true;
-            break;
-          }
-        }
-      }
-    }
   }
 
   /** Internal event methods **/

@@ -33,6 +33,17 @@
   .k-clear-value{
     display: none;
   }
+  .k-chip-outline-base {
+    border-color:transparent; 
+    background-color: $light-bgcolor;
+    border-radius: 30px;
+    &:hover{
+      background: $black-e;
+    }
+    .k-i-x-circle{
+      color: $black-6;
+    }
+}
 }
 .k-combobox {
   width: 100%;

@@ -1289,6 +1289,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   public handleFileSelected(event: any, fileType: string) {
     this.documentSizeValidator=false;
     if (fileType == 'proof') {
+      this.proofOfPremiumFiles = null;
       this.proofOfPremiumExceedsFileSizeLimit=false;
       this.proofOfPremiumFiles = [{
         document: event.files[0],
@@ -1304,6 +1305,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'summary') {
+      this.copyOfSummaryFiles = null;
       this.summaryFilesExceedsFileSizeLimit=false;
       this.copyOfSummaryFiles = [{
         document: event.files[0],
@@ -1319,6 +1321,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'copyInsurance') {
+      this.copyOfInsuranceCardFiles = null;
       this.insuranceCardFilesExceedsFileSizeLimit=false;
       this.copyOfInsuranceCardFiles = [{
         document: event.files[0],
@@ -1334,6 +1337,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'medicareCard') {
+      this.copyOfMedicareCardFiles = null;
       this.medicareCardFilesExceedsFileSizeLimit=false;
       this.copyOfMedicareCardFiles = [{
         document: event.files[0],

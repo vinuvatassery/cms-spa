@@ -1,5 +1,5 @@
 <div class="client-data-block">
-  <h3>Prescription drugs</h3>
+  <h3>Prescription Drugs</h3>
   <form [formGroup]="prescriptionDrugForm">
   <section>
    
@@ -15,6 +15,7 @@
             type="radio"
             kendoRadioButton
             formControlName="prescriptionDrugsForHivCode"
+            (change)="hivFlagSelected($event)"
             value="YES"  
             name="prescription"
             id="takingPrescriptionYes"  />
@@ -29,6 +30,7 @@
             type="radio"
             kendoRadioButton
             formControlName="prescriptionDrugsForHivCode"
+            (change)="hivFlagSelected($event)"
             value="NO"  
             name="prescription"
             id="takingPrescriptionNo"
@@ -112,7 +114,8 @@
           for="requiresNonPreferredPharmacyDontKnow"
         ></kendo-label>
       </span>
-      <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+      <kendo-formerror   *ngIf="nonPreferredFlagValidation">Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+      <!-- <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror> -->
     </kendo-formfield>
     </div>
     </fieldset>
@@ -147,6 +150,7 @@
         aria-label="upload proof" 
         name="myFileSelect" 
         #myFileSelect="ngModel"
+        [removeUrl]="uploadRemoveUrl"
         [restrictions]="uploadFileRestrictions.fileRestrictions"   
         [multiple]="false" 
         [autoUpload]="false"
@@ -156,13 +160,17 @@
         (remove)="handleFileRemoved()">
         <ng-template kendoUploadFileInfoTemplate  let-files let-state="state">
           <div (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-            <span>{{files[0].name}} </span> 
+            <span  *ngIf="!files[0].documentId" >{{files[0].name}} </span> 
+            <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+              <a>{{ files[0].name }} </a>
+            </button>
             <br>
             <span>{{files[0].size}}</span> 
           </div>
         </ng-template> 
       </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="summaryBenefitsValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror *ngIf="showDocRequiredValidation">Summary of Benefits is required</kendo-formerror>
       </div>
     </div>

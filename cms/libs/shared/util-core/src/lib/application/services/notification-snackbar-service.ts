@@ -11,7 +11,7 @@ export class NotificationSnackbarService {
       snackbar$ = this.snackbarSubject.asObservable();
      
       manageSnackBar(type : SnackBarNotificationType , subtitle : any)
-      {
+      {        
         let subtitleText = subtitle;
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
         
@@ -22,9 +22,9 @@ export class NotificationSnackbarService {
           let errorMessage =''
           
           //In case of fluent validation result from API
-          if(err?.isValid === false)
+          if(err?.error?.isValid === false)
           {
-            err?.errors.forEach((item : any)=> {
+            err?.error?.errors?.forEach((item : any)=> {
               errorMessage += item?.errorMessage+' ';
             });           
           }
