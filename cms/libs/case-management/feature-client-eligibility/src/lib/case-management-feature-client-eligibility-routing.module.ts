@@ -13,10 +13,15 @@ const routes: Routes = [
     path: 'send-letter',
     component: SendLetterPageComponent,
   },
+  {
+    path: '',
+    redirectTo: 'eligibility',
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CaseManagementFeatureClientEligibilityRoutingModule {}
+export class CaseManagementFeatureClientEligibilityRoutingModule { }
