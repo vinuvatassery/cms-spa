@@ -41,6 +41,9 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
           person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
         });
         let dependents = data.filter((dep: any) => dep.dependentTypeCode == 'D');
+        dependents.forEach((el:any) => {
+          el.enrolledInInsuranceFlag=false;
+        });
         let dependentGroup = !!dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
         let dependentForm = this.formBuilder.array(dependentGroup);
         this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);

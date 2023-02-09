@@ -422,9 +422,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
       healthInsurancePolicy.othersCoveredOnPlanFlag
     );
-    healthInsurancePolicy.othersCoveredOnPlan?.forEach((person: any) => {
-      person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
-    })
+    // healthInsurancePolicy.othersCoveredOnPlan?.forEach((person: any) => {
+    //   person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
+    // })
     this.setDependentsForm(healthInsurancePolicy);
     if (!!healthInsurancePolicy.copyOfInsuranceCardFileName) {
       this.copyOfInsuranceCardFiles = [{
@@ -470,14 +470,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private setDependentsForm(healthInsurancePolicy: healthInsurancePolicy) {
-    let dependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'D');
-    let dependentGroup = !!dependents ? dependents.map(pe => this.formBuilder.group(pe)) : [];
-    let dependentForm = this.formBuilder.array(dependentGroup);
-    this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
-    let healthDependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
-    let healthGroup = !!healthDependents ? healthDependents.map(pe => this.formBuilder.group(pe)) : [];
-    let healthForm = this.formBuilder.array(healthGroup);
-    this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
+    // let dependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'D');
+    // let dependentGroup = !!dependents ? dependents.map(pe => this.formBuilder.group(pe)) : [];
+    // let dependentForm = this.formBuilder.array(dependentGroup);
+    // this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
+    // let healthDependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
+    // let healthGroup = !!healthDependents ? healthDependents.map(pe => this.formBuilder.group(pe)) : [];
+    // let healthForm = this.formBuilder.array(healthGroup);
+    // this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
   }
 
 
@@ -920,7 +920,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonPharmacy = null;
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
-      this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
+      debugger
+      this.healthInsurancePolicy.othersCoveredOnPlan= this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag===true);
+      //this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
       // if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
       //   this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
       //     x.relationshipCode = this.relationshipList.filter(
@@ -928,12 +930,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       //   });
       //   this.healthInsurancePolicy.othersCoveredOnPlan.push(...this.healthInsuranceForm.value.newOthersCoveredOnPlan);
       // }
-      this.healthInsuranceForm.value.othersCoveredOnPlan.forEach((person: any) => {
-        person.enrolledInInsuranceFlag = !!person.enrolledInInsuranceFlag ? StatusFlag.Yes : StatusFlag.No;
-      });
-      if (this.removedPersons.length > 0) {
-        this.healthInsurancePolicy.removedOthersCoveredOnPlan = this.removedPersons;
-      }
+      // this.healthInsuranceForm.value.othersCoveredOnPlan.forEach((person: any) => {
+      //   person.enrolledInInsuranceFlag = !!person.enrolledInInsuranceFlag ? StatusFlag.Yes : StatusFlag.No;
+      // });
+      // if (this.removedPersons.length > 0) {
+      //   this.healthInsurancePolicy.removedOthersCoveredOnPlan = this.removedPersons;
+      // }
       this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;
       this.healthInsurancePolicy.policyHolderFirstName = this.healthInsuranceForm.value.policyHolderFirstName;
       this.healthInsurancePolicy.policyHolderLastName = this.healthInsuranceForm.value.policyHolderLastName;

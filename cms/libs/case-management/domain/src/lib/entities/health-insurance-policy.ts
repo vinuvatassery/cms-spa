@@ -1,3 +1,5 @@
+import { Dependent } from "./dependent";
+
 export class healthInsurancePolicy {
         clientInsurancePolicyId: string | null = null;
         clientId: number | null = null;
@@ -67,8 +69,8 @@ export class healthInsurancePolicy {
         medicareCardFileTypeCode: string = "";
         medicareCardFileId: string = "";
         medicareCardFilePath: string = "";
-        othersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
-        removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
+        othersCoveredOnPlan: Array<Dependent> = [];
+        //removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
 }
 
 export class othersCoveredOnPlan {
