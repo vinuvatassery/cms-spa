@@ -100,7 +100,7 @@ export class AcceptApplicationComponent implements OnInit {
             'Eligibility added successfully.'
           );
           this.loaderService.hide();
-          this.router.navigate(['/case-management/case-detail/application-eligibility/send-letter'], {
+          this.router.navigate(['/case-management/case-detail/send-letter'], {
             queryParamsHandling: "preserve"
           });
         }

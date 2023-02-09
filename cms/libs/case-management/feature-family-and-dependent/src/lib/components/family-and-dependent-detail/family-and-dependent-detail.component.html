@@ -159,7 +159,7 @@
         <kendo-floatinglabel text="Legal Last Name">
           <kendo-textbox aria-label="legal last name"  
           [fillMode]="formUiStyle.inputFillMode"  placeholder="Legal Last Name"
-          formControlName="lastName">   </kendo-textbox> 
+          formControlName="lastName" [maxlength]="40">   </kendo-textbox> 
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','lastName') && isSubmitted">Legal Last Name
           is required</kendo-formerror>

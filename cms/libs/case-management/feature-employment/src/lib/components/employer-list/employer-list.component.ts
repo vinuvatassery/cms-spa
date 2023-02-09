@@ -28,6 +28,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/
+  filterable = false;
   isAddEmployerButtonDisplayed!: boolean;
   isAdd = true;
   isRemoveEmployerConfirmationPopupOpened = false;

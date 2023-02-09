@@ -1258,7 +1258,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   public handleFileSelected(event: any, fileType: string) {
     this.documentSizeValidator = false;
     if (fileType == 'proof') {
-      this.proofOfPremiumExceedsFileSizeLimit = false;
+      this.proofOfPremiumFiles = null;
+      this.proofOfPremiumExceedsFileSizeLimit=false;
       this.proofOfPremiumFiles = [{
         document: event.files[0],
         size: event.files[0].size,
@@ -1272,7 +1273,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'summary') {
-      this.summaryFilesExceedsFileSizeLimit = false;
+      this.copyOfSummaryFiles = null;
+      this.summaryFilesExceedsFileSizeLimit=false;
       this.copyOfSummaryFiles = [{
         document: event.files[0],
         size: event.files[0].size,
@@ -1286,7 +1288,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'copyInsurance') {
-      this.insuranceCardFilesExceedsFileSizeLimit = false;
+      this.copyOfInsuranceCardFiles = null;
+      this.insuranceCardFilesExceedsFileSizeLimit=false;
       this.copyOfInsuranceCardFiles = [{
         document: event.files[0],
         size: event.files[0].size,
@@ -1300,7 +1303,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
     else if (fileType == 'medicareCard') {
-      this.medicareCardFilesExceedsFileSizeLimit = false;
+      this.copyOfMedicareCardFiles = null;
+      this.medicareCardFilesExceedsFileSizeLimit=false;
       this.copyOfMedicareCardFiles = [{
         document: event.files[0],
         size: event.files[0].size,
