@@ -51,6 +51,11 @@ export class IncomeFacade {
       this.HideLoader();
     }
 
+    errorShowHideSnackBar( subtitle : any)
+    {
+      this.notificationSnackbarService.errorSnackBar(subtitle)
+    }
+
     ShowLoader()
     {
       this.loaderService.show();

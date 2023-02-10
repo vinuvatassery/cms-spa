@@ -50,6 +50,7 @@ export class IncomeDetailComponent implements OnInit {
   tareaJustification = '';
   tareaJustificationCharachtersCount!: number;
   tareaJustificationMaxLength = 300;
+  startDate!:any;
   incomeTypesOther = '';
   public IncomeDetailsFormData: { incomeAmount: number } = {
     incomeAmount: 0,
@@ -193,7 +194,6 @@ export class IncomeDetailComponent implements OnInit {
     this.setValidators();
     if (this.isEditValue) {
       this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
-      this.proofOfIncomeValidator = false;
     }
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
       let incomeData = this.IncomeDetailsForm.value;
@@ -295,7 +295,6 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeAmt'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
-    // this.IncomeDetailsForm.controls['incomeEndDate'].setValidators([Validators.required,    ]);
     this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
@@ -304,6 +303,11 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
+    var endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
+    var startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
+    if(endDate<=startDate && this.IncomeDetailsForm.controls['incomeEndDate'].value ){
+      this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({'incorrect':true})
+    }
 
 
     if (!this.hasNoProofOfIncome) {

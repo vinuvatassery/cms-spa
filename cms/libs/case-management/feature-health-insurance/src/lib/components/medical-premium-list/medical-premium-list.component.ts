@@ -24,6 +24,7 @@ export class MedicalPremiumListComponent implements OnInit {
   isEdit!: boolean;
   dialogTitle!: string;
   insuranceType!: string;
+  columnOptionDisabled = false;
   public pageSizes = this.healthFacade.gridPageSizes;
   public gridSkipCount = this.healthFacade.skipCount;
   public state!: State;

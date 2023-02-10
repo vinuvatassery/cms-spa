@@ -103,8 +103,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     this.familyMemberForm = this.formBuilder.group({
       concurrencyStamp: [''],
       relationshipCode: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.maxLength(40)]],
+      lastName: ['', [Validators.required, Validators.maxLength(40)]],
       dob: ['', Validators.required],
       ssn: [''],
       enrolledInInsuranceFlag: ['', Validators.required],
