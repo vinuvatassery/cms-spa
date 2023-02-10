@@ -389,9 +389,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(
         healthInsurancePolicy.insuranceIdNbr
       );
-      // this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
-      //   healthInsurancePolicy.insuranceCarrierId
-      // );
 
       this.healthInsuranceForm.controls['insurancePlanName'].setValue(
         healthInsurancePolicy.insurancePlanId
@@ -423,9 +420,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
       healthInsurancePolicy.othersCoveredOnPlanFlag
     );
-    // healthInsurancePolicy.othersCoveredOnPlan?.forEach((person: any) => {
-    //   person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
-    // })
+    
     this.setDependentsForm(healthInsurancePolicy);
     if (!!healthInsurancePolicy.copyOfInsuranceCardFileName) {
       this.copyOfInsuranceCardFiles = [{
@@ -471,14 +466,20 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   private setDependentsForm(healthInsurancePolicy: healthInsurancePolicy) {
-    // let dependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'D');
+    healthInsurancePolicy.othersCoveredOnPlan?.forEach((person: any) => {
+      person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
+    })
+    let dependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'D');
+    this.healthInsuranceForm.controls['othersCoveredOnPlanSaved'].setValue(
+      dependents
+    );
     // let dependentGroup = !!dependents ? dependents.map(pe => this.formBuilder.group(pe)) : [];
     // let dependentForm = this.formBuilder.array(dependentGroup);
-    // this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
-    // let healthDependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
-    // let healthGroup = !!healthDependents ? healthDependents.map(pe => this.formBuilder.group(pe)) : [];
-    // let healthForm = this.formBuilder.array(healthGroup);
-    // this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
+    // this.healthInsuranceForm.setControl('othersCoveredOnPlanSaved', dependentForm);
+    let healthDependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
+    let healthGroup = !!healthDependents ? healthDependents.map(pe => this.formBuilder.group(pe)) : [];
+    let healthForm = this.formBuilder.array(healthGroup);
+    this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
   }
 
 
@@ -939,7 +940,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonPharmacy = null;
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
-
       this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag === true);
       this.healthInsurancePolicy.othersCoveredOnPlan.forEach((person: any) => {
         person.enrolledInInsuranceFlag = StatusFlag.Yes;
@@ -951,6 +951,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         x.clientId = this.clientId;
         this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
       });
+      
       //this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
       // if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
       //   this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {

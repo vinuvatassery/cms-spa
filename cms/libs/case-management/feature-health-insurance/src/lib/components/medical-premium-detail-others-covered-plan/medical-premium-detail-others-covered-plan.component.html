@@ -17,7 +17,8 @@
                 <kendo-label class="k-radio-label" for="othersCoveredOnThePlanNo" text="No"></kendo-label>
             </span>
             <kendo-formerror
-                *ngIf="!healthInsuranceForm.controls['othersCoveredOnPlanFlag'].valid && isViewContentEditable==false">A Response is required.</kendo-formerror>
+                *ngIf="!healthInsuranceForm.controls['othersCoveredOnPlanFlag'].valid && isViewContentEditable==false">A
+                Response is required.</kendo-formerror>
         </div>
     </fieldset>
 
@@ -33,8 +34,8 @@
                             <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
                                 formControlName="enrolledInInsuranceFlag" (change)="updateEnrollStatus($event, i)"
                                 aria-labelledby="othersCoverdSelect" id="othersCoverdSelect{{i}}"
-                                name={{person.value.firstName}}{{-person.value.lastName}} />
-                            <label class="k-checkbox-label" for="othersCoverdSelect">{{person.value.firstName}}
+                                 />
+                            <label class="k-checkbox-label" for="othersCoverdSelect{{i}}">{{person.value.firstName}}
                                 {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
                         </span>
                     </div>
@@ -57,11 +58,13 @@
                     <kendo-floatinglabel text="Relationship to Client">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                             aria-label="Relationship to Client" [disabled]="isViewContentEditable"
-                            [data]="relationshipDescriptionList" formControlName="relationshipDescription">
+                            [data]="relationshipList"  textField="lovDesc" [valuePrimitive]="true"
+                            valueField="lovCode"
+                            formControlName="relationshipCode">
                         </kendo-dropdownlist>
                         <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
-                  && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].relationshipDescription
-                  && getPersonControl(i, 'relationshipDescription')?.touched
+                  && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].relationshipCode
+                  && getPersonControl(i, 'relationshipCode')?.touched
                   && isViewContentEditable==false">Relationship description is
                             required.</kendo-formerror>
                     </kendo-floatinglabel>
@@ -105,10 +108,10 @@
     </div>
     <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
         <div class="flex-col" *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
-          <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
-            aria-label="add new person">
-            <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
-          </button>
+            <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
+                aria-label="add new person">
+                <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
+            </button>
         </div>
-      </div>
+    </div>
 </div>

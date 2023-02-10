@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup,FormArray,FormControl,Validators } from '@angular/forms';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { FamilyAndDependentFacade, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-medical-premium-detail-others-covered-plan',
@@ -13,8 +14,8 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() clientId: any;
-  
 
+  private familyAndDependentSubscription !: Subscription;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   relationshipDescriptionList: any = [];
   relationshipList: any = [];
@@ -25,7 +26,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
     public readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder
   ) {
-    this.healthInsuranceForm = this.formBuilder.group({ });
+    this.healthInsuranceForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
@@ -34,39 +35,42 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
     this.familyAndDependentFacade.loadClientDependents(this.clientId);
     this.loadClientDependents();
   }
+  ngOnDestroy(): void {
+    this.familyAndDependentSubscription.unsubscribe();
+  }
   private loadClientDependents() {
-    this.familyAndDependentFacade.clientDependents$.subscribe((data: any) => {
+    this.familyAndDependentSubscription = this.familyAndDependentFacade.clientDependents$.subscribe((data: any) => {
       if (!!data) {
-        data.forEach((person: any) => {
-          person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
-        });
         let dependents = data.filter((dep: any) => dep.dependentTypeCode == 'D');
-        dependents.forEach((el:any) => {
-          el.enrolledInInsuranceFlag=false;
+        const othersCoveredOnPlanSaved = this.healthInsuranceForm.controls['othersCoveredOnPlanSaved'].value;
+        dependents.forEach((el: any) => {
+          if (othersCoveredOnPlanSaved !== null && othersCoveredOnPlanSaved.some((m: any) => m.clientDependentId === el.clientDependentId))
+            el.enrolledInInsuranceFlag = true;
+          else
+            el.enrolledInInsuranceFlag = false;
         });
         let dependentGroup = !!dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
         let dependentForm = this.formBuilder.array(dependentGroup);
         this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
-        // let healthDependents = data.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
-        // let healthGroup = !!healthDependents ? healthDependents.map((person: any) => this.formBuilder.group(person)) : [];
-        // let healthForm = this.formBuilder.array(healthGroup);
-        // this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
+
+        if (this.isViewContentEditable) {
+          this.othersCoveredOnPlan.controls.forEach((key: any) => {
+            key.controls['enrolledInInsuranceFlag'].disable();
+          });
+        }
       }
     });
   }
 
   onToggleNewPersonClicked() {
     let personForm = this.formBuilder.group({
-      relationshipDescription: new FormControl(''),
       relationshipCode: new FormControl(''),
       firstName: new FormControl('', Validators.maxLength(40)),
       lastName: new FormControl('', Validators.maxLength(40)),
       dob: new FormControl(),
-      //enrolledInInsuranceFlag: new FormControl(true),
     });
     this.newOthersCoveredOnPlan.push(personForm);
   }
-
   getPersonControl(index: number, fieldName: string) {
     return (<FormArray>this.healthInsuranceForm.get('newOthersCoveredOnPlan')).at(index).get(fieldName);
   }
