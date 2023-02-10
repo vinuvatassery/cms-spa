@@ -68,7 +68,7 @@ export class IncomeListComponent implements OnInit {
     },
     {
       buttonType:"btn-h-primary",
-      text: "Attach from client attachments",
+      text: "Attach from client/'s attachments",
       id: "attachfromclient",
       // icon: "star",
       click: (event: any,dataItem: any): void => {
