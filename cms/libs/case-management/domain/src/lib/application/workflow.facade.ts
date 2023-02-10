@@ -36,6 +36,7 @@ export class WorkflowFacade {
   private saveForLaterValidationSubject = new Subject<boolean>();
   private saveForLaterConfirmationSubject = new Subject<boolean>();
   private sendEmailLetterSubject = new Subject<boolean>();
+  private isSaveButtonEnabledSubject = new Subject<boolean>();
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
@@ -44,6 +45,7 @@ export class WorkflowFacade {
   sessionSubject$ = this.sessionSubject.asObservable();
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
   workflowReady$ = this.workflowReadySubject.asObservable();
+  isSaveButtonEnabled$ = this.isSaveButtonEnabledSubject.asObservable();
 
   saveForLaterClicked$ = this.saveForLaterClickedSubject.asObservable();
   saveForLaterValidationClicked$ = this.saveForLaterValidationSubject.asObservable();
@@ -480,5 +482,12 @@ export class WorkflowFacade {
     this.wfProcessCompletionStatusSubject.next([]);
   }
 
+  enableSaveButton(){
+    this.isSaveButtonEnabledSubject.next(true);
+  }
+
+  disableSaveButton(){
+    this.isSaveButtonEnabledSubject.next(false);
+  }
   
 } 
