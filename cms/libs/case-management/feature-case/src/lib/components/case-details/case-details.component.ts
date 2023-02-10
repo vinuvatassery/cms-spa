@@ -122,6 +122,8 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   ngOnDestroy(): void {
     if (!this.isProgramVIsible) {
       this.caseDataDataSubscription.unsubscribe();
+    }
+    else{
       this.userProfileSubsriction.unsubscribe();
     }
   }
