@@ -36,6 +36,9 @@ export class DuplicateClientFoundComponent implements OnInit {
     else {
       this.ssn = this.currentClientInfo.ssn
     }
+    if(isNaN(this.currentClientInfo.dob)){
+      this.currentClientInfo.dob=null
+    }
   }
 
   onDuplicateFoundClick() {
