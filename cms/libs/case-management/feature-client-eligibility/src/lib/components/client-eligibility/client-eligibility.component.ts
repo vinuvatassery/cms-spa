@@ -121,6 +121,10 @@ export class ClientEligibilityComponent implements OnInit {
     this.getQuestionsResponse.emit(this.questions);
   }
 
+  notesChanged(){    
+    this.getQuestionsResponse.emit(this.questions);
+  }
+
   getQuestionDocuments(questionCode: string) {
     let entityTypeCode = '';
     switch (questionCode) {
