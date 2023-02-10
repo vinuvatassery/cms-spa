@@ -1,15 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
 import { SnackBarNotificationText, SnackBarNotificationType } from '../../enums/snack-bar-notification-type.enum';
-
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationSnackbarService {
+ 
+  filterManager: Subject<any> = new Subject<any>();  
+  snackbarSubject = new Subject<any>();
+  snackbar$ = this.snackbarSubject.asObservable();
 
-      snackbarSubject = new Subject<any>();
-      snackbar$ = this.snackbarSubject.asObservable();
-     
+     constructor()
+     {
+      this.filterManager
+      .pipe(debounceTime(300))      
+      .subscribe(
+        (snackbarMessage) => 
+        {
+          this.snackbarSubject.next(snackbarMessage);
+        } ); 
+     }  
+
       manageSnackBar(type : SnackBarNotificationType , errorBody : any)
       {      
           
@@ -17,11 +28,9 @@ export class NotificationSnackbarService {
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
         
         if(type == SnackBarNotificationType.ERROR)
-        {
-         
+        {         
           const errorData= errorBody;     
-          let errorMessage =''
-          
+          let errorMessage =''          
           //In case of fluent validation result from API
           if(errorData?.error?.isValid === false)
           {
@@ -34,11 +43,8 @@ export class NotificationSnackbarService {
              //exception plugin result DTO
               errorMessage =  errorData?.error?.details == null ? errorData?.error?.message : errorData?.error?.details
               errorMessage = errorData?.message ?? ''
-          }
-         
-          subtitleText = errorMessage ?? errorData?.name ;        
-          
-         
+          }         
+          subtitleText = errorMessage ?? errorData?.name ;   
         }
 
         const snackbarMessage: any = {
@@ -46,7 +52,7 @@ export class NotificationSnackbarService {
           subtitle: subtitleText,
           type: type,
         };
-        this.snackbarSubject.next(snackbarMessage);
+        this.filterManager.next(snackbarMessage);
 
       }
       errorSnackBar( subtitle : any)
