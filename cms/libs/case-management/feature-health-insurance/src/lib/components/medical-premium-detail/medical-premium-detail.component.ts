@@ -72,6 +72,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   @Output() editRedirect = new EventEmitter<string>();
   @Output() isDeleteClicked = new EventEmitter<any>();
   @Output() isAddEditClicked = new EventEmitter<any>();
+  @Output() isAddPriority = new EventEmitter<any>();
 
   /** Private properties **/
   private loadSessionSubscription!: Subscription;
@@ -195,7 +196,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   // private loadDdlMedicalHealthInsurancePlans() {
   //   this.healthFacade.loadDdlMedicalHealthInsurancePlans();
-  // }  
+  // }
 
   private loadDdlMedicalHealthPlanMetalLevel() {
     this.healthFacade.loadDdlMedicalHealthPlanMetalLevel();
@@ -420,7 +421,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
       healthInsurancePolicy.othersCoveredOnPlanFlag
     );
-    
+
     this.setDependentsForm(healthInsurancePolicy);
     if (!!healthInsurancePolicy.copyOfInsuranceCardFileName) {
       this.copyOfInsuranceCardFiles = [{
@@ -629,7 +630,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         cobraPlanRequiredFields.push(...careassistPayingRequiredFields);
         cobraPlanRequiredFields.push('premiumPaidThruDate');
-        
+
       }
       cobraPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
@@ -664,7 +665,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
 
 
-    
+
 
     // if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) {
     //   this.medicareInsuranceInfoCheck = false;
@@ -731,7 +732,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     // if (this.ddlInsuranceType !== this.InsurancePlanTypes.OregonHealthPlan
     //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans
     //   && this.ddlInsuranceType !== this.InsurancePlanTypes.GroupInsurancePlan
-    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra 
+    //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Cobra
     //   && this.ddlInsuranceType !== this.InsurancePlanTypes.Medicare) {
     //   if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y') {
     //     if (this.healthInsuranceForm.value.othersCoveredOnPlan.length == 0) {
@@ -741,7 +742,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     //       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].updateValueAndValidity();
     //     }
     //   }
-    //   if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y' 
+    //   if(this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == 'Y'
     //   || this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value == 'N'){
     //     this.healthInsuranceForm.controls['policyHolderFirstName'].setValidators([
     //       Validators.required,
@@ -951,7 +952,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         x.clientId = this.clientId;
         this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
       });
-      
+
       //this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
       // if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
       //   this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
@@ -1164,6 +1165,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
               this.isAddEditClicked.next(true);
+              this.isAddPriority.next(false);
             },
             (error: any) => {
               if (error) {
@@ -1188,6 +1190,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
               this.isAddEditClicked.next(true);
+              this.isAddPriority.next(true)
             },
             (error: any) => {
               if (error) {

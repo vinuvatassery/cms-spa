@@ -141,6 +141,7 @@
     (isCloseInsuranceModal)="handleHealthInsuranceCloseClicked()"
     (editRedirect)="handleHealthInsuranceOpenClicked('edit')" [insuranceType]="insuranceType"
     [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)" (isAddEditClicked)="addOrEditClicked($event)"
+    (isAddPriority)="isAddPriority($event)"
     [caseEligibilityId]="caseEligibilityId"
     [clientId] ="clientId">
   </case-management-medical-premium-detail>
@@ -149,8 +150,12 @@
 <!-- Change Priority Modal -->
 <kendo-dialog *ngIf="isOpenedChangePriorityModal" (close)="onChangePriorityCloseClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar>Select Insurance Priority</kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"></case-management-set-health-insurance-priority>
+  <kendo-dialog-titlebar>{{
+    isEditInsurancePriorityTitle
+        ? 'Change Insurance Priority'
+        : 'Select Insurance Priority'
+    }}</kendo-dialog-titlebar>
+  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"></case-management-set-health-insurance-priority>
 </kendo-dialog>
 
 <!-- Delete Modal -->
