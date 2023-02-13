@@ -27,6 +27,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
   raceAndEthnicityData: Array<any> = [];
   ethnicityData: Array<any> = [];
+  isNotListed: boolean = false;
 
   popupClassMultiSelect = 'multiSelectSearchPopup';
   constructor(
@@ -75,11 +76,25 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
       this.raceAndEthnicityData = groupBy(raceAndEthnicityDataGroup, [
         { field: 'parentCode' },
       ]);
+      console.log(this.raceAndEthnicityData);
       this.RaceAndEthnicityData.emit(raceAndEthnicityData);
     });
   }
 
   public RaceAndEthnicityhange(value: any): void {
+    let notListedValue: any = {};
+    value.forEach((val:any)=>{
+      if(val.lovCode === "NOT_LISTED") {
+        this.isNotListed = true;
+        notListedValue = val;
+      }
+    });
+    if (this.isNotListed && Object.keys(notListedValue).length > 0) {
+      this.appInfoForm.get('RaceAndEthnicity')?.setValue([notListedValue]);
+    }
+    else {
+      this.isNotListed = false;
+    }
     this.RaceAndEthnicityChange.emit(true);
     // if (Array.isArray(value) && value.length == 1) {
     //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(value[0]);
@@ -87,5 +102,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
     //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
     // }
     // console.log('valueChange', value);
+
   }
 }
