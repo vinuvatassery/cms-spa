@@ -24,7 +24,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>           
             <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.required">
-              Address Line 1 is required
+              Mailing Address is required
             </kendo-formerror>
             <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.pattern">
               Special characters are not allowed
@@ -64,7 +64,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="mailingAddress?.city?.errors?.required">
-              City is required
+              Mailing City is required
             </kendo-formerror>
             <kendo-formerror *ngIf="mailingAddress?.city?.errors?.pattern">
               Special characters are not allowed
@@ -88,7 +88,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>State is required</kendo-formerror>
+            <kendo-formerror>Mailing State is required</kendo-formerror>
           </kendo-formfield>
           </div>
           <div class="flex-col flex-col-3">
@@ -103,7 +103,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.required">
-              Zip is required
+              Mailing Zip is required
             </kendo-formerror>
             <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.pattern">
               Special characters are not allowed
@@ -161,7 +161,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
-              Address Line 1 is required
+              Home Address is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homeAddress?.address1?.errors?.pattern">
               Special characters are not allowed
@@ -203,7 +203,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
-              City is required
+              Home City is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homeAddress?.city?.errors?.pattern">
               Special characters are not allowed
@@ -229,7 +229,7 @@
               </kendo-dropdownlist>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.state?.errors?.required">
-              State is required
+              Home State is required
             </kendo-formerror>
           </kendo-formfield>
           <kendo-formerror *ngIf="!(isHomeAddressStateOregon$ | async)">
@@ -248,7 +248,7 @@
               > </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homeAddress?.zip?.errors?.required">
-              Zip is required
+              Home Zip is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homeAddress?.zip?.errors?.pattern">
               Special characters are not allowed
@@ -278,7 +278,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <kendo-formerror>County is required</kendo-formerror>
+            <kendo-formerror>Home County is required</kendo-formerror>
           </kendo-formfield>
           </div>
         </div>
