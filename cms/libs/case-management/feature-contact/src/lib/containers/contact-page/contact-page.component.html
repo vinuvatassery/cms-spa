@@ -444,7 +444,7 @@
               Home Phone is required
             </kendo-formerror>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.pattern">
-              Not a valid phone number format
+              Home Phone must have 10 digits
             </kendo-formerror>
           </kendo-formfield>
           </div>
@@ -517,7 +517,7 @@
               Cell Phone is required
             </kendo-formerror>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.pattern">
-              Not a valid phone number format
+              Cell Phone must have 10 digits
             </kendo-formerror>
           </kendo-formfield>
           </div>
@@ -591,7 +591,7 @@
                 Work Phone is required
               </kendo-formerror>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.pattern">
-                Not a valid phone number format
+                Work Phone must have 10 digits
               </kendo-formerror>
             </kendo-formfield>
             </div>
@@ -666,7 +666,7 @@
                 Other Phone is required
               </kendo-formerror>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.pattern">
-                Not a valid phone number format
+                Other Phone must have 10 digits
               </kendo-formerror>
             </kendo-formfield>
             </div>
