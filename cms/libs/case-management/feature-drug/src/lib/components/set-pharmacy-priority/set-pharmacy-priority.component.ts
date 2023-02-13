@@ -115,6 +115,19 @@ export class SetPharmacyPriorityComponent implements OnInit {
     this.priorityValidation = false;
     this.savePriorityObjectList[index].priorityCode = value;
     this.copyLoadPriorties=this.priorities.filter(m=>m.lovCode!=value);
+    this.copyLoadPriorties= this.priorities;
+    if( this.savePriorityObjectList.length == 1)
+    {
+      this.copyLoadPriorties = this.priorities.filter((x:any) =>x.lovCode === PriorityCode.Primary  );
+      
+    }
+    else if( this.savePriorityObjectList.length == 2)
+    {
+      this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode === PriorityCode.Primary ||x.lovCode === PriorityCode.Secondary);
+    }
+    else{
+      this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode === PriorityCode.Primary ||x.lovCode === PriorityCode.Secondary ||x.lovCode === PriorityCode.Tertiary);
+    }
   }
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
@@ -142,7 +155,10 @@ export class SetPharmacyPriorityComponent implements OnInit {
       }
       else if( this.savePriorityObjectList.length == 2)
       {
-        this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode != PriorityCode.Tertiary );
+        this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode === PriorityCode.Primary ||x.lovCode === PriorityCode.Secondary);
+      }
+      else{
+        this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode === PriorityCode.Primary ||x.lovCode === PriorityCode.Secondary ||x.lovCode === PriorityCode.Tertiary);
       }
    
       
