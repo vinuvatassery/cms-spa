@@ -470,7 +470,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     
     if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
-      ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+      ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]);
       ffContactGroup.controls['contactName'].updateValueAndValidity();
       ffContactGroup.controls['contactRelationshipCode'].setValidators([Validators.required]);
       ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
