@@ -21,8 +21,8 @@
                 Response is required.</kendo-formerror>
         </div>
     </fieldset>
-
-    <div class="flex-col mt-2" *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+<div *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+    <div class="flex-col mt-2" >
         <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
                 <h5>Others covered on the plan(Select all that apply)</h5>
@@ -61,9 +61,7 @@
                             valueField="lovCode"
                             formControlName="relationshipCode">
                         </kendo-dropdownlist>
-                        <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
-                  && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].relationshipCode
-                  && getPersonControl(i, 'relationshipCode')?.touched
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'relationshipCode')?.valid
                   && isViewContentEditable==false">Relationship description is
                             required.</kendo-formerror>
                     </kendo-floatinglabel>
@@ -82,9 +80,7 @@
                         <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
                             [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="40">
                         </kendo-textbox>
-                        <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
-                     && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].lastName
-                     && getPersonControl(i, 'firstName')?.touched
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'firstName')?.valid
                      && isViewContentEditable==false">Last name is required.</kendo-formerror>
                     </kendo-floatinglabel>
                 </div>
@@ -93,9 +89,7 @@
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Date of birth"
                             format="MM-dd-yyyy" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
                             formControlName="dob">
-                            <kendo-formerror *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value == 'Y'
-                     && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].dob
-                     && getPersonControl(i, 'dob')?.touched
+                            <kendo-formerror *ngIf="getPersonControl(i, 'dob')?.valid
                      && isViewContentEditable==false">Date of birth is required.</kendo-formerror>
                         </kendo-datepicker>
                     </kendo-floatinglabel>
@@ -104,11 +98,12 @@
         </div>
     </div>
     <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
-        <div class="flex-col" *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+        <div class="flex-col" >
             <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
                 aria-label="add new person">
                 <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
             </button>
         </div>
     </div>
+</div>
 </div>

@@ -668,8 +668,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         medicarePlanRequiredFields.push(...medicareInsuranceRequiredFields);
         if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
           const index = careassistPayingRequiredFields.indexOf('nextPremiumDueDate');
-          if (index > -1) { 
-            careassistPayingRequiredFields.splice(index, 1); 
+          if (index > -1) {
+            careassistPayingRequiredFields.splice(index, 1);
           }
           medicarePlanRequiredFields.push(...careassistPayingRequiredFields);
         }
@@ -705,13 +705,15 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     }
 
     if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y') {
-      debugger
-      othersCoveredOnPlanRequiredFields.forEach((key: any) => {
-        this.getPersonControl(0,key)?.setValidators([
-          Validators.required,
-        ]);
-        this.getPersonControl(0,key)?.updateValueAndValidity();
-      });
+      if (this.othersCoveredOnPlanNew.controls.length > 0) {
+        othersCoveredOnPlanRequiredFields.forEach((key: any) => {
+          this.getPersonControl(0, key)?.setValidators([
+            Validators.required,
+          ]);
+          this.getPersonControl(0, key)?.updateValueAndValidity();
+        });
+      }
+
 
     }
 
@@ -998,11 +1000,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.othersCoveredOnPlan.forEach((person: any) => {
         person.enrolledInInsuranceFlag = StatusFlag.Yes;
       });
+      debugger
       this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
         x.dependentTypeCode = DependentTypeCode.Health;
         x.enrolledInInsuranceFlag = StatusFlag.Yes;
         x.clientCaseEligibilityId = this.caseEligibilityId;
         x.clientId = this.clientId;
+        x.dob =  x.dob.toLocaleDateString();//new Date(this.intl.formatDate(x.dob, this.dateFormat));
         this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
       });
 
