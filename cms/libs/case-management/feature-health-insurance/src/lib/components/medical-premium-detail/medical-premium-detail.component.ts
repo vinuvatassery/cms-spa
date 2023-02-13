@@ -420,7 +420,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].setValue(
       healthInsurancePolicy.othersCoveredOnPlanFlag
     );
-    
+
     this.setDependentsForm(healthInsurancePolicy);
     if (!!healthInsurancePolicy.copyOfInsuranceCardFileName) {
       this.copyOfInsuranceCardFiles = [{
@@ -473,9 +473,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.controls['othersCoveredOnPlanSaved'].setValue(
       dependents
     );
-    // let dependentGroup = !!dependents ? dependents.map(pe => this.formBuilder.group(pe)) : [];
-    // let dependentForm = this.formBuilder.array(dependentGroup);
-    // this.healthInsuranceForm.setControl('othersCoveredOnPlanSaved', dependentForm);
     let healthDependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
     let healthGroup = !!healthDependents ? healthDependents.map(pe => this.formBuilder.group(pe)) : [];
     let healthForm = this.formBuilder.array(healthGroup);
@@ -503,6 +500,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   private conditionsInsideView() {
     //this.ddlInsuranceType = this.insuranceType;
     this.isOpenDdl = true;
+  }
+
+  get othersCoveredOnPlanNew(): FormArray {
+    return this.healthInsuranceForm.get("newOthersCoveredOnPlan") as FormArray;
   }
 
   private validateForm() {
@@ -564,13 +565,26 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       'insurancePlanName',
       'careassistPayingPremiumFlag'
     ];
-    const HelpWithPremiumRequiredFields: Array<string> =
-      ['nextPremiumDueDate', 'premiumAmt', 'premiumFrequencyCode', 'paymentIdNbr'];
-    const MedicarePlanRequiredFields: Array<string> = [
+    const medicarePlanRequiredFields: Array<string> = [
       'medicareBeneficiaryIdNbr',
       'medicareCoverageTypeCode',
-      'onLisFlag']
-    // this.healthInsuranceForm.markAllAsTouched();
+    ];
+    const medicareInsuranceRequiredFields: Array<string> = [
+      'insuranceStartDate',
+      'insuranceIdNumber',
+      'insuranceCarrierName',
+      'insurancePlanName',
+      'careassistPayingPremiumFlag'
+    ];
+    const othersCoveredOnPlanRequiredFields: Array<string> = [
+      'relationshipCode',
+      'firstName',
+      'lastName',
+      'dob'
+    ];
+
+
+
 
     if (this.ddlInsuranceType === HealthInsurancePlan.OregonHealthPlan) {
       oregonPlanRequiredFields.forEach((key: string) => {
@@ -629,7 +643,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         cobraPlanRequiredFields.push(...careassistPayingRequiredFields);
         cobraPlanRequiredFields.push('premiumPaidThruDate');
-        
+
       }
       cobraPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
@@ -639,7 +653,34 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       });
     }
 
-    if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan || this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan || this.ddlInsuranceType === HealthInsurancePlan.Cobra) {
+    if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
+
+      if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value?.includes('A') === true) {
+        medicarePlanRequiredFields.push('medicarePartAStartDate');
+      }
+      if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value?.includes('B') === true) {
+        medicarePlanRequiredFields.push('medicarePartBStartDate');
+      }
+      if (this.medicareInsuranceInfoCheck) {
+        medicarePlanRequiredFields.push(...medicareInsuranceRequiredFields);
+        if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
+          const index = careassistPayingRequiredFields.indexOf('nextPremiumDueDate');
+          if (index > -1) { 
+            careassistPayingRequiredFields.splice(index, 1); 
+          }
+          medicarePlanRequiredFields.push(...careassistPayingRequiredFields);
+        }
+      }
+
+
+      medicarePlanRequiredFields.forEach((key: string) => {
+        this.healthInsuranceForm.controls[key].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      });
+    }
+    if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan || this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan || this.ddlInsuranceType === HealthInsurancePlan.Cobra || this.medicareInsuranceInfoCheck) {
       this.isInsuranceFileUploaded = (this.copyOfInsuranceCardFiles?.length > 0 && !!this.copyOfInsuranceCardFiles[0].name) ? true : false;
       if (!this.isInsuranceFileUploaded) {
         this.insuranceCardFilesExceedsFileSizeLimit = false;
@@ -660,11 +701,24 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
 
+    // if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y') {
+    //   debugger
+    //   othersCoveredOnPlanRequiredFields.forEach((key: any) => {
+    //     this.healthInsuranceForm.get('newOthersCoveredOnPlan').at(0).get(key).setValidators([
+    //       Validators.required,
+    //     ]);
+    //     // this.othersCoveredOnPlanNew.controls[0]?.controls[key].setValidators([
+    //     //   Validators.required,
+    //     // ]);
+    //     // this.healthInsuranceForm.controls[key].updateValueAndValidity();
+    //   });
+
+    // }
 
 
 
 
-    
+
 
     // if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) {
     //   this.medicareInsuranceInfoCheck = false;
@@ -951,7 +1005,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         x.clientId = this.clientId;
         this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
       });
-      
+
       //this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan;
       // if (this.healthInsuranceForm.value.newOthersCoveredOnPlan.length > 0) {
       //   this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
@@ -1071,13 +1125,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.editRedirect.next('edit');
     this.disableEnableRadio();
   }
-
-
-
-
-
-
-
   insuranceCarrierNameData(data: any) {
     if (this.isEdit) {
       this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
@@ -1085,7 +1132,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       );
     }
   }
-
   insuranceCarrierNameChange(value: string) {
     this.insurancePlans = [];
     this.healthInsuranceForm.controls['insurancePlanName'].setValue('');
@@ -1129,20 +1175,20 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     else {
       this.medicareInsuranceInfoCheck = false;
     }
-    const PartAenum = Object.keys(PartAMedicareType)
-    if (PartAenum.includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value)) {
-      this.partAStartDateCheck = true;
-    }
-    else {
-      this.partAStartDateCheck = false;
-    }
-    const PartBenum = Object.keys(PartBMedicareType)
-    if (PartBenum.includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value)) {
-      this.partBDtartDateCheck = true;
-    }
-    else {
-      this.partBDtartDateCheck = false;
-    }
+    // const PartAenum = Object.keys(PartAMedicareType)
+    // if (PartAenum.includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value)) {
+    //   this.partAStartDateCheck = true;
+    // }
+    // else {
+    //   this.partAStartDateCheck = false;
+    // }
+    // const PartBenum = Object.keys(PartBMedicareType)
+    // if (PartBenum.includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value)) {
+    //   this.partBDtartDateCheck = true;
+    // }
+    // else {
+    //   this.partBDtartDateCheck = false;
+    // }
   }
   save() {
     this.validateForm();

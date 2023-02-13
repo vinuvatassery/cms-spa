@@ -48,7 +48,6 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part A Start Date">
-            <!-- [(ngModel)]="currentDate" -->
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part A Start Date" formControlName="medicarePartAStartDate"
               [disabled]="isViewContentEditable" formatPlaceholder="formatPattern" placeholder="">
@@ -59,7 +58,6 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part B Start Date">
-            <!-- [(ngModel)]="currentDate" -->
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part B Start Date" formControlName="medicarePartBStartDate"
               [disabled]="isViewContentEditable" formatPlaceholder="formatPattern" placeholder="">
@@ -216,7 +214,7 @@
           <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
         </div>
-        <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra">
+        <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
             [ddlInsuranceType]="ddlInsuranceType" [clientId]="clientId"></case-management-medical-premium-detail-careassist-pay>
@@ -224,7 +222,7 @@
 
       </div>
 
-      <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra">
+      <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
@@ -248,7 +246,7 @@
         <kendo-formerror
           *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !insuranceCardFilesExceedsFileSizeLimit">Copy of insurance card is required. </kendo-formerror>
       </div>
-      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra)
+      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare)
           && healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
         <h5 class="text-capital">Proof of premium amount</h5>
         <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"

@@ -43,8 +43,7 @@
             </div>
         </fieldset>
     </div>
-    <div formArrayName="newOthersCoveredOnPlan"
-        *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+    <div formArrayName="newOthersCoveredOnPlan">
         <div *ngFor="let person of newOthersCoveredOnPlan.controls; let i=index">
             <div class="flex-row pl-3 mt-2" [formGroupName]="i">
                 <div class="flex-col d-flex align-iems-center justify-content-between">
