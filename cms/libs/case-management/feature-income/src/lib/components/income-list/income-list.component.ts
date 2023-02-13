@@ -68,27 +68,27 @@ export class IncomeListComponent implements OnInit {
     },
     {
       buttonType:"btn-h-primary",
-      text: "Attach from client attachments",
+      text: "Attach from client/'s attachments",
       id: "attachfromclient",
       // icon: "star",
       click: (event: any,dataItem: any): void => {
       //  this.onDeactivateEmailAddressClicked()
       },
     },
- 
+
     {
       buttonType:"btn-h-danger",
       text: "Remove file",
       id: "removefile",
       // icon: "delete",
-      click: (event: any,dataItem: any): void => { 
+      click: (event: any,dataItem: any): void => {
       this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
       },
     },
-   
+
 
   ];
- 
+
   public actionsmore = [
     {
       buttonType:"btn-h-primary",
@@ -99,8 +99,8 @@ export class IncomeListComponent implements OnInit {
         //   this.onIncomeClicked(true);
         // },
     },
-    
- 
+
+
     {
       buttonType:"btn-h-danger",
       text: "Delete Income",
@@ -110,9 +110,9 @@ export class IncomeListComponent implements OnInit {
       // },
       type: 'delete',
     },
-   
-    
- 
+
+
+
   ];
   /** Constructor **/
   constructor(
@@ -141,6 +141,7 @@ export class IncomeListComponent implements OnInit {
   private loadIncomes() {
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse:any)=>{
       this.incomesTotal=incomeresponse;
+      this.cdr.detectChanges();
     })
     this.incomeFacade.HideLoader();
 
@@ -177,11 +178,11 @@ onIncomeActionClicked(
       this.isAddIncomeButtonAndFooterNoteDisplay = true;
     }
   }
-  private updateWorkFlowStatus(isCompleted:boolean) 
+  private updateWorkFlowStatus(isCompleted:boolean)
   {
     const workFlowdata: CompletionChecklist[] = [{
       dataPointName: 'income',
-      status: isCompleted ? StatusFlag.Yes :StatusFlag.No 
+      status: isCompleted ? StatusFlag.Yes :StatusFlag.No
     }];
 
     this.workflowFacade.updateChecklist(workFlowdata);
@@ -231,7 +232,7 @@ onIncomeActionClicked(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sort?.field ?? 'incomeSourceCodeDesc',
-      this.sort?.dir ?? 'asc' 
+      this.sort?.dir ?? 'asc'
     );
   }
 
@@ -278,7 +279,7 @@ onIncomeActionClicked(
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.HideLoader();
           this.showHideImageUploadLoader(false, dataItem);
-          
+
         },
         error: (err: any) => {
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -315,22 +316,22 @@ onIncomeActionClicked(
     })
   }
 
- removeDependentsProofofSchoool(documentid: string){ 
+ removeDependentsProofofSchoool(documentid: string){
     if (documentid) {
       this.incomeFacade.ShowLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
-        next: (response: any) => { 
+        next: (response: any) => {
           this.loadIncomeData();
           this.loadDependentsProofofSchools();
           this.incomeFacade.HideLoader();
           this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
-          this.sendDetailToIncomeList.next(true); 
-      
-     
+          this.sendDetailToIncomeList.next(true);
+
+
         },
         error: (err: any) => {
           this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );

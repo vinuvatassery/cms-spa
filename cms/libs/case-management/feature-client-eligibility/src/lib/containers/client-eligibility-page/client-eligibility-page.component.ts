@@ -5,6 +5,7 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  AfterViewInit,
 } from '@angular/core';
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -25,7 +26,7 @@ import {
   styleUrls: ['./client-eligibility-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
+export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private saveClickSubscription!: Subscription;
   eligibilityForm!: FormGroup;
   formSubmited!: boolean;
@@ -59,6 +60,10 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+  }
+
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -82,7 +87,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy {
           if(que?.responseAnswerId && que?.childQuestions?.length > 0){
             var isChildRespRequired = que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
             if(isChildRespRequired){
-              isAllChildQueAnswered = que?.childQuestions?.findIndex((chdQue:any) => chdQue?.responseAnswerId != undefined) !== -1;
+              isAllChildQueAnswered = que?.childQuestions?.findIndex((chdQue:any) => chdQue?.responseAnswerId != undefined && chdQue?.notes) !== -1;
             }
           }
           const item: CompletionChecklist = {
