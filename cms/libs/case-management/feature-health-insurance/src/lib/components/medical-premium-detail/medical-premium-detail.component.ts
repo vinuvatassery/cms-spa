@@ -506,6 +506,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     return this.healthInsuranceForm.get("newOthersCoveredOnPlan") as FormArray;
   }
 
+  getPersonControl(index: number, fieldName: string) {
+    return (<FormArray>this.healthInsuranceForm.get('newOthersCoveredOnPlan')).at(index).get(fieldName);
+  }
   private validateForm() {
     this.healthInsuranceForm.markAllAsTouched();
     this.resetValidators()
@@ -701,19 +704,16 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
     }
 
-    // if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y') {
-    //   debugger
-    //   othersCoveredOnPlanRequiredFields.forEach((key: any) => {
-    //     this.healthInsuranceForm.get('newOthersCoveredOnPlan').at(0).get(key).setValidators([
-    //       Validators.required,
-    //     ]);
-    //     // this.othersCoveredOnPlanNew.controls[0]?.controls[key].setValidators([
-    //     //   Validators.required,
-    //     // ]);
-    //     // this.healthInsuranceForm.controls[key].updateValueAndValidity();
-    //   });
+    if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y') {
+      debugger
+      othersCoveredOnPlanRequiredFields.forEach((key: any) => {
+        this.getPersonControl(0,key)?.setValidators([
+          Validators.required,
+        ]);
+        this.getPersonControl(0,key)?.updateValueAndValidity();
+      });
 
-    // }
+    }
 
 
 

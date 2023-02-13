@@ -105,8 +105,9 @@
             [restrictions]="uploadFileRestrictions.fileRestrictions">
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
               <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-                <span *ngIf="!files[0].documentId">{{files[0].name}} </span> 
-                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
+                  class="card-link-button">
                   <a>{{ files[0].name }} </a>
                 </button>
                 <br>
@@ -136,7 +137,8 @@
               formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid ">Insurance Start Date is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid ">Insurance Start Date is
+            required.</kendo-formerror>
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance End Date">
@@ -147,9 +149,11 @@
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror
-            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate">Insurance End Date is required.</kendo-formerror>
+            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate">Insurance
+            End Date is required.</kendo-formerror>
           <kendo-formerror
-            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate">Insurance End Date must be after Start Date.</kendo-formerror>
+            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate">Insurance
+            End Date must be after Start Date.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
@@ -175,7 +179,8 @@
             [insurancePlans]="insurancePlans" [insurancePlansLoader]="insurancePlansLoader"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-insurance-plan-name>
         </div>
-        <div class="flex-col" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
+        <div class="flex-col"
+          *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan">
           <case-management-medical-premium-detail-metal-level [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit"
             [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
@@ -214,38 +219,17 @@
           <case-management-medical-premium-detail-aptc [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
         </div>
-        <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
+        <div class="flex-col mt-3"
+          *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
-            [ddlInsuranceType]="ddlInsuranceType" [clientId]="clientId"></case-management-medical-premium-detail-careassist-pay>
-        </div> 
+            [ddlInsuranceType]="ddlInsuranceType"
+            [clientId]="clientId"></case-management-medical-premium-detail-careassist-pay>
+        </div>
 
       </div>
 
-      <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
-        <h5 class="text-capital">Copy of Insurance Card</h5>
-        <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
-          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
-          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance');" #copyOfInsurance
-          [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
-          [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span> 
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
-                <a>{{ files[0].name }} </a>
-              </button>
-              <br>
-              <span>{{files[0].size}}</span>
-            </span>
-          </ng-template>
-        </kendo-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="insuranceCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
-          smaller file. </kendo-formerror>
-        <kendo-formerror
-          *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !insuranceCardFilesExceedsFileSizeLimit">Copy of insurance card is required. </kendo-formerror>
-      </div>
+
       <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare)
           && healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
         <h5 class="text-capital">Proof of premium amount</h5>
@@ -256,8 +240,9 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
             <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span  *ngIf="!files[0].documentId">{{files[0].name}} </span> 
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
+              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
+                class="card-link-button">
                 <a>{{ files[0].name }} </a>
               </button>
               <br>
@@ -267,14 +252,16 @@
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
-          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">Proof of premium is required. </kendo-formerror>
+          *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">Proof
+          of premium is required. </kendo-formerror>
         <kendo-formerror
           *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isViewContentEditable && proofOfPremiumExceedsFileSizeLimit">
           File size is limited to 25 MB. Please select a smaller file.
         </kendo-formerror>
 
       </div>
-      <div class="flex-col mb-2  file-uploads" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra">
+      <div class="flex-col mb-2  file-uploads"
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra">
         <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
         <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
@@ -283,8 +270,9 @@
           [restrictions]="uploadFileRestrictions.fileRestrictions">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
             <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span> 
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
+              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
+                class="card-link-button">
                 <a>{{ files[0].name }} </a>
               </button>
               <br>
@@ -298,6 +286,35 @@
         <kendo-formerror *ngIf="!isSummaryFileUploaded && !summaryFilesExceedsFileSizeLimit">
           Summary of Benefits is required.
         </kendo-formerror>
+      </div>
+    </div>
+    <div *ngIf="isOpenDdl">
+      <div class="flex-col mb-2 mt-2 file-uploads"
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
+        <h5 class="text-capital">Copy of Insurance Card</h5>
+        <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
+          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
+          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance');" #copyOfInsurance
+          [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
+          [restrictions]="uploadFileRestrictions.fileRestrictions">
+          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
+              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
+                class="card-link-button">
+                <a>{{ files[0].name }} </a>
+              </button>
+              <br>
+              <span>{{files[0].size}}</span>
+            </span>
+          </ng-template>
+        </kendo-upload>
+        <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="insuranceCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
+          smaller file. </kendo-formerror>
+        <kendo-formerror
+          *ngIf="!isInsuranceFileUploaded && !isViewContentEditable && !insuranceCardFilesExceedsFileSizeLimit">Copy of
+          insurance card is required. </kendo-formerror>
       </div>
     </div>
   </div>

@@ -73,9 +73,7 @@
                         <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name"
                             placeholder="First Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="40"
                             formControlName="firstName"> </kendo-textbox>
-                        <kendo-formerror *ngIf="healthInsuranceForm.value.othersCoveredOnPlanFlag == 'Y'
-                     && !healthInsuranceForm.value.newOthersCoveredOnPlan[i].firstName
-                     && getPersonControl(i, 'firstName')?.touched
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'firstName')?.valid
                      && isViewContentEditable==false">First name is required.</kendo-formerror>
                     </kendo-floatinglabel>
                 </div>
