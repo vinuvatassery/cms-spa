@@ -1,9 +1,9 @@
 /** Angular **/
-import { OnInit } from '@angular/core';
+import {  AfterViewInit, OnInit } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
-import { catchError, first, forkJoin, last, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, 
   ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat } from '@cms/case-management/domain';
@@ -13,7 +13,7 @@ import { CompletionChecklist } from '@cms/case-management/domain';
 import { NavigationType,PronounCode } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoaderService,LoggingService,SnackBarNotificationType,NotificationSnackbarService,ConfigurationProvider } from '@cms/shared/util-core';
+import { LoaderService,LoggingService,SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 
@@ -24,7 +24,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
   styleUrls: ['./client-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientPageComponent implements OnInit, OnDestroy {
+export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -67,6 +67,7 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
   }
+
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.loadSessionSubscription.unsubscribe();
@@ -74,9 +75,14 @@ export class ClientPageComponent implements OnInit, OnDestroy {
     this.saveForLaterValidationSubscription.unsubscribe();
   }
 
+  ngAfterViewInit(){
+    this.workFlowFacade.enableSaveButton();
+  }  
+
   /** Private methods **/
   private addSaveSubscription(): void {   
-    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(      
+    this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(   
+      tap(() => this.workFlowFacade.disableSaveButton()),   
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.saveAndUpdate()])
       ),
@@ -85,7 +91,9 @@ export class ClientPageComponent implements OnInit, OnDestroy {
           if (isSaved) {       
               this.clientFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS ,this.message) 
               this.workFlowFacade.navigate(navigationType);          
-        }    
+        } else {
+          this.workFlowFacade.enableSaveButton()
+        }  
       },
       error: (error: any) => {       
         this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error);       

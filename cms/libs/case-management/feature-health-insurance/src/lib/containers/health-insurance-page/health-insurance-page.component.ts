@@ -1,7 +1,7 @@
 /** Angular **/
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Facades **/
 import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, CompletionChecklist, StatusFlag, othersCoveredOnPlan } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -16,7 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./health-insurance-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HealthInsurancePageComponent implements OnInit, OnDestroy {
+export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   healthInsuranceForm!: FormGroup;
@@ -66,6 +66,11 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
   }
+
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+  }
+
   ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -134,6 +139,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -141,6 +147,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       if (isSaved) {
         this.workflowFacade.navigate(navigationType);
         this.HideLoader();
+      } else {
+        this.workflowFacade.enableSaveButton();
       }
     });
   }

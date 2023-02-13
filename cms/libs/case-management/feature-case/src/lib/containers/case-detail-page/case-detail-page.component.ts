@@ -94,8 +94,9 @@ export class CaseDetailPageComponent implements OnInit {
 
   routes$ = this.workflowFacade.routes$;
   completeStaus$ = this.workflowFacade.completionStatus$;
-  currentSession = this.workflowFacade.currentSession
-  isWorkflowReady$ = this.workflowFacade.workflowReady$
+  currentSession = this.workflowFacade.currentSession;
+  isWorkflowReady$ = this.workflowFacade.workflowReady$;
+  isSaveButtonEnabled$ = this.workflowFacade.isSaveButtonEnabled$;
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
@@ -174,6 +175,7 @@ export class CaseDetailPageComponent implements OnInit {
   }
   private loadCase()
   {     
+   this.workflowFacade.disableSaveButton();
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription =this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))

@@ -29,10 +29,36 @@
   border: 0px;
   padding: 0px;
 }
-.k-multiselect{
-  .k-clear-value{
-    display: none;
+.k-multiselect-wrapper {
+  width: auto;
+    min-width: 31%;
+    position: relative;
+    .multi-dropdown-icon {
+    right: 12px;
+ top: 38px;
+   position: absolute;
+  z-index: 1;
+   width: 10px;
+   height: 3px;
+  padding: 0;
+   line-height: 0;
+ text-indent: 0;
   }
+  }
+.k-multiselect{
+    .k-clear-value{
+ 
+      right: 30px;
+      position: absolute;
+      top: 4px;
+      z-index: 1;
+      }
+      .k-input-values{
+      padding-right: 60px;
+      .k-searchbar{
+      min-width: 150px;
+      }
+      }
   .k-chip-outline-base {
     border-color:transparent; 
     background-color: $light-bgcolor;

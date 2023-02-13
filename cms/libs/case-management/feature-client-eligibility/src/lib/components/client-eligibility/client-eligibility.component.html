@@ -27,6 +27,12 @@
           <a class="text-bold text-underline" aria-label="open in new tab" (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
+        <span *ngIf="question.questionCode==reviewQuestionCode.origonResident && checkQuestionDocuments(question.questionCode)==false">
+         <p class="mt-1 mb-1">Client does not have proof of home address or residency</p> 
+        </span>
+        <span *ngIf="question.questionCode==reviewQuestionCode.hivStatus && checkQuestionDocuments(question.questionCode)==false">
+          <p class="mt-1 mb-1">Client does not have proof of HIV</p> 
+         </span>
         <kendo-formerror *ngIf="formSubmited && !question.responseAnswerId">{{question.questionDesc}} response is
           required.</kendo-formerror>
       </div>
@@ -62,7 +68,7 @@
           <kendo-floatinglabel text="Exception Note">
             <kendo-textarea [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="child.notes"
               [ngModelOptions]="{standalone: true}" aria-label="exception note description" name="Exception Note"
-              [rows]="5" [cols]="40">
+              [rows]="5" [cols]="40" (blur)="notesChanged()">
             </kendo-textarea>
             <kendo-formhint class="justify-content-end">{{child.notes?.length}}/250</kendo-formhint>
           </kendo-floatinglabel>
@@ -77,7 +83,7 @@
         <h4 class="mb-0 mt-0">Is the application accepted?</h4>
       </div>
       <div class="flex-col flex-col-4 text-right">
-        <button kendoButton aria-label="application accepted yes" [primary]="true" (click)="isOpenAcceptanceClicked()">
+        <button [disabled]="acceptedApplicationStatus" kendoButton aria-label="application accepted yes" [primary]="true" (click)="isOpenAcceptanceClicked()">
           Yes
         </button>
         <button kendoButton aria-label="application accepted no" [primary]="true" class="ml-2"
@@ -90,7 +96,7 @@
 </section>
 
 <!-- Application Acceptance Modal Html-->
-<kendo-dialog *ngIf="isOpenAcceptance" (close)="onCloseAcceptanceClicked()"
+<kendo-dialog *ngIf="isOpenAcceptance || isSaveAndContinueAcceptance" (close)="onCloseAcceptanceClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar> Application Accepted </kendo-dialog-titlebar>
   <case-management-accept-application (isCloseModalEvent)="onCloseAcceptanceClicked()" [isEdit]="isEdit"

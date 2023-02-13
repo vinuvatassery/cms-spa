@@ -148,8 +148,8 @@ export class NewCaseComponent implements OnInit  {
               this.loaderService.hide();
               this.router.navigate(['case-management/case-detail'], {
                 queryParams: {
-                  sid: response[0].sessionId,
-                  eid: response[0].entityID
+                  sid: response.sessionId,
+                  eid: response.entityID
                 },
               });
             }

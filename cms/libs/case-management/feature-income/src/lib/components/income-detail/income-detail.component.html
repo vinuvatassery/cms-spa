@@ -25,15 +25,15 @@
 
         </div>
         <div class="flex-col flex-col-6">
-          <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+          <kendo-floatinglabel text="Gross Amount" class="amount-with-symbol">
             <span class="k-input-prefix custom-currencysymbol"> $ </span>
-            <kendo-numerictextbox placeholder="Amount" aria-label="amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
+            <kendo-numerictextbox placeholder="Gross Amount" aria-label="amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
               formControlName="incomeAmt" #incomeAmount [fillMode]="formUiStyle.inputFillMode" name="amount">
 
             </kendo-numerictextbox>
           </kendo-floatinglabel>
 
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeAmt'].valid">Income Amount is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeAmt'].valid">Gross Amount is required
           </kendo-formerror>
 
         </div>
@@ -48,28 +48,31 @@
 
         </div>
         <div class="flex-col flex-col-6">
-          <kendo-floatinglabel text="Income Start">
+          <kendo-floatinglabel text="Date of Hire">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               formatPlaceholder="formatPattern" aria-label="income start" name="income start"
               formControlName="incomeStartDate"  placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Income Start Date is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Date of Hire is required
           </kendo-formerror>
 
         </div>
         <div class="flex-col flex-col-6">
-          <kendo-floatinglabel text="Income End">
+          <kendo-floatinglabel text="Income End (optional)">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-              formatPlaceholder="formatPattern"  placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
+              formatPlaceholder="formatPattern" [min]="startDate" 
+               placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
               #incomeEndDate>
             </kendo-datepicker>
+            <kendo-formerror *ngIf="IncomeDetailsForm.controls['incomeEndDate'].hasError('incorrect')"> 'Income End Date' should be greater than 'Income Start Date' 
+            </kendo-formerror>
           </kendo-floatinglabel>
 
 
         </div>
         <div class="flex-col justify-content-between align-items-center ">
-          <h5 class="text-caital">Proof of Income</h5>
+          <h5 class="text-caital">PROOF OF INCOME</h5>
           <div>
             <span class="app-checkboxwidtext-wrapper">
               <input kendoCheckBox id="noProofOfIncome"
@@ -90,7 +93,7 @@
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
               <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
 
-                <span *ngIf="!files[0].documentId">{{ files[0].name }} </span> 
+                <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
                 <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
                   <a>{{ files[0].name }} </a>
                 </button>
@@ -101,7 +104,7 @@
             </ng-template>
           </kendo-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
-          <kendo-formerror *ngIf="proofOfIncomeValidator"> Proof of Income is required </kendo-formerror>
+          <kendo-formerror *ngIf="proofOfIncomeValidator"> Upload proof is required </kendo-formerror>
           <kendo-formerror *ngIf="proofOfIncomeValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
 
         </div>
@@ -128,7 +131,7 @@
 
         </div>
         <div class="flex-col">
-          <kendo-floatinglabel text="Financial justification or Income Note">
+          <kendo-floatinglabel text="Financial Justication or Income Note">
             <kendo-textarea  [fillMode]="formUiStyle.inputFillMode" #tareaJustifications resizable="auto"
               [maxlength]="tareaJustificationMaxLength" [value]="tareaJustification"
               (valueChange)="onTareaJustificationValueChange($event)" aria-label="income note" name="income-note"
@@ -140,7 +143,7 @@
               </kendo-textarea-suffix>
             </kendo-textarea>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeNote'].valid"> Financial justification or Income Note is required </kendo-formerror>
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeNote'].valid"> Financial Justication or Income Note is required </kendo-formerror>
 
         </div>
       </div>
@@ -163,7 +166,7 @@
       </div>
     </kendo-dialog-actions>
   </form>
-  <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Remove Income">
+  <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete Income">
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"

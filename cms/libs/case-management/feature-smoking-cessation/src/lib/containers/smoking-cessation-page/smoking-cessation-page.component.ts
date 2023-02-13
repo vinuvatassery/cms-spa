@@ -1,8 +1,8 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit,   ChangeDetectorRef, } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit,   ChangeDetectorRef, AfterViewInit, } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist, StatusFlag, SmokingCessation, YesNoFlag, ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -16,7 +16,7 @@ import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/sh
   styleUrls: ['./smoking-cessation-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SmokingCessationPageComponent implements OnInit, OnDestroy {
+export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -71,24 +71,32 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
   }
+
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+    
+  } 
+
   loadSessionData() {
+    
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-      .subscribe((session: any) => {
+      .subscribe((session: any) => { 
+        this.smokingCessationForm.controls["changeDetect"].setValue('changed'); // added just to detect changes in the screen.
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.loadSmokingCessation();
         }
       });
-
   }
   /** Private methods **/
   public buildForm() {
     this.smokingCessationForm = new FormGroup({
       smokingCessation: new FormControl('',[]),
-      smokingCessationNote: new FormControl('',[])
+      smokingCessationNote: new FormControl('',[]),
+      changeDetect:new FormControl({ value: '', disabled : true },[]),
     });
   }
 
@@ -135,6 +143,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -143,6 +152,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
         this.smokingCessationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Smoking cessation saved sucessfully')
         this.workflowFacade.navigate(navigationType);
+      } else {
+        this.workflowFacade.enableSaveButton();
       }
     });
   }

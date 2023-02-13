@@ -1,9 +1,11 @@
 export enum SnackBarNotificationType{
     SUCCESS = 'success',
-    ERROR = 'error'
+    ERROR = 'error',
+    WARNING = 'warning'
 }
 
 export enum SnackBarNotificationText{
     SUCCESS = 'Success',
-    ERROR = 'Error'
+    ERROR = 'Error',
+    WARNING = 'warning'
 }

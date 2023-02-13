@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { first, Observable, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionAnswer, ReviewQuestionCode, QuestionTypeCode } from '@cms/case-management/domain';
+import { YesNoFlag,WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionAnswer, ReviewQuestionCode, QuestionTypeCode } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import {
   LoaderService,
@@ -21,8 +21,10 @@ export class ClientEligibilityComponent implements OnInit {
   @Input() eligibilityForm: FormGroup;
   @Input() formSubmited!: boolean;
   @Input() questions: any = [];
+  @Input() isSaveAndContinueAcceptance!: boolean;
 
   @Output() getQuestionsResponse = new EventEmitter<any>();
+  @Output() changeApplicationAcceptedStatus = new EventEmitter<any>();
 
 
   private reviewQuestionAnswerSubscription!: Subscription;
@@ -47,6 +49,7 @@ export class ClientEligibilityComponent implements OnInit {
   reviewQuestionAnswers: any = [];
   //questions: any = [];
   reviewQuestionCode = ReviewQuestionCode;
+  acceptedApplicationStatus = true;
 
   /** Constructor **/
   constructor(
@@ -82,6 +85,9 @@ export class ClientEligibilityComponent implements OnInit {
         this.reviewQuestionAnswers = data;
 
         this.questions = this.getQuestions(data.filter((m: any) => m.reviewQuestionParentId === null)).sort((a: any, b: any) => a.questionDisplayOrder - b.questionDisplayOrder);
+        this.questions.forEach((q: any) => {
+          q.answerCode = YesNoFlag.No.toUpperCase();
+        });
         this.getQuestionsResponse.emit(this.questions);
         this.getSavedQuestionsResponse();
         this.cdr.detectChanges();
@@ -110,6 +116,12 @@ export class ClientEligibilityComponent implements OnInit {
     question.responseAnswerId = answer.reviewQuestionAnswerId;
     question.answerCode = answer.answerCode;
     question.reviewQuestionAnswerId = answer.reviewQuestionAnswerId;
+    this.acceptedApplicationStatus = !this.questions.every((m:any)=>m.answerCode===YesNoFlag.Yes.toUpperCase());
+    this.changeApplicationAcceptedStatus.emit(this.acceptedApplicationStatus);
+    this.getQuestionsResponse.emit(this.questions);
+  }
+
+  notesChanged(){    
     this.getQuestionsResponse.emit(this.questions);
   }
 
@@ -182,6 +194,8 @@ export class ClientEligibilityComponent implements OnInit {
 
 
       this.setSavedResponseInQuestions(this.questions, data);
+      this.acceptedApplicationStatus = !this.questions.every((m:any)=>m.answerCode===YesNoFlag.Yes.toUpperCase());
+      this.changeApplicationAcceptedStatus.emit(this.acceptedApplicationStatus);
       this.getQuestionsResponse.emit(this.questions);
     })
   }
@@ -212,6 +226,7 @@ export class ClientEligibilityComponent implements OnInit {
 
   onCloseAcceptanceClicked() {
     this.isOpenAcceptance = false;
+    this.isSaveAndContinueAcceptance = false;
   }
 
   isOpenAcceptanceClicked() {
@@ -237,5 +252,28 @@ export class ClientEligibilityComponent implements OnInit {
   }
   denialPopupClose() {
     this.isDenialLetter = false;
+  }
+
+  checkQuestionDocuments(questionCode: string) {
+    let entityTypeCode = '';
+    switch (questionCode) {
+      case ReviewQuestionCode.origonResident:
+        entityTypeCode = ClientDocumnetEntityType.HomeAddressProof;
+        break;
+      case ReviewQuestionCode.income:
+        entityTypeCode = ClientDocumnetEntityType.Income;
+        break;
+      case ReviewQuestionCode.hivStatus:
+        entityTypeCode = ClientDocumnetEntityType.HivVerification;
+        break;
+
+      default:
+        break;
+    }
+    var documents=this.documents.filter((m: any) => m.entityTypeCode === entityTypeCode);
+    if(documents.length>0){
+      return true;
+    }
+    return false;
   }
 }
