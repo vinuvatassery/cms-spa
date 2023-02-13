@@ -4,7 +4,7 @@
       Which option describes their Ethnic Identity?
     </h5>
     <div class="flex-row">
-      <div class="flex-col">
+      <div class="flex-col flex-col-4">
         <kendo-floatinglabel
           text="Ethnic Identity"
           class="k-multiselect-wrapper"
@@ -60,7 +60,7 @@
         Which options describe their Racial Identity? (Select all that apply)
       </h5>
       <div class="flex-row">
-        <div class="flex-col">
+        <div class="flex-col flex-col-4">
           <kendo-floatinglabel
             text="Racial Identity"
             class="k-multiselect-wrapper"
@@ -83,6 +83,7 @@
               [textField]="'lovDesc'"
               [valueField]="'lovCode'"
               (valueChange)="RaceAndEthnicityhange($event)"
+              [kendoMultiSelectSummaryTag]="5"
               [popupSettings]="{
                 popupClass: popupClassMultiSelect,
                 animate: true
