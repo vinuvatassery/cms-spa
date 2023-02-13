@@ -9,6 +9,7 @@
     </kendo-floatinglabel>
     <kendo-formerror *ngIf="parentForm?.hasError('required','applicationDate') && isSubmitted">Date Application Received
       is required</kendo-formerror>
+      <kendo-formerror *ngIf="parentForm?.hasError('maxError','applicationDate')">Future Dates are not allowed</kendo-formerror>
   </div>
   <div class="flex-col">
     <kendo-floatinglabel text="Case Origin">
