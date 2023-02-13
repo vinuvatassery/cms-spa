@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '../api/providers/configuration.provider';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { LoggingService } from '../api/services/logging.service';
 import { LoaderService } from '../application/services/app-loader.service';
 @Injectable({
   providedIn: 'root'
@@ -10,6 +9,7 @@ import { LoaderService } from '../application/services/app-loader.service';
 export class UserProfileService {
   private getUserProfileData = new BehaviorSubject<any>([]);
   getProfile$ = this.getUserProfileData.asObservable();
+  private user: any;
 
   constructor(private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider,
@@ -24,18 +24,36 @@ export class UserProfileService {
     this.loaderService.hide();
   }
 
+  getUserDetails()
+  {
+    return this.user;
+  }
+
+  getLogedinUserRoleCode()
+  {
+    return this.user?.roleCode;
+  }
+
   getUserProfile() {
-    this.showLoader();
-    this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`).subscribe({
-      next: (response: any) => {
-        if (response) {
-          this.getUserProfileData.next(response);
+    this.showLoader();       
+    if(this.user?.loginUserId)
+    {
+      this.getUserProfileData.next(this.user);
+    }
+    else
+    {      
+      this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`).subscribe({
+        next: (response: any) => {
+          if (response) {            
+            this.user = response;
+            this.getUserProfileData.next(response);
+          }
+          this.hideLoader();
+        },
+        error: (err: any) => {
+          this.hideLoader();
         }
-        this.hideLoader();
-      },
-      error: (err: any) => {
-        this.hideLoader();
-      }
-    });
+      });
+    }
   }
 }

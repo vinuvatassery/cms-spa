@@ -3,6 +3,7 @@ import {    Component,     ChangeDetectionStrategy,      Input,    Output,   Eve
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HealthcareProviderFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LoggedinUserRoleCodes, UserProfileService } from '@cms/shared/util-core';
 
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
@@ -36,7 +37,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Input() existingProviderData: any;  
   @Input() searchProviderLoaded$: any;
   @Input() selectedCustomProviderName: any;  
- 
+
 
   /** Public properties **/
   providers$ = this.drugPharmacyFacade.healthCareProviders$;
@@ -45,14 +46,17 @@ export class HealthCareProviderSearchComponent implements OnInit
   isAdminRole =false;   
   popupClass = 'k-autocomplete-custom';
   selectedClinic! : string
- 
+  roleCode! : string
+  isAdmin! : boolean
+
   existHealthProvderForm!: FormGroup;
   isExistSubmitted =false;
 
     /** Constructor **/
     constructor(private readonly drugPharmacyFacade: HealthcareProviderFacade,
       private formBuilder: FormBuilder,
-      private readonly ref: ChangeDetectorRef) 
+      private readonly ref: ChangeDetectorRef,
+      private readonly userProfile : UserProfileService) 
     {
       this.filterManager
       .pipe(   
@@ -72,7 +76,12 @@ export class HealthCareProviderSearchComponent implements OnInit
   
       /** Lifecycle hooks **/
   ngOnInit(): void {       
-    this.composexistHealthProvdeForm();
+    this.composexistHealthProvdeForm();    
+    this.roleCode = this.userProfile.getLogedinUserRoleCode()    
+    if(this.roleCode == LoggedinUserRoleCodes.ADMIN)
+    {
+      this.isAdmin = true;
+    }
     //this.ref.markForCheck();
   }
   composexistHealthProvdeForm()

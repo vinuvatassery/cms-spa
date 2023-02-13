@@ -65,7 +65,7 @@
           aria-label="add new provider"
           *ngIf="!isEditSearchHealthProviderValue"
         >
-          ADD NEW
+        {{ isAdmin  ? 'ADD NEW' : 'SUGGEST NEW' }}          
         </button>
         <button
           kendoButton
