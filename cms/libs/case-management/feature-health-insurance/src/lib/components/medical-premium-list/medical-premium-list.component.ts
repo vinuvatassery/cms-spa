@@ -34,6 +34,7 @@ export class MedicalPremiumListComponent implements OnInit {
   sort!:any;
   currentInsurancePolicyId: any;
   selectedInsurance: any;
+  medicalHealthPlansCount :any;
   gridList=[];
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
@@ -173,6 +174,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
   loadHealthInsurancePlans() {
     this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
+      this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
       if(medicalHealthPolicy?.data?.length > 0)
       this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
       if(medicalHealthPolicy?.length > 0){

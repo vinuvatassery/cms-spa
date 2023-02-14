@@ -141,6 +141,7 @@
     (isCloseInsuranceModal)="handleHealthInsuranceCloseClicked()"
     (editRedirect)="handleHealthInsuranceOpenClicked('edit')" [insuranceType]="insuranceType"
     [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)" (isAddEditClicked)="addOrEditClicked($event)"
+    [medicalHealthPlansCount]="medicalHealthPlansCount"
     (isAddPriority)="isAddPriority($event)"
     [caseEligibilityId]="caseEligibilityId"
     [clientId] ="clientId">
