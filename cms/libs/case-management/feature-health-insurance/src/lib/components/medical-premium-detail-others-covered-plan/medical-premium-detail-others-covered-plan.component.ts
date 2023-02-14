@@ -31,7 +31,10 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    this.lovFacade.getRelationShipsLovs();
+      this.loadRelationshipLov();
+      this.familyAndDependentFacade.loadClientDependents(this.clientId);
+      this.loadClientDependents();
   }
   ngOnDestroy(): void {
     if(this.familyAndDependentSubscription!==undefined)
@@ -65,11 +68,6 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   onOthersCoveredOnPlanFlagRdoClicked(value:any){
     if(value==='Y'){
       (this.healthInsuranceForm.controls['newOthersCoveredOnPlan'] as FormArray).clear();
-      this.lovFacade.getRelationShipsLovs();
-      this.loadRelationshipLov();
-      this.familyAndDependentFacade.loadClientDependents(this.clientId);
-      this.loadClientDependents();
-      
     }
   }
 
