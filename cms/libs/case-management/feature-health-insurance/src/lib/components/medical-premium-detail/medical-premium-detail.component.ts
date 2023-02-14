@@ -140,10 +140,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     private lovFacade: LovFacade,
     private insurancePlanFacade: InsurancePlanFacade,
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
-    private familyAndDependentFacade: FamilyAndDependentFacade,
-    private route: ActivatedRoute,
-    private workflowFacade: WorkflowFacade,
-    private readonly loaderService: LoaderService,
     private changeDetector: ChangeDetectorRef,
     public intl: IntlService,
     private configurationProvider: ConfigurationProvider,
@@ -175,7 +171,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   ngOnChanges() {
   }
   ngOnDestroy(): void {
-    (this.healthInsuranceForm.controls['othersCoveredOnPlan'] as FormArray).clear();
     if (this.editViewSubscription !== undefined)
       this.editViewSubscription.unsubscribe();
   }
@@ -708,12 +703,16 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
     if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y') {
       if (this.othersCoveredOnPlanNew.controls.length > 0) {
-        othersCoveredOnPlanRequiredFields.forEach((key: any) => {
-          this.getPersonControl(0, key)?.setValidators([
-            Validators.required,
-          ]);
-          this.getPersonControl(0, key)?.updateValueAndValidity();
-        });
+        for (let index = 0; index < this.othersCoveredOnPlanNew.controls.length; index++) {
+          othersCoveredOnPlanRequiredFields.forEach((key: any) => {
+            this.getPersonControl(index, key)?.setValidators([
+              Validators.required,
+            ]);
+            this.getPersonControl(index, key)?.updateValueAndValidity();
+          });
+          
+        }
+        
       }
     }
 
@@ -1142,7 +1141,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   insuranceCarrierNameChange(value: string) {
     this.insurancePlans = [];
-    this.healthInsuranceForm.controls['insurancePlanName'].setValue('');
+    this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     if (value === undefined) return;
     this.insurancePlansLoader = true;
     this.insurancePlanFacade
