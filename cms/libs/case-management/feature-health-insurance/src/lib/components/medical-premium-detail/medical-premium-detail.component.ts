@@ -26,7 +26,8 @@ import {
   PartAMedicareType,
   WorkflowFacade,
   FamilyAndDependentFacade,
-  DependentTypeCode
+  DependentTypeCode,
+  PriorityCode
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray, ValidationErrors } from '@angular/forms';
@@ -66,6 +67,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   @Input() healthInsuranceForm: FormGroup;
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
+  @Input() medicalHealthPlansCount: any;
 
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
@@ -893,7 +895,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.clientCaseEligibilityId = this.caseEligibilityId;
       this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
       this.healthInsurancePolicy.healthInsuranceTypeCode = this.ddlInsuranceType;
-
+      if (this.medicalHealthPlansCount === 0)
+      {
+        this.healthInsurancePolicy.priorityCode = PriorityCode.Primary;
+      }
       /* these field will be removed when the columns are allwed null from the database */
       this.healthInsurancePolicy.premiumFrequencyCode = "";
       this.healthInsurancePolicy.oonDrugs = "";
