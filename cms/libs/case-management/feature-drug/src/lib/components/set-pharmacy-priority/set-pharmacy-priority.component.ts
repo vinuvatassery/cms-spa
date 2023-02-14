@@ -28,6 +28,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class SetPharmacyPriorityComponent implements OnInit {
   /** Input properties  **/
   @Input() clientpharmacies$!: Observable<any>;
+  @Input() pharmacyPriorityModalButtonText: any;
   /** Output properties  **/
   @Output() closeChangePriority = new EventEmitter();
 
