@@ -14,7 +14,8 @@
           <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
             (valueChange)="onHealthInsuranceTypeChanged()" formControlName="insuranceType" textField="lovDesc"
-            valueField="lovCode" [disabled]="isViewContentEditable" [valuePrimitive]="true">
+            valueField="lovCode" [disabled]="isViewContentEditable" [valuePrimitive]="true"
+            [loading] = "isInsuranceTypeLoading" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>

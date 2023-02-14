@@ -81,6 +81,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   partAStartDateCheck = false;
   partBDtartDateCheck = false;
   medicareInsuranceInfoCheck = true;
+  isInsuranceTypeLoading =true;
   // ddlMedicalHealthInsurancePlans$ =
   //   this.healthFacade.ddlMedicalHealthInsurancePlans$;
   carrierContactInfo = new CarrierContactInfo();
@@ -129,10 +130,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   endDateMin!: Date;
 
 
-
-
-
-
   /** Constructor **/
   constructor(
     private readonly healthFacade: HealthInsuranceFacade,
@@ -170,6 +167,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls['paymentIdNbr'].setValue(selectedValue);
       }
     });
+    this.isInsuranceTypeLoading = false;
   }
   ngOnChanges() {
   }
@@ -180,7 +178,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   private loadLovs() {
     //this.lovFacade.getPremiumFrequencyLovs();
     this.lovFacade.getInsuranceTypeLovs();
-    this.lovFacade.getMedicareCoverageTypeLovs();
+    this.lovFacade.getMedicareCoverageTypeLovs();   
 
   }
   private validateFormMode() {
