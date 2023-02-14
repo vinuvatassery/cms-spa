@@ -56,6 +56,7 @@ public isLoading =false;
   }
 
   public insuranceCarrierNameChangeValue(value: string): void {
+    this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     this.insuranceCarrierNameChange.emit(value);
   }
 

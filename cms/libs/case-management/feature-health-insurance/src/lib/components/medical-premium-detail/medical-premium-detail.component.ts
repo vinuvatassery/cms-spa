@@ -710,9 +710,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
             ]);
             this.getPersonControl(index, key)?.updateValueAndValidity();
           });
-          
+
         }
-        
+
       }
     }
 
@@ -895,8 +895,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.clientCaseEligibilityId = this.caseEligibilityId;
       this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
       this.healthInsurancePolicy.healthInsuranceTypeCode = this.ddlInsuranceType;
-      if (this.medicalHealthPlansCount === 0)
-      {
+      if (this.medicalHealthPlansCount === 0) {
         this.healthInsurancePolicy.priorityCode = PriorityCode.Primary;
       }
       /* these field will be removed when the columns are allwed null from the database */
@@ -1141,7 +1140,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   insuranceCarrierNameChange(value: string) {
     this.insurancePlans = [];
-    this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     if (value === undefined) return;
     this.insurancePlansLoader = true;
     this.insurancePlanFacade
@@ -1150,11 +1148,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         if (!Array.isArray(data)) return;
         this.insurancePlans = data;
 
-        if (this.isEdit && data.length > 0) {
-          this.healthInsuranceForm.controls['insurancePlanName'].setValue(
-            this.insurancePlanNameDefaultValue
-          );
-        }
+        // if (this.isEdit && data.length > 0) {
+        //   this.healthInsuranceForm.controls['insurancePlanName'].setValue(
+        //     this.insurancePlanNameDefaultValue
+        //   );
+        // }
         this.insurancePlansLoader = false;
       },
         (error: any) => {

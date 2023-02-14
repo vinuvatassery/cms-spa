@@ -34,6 +34,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
     
   }
   ngOnDestroy(): void {
+    if(this.familyAndDependentSubscription!==undefined)
     this.familyAndDependentSubscription.unsubscribe();
   }
   private loadClientDependents() {
