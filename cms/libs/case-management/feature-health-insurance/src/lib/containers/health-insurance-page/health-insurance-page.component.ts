@@ -31,6 +31,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   groupPolicyEligible: string = "";
   showTable: boolean = false;
   closeDeleteModal:boolean=false;
+  triggerPriorityPopup$ = this.healthFacade.triggerPriorityPopup$;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -286,7 +287,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       },
       error:(err:any)=>{
         this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ; 
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ;
       }
     });
   }
