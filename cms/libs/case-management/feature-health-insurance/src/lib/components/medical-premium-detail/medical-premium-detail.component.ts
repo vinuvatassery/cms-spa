@@ -255,13 +255,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   loadHealthInsurancePolicy() {
-    // if (this.dialogTitle === 'View' || this.dialogTitle === 'Edit') {
-    //   this.loaderService.show()
-    // }
     this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
       this.healthInsurancePolicyCopy = data;
       this.bindValues(data);
-      // this.loaderService.hide();
     });
   }
 

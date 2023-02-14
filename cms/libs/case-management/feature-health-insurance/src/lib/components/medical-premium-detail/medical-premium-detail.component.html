@@ -15,7 +15,7 @@
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
             (valueChange)="onHealthInsuranceTypeChanged()" formControlName="insuranceType" textField="lovDesc"
             valueField="lovCode" [disabled]="isViewContentEditable" [valuePrimitive]="true"
-            [loading] = "isInsuranceTypeLoading" >
+            [loading] = "(insuranceTypeList$ | async)?.length===0" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
