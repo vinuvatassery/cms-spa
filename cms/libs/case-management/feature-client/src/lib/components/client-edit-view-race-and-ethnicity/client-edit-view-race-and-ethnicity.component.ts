@@ -76,7 +76,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
       this.raceAndEthnicityData = groupBy(raceAndEthnicityDataGroup, [
         { field: 'parentCode' },
       ]);
-      console.log(this.raceAndEthnicityData);
       this.RaceAndEthnicityData.emit(raceAndEthnicityData);
     });
   }
@@ -102,6 +101,5 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
     //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
     // }
     // console.log('valueChange', value);
-
   }
 }
