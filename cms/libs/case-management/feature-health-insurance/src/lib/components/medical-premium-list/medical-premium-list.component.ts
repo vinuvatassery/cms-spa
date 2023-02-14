@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
-import { first } from 'rxjs';
+import { Observable, first } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { CompletionChecklist, HealthInsuranceFacade ,HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
@@ -17,7 +17,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 export class MedicalPremiumListComponent implements OnInit {
   /** Public properties **/
+  isEditInsurancePriorityTitle = false;
+  insurancePriorityModalButtonText = 'Save';
   medicalHealthPlans$ = this.healthFacade.medicalHealthPlans$;
+  isTriggerPriorityPopup = false;
   isOpenedHealthInsuranceModal = false;
   isOpenedChangePriorityModal = false;
   isOpenedDeleteConfirm = false;
@@ -31,11 +34,15 @@ export class MedicalPremiumListComponent implements OnInit {
   sort!:any;
   currentInsurancePolicyId: any;
   selectedInsurance: any;
+  medicalHealthPlansCount :any;
   gridList=[];
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
   @Input() closeDeleteModal: boolean = false;
+  @Input() caseEligibilityId: any;
+  @Input() clientId:any;
+  @Input() triggerPriorityPopup$!: Observable<boolean>;
 
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
@@ -87,13 +94,13 @@ export class MedicalPremiumListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.priorityPopupShowSubscription();
   }
   ngOnChanges(): void {
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-
     if (this.closeDeleteModal) {
       this.onDeleteConfirmCloseClicked();
       this.handleHealthInsuranceCloseClicked();
@@ -101,8 +108,25 @@ export class MedicalPremiumListComponent implements OnInit {
     this.loadHealthInsurancePlans();
   }
   /** Internal event methods **/
+
+  private priorityPopupShowSubscription(){
+    this.triggerPriorityPopup$.subscribe((value:boolean)=>{
+      if(value && this.isTriggerPriorityPopup){
+        this.isEditInsurancePriorityTitle = false;
+        this.insurancePriorityModalButtonText = 'Save';
+        this.onChangePriorityOpenClicked();
+      }
+      else
+      {
+        this.isEditInsurancePriorityTitle = true;
+        this.insurancePriorityModalButtonText = 'Update';
+      }
+    })
+  }
+
   onChangePriorityCloseClicked() {
     this.isOpenedChangePriorityModal = false;
+    this.isTriggerPriorityPopup = false;
     this.loadInsurancePolicies();
   }
 
@@ -128,7 +152,6 @@ export class MedicalPremiumListComponent implements OnInit {
 
   handleHealthInsuranceCloseClicked() {
     this.isOpenedHealthInsuranceModal = false;
-    this.loadInsurancePolicies();
   }
 
   handleHealthInsuranceOpenClicked(value: string) {
@@ -151,6 +174,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
   loadHealthInsurancePlans() {
     this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
+      this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
       if(medicalHealthPolicy?.data?.length > 0)
       this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
       if(medicalHealthPolicy?.length > 0){
@@ -202,6 +226,7 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   deleteInsurancePolicy() {
+    this.isTriggerPriorityPopup = false;
     this.deleteInsurancePlan.next(this.currentInsurancePolicyId);
   }
 
@@ -226,6 +251,15 @@ export class MedicalPremiumListComponent implements OnInit {
     if(deleteButonClicked){
       this.onDeleteConfirmOpenClicked();
     }
+  }
+  addOrEditClicked(addEditButonClicked:any){
+    if(addEditButonClicked){
+     this.loadInsurancePolicies();
+    }
+  }
+  isAddPriority(event:any)
+  {
+    this.isTriggerPriorityPopup = event;
   }
 
 }

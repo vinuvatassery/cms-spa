@@ -20,6 +20,7 @@ import { SnackBarNotificationType, NotificationSnackbarService } from '@cms/shar
 export class SetHealthInsurancePriorityComponent implements OnInit {
   @Input() selectedInsurance: any;
   @Input() gridList: any;
+  @Input() insurancePriorityModalButtonText: any;
   @Output() isCloseInsuranceModal = new EventEmitter();
 
   /** Public properties **/
