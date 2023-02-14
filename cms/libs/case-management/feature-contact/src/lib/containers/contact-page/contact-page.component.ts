@@ -963,7 +963,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.contactInfoForm.get('email.email')?.patchValue(this.contactInfo?.email?.email);
       this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('email.detailMsgConsentFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('email.detailMsgFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('email.paperlessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes);
       this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
         homePhone,
