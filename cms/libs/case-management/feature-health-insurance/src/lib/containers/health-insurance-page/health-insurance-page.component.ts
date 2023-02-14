@@ -351,6 +351,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       this.closeDeleteModal=false;
       this.healthFacade.deleteInsurancePolicy(insurancePolicyId).subscribe((response: any) => {
         this.closeDeleteModal=true;
+        const gridDataRefinerValue = {
+          skipCount: this.healthFacade.skipCount,
+          pagesize: this.healthFacade.gridPageSizes[0]?.value,
+          sortColumn : 'creationTime',
+          sortType : 'asc',
+        };
+        this.loadHealthInsuranceHandle(gridDataRefinerValue);
         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
         this.HideLoader();
         this.ref.detectChanges();
