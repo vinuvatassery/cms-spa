@@ -1231,7 +1231,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
             (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
-                'Insurance plan updated successfully.'
+                'Insurance plan saved successfully.'
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
