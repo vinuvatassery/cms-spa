@@ -7,14 +7,15 @@
     }}
   </p>
   <div [formGroup]="healthInsuranceForm">
+    
     <div class="flex-row">
       <div class="flex-col">
+       
         <kendo-floatinglabel text="Health Insurance Type">
-          <!-- [(ngModel)]="ddlInsuranceType" -->
           <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
             (valueChange)="onHealthInsuranceTypeChanged()" formControlName="insuranceType" textField="lovDesc"
-            valueField="lovCode" [disabled]="isViewContentEditable" [valuePrimitive]="true"
+            valueField="lovCode" [disabled]="isViewContentEditable || isEdit" [valuePrimitive]="true"
             [loading] = "(insuranceTypeList$ | async)?.length===0" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
