@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, LovType } from '@cms/system-config/domain';
 import { ClientFacade } from '@cms/case-management/domain';
 import { groupBy } from '@progress/kendo-data-query';
 
@@ -83,7 +83,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   public RaceAndEthnicityhange(value: any): void {
     let notListedValue: any = {};
     value.forEach((val:any)=>{
-      if(val.lovCode === "NOT_LISTED") {
+      if(val.lovCode === LovType.EthnicityNotListed) {
         this.isNotListed = true;
         notListedValue = val;
       }
