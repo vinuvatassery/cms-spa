@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { FamilyAndDependentFacade, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -24,16 +24,14 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   constructor(
     private readonly familyAndDependentFacade: FamilyAndDependentFacade,
     public readonly lovFacade: LovFacade,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private changeDetector: ChangeDetectorRef,
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
-    this.lovFacade.getRelationShipsLovs();
-    this.loadRelationshipLov();
-    this.familyAndDependentFacade.loadClientDependents(this.clientId);
-    this.loadClientDependents();
+    
   }
   ngOnDestroy(): void {
     this.familyAndDependentSubscription.unsubscribe();
@@ -58,8 +56,20 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
             key.controls['enrolledInInsuranceFlag'].disable();
           });
         }
+        this.changeDetector.detectChanges();
       }
     });
+  }
+
+  onOthersCoveredOnPlanFlagRdoClicked(value:any){
+    if(value==='Y'){
+      (this.healthInsuranceForm.controls['newOthersCoveredOnPlan'] as FormArray).clear();
+      this.lovFacade.getRelationShipsLovs();
+      this.loadRelationshipLov();
+      this.familyAndDependentFacade.loadClientDependents(this.clientId);
+      this.loadClientDependents();
+      
+    }
   }
 
   onToggleNewPersonClicked() {
