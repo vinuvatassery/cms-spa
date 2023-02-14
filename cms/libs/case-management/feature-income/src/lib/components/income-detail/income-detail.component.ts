@@ -1,13 +1,13 @@
 /** Angular **/
-import {  Component,  ChangeDetectionStrategy,  Output,  EventEmitter,  Input,  OnDestroy,  OnInit,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, } from '@angular/core';
 /** Facades **/
-import { IncomeFacade, StatusFlag, IncomeTypeCode } from '@cms/case-management/domain';
+import { IncomeFacade, StatusFlag, IncomeTypeCode,ClientDocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { Validators,  FormGroup,  FormControl,  FormBuilder,} from '@angular/forms';
+import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
-import { LoaderService,  LoggingService,  NotificationSnackbarService,  SnackBarNotificationType,} from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'case-management-income-detail',
@@ -50,6 +50,7 @@ export class IncomeDetailComponent implements OnInit {
   tareaJustification = '';
   tareaJustificationCharachtersCount!: number;
   tareaJustificationMaxLength = 300;
+  startDate!:any;
   incomeTypesOther = '';
   public IncomeDetailsFormData: { incomeAmount: number } = {
     incomeAmount: 0,
@@ -75,8 +76,10 @@ export class IncomeDetailComponent implements OnInit {
     private lov: LovFacade,
     private readonly loaderService: LoaderService,
     private loggingService: LoggingService,
-    private readonly notificationSnackbarService: NotificationSnackbarService
-  ) {}
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly configurationProvider: ConfigurationProvider,
+    public readonly clientDocumentFacade: ClientDocumentFacade
+  ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -191,7 +194,6 @@ export class IncomeDetailComponent implements OnInit {
     this.setValidators();
     if (this.isEditValue) {
       this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
-      this.proofOfIncomeValidator = false;
     }
     if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
       let incomeData = this.IncomeDetailsForm.value;
@@ -200,9 +202,9 @@ export class IncomeDetailComponent implements OnInit {
       incomeData['clientCaseId'] = this.clientCaseId;
 
       if (this.incomeTypesOther == 'O') {
-        incomeData.otherDesc =  this.IncomeDetailsForm.controls['otherDesc'].value;
-      } else{
-        incomeData.otherDesc =  this.IncomeDetailsForm.controls['otherDesc'].value == null;
+        incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value;
+      } else {
+        incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value == null;
       }
 
       if (!this.isEditValue) {
@@ -271,10 +273,11 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
+    this.proofOfIncomeFiles = null;
     this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
-   if(this.proofOfIncomeFiles.size>26214400) 
+   if(this.proofOfIncomeFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit) 
    {
     this.proofOfIncomeValidatorSize=true;
    }
@@ -287,13 +290,12 @@ export class IncomeDetailComponent implements OnInit {
   // checking the validation
   setValidators() {
     this.IncomeDetailsForm.markAllAsTouched();
-    this.IncomeDetailsForm.controls['incomeSourceCode'].setValidators([ Validators.required,  ]);
+    this.IncomeDetailsForm.controls['incomeSourceCode'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeTypeCode'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeAmt'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,    ]);
-    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,    ]);
-    // this.IncomeDetailsForm.controls['incomeEndDate'].setValidators([Validators.required,    ]);
-    this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,    ]);
+    this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeAmt'].updateValueAndValidity();
@@ -301,10 +303,17 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
+    var endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
+    var startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
+    if(endDate<=startDate && this.IncomeDetailsForm.controls['incomeEndDate'].value ){
+      this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({'incorrect':true})
+    }
 
 
     if (!this.hasNoProofOfIncome) {
       if (this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value === 'O') {
+        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].setValidators([Validators.required,]);
+        this.IncomeDetailsForm.controls['proofIncomeTypeCode'].updateValueAndValidity();
         this.IncomeDetailsForm.controls['otherDesc'].setValidators([  Validators.required,]);
         this.IncomeDetailsForm.controls['otherDesc'].updateValueAndValidity();
       }
@@ -329,7 +338,7 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeAmt'].setValue(this.selectedIncome.incomeAmt);
     this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValue(this.selectedIncome.incomeFrequencyCode);
     this.IncomeDetailsForm.controls['incomeStartDate'].setValue(new Date(this.selectedIncome.incomeStartDate));
-    this.IncomeDetailsForm.controls['incomeEndDate'].setValue(this.selectedIncome.incomeEndDate != null? new Date(this.selectedIncome.incomeEndDate): null);
+    this.IncomeDetailsForm.controls['incomeEndDate'].setValue(this.selectedIncome.incomeEndDate != null ? new Date(this.selectedIncome.incomeEndDate) : null);
     this.IncomeDetailsForm.controls['incomeNote'].setValue(this.selectedIncome.incomeNote);
     this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
@@ -374,6 +383,7 @@ export class IncomeDetailComponent implements OnInit {
           src: this.selectedIncome.documentPath,
           uid: this.selectedIncome.clientDocumentId,
           size: this.selectedIncome?.documentSize,
+          documentId: this.selectedIncome.clientDocumentId
         },
       ];
     }
@@ -390,8 +400,8 @@ export class IncomeDetailComponent implements OnInit {
     this.isRemoveIncomeConfirmationPopupOpened = false;
   }
 
-  incomeDeleteHandle(event:any){
-    if(event){
+  incomeDeleteHandle(event: any) {
+    if (event) {
       this.sendDetailToIncomeList.next(true);
       this.onRemoveIncomeConfirmationClosed();
     }

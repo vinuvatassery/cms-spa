@@ -13,7 +13,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { first, Subscription, tap } from 'rxjs';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { ProgramCode, CaseOriginCode } from '@cms/case-management/domain';
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, UserProfileService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
@@ -35,6 +35,9 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
 
   date = new Date();
   caseOwnersObject!: any
+  caseOwnerList!:any;
+  userData!:any
+  private userProfileSubsriction !: Subscription;
 
   @Input() isProgramVIsible!: any;
   @Input() parentForm!: FormGroup;
@@ -47,12 +50,12 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   @Input() selectedCase!: any
 
   private caseDataDataSubscription !: Subscription;
-  today = new Date();
+  currentDate = new Date();
 
   /** Constructor**/
   constructor(private readonly router: Router, private readonly ref: ChangeDetectorRef,
     private loaderService: LoaderService,
-
+    private userProfileService: UserProfileService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,6 +75,9 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
 
   ngOnInit(): void {
     this.setDefaultProgram();
+    if (this.isProgramVIsible) {
+      this.getCaseOwners();
+    }
   }
 
   setDefaultProgram() {
@@ -117,11 +123,38 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
     if (!this.isProgramVIsible) {
       this.caseDataDataSubscription.unsubscribe();
     }
+    else{
+      this.userProfileSubsriction.unsubscribe();
+    }
   }
 
   formValidation(caseData: any) {
     if (caseData.caseOriginCode == CaseOriginCode.ClientPortal) {
       this.parentForm.controls['caseOriginCode'].disable();
     }
+  }
+  
+  getLoggedInCaseWorker(){
+    let loggedInCaseOwner= this.caseOwnerList.filter((x:any)=>x.adUserId==this.userData.adUserId);
+    if(loggedInCaseOwner.length>0){
+      this.parentForm.controls['caseOwnerId'].setValue(loggedInCaseOwner[0].loginUserId);
+    }
+  }
+  getCaseOwners(){
+    this.caseOwners.subscribe((element:any)=>{
+      if(element.length>0){
+        this.caseOwnerList=element;
+        this.getLoggedInUserProfile();
+      }
+    })
+  }
+  
+  getLoggedInUserProfile(){
+    this.userProfileSubsriction=this.userProfileService.getProfile$.subscribe((profile:any)=>{
+      if(profile){
+        this.userData=profile;
+        this.getLoggedInCaseWorker();
+      }
+    })
   }
 }

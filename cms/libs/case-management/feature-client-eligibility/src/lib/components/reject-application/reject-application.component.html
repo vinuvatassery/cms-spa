@@ -1,6 +1,6 @@
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    The Status will be set to REJECT. You’ll be prompted to send a denial notice
+    The Status will be set to REJECT. You will be prompted to send a denial notice
     after you click “Deny.”
   </p>
 </section>
@@ -13,10 +13,11 @@
         aria-label="cancel status"
         [primary]="true"
         look="outline"
+        (click)="onModalClose()"
       >
         Cancel
       </button>
-      <button kendoButton aria-label="deny status" [primary]="true">
+      <button kendoButton aria-label="deny status" [primary]="true" (click)="updateCaseStatus()">
         Deny
       </button>
     </div>

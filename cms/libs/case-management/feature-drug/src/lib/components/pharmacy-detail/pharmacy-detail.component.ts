@@ -41,6 +41,7 @@ export class PharmacyDetailComponent implements OnInit {
   pharmacyForm!: FormGroup;
   selectedPharmacyForEdit!: string;
   selectedPharmacyId!: string | null;
+  showSelectPharmacyRequired = false;
   /** Constructor **/
   constructor() { }
 
@@ -72,6 +73,9 @@ export class PharmacyDetailComponent implements OnInit {
         this.addPharmacyEvent.emit(this.selectedPharmacyId ?? '');
       }
     }
+    else{
+      this.showSelectPharmacyRequired = true;
+    }
   }
 
   /** Internal event methods **/
@@ -89,6 +93,12 @@ export class PharmacyDetailComponent implements OnInit {
   }
 
   onSearchTemplateClick(pharmacy: Pharmacy) {
-    this.selectedPharmacyId = pharmacy.vendorId ?? null;
+    if(pharmacy.vendorId){
+      this.selectedPharmacyId = pharmacy.vendorId;
+      this.showSelectPharmacyRequired = false;
+    }
+    else{
+      this.selectedPharmacyId = null;
+    }
   }
 }

@@ -1,7 +1,7 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-management/domain';
 
@@ -12,7 +12,7 @@ import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-ma
   styleUrls: ['./verification-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerificationPageComponent implements OnInit, OnDestroy {
+export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Private properties **/
   private saveClickSubscription !: Subscription;
 
@@ -29,15 +29,22 @@ export class VerificationPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
   }
 
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+  } 
+
   /** Private Methods **/
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      //tap(() => this.workflowFacade.disableSaveButton()), TODO: uncomment while completing this page. This will prevent multiple clicks on save & continue button. 
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.workflowFacade.navigate(navigationType);
+      } else {
+        this.workflowFacade.enableSaveButton();
       }
     });
   }

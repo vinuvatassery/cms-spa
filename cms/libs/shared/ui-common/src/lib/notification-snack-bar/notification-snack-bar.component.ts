@@ -39,10 +39,10 @@ export class NotificationSnackBarComponent implements OnInit {
     private configurationProvider : ConfigurationProvider) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
-    
+  ngOnInit(): void {   
     this.data$.subscribe({
       next: (res) => {
+        this.removePreviousMessage()
         if (res) {
           this.snackbarMessage = res;
           this.notificationService.show({
@@ -61,7 +61,15 @@ export class NotificationSnackBarComponent implements OnInit {
     });
   }   
 
-
+  private removePreviousMessage()
+  {      
+   const divMessage = document.getElementsByClassName("k-notification-container ng-star-inserted");
+   if(divMessage.length > 0)
+     {    
+      var currentMessgae = divMessage.item(0);
+      currentMessgae?.remove(); 
+    }
+   }
 
 
 }

@@ -1,12 +1,12 @@
 /** Angular **/
-import { ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries **/
-import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map } from 'rxjs';
+import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map, tap } from 'rxjs';
 
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, StatesInUSA } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from '@cms/case-management/domain';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
@@ -20,7 +20,7 @@ import { ActivatedRoute,Router } from '@angular/router';
   styleUrls: ['./contact-page.component.scss'],
 })
 
-export class ContactPageComponent implements OnInit, OnDestroy {
+export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -58,6 +58,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
   showRelationshipOtherDec: boolean = false;
   showAddressProofRequiredValidation: boolean = false;
   showPreferredContactLoader = false;
+  isHomeAddressStateOregon$ = new BehaviorSubject(true);;
   public homeAddressProofFile: any = undefined;
 
   /** Private properties **/
@@ -78,7 +79,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly route: ActivatedRoute,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
+    public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly router :Router
   ) { }
 
@@ -87,6 +88,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.loadCurrentSession();
     this.loadDdlRelationships();
     this.loadDdlStates();
+    this.loadDdlCounties(StatesInUSA.Oregon);
     this.buildContactInfoForm();
     this.buildAddressValidationForm();
     this.addSubscriptions();
@@ -104,6 +106,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     adjustControls.forEach((control: any) => {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
     });
+
+    this.workflowFacade.enableSaveButton();
   }
 
   /** Private methods **/
@@ -114,7 +118,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.sameAsMailingAddressChangeSubscription();
     this.addMailingAddressChangeSubscription();
     this.homelessFlagChangeSubscription();
-    this.addStateChangeSubscription();
     this.homePhoneApplicableFlagChangeSubscription();
     this.cellPhoneApplicableFlagChangeSubscription();
     this.workPhoneApplicableFlagChangeSubscription();
@@ -285,7 +288,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       preferredContact.push(this.formatPhoneNumber(otherPhone?.value ?? ''));
     }
     if (isValidEmail) {
-    const match = email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,6}$/);
+    const match = email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/);
       if(match){
         preferredContact.push(email?.value ?? '');
       }
@@ -293,10 +296,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.preferredContactMethods = preferredContact;
 
     if (this.preferredContactMethods.length > 0) {
-      this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(Validators.required);
-      this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
       const selectPreferredCode = this.contactInfoForm?.get('email.preferredContactMethod')?.value;
-      if (!this.preferredContactMethods?.includes(selectPreferredCode)) {
+      if (selectPreferredCode && !this.preferredContactMethods?.includes(selectPreferredCode)) {
         this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
       }
       this.updatePreferredContactCount(true);
@@ -378,7 +379,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private formatPhoneNumber(phoneNumberString: string) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    var match = cleaned?.match(/^(1)?(\d{3})(\d{3})(\d{4})$/);
     if (match) {
       var intlCode = (match[1] ? '+1 ' : '');
       return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
@@ -403,7 +404,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     mailingAddressGroup.controls['city'].updateValueAndValidity();
     mailingAddressGroup.controls['state'].setValidators([Validators.required]);
     mailingAddressGroup.controls['state'].updateValueAndValidity();
-    mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
+    mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
     mailingAddressGroup.controls['zip'].updateValueAndValidity();
 
     if ((homeAddressGroup.controls['homelessFlag']?.value ?? false) === false) {
@@ -411,7 +412,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       homeAddressGroup.controls['address1'].updateValueAndValidity();
       homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['address2'].updateValueAndValidity();
-      homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
+      homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['zip'].updateValueAndValidity();
     }
 
@@ -422,10 +423,11 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
     homeAddressGroup.controls['city'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+')]);
     homeAddressGroup.controls['city'].updateValueAndValidity();
-    homeAddressGroup.controls['state'].setValidators([Validators.required]);
+    homeAddressGroup.controls['state'].setValidators([Validators.required, Validators.pattern('^OR$')]);
     homeAddressGroup.controls['state'].updateValueAndValidity();
+    this.isHomeAddressStateOregon$.next(homeAddressGroup.controls['state']?.value === StatesInUSA.Oregon);
     homeAddressGroup.controls['county'].setValidators([Validators.required]);
-    homeAddressGroup.controls['county'].updateValueAndValidity();
+    homeAddressGroup.controls['county'].updateValueAndValidity();    
 
     if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
       homePhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
@@ -457,12 +459,18 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }
     }
 
-    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) {
-      emailGroup.controls['email'].setValidators([Validators.email]);
+    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
+      emailGroup.controls['email'].setValidators([Validators.required, Validators.email]);
       emailGroup.controls['email'].updateValueAndValidity();
     }
+
+    if (this.preferredContactMethods.length > 0) {
+      this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(Validators.required);
+      this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
+    }
+    
     if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
-      ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+      ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]);
       ffContactGroup.controls['contactName'].updateValueAndValidity();
       ffContactGroup.controls['contactRelationshipCode'].setValidators([Validators.required]);
       ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
@@ -482,14 +490,14 @@ export class ContactPageComponent implements OnInit, OnDestroy {
         address1: new FormControl(''),
         address2: new FormControl(''),
         city: new FormControl(''),
-        state: new FormControl('OR'),
+        state: new FormControl(),
         zip: new FormControl(''),
       }),
       homeAddress: new FormGroup({
         address1: new FormControl(''),
         address2: new FormControl(''),
         city: new FormControl(''),
-        state: new FormControl('OR'),
+        state: new FormControl(StatesInUSA.Oregon),
         zip: new FormControl(''),
         county: new FormControl(''),
         homelessFlag: new FormControl(false, { validators: Validators.required }),
@@ -542,6 +550,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -552,6 +561,9 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
           this.workflowFacade.navigate(navigationType);
         }
+        else{
+          this.workflowFacade.enableSaveButton();
+        } 
       },
       error: (err) => {
         this.loaderService.hide();
@@ -565,7 +577,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.fileUploadRestrictions?.maxFileSize ?? 0);
-    if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile) {
+    const isHomeAddressStateOregon = this.contactInfoForm?.get('homeAddress.state')?.value == StatesInUSA.Oregon;
+    if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile && isHomeAddressStateOregon === true) {
       this.loaderService.show()
       return this.saveContactInfo();
     }
@@ -862,7 +875,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           this.contactInfo = data;
           this.setFormValues();
           if (!this.isEdit) {
-            this.loadDdlCounties('OR');
+            this.loadDdlCounties(StatesInUSA.Oregon);
           }
         }
       },
@@ -950,7 +963,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
 
       this.contactInfoForm.get('email.email')?.patchValue(this.contactInfo?.email?.email);
       this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('email.detailMsgConsentFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('email.detailMsgFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('email.paperlessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes);
       this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
         homePhone,
@@ -968,7 +981,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           name: this.contactInfo?.homeAddressProof?.documentName,
           size: this.contactInfo?.homeAddressProof?.documentSize,
           src: this.contactInfo?.homeAddressProof?.documentPath,
-          uid: this.contactInfo?.homeAddressProof?.documentId
+          uid: this.contactInfo?.homeAddressProof?.documentId,
+          documentId: this.contactInfo?.homeAddressProof?.documentId,
         },
       ];
     }
@@ -1034,12 +1048,6 @@ export class ContactPageComponent implements OnInit, OnDestroy {
           this.setSameAsMailingAddressFlagChanges(curValue);
         }
       });
-  }
-
-  private addStateChangeSubscription() {
-    (this.contactInfoForm.get('homeAddress') as FormGroup)?.controls['state']?.valueChanges.subscribe(value => {
-      this.loadDdlCounties(value);
-    })
   }
 
   private homelessFlagChangeSubscription() {
@@ -1256,6 +1264,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       homeAddressGroup?.controls['city']?.disable();
       homeAddressGroup?.controls['state']?.disable();
       homeAddressGroup?.controls['zip']?.disable();
+      this.isHomeAddressStateOregon$.next(address?.state === StatesInUSA.Oregon);
     }
     else {
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
@@ -1265,7 +1274,8 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       }
 
       homeAddressGroup?.controls['city']?.enable();
-      homeAddressGroup?.controls['state']?.setValue('OR');
+      homeAddressGroup?.controls['state']?.setValue(StatesInUSA.Oregon);
+      this.isHomeAddressStateOregon$.next(true);
     }
     this.isNoMailAddressValidationRequired =false;
   }
@@ -1345,13 +1355,17 @@ export class ContactPageComponent implements OnInit, OnDestroy {
     }
   }
   handleFileSelected(e: SelectEvent) {
+    this.homeAddressProofFile = undefined;
+    this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
     this.showAddressProofRequiredValidation = false;
     this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {
+ 
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
+      this.loaderService.show();
       this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
         next: (response) => {
           if (response === true) {
@@ -1360,10 +1374,12 @@ export class ContactPageComponent implements OnInit, OnDestroy {
             this.uploadedHomeAddressProof = undefined;
             this.loadContactInfo();
             this.updateHomeAddressProofCount(false);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
           this.loggingService.logException(err);
+          this.loaderService.hide();
         },
       });
     }
@@ -1371,6 +1387,7 @@ export class ContactPageComponent implements OnInit, OnDestroy {
       this.homeAddressProofFile = undefined;
       this.uploadedHomeAddressProof = undefined;
       this.updateHomeAddressProofCount(false);
+      this.loaderService.hide();
     }
 
   }
@@ -1437,7 +1454,12 @@ private addSaveForLaterSubscription(): void {
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.router.navigate([`/case-management/cases/case360/${this.workflowFacade.clientCaseId}`])
+        if(statusResponse){
+          this.workflowFacade.showSendEmailLetterPopup(true);
+        }
+        else{
+          this.router.navigate([`/case-management/cases/case360/${this.workflowFacade.clientCaseId}`])
+        }
       }
     });
   }

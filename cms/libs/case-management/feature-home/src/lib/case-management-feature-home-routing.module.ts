@@ -12,7 +12,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureCaseModule
       ),
     data: {
-      title: null,
+      title: 'Clients',
     },
   },
   {
@@ -144,7 +144,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'application-eligibility',
+        path: '',
         loadChildren: () =>
           import('@cms/case-management/feature-client-eligibility').then(
             (m) => m.CaseManagementFeatureClientEligibilityModule

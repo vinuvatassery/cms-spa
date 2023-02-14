@@ -1,7 +1,7 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 /** External libraries **/
-import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -16,7 +16,7 @@ import { LoaderService } from '@cms/shared/util-core';
   styleUrls: ['./management-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManagementPageComponent implements OnInit, OnDestroy {
+export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Public properties **/
   isVisible: any;
   isSelected = true;
@@ -72,6 +72,10 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
   }
 
   /** Private Methods **/
@@ -135,6 +139,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -142,6 +147,8 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
       if (isSaved) {
         this.workflowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Status Updated')  
         this.workflowFacade.navigate(navigationType);
+      } else {
+        this.workflowFacade.enableSaveButton();
       }
     });
   }
@@ -237,7 +244,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy {
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        if (statusResponse) {
+          this.workflowFacade.showSendEmailLetterPopup(true);
+        }
+        else {
+          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        }
       }
     });
   }

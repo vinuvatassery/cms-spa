@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
@@ -27,6 +27,7 @@ export class CaseDetailPageComponent implements OnInit {
   /**Private properties**/
   private navigationSubscription !: Subscription;
   private loadSessionSubscription !:Subscription;
+  private showSendNewsLetterSubscription !: Subscription;
   private showConfirmationPopupSubscription !: Subscription;  public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
@@ -57,6 +58,7 @@ export class CaseDetailPageComponent implements OnInit {
   showDelete:boolean=true;
   currentStatusCode:string="";
   isSubmitted:boolean=false;
+  sendLetterFlag!:any;
   data: Array<any> = [
     {
       text: '',
@@ -65,7 +67,7 @@ export class CaseDetailPageComponent implements OnInit {
   public saveForLaterData = [
     {
       buttonType: "btn-h-primary",
-      text: "Save For Later",
+      text: "SAVE FOR LATER",
       icon: "save",
       click: (): void => {
         this.onSaveLaterClicked();
@@ -73,7 +75,7 @@ export class CaseDetailPageComponent implements OnInit {
     },
     {
       buttonType: "btn-h-primary",
-      text: "Discard Changes",
+      text: "DISCARD CHANGES",
       icon: "do_disturb_alt",
       click: (): void => {
         this.onDiscardConfirmClicked()
@@ -81,7 +83,7 @@ export class CaseDetailPageComponent implements OnInit {
     },
     {
       buttonType: "btn-h-danger",
-      text: "Delete Application",
+      text: "DELETE APPLICATION",
       icon: "delete",
       click: (): void => {
         this.onDeleteConfirmClicked()
@@ -92,8 +94,9 @@ export class CaseDetailPageComponent implements OnInit {
 
   routes$ = this.workflowFacade.routes$;
   completeStaus$ = this.workflowFacade.completionStatus$;
-  currentSession = this.workflowFacade.currentSession
-  isWorkflowReady$ = this.workflowFacade.workflowReady$
+  currentSession = this.workflowFacade.currentSession;
+  isWorkflowReady$ = this.workflowFacade.workflowReady$;
+  isSaveButtonEnabled$ = this.workflowFacade.isSaveButtonEnabled$;
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,
@@ -102,7 +105,8 @@ export class CaseDetailPageComponent implements OnInit {
     private loggingService : LoggingService,
     private readonly snackbarService : NotificationSnackbarService,
     private router: Router,
-	private lovFacade:LovFacade
+	  private lovFacade:LovFacade,
+    private readonly cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -113,15 +117,18 @@ export class CaseDetailPageComponent implements OnInit {
     this.addNavigationSubscription();
     this.loadCase();   
     this.getCase();
- 	this.addConfirmationPopupSubscription();
+ 	  this.addConfirmationPopupSubscription();
     this.loadSessionData();
-    this.getCaseStatusLov();  }
+    this.getCaseStatusLov(); 
+    this.showSendNewsLetterPopup();
+  }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
     this.loadSessionSubscription .unsubscribe();
 	  this.showConfirmationPopupSubscription.unsubscribe();      
     this.workflowFacade.unloadWorkflowSession();
+    this.showSendNewsLetterSubscription.unsubscribe();
 }
 
   cancelCase(){
@@ -168,6 +175,7 @@ export class CaseDetailPageComponent implements OnInit {
   }
   private loadCase()
   {     
+   this.workflowFacade.disableSaveButton();
    this.sessionId = this.route.snapshot.queryParams['sid'];    
    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription =this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
@@ -212,7 +220,7 @@ export class CaseDetailPageComponent implements OnInit {
         tap(()=> this.loaderService.show()),
         mergeMap((navigationType: NavigationType) =>
           forkJoin(
-            [              
+            [
               of(navigationType),
               this.workflowFacade.saveWorkflowProgress(navigationType, this.sessionId, this.route.snapshot.queryParams['pid'])
             ])
@@ -227,8 +235,8 @@ export class CaseDetailPageComponent implements OnInit {
           this.loaderService.hide();
         },
         error: (err: any) => {
-          this.loaderService.hide();            
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);  
+          this.loaderService.hide();
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
           this.loggingService.logException(err);
         },
       });
@@ -270,6 +278,7 @@ export class CaseDetailPageComponent implements OnInit {
     if (event === CommunicationEvents.Close) {
       this.isShowSendNewLetterPopup = false;
     }
+    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
   }
   public onPaste(): void {
     console.log("Paste");
@@ -313,7 +322,7 @@ export class CaseDetailPageComponent implements OnInit {
     this.loaderService.show();
     if (object?.isReset ?? false) {
       this.workflowFacade.resetWorkflowNavigation();
-      this.loaderService.hide();
+      //this.loaderService.hide();
     }
     else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
       this.workflowFacade.saveNonequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
@@ -332,6 +341,9 @@ export class CaseDetailPageComponent implements OnInit {
     this.showConfirmationPopupSubscription = this.workflowFacade.saveForLaterConfirmationClicked$.subscribe((val) => {
       if (val) {
         this.isShowSaveLaterPopup = true;
+        this.sendLetterFlag = '';
+        this.currentStatusCode = '';
+        this.isSubmitted=false;
       }
     });
   }
@@ -378,20 +390,32 @@ export class CaseDetailPageComponent implements OnInit {
     this.loaderService.show();
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
-      this.caseFacade.updateCaseStatus(this.clientCaseId,this.currentStatusCode).subscribe({
-        next:(casesResponse:any)=>{
+      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode).subscribe({
+        next: (casesResponse: any) => {
           this.loaderService.hide();
-          this.workflowFacade.saveForLater(true);
+          if (this.sendLetterFlag == StatusFlag.Yes) {
+            this.workflowFacade.saveForLater(true);
+          }
+          else {
+            this.workflowFacade.saveForLater(false);
+          }
           this.isShowSaveLaterPopup = false;
         },
-        error:(err:any)=>{
+        error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         }
       })
     }
-
   }
 
+  showSendNewsLetterPopup() {
+    this.showSendNewsLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe((response: any) => {
+      if (response) {
+        this.onSendNewLetterClicked();
+        this.cdr.detectChanges();
+      }
+    })
+  }
 }

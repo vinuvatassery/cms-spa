@@ -1,3 +1,5 @@
+import { Dependent } from "./dependent";
+
 export class healthInsurancePolicy {
         clientInsurancePolicyId: string | null = null;
         clientId: number | null = null;
@@ -21,7 +23,7 @@ export class healthInsurancePolicy {
         nextPremiumDueDate?: Date | null;
         paymentIdNbrSameAsInsuranceIdNbrFlag: string | null = null;
         paymentIdNbr: string | null = null;
-        aptcFlag: string | null = null;
+        aptcCode: string | null = null;
         aptcNotTakingFlag: string | null = null;
         aptcMonthlyAmt: number | null = null;
         othersCoveredOnPlanFlag: string | null = null;
@@ -42,8 +44,7 @@ export class healthInsurancePolicy {
         oonDrugs: string | null = null;
         concurrencyStamp: string | null = null;
         activeFlag: string | null = null;
-        creationTime?: Date;
-        othersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
+        creationTime?: Date;       
         proofOfPremiumFile: any = null;
         proofOfPremiumFileName: string = "";
         proofOfPremiumFileSize: number | null = null;
@@ -61,14 +62,15 @@ export class healthInsurancePolicy {
         copyOfSummaryFileSize: number | null = null;
         copyOfSummaryFileTypeCode: string = "";
         copyOfSummaryFileId: string = "";
-        copyOfSummaryFilePath: string = "";
-
+        copyOfSummaryFilePath: string = "";        
         medicareCardFile: any = null;
         medicareCardFileName: string = "";
         medicareCardFileSize: number | null = null;
         medicareCardFileTypeCode: string = "";
         medicareCardFileId: string = "";
         medicareCardFilePath: string = "";
+        othersCoveredOnPlan: Array<Dependent> = [];
+        //removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
 }
 
 export class othersCoveredOnPlan {

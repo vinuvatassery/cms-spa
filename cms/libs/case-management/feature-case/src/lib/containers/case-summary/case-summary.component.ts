@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
+  Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, AfterViewInit} from '@angular/core';
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, WorkflowFacade,
@@ -9,7 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 /**external libraries */
-import { catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -19,7 +19,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class CaseSummaryComponent implements OnInit , OnDestroy {
+export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
   /** Public properties **/
 
   parentForm!: FormGroup;
@@ -73,6 +73,10 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
     this.saveForLaterValidationSubscription.unsubscribe();
   }
 
+  ngAfterViewInit(){
+    this.workFlowFacade.enableSaveButton();
+  }
+
     private loadFormdata()
     {      
       this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
@@ -108,6 +112,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
    
     private addSaveSubscription(): void {
       this.saveClickSubscription = this.workFlowFacade.saveAndContinueClicked$.pipe(
+        tap(() => this.workFlowFacade.disableSaveButton()),
         mergeMap((navigationType: NavigationType) =>
           forkJoin([of(navigationType), this.updateCase()])
         ),       
@@ -115,6 +120,8 @@ export class CaseSummaryComponent implements OnInit , OnDestroy {
         if (isSaved == true) {
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
           this.workFlowFacade.navigate(navigationType);
+        } else {
+          this.workFlowFacade.enableSaveButton();
         }
       });
     }
@@ -190,7 +197,12 @@ private addSaveForLaterSubscription(): void {
       ).subscribe(([statusResponse, isSaved]) => {
         if (isSaved) {
           this.loaderService.hide();
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+          if(statusResponse){
+            this.workFlowFacade.showSendEmailLetterPopup(true);
+          }
+          else{
+            this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+          }
         }
       });
     }

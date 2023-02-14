@@ -1,29 +1,30 @@
 <div class="app-l-inner-rapper">
   <div class="flex-row">
     <div class="flex-col mb-3">
-      <common-signature-pad></common-signature-pad>
-      <hr />
+      <!-- <common-signature-pad></common-signature-pad> -->
+      <!-- <hr /> -->
+      <h2> 
+        <span      
+            class="material-icons"     
+            aria-label="home"
+            aria-hidden="true"
+        >home</span>
+         &nbsp; Dashboard
+      </h2>
     </div>
     <div class="flex-col mb-3">
-      <table class="table">
+      <table class="table" summary="dashboard">
+        <tr hidden>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
         <tr *ngFor="let dashboard of dashboard$ | async">
           <td>{{ dashboard.id }}</td>
           <td>{{ dashboard.name }}</td>
           <td>{{ dashboard.description }}</td>
         </tr>
       </table>
-
-      <div class="flex-col mb-3">
-        <p><b>Test Local Storage Service</b></p>
-        <button
-          (click)="testLocalStorageService()"
-          kendoButton
-          [primary]="true"
-        >
-          Submit
-        </button>
-        <hr />
-      </div>
     </div>
   </div>
 </div>

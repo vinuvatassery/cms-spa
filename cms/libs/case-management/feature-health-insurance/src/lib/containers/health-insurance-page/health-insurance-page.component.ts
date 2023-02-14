@@ -1,7 +1,7 @@
 /** Angular **/
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Facades **/
 import { WorkflowFacade, HealthInsuranceFacade, CaseFacade, HealthInsurancePolicyFacade, healthInsurancePolicy, CompletionChecklist, StatusFlag, othersCoveredOnPlan } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -16,7 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./health-insurance-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HealthInsurancePageComponent implements OnInit, OnDestroy {
+export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   healthInsuranceForm!: FormGroup;
@@ -31,6 +31,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   groupPolicyEligible: string = "";
   showTable: boolean = false;
   closeDeleteModal:boolean=false;
+  triggerPriorityPopup$ = this.healthFacade.triggerPriorityPopup$;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -66,6 +67,11 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
   }
+
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+  }
+
   ShowHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -114,6 +120,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       othersCoveredOnPlanFlag: [''],
       othersCoveredOnPlan: this.formBuilder.array([]),
       newOthersCoveredOnPlan: this.formBuilder.array([]),
+      othersCoveredOnPlanSaved: [[]],
       isClientPolicyHolderFlag: [''],
       policyHolderFirstName: [''],
       policyHolderLastName: [''],
@@ -133,6 +140,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -140,6 +148,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       if (isSaved) {
         this.workflowFacade.navigate(navigationType);
         this.HideLoader();
+      } else {
+        this.workflowFacade.enableSaveButton();
       }
     });
   }
@@ -233,7 +243,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
 
           const gridDataRefinerValue = {
             skipCount: this.healthFacade.skipCount,
-            pagesize: this.healthFacade.gridPageSizes[0]?.value
+            pagesize: this.healthFacade.gridPageSizes[0]?.value,
+            sortColumn : 'creationTime',
+            sortType : 'asc',
           };
           this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.loadInsurancePolicyFlags();
@@ -275,7 +287,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       },
       error:(err:any)=>{
         this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ; 
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ;
       }
     });
   }
@@ -289,7 +301,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
           this.showTable = true;
           const gridDataRefinerValue = {
             skipCount: this.healthFacade.skipCount,
-            pagesize: this.healthFacade.gridPageSizes[0]?.value
+            pagesize: this.healthFacade.gridPageSizes[0]?.value,
+            sortColumn : 'creationTime',
+            sortType : 'asc',
           };
           this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.loadInsurancePolicyFlags();
@@ -317,13 +331,17 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sortColumn : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
     };
     this.healthFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
       gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType
     );
   }
 
@@ -333,6 +351,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
       this.closeDeleteModal=false;
       this.healthFacade.deleteInsurancePolicy(insurancePolicyId).subscribe((response: any) => {
         this.closeDeleteModal=true;
+        const gridDataRefinerValue = {
+          skipCount: this.healthFacade.skipCount,
+          pagesize: this.healthFacade.gridPageSizes[0]?.value,
+          sortColumn : 'creationTime',
+          sortType : 'asc',
+        };
+        this.loadHealthInsuranceHandle(gridDataRefinerValue);
         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
         this.HideLoader();
         this.ref.detectChanges();
@@ -351,7 +376,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy {
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        if (statusResponse) {
+          this.workflowFacade.showSendEmailLetterPopup(true);
+        }
+        else {
+          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        }
       }
     });
   }

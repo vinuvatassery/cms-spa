@@ -83,11 +83,9 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
-    this.composeFamilyMemberForm();
-    this.loadFamilyDependents();   
-    this.loadNewFamilyMemberData();  
-    this.composeExistFamilyMemberForm()
+  ngOnInit(): void {     
+    this.composeFamilyMemberForm();   
+    this.loadNewFamilyMemberData();     
     this.updateRelationshipList();
   }
 
@@ -95,17 +93,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   private loadNewFamilyMemberData()
   {    
     this.isExistDependent =false;
-    this.isOpenedNewFamilyMember =false;   
-    if(this.dependentTypeCodeSelected== DependentTypeCode.Dependent)
-    {
-      
-    this.onNewFamilyMemberClicked()
-    }
-    else
-    {
-     
-      this.onExistingFamilyMemberLoad()
-    }
+    this.isOpenedNewFamilyMember =false;  
+    this.onNewFamilyMemberClicked()   
   }
 
 
@@ -114,8 +103,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     this.familyMemberForm = this.formBuilder.group({
       concurrencyStamp: [''],
       relationshipCode: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.maxLength(40)]],
+      lastName: ['', [Validators.required, Validators.maxLength(40)]],
       dob: ['', Validators.required],
       ssn: [''],
       enrolledInInsuranceFlag: ['', Validators.required],
@@ -133,7 +122,8 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         this.dependentSearch = groupBy(dependentSearch, [
           { field: 'memberType' },
         ]);  
-        this.searchResultSubject.next(this.dependentSearch)      
+        this.searchResultSubject.next(this.dependentSearch);
+        this.showDependentSearchInputLoader = false;     
       }
       
     });  

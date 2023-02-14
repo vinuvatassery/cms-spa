@@ -23,7 +23,7 @@
           </ng-template>
         </kendo-grid-column>
          <!-- grid more ation column template -->
-        <kendo-grid-column field="Option" title="Option" [width]="75" class="text-center">
+        <kendo-grid-column field="Option" title="Option" [width]="75" class="text-center" [filterable]="filterable" [columnMenu]="filterable" [sortable]="filterable">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More option" class="TableActionPopup app-dropdown-action"
               aria-label="more actions" buttonClass="k-icon-button"

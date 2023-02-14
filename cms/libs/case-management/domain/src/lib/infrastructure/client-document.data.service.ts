@@ -31,12 +31,24 @@ export class ClientDocumentDataService {
     }
 
     removeDocument(documentId: string) {
-        const url = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/${documentId}`;
+        const url = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${documentId}`;
         return this.http.delete(url);
     }
 
     /** private methods**/
     private getUrl() {
         return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/upload`
+    }
+    getClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
+        return this.http.get<ClientDocument>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/eligibilty/${clientCaseEligibilityId}`
+        );
+    }
+
+    getClientDocumentsViewDownload(clientDocumentId: string) {
+        return this.http.get(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}`
+         , {
+            responseType: 'blob'} );
     }
 }

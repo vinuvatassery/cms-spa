@@ -33,11 +33,12 @@ export class IncomeFacade {
   dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly contactDataService: ContactDataService,
-    private loggingService : LoggingService,
+  constructor(
+    private readonly contactDataService: ContactDataService,
+    private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private configurationProvider: ConfigurationProvider) { }
+    private readonly configurationProvider: ConfigurationProvider) { }
 
     ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -48,6 +49,11 @@ export class IncomeFacade {
       }
       this.notificationSnackbarService.manageSnackBar(type,subtitle)
       this.HideLoader();
+    }
+
+    errorShowHideSnackBar( subtitle : any)
+    {
+      this.notificationSnackbarService.errorSnackBar(subtitle)
     }
 
     ShowLoader()
@@ -105,9 +111,9 @@ export class IncomeFacade {
     });
   }
 
-  loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any): void {
+  loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any, sortBy:any, sortType:any): void {
     this.ShowLoader();
-    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize).subscribe({
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize, sortBy, sortType).subscribe({
       next: (incomesResponse: any) => {
         if(incomesResponse.clientIncomes!=null){
           const gridView: any = {
@@ -156,10 +162,10 @@ export class IncomeFacade {
     const formData: any = new FormData();
     for (var key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       else {
         formData.append(key, clientIncome[key]);
@@ -172,10 +178,10 @@ export class IncomeFacade {
     const formData: any = new FormData();
     for (var key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString()));
+        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
       else {
         formData.append(key, clientIncome[key]);
@@ -187,8 +193,7 @@ export class IncomeFacade {
 
   deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string) {
     return this.contactDataService.deleteIncome(clientIncomeId,clientId,clientCaseEligibilityId);
-  }
-
+  } 
   loadIncomeDetails(clientIncomeId : string){
     return this.contactDataService.loadIncomeDetailsService(clientIncomeId)
   }

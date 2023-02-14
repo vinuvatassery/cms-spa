@@ -35,6 +35,8 @@ export class WorkflowFacade {
   private saveForLaterClickedSubject = new Subject<boolean>();
   private saveForLaterValidationSubject = new Subject<boolean>();
   private saveForLaterConfirmationSubject = new Subject<boolean>();
+  private sendEmailLetterSubject = new Subject<boolean>();
+  private isSaveButtonEnabledSubject = new Subject<boolean>();
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
@@ -43,13 +45,15 @@ export class WorkflowFacade {
   sessionSubject$ = this.sessionSubject.asObservable();
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
   workflowReady$ = this.workflowReadySubject.asObservable();
+  isSaveButtonEnabled$ = this.isSaveButtonEnabledSubject.asObservable();
 
   saveForLaterClicked$ = this.saveForLaterClickedSubject.asObservable();
   saveForLaterValidationClicked$ = this.saveForLaterValidationSubject.asObservable();
   saveForLaterConfirmationClicked$ = this.saveForLaterConfirmationSubject.asObservable();
+  sendEmailLetterClicked$ = this.sendEmailLetterSubject.asObservable();
   clientId: number | undefined;
   clientCaseId: string | undefined;
-  clientCaseEligibilityId: string | undefined; 
+  clientCaseEligibilityId: string | undefined;
 
   completionChecklist!: WorkflowProcessCompletionStatus[];
   currentSession!: WorkflowSession;
@@ -57,21 +61,20 @@ export class WorkflowFacade {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /**Constructor */
-  constructor(private readonly workflowService: WorkflowDataService, private router: Router, private actRoute: ActivatedRoute
+  constructor(private readonly workflowService: WorkflowDataService, private readonly router: Router, private readonly actRoute: ActivatedRoute
     ,   private readonly loaderService: LoaderService,
-    private loggingService : LoggingService ,
+    private readonly loggingService : LoggingService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService,
-    private configurationProvider : ConfigurationProvider ) { }
-  
+    public readonly intl: IntlService,
+    private readonly configurationProvider : ConfigurationProvider ) { }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {        
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
     this.hideLoader();   
   }
@@ -101,6 +104,10 @@ export class WorkflowFacade {
 
   showSaveForLaterConfirmationPopup(showHide: boolean) {
     this.saveForLaterConfirmationSubject.next(showHide);
+  }
+
+  showSendEmailLetterPopup(showHideValue:boolean) {
+    this.sendEmailLetterSubject.next(showHideValue)
   }
 
   navigate(navigationType: NavigationType) {
@@ -154,7 +161,7 @@ export class WorkflowFacade {
           forkJoin(
             [
               of(wfMaster),
-              this.workflowService.loadWorkflow(sessionId)             
+              this.workflowService.loadWorkflow(sessionId)
             ])
         ),
       ).subscribe({
@@ -288,6 +295,19 @@ export class WorkflowFacade {
     }
   }
 
+  replaceChecklist(checklist: CompletionChecklist[]){
+    if (checklist) {
+      const processId = this.actRoute.snapshot.queryParams['pid'];
+      let completionChecklist: WorkflowProcessCompletionStatus = this.deepCopy(this.completionChecklist)
+        ?.filter((cs: WorkflowProcessCompletionStatus) => cs.processId === processId)[0];
+        if (completionChecklist) {
+          completionChecklist.completionChecklist =   checklist;
+        }
+        
+        this.updateWorkflowCompletionStatus(completionChecklist, true);
+    }
+  }
+
   resetWorkflowNavigation() {
     const newRoute = this.deepCopy(this.currentSession?.workFlowProgress)[0];
     this.saveNonequenceNavigation(newRoute?.workflowProgressId, this.currentSession.workflowSessionId)
@@ -375,7 +395,6 @@ export class WorkflowFacade {
       const nextIndex = this.deepCopy(this.currentSession?.workFlowProgress)?.findIndex((wf: WorkFlowProgress) => wf.workflowProgressId === nextWorkflow.workflowProgressId);
       if (nextIndex !== -1) {
         this.currentSession.workFlowProgress[nextIndex] = nextWorkflow;
-        this.currentSession = this.currentSession;
         this.routesSubject.next(this.currentSession.workFlowProgress);
       }
     }
@@ -422,6 +441,7 @@ export class WorkflowFacade {
 
 
   loadWorkFlowSessionData(sessionId: string): void {
+    this.showLoader();
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (ddlsessionDataResponse) => {
         if (ddlsessionDataResponse) {
@@ -449,6 +469,7 @@ export class WorkflowFacade {
           this.sessionDataSubject.next(workflowResonseData);
         }
        
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
@@ -461,5 +482,12 @@ export class WorkflowFacade {
     this.wfProcessCompletionStatusSubject.next([]);
   }
 
+  enableSaveButton(){
+    this.isSaveButtonEnabledSubject.next(true);
+  }
+
+  disableSaveButton(){
+    this.isSaveButtonEnabledSubject.next(false);
+  }
   
 } 

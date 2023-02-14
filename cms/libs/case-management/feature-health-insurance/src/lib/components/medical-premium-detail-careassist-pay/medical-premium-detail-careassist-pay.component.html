@@ -1,0 +1,105 @@
+<div [formGroup]="healthInsuranceForm">
+    <div class="block-section">
+        <div class="flex-row">
+            <div class="flex-col">
+                <fieldset class="k-form-fieldset">
+                    <legend class="k-form-legend">
+                        <h5>Do they want CAREAssist to pay for health insurance premiums?</h5>
+                    </legend>
+
+                    <div class="component-list-h">
+                        <span class="app-radiobtnwidtext-wrapper">
+                            <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton
+                                name="careassistPayingPremiumFlag" aria-labelledby="buyingPremiumYes"
+                                formControlName="careassistPayingPremiumFlag" id="buyingPremiumYes" value="Y" />
+                            <kendo-label class="k-radio-label" for="buyingPremiumYes" text="Yes"></kendo-label>
+                        </span>
+                        <span class="app-radiobtnwidtext-wrapper">
+                            <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton
+                                name="careassistPayingPremiumFlag" aria-labelledby="buyingPremiumNo"
+                                formControlName="careassistPayingPremiumFlag" id="buyingPremiumNo" value="N" />
+                            <kendo-label class="k-radio-label" for="buyingPremiumNo" text="No"></kendo-label>
+                        </span>
+                        <kendo-formerror
+                            *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">A Response is Required.</kendo-formerror>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
+            <div class="flex-col flex-col-6">
+                <kendo-floatinglabel text="Date Currently Paid Through">
+                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                        formControlName="premiumPaidThruDate" [disabled]="isViewContentEditable"
+                        formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid Through">
+                    </kendo-datepicker>
+                </kendo-floatinglabel>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumPaidThruDate'].valid">Date currently paid through is required.</kendo-formerror>
+            </div>
+            <div class="flex-col flex-col-6">
+                <kendo-floatinglabel text="Next Premium Payment Due Date">
+                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                        formControlName="nextPremiumDueDate" [disabled]="isViewContentEditable"
+                        formatPlaceholder="formatPattern" placeholder="" aria-label="Next Premium Payment Due Date">
+                    </kendo-datepicker>
+                </kendo-floatinglabel>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">	Next payment due date is required.</kendo-formerror>
+
+            </div>
+            <div class="flex-col flex-col-6">
+                <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
+                    <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                    <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
+                        placeholder="Premium Amount" placeholder="00.00" formControlName="premiumAmt" #premiumAmt
+                        [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" [disabled]="isViewContentEditable">
+
+                    </kendo-numerictextbox>
+                </kendo-floatinglabel>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid">Premium amount is required.</kendo-formerror>
+
+            </div>
+            <div class="flex-col flex-col-6">
+                <kendo-floatinglabel text="Premium Frequency">
+                    <kendo-dropdownlist aria-label="Premium Frequency" [fillMode]="formUiStyle.dropDownFillMode"
+                        [disabled]="isViewContentEditable" [data]="premiumFrequencyList$ | async"
+                        formControlName="premiumFrequencyCode" textField="lovDesc" valueField="lovCode"
+                        [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                </kendo-floatinglabel>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid">Premium frequency is required.</kendo-formerror>
+            </div>
+            <div class="flex-col">
+                <kendo-floatinglabel text="Payment ID Number">
+                    <kendo-textbox [disabled]="isViewContentEditable || sameAsInsuranceIdFlag"
+                        placeholder="Payment ID Number" formControlName="paymentIdNbr" [maxlength]="20"
+                        [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
+                    </kendo-textbox>
+
+                </kendo-floatinglabel>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment ID number is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
+                    Special characters not allowed.</kendo-formerror>
+            </div>
+            <div class="flex-col mt-2">
+                <span class="app-checkboxwidtext-wrapper">
+                    <input [disabled]="isViewContentEditable" type="checkbox"
+                        formControlName="paymentIdNbrSameAsInsuranceIdNbrFlag"
+                        (change)="onSameAsInsuranceIdValueChange($event)" kendoCheckBox
+                        aria-labelledby="sameAsInsuranceId" id="sameAsInsuranceId" />
+                    <label class="k-checkbox-label" for="sameAsInsuranceId">Same as Insurance ID</label>
+                </span>
+            </div>
+
+            <div class="flex-col mt-3">
+                <case-management-medical-premium-detail-client-policy-holder [healthInsuranceForm]="healthInsuranceForm"
+                    [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-client-policy-holder>
+            </div>
+
+            <div class="flex-col mt-3">
+                <case-management-medical-premium-detail-others-covered-plan [healthInsuranceForm]="healthInsuranceForm"
+                    [isViewContentEditable]="isViewContentEditable"
+                    [clientId]="clientId"></case-management-medical-premium-detail-others-covered-plan>
+            </div>
+        </div>
+    </div>
+</div>

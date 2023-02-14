@@ -1,10 +1,10 @@
 /** Angular **/
-import { OnDestroy } from '@angular/core';
+import { AfterViewInit, OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
-import { catchError, filter, first, forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facades **/
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -20,7 +20,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
   styleUrls: ['./family-and-dependent-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
+export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Public Methods **/
   dependentList$ = this.familyAndDependentFacade.dependents$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
@@ -80,6 +80,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     this.saveForLaterValidationSubscription.unsubscribe();
   }
 
+  ngAfterViewInit(){
+    this.workflowFacade.enableSaveButton();
+  }
+
   /** Private Methods **/
   private loadCase()
   {  
@@ -123,6 +127,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
   }
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
+      tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),  
@@ -131,7 +136,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')  
         this.checkBoxSubscription.unsubscribe();      
         this.workflowFacade.navigate(navigationType);
-      }
+      } else {
+        this.workflowFacade.enableSaveButton();
+      } 
     });
   }
 
@@ -231,7 +238,12 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy {
     ).subscribe(([statusResponse, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        if(statusResponse){
+          this.workflowFacade.showSendEmailLetterPopup(true);
+        }
+        else{
+          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
+        }
       }
     });
   }

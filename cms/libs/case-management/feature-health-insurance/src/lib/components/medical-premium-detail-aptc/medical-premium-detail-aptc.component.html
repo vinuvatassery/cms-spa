@@ -2,87 +2,35 @@
 
 <fieldset class="k-form-fieldset">
   <legend class="k-form-legend"><h5>Advanced Premium Tax Credit?</h5></legend>
- 
       <div class="component-list-h">
-        <span class="app-radiobtnwidtext-wrapper">
+        <span class="app-radiobtnwidtext-wrapper" *ngFor="let aptc of lovFacade.aptclov$ | async; let i = index">
           <input
             type="radio"
             kendoRadioButton
             formControlName="aptcFlag"
-            value="Y"
+            [value]="aptc.lovCode"
             name="aptcFlag"
             aria-labelledby="advancedPremiumTaxCreditYes"
-            id="advancedPremiumTaxCreditYes"
-            [checked]="aptcFlagValue=='Y'"
+            id="aptcFlag{{aptc.lovCode}}"
           />
           <kendo-label
             class="k-radio-label"
-            text="Yes"
-            for="advancedPremiumTaxCreditYes"
+            text="{{aptc.lovDesc}}"
+            for="aptcFlag{{aptc.lovCode}}"
           ></kendo-label>
         </span>
-        <span class="app-radiobtnwidtext-wrapper">
-          <input
-            type="radio"
-            kendoRadioButton
-            formControlName="aptcFlag"
-            value="N"
-            name="aptcFlag"
-            aria-labelledby="advancedPremiumTaxCreditNo"
-            id="advancedPremiumTaxCreditNo"
-            [checked]="aptcFlagValue=='N'"
-          />
-          <kendo-label
-            class="k-radio-label"
-            text="No"
-            for="advancedPremiumTaxCreditNo"
-          ></kendo-label>
-        </span>
-        <span class="app-radiobtnwidtext-wrapper">
-          <input
-            type="radio"
-            kendoRadioButton
-            formControlName="aptcFlag"
-            value="U"
-            name="aptcFlag"
-            aria-labelledby="advancedPremiumTaxCreditUnknown"
-            id="advancedPremiumTaxCreditUnknown"
-            [checked]="aptcFlagValue=='U'"
-          />
-          <kendo-label
-            class="k-radio-label"
-            text="Unknown"
-            for="advancedPremiumTaxCreditUnknown"
-          ></kendo-label>
-        </span>
-        <span class="app-radiobtnwidtext-wrapper">
-          <input
-            type="radio"
-            kendoRadioButton
-            formControlName="aptcFlag"
-            value="E"
-            name="aptcFlag"
-            aria-labelledby="advancedPremiumTaxCreditEligibleButNotTaking"
-            id="advancedPremiumTaxCreditEligibleButNotTaking"
-            [checked]="aptcFlagValue=='E'"
-          />
-          <kendo-label
-            class="k-radio-label"
-            text="Eligible, but not taking"
-            for="advancedPremiumTaxCreditEligibleButNotTaking"
-          ></kendo-label>
-        </span>
-        <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcFlag'].valid && isViewContentEditable==false)">Advanced Premium Tax Credit is required.</kendo-formerror>
+      
+        <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcFlag'].valid && isViewContentEditable==false)">A Response is required.</kendo-formerror>
       </div>
   
       </fieldset>
-      <div class="block-section mt-2" *ngIf="healthInsuranceForm.controls['aptcFlag'].value==='Y'">
+      <div class="block-section mt-2" *ngIf="healthInsuranceForm.controls['aptcFlag'].value==='YES'">
         <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
-          <kendo-textbox  aria-label="monthly aptc amount" placeholder="Monthly APTC Amount (may be $0)" 
+          <span class="k-input-prefix custom-currencysymbol"> $ </span>  
+          <kendo-textbox  aria-label="monthly aptc amount" placeholder="" 
             formControlName="aptcMonthlyAmt"
             [fillMode]="formUiStyle.inputFillMode"> 
-            <ng-template kendoTextBoxPrefixTemplate> $ </ng-template>
-            </kendo-textbox>
+          </kendo-textbox>
            
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcMonthlyAmt'].valid && isViewContentEditable==false)">Monthly APTC Amount is required.</kendo-formerror>

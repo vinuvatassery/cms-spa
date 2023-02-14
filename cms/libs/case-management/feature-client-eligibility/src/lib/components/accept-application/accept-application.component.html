@@ -1,41 +1,78 @@
+<div  [formGroup]="eligibilityForm">
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    Set Status, Group, and Eligibility Period. You’ll be prompted to send an
-    approval or pending notice after you click “Initiate Benefits.”
+    {{
+      isEdit
+        ? 'Edit Status, Group, and Eligibility Period as needed. Click “Update” to commit the changes.'
+        : 'Set Status, Group, and Eligibility Period. You’ll be prompted to send an approval or pending notice after you click “Initiate Benefits.”'
+    }}
   </p>
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Case Status">
-        <kendo-dropdownlist  dropdownFieldautofocus [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlAcceptApplications$ | async">
+        <kendo-dropdownlist
+        [fillMode]="formUiStyle.dropDownFillMode"
+        [data]="caseStatusList$ | async"
+        formControlName ="caseStatusCode"
+        textField ="lovDesc"
+        valueField ="lovCode"
+        [valuePrimitive]="true"
+        (valueChange)="startDateOnChange($event)">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eligibilityForm.controls['caseStatusCode'].valid">Case status is required.</kendo-formerror>
+
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Group">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlAcceptApplications$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+        [data]="groupList$ | async"
+        formControlName ="groupCode"
+        textField ="lovDesc"
+        valueField ="lovCode"
+        [valuePrimitive]="true"
+        (valueChange)="startDateOnChange($event)">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eligibilityForm.controls['groupCode'].valid">Group is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Eligibility Start Date">
-        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+      <kendo-floatinglabel text="Eligibility Start">
+        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+        format="MM-dd-yyyy"
+          formControlName ="eligibilityStartDate"
+          formatPlaceholder="formatPattern"
+          placeholder=""
+          (valueChange)="startDateOnChange($event)">
         </kendo-datepicker>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eligibilityForm.controls['eligibilityStartDate'].valid">Eligibility start is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Eligibility End Date">
-        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+      <kendo-floatinglabel text="Eligibility End">
+        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+        format="MM-dd-yyyy"
+          formControlName ="eligibilityEndDate"
+          formatPlaceholder="formatPattern"
+          placeholder="">
         </kendo-datepicker>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eligibilityForm.controls['eligibilityEndDate'].valid && !eligibilityForm.controls['eligibilityEndDate'].hasError('incorrect')">Eligibility end is required.</kendo-formerror>
+      <kendo-formerror *ngIf="eligibilityForm.controls['eligibilityEndDate'].hasError('incorrect')"> 'Eligibility End' should be greater than 'Eligibility Start' date
+      </kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Assigned Case Worker">
         <!-- <input kendoTextBox aria-label="assigned case worker" /> -->
-        <kendo-textbox placeholder="Assigned Case Worker" aria-label="assigned case worker" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="assigned case worker" [disabled]="true"
+        [fillMode]="formUiStyle.inputFillMode"
+        formControlName="assignedCwUser"
+        ></kendo-textbox>
       </kendo-floatinglabel>
     </div>
   </div>
 </section>
+</div>
 
 <kendo-dialog-actions>
   <div class="justify-content-between">
@@ -45,16 +82,17 @@
         aria-label="cancel send letter"
         [primary]="true"
         look="outline"
+        (click)="onCancel()"
       >
         Cancel
       </button>
       <button
         kendoButton
         [primary]="true"
-        routerLink="/case-detail/application-eligibility/send-letter"
         aria-label="initiate benefits"
+        (click)="save()"
       >
-        Initiate Benefits
+       {{buttonText}}
       </button>
     </div>
   </div>

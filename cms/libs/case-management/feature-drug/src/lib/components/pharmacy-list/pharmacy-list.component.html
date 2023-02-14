@@ -127,9 +127,15 @@
   (close)="handleCloseChangePriorityClikced()"
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
-  <kendo-dialog-titlebar> Change Pharmacy Priority </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar>  {{
+    isEditPharmacyPriorityTitle
+        ? 'Change Pharmacy Priority'
+        : 'Select Pharmacy Priority'
+    }}
+</kendo-dialog-titlebar>
   <case-management-set-pharmacy-priority
     (closeChangePriority)="handleCloseChangePriorityClikced()"
+    [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
     [clientpharmacies$]="clientpharmacies$"
   ></case-management-set-pharmacy-priority>
 </kendo-dialog>

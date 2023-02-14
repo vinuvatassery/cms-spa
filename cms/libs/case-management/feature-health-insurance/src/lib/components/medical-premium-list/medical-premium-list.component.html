@@ -2,9 +2,9 @@
   <div class="flex-col">
     <div class="app-c-table">
       <kendo-grid [data]="medicalHealthPlans$ |async" #employersGrid [pageSize]="state.take" [pageable]="true"
-      [sortable]="false" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
+      [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="75">
+        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="75" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
               aria-label="view medical premium">
@@ -43,7 +43,7 @@
         <kendo-grid-column field="careassistPayingPremiumFlag" title="CAREAssist paying premium?" [width]="150"
           class="text-center">
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Option" [width]="75" [sticky]="true" class="text-center">
+        <kendo-grid-column field="Option" title="Option" [width]="75" [sticky]="true" class="text-center"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More option" class="TableActionPopup app-dropdown-action"
               buttonClass="k-icon-button" aria-label="more actions"
@@ -133,21 +133,30 @@
 
 <!-- Add Health Insurance  Modal -->
 <kendo-dialog *ngIf="isOpenedHealthInsuranceModal" (close)="handleHealthInsuranceCloseClicked()"
-  class="app-c-modal app-c-modal-md app-c-modal-np">
+  class="app-c-modal app-c-modal-mdl app-c-modal-np">
   <kendo-dialog-titlebar>
     {{ dialogTitle + ' Health Insurance' }}
   </kendo-dialog-titlebar>
   <case-management-medical-premium-detail [dialogTitle]="dialogTitle"
     (isCloseInsuranceModal)="handleHealthInsuranceCloseClicked()"
     (editRedirect)="handleHealthInsuranceOpenClicked('edit')" [insuranceType]="insuranceType"
-    [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)"></case-management-medical-premium-detail>
+    [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)" (isAddEditClicked)="addOrEditClicked($event)"
+    [medicalHealthPlansCount]="medicalHealthPlansCount"
+    (isAddPriority)="isAddPriority($event)"
+    [caseEligibilityId]="caseEligibilityId"
+    [clientId] ="clientId">
+  </case-management-medical-premium-detail>
 </kendo-dialog>
 
 <!-- Change Priority Modal -->
 <kendo-dialog *ngIf="isOpenedChangePriorityModal" (close)="onChangePriorityCloseClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar> Select Insurance Priority </kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"></case-management-set-health-insurance-priority>
+  <kendo-dialog-titlebar>{{
+    isEditInsurancePriorityTitle
+        ? 'Change Insurance Priority'
+        : 'Select Insurance Priority'
+    }}</kendo-dialog-titlebar>
+  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"></case-management-set-health-insurance-priority>
 </kendo-dialog>
 
 <!-- Delete Modal -->

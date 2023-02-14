@@ -1,4 +1,4 @@
-of/** Angular **/
+/** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef,  Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
 import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
@@ -91,7 +91,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public racialName: any = [];
   public formUiStyle : UIFormStyle = new UIFormStyle();  
   appInfoForm!: FormGroup;
-  checkBoxValid!:boolean;
   ageMinLimit=1;
   ageMaxLimit=9999999999;
 
@@ -117,7 +116,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   public value = "";
   isVisible: any;
   isSelected = true;
-  applicantInfo!:any;
+  applicantInfo= {} as ApplicantInfo
   pronounList =[];
   raceAndEthnicity =[];
   raceAndEthnicityPrimaryData: Array<any> = [];
@@ -134,6 +133,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   matchingClient:any={};
   ssnMask='000-00-0000'
   showNameDuplicateLoader:boolean=false;
+  showNameDuplicateLoaderField = '';
   showSsnDuplicateLoader:boolean=false;
   otherEthnicityList:any[]=[];
  
@@ -211,7 +211,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.raceAndEthnicityPrimaryData=[...this.raceAndEthnicityPrimaryData,...this.otherEthnicityList]
     }
 
-    if (this.raceAndEthnicityPrimaryData.length == 1) {
+    if (this.raceAndEthnicityPrimaryData.length == 1 || this.raceAndEthnicityPrimaryNotListed) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
       this.updateAdjustAttribute('RaceAndEthnicityPrimaryAdjust', StatusFlag.No);
@@ -419,10 +419,10 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
   } 
 
-  const Transgender=applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderCode.trim();
+  const Transgender=applicantInfo.client?.clientTransgenderCode?.trim();
   this.appInfoForm.controls['Transgender']?.setValue(Transgender);
   if (Transgender==='NOT_LISTED') {
-    this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientTransgenderDesc);
+    this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.client.clientTransgenderDesc);
   }
 
   const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
@@ -434,67 +434,67 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   
   this.assignRaceAndEthnicityToForm();
 
-  this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode);
-  this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatDesc);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatCode ==='YES'){
+  this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.client.materialInAlternateFormatCode);
+  this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.client.materialInAlternateFormatDesc);
+  if(this.applicantInfo.client.materialInAlternateFormatCode !== null && 
+    this.applicantInfo.client.materialInAlternateFormatCode ==='YES'){
       this.yesMaterialDisable = false;
       this.appInfoForm.controls["materialInAlternateFormatOther"].setValue(
-       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.materialInAlternateFormatOther);
+       this.applicantInfo.client.materialInAlternateFormatOther);
 
   }
-  this.appInfoForm.controls["interpreterCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode);
-  this.appInfoForm.controls["interpreterType"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterType);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.interpreterCode ==='YES'){
+  this.appInfoForm.controls["interpreterCode"].setValue(this.applicantInfo.client.interpreterCode);
+  this.appInfoForm.controls["interpreterType"].setValue(this.applicantInfo.client.interpreterType);
+  if(this.applicantInfo.client.interpreterCode !== null && 
+    this.applicantInfo.client.interpreterCode ==='YES'){
       this.interpreterTypeInputDisable = false;
   }
-  this.appInfoForm.controls["deafOrHearingCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode);
-  this.appInfoForm.controls["startAgeDeafOrHearing"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDeafOrHearing);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.deafOrHearingCode ==='YES'){
+  this.appInfoForm.controls["deafOrHearingCode"].setValue(this.applicantInfo.client.deafOrHearingCode);
+  this.appInfoForm.controls["startAgeDeafOrHearing"].setValue(this.applicantInfo.client.startAgeDeafOrHearing);
+  if(this.applicantInfo.client.deafOrHearingCode !== null && 
+    this.applicantInfo.client.deafOrHearingCode ==='YES'){
       this.startAgeDeafOrHearingInputDisable = false;
   }
 
-  this.appInfoForm.controls["blindSeeingCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode);
-  this.appInfoForm.controls["startAgeBlindSeeing"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeBlindSeeing);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.blindSeeingCode ==='YES'){
+  this.appInfoForm.controls["blindSeeingCode"].setValue(this.applicantInfo.client.blindSeeingCode);
+  this.appInfoForm.controls["startAgeBlindSeeing"].setValue(this.applicantInfo.client.startAgeBlindSeeing);
+  if(this.applicantInfo.client.blindSeeingCode !== null && 
+    this.applicantInfo.client.blindSeeingCode ==='YES'){
       this.startAgeBlindSeeingInputDisable = false;
   }
 
-  this.appInfoForm.controls["limitingConditionCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.limitingConditionCode);
+  this.appInfoForm.controls["limitingConditionCode"].setValue(this.applicantInfo.client.limitingConditionCode);
   
-  this.appInfoForm.controls["walkingClimbingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode);
-  this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeWalkingClimbingDifficulty);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.walkingClimbingDifficultyCode ==='YES'){
+  this.appInfoForm.controls["walkingClimbingDifficultyCode"].setValue(this.applicantInfo.client.walkingClimbingDifficultyCode);
+  this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].setValue(this.applicantInfo.client.startAgeWalkingClimbingDifficulty);
+  if(this.applicantInfo.client.walkingClimbingDifficultyCode !== null && 
+    this.applicantInfo.client.walkingClimbingDifficultyCode ==='YES'){
       this.startAgeWalkingClimbingDifficultyInputDisable = false;
   }
 
-  this.appInfoForm.controls["dressingBathingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode);
-  this.appInfoForm.controls["startAgeDressingBathingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeDressingBathingDifficulty);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.dressingBathingDifficultyCode ==='YES'){
+  this.appInfoForm.controls["dressingBathingDifficultyCode"].setValue(this.applicantInfo.client.dressingBathingDifficultyCode);
+  this.appInfoForm.controls["startAgeDressingBathingDifficulty"].setValue(this.applicantInfo.client.startAgeDressingBathingDifficulty);
+  if(this.applicantInfo.client.dressingBathingDifficultyCode !== null && 
+    this.applicantInfo.client.dressingBathingDifficultyCode ==='YES'){
       this.startAgeDressingBathingDifficultyInputDisable = false;
   }
 
-  this.appInfoForm.controls["concentratingDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode);
-  this.appInfoForm.controls["startAgeConcentratingDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeConcentratingDifficulty);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.concentratingDifficultyCode ==='YES'){
+  this.appInfoForm.controls["concentratingDifficultyCode"].setValue(this.applicantInfo.client.concentratingDifficultyCode);
+  this.appInfoForm.controls["startAgeConcentratingDifficulty"].setValue(this.applicantInfo.client.startAgeConcentratingDifficulty);
+  if(this.applicantInfo.client.concentratingDifficultyCode !== null && 
+    this.applicantInfo.client.concentratingDifficultyCode ==='YES'){
       this.startAgeConcentratingDifficultyInputDisable = false;
   }
 
-  this.appInfoForm.controls["errandsDifficultyCode"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode);
-  this.appInfoForm.controls["startAgeErrandsDifficulty"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.startAgeErrandsDifficulty);
-  if(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode !== null && 
-    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.errandsDifficultyCode ==='YES'){
+  this.appInfoForm.controls["errandsDifficultyCode"].setValue(this.applicantInfo.client.errandsDifficultyCode);
+  this.appInfoForm.controls["startAgeErrandsDifficulty"].setValue(this.applicantInfo.client.startAgeErrandsDifficulty);
+  if(this.applicantInfo.client.errandsDifficultyCode !== null && 
+    this.applicantInfo.client.errandsDifficultyCode ==='YES'){
       this.startAgeErrandsDifficultyInputDisable = false;
   }
-  this.appInfoForm.controls["spokenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.spokenLanguageCode);
-  this.appInfoForm.controls["writtenLanguage"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.writtenLanguageCode);
-  this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.englishProficiencyCode);
+  this.appInfoForm.controls["spokenLanguage"].setValue(this.applicantInfo.client.spokenLanguageCode);
+  this.appInfoForm.controls["writtenLanguage"].setValue(this.applicantInfo.client.writtenLanguageCode);
+  this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.client.englishProficiencyCode);
   
   this.adjustAttributeInit();
 }
@@ -532,19 +532,19 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(RaceAndEthnicityPrimary);
       if(this.raceAndEthnicityPrimaryNotListed){
         const raceAndEthnicityNotListed = this.applicantInfo.clientRaceList.find((m: any) => m.clientRaceCategoryCode === 'NOT_LISTED');
-        this.appInfoForm.controls['RaceAndEthnicityNotListed']?.setValue(raceAndEthnicityNotListed.raceDesc);
+        this.appInfoForm.controls['RaceAndEthnicityNotListed']?.setValue(raceAndEthnicityNotListed?.raceDesc);
       }
     }
 
   }
 
-private updateWorkflowPronounCount(isCompleted:boolean){
-  const workFlowdata: CompletionChecklist[] = [{
-    dataPointName: 'pronoun',
-    status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+updateWorkflowCount(data: any){
+  const workFlowData: CompletionChecklist[] = [{
+    dataPointName: data?.completedDataPoints,
+    status: data?.isCompleted ? StatusFlag.Yes : StatusFlag.No
   }];
 
-  this.AppInfoChanged.emit({completedDataPoints: workFlowdata, updateWorkflowCount: true});
+  this.AppInfoChanged.emit({completedDataPoints: workFlowData, updateWorkflowCount: true});
 }
 
   private adjustAttributeChanged(event: Event) { 
@@ -572,15 +572,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
           this.updateFormCompleteCount(prev, curr); 
         }     
       });
-       this.appInfoForm.statusChanges.subscribe(a=>{   
-       if(this.appInfoForm.controls["pronouns"].valid){
-        this.checkBoxValid = true;
 
-       }
-       else{
-        this.checkBoxValid = false;
-       }
-    });
   }
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
@@ -633,6 +625,57 @@ private updateWorkflowPronounCount(isCompleted:boolean){
         completedDataPoints.push(item);
       }  
     });
+
+    let trans = this.appInfoForm.controls['Transgender']?.value;
+    if( trans && (trans !=='NOT_LISTED' || (trans==='NOT_LISTED' && this.appInfoForm.controls['TransgenderDescription']?.value))){
+      completedDataPoints.push({ dataPointName: 'transgenderCode', status: StatusFlag.Yes });
+    }
+
+    let gender = this.appInfoForm.controls['BirthGender']?.value;
+    if( gender && (gender !=='NOT_LISTED' || (gender==='NOT_LISTED' && this.appInfoForm.controls['BirthGenderDescription']?.value))){
+      completedDataPoints.push({ dataPointName: 'birthGenderCode', status: StatusFlag.Yes });
+    }
+
+    let material = this.appInfoForm.controls['materialInAlternateFormatCode']?.value;
+    if( material && (material !==StatusFlag.Yes || (material=== StatusFlag.Yes && (this.appInfoForm.controls['materialInAlternateFormatDesc']?.value !== 'OTHER' || (this.appInfoForm.controls['materialInAlternateFormatDesc']?.value === 'OTHER' && this.appInfoForm.controls['materialInAlternateFormatOther']?.value))))){
+      completedDataPoints.push({ dataPointName: 'materialInAlternateFormat', status: StatusFlag.Yes });
+    }
+
+    let interpreter = this.appInfoForm.controls['interpreterCode']?.value;
+    if( interpreter && (interpreter !==StatusFlag.Yes || (interpreter===StatusFlag.Yes && this.appInfoForm.controls['interpreterType']?.value))){
+      completedDataPoints.push({ dataPointName: 'interpreter', status: StatusFlag.Yes });
+    }
+
+    let deafOrHearing = this.appInfoForm.controls['deafOrHearingCode']?.value;
+    if( deafOrHearing && (deafOrHearing !==StatusFlag.Yes || (deafOrHearing===StatusFlag.Yes && this.appInfoForm.controls['startAgeDeafOrHearing']?.value))){
+      completedDataPoints.push({ dataPointName: 'deafOrHearing', status: StatusFlag.Yes });
+    }
+
+    let blindSeeing = this.appInfoForm.controls['blindSeeingCode']?.value;
+    if( blindSeeing && (blindSeeing !==StatusFlag.Yes || (blindSeeing===StatusFlag.Yes && this.appInfoForm.controls['startAgeBlindSeeing']?.value))){
+      completedDataPoints.push({ dataPointName: 'blindSeeing', status: StatusFlag.Yes });
+    }
+
+    let walkingClimbing = this.appInfoForm.controls['walkingClimbingDifficultyCode']?.value;
+    if( walkingClimbing && (walkingClimbing !==StatusFlag.Yes || (walkingClimbing===StatusFlag.Yes && this.appInfoForm.controls['startAgeWalkingClimbingDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'walkingClimbingDifficulty', status: StatusFlag.Yes });
+    }
+
+    let dressingBathing = this.appInfoForm.controls['dressingBathingDifficultyCode']?.value;
+    if( dressingBathing && (dressingBathing !==StatusFlag.Yes || (dressingBathing===StatusFlag.Yes && this.appInfoForm.controls['startAgeDressingBathingDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'dressingBathingDifficulty', status: StatusFlag.Yes });
+    }
+
+    let concentrating = this.appInfoForm.controls['concentratingDifficultyCode']?.value;
+    if( concentrating && (concentrating !==StatusFlag.Yes || (concentrating===StatusFlag.Yes && this.appInfoForm.controls['startAgeConcentratingDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'concentratingDifficulty', status: StatusFlag.Yes });
+    }
+
+    
+    let errandsDifficulty = this.appInfoForm.controls['errandsDifficultyCode']?.value;
+    if( errandsDifficulty && (errandsDifficulty !==StatusFlag.Yes || (errandsDifficulty===StatusFlag.Yes && this.appInfoForm.controls['startAgeErrandsDifficulty']?.value))){
+      completedDataPoints.push({ dataPointName: 'errandsDifficulty', status: StatusFlag.Yes });
+    }
 
     if (completedDataPoints.length > 0) {
       this.AppInfoChanged.emit({completedDataPoints: completedDataPoints, updateWorkflowCount: true});
@@ -781,7 +824,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       this.isSSNChecked = false;
       this.appInfoForm.controls['ssn'].enable();
     }
-    this.searchDuplicateClient();
+    this.searchDuplicateClient('ssn');
   }
 
   registerToVoteSelected(event:Event){
@@ -879,7 +922,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
     this.tareaRaceAndEthinicityCounter = `${this.tareaRaceAndEthinicityCharachtersCount}/${this.tareaRaceAndEthinicityMaxLength}`;
   }
 
-  searchDuplicateClient() {
+  searchDuplicateClient(fieldname: any) {
     this.ssnDuplicateFound = false;
     let firstName = this.appInfoForm.controls['firstName'].value != null ? this.appInfoForm.controls['firstName'].value : '';
     let lastName = this.appInfoForm.controls['lastName'].value != null ? this.appInfoForm.controls['lastName'].value : '';
@@ -905,6 +948,7 @@ private updateWorkflowPronounCount(isCompleted:boolean){
       }
       if (data.firstName != '' && data.lastName != '' && dateOfBirth != null) {
         this.showNameDuplicateLoader = true;
+        this.showNameDuplicateLoaderField = fieldname;
       }
       this.clientfacade.searchDuplicateClient(data).subscribe({
         next: (response: any) => {
@@ -929,12 +973,14 @@ private updateWorkflowPronounCount(isCompleted:boolean){
             
           }
           this.showNameDuplicateLoader = false;
+          this.showNameDuplicateLoaderField = '';
           this.showSsnDuplicateLoader = false;
           this.ref.detectChanges();
         },
         error: (err: any) => {
           this.showNameDuplicateLoader = false;
           this.showSsnDuplicateLoader = false;
+          this.showNameDuplicateLoaderField = '';
           this.loggingService.logException(err);
           this.clientfacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         }

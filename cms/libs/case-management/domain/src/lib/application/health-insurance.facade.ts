@@ -26,6 +26,8 @@ export class HealthInsuranceFacade {
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
   private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
   private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
+  private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+
 
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
@@ -41,6 +43,8 @@ export class HealthInsuranceFacade {
   healthInsuranceStatus$ = this.healthInsuranceStatusSubject.asObservable();
   medicalHealthPlans$ = this.medicalHealthPlansSubject.asObservable();
   medicalHealthPolicy$ = this.medicalHealthPolicySubject.asObservable();
+  triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
+
 
   /** Constructor**/
   constructor(private readonly contactDataService: ContactDataService,
@@ -81,9 +85,9 @@ export class HealthInsuranceFacade {
     });
   }
 
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
     this.ShowLoader();
-    this.contactDataService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize).subscribe({
+    this.contactDataService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize,sortBy,sortType).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {
@@ -95,6 +99,13 @@ export class HealthInsuranceFacade {
             total: medicalHealthPlansResponse?.totalCount,
           };
           this.updateWorkflowCount('insurance_plans',  medicalHealthPlansResponse?.totalCount > 0);
+          if(medicalHealthPlansResponse?.clientInsurancePolicies.length > 1 && medicalHealthPlansResponse?.clientInsurancePolicies.length <= 3){
+            this.triggerPriorityPopupSubject.next(true);
+          }
+          else
+          {
+            this.triggerPriorityPopupSubject.next(false);
+          }
           this.medicalHealthPlansSubject.next(gridView);
         }
         this.HideLoader();

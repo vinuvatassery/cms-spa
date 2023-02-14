@@ -11,6 +11,9 @@ import { Program } from '../entities/program';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../entities/client-case';
+import { ClientProfileCase } from '../entities/client-profile-cases';
+import { CaseScreenTab } from '../enums/case-screen-tab.enum';
+import { CaseHistory } from '../entities/case-history';
 
 @Injectable({ providedIn: 'root' })
 export class CaseDataService {
@@ -18,8 +21,63 @@ export class CaseDataService {
   constructor(private readonly http: HttpClient,
     private configurationProvider : ConfigurationProvider) {}
 
+    
   /** Public methods **/
-  loadCases(): Observable<Case[]> {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
+    return this.http.get<ClientProfileCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/client-profile/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+
+  }
+
+  loadClientProfile(clientCaseEligibilityId : string) {     
+    return this.http.get<ClientProfileCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/clientCaseEligibilityId=${clientCaseEligibilityId}`
+    );
+
+  }
+
+  loadClientProfileHeader(clientId : number) {     
+    return this.http.get<ClientProfileCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/header/clientId=${clientId}`
+    );
+
+  }
+
+
+  loadCaseHistory() : Observable<CaseHistory[]>
+  {
+    return of([
+      { caseNumber: 13, 
+        caseStatus: 'New', 
+        eligibilityPeriods: 2 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }  , 
+      { caseNumber: 12, 
+        caseStatus: 'DisEnrolled', 
+        eligibilityPeriods: 12 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }
+      , 
+      { caseNumber: 11, 
+        caseStatus: 'DisEnrolled', 
+        eligibilityPeriods: 15 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }
+      , 
+      { caseNumber: 10, 
+        caseStatus: 'DisEnrolled', 
+        eligibilityPeriods: 15 ,
+        startDate: '01/01/2020' ,
+        endDate: '01/01/2020'
+      }
+    ]);
+  }
+  loadCasesold(): Observable<Case[]> {
     return of([
       {
         CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
@@ -128,7 +186,7 @@ export class CaseDataService {
     ]);
   }
 
-  loadCaseBySearchText(text : string) {     
+  loadCaseBySearchText(text : string) {
       return this.http.get<ClientCase[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
         `/case-management/clients/SearchText=${text}`
@@ -326,9 +384,9 @@ export class CaseDataService {
     return of([
       {
         name: 'Donna 1',
-        id: 'ae578070-7a8b-4c5c-aa2e-00a241d4cb5a',
-        programId: '3B8DD4FC-86FD-43E7-8493-0037A6F9160B',
-        isApplicationComplete: false,
+        id: '1',
+        programId: '1',
+        isApplicationComplete: true,
       },
       {
         name: 'David 2',
@@ -360,8 +418,8 @@ export class CaseDataService {
 
   loadDdlSendLetters() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  } 
-   
+  }
+
 
     loadCasesById(clientCaseId : string) {
       return this.http.get<ClientCase[]>(
@@ -369,10 +427,10 @@ export class CaseDataService {
         `/case-management/clients/cases/${clientCaseId}`
       );
     }
-  
+
 
   loadDdlPrograms() {
-        
+
     return this.http.get<Program[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/client-case/programs`
@@ -399,7 +457,7 @@ export class CaseDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case`,
       caseData
     );
-  }
+  }  
   updateCaseStatus(caseData: any,clientCaseId:any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/status`,caseData

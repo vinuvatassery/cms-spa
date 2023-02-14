@@ -1,5 +1,5 @@
 <div class="client-data-block">
-  <h3>Prescription drugs</h3>
+  <h3>Prescription Drugs</h3>
   <form [formGroup]="prescriptionDrugForm">
   <section>
    
@@ -15,8 +15,9 @@
             type="radio"
             kendoRadioButton
             formControlName="prescriptionDrugsForHivCode"
+            (change)="hivFlagSelected($event)"
             value="YES"  
-            name="prescription"
+            name="prescriptionDrugsForHivCode"
             id="takingPrescriptionYes"  />
           <kendo-label
             class="k-radio-label"
@@ -29,8 +30,9 @@
             type="radio"
             kendoRadioButton
             formControlName="prescriptionDrugsForHivCode"
+            (change)="hivFlagSelected($event)"
             value="NO"  
-            name="prescription"
+            name="prescriptionDrugsForHivCode"
             id="takingPrescriptionNo"
           />
           <kendo-label
@@ -45,7 +47,7 @@
             kendoRadioButton 
             formControlName="prescriptionDrugsForHivCode"
             value="DO_NOT_KNOW" 
-            name="prescription"
+            name="prescriptionDrugsForHivCode"
             id="takingPrescriptionDontKnow"
           />
           <kendo-label
@@ -73,7 +75,7 @@
           kendoRadioButton
           formControlName="nonPreferredPharmacyCode"
           value="YES" 
-          name="healthInsurance"
+          name="nonPreferredPharmacyCode"
           id="requiresNonPreferredPharmacyYes"
         />
         <kendo-label
@@ -88,7 +90,7 @@
           kendoRadioButton
           formControlName="nonPreferredPharmacyCode"
           value="NO" 
-          name="healthInsurance"
+          name="nonPreferredPharmacyCode"
           id="requiresNonPreferredPharmacyNo"
         />
         <kendo-label
@@ -103,7 +105,7 @@
           kendoRadioButton 
           formControlName="nonPreferredPharmacyCode"
           value="DO_NOT_KNOW"
-          name="healthInsurance"
+          name="nonPreferredPharmacyCode"
           id="requiresNonPreferredPharmacyDontKnow"
         />
         <kendo-label
@@ -112,7 +114,8 @@
           for="requiresNonPreferredPharmacyDontKnow"
         ></kendo-label>
       </span>
-      <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+      <kendo-formerror   *ngIf="nonPreferredFlagValidation">Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+      <!-- <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror> -->
     </kendo-formfield>
     </div>
     </fieldset>
@@ -143,18 +146,31 @@
     </div>
     <div class="flex-row mt-2" *ngIf="isSummaryOfBenefitsRequired$ | async">
       <div class="flex-col flex-col-10">
-        <kendo-fileselect 
+        <kendo-upload
         aria-label="upload proof" 
         name="myFileSelect" 
         #myFileSelect="ngModel"
+        [removeUrl]="uploadRemoveUrl"
         [restrictions]="uploadFileRestrictions.fileRestrictions"   
         [multiple]="false" 
+        [autoUpload]="false"
         [ngModel]="uploadedBenefitSummaryFile" 
         [ngModelOptions]="{standalone: true}"
         (select)="handleFileSelected($event)" 
-        (remove)="handleFileRemoved()"> 
-      </kendo-fileselect>
+        (remove)="handleFileRemoved()">
+        <ng-template kendoUploadFileInfoTemplate  let-files let-state="state">
+          <div (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+            <span  *ngIf="!files[0].documentId" >{{files[0].name}} </span> 
+            <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+              <a>{{ files[0].name }} </a>
+            </button>
+            <br>
+            <span>{{files[0].size}}</span> 
+          </div>
+        </ng-template> 
+      </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
+        <kendo-formerror *ngIf="summaryBenefitsValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         <kendo-formerror *ngIf="showDocRequiredValidation">Summary of Benefits is required</kendo-formerror>
       </div>
     </div>
