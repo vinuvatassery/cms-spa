@@ -26,6 +26,8 @@ export class HealthInsuranceFacade {
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
   private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
   private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
+  private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+
 
   /** Public properties **/
   ddlMedicalHealthInsurancePlans$ =
@@ -41,6 +43,8 @@ export class HealthInsuranceFacade {
   healthInsuranceStatus$ = this.healthInsuranceStatusSubject.asObservable();
   medicalHealthPlans$ = this.medicalHealthPlansSubject.asObservable();
   medicalHealthPolicy$ = this.medicalHealthPolicySubject.asObservable();
+  triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
+
 
   /** Constructor**/
   constructor(private readonly contactDataService: ContactDataService,
@@ -95,6 +99,9 @@ export class HealthInsuranceFacade {
             total: medicalHealthPlansResponse?.totalCount,
           };
           this.updateWorkflowCount('insurance_plans',  medicalHealthPlansResponse?.totalCount > 0);
+          if(medicalHealthPlansResponse?.clientInsurancePolicies.length > 1){
+            this.triggerPriorityPopupSubject.next(true);
+          }
           this.medicalHealthPlansSubject.next(gridView);
         }
         this.HideLoader();

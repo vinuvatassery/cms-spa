@@ -7,20 +7,20 @@
           <div class="flex-col mb-1">
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend"><h5>Do they currently have health insurance?</h5></legend>
-             
+
             <div class="component-list-h">
-              
+
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
                   kendoRadioButton
                   name="currentInsuranceFlag"
-                  aria-labelledby="currentlyHaveHealthInsuranceYes" 
-                  id="currentlyHaveHealthInsuranceYes" 
-                  class="form-control" 
+                  aria-labelledby="currentlyHaveHealthInsuranceYes"
+                  id="currentlyHaveHealthInsuranceYes"
+                  class="form-control"
                   formControlName="currentInsuranceFlag"
                   value="Y"
-                  [checked]="currentInsurance == 'Y'" 
+                  [checked]="currentInsurance == 'Y'"
                   (change)="onCurrentInsuranceChange('Y')"
                 />
                 <kendo-label
@@ -35,7 +35,7 @@
                   kendoRadioButton
                   aria-labelledby="currentlyHaveHealthInsuranceNo"
                   name="currentInsuranceFlag"
-                  id="currentlyHaveHealthInsuranceNo" 
+                  id="currentlyHaveHealthInsuranceNo"
                   value="N"
                   [checked]="currentInsurance == 'N'"
                   formControlName="currentInsuranceFlag"
@@ -56,14 +56,14 @@
               <legend class="k-form-legend"><h5>Are they eligible for a group policy (through employer or spouse,
                 partner, or parent’s employer)?</h5></legend>
             <div class="component-list-h">
-              
+
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
                   kendoRadioButton
                   aria-labelledby="eligibleForGroupPolicyYes"
                   name="groupPolicyEligibleFlag"
-                  id="eligibleForGroupPolicyYes" 
+                  id="eligibleForGroupPolicyYes"
                   value="Y"
                   [checked]="groupPolicyEligible == 'Y'"
                   formControlName="groupPolicyEligibleFlag"
@@ -81,7 +81,7 @@
                   kendoRadioButton
                   aria-labelledby="eligibleForGroupPolicyNo"
                   name="groupPolicyEligibleFlag"
-                  id="eligibleForGroupPolicyNo" 
+                  id="eligibleForGroupPolicyNo"
                   value="N"
                   [checked]="groupPolicyEligible == 'N'"
                   formControlName="groupPolicyEligibleFlag"
@@ -99,11 +99,12 @@
         </form>
 
         <div *ngIf="showTable"  class="flex-col">
-          <h5 class="text-capital">Insurance Plans</h5>         
-          <case-management-medical-premium-list  [healthInsuranceForm]="healthInsuranceForm" 
-            [caseEligibilityId]="clientCaseEligibilityId" 
+          <h5 class="text-capital">Insurance Plans</h5>
+          <case-management-medical-premium-list  [healthInsuranceForm]="healthInsuranceForm"
+            [caseEligibilityId]="clientCaseEligibilityId"
             [clientId]="clientId"
-            [closeDeleteModal]="closeDeleteModal" (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)" 
+            [triggerPriorityPopup$]="triggerPriorityPopup$"
+            [closeDeleteModal]="closeDeleteModal" (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
             (deleteInsurancePlan)="delteInsurancePolicy($event)" >
           </case-management-medical-premium-list>
         </div>
