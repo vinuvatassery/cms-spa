@@ -711,8 +711,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           this.getPersonControl(0, key)?.updateValueAndValidity();
         });
       }
-
-
     }
 
 
@@ -994,17 +992,18 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonPharmacy = null;
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
-      this.healthInsurancePolicy.othersCoveredOnPlan = this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag === true);
+      this.healthInsurancePolicy.othersCoveredOnPlan=[];
+      const othersCoveredOnPlanSelected=this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag === true);
+      this.healthInsurancePolicy.othersCoveredOnPlan =JSON.parse(JSON.stringify(othersCoveredOnPlanSelected)); 
       this.healthInsurancePolicy.othersCoveredOnPlan.forEach((person: any) => {
         person.enrolledInInsuranceFlag = StatusFlag.Yes;
       });
-      debugger
       this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
         x.dependentTypeCode = DependentTypeCode.Health;
         x.enrolledInInsuranceFlag = StatusFlag.Yes;
         x.clientCaseEligibilityId = this.caseEligibilityId;
         x.clientId = this.clientId;
-        x.dob =  x.dob.toLocaleDateString();//new Date(this.intl.formatDate(x.dob, this.dateFormat));
+        x.dob =  x.dob.toLocaleDateString();
         this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
       });
 

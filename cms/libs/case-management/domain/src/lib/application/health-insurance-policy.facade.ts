@@ -75,7 +75,6 @@ export class HealthInsurancePolicyFacade {
     return this.healthInsurancePolicyService.saveHealthInsurancePolicy(formData);
   }
   updateHealthInsurancePolicy(healthInsurancePolicy: any) {
-    debugger
     const formData = new FormData();
     if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
       formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');
