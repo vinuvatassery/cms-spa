@@ -98,12 +98,14 @@ export class HealthInsurancePolicyFacade {
   }
 
   getHealthInsurancePolicyById(clientInsurancePolicyId: string): void {
+    this.showLoader();
     this.healthInsurancePolicyService.getHealthInsurancePolicyById(clientInsurancePolicyId).subscribe({
       next: (response) => {
+        this.hideLoader();
         this.healthInsurancePolicySubject.next(response);
       },
       error: (err) => {
-        console.error('err', err);
+        this.hideLoader();
       },
     });
   }

@@ -75,14 +75,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   @Output() isAddPriority = new EventEmitter<any>();
 
   /** Private properties **/
-  private loadSessionSubscription!: Subscription;
+  private editViewSubscription!: Subscription;
 
   /** Public properties **/
   sameAsInsuranceIdFlag = false;
   partAStartDateCheck = false;
   partBDtartDateCheck = false;
   medicareInsuranceInfoCheck = true;
-  isInsuranceTypeLoading =true;
+  isInsuranceTypeLoading = true;
   // ddlMedicalHealthInsurancePlans$ =
   //   this.healthFacade.ddlMedicalHealthInsurancePlans$;
   carrierContactInfo = new CarrierContactInfo();
@@ -174,12 +174,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   ngOnDestroy(): void {
     (this.healthInsuranceForm.controls['othersCoveredOnPlan'] as FormArray).clear();
+    if (this.editViewSubscription !== undefined)
+      this.editViewSubscription.unsubscribe();
   }
   /** Private methods **/
   private loadLovs() {
     //this.lovFacade.getPremiumFrequencyLovs();
     this.lovFacade.getInsuranceTypeLovs();
-    this.lovFacade.getMedicareCoverageTypeLovs();   
+    this.lovFacade.getMedicareCoverageTypeLovs();
 
   }
   private validateFormMode() {
@@ -253,13 +255,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
 
   loadHealthInsurancePolicy() {
-    if (this.dialogTitle === 'View' || this.dialogTitle === 'Edit') {
-      this.loaderService.show()
-    }
-    this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
+    // if (this.dialogTitle === 'View' || this.dialogTitle === 'Edit') {
+    //   this.loaderService.show()
+    // }
+    this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
       this.healthInsurancePolicyCopy = data;
       this.bindValues(data);
-      this.loaderService.hide();
+      // this.loaderService.hide();
     });
   }
 
@@ -473,6 +475,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       dependents
     );
     let healthDependents = healthInsurancePolicy.othersCoveredOnPlan.filter((dep: any) => dep.dependentTypeCode == 'HEALTH');
+    healthDependents.forEach((el: any) => {
+      el.dob = new Date(el.dob);
+    });
     let healthGroup = !!healthDependents ? healthDependents.map(pe => this.formBuilder.group(pe)) : [];
     let healthForm = this.formBuilder.array(healthGroup);
     this.healthInsuranceForm.setControl('newOthersCoveredOnPlan', healthForm);
@@ -993,9 +998,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       this.healthInsurancePolicy.oonPharmacy = null;
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
-      this.healthInsurancePolicy.othersCoveredOnPlan=[];
-      const othersCoveredOnPlanSelected=this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag === true);
-      this.healthInsurancePolicy.othersCoveredOnPlan =JSON.parse(JSON.stringify(othersCoveredOnPlanSelected)); 
+      this.healthInsurancePolicy.othersCoveredOnPlan = [];
+      const othersCoveredOnPlanSelected = this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag === true);
+      this.healthInsurancePolicy.othersCoveredOnPlan = JSON.parse(JSON.stringify(othersCoveredOnPlanSelected));
       this.healthInsurancePolicy.othersCoveredOnPlan.forEach((person: any) => {
         person.enrolledInInsuranceFlag = StatusFlag.Yes;
       });
@@ -1004,7 +1009,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         x.enrolledInInsuranceFlag = StatusFlag.Yes;
         x.clientCaseEligibilityId = this.caseEligibilityId;
         x.clientId = this.clientId;
-        x.dob =  x.dob.toLocaleDateString();
+        x.dob = x.dob.toLocaleDateString();
         this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
       });
 
