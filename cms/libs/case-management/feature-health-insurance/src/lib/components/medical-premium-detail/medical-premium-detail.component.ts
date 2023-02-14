@@ -231,7 +231,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     switch (this.dialogTitle) {
       case 'View':
         this.isEditViewPopup = true;
-        this.conditionsInsideView();
+        //this.conditionsInsideView();
         this.isViewContentEditable = true;
         this.resetForm();
         this.loadHealthInsurancePolicy();
