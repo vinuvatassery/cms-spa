@@ -681,7 +681,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
     }
-    if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan || this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan || this.ddlInsuranceType === HealthInsurancePlan.Cobra || this.medicareInsuranceInfoCheck) {
+    if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan || this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan || this.ddlInsuranceType === HealthInsurancePlan.Cobra || (this.ddlInsuranceType === HealthInsurancePlan.Medicare && this.medicareInsuranceInfoCheck)) {
       this.isInsuranceFileUploaded = (this.copyOfInsuranceCardFiles?.length > 0 && !!this.copyOfInsuranceCardFiles[0].name) ? true : false;
       if (!this.isInsuranceFileUploaded) {
         this.insuranceCardFilesExceedsFileSizeLimit = false;
