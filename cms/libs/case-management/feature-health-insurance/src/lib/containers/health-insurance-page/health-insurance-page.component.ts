@@ -31,6 +31,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   groupPolicyEligible: string = "";
   showTable: boolean = false;
   closeDeleteModal:boolean=false;
+  triggerPriorityPopup$ = this.healthFacade.triggerPriorityPopup$;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -119,6 +120,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       othersCoveredOnPlanFlag: [''],
       othersCoveredOnPlan: this.formBuilder.array([]),
       newOthersCoveredOnPlan: this.formBuilder.array([]),
+      othersCoveredOnPlanSaved: [[]],
       isClientPolicyHolderFlag: [''],
       policyHolderFirstName: [''],
       policyHolderLastName: [''],
@@ -285,7 +287,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       },
       error:(err:any)=>{
         this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ; 
+        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err) ;
       }
     });
   }
@@ -349,6 +351,13 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       this.closeDeleteModal=false;
       this.healthFacade.deleteInsurancePolicy(insurancePolicyId).subscribe((response: any) => {
         this.closeDeleteModal=true;
+        const gridDataRefinerValue = {
+          skipCount: this.healthFacade.skipCount,
+          pagesize: this.healthFacade.gridPageSizes[0]?.value,
+          sortColumn : 'creationTime',
+          sortType : 'asc',
+        };
+        this.loadHealthInsuranceHandle(gridDataRefinerValue);
         this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
         this.HideLoader();
         this.ref.detectChanges();

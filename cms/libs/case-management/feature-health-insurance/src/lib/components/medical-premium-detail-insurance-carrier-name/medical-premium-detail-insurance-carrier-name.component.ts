@@ -18,8 +18,9 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
   @Output() insuranceCarrierNameData = new EventEmitter<any>();
 public isaddNewInsuranceProviderOpen =false;
+public isLoading =false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  CarrierNames: any = [];
+  carrierNames: any = [];
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
     operator: 'startsWith',
@@ -40,21 +41,22 @@ public isaddNewInsuranceProviderOpen =false;
   }
 
   private loadInsuranceCarrierName() {
-    this.loaderService.show();
+    this.isLoading=true;
     this.vendorFacade.loadAllVendors().subscribe(
       (data: any) => {
         if (!Array.isArray(data)) return;
-        this.CarrierNames = data.sort((a: any, b: any) => (a.vendorName > b.vendorName) ? 1 : ((b.vendorName > a.vendorName) ? -1 : 0));
-        this.insuranceCarrierNameData.emit(this.CarrierNames);
-        this.loaderService.hide();
+        this.carrierNames = data.sort((a: any, b: any) => (a.vendorName > b.vendorName) ? 1 : ((b.vendorName > a.vendorName) ? -1 : 0));
+        this.insuranceCarrierNameData.emit(this.carrierNames);
+        this.isLoading=false;
       },
       (error: any) => {
-        this.loaderService.hide();
+        this.isLoading=false;
       }
     );
   }
 
   public insuranceCarrierNameChangeValue(value: string): void {
+    this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     this.insuranceCarrierNameChange.emit(value);
   }
 
