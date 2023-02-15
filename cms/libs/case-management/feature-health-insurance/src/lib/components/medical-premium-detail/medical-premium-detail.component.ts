@@ -606,7 +606,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         offExchangePlanRequiredFields.push(...careassistPayingRequiredFields);
         if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
-          qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+          offExchangePlanRequiredFields.push(...policyHolderRequiredFields);
         } 
       }     
       offExchangePlanRequiredFields.forEach((key: string) => {
@@ -621,7 +621,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         groupPlanRequiredFields.push(...careassistPayingRequiredFields);
         if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
-          qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+          groupPlanRequiredFields.push(...policyHolderRequiredFields);
         } 
       }
      
@@ -638,7 +638,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
         cobraPlanRequiredFields.push(...careassistPayingRequiredFields);
         cobraPlanRequiredFields.push('premiumPaidThruDate');
         if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
-          qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+          cobraPlanRequiredFields.push(...policyHolderRequiredFields);
         } 
       }
      
@@ -668,7 +668,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
           medicarePlanRequiredFields.push(...careassistPayingRequiredFields);
 
           if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
-            qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+            medicarePlanRequiredFields.push(...policyHolderRequiredFields);
           } 
         }       
       }
