@@ -152,7 +152,7 @@ export class HealthInsurancePolicyFacade {
         this.coPaysAndDeductiblesSubject.next(coPaysAndDeductiblesResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -162,7 +162,7 @@ export class HealthInsurancePolicyFacade {
         this.healthInsuranceStatusSubject.next(healthInsuranceStatusResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -173,7 +173,7 @@ export class HealthInsurancePolicyFacade {
         this.medicalPremiumPaymentsSubject.next(medicalPremiumPaymentsResponse);
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
