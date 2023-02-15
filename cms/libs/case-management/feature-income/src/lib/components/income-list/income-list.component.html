@@ -22,7 +22,7 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="incomeAmt"
-          title="Amount"
+          title="Gross Amount"
           [width]="130"          
         >
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -36,7 +36,7 @@
         ></kendo-grid-column>
         <kendo-grid-column
           field="incomeStartDate"
-          title="Income Start"
+          title="Date of Hire"
           [width]="110"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -243,7 +243,7 @@
 </div>
 
 <!-- Add Income  Modal -->
-<kendo-dialog *ngIf="isOpenedIncome" (close)="onIncomeClosed()" class="app-c-modal app-c-modal-md app-c-modal-np">
+<kendo-dialog *ngIf="isOpenedIncome" (close)="onIncomeClosed()" class="app-c-modal app-c-modal-mdl app-c-modal-np">
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
   }}</kendo-dialog-titlebar>

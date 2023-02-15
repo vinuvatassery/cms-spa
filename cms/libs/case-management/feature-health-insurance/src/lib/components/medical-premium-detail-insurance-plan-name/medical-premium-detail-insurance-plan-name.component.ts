@@ -18,6 +18,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() insurancePlans: Array<any> = [];
+  @Input() insurancePlansLoader: boolean = false;
+  
   public isaddNewInsurancePlanOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   CarrierNames: any = [];
@@ -30,18 +32,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
   }
 
-  ngOnInit(): void {
-   // this.lovFacade.getInsuranceCarrierNameLovs();
-    this.loadInsuranceCarrierName();
-
-  }
-
-  private loadInsuranceCarrierName() {
-    // this.insuranceCarrierNamelov$.subscribe((data:any) => {
-    //   if (!Array.isArray(data)) return;
-    //   this.CarrierNames = data;
-    // });
-  }
+  ngOnInit(): void { }
+  
   public addNewInsurancePlanClose(): void {
     this.isaddNewInsurancePlanOpen = false;
   }
