@@ -9,11 +9,18 @@
   </section>
   <section class="app-l-wrapper">
     <table class="table" summary="vendor">
-      <tr *ngFor="let vendor of vendors$ | async">
-        <td>{{ vendor.id }}</td>
-        <td>{{ vendor.name }}</td>
-        <td>{{ vendor.description }}</td>
+      <tr hidden>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
+      <tbody>
+        <tr *ngFor="let vendor of vendors$ | async">
+          <td>{{ vendor.id }}</td>
+          <td>{{ vendor.name }}</td>
+          <td>{{ vendor.description }}</td>
+        </tr>
+      </tbody>
     </table>
   </section>
 </div>
