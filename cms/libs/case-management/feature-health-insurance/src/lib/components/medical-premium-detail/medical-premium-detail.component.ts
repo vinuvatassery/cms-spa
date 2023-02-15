@@ -14,7 +14,6 @@ import {
 import {
   ClientDocument,
   ClientDocumentFacade,
-  HealthInsuranceFacade,
   HealthInsurancePolicyFacade,
   healthInsurancePolicy,
   CarrierContactInfo,
@@ -91,10 +90,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   medicareCoverageTypeList$ = this.lovFacade.medicareCoverageType$;
-  ddlMedicalHealthPlanMetalLevel$ =
-    this.healthFacade.ddlMedicalHealthPlanMetalLevel$;
+  // ddlMedicalHealthPlanMetalLevel$ =
+  //   this.healthFacade.ddlMedicalHealthPlanMetalLevel$;
   ddlMedicalHealthPalnPremiumFrequecy$ =
-    this.healthFacade.ddlMedicalHealthPalnPremiumFrequecy$;
+    this.insurancePolicyFacade.ddlMedicalHealthPalnPremiumFrequecy$;
   ddlInsuranceType!: string;
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   isEditViewPopup!: boolean;
@@ -135,7 +134,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   /** Constructor **/
   constructor(
-    private readonly healthFacade: HealthInsuranceFacade,
     private formBuilder: FormBuilder,
     private lovFacade: LovFacade,
     private insurancePlanFacade: InsurancePlanFacade,
@@ -154,9 +152,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   ngOnInit(): void {
     this.validateFormMode();
     this.loadLovs();
-    //this.loadDdlMedicalHealthInsurancePlans();
-    this.loadDdlMedicalHealthPlanMetalLevel();
-    this.loadDdlMedicalHealthPalnPremiumFrequecy();
     this.viewSelection();
 
     this.disableEnableRadio();
@@ -176,7 +171,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   /** Private methods **/
   private loadLovs() {
-    //this.lovFacade.getPremiumFrequencyLovs();
     this.lovFacade.getInsuranceTypeLovs();
     this.lovFacade.getMedicareCoverageTypeLovs();
 
@@ -191,16 +185,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     this.healthInsuranceForm.reset();
     this.healthInsuranceForm.updateValueAndValidity();
   }
-
-  private loadDdlMedicalHealthPlanMetalLevel() {
-    this.healthFacade.loadDdlMedicalHealthPlanMetalLevel();
-  }
-
-  private loadDdlMedicalHealthPalnPremiumFrequecy() {
-    this.healthFacade.loadDdlMedicalHealthPalnPremiumFrequecy();
-  }
-
-
 
   private loadHealthInsuranceProofCodes() {
     this.lovFacade.getLovsbyParent(LovType.HEALTHINSURANCEPROOF, 'HI');
@@ -534,10 +518,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       'premiumFrequencyCode',
       'paymentIdNbr',
       'isClientPolicyHolderFlag',
-      'policyHolderFirstName',
-      'policyHolderLastName',
       'othersCoveredOnPlanFlag'
     ];
+    const policyHolderRequiredFields:Array<string>=[
+      'policyHolderFirstName',
+      'policyHolderLastName',
+    ]
     const offExchangePlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
@@ -594,7 +580,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan) {
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         qualifiedHealthPlanRequiredFields.push(...careassistPayingRequiredFields);
+        if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
+          qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+        } 
       }
+          
       qualifiedHealthPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -615,7 +605,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan) {
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         offExchangePlanRequiredFields.push(...careassistPayingRequiredFields);
-      }
+        if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
+          qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+        } 
+      }     
       offExchangePlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -627,7 +620,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         groupPlanRequiredFields.push(...careassistPayingRequiredFields);
+        if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
+          qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+        } 
       }
+     
       groupPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -640,8 +637,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       if (this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y') {
         cobraPlanRequiredFields.push(...careassistPayingRequiredFields);
         cobraPlanRequiredFields.push('premiumPaidThruDate');
-
+        if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
+          qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+        } 
       }
+     
       cobraPlanRequiredFields.forEach((key: string) => {
         this.healthInsuranceForm.controls[key].setValidators([
           Validators.required,
@@ -666,7 +666,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
             careassistPayingRequiredFields.splice(index, 1);
           }
           medicarePlanRequiredFields.push(...careassistPayingRequiredFields);
-        }
+
+          if(this.healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'){
+            qualifiedHealthPlanRequiredFields.push(...policyHolderRequiredFields);
+          } 
+        }       
       }
 
 

@@ -1,24 +1,46 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService } from '@cms/shared/util-core';
+import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService,ConfigurationProvider } from '@cms/shared/util-core';
 import { healthInsurancePolicy } from '../entities/health-insurance-policy';
 import { HealthInsurancePolicyDataService } from '../infrastructure/health-insurance-policy.data.service';
+import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
+import { StatusFlag } from '../enums/status-flag.enum';
+import { WorkflowFacade } from './workflow.facade';
 
 
 @Injectable({ providedIn: 'root' })
 export class HealthInsurancePolicyFacade {
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+   /** Private properties **/
+  private coPaysAndDeductiblesSubject = new BehaviorSubject<any>([]);
+  private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
+  private healthInsurancePolicySubject = new Subject<healthInsurancePolicy>();
+  private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
+  private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+  private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
+  private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
+  private ddlMedicalHealthPalnPremiumFrequecySubject = new BehaviorSubject<any>(
+    []
+  );
 
   /** Public properties **/
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>();
-  //healthInsurancePolicySubject = new Subject<SnackBar>();
-  private healthInsurancePolicySubject = new Subject<healthInsurancePolicy>();
+  snackbarSubject = new Subject<SnackBar>(); 
+  coPaysAndDeductibles$ = this.coPaysAndDeductiblesSubject.asObservable();
   healthFacadesnackbar$ = this.snackbarSubject.asObservable();
   healthInsurancePolicy$ = this.healthInsurancePolicySubject.asObservable();
+  healthInsuranceStatus$ = this.healthInsuranceStatusSubject.asObservable();
+  medicalPremiumPayments$ = this.medicalPremiumPaymentsSubject.asObservable();
+  triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
+  medicalHealthPolicy$ = this.medicalHealthPolicySubject.asObservable();
+  medicalHealthPlans$ = this.medicalHealthPlansSubject.asObservable();
+  ddlMedicalHealthPalnPremiumFrequecy$ =
+  this.ddlMedicalHealthPalnPremiumFrequecySubject.asObservable();
 
   public dateFields: Array<string> = [
     'startDate',
@@ -45,7 +67,9 @@ export class HealthInsurancePolicyFacade {
   /** Constructor**/
   constructor(private readonly notificationSnackbarService: NotificationSnackbarService,
     private loggingService: LoggingService, private readonly loaderService: LoaderService,
-    private healthInsurancePolicyService: HealthInsurancePolicyDataService) { }
+    private healthInsurancePolicyService: HealthInsurancePolicyDataService,
+    private configurationProvider: ConfigurationProvider,
+    private readonly workflowFacade:WorkflowFacade) { }
 
   /** Public methods **/
   showLoader() {
@@ -108,8 +132,90 @@ export class HealthInsurancePolicyFacade {
         this.hideLoader();
       },
     });
+  }  
+  setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
+    return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
   }
 
+  deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
+    return this.healthInsurancePolicyService.deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId);
+  }
+  deleteInsurancePolicy(insurancePolicyId: any) {
+    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
+  }
+  saveInsuranceFlags(insuranceFlags: any): Observable<any> {
+    return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
+  }
+  loadCoPaysAndDeductibles() {
+    this.healthInsurancePolicyService.loadCoPaysAndDeductibles().subscribe({
+      next: (coPaysAndDeductiblesResponse) => {
+        this.coPaysAndDeductiblesSubject.next(coPaysAndDeductiblesResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+  loadHealthInsuranceStatus() {
+    this.healthInsurancePolicyService.loadHealthInsuranceStatus().subscribe({
+      next: (healthInsuranceStatusResponse) => {
+        this.healthInsuranceStatusSubject.next(healthInsuranceStatusResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+  
+  loadMedicalPremiumPayments() {
+    this.healthInsurancePolicyService.loadMedicalPremiumPayments().subscribe({
+      next: (medicalPremiumPaymentsResponse) => {
+        this.medicalPremiumPaymentsSubject.next(medicalPremiumPaymentsResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+  
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
+    this.showLoader();
+    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize,sortBy,sortType).subscribe({
+      next: (medicalHealthPlansResponse: any) => {
+        this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
+        if (medicalHealthPlansResponse) {
+          if (medicalHealthPlansResponse['clientInsurancePolicies'] == null) {
+            medicalHealthPlansResponse['clientInsurancePolicies'] = []
+          }
+          const gridView: any = {
+            data: medicalHealthPlansResponse['clientInsurancePolicies'],
+            total: medicalHealthPlansResponse?.totalCount,
+          };
+          this.updateWorkflowCount('insurance_plans',  medicalHealthPlansResponse?.totalCount > 0);
+          if(medicalHealthPlansResponse?.clientInsurancePolicies.length > 1 && medicalHealthPlansResponse?.clientInsurancePolicies.length <= 3){
+            this.triggerPriorityPopupSubject.next(true);
+          }
+          else
+          {
+            this.triggerPriorityPopupSubject.next(false);
+          }
+          this.medicalHealthPlansSubject.next(gridView);
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  private updateWorkflowCount(dataPointName:string, isCompleted:boolean){
+    const dataPoint: CompletionChecklist[] = [{
+      dataPointName: dataPointName,
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(dataPoint);
+  }
   private formDataAppendObject(fd: FormData, obj: any, key?: any) {
     var i, k;
     for (i in obj) {
@@ -135,8 +241,4 @@ export class HealthInsurancePolicyFacade {
       }
     }
   }
-  setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
-    return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
-  }
-
 }
