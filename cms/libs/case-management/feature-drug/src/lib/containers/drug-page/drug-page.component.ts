@@ -252,7 +252,10 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
       .pipe(
-        tap(() => { this.loaderService.show(), this.workflowFacade.disableSaveButton() }),
+        tap(() => { 
+          this.loaderService.show(); 
+          this.workflowFacade.disableSaveButton();
+         }),
         mergeMap((navigationType: NavigationType) =>
           forkJoin([of(navigationType), this.save()])
         )

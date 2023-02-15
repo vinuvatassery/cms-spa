@@ -3,20 +3,21 @@
   <!-- Main Title Section -->
   <section class="app-l-mainTittle">
     <h2>
-      <span
-        class="material-icons sidebar-menu_icon"
-        aria-label="settings"
-        aria-hidden="true"
-      >
+      <span class="material-icons sidebar-menu_icon" aria-label="settings" aria-hidden="true">
         settings
       </span>
       System Configuration
     </h2>
   </section>
   <section class="app-l-wrapper">
-    <table class="table"  summary="lov table">
-      <tr *ngFor="let lov of lovs$ | async">       
+    <table class="table" summary="lov table">
+      <tr hidden>
+        <th scope="col"></th>
       </tr>
+      <tbody>
+        <tr *ngFor="let lov of lovs$ | async">
+        </tr>
+      </tbody>
     </table>
   </section>
 </div>
