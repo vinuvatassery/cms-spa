@@ -122,7 +122,13 @@ export class IncomeDetailComponent implements OnInit {
     });
   }
 
-  loadProofOfIncomeTypes() {
+  loadProofOfIncomeTypes(proofIncomeTypeStatus: boolean = false) {
+    if(proofIncomeTypeStatus)
+    {
+      this.IncomeDetailsForm.controls[
+        'proofIncomeTypeCode'
+      ].setValue(null);
+    }
     if (
       this.IncomeDetailsForm.controls['incomeTypeCode'].value != null &&
       this.IncomeDetailsForm.controls['incomeTypeCode'].value != ''
@@ -277,7 +283,7 @@ export class IncomeDetailComponent implements OnInit {
     this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
-   if(this.proofOfIncomeFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit) 
+   if(this.proofOfIncomeFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
    {
     this.proofOfIncomeValidatorSize=true;
    }
