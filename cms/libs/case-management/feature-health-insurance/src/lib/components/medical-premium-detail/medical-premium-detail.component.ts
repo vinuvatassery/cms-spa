@@ -84,14 +84,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   partBDtartDateCheck = false;
   medicareInsuranceInfoCheck = true;
   isInsuranceTypeLoading = true;
-  // ddlMedicalHealthInsurancePlans$ =
-  //   this.healthFacade.ddlMedicalHealthInsurancePlans$;
   carrierContactInfo = new CarrierContactInfo();
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   medicareCoverageTypeList$ = this.lovFacade.medicareCoverageType$;
-  // ddlMedicalHealthPlanMetalLevel$ =
-  //   this.healthFacade.ddlMedicalHealthPlanMetalLevel$;
   ddlMedicalHealthPalnPremiumFrequecy$ =
     this.insurancePolicyFacade.ddlMedicalHealthPalnPremiumFrequecy$;
   ddlInsuranceType!: string;

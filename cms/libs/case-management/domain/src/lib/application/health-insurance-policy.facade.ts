@@ -14,9 +14,8 @@ import { WorkflowFacade } from './workflow.facade';
 
 @Injectable({ providedIn: 'root' })
 export class HealthInsurancePolicyFacade {
-  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
-  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-   /** Private properties **/
+  
+  /** Private properties **/
   private coPaysAndDeductiblesSubject = new BehaviorSubject<any>([]);
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
   private healthInsurancePolicySubject = new Subject<healthInsurancePolicy>();
@@ -29,6 +28,8 @@ export class HealthInsurancePolicyFacade {
   );
 
   /** Public properties **/
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
   coPaysAndDeductibles$ = this.coPaysAndDeductiblesSubject.asObservable();
