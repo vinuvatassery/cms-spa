@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { CompletionChecklist, HealthInsuranceFacade ,HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -36,6 +37,7 @@ export class MedicalPremiumListComponent implements OnInit {
   selectedInsurance: any;
   medicalHealthPlansCount :any;
   gridList=[];
+  carrierContactInfo:any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
@@ -261,5 +263,19 @@ export class MedicalPremiumListComponent implements OnInit {
   {
     this.isTriggerPriorityPopup = event;
   }
-
+  getCarrierContactInfo(carrierId:string){
+    this.healthInsurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
+      next: (data) => {
+        this.carrierContactInfo=data;
+      },
+      error: (err) => {
+        if (err) {
+          this.healthInsurancePolicyFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      },
+    });
+  }
 }
