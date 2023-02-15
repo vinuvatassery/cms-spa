@@ -1447,19 +1447,17 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.save()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if(statusResponse){
-          this.workflowFacade.showSendEmailLetterPopup(true);
-        }
-        else{
-          this.router.navigate([`/case-management/cases/case360/${this.workflowFacade.clientCaseId}`])
-        }
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      if (this.checkValidations()) {
+        this.save().subscribe((response: any) => {
+          if (response) {
+            this.loaderService.hide();
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.workflowFacade.clientCaseId)
+          }
+        })
+      }
+      else {
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.workflowFacade.clientCaseId)
       }
     });
   }
@@ -1467,14 +1465,14 @@ private addSaveForLaterSubscription(): void {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(this.checkValidations()){
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations()
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }
 
   checkValidations(){
+    this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined)
     if(isAddressProofRequired){

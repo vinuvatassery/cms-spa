@@ -134,7 +134,6 @@ export * from './lib/application/drug-pharmacy.facade';
 export * from './lib/application/employment.facade';
 export * from './lib/application/eligibility-period.facade';
 export * from './lib/application/family-and-dependent.facade';
-export * from './lib/application/health-insurance.facade';
 export * from './lib/application/healthcare-provider.facade';
 export * from './lib/application/income.facade';
 export * from './lib/application/management.facade';

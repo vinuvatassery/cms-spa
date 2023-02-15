@@ -6,11 +6,18 @@
   </section>
   <section class="app-l-wrapper">
     <table class="table" summary="veapprovalndor">
-      <tr *ngFor="let approval of approvals$ | async">
-        <td>{{ approval.id }}</td>
-        <td>{{ approval.name }}</td>
-        <td>{{ approval.description }}</td>
+      <tr hidden>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
+      <tbody>
+        <tr *ngFor="let approval of approvals$ | async">
+          <td>{{ approval.id }}</td>
+          <td>{{ approval.name }}</td>
+          <td>{{ approval.description }}</td>
+        </tr>
+      </tbody>
     </table>
   </section>
 </div>

@@ -233,19 +233,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.save()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if (statusResponse) {
-          this.workflowFacade.showSendEmailLetterPopup(true);
-        }
-        else {
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-        }
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      if (this.checkValidations()) {
+        this.save().subscribe((response: any) => {
+          if (response) {
+            this.loaderService.hide();
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          }
+        })
+      }
+      else {
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
       }
     });
   }
@@ -253,9 +251,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(this.checkValidations()){
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations()
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }

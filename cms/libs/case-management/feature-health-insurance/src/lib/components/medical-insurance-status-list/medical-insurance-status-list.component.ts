@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-medical-insurance-status-list',
@@ -11,7 +11,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class MedicalInsuranceStatusListComponent implements OnInit {
   /** Public properties **/
-  healthInsuranceStatus$ = this.healthFacade.healthInsuranceStatus$;
+  healthInsuranceStatus$ = this.insurancePolicyFacade.healthInsuranceStatus$;
   public pageSize = 10;
   public skip = 5;
   public pageSizes = [
@@ -47,7 +47,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly healthFacade: HealthInsuranceFacade) {}
+  constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -56,6 +56,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   /** Private methods **/
   private loadHealthInsuranceStatus() {
-    this.healthFacade.loadHealthInsuranceStatus();
+    this.insurancePolicyFacade.loadHealthInsuranceStatus();
   }
 }
