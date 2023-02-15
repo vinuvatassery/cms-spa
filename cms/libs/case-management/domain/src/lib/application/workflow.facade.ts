@@ -490,4 +490,12 @@ export class WorkflowFacade {
     this.isSaveButtonEnabledSubject.next(false);
   }
   
+  handleSendNewsLetterpopup(showHideValue:boolean,clientCaseId:any){
+    if(showHideValue){
+      this.showSendEmailLetterPopup(true);
+    }
+    else{
+      this.router.navigate([`/case-management/cases/case360/${clientCaseId}`])
+    }
+  }
 } 
