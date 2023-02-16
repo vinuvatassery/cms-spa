@@ -211,7 +211,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.raceAndEthnicityPrimaryData=[...this.raceAndEthnicityPrimaryData,...this.otherEthnicityList]
     }
 
-    if (this.raceAndEthnicityPrimaryData.length == 1) {
+    if (this.raceAndEthnicityPrimaryData.length == 1 || this.raceAndEthnicityPrimaryNotListed) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
       this.updateAdjustAttribute('RaceAndEthnicityPrimaryAdjust', StatusFlag.No);

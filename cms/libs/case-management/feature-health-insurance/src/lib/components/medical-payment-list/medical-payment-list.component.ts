@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-medical-payment-list',
@@ -11,7 +11,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class MedicalPaymentListComponent implements OnInit {
   /** Public **/
-  medicalPremiumPayments$ = this.healthFacade.medicalPremiumPayments$;
+  medicalPremiumPayments$ = this.insurancePolicyFacade.medicalPremiumPayments$;
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public pageSize = 10;
@@ -24,7 +24,7 @@ export class MedicalPaymentListComponent implements OnInit {
   ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   /** Constructor **/
-  constructor(private readonly healthFacade: HealthInsuranceFacade) {}
+  constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -33,6 +33,6 @@ export class MedicalPaymentListComponent implements OnInit {
 
   /** Private methods **/
   private loadMedicalPremiumPayments() {
-    this.healthFacade.loadMedicalPremiumPayments();
+    this.insurancePolicyFacade.loadMedicalPremiumPayments();
   }
 }

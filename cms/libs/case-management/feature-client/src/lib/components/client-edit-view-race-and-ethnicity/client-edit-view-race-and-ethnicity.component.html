@@ -114,6 +114,7 @@
                     kendoCheckBox
                     attr.aria-labelledby="{{dataItem.lovDesc}}"
                     [id]="dataItem.lovDesc"
+                    [disabled]="dataItem.lovCode == 'NOT_LISTED' ? false : isNotListed"
                   />
                   <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
                     dataItem.lovDesc

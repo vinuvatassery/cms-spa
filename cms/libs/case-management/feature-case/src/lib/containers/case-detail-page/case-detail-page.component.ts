@@ -387,9 +387,9 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   onUpdateCaseStatusClicked() {
-    this.loaderService.show();
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
+      this.loaderService.show();
       this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();

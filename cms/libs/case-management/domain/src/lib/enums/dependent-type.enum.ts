@@ -1,5 +1,6 @@
 export enum DependentTypeCode {
     CAClient = 'C',
-    Dependent = 'D'
+    Dependent = 'D',
+    Health = 'HEALTH'
 }
 
