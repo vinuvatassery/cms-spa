@@ -42,6 +42,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
   private sessionDataSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
 
   /** Constructor**/
   constructor(
@@ -65,12 +66,14 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
     this.addFormChangeSubscription();
  	  this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
   } 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.sessionDataSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -218,5 +221,13 @@ private updateFormCompleteCount(prev: any, curr: any) {
     this.parentForm.updateValueAndValidity()
     return this.parentForm.valid;
 
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workFlowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.caseFacade.loadCasesById(this.clientCaseId); 
+     }
+    });
   }
 }
