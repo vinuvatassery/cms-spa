@@ -136,12 +136,6 @@ export class AcceptApplicationComponent implements OnInit {
     this.eligibilityForm.controls['caseStatusCode'].updateValueAndValidity();
     this.eligibilityForm.controls['groupCode'].updateValueAndValidity();
     this.eligibilityForm.controls['eligibilityStartDate'].updateValueAndValidity();
-    this.eligibilityForm.controls['eligibilityEndDate'].updateValueAndValidity();
-    var endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
-    var startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;
-    if(endDate<=startDate && this.eligibilityForm.controls['eligibilityEndDate'].value ){
-      this.eligibilityForm.controls['eligibilityEndDate'].setErrors({'incorrect':true})
-    }
   }
   populateEligibility()
   {
@@ -264,5 +258,14 @@ export class AcceptApplicationComponent implements OnInit {
       new Date(acceptedApplication.eligibilityEndDate)
     );
   }
+  dateValidate(event: Event)
+  {
+    var endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
+    var startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;
+    if(endDate<=startDate && this.eligibilityForm.controls['eligibilityEndDate'].value ){
+      this.eligibilityForm.controls['eligibilityEndDate'].setErrors({'incorrect':true})
+    }
+  }
+
 
 }
