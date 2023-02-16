@@ -175,15 +175,11 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]);
     this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity(); 
     if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.Yes) {
-      this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity();
       this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.Yes;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.Yes;
       this.smokingCessation.smokingCessationNote = this.smokingCessationForm.value.smokingCessationNote;
     }
     else if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.No) {
-      this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity();
       this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.No;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.No;
       this.smokingCessation.smokingCessationNote = '';
@@ -260,7 +256,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   private adjustDataAttribute(isRequired:boolean) {
       const data: CompletionChecklist = {
         dataPointName: 'smokingCessationNote_Required',
-        status: isRequired ? StatusFlag.Yes : StatusFlag.No
+        status: StatusFlag.No
       };
 
       this.workflowFacade.updateBasedOnDtAttrChecklist([data]);  
