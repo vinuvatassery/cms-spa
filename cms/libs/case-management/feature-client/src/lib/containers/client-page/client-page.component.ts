@@ -6,7 +6,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, 
-  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat } from '@cms/case-management/domain';
+  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat, TransGenderCode } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -334,8 +334,11 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
         }    
-        
-           this.applicantInfo.client.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+        if(this.appInfoForm.controls['Transgender'].value == TransGenderCode.YES) {
+          this.applicantInfo.client.clientTransgenderCode=this.appInfoForm.controls["yesTransgender"].value;
+        } else {
+          this.applicantInfo.client.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+        }
            this.applicantInfo.client.clientTransgenderDesc=null;
            if (this.appInfoForm.controls["Transgender"].value===PronounCode.notListed) {
             this.applicantInfo.client.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
