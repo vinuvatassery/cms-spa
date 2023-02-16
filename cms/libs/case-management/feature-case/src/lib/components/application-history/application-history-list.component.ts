@@ -4,7 +4,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CaseFacade, DocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'case-management-app-history-list',

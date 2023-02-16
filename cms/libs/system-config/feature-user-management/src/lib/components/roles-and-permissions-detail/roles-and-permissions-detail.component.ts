@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-roles-and-permissions-detail',
@@ -7,15 +7,11 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RolesAndPermissionsDetailComponent implements OnInit {
-  ddlRolePermission: Array<string> = ["No Access", "Access"];  
-public formUiStyle : UIFormStyle = new UIFormStyle();
-isInnerLeftMenuOpen = false;
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-  openInnerLeftMenu(){
+export class RolesAndPermissionsDetailComponent {
+  ddlRolePermission: Array<string> = ["No Access", "Access"];
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  isInnerLeftMenuOpen = false;
+  openInnerLeftMenu() {
     this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
   }
 }

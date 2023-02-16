@@ -54,7 +54,8 @@
         format="MM-dd-yyyy"
           formControlName ="eligibilityEndDate"
           formatPlaceholder="formatPattern"
-          placeholder="">
+          placeholder=""
+          (keyup)="dateValidate($event)">
         </kendo-datepicker>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!eligibilityForm.controls['eligibilityEndDate'].valid && !eligibilityForm.controls['eligibilityEndDate'].hasError('incorrect')">Eligibility end is required.</kendo-formerror>
@@ -90,6 +91,7 @@
         kendoButton
         [primary]="true"
         aria-label="initiate benefits"
+        [disabled]="btnDisabled"
         (click)="save()"
       >
        {{buttonText}}

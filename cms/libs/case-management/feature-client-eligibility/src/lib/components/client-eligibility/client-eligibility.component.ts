@@ -50,7 +50,8 @@ export class ClientEligibilityComponent implements OnInit {
   //questions: any = [];
   reviewQuestionCode = ReviewQuestionCode;
   acceptedApplicationStatus = true;
-
+  btnDisabled = false; 
+  
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -270,7 +271,8 @@ export class ClientEligibilityComponent implements OnInit {
       default:
         break;
     }
-    var documents=this.documents.filter((m: any) => m.entityTypeCode === entityTypeCode);
+    
+    const documents=this.documents.filter((m: any) => m.entityTypeCode === entityTypeCode);
     if(documents.length>0){
       return true;
     }

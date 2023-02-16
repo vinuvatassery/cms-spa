@@ -85,7 +85,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
         value?.forEach((que:any) => {
           let isAllChildQueAnswered = true;
           if(que?.responseAnswerId && que?.childQuestions?.length > 0){
-            var isChildRespRequired = que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
+            const isChildRespRequired = que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
             if(isChildRespRequired){
               isAllChildQueAnswered = que?.childQuestions?.findIndex((chdQue:any) => chdQue?.responseAnswerId != undefined && chdQue?.notes) !== -1;
             }

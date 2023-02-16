@@ -177,6 +177,16 @@ onIncomeActionClicked(
     } else {
       this.isAddIncomeButtonAndFooterNoteDisplay = true;
     }
+    this.cdr.detectChanges();
+  }
+  private updateWorkFlowStatus(isCompleted:boolean)
+  {
+    const workFlowdata: CompletionChecklist[] = [{
+      dataPointName: 'income',
+      status: isCompleted ? StatusFlag.Yes :StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowdata);
   }
   private updateWorkFlowStatus(isCompleted:boolean)
   {

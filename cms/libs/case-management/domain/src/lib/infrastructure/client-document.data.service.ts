@@ -15,7 +15,7 @@ export class ClientDocumentDataService {
 
     /** pubic methods**/
     uploadDocument(doc: ClientDocument) {
-        var documentFormData = new FormData();
+        let documentFormData = new FormData();
         documentFormData.append("document", doc?.document ?? '');
         documentFormData.append("clientDocumentId", doc?.clientDocumentId ?? '');
         documentFormData.append("clientId", `${doc?.clientId}`);

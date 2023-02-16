@@ -35,7 +35,7 @@
       <button kendoButton [primary]="true" aria-label="cancel employer" look="outline" (click)="cancelModal()">
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="add new employer" (click)="saveEmployer()">
+      <button kendoButton [primary]="true" aria-label="add new employer" (click)="saveEmployer()" [disabled]="btnDisabled">
            {{ isAdd ? 'Add' : 'Update ' }}
       </button>
     </div>

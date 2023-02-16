@@ -21,7 +21,7 @@
           kendoButton
           class="k-error-button"
           aria-label="remove case manager"
-          (click)="onDeleteConfirm(true)"
+          (click)="onDeleteConfirm(true)" [disabled]="btnDisabled"
         >
           Remove
         </button>

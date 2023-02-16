@@ -1,6 +1,6 @@
 <kendo-popover #myPopover body="Popover Body" >
   <ng-template kendoPopoverBodyTemplate>
-    <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo"></case-management-medical-carrier-contact-info>
+    <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo" [insurancePlan]="insurancePlanName"></case-management-medical-carrier-contact-info>
   </ng-template>
 </kendo-popover>
 
@@ -27,14 +27,18 @@
               aria-label="carrier name"
               kendoPopoverAnchor
               [popover]="myPopover"
-              (click)="getCarrierContactInfo(dataItem.insuranceCarrierId)"
+              (click)="getCarrierContactInfo(dataItem.insuranceCarrierId,'')"
               >
               {{ dataItem.insuranceCarrierName }}
             </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="insurancePlanName" title="Insurance Plan Name" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
-              aria-label="plan name">
+              aria-label="plan name"
+              kendoPopoverAnchor
+              [popover]="myPopover"
+              (click)="getCarrierContactInfo(dataItem.insuranceCarrierId,dataItem.insurancePlanName)"
+              >
               {{ dataItem.insurancePlanName }}
             </button></ng-template>
         </kendo-grid-column>
@@ -54,7 +58,7 @@
         <kendo-grid-column field="careassistPayingPremiumFlag" title="CAREAssist paying premium?" [width]="150"
           class="text-center">
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Option" [width]="75" [sticky]="true" class="text-center"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">
+        <kendo-grid-column field="Option" title="Options" [width]="75" [sticky]="true" class="text-center"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More option" class="TableActionPopup app-dropdown-action"
               buttonClass="k-icon-button" aria-label="more actions"
