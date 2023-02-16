@@ -9,10 +9,10 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton [primary]="true" aria-label="cancel remove Income" look="outline"
-          (click)="onRemoveIncomeConfirmationClosed()">
+          (click)="onRemoveIncomeConfirmationClosed()" >
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="remove Income" (click)="removeIncome()">
+        <button kendoButton class="k-error-button" aria-label="remove Income" (click)="removeIncome()" [disabled]="btnDisabled">
           Delete
         </button>
       </div>

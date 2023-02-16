@@ -254,7 +254,7 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="add family member">
+        <button kendoButton [primary]="true" aria-label="add family member" [disabled]="btnDisabled">
           {{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'UPDATE' : 'ADD' }}
         </button>
       </div>

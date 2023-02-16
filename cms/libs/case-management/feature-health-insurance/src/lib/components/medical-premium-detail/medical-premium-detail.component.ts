@@ -60,7 +60,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uploadFileSizeLimit = this.configurationProvider.appSettings.uploadFileSizeLimit;
-
+  btnDisabled = false;
   /** Input properties **/
   @Input() dialogTitle!: string;
   @Input() insuranceType!: string;
@@ -1026,6 +1026,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
     if (this.healthInsuranceForm.valid && this.isInsuranceFileUploaded && this.isProofFileUploaded && this.isSummaryFileUploaded && this.isMedicareCardFileUploaded) {
       this.populateInsurancePolicy();
       this.insurancePolicyFacade.showLoader();
+      this.btnDisabled = true;
       if (this.isEdit) {
         this.healthInsurancePolicy.clientInsurancePolicyId =
           this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
@@ -1045,6 +1046,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
             },
             (error: any) => {
               if (error) {
+                this.btnDisabled = false;
                 this.insurancePolicyFacade.showHideSnackBar(
                   SnackBarNotificationType.ERROR,
                   error
@@ -1070,6 +1072,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
             },
             (error: any) => {
               if (error) {
+                this.btnDisabled = false;
                 this.insurancePolicyFacade.showHideSnackBar(
                   SnackBarNotificationType.ERROR,
                   error

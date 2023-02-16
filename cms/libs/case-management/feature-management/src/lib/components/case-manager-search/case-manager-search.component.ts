@@ -39,7 +39,7 @@ export class CaseManagerSearchComponent implements OnInit
   caseSearchInputLoader = false;
   popupClass = 'k-autocomplete-custom';
   selectedClinic! : string
- 
+  btnDisabled = false;
   existCaseManagerForm!: FormGroup;
   isExistSubmitted =false;
 
@@ -106,7 +106,9 @@ export class CaseManagerSearchComponent implements OnInit
         const existCaseManagerData =
         {
           assignedcaseManagerId : this.existCaseManagerForm?.controls["assignedcaseManagerId"].value       
-        }        
+        }    
+        
+        this.btnDisabled = true
         this.addExistingCaseManagerEvent.emit(existCaseManagerData);
        }
     }

@@ -60,7 +60,8 @@
         >
           CANCEL
         </button>
-        <button kendoButton [primary]="true" aria-label="add or update case manager">
+        <button kendoButton [primary]="true" aria-label="add or update case manager"
+        [disabled]="btnDisabled">
           {{ isEditSearchCaseManagerValue ? 'Update' : 'Add' }}
         </button>
       </div>

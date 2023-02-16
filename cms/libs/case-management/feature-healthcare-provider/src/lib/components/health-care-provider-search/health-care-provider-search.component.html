@@ -87,7 +87,7 @@
         >
           CANCEL
         </button>
-        <button kendoButton [primary]="true" aria-label="add or update pharmacy">
+        <button kendoButton [primary]="true" aria-label="add or update pharmacy"  [disabled]="btnDisabled">
           {{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}
         </button>
       </div>

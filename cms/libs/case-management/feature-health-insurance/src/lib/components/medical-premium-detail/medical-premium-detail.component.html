@@ -339,7 +339,7 @@
         Cancel
       </button>
       <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" aria-label="add new medical premium"
-        (click)="save()">
+        (click)="save()" [disabled]="btnDisabled">
         {{buttonText}}
       </button>
       <button kendoButton [primary]="true" *ngIf="isEditViewPopup" (click)="onModalCloseClicked()"

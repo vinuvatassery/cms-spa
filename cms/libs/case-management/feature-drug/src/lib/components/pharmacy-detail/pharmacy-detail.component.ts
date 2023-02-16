@@ -42,6 +42,8 @@ export class PharmacyDetailComponent implements OnInit {
   selectedPharmacyForEdit!: string;
   selectedPharmacyId!: string | null;
   showSelectPharmacyRequired = false;
+  btnDisabled = false; 
+
   /** Constructor **/
   constructor() { }
 
@@ -66,6 +68,7 @@ export class PharmacyDetailComponent implements OnInit {
 
   addOrEditPharmacy() {
     if (this.selectedPharmacyId) {
+      this.btnDisabled = true
       if (this.isEditPharmacy) {
         this.editPharmacyEvent.emit(this.selectedPharmacyId ?? '');
       }

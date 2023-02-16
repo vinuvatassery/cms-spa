@@ -20,9 +20,10 @@ export class RemoveCaseManagerConfirmationComponent
    @Input() clientCaseId!: string;
   
   @Output() deleteConfimEvent =  new EventEmitter<any>();
-
+  btnDisabled = false; 
   onDeleteConfirm(isDelete : boolean)
   {  
+    this.btnDisabled = true; 
     this.deleteConfimEvent.emit(isDelete);
   }
 }

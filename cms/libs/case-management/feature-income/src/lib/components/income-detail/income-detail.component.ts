@@ -16,6 +16,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomeDetailComponent implements OnInit {
+  btnDisabled = false;
   public uploadRemoveUrl = 'removeUrl';
   public uploadedIncomeFile: any[] = [];
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -206,8 +207,9 @@ export class IncomeDetailComponent implements OnInit {
       } else {
         incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value == null;
       }
-
+      this.btnDisabled =true;
       if (!this.isEditValue) {
+        
         this.incomeFacade.ShowLoader();
         this.incomeFacade
           .saveClientIncome(
@@ -225,6 +227,7 @@ export class IncomeDetailComponent implements OnInit {
               this.closeIncomeDetailPoup();
             },
             error: (err) => {
+              this.btnDisabled =false;
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
@@ -243,6 +246,7 @@ export class IncomeDetailComponent implements OnInit {
         }
 
         incomeData['activeFlag'] = this.selectedIncome.activeFlag;
+       
         this.incomeFacade
           .editClientIncome(
             this.IncomeDetailsForm.value,
@@ -260,6 +264,7 @@ export class IncomeDetailComponent implements OnInit {
               this.closeIncomeDetailPoup();
             },
             error: (err) => {
+              this.btnDisabled = false;
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
             },

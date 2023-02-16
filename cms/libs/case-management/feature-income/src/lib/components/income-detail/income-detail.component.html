@@ -161,7 +161,8 @@
             (click)="closeIncomeDetailPoup()">
             Cancel
           </button>
-          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income">  {{ isEditValue ? 'Update' : 'Add ' }}</button>
+          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income"
+          [disabled]="btnDisabled">  {{ isEditValue ? 'Update' : 'Add ' }}</button>
         </div>
       </div>
     </kendo-dialog-actions>
