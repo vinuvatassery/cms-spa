@@ -12,7 +12,7 @@
         (click)="onRemoveEmployerConfirmationClosed()">
         Cancel
       </button>
-      <button kendoButton class="k-error-button" aria-label="Delete employer" (click)="removeEmployer()">
+      <button kendoButton class="k-error-button" aria-label="Delete employer" (click)="removeEmployer()"  [disabled]="btnDisabled">
         Delete
       </button>
     </div>

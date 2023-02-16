@@ -42,6 +42,7 @@ export class PharmacyDetailComponent implements OnInit {
   selectedPharmacyForEdit!: string;
   selectedPharmacyId!: string | null;
   showSelectPharmacyRequired = false;
+  btnDisabled = false; 
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -64,6 +65,7 @@ export class PharmacyDetailComponent implements OnInit {
 
   addOrEditPharmacy() {
     if (this.selectedPharmacyId) {
+      this.btnDisabled = true
       if (this.isEditPharmacy) {
         this.editPharmacyEvent.emit(this.selectedPharmacyId ?? '');
       }

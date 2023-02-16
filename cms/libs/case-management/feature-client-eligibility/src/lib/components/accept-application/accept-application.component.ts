@@ -36,7 +36,7 @@ export class AcceptApplicationComponent implements OnInit {
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
   @Input() isEdit!: boolean;
-
+  btnDisabled = false; 
 
   /** Constructor **/
   constructor(
@@ -91,6 +91,7 @@ export class AcceptApplicationComponent implements OnInit {
     if (this.eligibilityForm.valid) {
       this.populateEligibility();
       this.loaderService.show();
+      this.btnDisabled = true
     this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication).subscribe({
       next: (data) => {
         if(!this.isEdit)
@@ -116,6 +117,7 @@ export class AcceptApplicationComponent implements OnInit {
       },
       error: (err) => {
         if (err){
+          this.btnDisabled = false
           this.loaderService.hide();
           this.clientEligibilityFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,

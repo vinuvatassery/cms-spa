@@ -23,7 +23,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Output() searchTextEvent = new EventEmitter<string>(); 
   @Output() addExistingProviderEvent = new EventEmitter<any>(); 
   @Output() deleteProviderEvent =  new EventEmitter<string>();
-  testData = 'sample';
+  btnDisabled = false;
 
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
@@ -126,6 +126,7 @@ export class HealthCareProviderSearchComponent implements OnInit
           providerId : this.existHealthProvderForm?.controls["providerId"].value,
           selectedProviderId  : this.existHealthProvderForm?.controls["selectedProviderId"].value 
         }        
+        this.btnDisabled = true
         this.addExistingProviderEvent.emit(existProviderData);
        }
     }

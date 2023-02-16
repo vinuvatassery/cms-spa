@@ -19,6 +19,7 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
   clientId: any;
   clientCaseId : any;
   clientCaseEligibilityId : any;
+  btnDisabled = false;
   /** Constructor **/
   constructor(
     private readonly employmentFacade: EmploymentFacade, 
@@ -49,6 +50,7 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
     this.employmentFacade.showLoader()
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.selectedEmployer) {
+      this.btnDisabled = true
       this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
         next: (response) => {
           this.onRemoveEmployerConfirmationClosed();
@@ -57,6 +59,7 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
           this.employmentFacade.hideLoader() 
         },
         error: (err) => {
+          this.btnDisabled = false;
           this.employmentFacade.hideLoader()
           this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
         },

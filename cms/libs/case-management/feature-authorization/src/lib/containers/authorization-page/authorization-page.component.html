@@ -11,6 +11,8 @@
           [primary]="true"
           routerLink="/case-detail/application-eligibility/eligibility"
           aria-label="start application review"
+          [disabled]="btnDisabled"
+          (click)="btnDisabled = true;"
         >
           Start
         </button>
