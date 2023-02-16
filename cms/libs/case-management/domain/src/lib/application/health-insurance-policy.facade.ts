@@ -193,7 +193,7 @@ export class HealthInsurancePolicyFacade {
             total: medicalHealthPlansResponse?.totalCount,
           };
           this.updateWorkflowCount('insurance_plans',  medicalHealthPlansResponse?.totalCount > 0);
-          if(medicalHealthPlansResponse?.clientInsurancePolicies.length > 1 && medicalHealthPlansResponse?.clientInsurancePolicies.length <= 3){
+          if(medicalHealthPlansResponse?.clientInsurancePolicies.length > 1){
             this.triggerPriorityPopupSubject.next(true);
           }
           else
