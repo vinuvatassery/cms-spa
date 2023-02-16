@@ -38,6 +38,7 @@ export class MedicalPremiumListComponent implements OnInit {
   medicalHealthPlansCount :any;
   gridList=[];
   carrierContactInfo:any;
+  insurancePlanName:string='';
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
@@ -262,10 +263,11 @@ export class MedicalPremiumListComponent implements OnInit {
   {
     this.isTriggerPriorityPopup = event;
   }
-  getCarrierContactInfo(carrierId:string){
+  getCarrierContactInfo(carrierId:string,insurancePlanName:string){
     this.healthInsurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
       next: (data) => {
         this.carrierContactInfo=data;
+        this.insurancePlanName=insurancePlanName;
       },
       error: (err) => {
         if (err) {
