@@ -7,11 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccountSettingsComponent implements OnInit {
+export class AccountSettingsComponent {
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

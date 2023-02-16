@@ -42,8 +42,6 @@ export class PharmacyDetailComponent implements OnInit {
   selectedPharmacyForEdit!: string;
   selectedPharmacyId!: string | null;
   showSelectPharmacyRequired = false;
-  /** Constructor **/
-  constructor() { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

@@ -4,17 +4,16 @@ import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 
 import { ConfigurationProvider, LoaderService, LoggingService,  SnackBarNotificationType } from '@cms/shared/util-core';
-import {  debounceTime, distinctUntilChanged,  of, pairwise,  startWith, Subscription,  } from 'rxjs';
+import {  debounceTime, distinctUntilChanged,  pairwise,  startWith, Subscription,  } from 'rxjs';
 /** Facades **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 
 import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
-import { LessOrEqualToFilterOperatorComponent } from '@progress/kendo-angular-grid';
  
 @Component({
   selector: 'case-management-client-edit-view',
@@ -223,8 +222,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
 
   ngAfterViewChecked() {  
-    var firstName = '';
-    var lastName ='';
+    let firstName = '';
+    let lastName ='';
     if(this.appInfoForm.controls["firstName"].value === null){
       firstName = ''
     }
@@ -990,9 +989,9 @@ updateWorkflowCount(data: any){
   dateValidate(event: Event)
   {
     this.dateValidator=false;
-    var signeddate=this.appInfoForm.controls['dateOfBirth'].value;
-      var todayDate= new Date();
-      if(signeddate>todayDate){
+    const signedDate=this.appInfoForm.controls['dateOfBirth'].value;
+    const todayDate= new Date();
+      if(signedDate>todayDate){
       this.dateValidator=true;
       }
   }
@@ -1002,7 +1001,7 @@ updateWorkflowCount(data: any){
   }
 
   ssnValueChange() {
-    var value = (this.appInfoForm.controls["ssn"].value).replace(/\s/g, "");
+    const value = (this.appInfoForm.controls["ssn"].value).replace(/\s/g, "");
     if (value != '' && value.length < 9) {
       this.appInfoForm.controls['ssn'].setErrors({ 'patternError': true });
     }
