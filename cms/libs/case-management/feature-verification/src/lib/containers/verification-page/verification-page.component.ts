@@ -1,7 +1,7 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-management/domain';
 

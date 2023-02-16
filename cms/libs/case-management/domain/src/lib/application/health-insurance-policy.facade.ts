@@ -218,7 +218,7 @@ export class HealthInsurancePolicyFacade {
     this.workflowFacade.updateChecklist(dataPoint);
   }
   private formDataAppendObject(fd: FormData, obj: any, key?: any) {
-    var i, k;
+    let i, k;
     for (i in obj) {
       k = key ? key + '[' + i + ']' : i;
       if (obj[i] instanceof File) {

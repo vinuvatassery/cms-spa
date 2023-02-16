@@ -11,12 +11,12 @@ export class PrescriptionDrugDataService {
   constructor(private readonly http: HttpClient, private readonly configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
-  updatePrescriptionDrugService(clientId: Number,prescriptionDrug: any) {
+  updatePrescriptionDrugService(clientId: number,prescriptionDrug: any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugs`, prescriptionDrug);
   }
   
-  loadPrescriptionDrug(clientId: Number, clientCaseEligibilityId: any) {
+  loadPrescriptionDrug(clientId: number, clientCaseEligibilityId: any) {
     return this.http.get<PrescriptionDrug>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugs?clientCaseEligibilityId=${clientCaseEligibilityId}`);
   }

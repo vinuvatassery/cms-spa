@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { CommunicationFacade } from '@cms/case-management/domain';
 
 @Component({
@@ -8,12 +8,9 @@ import { CommunicationFacade } from '@cms/case-management/domain';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IncomeInclusionsExclusionsDetailComponent implements OnInit {
+export class IncomeInclusionsExclusionsDetailComponent {
 
   letterEditorValue!: any;
   ddlEditorVariables$ = this.communicationFacade.ddlEditorVariables$;
   constructor(private readonly communicationFacade: CommunicationFacade) { }
-
-  ngOnInit(): void {
-  }
 }

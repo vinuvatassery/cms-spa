@@ -150,7 +150,7 @@ export class AcceptApplicationComponent implements OnInit {
   startDateOnChange(startDate:Date)
   {
     if( this.eligibilityForm.controls['eligibilityEndDate'].value !==null){
-      var endDate = this.intl.parseDate(
+      const endDate = this.intl.parseDate(
         Intl.DateTimeFormat('en-US').format(
           this.eligibilityForm.controls['eligibilityEndDate'].value
         )
@@ -260,8 +260,8 @@ export class AcceptApplicationComponent implements OnInit {
   }
   dateValidate(event: Event)
   {
-    var endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
-    var startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;
+    const endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
+    const startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;
     if(endDate<=startDate && this.eligibilityForm.controls['eligibilityEndDate'].value ){
       this.eligibilityForm.controls['eligibilityEndDate'].setErrors({'incorrect':true})
     }
