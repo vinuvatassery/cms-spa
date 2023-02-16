@@ -462,7 +462,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       (event.charCode >= 48 && event.charCode <= 57) ||
       event.charCode == 45);
     if (status) {
-      this.healthInsuranceForm.controls['insuranceEndDate'].setErrors(null);
+      this.healthInsuranceForm.controls['insuranceIdNumber'].setErrors(null);
       this.specialCharAdded = false;
     }
     else {
@@ -639,10 +639,26 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
       }
      
       cobraPlanRequiredFields.forEach((key: string) => {
-        this.healthInsuranceForm.controls[key].setValidators([
-          Validators.required,
-        ]);
-        this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        if(key.trim() === 'insuranceEndDate'){
+          if(!this.healthInsuranceForm.controls['insuranceEndDate'].valid){
+            this.insuranceEndDateIsgreaterthanStartDate = false;
+          }
+          else{
+            this.insuranceEndDateIsgreaterthanStartDate = true;
+            this.healthInsuranceForm.controls[key].setValidators([
+              Validators.required,
+            ]);
+            this.healthInsuranceForm.controls[key].updateValueAndValidity();
+          }
+          
+        }
+        else
+        {
+          this.healthInsuranceForm.controls[key].setValidators([
+            Validators.required,
+          ]);
+          this.healthInsuranceForm.controls[key].updateValueAndValidity();
+        }
       });
     }
 
@@ -717,8 +733,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
 
   private resetValidators() {
     Object.keys(this.healthInsuranceForm.controls).forEach((key: string) => {
-      this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
-      this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      if(!(key === 'insuranceEndDate' && !this.insuranceEndDateIsgreaterthanStartDate)){
+        this.healthInsuranceForm.controls[key].removeValidators(Validators.required);
+        this.healthInsuranceForm.controls[key].updateValueAndValidity();
+      } 
     });
   }
   private resetData() {
@@ -951,6 +969,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnChanges, OnDestr
   }
   /** Internal event methods **/
   onHealthInsuranceTypeChanged() {
+    this.insuranceEndDateIsgreaterthanStartDate = true;
     this.resetData();
     this.resetValidators();
     this.ddlInsuranceType =
