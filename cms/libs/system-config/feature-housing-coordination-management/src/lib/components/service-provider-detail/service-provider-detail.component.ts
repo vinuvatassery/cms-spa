@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-service-provider-detail',
   templateUrl: './service-provider-detail.component.html',
@@ -7,11 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServiceProviderDetailComponent implements OnInit {
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class ServiceProviderDetailComponent {
+  public formUiStyle: UIFormStyle = new UIFormStyle();
 }

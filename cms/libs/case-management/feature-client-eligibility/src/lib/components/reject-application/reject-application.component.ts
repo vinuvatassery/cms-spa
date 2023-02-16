@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit,Input,Output, EventEmitter} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input,Output, EventEmitter} from '@angular/core';
 import {CaseFacade,CaseStatusCode} from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -10,15 +10,14 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
   styleUrls: ['./reject-application.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RejectApplicationComponent implements OnInit {
+export class RejectApplicationComponent {
 
 
   @Input() clientCaseId: string = '';
   @Output() isCloseDenyModal: EventEmitter<boolean> = new EventEmitter();
   
   constructor(private readonly caseFacade: CaseFacade,private readonly loaderService: LoaderService) {}
-  ngOnInit(): void {
-  }
+
   updateCaseStatus()
   {
     this.loaderService.show();

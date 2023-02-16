@@ -44,9 +44,6 @@ export class PharmacyDetailComponent implements OnInit {
   showSelectPharmacyRequired = false;
   btnDisabled = false; 
 
-  /** Constructor **/
-  constructor() { }
-
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if (this.isEditPharmacy) {
