@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { HealthInsuranceFacade } from '@cms/case-management/domain';
+import {  HealthInsurancePolicyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
@@ -12,7 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class CoPaysAndDeductiblesListComponent implements OnInit {
   /** Public properties **/
-  coPaysAndDeductibles$ = this.healthFacade.coPaysAndDeductibles$;
+  coPaysAndDeductibles$ = this.insurancePolicyFacade.coPaysAndDeductibles$;
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public pageSize = 10;
@@ -25,7 +25,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   /** Constructor **/
-  constructor(private readonly healthFacade: HealthInsuranceFacade) {}
+  constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -34,6 +34,6 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
 
   /** Private methods **/
   private loadCoPaysAndDeductibles() {
-    this.healthFacade.loadCoPaysAndDeductibles();
+    this.insurancePolicyFacade.loadCoPaysAndDeductibles();
   }
 }

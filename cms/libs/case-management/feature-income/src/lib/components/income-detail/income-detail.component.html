@@ -17,7 +17,7 @@
         <div class="flex-col">
           <kendo-floatinglabel text="Income Type">
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="incomeTypes$" textField="lovDesc"
-            valueField="lovCode" [valuePrimitive]="true" (valueChange)="loadProofOfIncomeTypes()" aria-label="income types" name="income types" formControlName="incomeTypeCode" #incomeTypes>
+            valueField="lovCode" [valuePrimitive]="true" (valueChange)="loadProofOfIncomeTypes(true)" aria-label="income types" name="income types" formControlName="incomeTypeCode" #incomeTypes>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeTypeCode'].valid"> Income Type is required
@@ -61,11 +61,11 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Income End (optional)">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-              formatPlaceholder="formatPattern" [min]="startDate" 
+              formatPlaceholder="formatPattern" [min]="startDate"
                placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
               #incomeEndDate>
             </kendo-datepicker>
-            <kendo-formerror *ngIf="IncomeDetailsForm.controls['incomeEndDate'].hasError('incorrect')"> 'Income End Date' should be greater than 'Income Start Date' 
+            <kendo-formerror *ngIf="IncomeDetailsForm.controls['incomeEndDate'].hasError('incorrect')"> 'Income End Date' should be greater than 'Income Start Date'
             </kendo-formerror>
           </kendo-floatinglabel>
 

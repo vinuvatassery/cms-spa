@@ -26,6 +26,7 @@ import { MedicalPremiumDetailGroupPlanTypeComponent } from './components/medical
 import { MedicalPremiumDetailClientPolicyHolderComponent } from './components/medical-premium-detail-client-policy-holder/medical-premium-detail-client-policy-holder.component';
 import { MedicalPremiumDetailCareassistPayComponent } from './components/medical-premium-detail-careassist-pay/medical-premium-detail-careassist-pay.component';
 import { MedicalPremiumDetailOthersCoveredPlanComponent } from './components/medical-premium-detail-others-covered-plan/medical-premium-detail-others-covered-plan.component';
+import { MedicalCarrierContactInfoComponent } from './components/medical-carrier-contact-info/medical-carrier-contact-info.component';
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import { MedicalPremiumDetailOthersCoveredPlanComponent } from './components/med
     MedicalPremiumDetailClientPolicyHolderComponent,
     MedicalPremiumDetailCareassistPayComponent,
     MedicalPremiumDetailOthersCoveredPlanComponent,
+    MedicalCarrierContactInfoComponent,
   ],
   exports: [
     MedicalInsuranceStatusListComponent,

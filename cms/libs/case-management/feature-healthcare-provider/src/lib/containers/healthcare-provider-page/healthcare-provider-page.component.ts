@@ -234,21 +234,14 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
    }
 
    private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.save()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if (statusResponse) {
-          this.workFlowFacade.showSendEmailLetterPopup(true);
-        }
-        else {
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-        }
-      }
-    });
+     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+       this.save().subscribe((response: any) => {
+         if (response) {
+           this.loaderService.hide();
+           this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+         }
+       })
+     });
   }
 
   private addSaveForLaterValidationsSubscription(): void {

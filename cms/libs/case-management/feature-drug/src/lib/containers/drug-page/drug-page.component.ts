@@ -45,6 +45,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isSummaryOfBenefitsRequired$ = new BehaviorSubject<boolean>(false);
   showDocRequiredValidation = false;
   nonPreferredFlagValidation = false;
+  changeRequestRequirment = true;
   prescriptionInfo = {} as PrescriptionDrug;
 
   /** Private properties **/
@@ -251,7 +252,10 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
       .pipe(
-        tap(() => { this.loaderService.show(), this.workflowFacade.disableSaveButton() }),
+        tap(() => { 
+          this.loaderService.show(); 
+          this.workflowFacade.disableSaveButton();
+         }),
         mergeMap((navigationType: NavigationType) =>
           forkJoin([of(navigationType), this.save()])
         )
@@ -477,33 +481,27 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription =
-      this.workflowFacade.saveForLaterClicked$
-        .pipe(
-          mergeMap((statusResponse: boolean) =>
-            forkJoin([of(statusResponse), this.save()])
-          )
-        )
-        .subscribe(([statusResponse, isSaved]) => {
-          if (isSaved === true) {
-            if (statusResponse) {
-              this.workflowFacade.showSendEmailLetterPopup(true);
-            } else {
-              this.router.navigate([
-                `/case-management/cases/case360/${this.clientCaseId}`,
-              ]);
+      this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+        if (this.checkValidations()) {
+          this.save().subscribe((response: any) => {
+            if (response) {
+              this.loaderService.hide();
+              this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
             }
-          }
-          this.loaderService.hide();
-        });
+          })
+        }
+        else {
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        }
+      });
   }
 
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription =
       this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
         if (val) {
-          if (this.checkValidations()) {
-            this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-          }
+          this.checkValidations()
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
         }
       });
   }
