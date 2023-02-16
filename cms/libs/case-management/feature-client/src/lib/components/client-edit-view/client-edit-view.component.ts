@@ -6,7 +6,7 @@ import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService,  SnackBarNotificationType } from '@cms/shared/util-core';
 import {  debounceTime, distinctUntilChanged,  of, pairwise,  startWith, Subscription,  } from 'rxjs';
 /** Facades **/
-import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
+import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag, TransGenderCode,WorkflowFacade} from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -420,7 +420,13 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   } 
 
   const Transgender=applicantInfo.client?.clientTransgenderCode?.trim();
-  this.appInfoForm.controls['Transgender']?.setValue(Transgender);
+  if(Transgender == TransGenderCode.YES_F_TO_M || Transgender == TransGenderCode.YES_M_TO_F) {
+    this.appInfoForm.controls['Transgender']?.setValue(TransGenderCode.YES);
+    this.appInfoForm.controls['yesTransgender']?.setValue(Transgender);
+  }
+  else {
+    this.appInfoForm.controls['Transgender']?.setValue(Transgender);
+  }
   if (Transgender==='NOT_LISTED') {
     this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.client.clientTransgenderDesc);
   }
