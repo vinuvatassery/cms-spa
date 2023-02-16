@@ -5,8 +5,9 @@ import { State } from '@progress/kendo-data-query';
 import { Observable, first } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
-import { CompletionChecklist, HealthInsuranceFacade ,HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
+import { CompletionChecklist, HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -19,7 +20,7 @@ export class MedicalPremiumListComponent implements OnInit {
   /** Public properties **/
   isEditInsurancePriorityTitle = false;
   insurancePriorityModalButtonText = 'Save';
-  medicalHealthPlans$ = this.healthFacade.medicalHealthPlans$;
+  medicalHealthPlans$ = this.healthInsurancePolicyFacade.medicalHealthPlans$;
   isTriggerPriorityPopup = false;
   isOpenedHealthInsuranceModal = false;
   isOpenedChangePriorityModal = false;
@@ -28,14 +29,16 @@ export class MedicalPremiumListComponent implements OnInit {
   dialogTitle!: string;
   insuranceType!: string;
   columnOptionDisabled = false;
-  public pageSizes = this.healthFacade.gridPageSizes;
-  public gridSkipCount = this.healthFacade.skipCount;
+  public pageSizes = this.healthInsurancePolicyFacade.gridPageSizes;
+  public gridSkipCount = this.healthInsurancePolicyFacade.skipCount;
   public state!: State;
   sort!:any;
   currentInsurancePolicyId: any;
   selectedInsurance: any;
   medicalHealthPlansCount :any;
   gridList=[];
+  carrierContactInfo:any;
+  insurancePlanName:string='';
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
@@ -83,7 +86,6 @@ export class MedicalPremiumListComponent implements OnInit {
 
   /** Constructor **/
   constructor(
-    private readonly healthFacade: HealthInsuranceFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly healthInsurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly workflowFacade: WorkflowFacade,
@@ -173,7 +175,7 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   loadHealthInsurancePlans() {
-    this.healthFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
+    this.healthInsurancePolicyFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
       if(medicalHealthPolicy?.data?.length > 0)
       this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
@@ -261,5 +263,20 @@ export class MedicalPremiumListComponent implements OnInit {
   {
     this.isTriggerPriorityPopup = event;
   }
-
+  getCarrierContactInfo(carrierId:string,insurancePlanName:string){
+    this.healthInsurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
+      next: (data) => {
+        this.carrierContactInfo=data;
+        this.insurancePlanName=insurancePlanName;
+      },
+      error: (err) => {
+        if (err) {
+          this.healthInsurancePolicyFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      },
+    });
+  }
 }

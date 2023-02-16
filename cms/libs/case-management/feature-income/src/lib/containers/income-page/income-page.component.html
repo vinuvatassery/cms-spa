@@ -24,7 +24,9 @@
           <div  *ngIf="hasNoIncome">
             <form [formGroup]="noIncomeDetailsForm">
               <div class="flex-row">
-
+                <div class="flex-col ">
+                  <label class="k-checkbox-label">Once the application has been submitted the "Date Client Signed" will be updated to match the application submission date</label>
+                  </div>
                 <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Date Client Signed">
                     <kendo-datepicker autofocusfield [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"

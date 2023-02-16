@@ -1,0 +1,33 @@
+<div class="flex-col flex-col-4 inlineloaderwrapper"  *ngIf="!carrierContactInfo">
+    <span class="app-c-badge  mt-3">       
+      <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+    </span>
+  </div>
+<div class="flex-col mt-3" *ngIf="carrierContactInfo">
+          <h5 class="text-capital">Insurance Carrier Contact Info</h5>
+          <div class="block-section">
+            <p class="bold-text">Address</p>
+            <p>{{ carrierContactInfo.address1}}</p>
+            <p>{{ carrierContactInfo.address2}}</p>
+            <p>{{ carrierContactInfo.cityCode}}</p>
+            <p>{{ carrierContactInfo.stateCode}}</p>
+            <p>{{ carrierContactInfo.zip}}</p>
+          </div>
+          <div class="block-section mt-2">
+            <p class="bold-text">Tax ID Number (TIN)</p>
+            <p>{{ carrierContactInfo.tin | ssn}}</p>
+          </div>
+          <div class="block-section mt-2">
+            <p class="bold-text">Mail Code</p>
+            <p>{{ carrierContactInfo.mailCode }}</p>
+          </div>
+          <div class="block-section mt-2">
+            <p class="bold-text">Contact Name and Phone</p>
+            <p>{{ carrierContactInfo.contactName }}</p>
+            <p>{{ carrierContactInfo.phoneNbr | phone}}</p>
+          </div>
+          <div class="block-section mt-2" *ngIf="insurancePlan">
+            <p class="bold-text">Summary of Benifits:</p>
+            <p>{{insurancePlan}}</p>
+          </div>
+        </div>

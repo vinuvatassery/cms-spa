@@ -177,6 +177,7 @@ onIncomeActionClicked(
     } else {
       this.isAddIncomeButtonAndFooterNoteDisplay = true;
     }
+    this.cdr.detectChanges();
   }
   private updateWorkFlowStatus(isCompleted:boolean)
   {

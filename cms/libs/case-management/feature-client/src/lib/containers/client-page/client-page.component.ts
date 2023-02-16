@@ -900,19 +900,17 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.saveAndUpdate()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if(statusResponse){
-          this.workFlowFacade.showSendEmailLetterPopup(true);
-        }
-        else{
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-        }
+    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      if (this.checkValidations()) {
+        this.saveAndUpdate().subscribe((response: any) => {
+          if (response) {
+            this.loaderService.hide();
+            this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          }
+        })
+      }
+      else {
+        this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
       }
     });
   }
@@ -920,14 +918,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(this.checkValidations()){
-          this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations();
+        this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }
 
-  checkValidations(){
+  checkValidations() {
     this.validateForm();
     return this.appInfoForm.valid;
   }

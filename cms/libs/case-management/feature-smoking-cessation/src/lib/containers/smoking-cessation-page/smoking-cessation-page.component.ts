@@ -175,15 +175,11 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]);
     this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity(); 
     if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.Yes) {
-      this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity();
       this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.Yes;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.Yes;
       this.smokingCessation.smokingCessationNote = this.smokingCessationForm.value.smokingCessationNote;
     }
     else if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.No) {
-      this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity();
       this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.No;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.No;
       this.smokingCessation.smokingCessationNote = '';
@@ -233,19 +229,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.save()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if (statusResponse) {
-          this.workflowFacade.showSendEmailLetterPopup(true);
-        }
-        else {
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-        }
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      if (this.checkValidations()) {
+        this.save().subscribe((response: any) => {
+          if (response) {
+            this.loaderService.hide();
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          }
+        })
+      }
+      else {
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
       }
     });
   }
@@ -253,9 +247,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(this.checkValidations()){
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations()
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }
@@ -263,7 +256,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   private adjustDataAttribute(isRequired:boolean) {
       const data: CompletionChecklist = {
         dataPointName: 'smokingCessationNote_Required',
-        status: isRequired ? StatusFlag.Yes : StatusFlag.No
+        status: StatusFlag.No
       };
 
       this.workflowFacade.updateBasedOnDtAttrChecklist([data]);  

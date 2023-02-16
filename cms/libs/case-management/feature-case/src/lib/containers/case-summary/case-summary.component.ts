@@ -189,37 +189,34 @@ private updateFormCompleteCount(prev: any, curr: any) {
   }
 }
 
-private addSaveForLaterSubscription(): void {
-      this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
-        mergeMap((statusResponse: boolean) =>
-          forkJoin([of(statusResponse), this.updateCase()])
-        ),
-      ).subscribe(([statusResponse, isSaved]) => {
-        if (isSaved) {
-          this.loaderService.hide();
-          if(statusResponse){
-            this.workFlowFacade.showSendEmailLetterPopup(true);
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      if (this.checkValidations()) {
+        this.updateCase().subscribe((response: any) => {
+          if (response) {
+            this.loaderService.hide();
+            this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
           }
-          else{
-            this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-          }
-        }
-      });
-    }
-  
-    private addSaveForLaterValidationsSubscription(): void {
-      this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-        if (val) {
-          if(this.checkValidations()){
-            this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
-          }
-        }
-      });
-    }
-  
-    checkValidations(){
-      this.parentForm.updateValueAndValidity()
-      return this.parentForm.valid;
-     
-    }
+        })
+      }
+      else {
+        this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+      }
+    });
+  }
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+        this.checkValidations()
+        this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
+      }
+    });
+  }
+
+  checkValidations() {
+    this.parentForm.updateValueAndValidity()
+    return this.parentForm.valid;
+
+  }
 }

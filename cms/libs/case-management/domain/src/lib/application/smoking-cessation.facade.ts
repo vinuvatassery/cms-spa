@@ -1,12 +1,11 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SmokingCessation } from '../entities/smoking-cessation';
 import { SmokingCessationDataService } from '../infrastructure/smoking-cessation.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
 import { LoaderService ,NotificationSnackbarService, SnackBarNotificationType,LoggingService} from '@cms/shared/util-core';
-
 @Injectable({ providedIn: 'root' })
 export class SmokingCessationFacade {
    
@@ -41,7 +40,8 @@ export class SmokingCessationFacade {
      {
        this.loaderService.hide();
      }
-    updateSmokingCessation(smokingCessation:SmokingCessation) {
+    updateSmokingCessation(smokingCessation:SmokingCessation):Observable<any> 
+    {
         return this.smokingCessationDataService.updateSmokingCessation(smokingCessation);
     }
     loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any) {
