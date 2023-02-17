@@ -279,7 +279,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
-    debugger;
     this.prescriptionDrugForm.markAllAsTouched();
    
      this.changeDetector.detectChanges();
@@ -409,7 +408,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.prescriptionDrugForm.valid;
   }
   hivFlagSelected(event: Event) {
-    debugger;
     if (
       this.prescriptionDrugForm.controls[
         'prescriptionDrugsForHivCode'
