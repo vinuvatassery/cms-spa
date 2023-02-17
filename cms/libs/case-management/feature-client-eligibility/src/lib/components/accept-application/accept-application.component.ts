@@ -36,7 +36,7 @@ export class AcceptApplicationComponent implements OnInit {
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
   @Input() isEdit!: boolean;
-
+  btnDisabled = false; 
 
   /** Constructor **/
   constructor(
@@ -91,6 +91,7 @@ export class AcceptApplicationComponent implements OnInit {
     if (this.eligibilityForm.valid) {
       this.populateEligibility();
       this.loaderService.show();
+      this.btnDisabled = true
     this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication).subscribe({
       next: (data) => {
         if(!this.isEdit)
@@ -116,6 +117,7 @@ export class AcceptApplicationComponent implements OnInit {
       },
       error: (err) => {
         if (err){
+          this.btnDisabled = false
           this.loaderService.hide();
           this.clientEligibilityFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
@@ -136,12 +138,6 @@ export class AcceptApplicationComponent implements OnInit {
     this.eligibilityForm.controls['caseStatusCode'].updateValueAndValidity();
     this.eligibilityForm.controls['groupCode'].updateValueAndValidity();
     this.eligibilityForm.controls['eligibilityStartDate'].updateValueAndValidity();
-    this.eligibilityForm.controls['eligibilityEndDate'].updateValueAndValidity();
-    var endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
-    var startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;
-    if(endDate<=startDate && this.eligibilityForm.controls['eligibilityEndDate'].value ){
-      this.eligibilityForm.controls['eligibilityEndDate'].setErrors({'incorrect':true})
-    }
   }
   populateEligibility()
   {
@@ -156,7 +152,7 @@ export class AcceptApplicationComponent implements OnInit {
   startDateOnChange(startDate:Date)
   {
     if( this.eligibilityForm.controls['eligibilityEndDate'].value !==null){
-      var endDate = this.intl.parseDate(
+      const endDate = this.intl.parseDate(
         Intl.DateTimeFormat('en-US').format(
           this.eligibilityForm.controls['eligibilityEndDate'].value
         )
@@ -264,5 +260,14 @@ export class AcceptApplicationComponent implements OnInit {
       new Date(acceptedApplication.eligibilityEndDate)
     );
   }
+  dateValidate(event: Event)
+  {
+    const endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
+    const startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;
+    if(endDate<=startDate && this.eligibilityForm.controls['eligibilityEndDate'].value ){
+      this.eligibilityForm.controls['eligibilityEndDate'].setErrors({'incorrect':true})
+    }
+  }
+
 
 }

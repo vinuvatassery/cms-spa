@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-system-config-navigation',
@@ -7,13 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SystemConfigNavigationComponent implements OnInit {
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  
-
+export class SystemConfigNavigationComponent {
+  public formUiStyle: UIFormStyle = new UIFormStyle();
 }

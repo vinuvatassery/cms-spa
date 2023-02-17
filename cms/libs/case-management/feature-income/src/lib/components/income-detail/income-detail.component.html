@@ -161,12 +161,13 @@
             (click)="closeIncomeDetailPoup()">
             Cancel
           </button>
-          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income">  {{ isEditValue ? 'Update' : 'Add ' }}</button>
+          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income"
+          [disabled]="btnDisabled">  {{ isEditValue ? 'Update' : 'Add ' }}</button>
         </div>
       </div>
     </kendo-dialog-actions>
   </form>
-  <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete Income">
+  <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete income source">
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"

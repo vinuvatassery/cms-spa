@@ -28,7 +28,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
    //textboxDisable:boolean=true;
    disablePronouns:any;
 
-     /** Construtor **/
+     /** Constructor **/
    constructor(
      private readonly formBuilder: FormBuilder,
      private readonly cdr: ChangeDetectorRef,
@@ -70,7 +70,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
           if(applicantInfo.clientPronounList !== null && applicantInfo.clientPronounList !== undefined
           && applicantInfo.clientPronounList.length>0){
             this.assignPronounModelToForm(applicantInfo.clientPronounList);
-            var nonDisablePronouns =  applicantInfo.clientPronounList.filter((x:any)=>x.clientPronounCode === PronounCode.dontKnow|| x.clientPronounCode === PronounCode.dontWant)
+            const nonDisablePronouns =  applicantInfo.clientPronounList.filter((x:any)=>x.clientPronounCode === PronounCode.dontKnow|| x.clientPronounCode === PronounCode.dontWant)
             if(nonDisablePronouns.length>0){
               this.enableDisablePronoun(true, nonDisablePronouns[0].clientPronounCode);
             }

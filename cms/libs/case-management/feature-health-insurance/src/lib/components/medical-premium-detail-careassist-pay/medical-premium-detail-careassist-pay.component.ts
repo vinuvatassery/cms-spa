@@ -13,7 +13,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() sameAsInsuranceIdFlag!: boolean;
-  @Input() ddlInsuranceType: string='';
+  @Input() ddlInsuranceType: string = '';
   @Input() clientId: any;
 
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
@@ -24,7 +24,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
     public readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder
   ) {
-    this.healthInsuranceForm = this.formBuilder.group({ });
+    this.healthInsuranceForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
@@ -35,7 +35,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.sameAsInsuranceIdFlag = true;
-      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(this.healthInsuranceForm.controls['insuranceIdNumber'].value );
+      this.healthInsuranceForm.controls['paymentIdNbr'].setValue(this.healthInsuranceForm.controls['insuranceIdNumber'].value);
     }
     else {
       this.sameAsInsuranceIdFlag = false;
@@ -43,7 +43,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
     }
   }
   restrictSpecialChar(event: any) {
-    var status = ((event.charCode > 64 && event.charCode < 91) ||
+    const status = ((event.charCode > 64 && event.charCode < 91) ||
       (event.charCode > 96 && event.charCode < 123) ||
       event.charCode == 8 || event.charCode == 32 ||
       (event.charCode >= 48 && event.charCode <= 57) ||

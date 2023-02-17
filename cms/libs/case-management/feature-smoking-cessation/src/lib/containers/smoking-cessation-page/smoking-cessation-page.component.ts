@@ -1,12 +1,12 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit,   ChangeDetectorRef, AfterViewInit, } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef, AfterViewInit, } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CaseFacade, CompletionChecklist, StatusFlag, SmokingCessation, YesNoFlag, ClientFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CompletionChecklist, StatusFlag, SmokingCessation, YesNoFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
@@ -46,19 +46,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     private workflowFacade: WorkflowFacade,
     private smokingCessationFacade: SmokingCessationFacade,
     private route: ActivatedRoute,
-    private caseFacad: CaseFacade,
     private loaderService: LoaderService,
     private loggingService: LoggingService,
     private changeDetector: ChangeDetectorRef,
-    private router:Router
   ) {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.buildForm();
     this.loadSessionData();
-    this.tareaVariablesIntiation();
+    this.tAreaVariablesInitiation();
     this.addSaveSubscription();
     this.smokingCessationFormChanged();
     this.addSaveForLaterSubscription();
@@ -72,17 +70,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     this.saveForLaterValidationSubscription.unsubscribe();
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.workflowFacade.enableSaveButton();
-    
-  } 
+
+  }
 
   loadSessionData() {
-    
+
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-      .subscribe((session: any) => { 
+      .subscribe((session: any) => {
         this.smokingCessationForm.controls["changeDetect"].setValue('changed'); // added just to detect changes in the screen.
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
@@ -94,9 +92,9 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   /** Private methods **/
   public buildForm() {
     this.smokingCessationForm = new FormGroup({
-      smokingCessation: new FormControl('',[]),
-      smokingCessationNote: new FormControl('',[]),
-      changeDetect:new FormControl({ value: '', disabled : true },[]),
+      smokingCessation: new FormControl('', []),
+      smokingCessationNote: new FormControl('', []),
+      changeDetect: new FormControl({ value: '', disabled: true }, []),
     });
   }
 
@@ -138,7 +136,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
       .subscribe(([prev, curr]: [any, any]) => {
         this.updateFormCompleteCount(prev, curr);
       });
-      this.changeDetector.detectChanges();
+    this.changeDetector.detectChanges();
   }
 
   private addSaveSubscription(): void {
@@ -169,25 +167,21 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     }
     return of(false)
   }
- 
-  public validate()  { 
+
+  public validate() {
     this.smokingCessationForm.markAllAsTouched();
     this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]);
-    this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity(); 
+    this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity();
     if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.Yes) {
-      this.smokingCessationForm.controls["smokingCessationNote"].setValidators([Validators.required]);
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity();
       this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.Yes;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.Yes;
       this.smokingCessation.smokingCessationNote = this.smokingCessationForm.value.smokingCessationNote;
     }
     else if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.No) {
-      this.smokingCessationForm.controls["smokingCessationNote"].clearValidators();
-      this.smokingCessationForm.controls['smokingCessationNote'].updateValueAndValidity();
       this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.No;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.No;
       this.smokingCessation.smokingCessationNote = '';
-    } 
+    }
   }
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
@@ -200,7 +194,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
           };
           completedDataPoints.push(item);
         }
-      }      
+      }
     });
 
     if (completedDataPoints.length > 0) {
@@ -209,7 +203,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   }
 
 
-  private tareaVariablesIntiation() {
+  private tAreaVariablesInitiation() {
     this.tareaCessationCharachtersCount = this.tareaCessationNote
       ? this.tareaCessationNote.length
       : 0;
@@ -217,7 +211,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   }
 
   /** Internal event methods **/
- 
+
   /** Public methods **/
   onTareaCessationValueChange(event: any): void {
     this.tareaCessationCharachtersCount = event.length;
@@ -257,17 +251,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     });
   }
 
-  private adjustDataAttribute(isRequired:boolean) {
-      const data: CompletionChecklist = {
-        dataPointName: 'smokingCessationNote_Required',
-        status: isRequired ? StatusFlag.Yes : StatusFlag.No
-      };
+  private adjustDataAttribute(isRequired: boolean) {
+    const data: CompletionChecklist = {
+      dataPointName: 'smokingCessationNote_Required',
+      status: StatusFlag.No
+    };
 
-      this.workflowFacade.updateBasedOnDtAttrChecklist([data]);  
-      this.updateInitialWorkflowChecklist();
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+    this.updateInitialWorkflowChecklist();
   }
 
-  private updateInitialWorkflowChecklist(){
+  private updateInitialWorkflowChecklist() {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.smokingCessationForm.controls).forEach(key => {
       if (this.smokingCessationForm?.get(key)?.value) {
