@@ -11,7 +11,7 @@ import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag, TransGend
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, LovType } from '@cms/system-config/domain';
 
 import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
  
@@ -199,10 +199,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
     if (Array.isArray(Race)) {
       Race.forEach((el: any) => {
-        if (el.lovCode !== 'NOT_LISTED')
-          this.raceAndEthnicityPrimaryData.push(el);
-        else
+        this.raceAndEthnicityPrimaryData.push(el);
+        if (el.lovCode === LovType.EthnicityNotListed){
           this.raceAndEthnicityPrimaryNotListed = true;
+        }
       });
     }
 
@@ -210,7 +210,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.raceAndEthnicityPrimaryData=[...this.raceAndEthnicityPrimaryData,...this.otherEthnicityList]
     }
 
-    if (this.raceAndEthnicityPrimaryData.length == 1 || this.raceAndEthnicityPrimaryNotListed) {
+    if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
       this.updateAdjustAttribute('RaceAndEthnicityPrimaryAdjust', StatusFlag.No);
