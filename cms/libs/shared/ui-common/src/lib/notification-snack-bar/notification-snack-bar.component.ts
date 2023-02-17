@@ -66,8 +66,8 @@ export class NotificationSnackBarComponent implements OnInit {
    const divMessage = document.getElementsByClassName("k-notification-container ng-star-inserted");
    if(divMessage.length > 0)
      {    
-      var currentMessgae = divMessage.item(0);
-      currentMessgae?.remove(); 
+      let currentMessage = divMessage.item(0);
+      currentMessage?.remove(); 
     }
    }
 

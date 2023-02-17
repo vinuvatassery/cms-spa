@@ -19,6 +19,8 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   @Input() currentClientInfo: any = {};
   @Input() matchingClientInfo: any = {};
+ 
+  duplicateBtnDisabled = false;
 
   @Output() closeModalClick = new EventEmitter<any>();
   ssn: string = '';
@@ -42,6 +44,7 @@ export class DuplicateClientFoundComponent implements OnInit {
   }
 
   onDuplicateFoundClick() {
+    this.duplicateBtnDisabled = true;
     this.loaderService.show();
     this.caseFacade.updateCaseStatus(this.currentClientInfo.clientCaseId, CaseStatusCode.canceled).subscribe({
       next: (response: any) => {
@@ -53,6 +56,7 @@ export class DuplicateClientFoundComponent implements OnInit {
         this.loaderService.hide();
         this.loggingService.logException(err);
         this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        this.duplicateBtnDisabled = false;
       }
     })
   }

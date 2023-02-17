@@ -1,9 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
@@ -14,7 +12,7 @@ import {  LovFacade } from '@cms/system-config/domain';
   templateUrl: './medical-premium-detail-insurance-plan-name.component.html',
   styleUrls: ['./medical-premium-detail-insurance-plan-name.component.scss'],
 })
-export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
+export class MedicalPremiumDetailInsurancePlanNameComponent {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() insurancePlans: Array<any> = [];
@@ -31,8 +29,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,private readonly lovFacade: LovFacade) {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
   }
-
-  ngOnInit(): void { }
   
   public addNewInsurancePlanClose(): void {
     this.isaddNewInsurancePlanOpen = false;

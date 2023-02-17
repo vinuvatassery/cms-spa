@@ -39,7 +39,7 @@
             <button (click)=" onNotaDuplicateClick()" aria-label="Not a Duplicate" kendoButton [primary]="true" look="outline">
                 Not a Duplicate
             </button>
-            <button (click)="onDuplicateFoundClick()" aria-label="Duplicate Found" kendoButton [primary]="true">
+            <button (click)="onDuplicateFoundClick()" [disabled]="duplicateBtnDisabled" aria-label="Duplicate Found" kendoButton [primary]="true">
                 Duplicate Found
             </button>
         </div>

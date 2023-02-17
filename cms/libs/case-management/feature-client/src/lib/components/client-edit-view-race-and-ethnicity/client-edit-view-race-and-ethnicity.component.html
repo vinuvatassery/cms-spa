@@ -9,12 +9,7 @@
           text="Ethnic Identity"
           class="k-multiselect-wrapper"
         >
-          <span
-            unselectable="on"
-            class="k-button-icon k-icon k-i-arrow-s multi-dropdown-icon"
-            aria-label="dropdown arrow"
-            aria-hidden="true"
-          ></span>
+        
 
           <kendo-dropdownlist
           aria-label="Ethnic Identity"
@@ -70,13 +65,14 @@
               class="k-button-icon k-icon k-i-arrow-s multi-dropdown-icon"
               aria-label="dropdown arrow"
               aria-hidden="true"
+              (click)="racialidentity.toggle()"
             ></span>
 
             <kendo-multiselect
               aria-label="Racial Identity"
               [checkboxes]="{ checkOnClick: true, enabled: true }"
               formControlName="RaceAndEthnicity"
-              #multiselect
+              #racialidentity
               [autoClose]="false"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="raceAndEthnicityData"

@@ -43,9 +43,6 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadDdlMedicalHealthPlanPriority();
-    if (this.gridList.length > 3) {
-      this.gridList.length = 3;
-    }
     this.gridList.forEach((row: any) => {
       this.form.addControl(
         row.clientInsurancePolicyId,
@@ -87,13 +84,12 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       const primeryStartDate2 = new Date(primarySelections[1].startDate);
       const primeryEndDate2 = new Date(primarySelections[1].endDate);
       if (this.dateRangeOverlaps(primeryStartDate, primeryEndDate, primeryStartDate2, primeryEndDate2)) {
-        this.notificationSnackbarService.errorSnackBar(errorMessage);
-        this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
-        insurance.priorityCode = null;
-        return;
+       const previousControl=primarySelections.find((m:any)=>m.clientInsurancePolicyId!==insurance.clientInsurancePolicyId);
+        this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
+        return true;
       }
     }
-
+    return false;
   }
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
     if (aStart <= bStart && bStart <= aEnd) return true;
@@ -106,8 +102,6 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   }
 
   prioritySave() {
-    this.formSubmitted = true;
-    if (!this.form.valid) return;
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
@@ -118,10 +112,6 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
 
     if (multiplePrimarySelection.length > 0) {
       primaryExist = true;
-      // if (multiplePrimarySelection.length > 1) {
-      //   this.notificationSnackbarService.errorSnackBar('Multiple Primary Insurance is selected');
-      //   return;
-      // }
     }
     if (!primaryExist) {
       this.notificationSnackbarService.errorSnackBar('A Primary Insurance is required');
@@ -130,10 +120,6 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     const multipleSecondarySelection = this.gridList.filter((m: any) => m.priorityCode === PriorityCode.Secondary);
     if (multipleSecondarySelection.length > 0) {
       secondaryExist = true;
-      // if (multipleSecondarySelection.length > 1) {
-      //   this.notificationSnackbarService.errorSnackBar('Multiple Secondary Insurance is selected');
-      //   return;
-      // }
     }
     if (tertiaryExist && !secondaryExist) {
       this.notificationSnackbarService.errorSnackBar('A Tertiary Insurance cannot be created if there is no Secondary Insurance');

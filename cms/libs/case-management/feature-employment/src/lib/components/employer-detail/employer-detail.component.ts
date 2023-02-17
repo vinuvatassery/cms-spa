@@ -25,6 +25,7 @@ export class EmployerDetailComponent implements OnInit{
   clientCaseId: any;
   clientCaseEligibilityId: any;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  btnDisabled = false;
   /** Input properties **/
   @Input() isAdd = true;
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
@@ -112,6 +113,7 @@ export class EmployerDetailComponent implements OnInit{
             this.employer.dateOfHire = new Date( this.intl.formatDate(this.empDetailsForm.controls['empHireDate'].value,this.dateFormat));
           
             if (this.employer) {
+              this.btnDisabled = true
               this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
               this.employmentFacade.showLoader();
               this.employerFormSubmitted = false;
@@ -125,6 +127,7 @@ export class EmployerDetailComponent implements OnInit{
                     this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer added successfully') ;  
                   },
                   error: (err) => { 
+                    this.btnDisabled = false
                     this.employmentFacade.hideLoader();
                     this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
                   },
@@ -140,6 +143,7 @@ export class EmployerDetailComponent implements OnInit{
                     this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer updated successfully') ;  
                   },
                   error: (err) => {
+                    this.btnDisabled = false
                     this.employmentFacade.hideLoader(); 
                     this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
                   },

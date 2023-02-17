@@ -378,10 +378,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private formatPhoneNumber(phoneNumberString: string) {
-    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-    var match = cleaned?.match(/^(1)?(\d{3})(\d{3})(\d{4})$/);
+    const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    const match = cleaned?.match(/^(1)?(\d{3})(\d{3})(\d{4})$/);
     if (match) {
-      var intlCode = (match[1] ? '+1 ' : '');
+      const intlCode = (match[1] ? '+1 ' : '');
       return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
     }
     return '';
@@ -1185,7 +1185,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setAddress(address: MailAddress | undefined, type: AddressTypeCode) {
     if (!address) return;
-    var selectedAddress: ClientAddress = {
+    const selectedAddress: ClientAddress = {
       address1: address?.address1 == '' ? address?.address2 : address?.address1,
       address2: address?.address1 == '' ? '' : address?.address2,
       city: address?.city,
@@ -1198,10 +1198,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     else if (type === AddressTypeCode.Home) {
       this.homeAddressEntered = address;
-      var sameAsFlag = this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value;
-      var homelessFlag = this.contactInfoForm?.get('homeAddress.homelessFlag')?.value;
-      var noHomeAddressProofFlag = this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value;
-      var housingStabilityCode = this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.value;
+      const sameAsFlag = this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value;
+      const homelessFlag = this.contactInfoForm?.get('homeAddress.homelessFlag')?.value;
+      const noHomeAddressProofFlag = this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value;
+      const housingStabilityCode = this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.value;
       const homeAddress: any = {
         address1: selectedAddress?.address1,
         address2: selectedAddress?.address2,
@@ -1395,7 +1395,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   uploadEventHandler(e: SelectEvent) {
     if (this.uploadedHomeAddressProof) {
-      var document: ClientDocument = {
+      const document: ClientDocument = {
         clientId: this.workflowFacade.clientId,
         clientCaseId: this.workflowFacade.clientCaseId,
         clientCaseEligibilityId: this.workflowFacade.clientCaseEligibilityId,

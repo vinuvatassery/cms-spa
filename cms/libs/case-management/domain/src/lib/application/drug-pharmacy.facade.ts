@@ -186,7 +186,7 @@ export class DrugPharmacyFacade {
   }
 
   addClientPharmacy(clientId: number, vendorId: string) {
-    var model = {
+    const model = {
       vendorId: vendorId,      
     };
 
@@ -210,7 +210,7 @@ export class DrugPharmacyFacade {
   }
 
   editClientPharmacy(clientId: number, clientPharmacyId: string, vendorId?: string) {
-    var model = {
+    const model = {
       vendorId: vendorId     
     };
     this.loaderService.show();

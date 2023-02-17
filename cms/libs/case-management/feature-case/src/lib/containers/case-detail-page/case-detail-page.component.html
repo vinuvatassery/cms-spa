@@ -150,6 +150,6 @@
   </kendo-dialog-actions>
 </kendo-dialog>
 
-<!-- Send New Letter Modal -->
-<case-management-send-letter *ngIf="isShowSendNewLetterPopup" [data]="ScreenName"
-  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"></case-management-send-letter>
+    <!-- Send New Email Modal -->
+<case-management-send-email *ngIf="isShowSendNewLetterPopup" [data]="ScreenName"
+(closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
