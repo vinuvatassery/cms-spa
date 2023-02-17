@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,  } from '@angular/core';
+import { Component, Input,  } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   templateUrl: './medical-premium-detail-group-plan-type.component.html',
   styleUrls: ['./medical-premium-detail-group-plan-type.component.scss'],
 })
-export class MedicalPremiumDetailGroupPlanTypeComponent implements OnInit {
+export class MedicalPremiumDetailGroupPlanTypeComponent{
   @Input() isViewContentEditable!: boolean;
   @Input() healthInsuranceForm: FormGroup;
   constructor(
@@ -14,6 +14,4 @@ export class MedicalPremiumDetailGroupPlanTypeComponent implements OnInit {
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
-
-  ngOnInit(): void {}
 }

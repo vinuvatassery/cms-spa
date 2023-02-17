@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -6,7 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   templateUrl: './medical-premium-detail-client-policy-holder.component.html',
   styleUrls: ['./medical-premium-detail-client-policy-holder.component.scss'],
 })
-export class MedicalPremiumDetailClientPolicyHolderComponent implements OnInit {
+export class MedicalPremiumDetailClientPolicyHolderComponent {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   policyHolderInputMaxLength:number=40;
@@ -15,7 +15,5 @@ export class MedicalPremiumDetailClientPolicyHolderComponent implements OnInit {
     private readonly formBuilder: FormBuilder
   ) {
     this.healthInsuranceForm = this.formBuilder.group({ });
-  }
-
-  ngOnInit(): void {}
+  } 
 }

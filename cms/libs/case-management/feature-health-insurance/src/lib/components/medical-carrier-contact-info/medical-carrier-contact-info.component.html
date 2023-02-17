@@ -26,4 +26,8 @@
             <p>{{ carrierContactInfo.contactName }}</p>
             <p>{{ carrierContactInfo.phoneNbr | phone}}</p>
           </div>
+          <div class="block-section mt-2" *ngIf="insurancePlan">
+            <p class="bold-text">Summary of Benifits:</p>
+            <p>{{insurancePlan}}</p>
+          </div>
         </div>

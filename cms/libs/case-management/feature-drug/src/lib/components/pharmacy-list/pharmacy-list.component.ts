@@ -87,7 +87,7 @@ export class PharmacyListComponent implements OnInit {
   ];
 
    /** Private properties **/
-  clientPharmacyCount!:Number;
+  clientPharmacyCount!:number;
 
   /** Constructor **/
   constructor() {

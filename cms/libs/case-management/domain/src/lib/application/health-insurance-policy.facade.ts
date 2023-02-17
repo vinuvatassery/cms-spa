@@ -193,7 +193,7 @@ export class HealthInsurancePolicyFacade {
             total: medicalHealthPlansResponse?.totalCount,
           };
           this.updateWorkflowCount('insurance_plans',  medicalHealthPlansResponse?.totalCount > 0);
-          if(medicalHealthPlansResponse?.clientInsurancePolicies.length > 1 && medicalHealthPlansResponse?.clientInsurancePolicies.length <= 3){
+          if(medicalHealthPlansResponse?.clientInsurancePolicies.length > 1){
             this.triggerPriorityPopupSubject.next(true);
           }
           else
@@ -218,7 +218,7 @@ export class HealthInsurancePolicyFacade {
     this.workflowFacade.updateChecklist(dataPoint);
   }
   private formDataAppendObject(fd: FormData, obj: any, key?: any) {
-    var i, k;
+    let i, k;
     for (i in obj) {
       k = key ? key + '[' + i + ']' : i;
       if (obj[i] instanceof File) {

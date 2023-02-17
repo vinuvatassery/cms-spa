@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** External libraries **/
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BreadCrumbItem } from '@progress/kendo-angular-navigation';
@@ -11,7 +11,7 @@ import { filter, Subscription, BehaviorSubject } from 'rxjs';
   styleUrls: ['./bread-crumb.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BreadCrumbComponent implements OnInit {
+export class BreadCrumbComponent {
   private routesData!: Subscription;
   private readonly breadcrumbsSubject = new BehaviorSubject<any[]>([]);
   readonly breadcrumbs$ = this.breadcrumbsSubject.asObservable();
@@ -20,8 +20,6 @@ export class BreadCrumbComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     this.initRoutes();
   }
-
-  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.routesData.unsubscribe();

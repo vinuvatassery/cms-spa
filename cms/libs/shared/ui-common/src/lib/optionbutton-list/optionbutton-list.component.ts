@@ -1,4 +1,4 @@
-import { Component, OnInit,Input,OnChanges, Output, EventEmitter  } from '@angular/core';
+import { Component, OnInit,Input,Output, EventEmitter  } from '@angular/core';
 import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -11,7 +11,7 @@ import { MaterialFormat } from '../enums/material-format.enum';
   templateUrl: './optionbutton-list.component.html',
   styleUrls: ['./optionbutton-list.component.scss'],
 })
-export class OptionbuttonListComponent implements OnInit,OnChanges {
+export class OptionbuttonListComponent implements OnInit {
 
      /** Input properties **/
   @Input() appInfoForm: FormGroup;
@@ -54,8 +54,6 @@ export class OptionbuttonListComponent implements OnInit,OnChanges {
       /** Lifecycle hooks **/
   ngOnInit(): void {
     this.textFieldDisable = true;
-  }
-  ngOnChanges(): void {
   }
 
   private updateDataPointCount(isCompleted:boolean){

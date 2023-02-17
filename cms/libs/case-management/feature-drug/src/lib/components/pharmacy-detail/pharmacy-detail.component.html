@@ -83,7 +83,7 @@
       kendoButton 
       [primary]="true" 
       aria-label="add or update pharmacy"
-      (click)="addOrEditPharmacy()"
+      (click)="addOrEditPharmacy()" [disabled]="btnDisabled"
       >
         {{ isEditPharmacy ? 'Update' : 'Add' }}
       </button>
