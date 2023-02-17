@@ -7,8 +7,10 @@ import { InsurancePlanDataService } from '../infrastructure/insurance-plan.data.
 export class InsurancePlanFacade {
 
      /** Public properties **/
-     carrierNameChangeSubject = new Subject<string>();
-     carrierNameChange$ = this.carrierNameChangeSubject.asObservable();
+     planLoaderSubject = new Subject<boolean>();
+     planLoaderChange$ = this.planLoaderSubject.asObservable();
+     planNameChangeSubject = new Subject<any[]>();
+     planNameChange$ = this.planNameChangeSubject.asObservable();
      constructor(private readonly insurancePlanDataService:InsurancePlanDataService){}
 
 

@@ -7,7 +7,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges,
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
@@ -248,6 +247,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
       healthInsurancePolicy.insuranceCarrierId
     );
+    //this.insurancePlanFacade.carrierNameChangeSubject.next(healthInsurancePolicy.insuranceCarrierId);
     if (healthInsurancePolicy.insuranceCarrierId) {
       this.insuranceCarrierNameChange(healthInsurancePolicy.insuranceCarrierId);
     }
@@ -986,8 +986,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       );
     }
   }
-  insuranceCarrierNameChange(value: string) {   
-    this.insurancePlanFacade.carrierNameChangeSubject.next(value);
+  insuranceCarrierNameChange(value: string) {  
+    this.insurancePlanFacade.planLoaderSubject.next(true);
+    this.insurancePlans=[];
+    this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe({
+      next: (data: any) => {      
+        this.insurancePlanFacade.planNameChangeSubject.next(data);
+      },
+      error: (err) => {
+        this.insurancePlanFacade.planLoaderSubject.next(false);  
+        this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      }
+    });
     this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
       next: (data) => {
         this.carrierContactInfo = data;

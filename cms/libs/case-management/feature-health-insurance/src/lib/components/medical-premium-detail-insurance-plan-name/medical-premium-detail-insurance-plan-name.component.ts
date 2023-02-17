@@ -18,11 +18,9 @@ import { SnackBarNotificationType, ConfigurationProvider, LoggingService, Notifi
 export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
-  insurancePlans :any;
-  //@Input() dropdownInutLov :any;
-  insurancePlansLoader: boolean = false;
+  @Input() insurancePlans :any;
+  insurancePlansLoader: boolean = true;
   insurancePlan:Array<any> = [];
-  insurancePlanLoader:boolean= false;
 
   
   public isaddNewInsurancePlanOpen = false;
@@ -50,24 +48,24 @@ export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
     this.isaddNewInsurancePlanOpen = true;
   }
   private loadInsurancePlans(){   
-    this.insurancePlanFacade.carrierNameChange$.subscribe((value) => {
-      this.insurancePlans = [];
-        this.insurancePlansLoader = true;
-        this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe({
-          next: (data: any) => {
-            this.insurancePlansLoader = false; 
-            this.insurancePlans = data;
+    this.insurancePlanFacade.planLoaderChange$.subscribe((data)=>{
+      this.insurancePlansLoader = data;
+      this.changeDetector.detectChanges();     
+    })
+    this.insurancePlanFacade.planNameChange$.subscribe({          
+           next: (data: any) => {
+            debugger;
+             this.insurancePlansLoader = false; 
+             this.insurancePlans = data;
             this.changeDetector.detectChanges();       
-          },
+           },
           error: (err) => {
             this.insurancePlansLoader = false;           
             this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             this.loggingService.logException(err);
             this.changeDetector.detectChanges();
           }
-        });
-    });
-  
+         });
     }
 
 }
