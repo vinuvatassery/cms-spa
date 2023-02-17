@@ -1,15 +1,12 @@
 /** Angular **/
-import { AfterViewInit, OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, OnDestroy,ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
-/** Facades **/
-import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist } from '@cms/case-management/domain';
-/** Enums **/
-import {  NavigationType } from '@cms/case-management/domain';
 
+/** Internal libraries **/
+import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
 import {LovFacade } from '@cms/system-config/domain' 
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -118,8 +115,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private loadDependentsStatus() : void {    
       this.familyAndDependentFacade.loadDependentsStatus(this.clientCaseEligibilityId);
       this.checkBoxSubscription= 
-      this.dependentStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-    ((x: boolean)=>
+      this.dependentStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe((x: boolean)=>
     {               
       this.isFamilyGridDisplay = x
      
@@ -231,20 +227,13 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.save()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if(statusResponse){
-          this.workflowFacade.showSendEmailLetterPopup(true);
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      this.save().subscribe((response: any) => {
+        if (response) {
+          this.loaderService.hide();
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
         }
-        else{
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-        }
-      }
+      })
     });
   }
 

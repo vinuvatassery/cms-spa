@@ -24,9 +24,9 @@ export class PrescriptionDrugFacade {
 
   updatePrescriptionDrug(prescriptionDrug: any): Observable<any> {
     const formData: any = new FormData();
-    for (var key in prescriptionDrug) {
+    for (let key in prescriptionDrug) {
       if (typeof prescriptionDrug[key] == 'object') {
-        for (var childKey in prescriptionDrug[key]) {
+        for (let childKey in prescriptionDrug[key]) {
           formData.append(`${key}[${childKey}]`, prescriptionDrug[key][childKey]);
         }
       }
@@ -44,7 +44,7 @@ export class PrescriptionDrugFacade {
     );
   }
 
-  loadPrescriptionDrug(clientId: Number, clientCaseEligibilityId: any) {
+  loadPrescriptionDrug(clientId: number, clientCaseEligibilityId: any) {
     return this.prescriptionDrugDataService.loadPrescriptionDrug(clientId, clientCaseEligibilityId);
   }
 }

@@ -84,6 +84,7 @@ export * from './lib/enums/material-format.enum';
 export * from './lib/enums/states-in-usa.enum';
 export * from './lib/enums/review-question-code.enum';
 export * from './lib/enums/question-type-code.enum';
+export * from './lib/enums/trans-gender-code.enum';
 
 
 /** Data services **/
@@ -134,7 +135,6 @@ export * from './lib/application/drug-pharmacy.facade';
 export * from './lib/application/employment.facade';
 export * from './lib/application/eligibility-period.facade';
 export * from './lib/application/family-and-dependent.facade';
-export * from './lib/application/health-insurance.facade';
 export * from './lib/application/healthcare-provider.facade';
 export * from './lib/application/income.facade';
 export * from './lib/application/management.facade';

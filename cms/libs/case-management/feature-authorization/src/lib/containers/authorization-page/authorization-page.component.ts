@@ -7,4 +7,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./authorization-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthorizationPageComponent {}
+export class AuthorizationPageComponent {
+  btnDisabled = false; 
+}

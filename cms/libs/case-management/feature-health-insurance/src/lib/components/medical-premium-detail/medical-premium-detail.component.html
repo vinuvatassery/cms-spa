@@ -7,10 +7,10 @@
     }}
   </p>
   <div [formGroup]="healthInsuranceForm">
-    
+
     <div class="flex-row">
       <div class="flex-col">
-       
+
         <kendo-floatinglabel text="Health Insurance Type">
           <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
@@ -113,7 +113,7 @@
                   <a>{{ files[0].name }} </a>
                 </button>
                 <br>
-                <span>{{files[0].size}}</span>
+                <span>{{files[0].size | fileSize}}</span>
               </span>
             </ng-template>
           </kendo-upload>
@@ -186,30 +186,9 @@
             [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit"
             [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
         </div>
-        <div class="flex-col mt-3"
+        <div
           *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && healthInsuranceForm.controls['insuranceCarrierName'].value">
-          <h5 class="text-capital">Insurance Carrier Contact Info</h5>
-          <div class="block-section">
-            <p class="bold-text">Address</p>
-            <p>{{ carrierContactInfo.address1}}</p>
-            <p>{{ carrierContactInfo.address2}}</p>
-            <p>{{ carrierContactInfo.cityCode}}</p>
-            <p>{{ carrierContactInfo.stateCode}}</p>
-            <p>{{ carrierContactInfo.zip}}</p>
-          </div>
-          <div class="block-section mt-2">
-            <p class="bold-text">Tax ID Number (TIN)</p>
-            <p>{{ carrierContactInfo.tin | ssn}}</p>
-          </div>
-          <div class="block-section mt-2">
-            <p class="bold-text">Mail Code</p>
-            <p>{{ carrierContactInfo.mailCode }}</p>
-          </div>
-          <div class="block-section mt-2">
-            <p class="bold-text">Contact Name and Phone</p>
-            <p>{{ carrierContactInfo.contactName }}</p>
-            <p>{{ carrierContactInfo.phoneNbr | phone}}</p>
-          </div>
+          <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo"></case-management-medical-carrier-contact-info>
         </div>
         <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
           <case-management-medical-premium-detail-group-plan-type [healthInsuranceForm]="healthInsuranceForm"
@@ -277,7 +256,7 @@
                 <a>{{ files[0].name }} </a>
               </button>
               <br>
-              <span>{{files[0].size}}</span>
+              <span>{{files[0].size | fileSize}}</span>
             </span>
           </ng-template>
         </kendo-upload>
@@ -306,7 +285,7 @@
                 <a>{{ files[0].name }} </a>
               </button>
               <br>
-              <span>{{files[0].size}}</span>
+              <span>{{files[0].size | fileSize}}</span>
             </span>
           </ng-template>
         </kendo-upload>
@@ -339,7 +318,7 @@
         Cancel
       </button>
       <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" aria-label="add new medical premium"
-        (click)="save()">
+        (click)="save()" [disabled]="btnDisabled">
         {{buttonText}}
       </button>
       <button kendoButton [primary]="true" *ngIf="isEditViewPopup" (click)="onModalCloseClicked()"

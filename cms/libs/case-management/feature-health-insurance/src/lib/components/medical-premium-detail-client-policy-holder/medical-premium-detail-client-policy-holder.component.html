@@ -14,7 +14,7 @@
         <kendo-formerror *ngIf="!healthInsuranceForm.controls['isClientPolicyHolderFlag'].valid && isViewContentEditable==false">	A Response is Required.</kendo-formerror>
     </div>
 
-    <div class="flex-row pl-3 mt-2">
+    <div class="flex-row pl-3 mt-2" *ngIf="healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'">
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">
             <kendo-textbox [disabled]="isViewContentEditable" aria-label="First Name" placeholder="First Name"

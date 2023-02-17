@@ -87,9 +87,9 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
         if(applicantInfo.clientGenderList !== null && applicantInfo.clientGenderList !== undefined
         && applicantInfo.clientGenderList.length>0){
           this.assignGenderModelToForm(applicantInfo.clientGenderList);
-          var otherGeder =  applicantInfo.clientGenderList.filter((x:any)=>x.clientGenderCode === GenderCode.dontKnow|| x.clientGenderCode === GenderCode.dontKnowAnswer || x.clientGenderCode === GenderCode.dontKnowQustion)
-          if(otherGeder.length>0){
-            this.enableDisableGender(true, otherGeder[0].clientGenderCode);
+          const otherGender =  applicantInfo.clientGenderList.filter((x:any)=>x.clientGenderCode === GenderCode.dontKnow|| x.clientGenderCode === GenderCode.dontKnowAnswer || x.clientGenderCode === GenderCode.dontKnowQustion)
+          if(otherGender.length>0){
+            this.enableDisableGender(true, otherGender[0].clientGenderCode);
           }
           this.updateWorkflowCount(true);
         }        

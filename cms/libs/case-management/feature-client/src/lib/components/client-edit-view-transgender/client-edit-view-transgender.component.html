@@ -1,14 +1,14 @@
 <section [formGroup]="appInfoForm">
-  
+
   <fieldset class="k-form-fieldset">
-    <legend class="k-form-legend">    
+    <legend class="k-form-legend">
       <h5 class="mt-3">Are they transgender?</h5>
-</legend>
-  <div class="component-list-h">
-    <span *ngFor="let gender of Transgenders; let i = index">
-      <div class="flex-row">
-        <div class="flex-col flex-col-12">
-          <span class="app-radiobtnwidtext-wrapper">
+    </legend>
+    <div class="component-list-h">
+      <span *ngFor="let gender of Transgenders; let i = index">
+        <div class="flex-row">
+          <div class="flex-col flex-col-12">
+            <span class="app-radiobtnwidtext-wrapper">
             <input
               type="radio"
               kendoRadioButton
@@ -25,9 +25,9 @@
               for="trans{{ gender.lovCode }}"
               text="{{ gender.lovDesc }}"
             ></kendo-label>
-            <div class="flex-row" *ngIf="gender.lovCode === 'NOT_LISTED'">
-              <div class="flex-col flex-col-6">
-              <kendo-floatinglabel text="Enter Answer">
+              <div class="flex-row" *ngIf="gender.lovCode === 'NOT_LISTED'">
+                <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Enter Answer">
                 <kendo-textbox
                   aria-label="Enter Answer"
                   [fillMode]="formUiStyle.inputFillMode"
@@ -38,18 +38,30 @@
                   placeholder="Enter Answer"
                   (blur)="descriptionChange()" 
                 ></kendo-textbox>
-              </kendo-floatinglabel>
+                  </kendo-floatinglabel>
               <kendo-formerror
                 *ngIf="!appInfoForm.controls[DescriptionField].valid"
                 >Are they transgender is required.</kendo-formerror
               >
+                </div>
               </div>
-            </div>
-          </span>
+              <span *ngIf="gender.lovCode === 'YES' && appInfoForm.controls['Transgender'].value == 'YES'">
+                <div class="flex-row yes-gender-list" *ngFor="let gen of yesGendersList; let i = index">
+                  <div class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton formControlName="yesTransgender" [value]="gen.lovCode"
+                      name="yesTransgender" attr.aria-labelledby="trans{{ gen.lovCode }}" id="trans{{ gen.lovCode }}"/>
+                    <kendo-label class="k-radio-label" for="trans{{ gen.lovCode }}"
+                      text="{{ gen.lovDesc }}"></kendo-label>
+                  </div>
+                </div>
+                  <kendo-formerror *ngIf="!appInfoForm.controls['yesTransgender']?.valid"> At least one Option must be
+                    selected.</kendo-formerror>
+              </span>
+            </span>
+          </div>
         </div>
-      </div>
-    </span>
+      </span>
     <kendo-formerror *ngIf="!appInfoForm.controls['Transgender']?.valid">	At least one Option must be selected.</kendo-formerror>
-  </div>
+    </div>
   </fieldset>
 </section>
