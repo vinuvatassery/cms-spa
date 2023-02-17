@@ -198,11 +198,12 @@ export class IncomeDetailComponent implements OnInit {
       this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value;
   }
   public submitIncomeDetailsForm(): void {
+    debugger;
     this.setValidators();
     if (this.isEditValue) {
       this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
     }
-    if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
+    if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator && !this.proofOfIncomeValidatorSize) {
       let incomeData = this.IncomeDetailsForm.value;
       incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
       incomeData['clientId'] = this.clientId;
