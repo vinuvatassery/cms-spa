@@ -182,7 +182,7 @@ export class ContactDataService {
     if (contactInfo?.homeAddressProof?.document) {
       fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
     }
-    this.FormData_append_object(fd, contactInfo);
+    this.formDataAppendObject(fd, contactInfo);
 
     return this.http.post(this.getUrl(clientId, clientCaseEligibilityId)
       , fd, { reportProgress: true, });
@@ -193,7 +193,7 @@ export class ContactDataService {
     if (contactInfo?.homeAddressProof?.document) {
       fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
     }
-    this.FormData_append_object(fd, contactInfo);
+    this.formDataAppendObject(fd, contactInfo);
 
     return this.http.put(this.getUrl(clientId, clientCaseEligibilityId)
       , fd, { reportProgress: true, });
@@ -213,15 +213,15 @@ export class ContactDataService {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
   }
 
-  FormData_append_object(fd: FormData, obj: any, key?: any) {
-    var i, k;
+  formDataAppendObject(fd: FormData, obj: any, key?: any) {
+    let i, k;
     for (i in obj) {
       k = key ? key + '[' + i + ']' : i;
       if (obj[i] instanceof File) {
         continue;
       }
       else if (typeof obj[i] == 'object') {
-        this.FormData_append_object(fd, obj[i], k);
+        this.formDataAppendObject(fd, obj[i], k);
       }
       else {
         fd.append(k, obj[i]);

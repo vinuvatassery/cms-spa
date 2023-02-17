@@ -64,13 +64,18 @@ export class SignalrService {
   private startConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.configurationProvider.appSettings.signalrHubUrl, {
-        accessTokenFactory: () =>  lastValueFrom(this.oidcSecurityService.getAccessToken())
+        accessTokenFactory: () => lastValueFrom(this.oidcSecurityService.getAccessToken())
       })
       //.withUrl(this.configurationProvider.appSettings.signalrHubUrl)
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (retryContext) => {
           this.notify('AutoReconnect', retryContext.elapsedMilliseconds);
-          return Math.random() * 10000; 
+          const crypto = window.crypto;
+          var array = new Uint32Array(1);
+          crypto.getRandomValues(array); 
+          const randomNum = array[0];
+          return randomNum * 10000;
+
           // if (retryContext.elapsedMilliseconds < 60000) {
           //   // If we've been reconnecting for less than 60 seconds so far,
           //   // wait between 0 and 10 seconds before the next reconnect attempt.

@@ -309,8 +309,8 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
-    var endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
-    var startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
+    const endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
+    const startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
     if(endDate<=startDate && this.IncomeDetailsForm.controls['incomeEndDate'].value ){
       this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({'incorrect':true})
     }
