@@ -198,7 +198,6 @@ export class IncomeDetailComponent implements OnInit {
       this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value;
   }
   public submitIncomeDetailsForm(): void {
-    debugger;
     this.setValidators();
     if (this.isEditValue) {
       this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
