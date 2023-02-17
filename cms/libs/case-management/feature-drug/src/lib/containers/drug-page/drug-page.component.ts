@@ -45,7 +45,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isSummaryOfBenefitsRequired$ = new BehaviorSubject<boolean>(false);
   showDocRequiredValidation = false;
   nonPreferredFlagValidation = false;
-  changeRequestRequirment = true;
   prescriptionInfo = {} as PrescriptionDrug;
 
   /** Private properties **/
