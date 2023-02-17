@@ -413,6 +413,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.prescriptionDrugForm.valid;
   }
   hivFlagSelected(event: Event) {
+    debugger;
     if (
       this.prescriptionDrugForm.controls[
         'prescriptionDrugsForHivCode'
@@ -425,6 +426,16 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
         ?.updateValueAndValidity();
+        if(
+          this.prescriptionDrugForm.controls[
+            'nonPreferredPharmacyCode'
+          ].value.toUpperCase()!=YesNoFlag.Yes.toUpperCase() &&
+        this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].value.toUpperCase()!=YesNoFlag.No.toUpperCase() )
+        {
+          this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
+        }
+       
+        
     } else {
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
