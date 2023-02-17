@@ -986,22 +986,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       );
     }
   }
-  insuranceCarrierNameChange(value: string) {
-    this.insurancePlans = [];
-    if (value === undefined) return;
-    this.insurancePlansLoader = true;
-    this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe({
-      next: (data: any) => {
-        if (!Array.isArray(data)) return;
-        this.insurancePlans = data;
-        this.changeDetector.detectChanges();
-        this.insurancePlansLoader = false;
-      },
-      error: () => {
-        this.insurancePlansLoader = false;
-      }
-    });
-
+  insuranceCarrierNameChange(value: string) {   
+    this.insurancePlanFacade.carrierNameChangeSubject.next(value);
     this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
       next: (data) => {
         this.carrierContactInfo = data;
