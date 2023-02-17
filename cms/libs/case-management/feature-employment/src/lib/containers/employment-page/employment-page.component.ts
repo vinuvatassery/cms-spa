@@ -168,20 +168,13 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.save()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if(statusResponse){
-          this.workflowFacade.showSendEmailLetterPopup(true);
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      this.save().subscribe((response: any) => {
+        if (response) {
+          this.loaderService.hide();
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
         }
-        else{
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-        }
-      }
+      })
     });
   }
 

@@ -16,6 +16,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomeDetailComponent implements OnInit {
+  btnDisabled = false;
   public uploadRemoveUrl = 'removeUrl';
   public uploadedIncomeFile: any[] = [];
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -122,7 +123,13 @@ export class IncomeDetailComponent implements OnInit {
     });
   }
 
-  loadProofOfIncomeTypes() {
+  loadProofOfIncomeTypes(proofIncomeTypeStatus: boolean = false) {
+    if(proofIncomeTypeStatus)
+    {
+      this.IncomeDetailsForm.controls[
+        'proofIncomeTypeCode'
+      ].setValue(null);
+    }
     if (
       this.IncomeDetailsForm.controls['incomeTypeCode'].value != null &&
       this.IncomeDetailsForm.controls['incomeTypeCode'].value != ''
@@ -195,7 +202,7 @@ export class IncomeDetailComponent implements OnInit {
     if (this.isEditValue) {
       this.onProofofIncomeValueChangedUpdated(this.hasNoProofOfIncome);
     }
-    if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator) {
+    if (this.IncomeDetailsForm.valid && !this.proofOfIncomeValidator && !this.proofOfIncomeValidatorSize) {
       let incomeData = this.IncomeDetailsForm.value;
       incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
       incomeData['clientId'] = this.clientId;
@@ -206,8 +213,9 @@ export class IncomeDetailComponent implements OnInit {
       } else {
         incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value == null;
       }
-
+      this.btnDisabled =true;
       if (!this.isEditValue) {
+        
         this.incomeFacade.ShowLoader();
         this.incomeFacade
           .saveClientIncome(
@@ -225,6 +233,7 @@ export class IncomeDetailComponent implements OnInit {
               this.closeIncomeDetailPoup();
             },
             error: (err) => {
+              this.btnDisabled =false;
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
@@ -243,6 +252,7 @@ export class IncomeDetailComponent implements OnInit {
         }
 
         incomeData['activeFlag'] = this.selectedIncome.activeFlag;
+       
         this.incomeFacade
           .editClientIncome(
             this.IncomeDetailsForm.value,
@@ -260,6 +270,7 @@ export class IncomeDetailComponent implements OnInit {
               this.closeIncomeDetailPoup();
             },
             error: (err) => {
+              this.btnDisabled = false;
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
@@ -277,7 +288,7 @@ export class IncomeDetailComponent implements OnInit {
     this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
-   if(this.proofOfIncomeFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit) 
+   if(this.proofOfIncomeFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
    {
     this.proofOfIncomeValidatorSize=true;
    }

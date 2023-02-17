@@ -325,7 +325,7 @@ export class CaseDetailPageComponent implements OnInit {
       //this.loaderService.hide();
     }
     else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
-      this.workflowFacade.saveNonequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
+      this.workflowFacade.saveNonSequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
         .subscribe(() => {
           this.loaderService.hide();
           this.workflowFacade.updateNonequenceNavigation(object?.route);
@@ -387,9 +387,9 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   onUpdateCaseStatusClicked() {
-    this.loaderService.show();
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
+      this.loaderService.show();
       this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();

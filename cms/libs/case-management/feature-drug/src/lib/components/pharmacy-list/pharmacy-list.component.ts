@@ -32,6 +32,9 @@ export class PharmacyListComponent implements OnInit {
   @Output() removePharmacyClick = new EventEmitter<string>();
 
   /** Public properties **/
+  isTriggerPriorityPopup = false;
+  isEditPharmacyPriorityTitle = false;
+  pharmacyPriorityModalButtonText = 'Save';
   isOpenChangePriorityClicked$ = new Subject();
   isOpenPharmacyClicked$ = new Subject();
   isEditPharmacyListClicked = false;
@@ -84,7 +87,7 @@ export class PharmacyListComponent implements OnInit {
   ];
 
    /** Private properties **/
-  clientPharmacyCount!:Number;
+  clientPharmacyCount!:number;
 
   /** Constructor **/
   constructor() {
@@ -117,8 +120,15 @@ export class PharmacyListComponent implements OnInit {
 
   private priorityPopupShowSubscription(){
     this.triggerPriorityPopup$.subscribe((value:boolean)=>{
-      if(value){
+      if(value ){
         this.isOpenChangePriorityClicked$.next(true);
+        this.isEditPharmacyPriorityTitle = false;
+        this.pharmacyPriorityModalButtonText = 'Save';
+      }
+      else
+      {
+        this.isEditPharmacyPriorityTitle = true;
+        this.pharmacyPriorityModalButtonText = 'Update';
       }
     })
   }

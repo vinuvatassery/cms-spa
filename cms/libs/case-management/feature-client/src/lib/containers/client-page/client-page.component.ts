@@ -6,7 +6,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facade **/
 import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, 
-  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat } from '@cms/case-management/domain';
+  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat, TransGenderCode } from '@cms/case-management/domain';
 /** Entities **/
 import { CompletionChecklist } from '@cms/case-management/domain';
 /** Enums **/
@@ -180,7 +180,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
               /*Populate Client Gender */
               response.clientGenderList.forEach(x=>{
-                var clientGender = new ClientGender()
+                const clientGender = new ClientGender()
                 clientGender.clientGenderCode = x.clientGenderCode;
                 clientGender.clientGenderId = x.clientGenderId;
                 clientGender.clientId = x.clientId;
@@ -193,7 +193,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
               /*Populate Client Pronoun */
               response.clientPronounList.forEach(x=>{
-                var pronoun = new ClientPronoun()
+                const pronoun = new ClientPronoun()
                 pronoun.clientId = x.clientId;
                 pronoun.clientPronounCode = x.clientPronounCode;
                 pronoun.clientPronounId = x.clientPronounId;
@@ -206,7 +206,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
               /*Populate Client Race */
               response.clientRaceList.forEach(x=>{
-                var clientRace = new ClientRace();
+                const clientRace = new ClientRace();
                 clientRace.clientEthnicIdentityCode = x.clientEthnicIdentityCode;
                 clientRace.clientId = x.clientId;
                 clientRace.clientRaceCategoryCode = x.clientRaceCategoryCode;
@@ -221,7 +221,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
               /*Populate Clien Sexual Identity */
               response.clientSexualIdentityList.forEach(x=>{
-                var clientSexualIdentity = new ClientSexualIdentity();
+                const clientSexualIdentity = new ClientSexualIdentity();
                 clientSexualIdentity.clientId= x.clientId;
                 clientSexualIdentity.clientSexualIdentityCode = x.clientSexualIdentityCode;
                 clientSexualIdentity.clientSexualyIdentityId = x.clientSexualyIdentityId;
@@ -334,8 +334,11 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility = new ClientCaseEligibility;
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId = this.clientCaseId;            
         }    
-        
-           this.applicantInfo.client.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+        if(this.appInfoForm.controls['Transgender'].value == TransGenderCode.YES) {
+          this.applicantInfo.client.clientTransgenderCode=this.appInfoForm.controls["yesTransgender"].value;
+        } else {
+          this.applicantInfo.client.clientTransgenderCode=this.appInfoForm.controls["Transgender"].value;
+        }
            this.applicantInfo.client.clientTransgenderDesc=null;
            if (this.appInfoForm.controls["Transgender"].value===PronounCode.notListed) {
             this.applicantInfo.client.clientTransgenderDesc=this.appInfoForm.controls["TransgenderDescription"].value;
@@ -467,8 +470,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if( this.appInfoForm.controls[pronoun].value ===""
          ||this.appInfoForm.controls[pronoun].value === null
          ||this.appInfoForm.controls[pronoun].value ===false){
-          var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
-          var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronounCode)
+          const pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+          const existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronounCode)
         if(existingPronoun != null){
            const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);
           if (index > -1) {
@@ -478,25 +481,25 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
       }
      else{
-      var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
-      var existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronounCode)     
+      const pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+      const existingPronoun = this.applicantInfo.clientPronounList.find(x=>x.clientPronounCode ===pronounCode)     
       if(existingPronoun === null || existingPronoun === undefined){
-          var clientPronoun = new ClientPronoun();
+        const clientPronoun = new ClientPronoun();
           if(pronounCode === PronounCode.notListed) {
-                    var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+            const pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
                     clientPronoun.otherDesc = this.appInfoForm.controls["pronoun"].value;
                     clientPronoun.clientPronounCode =pronounCode;
                     clientPronoun.clientId = this.clientId;
             }
             else{
-              var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+              const pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
               clientPronoun.clientPronounCode =pronounCode;
               clientPronoun.clientId = this.clientId;
             } 
             this.applicantInfo.clientPronounList.push(clientPronoun);
         }
         else{
-          var pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
+          const pronounCode= pronoun.replace(ControlPrefix.pronoun,'');
           if(pronounCode===PronounCode.notListed) {
             const index = this.applicantInfo.clientPronounList.indexOf(existingPronoun, 0);          
             this.applicantInfo.clientPronounList[index].clientPronounCode = pronounCode;
@@ -538,7 +541,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     let ethnicityValue=this.appInfoForm.controls['Ethnicity'].value;
     Ethnicity.push(ethnicityValue);
     const RaceAndEthnicityPrimary = this.appInfoForm.controls['RaceAndEthnicityPrimary'].value;
-    var checkPrimaryInRaceList=RaceAndEthnicity.filter((lov:any)=>lov.lovCode==RaceAndEthnicityPrimary.lovCode);
+    const checkPrimaryInRaceList=RaceAndEthnicity.filter((lov:any)=>lov.lovCode==RaceAndEthnicityPrimary.lovCode);
     if(checkPrimaryInRaceList.length==0){
       RaceAndEthnicity.push(RaceAndEthnicityPrimary);
     }
@@ -670,7 +673,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
               Object.keys( this.appInfoForm.controls).filter(m=>m.includes(ControlPrefix.pronoun)).forEach(pronoun => {  
                 this.appInfoForm.controls[pronoun].removeValidators(Validators.requiredTrue);
                 this.appInfoForm.controls[pronoun].updateValueAndValidity();
-                var pronounCode =   pronoun.replace(ControlPrefix.pronoun,'');
+                const pronounCode =   pronoun.replace(ControlPrefix.pronoun,'');
                 if(pronounCode === PronounCode.notListed && this.appInfoForm.controls[pronoun].value){
                   this.appInfoForm.controls['pronoun'].setValidators(Validators.required);
                   this.appInfoForm.controls['pronoun'].updateValueAndValidity();
@@ -900,19 +903,17 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.pipe(
-      mergeMap((statusResponse: boolean) =>
-        forkJoin([of(statusResponse), this.saveAndUpdate()])
-      ),
-    ).subscribe(([statusResponse, isSaved]) => {
-      if (isSaved) {
-        this.loaderService.hide();
-        if(statusResponse){
-          this.workFlowFacade.showSendEmailLetterPopup(true);
-        }
-        else{
-          this.router.navigate([`/case-management/cases/case360/${this.clientCaseId}`])
-        }
+    this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+      if (this.checkValidations()) {
+        this.saveAndUpdate().subscribe((response: any) => {
+          if (response) {
+            this.loaderService.hide();
+            this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          }
+        })
+      }
+      else {
+        this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
       }
     });
   }
@@ -920,14 +921,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(this.checkValidations()){
-          this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations();
+        this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }
 
-  checkValidations(){
+  checkValidations() {
     this.validateForm();
     return this.appInfoForm.valid;
   }

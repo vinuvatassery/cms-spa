@@ -1,9 +1,16 @@
 <h1>case-management-dental-insurance</h1>
 
 <table class="table" summary="dental-insurance">
-  <tr *ngFor="let dentalInsurance of dentalInsurances$ | async">
-    <td>{{ dentalInsurance.id }}</td>
-    <td>{{ dentalInsurance.name }}</td>
-    <td>{{ dentalInsurance.description }}</td>
+  <tr hidden>
+    <th scope="col"></th>
+    <th scope="col"></th>
+    <th scope="col"></th>
   </tr>
+  <tbody>
+    <tr *ngFor="let dentalInsurance of dentalInsurances$ | async">
+      <td>{{ dentalInsurance.id }}</td>
+      <td>{{ dentalInsurance.name }}</td>
+      <td>{{ dentalInsurance.description }}</td>
+    </tr>
+  </tbody>
 </table>

@@ -24,6 +24,7 @@
           class="k-error-button"
           aria-label="delete health provider"
           (click)="onDeleteConfirm(true)"
+          [disabled]="btnDisabled"
         >
         {{ deleteRqdependentTypeCode === CAClient ? 'REMOVE' : 'DELETE' }}
         </button>

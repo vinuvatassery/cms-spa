@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, StatusFlag, WorkflowFacade, TransGenderCode } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-client-edit-view-transgender',
   templateUrl: './client-edit-view-transgender.component.html',
@@ -18,6 +18,7 @@ export class ClientEditViewTransgenderComponent implements OnInit {
   ControlPrefix = 'Transgender';
   DescriptionField = 'TransgenderDescription';
   Transgenders: any = [];
+  yesGendersList: any =[];
   TransgenderLovs$ = this.lovFacade.transgenderlov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
@@ -40,8 +41,14 @@ export class ClientEditViewTransgenderComponent implements OnInit {
         'Transgender',
         new FormControl('')
       );
+      this.appInfoForm.addControl(
+        'yesTransgender',
+        new FormControl('')
+      );
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
-      this.Transgenders = data;
+      this.Transgenders = data.filter((x:any)=>x.lovCode !== TransGenderCode.dontKnow 
+      && x.lovCode !== TransGenderCode.dontKnowQustion && x.parentCode != TransGenderCode.yesParentCode);
+      this.yesGendersList = data.filter((x: any)=> x.parentCode == TransGenderCode.yesParentCode);
     });
   }
 
@@ -68,6 +75,11 @@ export class ClientEditViewTransgenderComponent implements OnInit {
         this.DescriptionField
       ].updateValueAndValidity();
       this.updateWorkflowCount(true);
+    }
+    if(lovCode === TransGenderCode.YES) {
+      this.appInfoForm.controls['yesTransgender'].setValidators(
+        Validators.required
+      );
     }
   }
 

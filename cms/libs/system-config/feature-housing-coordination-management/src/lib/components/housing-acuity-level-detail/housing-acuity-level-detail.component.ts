@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-housing-acuity-level-detail',
@@ -7,11 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HousingAcuityLevelDetailComponent implements OnInit {
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class HousingAcuityLevelDetailComponent {
+  public formUiStyle: UIFormStyle = new UIFormStyle();
 }

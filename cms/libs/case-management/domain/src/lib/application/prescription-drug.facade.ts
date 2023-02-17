@@ -22,17 +22,16 @@ export class PrescriptionDrugFacade {
     private readonly snackbarService: NotificationSnackbarService,
   ) { }
 
-  updatePrescriptionDrug(prescriptionDrug: any, summaryBenefitFiles: any): Observable<any> {
+  updatePrescriptionDrug(prescriptionDrug: any): Observable<any> {
     const formData: any = new FormData();
-    for (var key in prescriptionDrug) {
+    for (let key in prescriptionDrug) {
       if (typeof prescriptionDrug[key] == 'object') {
-        for (var childKey in prescriptionDrug[key]) {
+        for (let childKey in prescriptionDrug[key]) {
           formData.append(`${key}[${childKey}]`, prescriptionDrug[key][childKey]);
         }
       }
       formData.append(key, prescriptionDrug[key]);
     }
-    formData.append('summaryBenefitDocument', summaryBenefitFiles);
     return this.prescriptionDrugDataService.updatePrescriptionDrugService(prescriptionDrug?.clientId, formData).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
@@ -45,7 +44,7 @@ export class PrescriptionDrugFacade {
     );
   }
 
-  loadPrescriptionDrug(clientId: Number, clientCaseEligibilityId: any) {
+  loadPrescriptionDrug(clientId: number, clientCaseEligibilityId: any) {
     return this.prescriptionDrugDataService.loadPrescriptionDrug(clientId, clientCaseEligibilityId);
   }
 }

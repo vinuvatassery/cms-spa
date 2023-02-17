@@ -54,8 +54,7 @@ export class DocumentListComponent implements OnInit {
         sort: this.sort,
       };
     }
-    ngOnChanges(): void {
-    }
+
     /** Private methods **/
     private loadDocuments(): void {
       this.documentFacade.loadDocuments();
