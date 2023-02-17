@@ -54,7 +54,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent implements OnInit {
     })
     this.insurancePlanFacade.planNameChange$.subscribe({          
            next: (data: any) => {
-            debugger;
              this.insurancePlansLoader = false; 
              this.insurancePlans = data;
             this.changeDetector.detectChanges();       
