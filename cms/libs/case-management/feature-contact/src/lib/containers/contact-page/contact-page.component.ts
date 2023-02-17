@@ -68,6 +68,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private allowWorkflowCountUpdate = false;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
+
   constructor(
     private readonly contactFacade: ContactFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
@@ -92,6 +94,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.buildContactInfoForm();
     this.buildAddressValidationForm();
     this.addSubscriptions();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -99,6 +102,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -1482,4 +1486,112 @@ private addSaveForLaterSubscription(): void {
       return true;
     }
     return false;
-  }}
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      //this.contactInfoForm.reset();
+      this.removeValidators();
+      this.loadContactInfo();
+     }
+    });
+  }
+
+  public removeValidators() {
+    const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
+    const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
+    const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
+    const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
+    const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
+    const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
+    const emailGroup = this.contactInfoForm.get('email') as FormGroup;
+    const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
+    mailingAddressGroup.controls['address1'].setValidators(null);
+    mailingAddressGroup.controls['address1'].updateValueAndValidity();
+    mailingAddressGroup.controls['address2'].setValidators(null);
+    mailingAddressGroup.controls['address2'].updateValueAndValidity();
+    mailingAddressGroup.controls['city'].setValidators(null);
+    mailingAddressGroup.controls['city'].updateValueAndValidity();
+    mailingAddressGroup.controls['state'].setValidators(null);
+    mailingAddressGroup.controls['state'].updateValueAndValidity();
+    mailingAddressGroup.controls['zip'].setValidators(null);
+    mailingAddressGroup.controls['zip'].updateValueAndValidity();
+
+    if ((homeAddressGroup.controls['homelessFlag']?.value ?? false) === false) {
+      homeAddressGroup.controls['address1'].setValidators(null);
+      homeAddressGroup.controls['address1'].updateValueAndValidity();
+      homeAddressGroup.controls['address2'].setValidators(null);
+      homeAddressGroup.controls['address2'].updateValueAndValidity();
+      homeAddressGroup.controls['zip'].setValidators(null);
+      homeAddressGroup.controls['zip'].updateValueAndValidity();
+    }
+
+    // For validating the home address proof. 
+    this.showAddressProofRequiredValidation = (homeAddressGroup.controls['noHomeAddressProofFlag']?.value ?? false) === false
+      && (this.uploadedHomeAddressProof === undefined
+        && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name === undefined));
+
+    homeAddressGroup.controls['city'].setValidators(null);
+    homeAddressGroup.controls['city'].updateValueAndValidity();
+    homeAddressGroup.controls['state'].setValidators(null);
+    homeAddressGroup.controls['state'].updateValueAndValidity();
+    this.isHomeAddressStateOregon$.next(homeAddressGroup.controls['state']?.value === StatesInUSA.Oregon);
+    homeAddressGroup.controls['county'].setValidators(null);
+    homeAddressGroup.controls['county'].updateValueAndValidity();    
+
+    if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      homePhoneGroup.controls['phoneNbr'].setValidators(null);
+      homePhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      homePhoneGroup.controls['phoneNbr'].setValidators(null);
+      homePhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((cellPhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      cellPhoneGroup.controls['phoneNbr'].setValidators(null);
+      cellPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((workPhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      workPhoneGroup.controls['phoneNbr'].setValidators(null);
+      workPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((otherPhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      otherPhoneGroup.controls['phoneNbr'].setValidators(null);
+      otherPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+
+      if (otherPhoneGroup.controls['phoneNbr']?.valid) {
+        otherPhoneGroup.controls['otherPhoneNote'].setValidators(null);
+        otherPhoneGroup.controls['otherPhoneNote'].updateValueAndValidity();
+      }
+    }
+
+    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
+      emailGroup.controls['email'].setValidators(null);
+      emailGroup.controls['email'].updateValueAndValidity();
+    }
+
+    if (this.preferredContactMethods.length > 0) {
+      this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(null);
+      this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
+    }
+    
+    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
+      ffContactGroup.controls['contactName'].setValidators(null);
+      ffContactGroup.controls['contactName'].updateValueAndValidity();
+      ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
+      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
+      ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
+      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
+
+      if (ffContactGroup.controls['contactRelationshipCode']?.value === 'O') {
+        ffContactGroup.controls['otherDesc'].setValidators(null);
+        ffContactGroup.controls['otherDesc'].updateValueAndValidity();
+      }
+    }
+  }
+}

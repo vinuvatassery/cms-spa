@@ -4,7 +4,7 @@ import {
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, WorkflowFacade,
-   UserDefaultRoles, NavigationType, CompletionChecklist, StatusFlag  } from '@cms/case-management/domain';
+   UserDefaultRoles, NavigationType, CompletionChecklist, StatusFlag, CaseOriginCode  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
@@ -226,7 +226,25 @@ private updateFormCompleteCount(prev: any, curr: any) {
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workFlowFacade.discardChangesClicked$.subscribe((response: any) => {
      if(response){
-      this.caseFacade.loadCasesById(this.clientCaseId); 
+      this.caseFacade.loadCasesById(this.clientCaseId);
+      this.caseFacade.getCase$.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
+      .subscribe((caseData: any) => {
+        this.parentForm.reset()
+        if (caseData.programId != null && caseData.caseStartDate != null
+          && caseData.assignedCwUserId != null) {
+          this.parentForm.setValue(
+            {
+              applicationDate: new Date(caseData.caseStartDate),
+              caseOriginCode: caseData?.caseOriginCode,
+              caseOwnerId: caseData?.assignedCwUserId,
+              programId: caseData?.programId,
+              concurrencyStamp: caseData?.concurrencyStamp
+            })
+            if (caseData.caseOriginCode == CaseOriginCode.ClientPortal) {
+              this.parentForm.controls['caseOriginCode'].disable();
+            }
+        }
+      }) 
      }
     });
   }
