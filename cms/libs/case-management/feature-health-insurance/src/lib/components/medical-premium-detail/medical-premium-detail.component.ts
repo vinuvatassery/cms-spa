@@ -7,7 +7,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges,
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
@@ -248,6 +247,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
       healthInsurancePolicy.insuranceCarrierId
     );
+    //this.insurancePlanFacade.carrierNameChangeSubject.next(healthInsurancePolicy.insuranceCarrierId);
     if (healthInsurancePolicy.insuranceCarrierId) {
       this.insuranceCarrierNameChange(healthInsurancePolicy.insuranceCarrierId);
     }
@@ -986,22 +986,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       );
     }
   }
-  insuranceCarrierNameChange(value: string) {
-    this.insurancePlans = [];
-    if (value === undefined) return;
-    this.insurancePlansLoader = true;
+  insuranceCarrierNameChange(value: string) {  
+    this.insurancePlanFacade.planLoaderSubject.next(true);
+    this.insurancePlans=[];
     this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe({
-      next: (data: any) => {
-        if (!Array.isArray(data)) return;
-        this.insurancePlans = data;
-        this.changeDetector.detectChanges();
-        this.insurancePlansLoader = false;
+      next: (data: any) => {      
+        this.insurancePlanFacade.planNameChangeSubject.next(data);
       },
-      error: () => {
-        this.insurancePlansLoader = false;
+      error: (err) => {
+        this.insurancePlanFacade.planLoaderSubject.next(false);  
+        this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
       }
     });
-
     this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
       next: (data) => {
         this.carrierContactInfo = data;
@@ -1128,9 +1125,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   endDateOnChange() {
     this.insuranceEndDateIsgreaterthanStartDate = true;
     if (this.healthInsuranceForm.controls['insuranceStartDate'].value === null) {
-      this.snackbarService.errorSnackBar('Insurance Start Date required.');
-      this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
-      return;
+      this.healthInsuranceForm.controls['insuranceStartDate'].markAllAsTouched();
+      this.healthInsuranceForm.controls['insuranceStartDate'].setValidators([Validators.required]);
+      this.healthInsuranceForm.controls['insuranceStartDate'].updateValueAndValidity();
+      this.healthInsuranceForm.controls['insuranceEndDate'].setErrors({ 'incorrect': true });
+      this.insuranceEndDateIsgreaterthanStartDate = false;
     }
     else if (this.healthInsuranceForm.controls['insuranceEndDate'].value !== null) {
       const startDate = this.intl.parseDate(
