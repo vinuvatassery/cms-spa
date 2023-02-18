@@ -875,6 +875,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (data: ContactInfo) => {
         this.loaderService.hide();
         if (data) {
+          this.contactInfoForm.reset();
           this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
           this.contactInfo = data;
           this.setFormValues();
@@ -1491,7 +1492,6 @@ private addSaveForLaterSubscription(): void {
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
      if(response){
-      //this.contactInfoForm.reset();
       this.removeValidators();
       this.loadContactInfo();
      }
@@ -1528,9 +1528,7 @@ private addSaveForLaterSubscription(): void {
     }
 
     // For validating the home address proof. 
-    this.showAddressProofRequiredValidation = (homeAddressGroup.controls['noHomeAddressProofFlag']?.value ?? false) === false
-      && (this.uploadedHomeAddressProof === undefined
-        && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name === undefined));
+    this.showAddressProofRequiredValidation = false;
 
     homeAddressGroup.controls['city'].setValidators(null);
     homeAddressGroup.controls['city'].updateValueAndValidity();
