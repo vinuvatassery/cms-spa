@@ -227,7 +227,7 @@ export class HealthInsurancePolicyFacade {
       else if (typeof obj[i] == 'object') {
         if (this.dateFields.indexOf(i) >= 0) {
           if (obj[i] != null && obj[i] != "") {
-            fd.append(i, (new Date(obj[i]).toLocaleDateString()));
+            fd.append(i, (new Date(obj[i]).toUTCString()));
           }
           else {
             fd.append(i, obj[i]);
