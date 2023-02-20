@@ -20,6 +20,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   relationshipDescriptionList: any = [];
   relationshipList: any = [];
   removedPersons: any = [];
+  otherCoveredPlanLoader:boolean= false;
   RelationshipLovs$ = this.lovFacade.lovRelationShip$;
   constructor(
     private readonly familyAndDependentFacade: FamilyAndDependentFacade,
@@ -31,6 +32,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.otherCoveredPlanLoader = true;
     this.lovFacade.getRelationShipsLovs();
       this.loadRelationshipLov();
       this.familyAndDependentFacade.loadClientDependents(this.clientId);
@@ -60,9 +62,11 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
             key.controls['enrolledInInsuranceFlag'].disable();
           });
         }
+        this.otherCoveredPlanLoader = false;
         this.changeDetector.detectChanges();
       }
     });
+   
   }
 
   onOthersCoveredOnPlanFlagRdoClicked(value:any){
