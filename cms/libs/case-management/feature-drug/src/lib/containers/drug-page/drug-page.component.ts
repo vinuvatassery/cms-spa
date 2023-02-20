@@ -119,17 +119,13 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       .loadPrescriptionDrug(this.clientId, this.clientCaseEligibilityId)
       .subscribe({
         next: (response) => {
+          this.prescriptionDrugForm.reset();
           if (response !== null) {
-            this.prescriptionDrugForm.reset();
             this.prescriptionDrug = response;
             this.prescriptionDrugForm.patchValue(response);
-            else{
-              this.uploadedBenefitSummaryFile = [];
-            }
             this.adjustAttributeInit();
             this.loaderService.hide();
           } else {
-           
             this.adjustAttributeInit();
             this.loaderService.hide();
           }
