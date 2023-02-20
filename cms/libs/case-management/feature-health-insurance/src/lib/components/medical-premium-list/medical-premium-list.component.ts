@@ -264,6 +264,8 @@ export class MedicalPremiumListComponent implements OnInit {
     this.isTriggerPriorityPopup = event;
   }
   getCarrierContactInfo(carrierId:string,insurancePlanName:string){
+    this.carrierContactInfo='';
+    this.insurancePlanName='';
     this.healthInsurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
       next: (data) => {
         this.carrierContactInfo=data;
