@@ -103,7 +103,7 @@ export class LovFacade {
     next: (lovResponse) => {
       this.lovcascadeSubject.next(lovResponse);
     },
-    error: (err) => {     
+    error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -114,7 +114,7 @@ getRelationShipsLovs(): void {
     next: (relationsResponse) => {
       this.lovRelationShipSubject.next(relationsResponse);
     },
-    error: (err) => {    
+    error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -124,7 +124,7 @@ getGenderLovs(): void {
     next: (lovResponse) => {
       this.lovGenderSubject.next(lovResponse);
     },
-    error: (err) => {     
+    error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -135,7 +135,7 @@ getCaseOriginLovs(): void {
     next: (lovcaseoriginResponse) => {
       this.lovcaseoriginSubject.next(lovcaseoriginResponse);
     },
-    error: (err) => {   
+    error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -326,7 +326,7 @@ getMedicareCoverageTypeLovs(): void {
     next: (lovResponse) => {
       this.lovMedicareCoverageTypeSubject.next(lovResponse);
     },
-    error: (err) => {     
+    error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
@@ -337,6 +337,9 @@ getCaseStatusLovs(): void {
       this.lovCaseStatusTypeSubject.next(lovResponse);
       const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
       const filteredLov = lovResponse.filter((item:any) => acceptedCaseStatusCodes.includes(item.lovCode))
+      filteredLov.forEach((item: any) => {
+        item.lovDesc = item.lovDesc.toUpperCase();
+      });
       this.lovCaseStatusSubject.next(filteredLov);
     },
     error: (err) => {
