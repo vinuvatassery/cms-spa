@@ -939,9 +939,9 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
      if(response){
       this.removeValidators();
       if(this.clientId==null || this.clientCaseEligibilityId==null){
+        this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
         this.appInfoForm.reset();
         this.appInfoForm.updateValueAndValidity();
-        this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
       }
       else{
         this.loadApplicantInfo();
