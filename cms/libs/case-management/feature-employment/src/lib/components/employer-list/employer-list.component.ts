@@ -25,6 +25,10 @@ export class EmployerListComponent implements OnInit, OnChanges {
   @Input() data!: any;
   @Input() employment$: any;
   @Input() isGridLoaderShow: any;
+  @Input() clientCaseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
+
   @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/
