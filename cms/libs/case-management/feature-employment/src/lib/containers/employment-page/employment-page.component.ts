@@ -20,6 +20,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   employmentStatus$ = this.employmentFacade.employmentStatusGet$;
   pageSizes = this.employmentFacade.gridPageSizes;
   clientCaseEligibilityId: any;
+  employerListCount : any;
   clientId: any;
   clientCaseId: any;
   sessionId!: string;
@@ -52,6 +53,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.employerSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.employmentList$.subscribe((emp:any) => {       
+      this.employerListCount = emp.total});
   }
 
   ngOnDestroy(): void {
@@ -139,10 +142,13 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.isEmployedFlag =
       this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
       this.employmentFacade.showLoader();
-    return this.employmentFacade
+      if(this.isEmployedGridDisplay === false && this.employerListCount <= 0){
+        this.employmentFacade.errorShowHideSnackBar( "Please fill the employment details");
+        return  of(false);
+      }else{
+        return this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
-      .pipe(
-
+      .pipe( 
         catchError((err: any) => {
           if (err?.error) { 
             this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
@@ -150,6 +156,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
           return of(false);
         }),
       )
+      } 
   }
 
   private employerSubscription(){  
