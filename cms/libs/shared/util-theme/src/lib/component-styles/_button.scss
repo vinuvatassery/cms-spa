@@ -18,7 +18,7 @@
     border-color: $app-primary;
   }
   &.k-primary,
-  &.k-button-solid-primary,
+  &.k-button-solid-primary
    {
     background: $app-primary;
     background-color: $app-primary;
@@ -226,6 +226,15 @@
     padding: $size-l $size-l;
     height: 25px;
   }
+
+  &.k-button-solid-base {
+    box-shadow: none;
+  }
+
+  .k-button-text {
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 .k-fab {
@@ -400,16 +409,7 @@
 
 //  }
 
-.k-button {
-  &.k-button-solid-base {
-    box-shadow: none;
-  }
 
-  .k-button-text {
-    display: inline-flex;
-    align-items: center;
-  }
-}
 .k-actions {
   .k-button {
     box-shadow: $button-box-shadow;
@@ -444,9 +444,7 @@
       .k-button {
         width: 100%;
         text-transform: capitalize;
-        justify-content: flex-start;
-        .k-button-text {
-        }
+        justify-content: flex-start; 
         .k-menu-group {
           padding: 8px;
         }
