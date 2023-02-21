@@ -29,6 +29,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
   /** Input properties  **/
   @Input() clientpharmacies$!: Observable<any>;
   @Input() pharmacyPriorityModalButtonText: any;
+  @Input() clientId: any;
   /** Output properties  **/
   @Output() closeChangePriority = new EventEmitter();
 
@@ -55,11 +56,8 @@ export class SetPharmacyPriorityComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   pharmacyPriority$: Lov[] = [];
   sessionId: any = "";
-  clientId: any;
   clientPharmacyId:any;
-  clientCaseId: any;
   pharmacyPriorityList: any;
-  clientCaseEligibilityId: string = "";
   isDisabled = false;
   priorityInfo = {} as PharmacyPriority;
 
@@ -80,7 +78,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadSessionData();
     this.lov.getPriorityLovs();
     this.loadPriority().then((isloaded) =>{
       if(isloaded){
@@ -130,20 +127,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
       this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode === PriorityCode.Primary ||x.lovCode === PriorityCode.Secondary ||x.lovCode === PriorityCode.Tertiary);
     }
   }
-  loadSessionData() {
-    this.sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-      .subscribe((session: any) => {
-        if (session !== null && session !== undefined && session.sessionData !== undefined) {
-          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
-          this.clientId = JSON.parse(session.sessionData).clientId;
-          this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
-          this.loadPriority();
-        }
-      });
 
-  }
   private loadClientPharmacies(){
    
     this.clientpharmacies$.subscribe(list =>{

@@ -18,7 +18,9 @@ import { Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
 })
 export class PharmaciesListComponent implements OnInit {
-    
+  
+    /** Input properties **/
+  @Input() clientId: any;
   /** Public properties **/
   pharmaciesList$ = this.drugPharmacyFacade.pharmaciesList$;
   isOpenChangePriorityClicked = false;
