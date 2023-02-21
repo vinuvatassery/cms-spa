@@ -62,6 +62,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
   clientCaseEligibilityId: string = "";
   isDisabled = false;
   priorityInfo = {} as PharmacyPriority;
+  btnDisabled = false; 
 
    /** Private properties **/
    private loadSessionSubscription!: Subscription;
@@ -194,6 +195,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
       return;
     }
     this.loaderService.show();
+    this.btnDisabled =true;
     this.drugPharmacyFacade.updatePharmacyPriority(this.savePriorityObjectList).subscribe((x:any) =>{
       if(x){
         this.loaderService.hide();
@@ -202,6 +204,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
         this.onCloseChangePriorityClicked();
       }
     },(error:any) =>{
+      this.btnDisabled = false;
       this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
     });
   }
