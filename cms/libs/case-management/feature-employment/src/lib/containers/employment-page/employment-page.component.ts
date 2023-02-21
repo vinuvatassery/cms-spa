@@ -4,9 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facades **/
-import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
+import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade, NavigationType, StatusFlag} from '@cms/case-management/domain';
 /** Enums **/
-import { NavigationType, StatusFlag } from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-employment-page',
