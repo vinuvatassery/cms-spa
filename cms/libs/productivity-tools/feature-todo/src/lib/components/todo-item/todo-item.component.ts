@@ -17,7 +17,6 @@ export class TodoItemComponent {
       text: "Done",
       icon: "done",
       click: (): void => {
-        // this.onDoneClicked();
       },
     },
     {
@@ -25,7 +24,6 @@ export class TodoItemComponent {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-      //  this.onOpenTodoDetailsClicked()
       },
     },
     {
@@ -33,7 +31,6 @@ export class TodoItemComponent {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-      // this.onOpenDeleteTodoClicked()
       },
     },
     

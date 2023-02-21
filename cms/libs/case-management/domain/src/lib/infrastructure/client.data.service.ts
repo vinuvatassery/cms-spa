@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
-import { empty } from 'rxjs';
 import { ApplicantInfo } from '../entities/applicant-info';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 

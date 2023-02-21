@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService,ConfigurationProvider } from '@cms/shared/util-core';
-import { healthInsurancePolicy } from '../entities/health-insurance-policy';
+import { HealthInsurancePolicy } from '../entities/health-insurance-policy';
 import { HealthInsurancePolicyDataService } from '../infrastructure/health-insurance-policy.data.service';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
@@ -18,7 +18,7 @@ export class HealthInsurancePolicyFacade {
   /** Private properties **/
   private coPaysAndDeductiblesSubject = new BehaviorSubject<any>([]);
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
-  private healthInsurancePolicySubject = new Subject<healthInsurancePolicy>();
+  private healthInsurancePolicySubject = new Subject<HealthInsurancePolicy>();
   private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
   private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
   private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
@@ -81,7 +81,7 @@ export class HealthInsurancePolicyFacade {
     this.loaderService.hide();
   }
 
-  saveHealthInsurancePolicy(healthInsurancePolicy: healthInsurancePolicy) {
+  saveHealthInsurancePolicy(healthInsurancePolicy: HealthInsurancePolicy) {
     const formData = new FormData();
     if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
       formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');

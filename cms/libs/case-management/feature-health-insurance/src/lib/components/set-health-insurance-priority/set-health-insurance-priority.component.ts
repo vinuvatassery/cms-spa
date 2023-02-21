@@ -130,14 +130,17 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       return;
     }
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.setHealthInsurancePolicyPriority(this.gridList).subscribe((x: any) => {
-
-      this.insurancePolicyFacade.hideLoader();
-      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
-      this.onModalCloseClicked();
-    }, (error: any) => {
-      this.insurancePolicyFacade.hideLoader();
-      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+    this.insurancePolicyFacade.setHealthInsurancePolicyPriority(this.gridList)
+    .subscribe({
+      next: (x: any) => {
+        this.insurancePolicyFacade.hideLoader();
+        this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
+        this.onModalCloseClicked();
+      }, 
+      error:(error: any) => {
+        this.insurancePolicyFacade.hideLoader();
+        this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      }
     });
   }
 }

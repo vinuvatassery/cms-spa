@@ -3,7 +3,6 @@
   <form [formGroup]="prescriptionDrugForm">
   <section>
    
-    <!-- <form [formGroup]="prescriptionDrugForm"> -->
       <fieldset class="k-form-fieldset">
         <legend class="k-form-legend"> <h5 class="mt-1">
           Are they currently taking prescription drugs for HIV (anti-retrovirals)?
@@ -118,11 +117,9 @@
         ></kendo-label>
       </span>
       <kendo-formerror   *ngIf="nonPreferredFlagValidation">Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
-      <!-- <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror> -->
     </kendo-formfield>
     </div>
     </fieldset>
-  <!-- </form> -->
   </section>
   <section  *ngIf="changeRequestRequirment">
     <div class="flex-row mt-3">

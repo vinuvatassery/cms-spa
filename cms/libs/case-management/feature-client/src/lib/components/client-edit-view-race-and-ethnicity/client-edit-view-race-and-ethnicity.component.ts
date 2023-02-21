@@ -3,11 +3,9 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade, LovType } from '@cms/system-config/domain';
-import { ClientFacade } from '@cms/case-management/domain';
 import { groupBy } from '@progress/kendo-data-query';
 
 @Component({
@@ -95,11 +93,5 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
       this.isNotListed = false;
     }
     this.RaceAndEthnicityChange.emit(true);
-    // if (Array.isArray(value) && value.length == 1) {
-    //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(value[0]);
-    // } else {
-    //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
-    // }
-    // console.log('valueChange', value);
   }
 }

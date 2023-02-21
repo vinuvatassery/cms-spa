@@ -29,7 +29,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       text: "Copy Status",
       icon: "content_copy",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
     {
@@ -37,7 +36,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       text: "Edit Status",
       icon: "edit",
       click: (): void => {
-      //  this.onDeactivateEmailAddressClicked()
       },
     },
     

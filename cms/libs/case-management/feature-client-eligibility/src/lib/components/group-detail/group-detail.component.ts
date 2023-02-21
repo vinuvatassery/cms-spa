@@ -23,11 +23,7 @@ export class GroupDetailComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadDdlGroups();
   }
 
   /** Private methods **/
-  private loadDdlGroups() {
-    //this.clientEligibilityFacade.loadDdlGroups();
-  }
 }

@@ -3,10 +3,8 @@ import { AfterViewInit, ChangeDetectionStrategy, Component,  OnDestroy,  OnInit,
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
-/** Facades **/
-import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
-/** Enums **/
-import { NavigationType, StatusFlag } from '@cms/case-management/domain';
+/** Internal libraries **/
+import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade, NavigationType, StatusFlag} from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-employment-page',
@@ -102,7 +100,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       sort: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
     };
-    if ((this.isEmployedGridDisplay ?? false) == false) {
+    if (this.isEmployedGridDisplay ?? false) {
       this.pageSizes = this.employmentFacade.gridPageSizes;
       this.employmentFacade.loadEmployers(
         this.clientCaseEligibilityId,
@@ -137,8 +135,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // save and continue subscription save method
   private save() {
-    this.isEmployedFlag =
-      this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
+    this.isEmployedFlag = (this.isEmployedGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No;
       this.employmentFacade.showLoader();
     return this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
@@ -162,7 +159,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   // unemployment checkbox click
   onUnEmployedClicked() {
     this.isEmployedGridDisplay = !this.isEmployedGridDisplay;
-    if(this.isEmployedGridDisplay === true){
+    if(this.isEmployedGridDisplay ?? false){
       this.employmentFacade.updateWorkFlowCount(StatusFlag.Yes);
     }
   }

@@ -22,7 +22,6 @@ export class HealthCareProviderListComponent implements OnInit {
     {text: 'All', value: 100}
   ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
-  // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -30,7 +29,6 @@ export class HealthCareProviderListComponent implements OnInit {
       text: "Edit Provider",
       icon: "edit",
       click: (): void => {
-        // this.onOpenProviderClicked(true);
       },
     },
    
@@ -39,7 +37,6 @@ export class HealthCareProviderListComponent implements OnInit {
       text: "Remove Provider",
       icon: "delete",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
       },
     },
   ];

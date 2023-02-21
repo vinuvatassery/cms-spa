@@ -1,7 +1,7 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClientEmployer, IncomeFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { IncomeFacade, WorkflowFacade } from '@cms/case-management/domain';
 import {  first } from 'rxjs';
 import {  SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
@@ -47,7 +47,6 @@ export class RemoveIncomeConfirmationComponent {
 
   // click on Delete employer confirmation
   removeIncome() {
-    // this.incomeFacade.showLoader();
     if (this.selectedIncome) {
       this.incomeFacade.ShowLoader();
       this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId, this.clientCaseEligibilityId ).subscribe({

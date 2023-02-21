@@ -43,16 +43,11 @@ export class AddressDetailComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadDdlAddressType();
-    this.loadDdlCountries();
     this.loadDdlStates();
     this.onEditAddressClicked();
   }
 
   /** Private methods **/
-  private loadDdlCountries() {
-    //this.contactFacade.loadDdlCountries();
-  }
-
   private loadDdlAddressType() {
     this.contactFacade.loadDdlAddressType();
   }

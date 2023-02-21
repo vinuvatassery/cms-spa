@@ -5,9 +5,8 @@ import { Observable, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 /** Data services **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { StatusPeriodDataService } from '../infrastructure/status-period.data.service';
-import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
@@ -44,10 +43,5 @@ export class StatusPeriodFacade {
         console.error('err', err);
       },
     });
-  }
- 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
   }
 }

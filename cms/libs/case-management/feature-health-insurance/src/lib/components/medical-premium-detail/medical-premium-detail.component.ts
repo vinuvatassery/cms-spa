@@ -7,14 +7,13 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges,
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import {
   ClientDocumentFacade,
   HealthInsurancePolicyFacade,
-  healthInsurancePolicy,
+  HealthInsurancePolicy,
   CarrierContactInfo,
   InsurancePlanFacade,
   StatusFlag,
@@ -94,8 +93,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   isOpenDdl = false;
   insurancePlans: Array<any> = [];
   insurancePlansLoader: boolean = false;
-  healthInsurancePolicy!: healthInsurancePolicy;
-  healthInsurancePolicyCopy!: healthInsurancePolicy;
+  healthInsurancePolicy!: HealthInsurancePolicy;
+  healthInsurancePolicyCopy!: HealthInsurancePolicy;
   metalLevelDefaultValue: any = {};
   insurancePlanNameDefaultValue: string | null = null;
   insuranceEndDateValid: boolean = true;
@@ -225,7 +224,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  bindValues(healthInsurancePolicy: healthInsurancePolicy) {
+  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(
       healthInsurancePolicy.clientInsurancePolicyId
     );
@@ -337,9 +336,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         healthInsurancePolicy.onLisFlag
       );
 
-      this.healthInsuranceForm.controls['onQmbFlag'].setValue(
-        healthInsurancePolicy.onQmbFlag === StatusFlag.Yes ? true : healthInsurancePolicy.onQmbFlag === StatusFlag.No ? false : null
-      );
+      this.healthInsuranceForm.controls['onQmbFlag'].setValue(healthInsurancePolicy.onQmbFlag === StatusFlag.Yes);
       if (this.medicareInsuranceInfoCheck) {
         this.insuranceCarrierNameChange(
           healthInsurancePolicy.insuranceCarrierId as string
@@ -427,7 +424,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.disableEnableRadio();
   }
 
-  private setDependentsForm(healthInsurancePolicy: healthInsurancePolicy) {
+  private setDependentsForm(healthInsurancePolicy: HealthInsurancePolicy) {
     healthInsurancePolicy.othersCoveredOnPlan?.forEach((person: any) => {
       person.enrolledInInsuranceFlag = person.enrolledInInsuranceFlag == StatusFlag.Yes ? true : false;
     })
@@ -748,7 +745,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
 
   private populateInsurancePolicy() {
     {
-      this.healthInsurancePolicy = new healthInsurancePolicy();
+      this.healthInsurancePolicy = new HealthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.clientCaseEligibilityId = this.caseEligibilityId;
       this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
@@ -795,7 +792,15 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.healthInsurancePolicy.nextPremiumDueDate = this.healthInsuranceForm.controls["nextPremiumDueDate"].value === null ? null :
           new Date(this.intl.formatDate(this.healthInsuranceForm.controls['nextPremiumDueDate'].value, this.dateFormat));
 
-        this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === true ? StatusFlag.Yes : this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === false ? StatusFlag.No : null;
+          if(this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value ?? false){
+            this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = StatusFlag.Yes
+          }
+          else if(!(this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value ?? false)){
+            this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = StatusFlag.No;
+          }
+          else{
+            this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = null;
+          }
        
         this.healthInsurancePolicy.paymentIdNbr = this.healthInsuranceForm.controls["paymentIdNbr"].value;
         this.healthInsurancePolicy.premiumAmt = this.healthInsuranceForm.controls["premiumAmt"].value;
@@ -1036,8 +1041,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.healthInsurancePolicy.creationTime = this.healthInsurancePolicyCopy.creationTime;
         this.insurancePolicyFacade
           .updateHealthInsurancePolicy(this.healthInsurancePolicy)
-          .subscribe(
-            (data: any) => {
+          .subscribe({
+            next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Insurance plan updated successfully.'
@@ -1047,7 +1052,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
               this.isAddEditClicked.next(true);
               this.isAddPriority.next(false);
             },
-            (error: any) => {
+            error: (error: any) => {
               if (error) {
                 this.insurancePolicyFacade.showHideSnackBar(
                   SnackBarNotificationType.ERROR,
@@ -1056,13 +1061,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
                 this.insurancePolicyFacade.hideLoader();
               }
             }
-          );
+        });
       } else {
         this.healthInsurancePolicy.creationTime = new Date();
         this.insurancePolicyFacade
           .saveHealthInsurancePolicy(this.healthInsurancePolicy)
-          .subscribe(
-            (data: any) => {
+          .subscribe({
+            next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Insurance plan saved successfully.'
@@ -1072,7 +1077,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
               this.isAddEditClicked.next(true);
               this.isAddPriority.next(true)
             },
-            (error: any) => {
+            error: (error: any) => {
               if (error) {
                 this.insurancePolicyFacade.showHideSnackBar(
                   SnackBarNotificationType.ERROR,
@@ -1081,7 +1086,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
                 this.insurancePolicyFacade.hideLoader();
               }
             }
-          );
+          });
       }
     }
   }
@@ -1127,7 +1132,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     if (this.healthInsuranceForm.controls['insuranceStartDate'].value === null) {
       this.snackbarService.errorSnackBar('Insurance Start Date required.');
       this.healthInsuranceForm.controls['insuranceEndDate'].setValue(null);
-      return;
     }
     else if (this.healthInsuranceForm.controls['insuranceEndDate'].value !== null) {
       const startDate = this.intl.parseDate(

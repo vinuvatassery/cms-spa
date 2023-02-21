@@ -1,18 +1,19 @@
 /** Angular **/
-import { AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ElementRef, OnDestroy, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute,Router } from '@angular/router';
 /** External Libraries **/
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map, tap } from 'rxjs';
-
-/** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, StatesInUSA } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { StatusFlag } from '@cms/case-management/domain';
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
+/** Internal Libraries **/
+import { WorkflowFacade, CompletionStatusFacade, ContactFacade, 
+  NavigationType, ContactInfo, ClientAddress, AddressTypeCode, 
+  ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, 
+  CompletionChecklist, ClientDocument, ClientCaseElgblty, 
+  ClientDocumentFacade, HomeAddressProof, StatesInUSA, StatusFlag } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ActivatedRoute,Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-contact-page',

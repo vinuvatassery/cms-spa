@@ -33,7 +33,6 @@ export class NotificationPanelComponent implements OnInit {
       text: "Snooze",
       icon: "snooze",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
  
@@ -43,7 +42,6 @@ export class NotificationPanelComponent implements OnInit {
       text: "Discard",
       icon: "notifications_off",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
       },
     },
    
@@ -56,7 +54,6 @@ export class NotificationPanelComponent implements OnInit {
       text: "Edit Remainder",
       icon: "edit",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
  
@@ -65,19 +62,8 @@ export class NotificationPanelComponent implements OnInit {
       text: "Delete Remainder",
       icon: "delete",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
       },
-    },
-    // {
-    //   buttonType:"btn-h-danger",
-    //   text: "Discard",
-    //   icon: "notifications_off",
-    //   click: (): void => {
-    //   //  this.onDeactivatePhoneNumberClicked()
-    //   },
-    // },
-   
-    
+    } 
   ];
   /** Constructor **/
   constructor(

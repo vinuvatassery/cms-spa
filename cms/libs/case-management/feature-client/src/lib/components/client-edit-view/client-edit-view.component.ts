@@ -9,11 +9,9 @@ import {  debounceTime, distinctUntilChanged,  pairwise,  startWith, Subscriptio
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
 
 /** Facades **/
-import { UIFormStyle } from '@cms/shared/ui-tpa'
-
+import { UIFormStyle, IntlDateService,DataQuery } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 
-import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
  
 @Component({
   selector: 'case-management-client-edit-view',
@@ -22,27 +20,21 @@ import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit,OnDestroy {
- 
-     
+
   /** Output Properties **/
  @Output() AppInfoChanged = new EventEmitter<{completedDataPoints: CompletionChecklist[], updateWorkflowCount:boolean}>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
  @Output() ValidateFields = new EventEmitter<FormGroup>();
- //@Output() PronounChanges = new EventEmitter<any>();
  @Output() ApplicantNameChange = new EventEmitter<any>();
 
   /** Public properties **/
   public currentDate = new Date(); 
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
-
   rdoMaterials$ = this.lovFacade.materialslov$;  
   materialsyeslov$ = this.lovFacade.materialsyeslov$; 
   spokenWrittenLanguagelov$ = this.lovFacade.spokenWrittenLanguagelov$;
   englishProficiencylov$ = this.lovFacade.englishProficiencylov$;
-  
-  //this.clientfacade.rdoInterpreters$;
-
   rdoDeafs$ = this.clientfacade.rdoDeaf$;
   rdoBlinds$ = this.clientfacade.rdoBlind$;
   rdoWalked$ = this.clientfacade.rdoWalked$;
@@ -222,21 +214,9 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
 
   ngAfterViewChecked() {  
-    let firstName = '';
-    let lastName ='';
-    if(this.appInfoForm.controls["firstName"].value === null){
-      firstName = ''
-    }
-    else{
-      firstName = this.appInfoForm.controls["firstName"].value
-    }
-    if(this.appInfoForm.controls["lastName"].value === null){
-      lastName = ''
-    }
-    else{
-      lastName = this.appInfoForm.controls["lastName"].value
-    }
-    this.ApplicantNameChange.emit(firstName+'  '+lastName);
+    const firstName = this.appInfoForm.controls["firstName"].value ?? '';
+    const lastName = this.appInfoForm.controls["lastName"].value ?? '';
+    this.ApplicantNameChange.emit(firstName + '  ' + lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -252,12 +232,6 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }
   }
 
-  public onClose(event: any) {    
-      //event.preventDefault();   
-  }
-  public clearForm(): void {
-    //this.form.reset();
-  }
   /** Private methods **/ 
 
   private buildForm() {
@@ -968,9 +942,7 @@ updateWorkflowCount(data: any){
               this.showDuplicatePopup = true
             }
           }
-          else{
-            
-          }
+
           this.showNameDuplicateLoader = false;
           this.showNameDuplicateLoaderField = '';
           this.showSsnDuplicateLoader = false;

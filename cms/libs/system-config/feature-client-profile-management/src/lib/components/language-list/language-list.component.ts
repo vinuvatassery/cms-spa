@@ -29,7 +29,6 @@ export class LanguageListComponent implements OnInit {
      text: "Edit",
      icon: "edit",
      click: (): void => {
-       // this.onUserDetailsClicked(true);
      },
    },
    {
@@ -37,7 +36,6 @@ export class LanguageListComponent implements OnInit {
      text: "Reorder",
      icon: "format_list_numbered",
      click: (): void => {
-     //  this.onUserDeactivateClicked()
      },
    },
    {
@@ -53,7 +51,6 @@ export class LanguageListComponent implements OnInit {
      text: "Delete",
      icon: "delete",
      click: (): void => {
-     // this.onOpenDeleteTodoClicked()
      },
    },
    

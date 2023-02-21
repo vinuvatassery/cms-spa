@@ -14,7 +14,6 @@ export class TodoListComponent implements OnInit {
   todoGrid$ = this.todoFacade.todoGrid$;
   isOpenDeleteTodo = false;
   isOpenTodo = false;
-  // moreactions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
 
@@ -25,7 +24,6 @@ export class TodoListComponent implements OnInit {
       text: "Done",
       icon: "done",
       click: (): void => {
-        // this.onDoneClicked();
       },
     },
     {

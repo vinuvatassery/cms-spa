@@ -73,7 +73,6 @@ export class HealthCareProviderSearchComponent implements OnInit
       /** Lifecycle hooks **/
   ngOnInit(): void {       
     this.composexistHealthProvdeForm();
-    //this.ref.markForCheck();
   }
   composexistHealthProvdeForm()
   {    

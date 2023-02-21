@@ -5,7 +5,7 @@ import { Directive, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
 @Directive({
   selector: 'kendo-fileselect'
 })
-export class kendoFileSelectDirective {
+export class KendoFileSelectDirective {
 
   constructor(public renderer: Renderer2, public hostElement: ElementRef) { }
   ngOnInit() { 

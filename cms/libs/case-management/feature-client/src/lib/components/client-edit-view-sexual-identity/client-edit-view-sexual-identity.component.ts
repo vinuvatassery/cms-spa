@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy,ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy,ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -156,7 +156,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
         if (applicantInfo.clientSexualIdentityList !== null && applicantInfo.clientSexualIdentityList !== undefined
           && applicantInfo.clientSexualIdentityList.length > 0) {
           this.assignSexualIdentityToForm(applicantInfo.clientSexualIdentityList);
-          var otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
+          const otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
           if (otherSexualIdentities.length > 0) {
             this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
           }

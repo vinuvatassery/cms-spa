@@ -1,14 +1,12 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ContactInfo } from '../entities/contact';
-import { Income } from '../entities/income';
-import { urlToHttpOptions } from 'url';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {

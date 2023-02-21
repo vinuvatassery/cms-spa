@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 /** External libraries **/
 
 import { Dependent } from '../entities/dependent';
@@ -102,12 +102,12 @@ export class FamilyAndDependentFacade {
   DeleteDependent(dependentId: string): void {
    this.ShowLoader();
     this.dependentDataService.deleteDependent(dependentId).subscribe({
-      next: (dependentdeleteResponse) => {      
-       if(dependentdeleteResponse == true)
+      next: (deleteResp) => {      
+       if(deleteResp ?? false)
        {     
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')  
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')  
        }             
-        this.dependentdeleteSubject.next(dependentdeleteResponse);
+        this.dependentdeleteSubject.next(deleteResp);
         this.HideLoader();
       },
       error: (err) => {        

@@ -52,7 +52,7 @@ export class CaseManagerListComponent implements OnInit {
       text: "Edit Case Manager",
       icon: "edit",
       click: (clientCaseId : string,caseManagerId : string): void => {
-        if(this.editButtonEmitted == false)
+        if(!(this.editButtonEmitted ?? false))
         {
           this.editButtonEmitted = true;
           this.deleteCaseManagerCaseId = clientCaseId
@@ -124,7 +124,7 @@ export class CaseManagerListComponent implements OnInit {
   onDeleteConfirmHandle($event : any)
   {
     
-    if($event == false)
+    if(($event ?? false))
     {
       this.onDeleteConfirmCloseClicked()
     }
@@ -169,7 +169,7 @@ export class CaseManagerListComponent implements OnInit {
    this.assignCaseManagerStatus$.pipe(first((addResponse: any ) => addResponse != null))
    .subscribe((addResponse: any) =>
    {  
-     if(addResponse ===true)
+     if(addResponse ?? false)
      {        
        this.loadManagers();
        this.onCloseCsManagerSearchClicked()

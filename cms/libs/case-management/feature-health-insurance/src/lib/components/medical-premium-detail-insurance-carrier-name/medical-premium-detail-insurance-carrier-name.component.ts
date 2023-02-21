@@ -42,17 +42,17 @@ public isLoading =false;
 
   private loadInsuranceCarrierName() {
     this.isLoading=true;
-    this.vendorFacade.loadAllVendors().subscribe(
-      (data: any) => {
+    this.vendorFacade.loadAllVendors().subscribe({
+      next: (data: any) => {
         if (!Array.isArray(data)) return;
         this.carrierNames = data.sort((a: any, b: any) => (a.vendorName > b.vendorName) ? 1 : ((b.vendorName > a.vendorName) ? -1 : 0));
         this.insuranceCarrierNameData.emit(this.carrierNames);
         this.isLoading=false;
       },
-      (error: any) => {
+      error: (error: any) => { 
         this.isLoading=false;
       }
-    );
+  });
   }
 
   public insuranceCarrierNameChangeValue(value: string): void {

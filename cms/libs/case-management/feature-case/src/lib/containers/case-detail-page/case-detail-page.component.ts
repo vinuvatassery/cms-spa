@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
@@ -10,11 +10,6 @@ import { forkJoin, mergeMap, of, Subscription, tap,first } from 'rxjs';
 import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType,CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Router } from '@angular/router';
-
-
-
-
 
 @Component({
   selector: 'case-management-case-detail-page',
@@ -22,7 +17,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./case-detail-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailPageComponent implements OnInit {
+export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   /**Private properties**/
   private navigationSubscription !: Subscription;
@@ -133,8 +128,8 @@ export class CaseDetailPageComponent implements OnInit {
 
   cancelCase(){
     this.loaderService.show()  
-    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe(
-      (response: any) => {
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe({
+      next: (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Case canceled successfully.'
@@ -143,7 +138,7 @@ export class CaseDetailPageComponent implements OnInit {
         this.loaderService.hide() 
         this.router.navigateByUrl(`dashboard`); 
       },
-      (error: any) => {
+      error: (error: any) => {
         if (error) {
           this.caseFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
@@ -157,7 +152,7 @@ export class CaseDetailPageComponent implements OnInit {
           this.loaderService.hide()    
         }
       }
-    );
+     });
   }
   getCase(){ 
     this.case$.subscribe((caseData:any)=>{   
@@ -322,7 +317,6 @@ export class CaseDetailPageComponent implements OnInit {
     this.loaderService.show();
     if (object?.isReset ?? false) {
       this.workflowFacade.resetWorkflowNavigation();
-      //this.loaderService.hide();
     }
     else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
       this.workflowFacade.saveNonSequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
@@ -349,7 +343,6 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   loadSessionData() {
-    //this.loaderService.show();
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))

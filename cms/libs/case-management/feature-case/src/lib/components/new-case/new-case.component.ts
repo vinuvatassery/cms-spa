@@ -1,8 +1,7 @@
 /** Angular **/
 import {
   Component, OnInit, ChangeDetectionStrategy,
-  ChangeDetectorRef, Output, EventEmitter, Input, ViewChild, AfterViewInit
-} from '@angular/core';
+  ChangeDetectorRef, Output, EventEmitter, Input, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProgramCode, CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
 

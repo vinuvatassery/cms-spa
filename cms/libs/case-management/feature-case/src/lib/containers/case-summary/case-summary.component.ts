@@ -117,7 +117,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
           forkJoin([of(navigationType), this.updateCase()])
         ),       
       ).subscribe(([navigationType, isSaved]) => {
-        if (isSaved == true) {
+        if (isSaved) {
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
           this.workFlowFacade.navigate(navigationType);
         } else {
@@ -131,15 +131,11 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
       this.parentForm.updateValueAndValidity()
       if(this.parentForm.valid)
       {
-       return  this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId)
-       .pipe
-       (
+       return  this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId).pipe(
         catchError((err: any) => {      
-          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err) 
-          
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
           return of(false)  
-        })
-       )     
+        }));     
       }
       else return of(false)
     }

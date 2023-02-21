@@ -347,9 +347,17 @@ export class WorkflowFacade {
       });
 
       const workflowProgress = this.deepCopy(workflowSession.workFlowProgress).filter((wp: WorkFlowProgress) => wp.processId === wf.processId)[0];
+      let totalCount = 0;
+      if(workflowProgress && workflowProgress?.requiredDatapointsCount != 0){
+        totalCount = workflowProgress?.requiredDatapointsCount;
+      }
+      else{
+        totalCount = (wf?.requiredCount === 0 ? 1 : wf?.requiredCount);
+      }
+      
       const processCompletion: WorkflowProcessCompletionStatus = {
         processId: wf.processId,
-        calculatedTotalCount: workflowProgress && workflowProgress?.requiredDatapointsCount != 0 ? workflowProgress?.requiredDatapointsCount : (wf?.requiredCount === 0 ? 1 : wf?.requiredCount),
+        calculatedTotalCount: totalCount,
         completedCount: workflowProgress ? workflowProgress?.completedDatapointsCount : 0,
         completionChecklist: completionChecklist
       };

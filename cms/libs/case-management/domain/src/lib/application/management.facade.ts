@@ -89,10 +89,6 @@ export class ManagementFacade {
         console.error('err', err);
       },
     });
-  }
- 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
-  }
+  } 
+
 }

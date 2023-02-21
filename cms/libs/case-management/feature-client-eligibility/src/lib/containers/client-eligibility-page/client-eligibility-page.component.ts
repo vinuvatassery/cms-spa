@@ -7,8 +7,8 @@ import {
   OnDestroy,
   AfterViewInit,
 } from '@angular/core';
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   LoaderService,
   LoggingService,
@@ -131,8 +131,8 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     if (!inValid && !questions.some((m: any) => m?.responseAnswerId === undefined)) {
       this.formSubmited = false;
       this.loaderService.show();
-      this.saveAndUpdate(questions).subscribe(
-        (data: any) => {
+      this.saveAndUpdate(questions).subscribe({
+        next: (data: any) => {
           if (data.length > 0) {
             data.forEach((el: any) => {
               let ques = this.questoinsResponse.find((m:any) => m.reviewQuestionAnswerId === el.reviewQuestionAnswerId);
@@ -153,11 +153,11 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
             }
           }
         },
-        (error: any) => {
+        error: (error: any) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, error);
           this.loaderService.hide();
         }
-      );
+    });
     }
   }
   saveAndUpdate(questoinsResponse: any) {
@@ -165,14 +165,12 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
 
       return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(questoinsResponse);
     }
-
     else {
       return this.reviewQuestionResponseFacade.saveReviewQuestionResponse(questoinsResponse)
 
     }
-
-
   }
+
   changeApplicationAcceptedStatus(value: any)
   {
     this.acceptedApplicationStatus = value;
