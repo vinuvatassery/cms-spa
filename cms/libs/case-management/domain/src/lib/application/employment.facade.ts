@@ -46,7 +46,10 @@ export class EmploymentFacade {
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
 
-
+  errorShowHideSnackBar( subtitle : any)
+  {
+    this.notificationSnackbarService.errorSnackBar(subtitle)
+  }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;

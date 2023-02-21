@@ -709,6 +709,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         }
 
       }
+      const othersCoveredOnPlanSelected = this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag === true);
+      if(this.othersCoveredOnPlanNew.controls.length === 0 && othersCoveredOnPlanSelected.length===0){
+        this.healthInsuranceForm.controls['othersCoveredOnPlanSelection'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['othersCoveredOnPlanSelection'].updateValueAndValidity();
+      }
     }
 
   }
