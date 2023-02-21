@@ -176,8 +176,8 @@
         </div>
 
         <div class="flex-col mat-form-sm-b-space ">
-          <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"
-            [insurancePlans]="insurancePlans" [insurancePlansLoader]="insurancePlansLoader"
+          <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"   
+          [insurancePlans]="insurancePlans"  
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-insurance-plan-name>
         </div>
         <div class="flex-col"
@@ -318,7 +318,7 @@
         Cancel
       </button>
       <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" aria-label="add new medical premium"
-        (click)="save()">
+        (click)="save()" [disabled]="btnDisabled">
         {{buttonText}}
       </button>
       <button kendoButton [primary]="true" *ngIf="isEditViewPopup" (click)="onModalCloseClicked()"

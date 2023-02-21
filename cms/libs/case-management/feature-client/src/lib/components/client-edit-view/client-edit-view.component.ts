@@ -6,12 +6,15 @@ import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService,  SnackBarNotificationType } from '@cms/shared/util-core';
 import {  debounceTime, distinctUntilChanged,  pairwise,  startWith, Subscription,  } from 'rxjs';
 /** Facades **/
-import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag ,WorkflowFacade} from '@cms/case-management/domain';
+import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag, TransGenderCode,WorkflowFacade} from '@cms/case-management/domain';
 
 /** Facades **/
 import { UIFormStyle, IntlDateService,DataQuery } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 
+import { LovFacade, LovType } from '@cms/system-config/domain';
+
+import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
  
 @Component({
   selector: 'case-management-client-edit-view',
@@ -191,10 +194,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
     if (Array.isArray(Race)) {
       Race.forEach((el: any) => {
-        if (el.lovCode !== 'NOT_LISTED')
-          this.raceAndEthnicityPrimaryData.push(el);
-        else
+        this.raceAndEthnicityPrimaryData.push(el);
+        if (el.lovCode === LovType.EthnicityNotListed){
           this.raceAndEthnicityPrimaryNotListed = true;
+        }
       });
     }
 
@@ -202,7 +205,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.raceAndEthnicityPrimaryData=[...this.raceAndEthnicityPrimaryData,...this.otherEthnicityList]
     }
 
-    if (this.raceAndEthnicityPrimaryData.length == 1 || this.raceAndEthnicityPrimaryNotListed) {
+    if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
       this.updateAdjustAttribute('RaceAndEthnicityPrimaryAdjust', StatusFlag.No);
@@ -214,9 +217,21 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
 
   ngAfterViewChecked() {  
-    const firstName = this.appInfoForm.controls["firstName"].value ?? '';
-    const lastName = this.appInfoForm.controls["lastName"].value ?? '';
-    this.ApplicantNameChange.emit(firstName + '  ' + lastName);
+    let firstName = '';
+    let lastName ='';
+    if(this.appInfoForm.controls["firstName"].value === null){
+      firstName = ''
+    }
+    else{
+      firstName = this.appInfoForm.controls["firstName"].value
+    }
+    if(this.appInfoForm.controls["lastName"].value === null){
+      lastName = ''
+    }
+    else{
+      lastName = this.appInfoForm.controls["lastName"].value
+    }
+    this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {     
@@ -393,7 +408,13 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   } 
 
   const Transgender=applicantInfo.client?.clientTransgenderCode?.trim();
-  this.appInfoForm.controls['Transgender']?.setValue(Transgender);
+  if(Transgender == TransGenderCode.YES_F_TO_M || Transgender == TransGenderCode.YES_M_TO_F) {
+    this.appInfoForm.controls['Transgender']?.setValue(TransGenderCode.YES);
+    this.appInfoForm.controls['yesTransgender']?.setValue(Transgender);
+  }
+  else {
+    this.appInfoForm.controls['Transgender']?.setValue(Transgender);
+  }
   if (Transgender==='NOT_LISTED') {
     this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.client.clientTransgenderDesc);
   }

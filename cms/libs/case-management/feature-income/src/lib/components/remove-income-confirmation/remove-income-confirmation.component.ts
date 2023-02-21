@@ -20,6 +20,7 @@ export class RemoveIncomeConfirmationComponent {
   clientId: any;
   clientCaseId : any;
   clientCaseEligibilityId : any;
+  btnDisabled = false
   /** Constructor **/
   constructor(
     private readonly incomeFacade: IncomeFacade, 
@@ -47,16 +48,19 @@ export class RemoveIncomeConfirmationComponent {
 
   // click on Delete employer confirmation
   removeIncome() {
-    if (this.selectedIncome) {
+    // this.incomeFacade.showLoader();
+    if (this.selectedIncome) {      
+      this.btnDisabled = true;
       this.incomeFacade.ShowLoader();
       this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId, this.clientCaseEligibilityId ).subscribe({
-        next: (response: any) => {
+        next: (response: any) => {        
           this.onRemoveIncomeConfirmationClosed();     
           this.incomeFacade.HideLoader();
           this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully') 
           this.sendDetailToIncomeList.next(true);
         },
         error: (err: any) => {
+          this.btnDisabled = false;
           this.incomeFacade.HideLoader();
           this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
         },

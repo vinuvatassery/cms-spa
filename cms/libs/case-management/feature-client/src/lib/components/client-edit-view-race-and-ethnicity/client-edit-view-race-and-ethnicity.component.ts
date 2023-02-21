@@ -25,7 +25,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
   raceAndEthnicityData: Array<any> = [];
   ethnicityData: Array<any> = [];
-  isNotListed: boolean = false;
 
   popupClassMultiSelect = 'multiSelectSearchPopup';
   constructor(
@@ -79,19 +78,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
 
   public RaceAndEthnicityhange(value: any): void {
-    let notListedValue: any = {};
-    value.forEach((val:any)=>{
-      if(val.lovCode === LovType.EthnicityNotListed) {
-        this.isNotListed = true;
-        notListedValue = val;
-      }
-    });
-    if (this.isNotListed && Object.keys(notListedValue).length > 0) {
-      this.appInfoForm.get('RaceAndEthnicity')?.setValue([notListedValue]);
-    }
-    else {
-      this.isNotListed = false;
-    }
     this.RaceAndEthnicityChange.emit(true);
   }
 }

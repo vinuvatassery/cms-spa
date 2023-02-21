@@ -56,6 +56,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   dependentTypeCode! : string;
   fullClientName! : string;
   relationshipList: Array<Lov> = [];
+  btnDisabled = false;
   public showDateError: boolean = false;
   /** Constructor **/
   constructor(  
@@ -257,6 +258,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         dob: this.familyMemberForm?.controls["dob"].value,       
         enrolledInInsuranceFlag: this.familyMemberForm?.controls["enrolledInInsuranceFlag"].value      
       }    
+      this.btnDisabled = true;
     this.addUpdateDependentEvent.next(dependent);   
    }
   }

@@ -46,7 +46,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isSummaryOfBenefitsRequired$ = new BehaviorSubject<boolean>(false);
   showDocRequiredValidation = false;
   nonPreferredFlagValidation = false;
-  changeRequestRequirment = true;
   prescriptionInfo = {} as PrescriptionDrug;
 
   /** Private properties **/
@@ -80,7 +79,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
-    this.summaryOfBenefitsChangeSubscription();
     this.loadSessionData();
     this.prescriptionDrugFormChanged();
   }
@@ -109,10 +107,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       prescriptionDrugsForHivCode: new FormControl('', {
         validators: Validators.required,
       }),
-      nonPreferredPharmacyCode: new FormControl('', {
-        validators: Validators.required,
-      }),
-      noSummaryOfBenefitsFlag: new FormControl(false),
+      nonPreferredPharmacyCode: new FormControl(''),
     });
   }
 
@@ -125,26 +120,10 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (response !== null) {
             this.prescriptionDrug = response;
             this.prescriptionDrugForm.patchValue(response);
-            this.prescriptionDrugForm.controls[
-              'noSummaryOfBenefitsFlag'
-            ]?.patchValue(response?.noSummaryOfBenefitsFlag === 'Y');
-            if (response.document) {
-              this.uploadedBenefitSummaryFile = [
-                {
-                  name: response.document?.documentName,
-                  size: response.document?.documentSize,
-                  src: response.document?.documentPath,
-                  uid: response.document?.documentId,
-                  documentId: response.document?.documentId,
-                },
-              ];
-            }
             this.adjustAttributeInit();
             this.loaderService.hide();
           } else {
-            this.prescriptionDrugForm.controls[
-              'noSummaryOfBenefitsFlag'
-            ]?.patchValue(false);
+           
             this.adjustAttributeInit();
             this.loaderService.hide();
           }
@@ -302,24 +281,11 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private save() {
     this.prescriptionDrugForm.markAllAsTouched();
-    const isSummaryDocRequired =
-      (this.prescriptionDrugForm.controls['noSummaryOfBenefitsFlag']?.value ??
-        false) === false &&
-      this.uploadedBenefitSummaryFile?.length <= 0 &&
-      this.summaryBenefitFiles == undefined;
-    if (isSummaryDocRequired) {
-      this.showDocRequiredValidation = true;
-    }
-    const isLargeFile =
-      (this.prescriptionDrugForm.controls['noSummaryOfBenefitsFlag']?.value ??
-        false) === false &&
-      (this.summaryBenefitFiles?.size ?? 0) >
-        (this.uploadFileRestrictions?.fileRestrictions.maxFileSize ?? 0);
-    this.changeDetector.detectChanges();
+   
+     this.changeDetector.detectChanges();
     if (
-      this.prescriptionDrugForm.valid &&
-      this.showDocRequiredValidation === false &&
-      !isLargeFile
+      this.prescriptionDrugForm.valid 
+     
     ) {
       const drugs = this.workflowFacade.deepCopy(
         this.prescriptionDrugForm.value
@@ -328,89 +294,21 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       drugs.clientId = this.clientId;
       drugs.clientCaseId = this.clientCaseId;
       drugs.concurrencyStamp = this.prescriptionDrug?.concurrencyStamp;
-      drugs.noSummaryOfBenefitsFlag =
-        drugs.noSummaryOfBenefitsFlag ?? false ? StatusFlag.Yes : StatusFlag.No;
-      if (
-        this.prescriptionDrug?.document?.documentId &&
-        this.prescriptionDrug?.document?.concurrencyStamp
-      ) {
-        const doc: PrescriptionDrugDocument = {
-          documentId: this.prescriptionDrug?.document?.documentId,
-          concurrencyStamp: this.prescriptionDrug?.document?.concurrencyStamp,
-        };
-        drugs.document = doc;
-      }
+     
 
-      return this.prescriptionDrugFacade.updatePrescriptionDrug(
-        drugs,
-        this.summaryBenefitFiles
-      );
+       return this.prescriptionDrugFacade.updatePrescriptionDrug(
+         drugs
+       );
     }
 
     return of(false);
   }
 
-  private summaryOfBenefitsChangeSubscription() {
-    this.prescriptionDrugForm.controls[
-      'noSummaryOfBenefitsFlag'
-    ]?.valueChanges.subscribe((value: boolean) => {
-      this.isSummaryOfBenefitsRequired$.next(!value);
-      if (!value) {
-        if (
-          this.summaryBenefitFiles !== undefined ||
-          this.uploadedBenefitSummaryFile[0]?.name !== undefined
-        ) {
-          this.updateWorkflowCount('summary_of_benefits_doc', true);
-        }
-      }
-    });
-  }
-
+ 
   /** Internal event methods **/
-  handleFileSelected(event: any) {
-    this.summaryBenefitsValidator = false;
-    this.summaryBenefitFiles = event.files[0].rawFile;
-    this.showDocRequiredValidation = false;
-    this.updateWorkflowCount('summary_of_benefits_doc', true);
-    if (
-      this.summaryBenefitFiles.size >
-      this.configurationProvider.appSettings.uploadFileSizeLimit
-    ) {
-      this.summaryBenefitsValidator = true;
-    }
-  }
+ 
 
-  handleFileRemoved() {
-    if (this.uploadedBenefitSummaryFile?.length > 0) {
-      this.loaderService.show();
-      this.clientDocumentFacade
-        .removeDocument(this.prescriptionDrug?.document?.documentId ?? '')
-        .subscribe({
-          next: (response) => {
-            if (response === true) {
-              this.notificationSnackbarService.manageSnackBar(
-                SnackBarNotificationType.SUCCESS,
-                'Summary of Benefits Document Removed Successfully!'
-              );
-              this.uploadedBenefitSummaryFile = [];
-              this.summaryBenefitFiles = undefined;
-              this.loadPrescriptionDrug();
-              this.updateWorkflowCount('summary_of_benefits_doc', false);
-              this.loaderService.hide();
-            }
-          },
-          error: (err) => {
-            this.loggingService.logException(err);
-            this.loaderService.hide();
-          },
-        });
-    } else {
-      this.uploadedBenefitSummaryFile = [];
-      this.summaryBenefitFiles = undefined;
-      this.updateWorkflowCount('summary_of_benefits_doc', false);
-      this.loaderService.hide();
-    }
-  }
+  
 
   /* Pharmacy */
   private loadClientPharmacies(clientId: number) {
@@ -523,6 +421,16 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
         ?.updateValueAndValidity();
+        if(
+          this.prescriptionDrugForm.controls[
+            'nonPreferredPharmacyCode'
+          ].value.toUpperCase()!=YesNoFlag.Yes.toUpperCase() &&
+        this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].value.toUpperCase()!=YesNoFlag.No.toUpperCase() )
+        {
+          this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
+        }
+       
+        
     } else {
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')

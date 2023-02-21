@@ -20,7 +20,7 @@ export class RemoveFamilyAndDependentConfirmationComponent {
     /******enumeration Alias *****/
     Dependent = DependentTypeCode.Dependent;
     CAClient = DependentTypeCode.CAClient;    
-
+    btnDisabled = false;
    
     onDeleteConfirm(isDelete : boolean)
     {  
@@ -29,6 +29,7 @@ export class RemoveFamilyAndDependentConfirmationComponent {
         isDelete : isDelete ,
         clientDependentId : this.deleteRqclientDependentId
       }
+      this.btnDisabled = true;
       this.deleteConfimEvent.emit(deleteConfirmParams);
     }
 }

@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { VendorFacade } from '@cms/case-management/domain';
+import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-carrier-name',
@@ -29,7 +29,9 @@ public isLoading =false;
   constructor(
     private formBuilder: FormBuilder,
     private readonly vendorFacade: VendorFacade,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private insurancePolicyFacade: HealthInsurancePolicyFacade,
+    private readonly insurancePlanFacade:InsurancePlanFacade
   ) {
     this.healthInsuranceForm = this.formBuilder.group({
       insuranceCarrierName: [''],
@@ -45,9 +47,10 @@ public isLoading =false;
     this.vendorFacade.loadAllVendors().subscribe({
       next: (data: any) => {
         if (!Array.isArray(data)) return;
-        this.carrierNames = data.sort((a: any, b: any) => (a.vendorName > b.vendorName) ? 1 : ((b.vendorName > a.vendorName) ? -1 : 0));
+        this.carrierNames = data.sort((a: any, b: any) => (a.vendorName > b.vendorName) ? 1 : ((b.vendorName > a.vendorName) ? -1 : 0));        
         this.insuranceCarrierNameData.emit(this.carrierNames);
-        this.isLoading=false;
+        this.isLoading=false;  
+        this.insurancePlanFacade.planLoaderSubject.next(false)     
       },
       error: (error: any) => { 
         this.isLoading=false;

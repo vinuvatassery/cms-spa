@@ -50,7 +50,8 @@ export class ClientEligibilityComponent implements OnInit {
   //questions: any = [];
   reviewQuestionCode = ReviewQuestionCode;
   acceptedApplicationStatus = true;
-
+  btnDisabled = false; 
+  
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
