@@ -5,16 +5,10 @@ import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 
 import { ConfigurationProvider, LoaderService, LoggingService,  SnackBarNotificationType } from '@cms/shared/util-core';
 import {  debounceTime, distinctUntilChanged,  pairwise,  startWith, Subscription,  } from 'rxjs';
-/** Facades **/
+/** Internal libraries **/
 import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag, TransGenderCode,WorkflowFacade} from '@cms/case-management/domain';
-
-/** Facades **/
 import { UIFormStyle, IntlDateService,DataQuery } from '@cms/shared/ui-tpa'
-import { LovFacade } from '@cms/system-config/domain';
-
 import { LovFacade, LovType } from '@cms/system-config/domain';
-
-import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
  
 @Component({
   selector: 'case-management-client-edit-view',

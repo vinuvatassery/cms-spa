@@ -48,7 +48,6 @@ export class RemoveIncomeConfirmationComponent {
 
   // click on Delete employer confirmation
   removeIncome() {
-    // this.incomeFacade.showLoader();
     if (this.selectedIncome) {      
       this.btnDisabled = true;
       this.incomeFacade.ShowLoader();

@@ -1,16 +1,5 @@
 /** Angular **/
-import {  AfterViewInit, OnInit } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-/** External libraries **/
-import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
-/** Facade **/
-import { WorkflowFacade, ClientFacade, ApplicantInfo, Client, ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, ClientRace, 
-  ClientSexualIdentity, clientCaseEligibilityFlag, ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix, MaterialFormat, TransGenderCode } from '@cms/case-management/domain';
-/** Entities **/
-import { CompletionChecklist } from '@cms/case-management/domain';
-/** Enums **/
-import { NavigationType,PronounCode } from '@cms/case-management/domain';
+import {  AfterViewInit, OnInit, OnDestroy, Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
@@ -22,8 +11,9 @@ import { WorkflowFacade, ClientFacade, ApplicantInfo, Client,
   ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender, 
   ClientRace, ClientSexualIdentity, ClientCaseEligibilityFlag, 
   ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag,ControlPrefix,
-   MaterialFormat, CompletionChecklist, NavigationType,PronounCode } from '@cms/case-management/domain';
+   MaterialFormat, CompletionChecklist, NavigationType,PronounCode, TransGenderCode } from '@cms/case-management/domain';
 import { LoaderService,LoggingService,SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
+
 
 @Component({
   selector: 'case-management-client-page',

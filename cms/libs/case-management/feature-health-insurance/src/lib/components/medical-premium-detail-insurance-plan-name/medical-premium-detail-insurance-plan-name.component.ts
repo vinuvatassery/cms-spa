@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,7 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings  } from '@progress/kendo-angular-dropdowns';
 import {  LovFacade } from '@cms/system-config/domain';
 import { InsurancePlanFacade, HealthInsurancePolicyFacade } from '@cms/case-management/domain';
-import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { SnackBarNotificationType, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-plan-name',
