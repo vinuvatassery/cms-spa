@@ -772,7 +772,6 @@ updateWorkflowCount(data: any){
     }
     else {
       this.appInfoForm.controls['middleName'].enable();
-      this.appInfoForm.controls['middleName'].setValidators(Validators.required);
       this.appInfoForm.controls['middleName'].updateValueAndValidity();    
     }
   }
@@ -788,10 +787,7 @@ updateWorkflowCount(data: any){
       this.appInfoForm.controls['prmInsLastName'].disable();
     }
     else {
-
-      this.appInfoForm.controls['prmInsFirstName'].setValidators(Validators.required);
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
-      this.appInfoForm.controls['prmInsLastName'].setValidators(Validators.required);
       this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsFirstName'].enable();
       this.appInfoForm.controls['prmInsLastName'].enable();
@@ -809,10 +805,7 @@ updateWorkflowCount(data: any){
       this.appInfoForm.controls['officialIdLastName'].disable();
     }
     else {
-
-      this.appInfoForm.controls['officialIdFirstName'].setValidators(Validators.required);
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
-      this.appInfoForm.controls['officialIdLastName'].setValidators(Validators.required);
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdFirstName'].enable();
       this.appInfoForm.controls['officialIdLastName'].enable();
@@ -824,10 +817,13 @@ updateWorkflowCount(data: any){
     if (isChecked) {
       this.isSSNChecked = true;
       this.appInfoForm.controls['ssn'].disable();
+      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
     }
     else {
       this.isSSNChecked = false;
       this.appInfoForm.controls['ssn'].enable();
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
     }
     this.searchDuplicateClient('ssn');
   }
