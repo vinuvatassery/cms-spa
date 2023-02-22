@@ -120,6 +120,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       othersCoveredOnPlan: this.formBuilder.array([]),
       newOthersCoveredOnPlan: this.formBuilder.array([]),
       othersCoveredOnPlanSaved: [[]],
+      othersCoveredOnPlanSelection: [''],
       isClientPolicyHolderFlag: [''],
       policyHolderFirstName: [''],
       policyHolderLastName: [''],

@@ -8,7 +8,8 @@
                     <section *ngIf="dataItem.RamseelInfo">
                         <div class="flex-col flex-col-6 mt-2 p-0">
                             <h4>Ramsell Info</h4>
-                            <table summary="Ramsell Info">
+                            <table>
+                                <caption hidden> Ramsell Info</caption>
                                 <tr hidden>
                                     <th scope="col"></th>
                                     <th scope="col"></th>
@@ -34,9 +35,10 @@
 
                     </section>
                     <div *ngIf="dataItem.GroupHistory" class="mt-5">
-                        <h4>Group History</h4>
+                        <h4  >Group History</h4>
 
-                        <table summary="Group History">
+                        <table >
+                            <caption hidden> Group History</caption>
                             <tr>
                                 <th>Group</th>
                                 <th>Start Date</th>
@@ -61,7 +63,8 @@
                     <div *ngIf="dataItem.FlipHistory" class="mt-5 mb-2">
                         <h4>FPL History</h4>
 
-                        <table summary="FPL History">
+                        <table>
+                            <caption hidden> FPL History</caption>
                             <tr >
                                 <th>FPL</th>
                                 <th>Start Date</th>
