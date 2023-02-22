@@ -332,7 +332,6 @@
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
-            <!-- <kendo-label class="k-checkbox-label" for="homeAddressProofUploaded" text="Proof of home address"> -->
             <kendo-fileselect 
             aria-label="proof of home address"  
             name="upload proof"
@@ -356,10 +355,10 @@
               </span>
             </ng-template>
           </kendo-fileselect>
-        <!-- </kendo-label> -->
           <kendo-formhint>Max file size 25MB</kendo-formhint> 
-          <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of home address is required
+          <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of Home Address is required
           </kendo-formerror>
+          <kendo-formerror *ngIf="showAddressProofSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
           </div>
         </div>
         <fieldset class="k-form-fieldset">  
