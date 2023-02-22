@@ -26,7 +26,7 @@
         aria-label="cancel updating priority">
         Cancel
       </button>
-      <button kendoButton [primary]="true" (click)="onSavePriority()" aria-label="update priority">
+      <button kendoButton [primary]="true" (click)="onSavePriority()" aria-label="update priority" [disabled]="btnDisabled">
        {{pharmacyPriorityModalButtonText}}
       </button>
     </div>
