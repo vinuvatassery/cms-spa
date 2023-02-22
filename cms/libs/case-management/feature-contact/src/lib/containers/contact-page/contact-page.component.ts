@@ -597,11 +597,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isNoMailAddressValidationRequired) return;
     const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
     const changedMailingAddress: MailAddress = {
-      address1: mailingAddressGroup?.controls['address1']?.value,
-      address2: mailingAddressGroup?.controls['address2']?.value,
-      city: mailingAddressGroup?.controls['city']?.value,
-      state: mailingAddressGroup?.controls['state']?.value,
-      zip5: mailingAddressGroup?.controls['zip']?.value      
+      address1: mailingAddressGroup?.controls['address1']?.value ?? '',
+      address2: mailingAddressGroup?.controls['address2']?.value ?? '',
+      city: mailingAddressGroup?.controls['city']?.value ?? '',
+      state: mailingAddressGroup?.controls['state']?.value ?? '',
+      zip5: mailingAddressGroup?.controls['zip']?.value ?? ''      
     }
 
     const isValid = mailingAddressGroup?.controls['address1']?.valid && (mailingAddressGroup?.controls['address1']?.value !== '' && mailingAddressGroup?.controls['address1']?.value !== null)
@@ -647,11 +647,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isNoMailAddressValidationRequired) return;
     const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
     const changedMailingAddress: MailAddress = {
-      address1: homeAddressGroup?.controls['address1']?.value,
-      address2: homeAddressGroup?.controls['address2']?.value,
-      city: homeAddressGroup?.controls['city']?.value,
-      state: homeAddressGroup?.controls['state']?.value,
-      zip5: homeAddressGroup?.controls['zip']?.value      
+      address1: homeAddressGroup?.controls['address1']?.value ?? '',
+      address2: homeAddressGroup?.controls['address2']?.value ?? '',
+      city: homeAddressGroup?.controls['city']?.value ?? '',
+      state: homeAddressGroup?.controls['state']?.value ?? '',
+      zip5: homeAddressGroup?.controls['zip']?.value ?? ''      
     }
 
     const isValid = homeAddressGroup?.controls['address1']?.valid && (changedMailingAddress?.address1 !== '' && changedMailingAddress?.address1 !== null)
@@ -878,7 +878,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (data: ContactInfo) => {
         this.loaderService.hide();
         if (data) {
-          this.contactInfoForm.reset();
           this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
           this.contactInfo = data;
           this.setFormValues();
@@ -1404,7 +1403,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-
   uploadEventHandler(e: SelectEvent) {
     if (this.uploadedHomeAddressProof) {
       const document: ClientDocument = {
@@ -1499,6 +1497,7 @@ private addSaveForLaterSubscription(): void {
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
      if(response){
+      this.contactInfoForm.reset();
       this.removeValidators();
       this.loadContactInfo();
      }
