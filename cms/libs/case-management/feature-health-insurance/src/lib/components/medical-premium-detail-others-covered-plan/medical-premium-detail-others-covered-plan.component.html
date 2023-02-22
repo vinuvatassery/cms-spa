@@ -22,17 +22,22 @@
                 Response is required.</kendo-formerror>
         </div>
     </fieldset>
-<div *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'">
+<div *ngIf="healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y'"     >
     <div class="flex-col mt-2" >
         <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
                 <h5>Others covered on the plan(Select all that apply)</h5>
             </legend>
             <div class="component-list-h" formArrayName="othersCoveredOnPlan">
+                <span class="app-c-badge  mt-3" *ngIf="otherCoveredPlanLoader">       
+                    <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+                    <span> Fetching dependent...</span> 
+                </span>
                 <div *ngFor="let person of othersCoveredOnPlan.controls; let i=index">
                     <div class="flex-row pl-3 mt-2" [formGroupName]="i">
                         <span class="app-checkboxwidtext-wrapper">
                             <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox
+                           
                                 formControlName="enrolledInInsuranceFlag" (change)="updateEnrollStatus($event, i)"
                                 aria-labelledby="othersCoverdSelect" id="othersCoverdSelect{{i}}"
                                  />
@@ -41,6 +46,7 @@
                         </span>
                     </div>
                 </div>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['othersCoveredOnPlanSelection'].valid && isViewContentEditable==false">A Response is required.</kendo-formerror>
             </div>
         </fieldset>
     </div>

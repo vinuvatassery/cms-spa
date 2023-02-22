@@ -214,7 +214,8 @@ export class PharmacyListComponent implements OnInit {
   }
 
   removeClientPharmacyOnEditMode(){
-    this.removePharmacyEvent(this.selectClientPharmacyId);
+    this.handleClosePharmacyClicked()
+    this.onRemovePharmacyClicked(this.selectClientPharmacyId);
   }
 
   removeClientPharmacy(data: any) {

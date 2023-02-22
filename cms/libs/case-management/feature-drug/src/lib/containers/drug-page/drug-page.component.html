@@ -118,66 +118,12 @@
         ></kendo-label>
       </span>
       <kendo-formerror   *ngIf="nonPreferredFlagValidation">Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
-      <!-- <kendo-formerror>Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror> -->
     </kendo-formfield>
     </div>
     </fieldset>
   <!-- </form> -->
   </section>
-  <section  *ngIf="changeRequestRequirment">
-    <div class="flex-row mt-3">
-      <div class="flex-col mat-split-list">
-        <h5 class="text-capital">
-          Summary of benefits with pharmacy Information
-        </h5>
-        <span class="app-checkboxwidtext-wrapper">
-          <input
-            class="adjust-attr"
-            type="checkbox"
-            name="noSummaryOfBenefits"
-            kendoCheckBox
-            id="noSummaryOfBenefits"
-            formControlName="noSummaryOfBenefitsFlag"
-          />
-          <kendo-label 
-          class="k-checkbox-label" 
-          for="noSummaryOfBenefits"
-          text="No Summary of Benefits"
-            ></kendo-label>
-        </span>
-      </div>
-    </div>
-    <div class="flex-row mt-2" *ngIf="isSummaryOfBenefitsRequired$ | async">
-      <div class="flex-col flex-col-10">
-        <kendo-upload
-        aria-label="upload proof" 
-        name="myFileSelect" 
-        #myFileSelect="ngModel"
-        [removeUrl]="uploadRemoveUrl"
-        [restrictions]="uploadFileRestrictions.fileRestrictions"   
-        [multiple]="false" 
-        [autoUpload]="false"
-        [ngModel]="uploadedBenefitSummaryFile" 
-        [ngModelOptions]="{standalone: true}"
-        (select)="handleFileSelected($event)" 
-        (remove)="handleFileRemoved()">
-        <ng-template kendoUploadFileInfoTemplate  let-files let-state="state">
-          <div (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-            <span  *ngIf="!files[0].documentId" >{{files[0].name}} </span> 
-            <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
-              <a>{{ files[0].name }} </a>
-            </button>
-            <br>
-            <span>{{files[0].size | fileSize}}</span> 
-          </div>
-        </ng-template> 
-      </kendo-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="summaryBenefitsValidator">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-        <kendo-formerror *ngIf="showDocRequiredValidation">Summary of Benefits is required</kendo-formerror>
-      </div>
-    </div>
-  </section>
+ 
 </form>
 
   <!-- Pharmacies -->

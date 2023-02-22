@@ -282,14 +282,11 @@ export class FamilyAndDependentFacade {
   }
 
   loadClientDependents(clientId: number) {
-    this.ShowLoader();
     this.dependentDataService.loadClientDependents(clientId).subscribe({
       next: (dependentsResponse : any) => {
               this.clientDependentsSubject.next(dependentsResponse);
-               this.HideLoader();
       },
       error: (err) => {
-        this.HideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });

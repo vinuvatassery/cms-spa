@@ -22,7 +22,7 @@ export class PrescriptionDrugFacade {
     private readonly snackbarService: NotificationSnackbarService,
   ) { }
 
-  updatePrescriptionDrug(prescriptionDrug: any, summaryBenefitFiles: any): Observable<any> {
+  updatePrescriptionDrug(prescriptionDrug: any): Observable<any> {
     const formData: any = new FormData();
     for (let key in prescriptionDrug) {
       if (typeof prescriptionDrug[key] == 'object') {
@@ -32,7 +32,6 @@ export class PrescriptionDrugFacade {
       }
       formData.append(key, prescriptionDrug[key]);
     }
-    formData.append('summaryBenefitDocument', summaryBenefitFiles);
     return this.prescriptionDrugDataService.updatePrescriptionDrugService(prescriptionDrug?.clientId, formData).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
