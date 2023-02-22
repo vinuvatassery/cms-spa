@@ -91,12 +91,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   
 
   ngAfterViewInit() {
-    const adjustControls =
-      this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
-    adjustControls.forEach((control: any) => {
-      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
-    });
-
     this.workflowFacade.enableSaveButton();
   }
 
@@ -119,12 +113,11 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (response !== null) {
             this.prescriptionDrug = response;
             this.prescriptionDrugForm.patchValue(response);
-            this.adjustAttributeInit();
+            this.adjustAttributeChanged(response?.prescriptionDrugsForHivCode === 'YES');
             this.loaderService.hide();
           } else {
-           
-            this.adjustAttributeInit();
             this.loaderService.hide();
+            this.adjustAttributeChanged(false);
           }
         },
         error: (err) => {
@@ -170,59 +163,27 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private adjustAttributeChanged(event: Event) {
-    const data: CompletionChecklist = {
-      dataPointName: (event.target as HTMLInputElement).name,
-      status: (event.target as HTMLInputElement).checked
-        ? StatusFlag.Yes
-        : StatusFlag.No,
-    };
-
-    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
-  }
-
-  private adjustAttributeInit() {
-    const initialAdjustment: CompletionChecklist[] = [];
-    const adjustControls =
-      this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
-    adjustControls.forEach((control: any) => {
+  private adjustAttributeChanged(isRequired: boolean) {
       const data: CompletionChecklist = {
-        dataPointName: control.name,
-        status: control.checked ? StatusFlag.Yes : StatusFlag.No,
+        dataPointName: 'nonPreferredPharmacyCode_ adjusted',
+        status: isRequired ? StatusFlag.Yes : StatusFlag.No,
       };
 
-      initialAdjustment.push(data);
-    });
-
-    if (initialAdjustment.length > 0) {
-      this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
-    }
-
-    this.updateInitialCompletionCheckList();
+      this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+      this.updateInitialCompletionCheckList();
   }
 
   private updateInitialCompletionCheckList() {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.prescriptionDrugForm.controls).forEach((key) => {
-      if (
-        this.prescriptionDrugForm?.get(key)?.value &&
-        this.prescriptionDrugForm?.get(key)?.valid
-      ) {
         let item: CompletionChecklist = {
           dataPointName: key,
-          status: StatusFlag.Yes,
+          status: this.prescriptionDrugForm?.get(key)?.value ? StatusFlag.Yes:  StatusFlag.No,
         };
 
-        completedDataPoints.push(item);
-      }
+        completedDataPoints.push(item);     
     });
 
-    completedDataPoints.push({
-      dataPointName: 'summary_of_benefits_doc',
-      status: this.prescriptionDrug?.document?.documentName
-        ? StatusFlag.Yes
-        : StatusFlag.No,
-    });
     if (completedDataPoints.length > 0) {
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
@@ -411,7 +372,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (
       this.prescriptionDrugForm.controls[
         'prescriptionDrugsForHivCode'
-      ].value.toUpperCase() == YesNoFlag.Yes.toUpperCase()
+      ].value?.toUpperCase() == YesNoFlag.Yes.toUpperCase()
     ) {
       this.nonPreferredFlagValidation = true;
       this.prescriptionDrugForm
@@ -423,12 +384,12 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if(
           this.prescriptionDrugForm.controls[
             'nonPreferredPharmacyCode'
-          ].value.toUpperCase()!=YesNoFlag.Yes.toUpperCase() &&
-        this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].value.toUpperCase()!=YesNoFlag.No.toUpperCase() )
+          ].value?.toUpperCase()!=YesNoFlag.Yes.toUpperCase() &&
+        this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].value?.toUpperCase()!=YesNoFlag.No.toUpperCase() )
         {
           this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
         }
-       
+        this.adjustAttributeChanged(true);
         
     } else {
       this.prescriptionDrugForm
@@ -441,6 +402,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         .get('nonPreferredPharmacyCode')
         ?.updateValueAndValidity();
       this.nonPreferredFlagValidation = false;
+      this.adjustAttributeChanged(false);
     }
   }
 }
