@@ -22,6 +22,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   private loadSessionSubscription!: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   /** Public properties **/
   tareaCessationMaxLength = 300;
   tareaCessationCharachtersCount!: number;
@@ -61,6 +62,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     this.smokingCessationFormChanged();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -68,6 +70,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     this.loadSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -100,9 +103,11 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
 
   private loadSmokingCessation() {
     this.isDisabled = true;
+    this.loaderService.show()
     this.smokingCessationFacade.loadSmokingCessation(this.clientCaseEligibilityId,
       this.clientCaseId).subscribe({
         next: response => {
+          this.smokingCessationForm.reset();
           this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.smokingCessationNote)
           if (response.smokingCessationReferralFlag == StatusFlag.Yes) {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.Yes)
@@ -114,6 +119,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
           }
           this.changeDetector.detectChanges();
           this.adjustDataAttribute(!this.isDisabled);
+          this.loaderService.hide();
         },
         error: error => {
           this.smokingCessationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
@@ -282,6 +288,16 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   checkValidations() {
     this.validate();
     return this.smokingCessationForm.valid;
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.smokingCessationForm.controls["smokingCessation"].setValidators(null);
+      this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity();
+      this.loadSmokingCessation();
+     }
+    });
   }
 
 }

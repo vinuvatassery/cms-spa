@@ -52,6 +52,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadSessionSubscription!: Subscription;
   private saveForLaterClickSubscription!: Subscription;
   private saveForLaterValidationSubscription!: Subscription;
+  private discardChangesSubscription !: Subscription;
 
   /** Constructor **/
   constructor(
@@ -80,6 +81,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterValidationsSubscription();
     this.loadSessionData();
     this.prescriptionDrugFormChanged();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -87,6 +89,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
   
 
@@ -110,6 +113,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       .loadPrescriptionDrug(this.clientId, this.clientCaseEligibilityId)
       .subscribe({
         next: (response) => {
+          this.prescriptionDrugForm.reset();
           if (response !== null) {
             this.prescriptionDrug = response;
             this.prescriptionDrugForm.patchValue(response);
@@ -404,6 +408,14 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.nonPreferredFlagValidation = false;
       this.adjustAttributeChanged(false);
     }
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+     this.loadPrescriptionDrug();
+     }
+    });
   }
 }
 
