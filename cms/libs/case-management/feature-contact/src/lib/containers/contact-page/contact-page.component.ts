@@ -507,9 +507,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         state: new FormControl(StatesInUSA.Oregon),
         zip: new FormControl(''),
         county: new FormControl(''),
-        homelessFlag: new FormControl(false, { validators: Validators.required }),
-        noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required }),
-        sameAsMailingAddressFlag: new FormControl(false, { validators: Validators.required }),
+        homelessFlag: new FormControl(false),
+        noHomeAddressProofFlag: new FormControl(false),
+        sameAsMailingAddressFlag: new FormControl(false),
         housingStabilityCode: new FormControl('', { validators: Validators.required }),
       }),
 
@@ -604,10 +604,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       zip5: mailingAddressGroup?.controls['zip']?.value      
     }
 
-    const isValid = mailingAddressGroup?.controls['address1']?.valid && mailingAddressGroup?.controls['address1']?.value !== ''
-                    && mailingAddressGroup?.controls['city']?.valid && mailingAddressGroup?.controls['city']?.value !== '' 
-                    && mailingAddressGroup?.controls['state']?.valid && mailingAddressGroup?.controls['state']?.value !== ''
-                    && mailingAddressGroup?.controls['zip']?.valid && mailingAddressGroup?.controls['zip']?.value !== ''
+    const isValid = mailingAddressGroup?.controls['address1']?.valid && (mailingAddressGroup?.controls['address1']?.value !== '' && mailingAddressGroup?.controls['address1']?.value !== null)
+                    && mailingAddressGroup?.controls['city']?.valid && (mailingAddressGroup?.controls['city']?.value !== '' && mailingAddressGroup?.controls['city']?.value !== null)
+                    && mailingAddressGroup?.controls['state']?.valid && (mailingAddressGroup?.controls['state']?.value !== '' && mailingAddressGroup?.controls['state']?.value !== null)
+                    && mailingAddressGroup?.controls['zip']?.valid && (mailingAddressGroup?.controls['zip']?.value !== '' && mailingAddressGroup?.controls['zip']?.value !== null)
 
     if (!isValid) return;
     if (this.mailAddressEntered && !isNoPopup) {
