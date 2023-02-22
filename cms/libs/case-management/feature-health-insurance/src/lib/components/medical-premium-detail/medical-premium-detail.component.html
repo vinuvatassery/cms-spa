@@ -176,8 +176,8 @@
         </div>
 
         <div class="flex-col mat-form-sm-b-space ">
-          <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"   
-          [insurancePlans]="insurancePlans"  
+          <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"
+          [insurancePlans]="insurancePlans"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-insurance-plan-name>
         </div>
         <div class="flex-col"
@@ -242,7 +242,7 @@
       </div>
       <div class="flex-col mb-2  file-uploads"
         *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra">
-        <h5 class="text-capital">Copy of Summary of Benefits and Coverage</h5>
+        <h5 class="text-capital">Copy of Summary of Benefits</h5>
         <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
           (remove)="handleFileRemoved(copyOfSummaryFiles, 'summary')" #copyOfSummary [removeUrl]="uploadRemoveUrl"
@@ -270,7 +270,7 @@
     </div>
     <div *ngIf="isOpenDdl">
       <div class="flex-col mb-2 mt-2 file-uploads"
-        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || medicareInsuranceInfoCheck">
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
