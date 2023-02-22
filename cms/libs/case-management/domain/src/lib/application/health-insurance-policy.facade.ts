@@ -225,13 +225,8 @@ export class HealthInsurancePolicyFacade {
         continue;
       }
       else if (typeof obj[i] == 'object') {
-        if (this.dateFields.indexOf(i) >= 0) {
-          if (obj[i] != null && obj[i] != "") {
-            fd.append(i, (new Date(obj[i]).toLocaleDateString()));
-          }
-          else {
+        if (this.dateFields.indexOf(i) >= 0) {         
             fd.append(i, obj[i]);
-          }
         }
         else {
           this.formDataAppendObject(fd, obj[i], k);

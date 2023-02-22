@@ -3,7 +3,7 @@ import { AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries **/
-import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map, tap } from 'rxjs';
+import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map, tap, debounceTime } from 'rxjs';
 
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, StatesInUSA } from '@cms/case-management/domain';
@@ -11,7 +11,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { StatusFlag } from '@cms/case-management/domain';
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute,Router } from '@angular/router';
 
 @Component({
@@ -50,7 +50,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedAddressForm!: FormGroup;
   uploadedHomeAddressProof!: File | undefined;
   fileUploadRestrictions: FileRestrictions = {
-    maxFileSize: 25000000,
+    maxFileSize: this.configurationProvider.appSettings.uploadFileSizeLimit,
   };
   showCountyLoader = this.contactFacade.showloaderOnCounty$;
   showMailAddressValidationLoader$ = new BehaviorSubject(false);
@@ -60,6 +60,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   showPreferredContactLoader = false;
   isHomeAddressStateOregon$ = new BehaviorSubject(true);;
   public homeAddressProofFile: any = undefined;
+  showAddressProofSizeValidation = false;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -82,7 +83,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly snackbarService: NotificationSnackbarService,
     private readonly route: ActivatedRoute,
     public readonly clientDocumentFacade: ClientDocumentFacade,
-    private readonly router :Router
+    private readonly router :Router,
+    private readonly configurationProvider: ConfigurationProvider,
   ) { }
 
   /** Lifecycle hooks **/
@@ -199,6 +201,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addContactInfoFormChangeSubscription() {
     this.contactInfoForm.valueChanges
       .pipe(
+        debounceTime(200),
         map(_ => this.contactInfoForm.getRawValue()),
         distinctUntilChanged(),
         startWith(null), pairwise()
@@ -580,7 +583,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private save() {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
-    const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.fileUploadRestrictions?.maxFileSize ?? 0);
+    const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.configurationProvider?.appSettings.uploadFileSizeLimit ?? 0);
     const isHomeAddressStateOregon = this.contactInfoForm?.get('homeAddress.state')?.value == StatesInUSA.Oregon;
     if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile && isHomeAddressStateOregon === true) {
       this.loaderService.show()
@@ -1077,6 +1080,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isNoProofOfHomeChecked = isChecked;
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
+      this.showAddressProofSizeValidation= false;
+      var removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
+      removeButton[0]?.click();
     }    
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);    
   }
@@ -1364,11 +1370,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
     this.showAddressProofRequiredValidation = false;
+    this.showAddressProofSizeValidation = (this.uploadedHomeAddressProof?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {
- 
+    this.showAddressProofSizeValidation = false;
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
       this.loaderService.show();
       this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
