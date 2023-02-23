@@ -8,11 +8,10 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Priority">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="onChangePriority($event,i)"
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="changePriority()"
             [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"
             textField="lovDesc" valueField="lovCode" [data]="copyLoadPriorties">
           </kendo-dropdownlist>
-          <kendo-formerror *ngIf="priorityValidation">Duplicate priorties.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
@@ -26,7 +25,7 @@
         aria-label="cancel updating priority">
         Cancel
       </button>
-      <button kendoButton [primary]="true" (click)="onSavePriority()" aria-label="update priority" [disabled]="btnDisabled">
+      <button kendoButton [primary]="true" (click)="onSavePriority()"  aria-label="update priority" [disabled]="btnDisabled">
        {{pharmacyPriorityModalButtonText}}
       </button>
     </div>
