@@ -98,7 +98,7 @@
             </div>
           </fieldset>
         </div>
-        <div class="flex-col mb-2 mt-2 file-uploads">
+        <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="healthInsuranceForm.controls['onLisFlag'].value==='Y'">
           <h5 class="text-capital">Copy of Medicare Card</h5>
           <kendo-upload aria-label="copy of insurance" name="copyOfMediacreCard" [disabled]="isViewContentEditable"
             [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'medicareCard')"
