@@ -23,7 +23,6 @@ export class NotificationSnackbarService {
 
       manageSnackBar(type : SnackBarNotificationType , errorBody : any)
       {      
-          
         let subtitleText = errorBody;
         const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
         
@@ -42,7 +41,7 @@ export class NotificationSnackbarService {
           {
              //exception plugin result DTO
               errorMessage =  errorData?.error?.details == null ? errorData?.error?.message : errorData?.error?.details
-              errorMessage = errorData?.message ?? ''
+              errorMessage = errorMessage ? errorMessage: (errorData?.message ?? '');
           }         
           subtitleText = errorMessage ?? errorData?.name ;   
         }

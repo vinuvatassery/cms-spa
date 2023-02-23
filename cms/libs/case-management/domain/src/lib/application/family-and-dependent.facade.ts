@@ -25,11 +25,11 @@ import { IntlService } from '@progress/kendo-angular-intl';
 export class FamilyAndDependentFacade {
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'fullName'
-  public sortType = '' 
+  public sortType = ''
   public sort: SortDescriptor[] = [{
-    field: this.sortValue, 
+    field: this.sortValue,
   }];
-  
+
 
   /** Private properties **/
   private dependentSearchSubject = new Subject<any>();
@@ -47,7 +47,7 @@ export class FamilyAndDependentFacade {
   displaydateFormat = this.configurationProvider.appSettings.displaydateFormat;
   /** Public properties **/
   products$ = this.productsSubject.asObservable();
-  
+
   dependentSearch$ = this.dependentSearchSubject.asObservable();
   ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   dependents$ = this.dependentsSubject.asObservable();
@@ -64,19 +64,19 @@ export class FamilyAndDependentFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   familyfacadesnackbar$ = this.snackbarSubject.asObservable();
- 
+
 
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
-    this.HideLoader();   
+    this.hideLoader();
   }
 
 
@@ -89,107 +89,107 @@ export class FamilyAndDependentFacade {
     public intl: IntlService ) {}
 
   /** Public methods **/
-  ShowLoader()
+  showLoader()
   {
     this.loaderService.show();
   }
 
-  HideLoader()
+  hideLoader()
   {
     this.loaderService.hide();
   }
 
   DeleteDependent(dependentId: string): void {
-   this.ShowLoader();
+   this.showLoader();
     this.dependentDataService.deleteDependent(dependentId).subscribe({
-      next: (dependentdeleteResponse) => {      
+      next: (dependentdeleteResponse) => {
        if(dependentdeleteResponse == true)
-       {     
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')  
-       }             
+       {
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')
+       }
         this.dependentdeleteSubject.next(dependentdeleteResponse);
-        this.HideLoader();
+        this.hideLoader();
       },
-      error: (err) => {        
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
   AddNewDependent(dependent: Dependent): void {
-    this.ShowLoader();
+    this.showLoader();
     this.dependentDataService.addNewDependent(dependent).subscribe({
       next: (addNewdependentsResponse) => {
         if(addNewdependentsResponse)
-        {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Dependent Added Successfully')  
+        {
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Dependent Added Successfully')
         }
-           
+
         this.dependentAddNewSubject.next(addNewdependentsResponse);
-        this.HideLoader();
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
   UpdateNewDependent(dependent: Dependent): void {
-    this.ShowLoader();
+    this.showLoader();
     this.dependentDataService.updateNewDependent(dependent).subscribe({
-      next: (updateNewdependentsResponse) => {        
-        
+      next: (updateNewdependentsResponse) => {
+
         if(updateNewdependentsResponse)
-        {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent data Updated')  
+        {
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent data Updated')
         }
-           
+
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
-        this.HideLoader();
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
   GetNewDependent(dependentId: string) : void {
-    this.ShowLoader();
+    this.showLoader();
     this.dependentDataService.getNewDependent(dependentId).subscribe({
-      next: (getNewdependentsResponse) => {    
+      next: (getNewdependentsResponse) => {
         this.dependentGetNewSubject.next(getNewdependentsResponse);
-        this.HideLoader();
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
 
-  GetExistingClientDependent(clientDependentId: string) : void {   
-    this.ShowLoader(); 
+  GetExistingClientDependent(clientDependentId: string) : void {
+    this.showLoader();
     this.dependentDataService.getExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
-      next: (dependentGetExistingResponse) => {      
+      next: (dependentGetExistingResponse) => {
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
-        this.HideLoader();
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
   loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
-    this.ShowLoader();
-    this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({ 
-      next: (dependentsResponse : any) => {         
+    this.showLoader();
+    this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({
+      next: (dependentsResponse : any) => {
               if(dependentsResponse)
-              {      
+              {
                   const gridView = {
-                    data : dependentsResponse["items"] ,        
-                    total:  dependentsResponse["totalCount"]  
-                    };       
+                    data : dependentsResponse["items"] ,
+                    total:  dependentsResponse["totalCount"]
+                    };
                 const workFlowdata: CompletionChecklist[] = [{
                   dataPointName: 'family_dependents',
                   status: (parseInt(dependentsResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
@@ -198,32 +198,32 @@ export class FamilyAndDependentFacade {
                 this.workflowFacade.updateChecklist(workFlowdata);
                 this.dependentsSubject.next(gridView);
                }
-               this.HideLoader();       
+               this.hideLoader();
       },
       error: (err) => {
         this.workflowFacade.updateChecklist([{
           dataPointName: 'family_dependents',
           status: StatusFlag.No
         }]);
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
-  updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string) {    
-    this.ShowLoader();
+  updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string) {
+    this.showLoader();
     return this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents)
   }
 
   loadDependentsStatus(clientCaseEligibilityId : string) : void {
-    this.ShowLoader();
+    this.showLoader();
     this.dependentDataService.loadDependentsStatus(clientCaseEligibilityId).subscribe({
       next: (dependentStatusGetResponse) => {
         this.dependentStatusGetSubject.next(dependentStatusGetResponse);
-        this.HideLoader();
+        this.hideLoader();
       },
-      error: (err) => {  
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -232,67 +232,73 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.searchDependents(text , clientId).subscribe({
       next: (dependentSearchResponse) => {
 
-        Object.values(dependentSearchResponse).forEach((key) => {   
-                   
+        Object.values(dependentSearchResponse).forEach((key) => {
+
           key.fullName = key.firstName + ' ' + key.lastName
           key.ssn=  (key.ssn =='' || key.ssn == null) ? '' : 'xxx-xx-' +key.ssn.slice(-4);
-          
+
           const dateOB = new Date(key.dob)
-                          
+
           key.dob = ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )
-          
-          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)     
-          
-          
-          if(key?.clientDependentId === '00000000-0000-0000-0000-000000000000')   
+
+          key.fullCustomName =key?.fullName + ' DOB '+key?.dob + ((key?.ssn == '' || key?.ssn == null) ? "" :' SSN '+key?.ssn)
+
+
+          if(key?.clientDependentId === '00000000-0000-0000-0000-000000000000')
           {
-              key.memberType = ClientDependentGroupDesc.Clients            
+              key.memberType = ClientDependentGroupDesc.Clients
           }
           else
-          {            
+          {
               key.memberType = ClientDependentGroupDesc.Dependents
           }
         });
         this.dependentSearchSubject.next(dependentSearchResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
 
 
-  AddExistingDependent(data : any) : void {    
-    this.ShowLoader();
+  AddExistingDependent(data : any) : void {
+    this.showLoader();
     this.dependentDataService.addExistingDependent(data ).subscribe({
-      next: (dependentStatusResponse) => {    
+      next: (dependentStatusResponse) => {
         if(dependentStatusResponse)
-        {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent added successfully')  
+        {
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent added successfully')
         }
-        
+
         this.existdependentStatusSubject.next(dependentStatusResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
-        
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+
       },
     });
   }
 
   loadClientDependents(clientId: number) {
-    this.dependentDataService.loadClientDependents(clientId).subscribe({ 
-      next: (dependentsResponse : any) => {         
-              this.clientDependentsSubject.next(dependentsResponse);    
+    this.dependentDataService.loadClientDependents(clientId).subscribe({
+      next: (dependentsResponse : any) => {
+              this.clientDependentsSubject.next(dependentsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
   uploadDependentProofOfSchool(dependentProof:any){
     return this.dependentDataService.uploadDependentProofOfSchool(dependentProof);
+  }
+
+  saveAndContinueDependents(clientId:number, clientCaseEligibilityId : string, hasDependentsStatus : string) {
+    this.showLoader();
+    return this.dependentDataService.saveAndContinueDependents(clientId, clientCaseEligibilityId, hasDependentsStatus)
+
   }
 }

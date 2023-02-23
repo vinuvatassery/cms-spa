@@ -177,4 +177,8 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
   {
     this.acceptedApplicationStatus = value;
   }
+  changeIsSaveAndContinueAcceptance()
+  {
+    this.isSaveAndContinueAcceptance = false;
+  }
 }
