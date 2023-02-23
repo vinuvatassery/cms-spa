@@ -98,7 +98,7 @@
             </div>
           </fieldset>
         </div>
-        <div class="flex-col mb-2 mt-2 file-uploads">
+        <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="healthInsuranceForm.controls['onLisFlag'].value==='Y'">
           <h5 class="text-capital">Copy of Medicare Card</h5>
           <kendo-upload aria-label="copy of insurance" name="copyOfMediacreCard" [disabled]="isViewContentEditable"
             [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'medicareCard')"
@@ -270,7 +270,7 @@
     </div>
     <div *ngIf="isOpenDdl">
       <div class="flex-col mb-2 mt-2 file-uploads"
-        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || (medicareInsuranceInfoCheck && ddlInsuranceType === InsurancePlanTypes.Medicare)">
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
