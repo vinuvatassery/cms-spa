@@ -115,6 +115,12 @@ export class SetPharmacyPriorityComponent implements OnInit {
 
   public onChangePriority(value: any,index :any): void {
     this.priorityValidation = false;
+    const changedItem = this.savePriorityObjectList[index];
+    let existItemIndex = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === value && i.clientPharmacyId !== changedItem?.clientPharmacyId);
+    if(existItemIndex !== -1 && this.savePriorityObjectList[existItemIndex]){
+      this.savePriorityObjectList[existItemIndex].priorityCode = null;
+    }
+
     this.savePriorityObjectList[index].priorityCode = value;
     this.copyLoadPriorties=this.priorities.filter(m=>m.lovCode!=value);
     this.copyLoadPriorties= this.priorities;
