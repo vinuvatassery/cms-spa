@@ -1,5 +1,5 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
@@ -52,13 +52,15 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   private saveClickSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private caseManagerFacade: CaseManagerFacade,
     private route: ActivatedRoute,
     private userManagementFacade : UserManagementFacade,
     private loaderService:LoaderService,
-    private router : Router) { }
+    private router : Router,
+    private cdr: ChangeDetectorRef) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -66,12 +68,14 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.loadCase()
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -99,7 +103,9 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     ((x: boolean)=>
     {   
       //Currently has HIV Case Manager?
+      this.hasManager='';
       this.hasManager = (x ===true) ? StatusFlag.Yes : StatusFlag.No;
+      this.cdr.detectChanges();
       this.adjustDataAttribute();
       //show hide grid
       this.gridVisibleSubject.next(x);
@@ -109,7 +115,9 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     ((x: boolean)=>
     {  
       //Would you like one?
+      this.needManager='';
       this.needManager = (x ===true) ? StatusFlag.Yes : StatusFlag.No;
+      this.cdr.detectChanges();
       this.caseManagerFacade.updateWorkFlow(true)
     });
      
@@ -306,5 +314,13 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   checkValidations(){
     return this.validate();
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+     this.getCaseManagerStatus();
+     }
+    });
   }
 }

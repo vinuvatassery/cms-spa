@@ -142,7 +142,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
-        forkJoin([of(navigationType), this.save()])
+        forkJoin([of(navigationType), this.saveAndContinue()])
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
@@ -153,8 +153,16 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       }
     });
   }
-
-  private save() {
+  private saveAndContinue(){    
+    if (this.checkValidations()) {
+     this.save();
+     return of(true);
+    }
+    else{
+      return of(false);
+    }
+  }
+  private save() {    
     if (this.insuranceFlagForm.valid) {
       this.ShowLoader();
       let caseEligibilityFlagsData = this.insuranceFlagForm.value;
@@ -165,7 +173,17 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     }
     return of(false)
   }
-
+  validateForm(){
+    this.insuranceFlagForm.markAllAsTouched();
+    this.insuranceFlagForm.controls['currentInsuranceFlag'].setValidators([
+      Validators.required,
+    ]);
+    this.insuranceFlagForm.controls['currentInsuranceFlag'].updateValueAndValidity();
+    this.insuranceFlagForm.controls['groupPolicyEligibleFlag'].setValidators([
+      Validators.required,
+    ]);
+    this.insuranceFlagForm.controls['groupPolicyEligibleFlag'].updateValueAndValidity();
+  }
   private insuranceFlagFormChangeSubscription() {
     this.insuranceFlagForm.valueChanges
       .pipe(
@@ -369,7 +387,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   }
 
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {    
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
           if (response) {
@@ -394,6 +412,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   }
 
   checkValidations(){
+    this.validateForm();
+    this.ref.detectChanges();
     return this.insuranceFlagForm.valid;
   }
 }

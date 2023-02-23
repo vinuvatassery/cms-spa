@@ -9,7 +9,6 @@
               <legend class="k-form-legend"><h5>Do they currently have health insurance?</h5></legend>
 
             <div class="component-list-h">
-
               <span class="app-radiobtnwidtext-wrapper">
                 <input
                   type="radio"
@@ -20,7 +19,6 @@
                   class="form-control"
                   formControlName="currentInsuranceFlag"
                   value="Y"
-                  [checked]="currentInsurance == 'Y'"
                   (change)="onCurrentInsuranceChange('Y')"
                 />
                 <kendo-label
@@ -37,7 +35,6 @@
                   name="currentInsuranceFlag"
                   id="currentlyHaveHealthInsuranceNo"
                   value="N"
-                  [checked]="currentInsurance == 'N'"
                   formControlName="currentInsuranceFlag"
                   (change)="onCurrentInsuranceChange('N')"
                 />
@@ -50,6 +47,9 @@
             </div>
             </fieldset>
           </div>
+          <kendo-formerror   *ngIf="!insuranceFlagForm.controls['currentInsuranceFlag'].valid"      >
+            A Response is required.
+        </kendo-formerror>
           <div class="flex-col mb-1">
 
             <fieldset class="k-form-fieldset">
@@ -96,6 +96,9 @@
             </div>
             </fieldset>
           </div>
+          <kendo-formerror   *ngIf="!insuranceFlagForm.controls['groupPolicyEligibleFlag'].valid">
+            A Response is required.
+        </kendo-formerror>
         </form>
 
         <div *ngIf="showTable"  class="flex-col">
