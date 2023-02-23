@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** interal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
@@ -46,7 +46,10 @@ export class EmploymentFacade {
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
 
-
+  errorShowHideSnackBar( subtitle : any)
+  {
+    this.notificationSnackbarService.errorSnackBar(subtitle)
+  }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;

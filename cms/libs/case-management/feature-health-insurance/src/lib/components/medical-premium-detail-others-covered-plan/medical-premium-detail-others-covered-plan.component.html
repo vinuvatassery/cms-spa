@@ -46,6 +46,7 @@
                         </span>
                     </div>
                 </div>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['othersCoveredOnPlanSelection'].valid && isViewContentEditable==false">A Response is required.</kendo-formerror>
             </div>
         </fieldset>
     </div>

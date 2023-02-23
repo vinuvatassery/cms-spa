@@ -710,6 +710,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         }
 
       }
+      const othersCoveredOnPlanSelected = this.healthInsuranceForm.value.othersCoveredOnPlan.filter((x: any) => x.enrolledInInsuranceFlag === true);
+      if(this.othersCoveredOnPlanNew.controls.length === 0 && othersCoveredOnPlanSelected.length===0){
+        this.healthInsuranceForm.controls['othersCoveredOnPlanSelection'].setValidators([
+          Validators.required,
+        ]);
+        this.healthInsuranceForm.controls['othersCoveredOnPlanSelection'].updateValueAndValidity();
+      }
     }
 
   }
@@ -773,14 +780,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.metalLevelCode =
         this.healthInsuranceForm.controls['metalLevel'].value === null ? null : this.healthInsuranceForm.controls['metalLevel'].value?.lovCode;
       if (this.healthInsuranceForm.controls['insuranceStartDate'].value !== null) {
-        this.healthInsurancePolicy.startDate = new Date(this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat));
+        this.healthInsurancePolicy.startDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat);
       }
       else {
         this.healthInsurancePolicy.startDate = null
       }
 
       if (this.healthInsuranceForm.controls['insuranceEndDate'].value !== null) {
-        this.healthInsurancePolicy.endDate = new Date(this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat));
+        this.healthInsurancePolicy.endDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat);
       }
       else {
         this.healthInsurancePolicy.endDate = null;
@@ -789,11 +796,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.healthInsurancePolicy.careassistPayingPremiumFlag = StatusFlag.Yes;
         this.healthInsurancePolicy.premiumPaidThruDate =
           this.healthInsuranceForm.controls["premiumPaidThruDate"].value === null ? null :
-            new Date(this.intl.formatDate(this.healthInsuranceForm.controls['premiumPaidThruDate'].value, this.dateFormat));
+           this.intl.formatDate(this.healthInsuranceForm.controls['premiumPaidThruDate'].value, this.dateFormat);
 
         this.healthInsurancePolicy.premiumFrequencyCode = this.healthInsuranceForm.controls["premiumFrequencyCode"].value;
         this.healthInsurancePolicy.nextPremiumDueDate = this.healthInsuranceForm.controls["nextPremiumDueDate"].value === null ? null :
-          new Date(this.intl.formatDate(this.healthInsuranceForm.controls['nextPremiumDueDate'].value, this.dateFormat));
+          this.intl.formatDate(this.healthInsuranceForm.controls['nextPremiumDueDate'].value, this.dateFormat);
 
         this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === true ? StatusFlag.Yes : this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].value === false ? StatusFlag.No : null;
        
@@ -820,13 +827,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.medicareCoverageTypeCode = this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value;
       if (this.healthInsuranceForm.controls['medicarePartAStartDate'].value !== null) {
 
-        this.healthInsurancePolicy.medicarePartAStartDate = new Date(this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartAStartDate'].value, this.dateFormat));
+        this.healthInsurancePolicy.medicarePartAStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartAStartDate'].value, this.dateFormat);
       }
       else {
         this.healthInsurancePolicy.medicarePartAStartDate = null;
       }
       if (this.healthInsuranceForm.controls['medicarePartBStartDate'].value !== null) {
-        this.healthInsurancePolicy.medicarePartBStartDate = new Date(this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartBStartDate'].value, this.dateFormat));
+        this.healthInsurancePolicy.medicarePartBStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartBStartDate'].value, this.dateFormat);
       }
       else {
         this.healthInsurancePolicy.medicarePartBStartDate = null;
@@ -851,8 +858,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
 
       this.healthInsurancePolicy.paymentGroupNumber = 0;
       this.healthInsurancePolicy.oonException = 0;
-      this.healthInsurancePolicy.oonStartDate = new Date();
-      this.healthInsurancePolicy.oonEndDate = new Date();
+      this.healthInsurancePolicy.oonStartDate = this.intl.formatDate(new Date(), this.dateFormat);
+      this.healthInsurancePolicy.oonEndDate = this.intl.formatDate(new Date(), this.dateFormat);
       this.healthInsurancePolicy.oonPharmacy = null;
       this.healthInsurancePolicy.oonDrugs = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = this.healthInsuranceForm.value.othersCoveredOnPlanFlag;
@@ -1057,7 +1064,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
             }
           );
       } else {
-        this.healthInsurancePolicy.creationTime = new Date();
         this.insurancePolicyFacade
           .saveHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe(

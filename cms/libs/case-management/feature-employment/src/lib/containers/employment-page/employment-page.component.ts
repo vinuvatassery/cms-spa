@@ -1,12 +1,11 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectionStrategy, Component,  OnDestroy,  OnInit,} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component,  OnDestroy,  OnInit, ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facades **/
-import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade,} from '@cms/case-management/domain';
+import {  WorkflowFacade,  CompletionStatusFacade,  EmploymentFacade, NavigationType, StatusFlag} from '@cms/case-management/domain';
 /** Enums **/
-import { NavigationType, StatusFlag } from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-employment-page',
@@ -21,6 +20,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   employmentStatus$ = this.employmentFacade.employmentStatusGet$;
   pageSizes = this.employmentFacade.gridPageSizes;
   clientCaseEligibilityId: any;
+  employerListCount : any;
   clientId: any;
   clientCaseId: any;
   sessionId!: string;
@@ -34,6 +34,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   private employeeSubscription$ = this.employmentFacade.employers$;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   /** Constructor */
   constructor(
     private employmentFacade: EmploymentFacade,
@@ -42,6 +43,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     private readonly router: Router,
     private route: ActivatedRoute,
     private loaderService: LoaderService,
+    private readonly cdr: ChangeDetectorRef
     
   ) {}
 
@@ -53,12 +55,16 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.employerSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
+    this.employmentList$.subscribe((emp:any) => {       
+      this.employerListCount = emp.total});
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -91,6 +97,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       .pipe(filter((x) => typeof x === 'boolean'))
       .subscribe((x: boolean) => {
         this.isEmployedGridDisplay = x;
+        this.cdr.detectChanges();
       });
   }
   // loading the employment list in grid
@@ -140,10 +147,13 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.isEmployedFlag =
       this.isEmployedGridDisplay == true ? StatusFlag.Yes : StatusFlag.No;
       this.employmentFacade.showLoader();
-    return this.employmentFacade
+      if(this.isEmployedGridDisplay === false && this.employerListCount <= 0){
+        this.employmentFacade.errorShowHideSnackBar( "Please fill the employment details");
+        return  of(false);
+      }else{
+        return this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
-      .pipe(
-
+      .pipe( 
         catchError((err: any) => {
           if (err?.error) { 
             this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
@@ -151,6 +161,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
           return of(false);
         }),
       )
+      } 
   }
 
   private employerSubscription(){  
@@ -183,6 +194,14 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       if (val) {
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
+    });
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.loadEmploymentStatus();
+     }
     });
   }
 }
