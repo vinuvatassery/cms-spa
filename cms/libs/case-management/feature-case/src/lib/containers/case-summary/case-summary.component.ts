@@ -4,7 +4,7 @@ import {
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, WorkflowFacade,
-   UserDefaultRoles, NavigationType, CompletionChecklist, StatusFlag  } from '@cms/case-management/domain';
+   UserDefaultRoles, NavigationType, CompletionChecklist, StatusFlag, CaseOriginCode  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
@@ -42,6 +42,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
   private sessionDataSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
 
   /** Constructor**/
   constructor(
@@ -65,12 +66,14 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
     this.addFormChangeSubscription();
  	  this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
   } 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.sessionDataSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -218,5 +221,31 @@ private updateFormCompleteCount(prev: any, curr: any) {
     this.parentForm.updateValueAndValidity()
     return this.parentForm.valid;
 
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workFlowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.caseFacade.loadCasesById(this.clientCaseId);
+      this.caseFacade.getCase$.pipe(first((caseData: { programId: any; }) => caseData.programId != null))
+      .subscribe((caseData: any) => {
+        this.parentForm.reset()
+        if (caseData.programId != null && caseData.caseStartDate != null
+          && caseData.assignedCwUserId != null) {
+          this.parentForm.setValue(
+            {
+              applicationDate: new Date(caseData.caseStartDate),
+              caseOriginCode: caseData?.caseOriginCode,
+              caseOwnerId: caseData?.assignedCwUserId,
+              programId: caseData?.programId,
+              concurrencyStamp: caseData?.concurrencyStamp
+            })
+            if (caseData.caseOriginCode == CaseOriginCode.ClientPortal) {
+              this.parentForm.controls['caseOriginCode'].disable();
+            }
+        }
+      }) 
+     }
+    });
   }
 }

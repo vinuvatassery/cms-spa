@@ -1,5 +1,5 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectionStrategy, Component,  OnDestroy,  OnInit,} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component,  OnDestroy,  OnInit, ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
@@ -34,6 +34,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   private employeeSubscription$ = this.employmentFacade.employers$;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   /** Constructor */
   constructor(
     private employmentFacade: EmploymentFacade,
@@ -42,6 +43,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     private readonly router: Router,
     private route: ActivatedRoute,
     private loaderService: LoaderService,
+    private readonly cdr: ChangeDetectorRef
     
   ) {}
 
@@ -53,6 +55,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.employerSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
     this.employmentList$.subscribe((emp:any) => {       
       this.employerListCount = emp.total});
   }
@@ -61,6 +64,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -93,6 +97,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       .pipe(filter((x) => typeof x === 'boolean'))
       .subscribe((x: boolean) => {
         this.isEmployedGridDisplay = x;
+        this.cdr.detectChanges();
       });
   }
   // loading the employment list in grid
@@ -189,6 +194,14 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       if (val) {
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
+    });
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.loadEmploymentStatus();
+     }
     });
   }
 }
