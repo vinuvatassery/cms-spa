@@ -214,28 +214,28 @@ export class SetPharmacyPriorityComponent implements OnInit {
     if(!isValid){
         this.showRequiredValidation = true;
         return; 
-    this.priorityValidation = false;
-    let primaryCodeDuplicate:number =0;
-    let secondryCodeDuplicate:number =0;
-    let tertiaryCodeDuplicate:number =0;
-    for (let i = 0; i < this.savePriorityObjectList.length; i++) {
-      const element= this.savePriorityObjectList[i];
-      if(element.priorityCode === PriorityCode.Primary){
-        primaryCodeDuplicate++;
-      
-      }
-      if(element.priorityCode === PriorityCode.Secondary){
-        secondryCodeDuplicate++;
-      }
-      if(element.priorityCode === PriorityCode.Tertiary){
-        tertiaryCodeDuplicate++;
-      }
     }
-    if(primaryCodeDuplicate > 1 || secondryCodeDuplicate > 1 || tertiaryCodeDuplicate>1){
-      this.priorityValidation = true;
-     this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
-      return;
-    }
+        this.priorityValidation = false;
+        let primaryCodeDuplicate:number =0;
+        let secondryCodeDuplicate:number =0;
+        let tertiaryCodeDuplicate:number =0;
+        for (let i = 0; i < this.savePriorityObjectList.length; i++) {
+          const element= this.savePriorityObjectList[i];
+          if(element.priorityCode === PriorityCode.Primary){
+            primaryCodeDuplicate++;
+          
+          }
+          if(element.priorityCode === PriorityCode.Secondary){
+            secondryCodeDuplicate++;
+          }
+          if(element.priorityCode === PriorityCode.Tertiary){
+            tertiaryCodeDuplicate++;
+          }
+        }
+        if(primaryCodeDuplicate > 1 || secondryCodeDuplicate > 1 || tertiaryCodeDuplicate>1){
+          this.priorityValidation = true;
+         this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
+          return;
+        }
   }
-}
 }
