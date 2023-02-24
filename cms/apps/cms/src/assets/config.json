@@ -5,7 +5,7 @@
   "sysConfigApiUrl": "https://localhost:44352/api",
   "signalrHubUrl": "https://localhost:5200/notification",
   "gridSkipCount":0,
-  "snackbarHideAfter":"3000",
+  "snackbarHideAfter":"5000",
   "gridPageSizeValues" : [
     {"text": "5", "value": 5}, 
     {"text": "10", "value": 10},
