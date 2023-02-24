@@ -238,3 +238,4 @@ export class SetPharmacyPriorityComponent implements OnInit {
     }
   }
 }
+}
