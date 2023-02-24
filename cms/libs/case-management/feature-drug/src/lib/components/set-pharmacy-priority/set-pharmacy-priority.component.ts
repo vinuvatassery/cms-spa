@@ -121,6 +121,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
     const changedItem = this.savePriorityObjectList[index];
     let existItemIndex = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === value && i.clientPharmacyId !== changedItem?.clientPharmacyId);
     if(existItemIndex !== -1 && this.savePriorityObjectList[existItemIndex]){
+      this.notificationSnackbarService.errorSnackBar('Priorities cannot be duplicated.');
       this.savePriorityObjectList[existItemIndex].priorityCode = null;
     }
 
@@ -212,31 +213,5 @@ export class SetPharmacyPriorityComponent implements OnInit {
     {
       this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
     }
-  }
-  changePriority()
-  {
-    
-        this.priorityValidation = false;
-        let primaryCodeDuplicate:number =0;
-        let secondaryCodeDuplicate:number =0;
-        let tertiaryCodeDuplicate:number =0;
-        for (let i = 0; i < this.savePriorityObjectList.length; i++) {
-          const element= this.savePriorityObjectList[i];
-          if(element.priorityCode === PriorityCode.Primary){
-            primaryCodeDuplicate++;
-          
-          }
-          if(element.priorityCode === PriorityCode.Secondary){
-            secondaryCodeDuplicate++;
-          }
-          if(element.priorityCode === PriorityCode.Tertiary){
-            tertiaryCodeDuplicate++;
-          }
-        }
-        if(primaryCodeDuplicate > 1 || secondaryCodeDuplicate > 1 || tertiaryCodeDuplicate>1){
-          this.priorityValidation = true;
-         this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
-          return;
-        }
   }
 }
