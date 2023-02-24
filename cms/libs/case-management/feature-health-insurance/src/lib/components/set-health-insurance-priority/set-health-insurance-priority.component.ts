@@ -58,7 +58,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.lovFacade.getCaseCodeLovs();
   }
   public onChangePriority(value: any, insurance: any): void {
-    if (value === PriorityCode.Primary) {
+    if (value === PriorityCode.Primary) {    
       if (insurance.canPayForMedicationFlag === "N") {
         this.notificationSnackbarService.errorSnackBar('Primary insurance always consists of insurance that pays for medications.');
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
@@ -67,7 +67,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }
-    else if (value === PriorityCode.Secondary) {
+    else if (value === PriorityCode.Secondary) {      
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
@@ -77,22 +77,27 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
     const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode);
-    if (primarySelections.length === 2) {
-      const primeryStartDate = new Date(primarySelections[0].startDate);
-      const primeryEndDate = new Date(primarySelections[0].endDate);
-
-      const primeryStartDate2 = new Date(primarySelections[1].startDate);
-      const primeryEndDate2 = new Date(primarySelections[1].endDate);
-      if (this.dateRangeOverlaps(primeryStartDate, primeryEndDate, primeryStartDate2, primeryEndDate2)) {
+    if (primarySelections.length === 2) {      
+      if (this.dateRangeOverlaps(primarySelections[0].startDate, primarySelections[0].endDate, primarySelections[1].startDate, primarySelections[1].endDate)) {
        const previousControl=primarySelections.find((m:any)=>m.clientInsurancePolicyId!==insurance.clientInsurancePolicyId);
         this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
+        this.notificationSnackbarService.warningSnackBar(errorMessage);
         return true;
       }
     }
     return false;
   }
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
-    if (aStart <= bStart && bStart <= aEnd) return true;
+    if(aEnd === null && bEnd === null){
+      if(aStart === bStart) return true;
+    }
+    if(aEnd === null){
+      if(aStart >= bStart   && aStart <= bEnd)return true;
+    }
+    if(bEnd === null){
+      if(bStart >= aStart  && bStart <=aEnd)return true;
+    }
+    if (aStart <= bStart && bStart <= aEnd)return true;
     if (aStart <= bEnd && bEnd <= aEnd) return true;
     if (bStart < aStart && aEnd < bEnd) return true;
     return false;
@@ -114,7 +119,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       primaryExist = true;
     }
     if (!primaryExist) {
-      this.notificationSnackbarService.errorSnackBar('A Primary Insurance is required');
+      this.notificationSnackbarService.warningSnackBar('A Primary Insurance is required');
       return;
     }
     const multipleSecondarySelection = this.gridList.filter((m: any) => m.priorityCode === PriorityCode.Secondary);
@@ -122,11 +127,11 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       secondaryExist = true;
     }
     if (tertiaryExist && !secondaryExist) {
-      this.notificationSnackbarService.errorSnackBar('A Tertiary Insurance cannot be created if there is no Secondary Insurance');
+      this.notificationSnackbarService.warningSnackBar('A Tertiary Insurance cannot be created if there is no Secondary Insurance');
       return;
     }
     if (secondaryExist && !primaryExist) {
-      this.notificationSnackbarService.errorSnackBar('A Secondary Insurance ​can be created when there is no Primary Insurance');
+      this.notificationSnackbarService.warningSnackBar('A Secondary Insurance ​can be created when there is no Primary Insurance');
       return;
     }
     this.insurancePolicyFacade.showLoader();
