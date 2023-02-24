@@ -193,7 +193,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
     }
     else
     {
-      this.notificationSnackbarService.errorSnackBar('Priorties can not be duplicate.');
+      this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
     }
   }
   changePriority()
@@ -217,7 +217,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
     }
     if(primaryCodeDuplicate > 1 || secondryCodeDuplicate > 1 || tertiaryCodeDuplicate>1){
       this.priorityValidation = true;
-     this.notificationSnackbarService.errorSnackBar('Priorties can not be duplicate.');
+     this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
       return;
     }
   }
