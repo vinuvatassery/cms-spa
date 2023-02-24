@@ -129,9 +129,10 @@ export class MedicalPremiumListComponent implements OnInit {
   onChangePriorityCloseClicked() {
     this.isOpenedChangePriorityModal = false;
     this.isTriggerPriorityPopup = false;
+  }
+  priorityAdded(){
     this.loadInsurancePolicies();
   }
-
   onChangePriorityOpenClicked() {
     this.isOpenedChangePriorityModal = true;
   }
