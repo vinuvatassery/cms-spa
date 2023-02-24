@@ -60,7 +60,12 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   public onChangePriority(value: any, insurance: any): void {
     if (value === PriorityCode.Primary) {    
       if (insurance.canPayForMedicationFlag === "N") {
-        this.notificationSnackbarService.errorSnackBar('Primary insurance always consists of insurance that pays for medications.');
+        this.notificationSnackbarService.warningSnackBar('Primary insurance always consists of insurance that pays for medications.');
+        this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
+        return;
+      }
+      if (insurance.dentalPlanFlag === "Y") {
+        this.notificationSnackbarService.warningSnackBar('A dental plan cannot be the set Primary Insurance even if the only plan is dental.');
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
