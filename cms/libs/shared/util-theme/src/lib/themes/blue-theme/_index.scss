@@ -1,5 +1,6 @@
 /* Kendo UI Theme Variable Import */
-@import '~@progress/kendo-theme-material/scss/variables';
+@import '@progress/kendo-theme-material/scss/_variables.scss';
+// @import "~@progress/kendo-theme-material/dist/all.scss";
 
 /* Custom Color Palette */
 @import 'palette';
