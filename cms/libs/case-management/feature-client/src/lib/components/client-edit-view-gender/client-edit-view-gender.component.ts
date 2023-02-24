@@ -92,7 +92,13 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
             this.enableDisableGender(true, otherGender[0].clientGenderCode);
           }
           this.updateWorkflowCount(true);
-        }        
+        }  
+        else{
+          this.enableAllGender();
+        }      
+      }
+      else{
+        this.enableAllGender();
       }
     });
   }
@@ -190,5 +196,13 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
 
   descriptionChange(){
       this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
+  }
+
+  enableAllGender(){
+    if(this.disableGender.length>0){
+      this.disableGender.forEach((gender:any) => { 
+        this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
+      });  
+    }
   }
 }

@@ -11,7 +11,7 @@ import { ApplicantInfo, ClientFacade, CompletionChecklist, StatusFlag, TransGend
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, LovType } from '@cms/system-config/domain';
 
 import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
  
@@ -199,10 +199,10 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
     if (Array.isArray(Race)) {
       Race.forEach((el: any) => {
-        if (el.lovCode !== 'NOT_LISTED')
-          this.raceAndEthnicityPrimaryData.push(el);
-        else
+        this.raceAndEthnicityPrimaryData.push(el);
+        if (el.lovCode === LovType.EthnicityNotListed){
           this.raceAndEthnicityPrimaryNotListed = true;
+        }
       });
     }
 
@@ -210,7 +210,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.raceAndEthnicityPrimaryData=[...this.raceAndEthnicityPrimaryData,...this.otherEthnicityList]
     }
 
-    if (this.raceAndEthnicityPrimaryData.length == 1 || this.raceAndEthnicityPrimaryNotListed) {
+    if (this.raceAndEthnicityPrimaryData.length == 1) {
       this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(this.raceAndEthnicityPrimaryData[0]);
       this.appInfoForm.controls['RaceAndEthnicityPrimary'].disable();
       this.updateAdjustAttribute('RaceAndEthnicityPrimaryAdjust', StatusFlag.No);
@@ -772,7 +772,6 @@ updateWorkflowCount(data: any){
     }
     else {
       this.appInfoForm.controls['middleName'].enable();
-      this.appInfoForm.controls['middleName'].setValidators(Validators.required);
       this.appInfoForm.controls['middleName'].updateValueAndValidity();    
     }
   }
@@ -788,10 +787,7 @@ updateWorkflowCount(data: any){
       this.appInfoForm.controls['prmInsLastName'].disable();
     }
     else {
-
-      this.appInfoForm.controls['prmInsFirstName'].setValidators(Validators.required);
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
-      this.appInfoForm.controls['prmInsLastName'].setValidators(Validators.required);
       this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsFirstName'].enable();
       this.appInfoForm.controls['prmInsLastName'].enable();
@@ -809,10 +805,7 @@ updateWorkflowCount(data: any){
       this.appInfoForm.controls['officialIdLastName'].disable();
     }
     else {
-
-      this.appInfoForm.controls['officialIdFirstName'].setValidators(Validators.required);
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
-      this.appInfoForm.controls['officialIdLastName'].setValidators(Validators.required);
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdFirstName'].enable();
       this.appInfoForm.controls['officialIdLastName'].enable();
@@ -824,10 +817,13 @@ updateWorkflowCount(data: any){
     if (isChecked) {
       this.isSSNChecked = true;
       this.appInfoForm.controls['ssn'].disable();
+      this.appInfoForm.controls['ssn'].removeValidators(Validators.required);
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
     }
     else {
       this.isSSNChecked = false;
       this.appInfoForm.controls['ssn'].enable();
+      this.appInfoForm.controls['ssn'].updateValueAndValidity();
     }
     this.searchDuplicateClient('ssn');
   }

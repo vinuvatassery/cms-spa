@@ -23,7 +23,7 @@ export class DependentDataService {
   /** Public methods **/
 
   ///1load dependents for grid
-  loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
+  loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string) {
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/client-dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&LovTypeCode=${LovType.RelationshipCode}`
@@ -32,7 +32,7 @@ export class DependentDataService {
   }
 
   ///2load dependent status  for checkbox
-  loadDependentsStatus(clientCaseEligibilityId : string) {     
+  loadDependentsStatus(clientCaseEligibilityId : string) {
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/client-dependents/${clientCaseEligibilityId}/dependent-status`
@@ -72,7 +72,7 @@ export class DependentDataService {
     );
   }
 
-  //5get new dependent for edit 
+  //5get new dependent for edit
   getNewDependent(clientDependentId: string) {
     return this.http.get<Dependent>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${clientDependentId}`
@@ -110,7 +110,7 @@ export class DependentDataService {
   }
 
   ///8update client as dependent
-     addExistingDependent(data : any) {      
+     addExistingDependent(data : any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client`,
       data
@@ -143,11 +143,17 @@ export class DependentDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/client/${clientId}`
     );
   }
-  
+
   uploadDependentProofOfSchool(dependentProof:any){
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/proofofschool`,
       dependentProof
+    );
+  }
+
+  saveAndContinueDependents(clientId:number, clientCaseEligibilityId : string, hasDependentsStatus : string){
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-dependents/${clientId}/${clientCaseEligibilityId}/${hasDependentsStatus}`,null
     );
   }
 }

@@ -13,6 +13,36 @@
 
 .k-floating-label-container {
   width: 100%;
+  
+  &.k-invalid,
+  .k-invalid,
+  .ng-invalid.ng-touched,
+  .ng-invalid.ng-dirty {
+    .k-label {
+      color: $error-color-1 !important;
+    }
+  }
+
+  .k-invalid .k-input-validation-icon,
+  .ng-invalid.ng-touched .k-input-validation-icon,
+  .ng-invalid.ng-dirty .k-input-validation-icon {
+    color: $error-color-1 !important;
+  }
+
+  &.k-invalid + .k-label,
+  .k-invalid + .k-label,
+  .ng-invalid.ng-touched + .k-label,
+  .ng-invalid.ng-dirty + .k-label {
+    color: $error-color-1 !important;
+  }
+
+  &.k-state-focused,
+  &:hover {
+    .k-dropdown .k-dropdown-wrap,
+    .k-dropdowntree .k-dropdown-wrap {
+      border: 1px solid $black-3 !important;
+    }
+  }
 }
 
 .k-form-hint{
@@ -34,7 +64,7 @@
     min-width: 31%;
     position: relative;
     .multi-dropdown-icon {
-      right: 12px;
+      right: 6px;
       top: 28px;
       position: absolute;
       z-index: 1;
@@ -49,7 +79,7 @@
 .k-multiselect{
     .k-clear-value{
  
-      right: 30px;
+      right: 20px;
       position: absolute;
       top: 4px;
       z-index: 1;
@@ -220,32 +250,14 @@
   }
 }
 // /*Floating Outline Text Box*/
-.k-floating-label-container {
-  &.k-invalid,
-  .k-invalid,
-  .ng-invalid.ng-touched,
-  .ng-invalid.ng-dirty {
-    .k-label {
-      color: $error-color-1 !important;
-    }
-  }
-
-  .k-invalid .k-input-validation-icon,
-  .ng-invalid.ng-touched .k-input-validation-icon,
-  .ng-invalid.ng-dirty .k-input-validation-icon {
-    color: $error-color-1 !important;
-  }
-
-  &.k-invalid + .k-label,
-  .k-invalid + .k-label,
-  .ng-invalid.ng-touched + .k-label,
-  .ng-invalid.ng-dirty + .k-label {
-    color: $error-color-1 !important;
-  }
-}
 
 .k-input-outline,
 .k-picker-outline {
+  border-color: rgba(0, 0, 0, 0.12); 
+  &:focus,
+  &:focus-within {
+    border: 1px solid $app-primary !important;
+  }
   &.k-textbox,
   &.k-picker-wrap,
   &.k-dropdownlist,
@@ -296,6 +308,8 @@
   &.ng-invalid.ng-dirty {
     border-color: $error-color-1 !important;
   }
+
+  
 }
 
 .input-icon-left {
@@ -318,16 +332,7 @@
   }
 }
 
-.k-input-outline,
-.k-picker-outline {
-  border-color: rgba(0, 0, 0, 0.12);
-  &:hover {
-  }
-  &:focus,
-  &:focus-within {
-    border: 1px solid $app-primary !important;
-  }
-}
+
 
 .k-floating-label-container > .k-label {
   font-size: 14px;
@@ -335,6 +340,7 @@
 }
 .k-floating-label-container.k-empty > .k-label {
   top: calc(calc(1.25 * 18px) + 1px + 8px);
+  max-width: 80%;
 }
 
 .k-floating-label-container .k-picker-outline.k-focus + .k-label,
@@ -439,9 +445,7 @@
 //   padding: 0 5px;
 // }
 
-.k-floating-label-container.k-empty > .k-label {
-max-width: 80%;
-}
+
 /*Floating Outline Dropdown*/
 .k-dropdown .k-dropdown-wrap,
 .k-dropdowntree .k-dropdown-wrap {
@@ -464,15 +468,7 @@ max-width: 80%;
     }
   }
 }
-.k-floating-label-container {
-  &.k-state-focused,
-  &:hover {
-    .k-dropdown .k-dropdown-wrap,
-    .k-dropdowntree .k-dropdown-wrap {
-      border: 1px solid $black-3 !important;
-    }
-  }
-}
+ 
 
 // /* Picker */
 .k-picker-wrap,
@@ -551,13 +547,13 @@ max-width: 80%;
       top: 8px !important;
     }
   }
+
+  > .k-label,
+  &.k-state-focused > .k-label{
+    top: -9px !important;
+  }
 }
-.small-input-form > .k-label,
-.small-input-form.k-state-focused > .k-label,
-.small-input-form > .k-label,
-.small-input-form.k-state-focused > .k-label {
-  top: -9px !important;
-}
+ 
 
 // ************************************************** /* medium Input */************************************************************
 
@@ -579,13 +575,13 @@ max-width: 80%;
   &.k-state-empty > .k-label {
     top: 9px !important;
   }
+
+  > .k-label,
+  &.k-state-focused > .k-label {
+    top: -9px !important;
+  }
 }
-.medium-input-form > .k-label,
-.medium-input-form.k-state-focused > .k-label,
-.medium-input-form > .k-label,
-.medium-input-form.k-state-focused > .k-label {
-  top: -9px !important;
-}
+
 
 .counter-label {
   text-align: right;
@@ -637,11 +633,7 @@ max-width: 80%;
     margin-bottom: $size-0;
   }
 }
-.k-list-ul {
-  .k-list-group-item {
-    // border-bottom: 1px solid $black-e;
-  }
-}
+
 // ************************************************** /* Search-input */************************************************************
 
 // /*Search-input*/
@@ -697,6 +689,8 @@ max-width: 80%;
 .k-fab-items {
   margin-right: 10px;
   .k-fab-item-icon {
+    position: relative;
+    overflow: visible;
     border-color: $white;
     color: $white;
     background-color: $app-primary;
@@ -706,11 +700,7 @@ max-width: 80%;
       background-color: material-color($hive-primary-palette, 900);
       color: $white;
     }
-  }
-  .k-fab-item-icon {
-    position: relative;
-    overflow: visible;
-  }
+  } 
 }
 // .k-autocomplete {
 //   border: 1px solid $theme-border;
@@ -853,6 +843,7 @@ kendo-timepicker {
   }
 }
 .amount-with-symbol{
+  position: relative;
   .k-input-prefix{
     font-size: 16px;
     &.custom-currencysymbol{
@@ -860,21 +851,18 @@ kendo-timepicker {
       display: none;
     }
   }
- }
 
- .amount-with-symbol.k-floating-label-container{
-  &.k-focus, &:not(.k-empty){
-    .k-input-prefix{ 
-      &.custom-currencysymbol{
-        bottom: 2px;
-        top: 33px;
-        display: block;
+ &.k-floating-label-container{
+    &.k-focus, &:not(.k-empty){
+      .k-input-prefix{ 
+        &.custom-currencysymbol{
+          bottom: 2px;
+          top: 33px;
+          display: block;
+        }
       }
     }
   }
- }
-.amount-with-symbol {
-  position: relative;
   .amount-prefix {
     position: absolute;
     left: 10px;
@@ -891,16 +879,13 @@ kendo-timepicker {
       top: auto;
     }
   }
-  // .k-label {
-  //   display: none;
-  // }
   .k-input-inner {
     text-align: right;
   }
-  &.k-floating-label-container.k-empty > .k-label {
-    // left: 24px;
-  }
-}
+
+ }
+
+ 
 
 // ************************************************** /* Check Box */************************************************************
 .app-checkboxwidtext-wrapper,

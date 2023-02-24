@@ -75,7 +75,15 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
               this.enableDisablePronoun(true, nonDisablePronouns[0].clientPronounCode);
             }
             this.updateWorkflowCount(true);
-          }        
+          } 
+          else{
+            this.textboxDisable=false;
+            this.enableAllPronouns();
+          }       
+        }
+        else{
+          this.textboxDisable=false;
+          this.enableAllPronouns();
         }
       });
       this.cdr.detectChanges();
@@ -163,5 +171,13 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls['pronoun'].removeValidators(Validators.required);
       this.appInfoForm.controls['pronoun'].updateValueAndValidity(); 
     }
-   }  
+   } 
+   
+   enableAllPronouns(){
+    if(this.disablePronouns.length>0){
+      this.disablePronouns.forEach((pronoun:any) => { 
+        this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].enable();
+      }); 
+    }
+   }
 }

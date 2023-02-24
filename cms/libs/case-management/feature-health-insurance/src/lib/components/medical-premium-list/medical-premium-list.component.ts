@@ -129,9 +129,10 @@ export class MedicalPremiumListComponent implements OnInit {
   onChangePriorityCloseClicked() {
     this.isOpenedChangePriorityModal = false;
     this.isTriggerPriorityPopup = false;
+  }
+  priorityAdded(){
     this.loadInsurancePolicies();
   }
-
   onChangePriorityOpenClicked() {
     this.isOpenedChangePriorityModal = true;
   }
@@ -264,6 +265,8 @@ export class MedicalPremiumListComponent implements OnInit {
     this.isTriggerPriorityPopup = event;
   }
   getCarrierContactInfo(carrierId:string,insurancePlanName:string){
+    this.carrierContactInfo='';
+    this.insurancePlanName='';
     this.healthInsurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
       next: (data) => {
         this.carrierContactInfo=data;
