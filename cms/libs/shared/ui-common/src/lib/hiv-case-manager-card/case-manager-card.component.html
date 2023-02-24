@@ -1,17 +1,15 @@
  
 <div class="app-popover-header use-profile-card-wrapper">
  
-    <div>     
-      
-      <span >
-        <div *ngIf="imageLoaderVisible" class="app-c-avatar avatar-lg">     
+    <div>    
+      <div *ngIf="imageLoaderVisible" class="app-c-avatar avatar-lg">     
           <span></span>
         </div>
-        <span *ngIf="imageLoaderVisible" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
-        <img [hidden]="imageLoaderVisible" [src]="userImage$ | async" alt="case manager image" class="profile-pic" (load)="onLoad()"/></span>
+           <span *ngIf="imageLoaderVisible" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+        <img [hidden]="imageLoaderVisible" [src]="userImage$ | async" alt="case manager image" class="profile-pic" (load)="onLoad()"/> 
     </div> 
     <div >
-      <h5>{{gridHoverDataItem.caseManagerName}} ({{gridHoverDataItem.pNumber}}) <span class="text-muted"></span></h5>
+      <h5>{{gridHoverDataItem.caseManagerName}}  <span class="text-muted">({{gridHoverDataItem.pNumber}})</span></h5>
       <p></p>
       {{gridHoverDataItem.domainCode}} <span class="text-muted"></span>
       <p></p>
