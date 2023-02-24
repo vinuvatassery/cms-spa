@@ -22,6 +22,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   @Input() gridList: any;
   @Input() insurancePriorityModalButtonText: any;
   @Output() isCloseInsuranceModal = new EventEmitter();
+  @Output() priorityAdded = new EventEmitter();
 
   /** Public properties **/
   ddlMedicalHealthPlanPriority$ = this.lovFacade.priorityCodeType$;
@@ -145,6 +146,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       this.insurancePolicyFacade.hideLoader();
       this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
       this.onModalCloseClicked();
+      this.priorityAdded.emit();
     }, (error: any) => {
       this.insurancePolicyFacade.hideLoader();
       this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
