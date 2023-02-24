@@ -186,7 +186,12 @@ export class SetPharmacyPriorityComponent implements OnInit {
   }
 
   onSavePriority()
-  { 
+  {
+     const isValid = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === '' || i.priorityCode === null || i.priorityCode === undefined) === -1;
+  if(!isValid){
+      this.showRequiredValidation = true;
+      return; 
+  }
     if(!this.priorityValidation)
     {
       this.loaderService.show();
@@ -210,11 +215,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
   }
   changePriority()
   {
-    const isValid = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === '' || i.priorityCode === null || i.priorityCode === undefined) === -1;
-    if(!isValid){
-        this.showRequiredValidation = true;
-        return; 
-    }
+    
         this.priorityValidation = false;
         let primaryCodeDuplicate:number =0;
         let secondryCodeDuplicate:number =0;
