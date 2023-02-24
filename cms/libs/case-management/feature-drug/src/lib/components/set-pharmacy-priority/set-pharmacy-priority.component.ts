@@ -63,6 +63,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
   isDisabled = false;
   priorityInfo = {} as PharmacyPriority;
   btnDisabled = false; 
+  showRequiredValidation = false;
 
    /** Private properties **/
    private loadSessionSubscription!: Subscription;
@@ -115,6 +116,13 @@ export class SetPharmacyPriorityComponent implements OnInit {
 
   public onChangePriority(value: any,index :any): void {
     this.priorityValidation = false;
+    this.showRequiredValidation = false;
+    const changedItem = this.savePriorityObjectList[index];
+    let existItemIndex = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === value && i.clientPharmacyId !== changedItem?.clientPharmacyId);
+    if(existItemIndex !== -1 && this.savePriorityObjectList[existItemIndex]){
+      this.savePriorityObjectList[existItemIndex].priorityCode = null;
+    }
+
     this.savePriorityObjectList[index].priorityCode = value;
     this.copyLoadPriorties=this.priorities.filter(m=>m.lovCode!=value);
     this.copyLoadPriorties= this.priorities;
@@ -131,6 +139,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
       this.copyLoadPriorties = this.priorities.filter((x:any)=>x.lovCode === PriorityCode.Primary ||x.lovCode === PriorityCode.Secondary ||x.lovCode === PriorityCode.Tertiary);
     }
   }
+
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
@@ -149,6 +158,9 @@ export class SetPharmacyPriorityComponent implements OnInit {
    
     this.clientpharmacies$.subscribe(list =>{
       this.savePriorityObjectList =JSON.parse(JSON.stringify(list));
+      for(let priority of this.savePriorityObjectList){
+          priority.priorityCode = priority.priorityCode?.replace(/\s/g, '');
+      }
       this.copyLoadPriorties= this.priorities;
       if( this.savePriorityObjectList.length == 1)
       {
@@ -174,25 +186,10 @@ export class SetPharmacyPriorityComponent implements OnInit {
 
   onSavePriority()
   {
-    this.priorityValidation = false;
-    let primaryCodeDuplicate:number =0;
-    let secondryCodeDuplicate:number =0;
-    let tertiaryCodeDuplicate:number =0;
-    for (let i = 0; i < this.savePriorityObjectList.length; i++) {
-      const element= this.savePriorityObjectList[i];
-      if(element.priorityCode === PriorityCode.Primary){
-        primaryCodeDuplicate++;
-      }
-      if(element.priorityCode === PriorityCode.Secondary){
-        secondryCodeDuplicate++;
-      }
-      if(element.priorityCode === PriorityCode.Tertiary){
-        tertiaryCodeDuplicate++;
-      }
-    }
-    if(primaryCodeDuplicate > 1 || secondryCodeDuplicate > 1 || tertiaryCodeDuplicate>1){
-      this.priorityValidation = true;
-      return;
+    const isValid = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === '' || i.priorityCode === null || i.priorityCode === undefined) === -1;
+    if(!isValid){
+        this.showRequiredValidation = true;
+        return; 
     }
     this.loaderService.show();
     this.btnDisabled =true;
