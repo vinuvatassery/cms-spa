@@ -11,7 +11,7 @@ import {
   FormGroup} from '@angular/forms'
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
-import { SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
+import { SnackBarNotificationType,LoaderService,NotificationSnackbarService } from '@cms/shared/util-core';
 
 /** External libraries **/
 import { first, Subscription, Observable } from 'rxjs';
@@ -74,6 +74,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly loaderService: LoaderService,
     private readonly workflowFacade: WorkflowFacade,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
     private  readonly lov: LovFacade,
     private cdr: ChangeDetectorRef
     ) {
@@ -186,23 +187,56 @@ export class SetPharmacyPriorityComponent implements OnInit {
 
   onSavePriority()
   {
-    const isValid = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === '' || i.priorityCode === null || i.priorityCode === undefined) === -1;
-    if(!isValid){
-        this.showRequiredValidation = true;
-        return; 
+     const isValid = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === '' || i.priorityCode === null || i.priorityCode === undefined) === -1;
+  if(!isValid){
+      this.showRequiredValidation = true;
+      return; 
+  }
+    if(!this.priorityValidation)
+    {
+      this.loaderService.show();
+      this.btnDisabled =true;
+      this.drugPharmacyFacade.updatePharmacyPriority(this.savePriorityObjectList).subscribe((x:any) =>{
+        if(x){
+          this.loaderService.hide();
+          this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
+          this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
+          this.onCloseChangePriorityClicked();
+        }
+      },(error:any) =>{
+        this.btnDisabled = false;
+        this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
+      });
     }
-    this.loaderService.show();
-    this.btnDisabled =true;
-    this.drugPharmacyFacade.updatePharmacyPriority(this.savePriorityObjectList).subscribe((x:any) =>{
-      if(x){
-        this.loaderService.hide();
-        this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
-        this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
-        this.onCloseChangePriorityClicked();
-      }
-    },(error:any) =>{
-      this.btnDisabled = false;
-      this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
-    });
+    else
+    {
+      this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
+    }
+  }
+  changePriority()
+  {
+    
+        this.priorityValidation = false;
+        let primaryCodeDuplicate:number =0;
+        let secondaryCodeDuplicate:number =0;
+        let tertiaryCodeDuplicate:number =0;
+        for (let i = 0; i < this.savePriorityObjectList.length; i++) {
+          const element= this.savePriorityObjectList[i];
+          if(element.priorityCode === PriorityCode.Primary){
+            primaryCodeDuplicate++;
+          
+          }
+          if(element.priorityCode === PriorityCode.Secondary){
+            secondaryCodeDuplicate++;
+          }
+          if(element.priorityCode === PriorityCode.Tertiary){
+            tertiaryCodeDuplicate++;
+          }
+        }
+        if(primaryCodeDuplicate > 1 || secondaryCodeDuplicate > 1 || tertiaryCodeDuplicate>1){
+          this.priorityValidation = true;
+         this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
+          return;
+        }
   }
 }
