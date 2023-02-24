@@ -12,7 +12,6 @@
             [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"
             textField="lovDesc" valueField="lovCode" [data]="copyLoadPriorties">
           </kendo-dropdownlist>
-          <kendo-formerror *ngIf="priorityValidation">Duplicate priorities.</kendo-formerror>
           <kendo-formerror *ngIf="showRequiredValidation && !(pharmacy.priorityCode)">Priority is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
