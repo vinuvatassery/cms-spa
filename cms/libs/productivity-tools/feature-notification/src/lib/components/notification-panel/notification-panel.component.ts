@@ -121,8 +121,8 @@ export class NotificationPanelComponent implements OnInit {
 
   private contains(target: any): boolean {
     return (
-      this.anchor.nativeElement.contains(target) ||
-      (this.popup ? this.popup.nativeElement.contains(target) : false)
+      this.anchor?.nativeElement?.contains(target) ||
+      (this.popup ? this.popup?.nativeElement?.contains(target) : false)
     );
   }
 
