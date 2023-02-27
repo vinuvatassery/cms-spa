@@ -52,6 +52,8 @@ export class IncomeListComponent implements OnInit {
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
   proofOfSchoolDocument!:any
+  incomeValid$ = this.incomeFacade.incomeValid$;
+  isIncomeAvailable:boolean = true;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
   // actions: Array<any> = [{ text: 'Action' }];
@@ -129,6 +131,10 @@ export class IncomeListComponent implements OnInit {
     this.loadIncomes();
     this.loadDependents();
     this.includeAddIncomeButtonAndFooterNote();
+    this.incomeValid$.subscribe(response=>{
+      this.isIncomeAvailable = response;
+      this.cdr.detectChanges();
+    })    
   }
 
   ngOnChanges(){
