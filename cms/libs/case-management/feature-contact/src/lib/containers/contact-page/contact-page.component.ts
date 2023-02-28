@@ -872,7 +872,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return flag ? StatusFlag.Yes : StatusFlag.No;
   }
 
-  private loadContactInfo() {
+  private loadContactInfo(isFormFillRequired = true) {
     this.loaderService.show()
     this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '').subscribe({
       next: (data: ContactInfo) => {
@@ -880,7 +880,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (data) {
           this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
           this.contactInfo = data;
-          this.setFormValues();
+          if(isFormFillRequired){
+            this.setFormValues();
+          }
           if (!this.isEdit) {
             this.loadDdlCounties(StatesInUSA.Oregon);
           }
@@ -1383,7 +1385,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Home Address Proof Removed Successfully!")
             this.homeAddressProofFile = undefined;
             this.uploadedHomeAddressProof = undefined;
-            this.loadContactInfo();
+            this.loadContactInfo(false);
             this.updateHomeAddressProofCount(false);
             this.loaderService.hide();
           }
