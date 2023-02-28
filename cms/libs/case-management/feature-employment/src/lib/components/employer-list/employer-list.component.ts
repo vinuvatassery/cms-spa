@@ -7,6 +7,7 @@ import {
   EventEmitter,
   Output,
   OnChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 /** Enums **/
 import { ScreenType } from '@cms/case-management/domain';
@@ -34,6 +35,8 @@ export class EmployerListComponent implements OnInit, OnChanges {
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
   selectedEmployer: ClientEmployer = new ClientEmployer();
+  employmentValid$ = this.employmentFacade.employmentValid$;
+  isEmployerAvailable:boolean = true;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public sortValue = this.employmentFacade.sortValue;
   public sortType = this.employmentFacade.sortType;
@@ -59,13 +62,17 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef) {}
 
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
     this.addEmployerButtonDisplay();
     this.loadEmployments();
+    this.employmentValid$.subscribe(response=>{
+      this.isEmployerAvailable = response;
+      this.cdr.detectChanges();
+    }) 
     
   }
 
