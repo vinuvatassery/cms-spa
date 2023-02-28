@@ -13,7 +13,7 @@ import { WorkflowFacade, CompletionStatusFacade, ContactFacade,
   ClientDocumentFacade, HomeAddressProof, StatesInUSA, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -51,7 +51,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedAddressForm!: FormGroup;
   uploadedHomeAddressProof!: File | undefined;
   fileUploadRestrictions: FileRestrictions = {
-    maxFileSize: 25000000,
+    maxFileSize: this.configurationProvider.appSettings.uploadFileSizeLimit,
   };
   showCountyLoader = this.contactFacade.showloaderOnCounty$;
   showMailAddressValidationLoader$ = new BehaviorSubject(false);
@@ -61,6 +61,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   showPreferredContactLoader = false;
   isHomeAddressStateOregon$ = new BehaviorSubject(true);;
   public homeAddressProofFile: any = undefined;
+  showAddressProofSizeValidation = false;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -69,6 +70,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private allowWorkflowCountUpdate = false;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
+
   constructor(
     private readonly contactFacade: ContactFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
@@ -81,7 +84,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly snackbarService: NotificationSnackbarService,
     private readonly route: ActivatedRoute,
     public readonly clientDocumentFacade: ClientDocumentFacade,
-    private readonly router :Router
+    private readonly router :Router,
+    private readonly configurationProvider: ConfigurationProvider,
   ) { }
 
   /** Lifecycle hooks **/
@@ -93,6 +97,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.buildContactInfoForm();
     this.buildAddressValidationForm();
     this.addSubscriptions();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -100,6 +105,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -196,6 +202,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addContactInfoFormChangeSubscription() {
     this.contactInfoForm.valueChanges
       .pipe(
+        debounceTime(200),
         map(_ => this.contactInfoForm.getRawValue()),
         distinctUntilChanged(),
         startWith(null), pairwise()
@@ -501,9 +508,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         state: new FormControl(StatesInUSA.Oregon),
         zip: new FormControl(''),
         county: new FormControl(''),
-        homelessFlag: new FormControl(false, { validators: Validators.required }),
-        noHomeAddressProofFlag: new FormControl(false, { validators: Validators.required }),
-        sameAsMailingAddressFlag: new FormControl(false, { validators: Validators.required }),
+        homelessFlag: new FormControl(false),
+        noHomeAddressProofFlag: new FormControl(false),
+        sameAsMailingAddressFlag: new FormControl(false),
         housingStabilityCode: new FormControl('', { validators: Validators.required }),
       }),
 
@@ -577,7 +584,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private save() {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
-    const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.fileUploadRestrictions?.maxFileSize ?? 0);
+    const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.configurationProvider?.appSettings.uploadFileSizeLimit ?? 0);
     const isHomeAddressStateOregon = this.contactInfoForm?.get('homeAddress.state')?.value == StatesInUSA.Oregon;
     if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation && !isLargeFile && isHomeAddressStateOregon === true) {
       this.loaderService.show()
@@ -591,17 +598,17 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isNoMailAddressValidationRequired) return;
     const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
     const changedMailingAddress: MailAddress = {
-      address1: mailingAddressGroup?.controls['address1']?.value,
-      address2: mailingAddressGroup?.controls['address2']?.value,
-      city: mailingAddressGroup?.controls['city']?.value,
-      state: mailingAddressGroup?.controls['state']?.value,
-      zip5: mailingAddressGroup?.controls['zip']?.value      
+      address1: mailingAddressGroup?.controls['address1']?.value ?? '',
+      address2: mailingAddressGroup?.controls['address2']?.value ?? '',
+      city: mailingAddressGroup?.controls['city']?.value ?? '',
+      state: mailingAddressGroup?.controls['state']?.value ?? '',
+      zip5: mailingAddressGroup?.controls['zip']?.value ?? ''      
     }
 
-    const isValid = mailingAddressGroup?.controls['address1']?.valid && mailingAddressGroup?.controls['address1']?.value !== ''
-                    && mailingAddressGroup?.controls['city']?.valid && mailingAddressGroup?.controls['city']?.value !== '' 
-                    && mailingAddressGroup?.controls['state']?.valid && mailingAddressGroup?.controls['state']?.value !== ''
-                    && mailingAddressGroup?.controls['zip']?.valid && mailingAddressGroup?.controls['zip']?.value !== ''
+    const isValid = mailingAddressGroup?.controls['address1']?.valid && (mailingAddressGroup?.controls['address1']?.value !== '' && mailingAddressGroup?.controls['address1']?.value !== null)
+                    && mailingAddressGroup?.controls['city']?.valid && (mailingAddressGroup?.controls['city']?.value !== '' && mailingAddressGroup?.controls['city']?.value !== null)
+                    && mailingAddressGroup?.controls['state']?.valid && (mailingAddressGroup?.controls['state']?.value !== '' && mailingAddressGroup?.controls['state']?.value !== null)
+                    && mailingAddressGroup?.controls['zip']?.valid && (mailingAddressGroup?.controls['zip']?.value !== '' && mailingAddressGroup?.controls['zip']?.value !== null)
 
     if (!isValid) return;
     if (this.mailAddressEntered && !isNoPopup) {
@@ -641,11 +648,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isNoMailAddressValidationRequired) return;
     const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
     const changedMailingAddress: MailAddress = {
-      address1: homeAddressGroup?.controls['address1']?.value,
-      address2: homeAddressGroup?.controls['address2']?.value,
-      city: homeAddressGroup?.controls['city']?.value,
-      state: homeAddressGroup?.controls['state']?.value,
-      zip5: homeAddressGroup?.controls['zip']?.value      
+      address1: homeAddressGroup?.controls['address1']?.value ?? '',
+      address2: homeAddressGroup?.controls['address2']?.value ?? '',
+      city: homeAddressGroup?.controls['city']?.value ?? '',
+      state: homeAddressGroup?.controls['state']?.value ?? '',
+      zip5: homeAddressGroup?.controls['zip']?.value ?? ''      
     }
 
     const isValid = homeAddressGroup?.controls['address1']?.valid && (changedMailingAddress?.address1 !== '' && changedMailingAddress?.address1 !== null)
@@ -866,7 +873,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return flag ? StatusFlag.Yes : StatusFlag.No;
   }
 
-  private loadContactInfo() {
+  private loadContactInfo(isFormFillRequired = true) {
     this.loaderService.show()
     this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '').subscribe({
       next: (data: ContactInfo) => {
@@ -874,7 +881,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (data) {
           this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
           this.contactInfo = data;
-          this.setFormValues();
+          if(isFormFillRequired){
+            this.setFormValues();
+          }
           if (!this.isEdit) {
             this.loadDdlCounties(StatesInUSA.Oregon);
           }
@@ -1073,6 +1082,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isNoProofOfHomeChecked = isChecked;
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
+      this.showAddressProofSizeValidation= false;
+      var removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
+      removeButton[0]?.click();
     }    
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);    
   }
@@ -1360,11 +1372,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
     this.showAddressProofRequiredValidation = false;
+    this.showAddressProofSizeValidation = (this.uploadedHomeAddressProof?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {
- 
+    this.showAddressProofSizeValidation = false;
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
       this.loaderService.show();
       this.clientDocumentFacade.removeDocument(this.contactInfo?.homeAddressProof?.documentId ?? '').subscribe({
@@ -1373,7 +1386,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Home Address Proof Removed Successfully!")
             this.homeAddressProofFile = undefined;
             this.uploadedHomeAddressProof = undefined;
-            this.loadContactInfo();
+            this.loadContactInfo(false);
             this.updateHomeAddressProofCount(false);
             this.loaderService.hide();
           }
@@ -1392,7 +1405,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
   }
-
 
   uploadEventHandler(e: SelectEvent) {
     if (this.uploadedHomeAddressProof) {
@@ -1483,4 +1495,110 @@ private addSaveForLaterSubscription(): void {
       return true;
     }
     return false;
-  }}
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.contactInfoForm.reset();
+      this.removeValidators();
+      this.loadContactInfo();
+     }
+    });
+  }
+
+  public removeValidators() {
+    const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
+    const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
+    const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
+    const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
+    const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
+    const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
+    const emailGroup = this.contactInfoForm.get('email') as FormGroup;
+    const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
+    mailingAddressGroup.controls['address1'].setValidators(null);
+    mailingAddressGroup.controls['address1'].updateValueAndValidity();
+    mailingAddressGroup.controls['address2'].setValidators(null);
+    mailingAddressGroup.controls['address2'].updateValueAndValidity();
+    mailingAddressGroup.controls['city'].setValidators(null);
+    mailingAddressGroup.controls['city'].updateValueAndValidity();
+    mailingAddressGroup.controls['state'].setValidators(null);
+    mailingAddressGroup.controls['state'].updateValueAndValidity();
+    mailingAddressGroup.controls['zip'].setValidators(null);
+    mailingAddressGroup.controls['zip'].updateValueAndValidity();
+
+    if ((homeAddressGroup.controls['homelessFlag']?.value ?? false) === false) {
+      homeAddressGroup.controls['address1'].setValidators(null);
+      homeAddressGroup.controls['address1'].updateValueAndValidity();
+      homeAddressGroup.controls['address2'].setValidators(null);
+      homeAddressGroup.controls['address2'].updateValueAndValidity();
+      homeAddressGroup.controls['zip'].setValidators(null);
+      homeAddressGroup.controls['zip'].updateValueAndValidity();
+    }
+
+    // For validating the home address proof. 
+    this.showAddressProofRequiredValidation = false;
+
+    homeAddressGroup.controls['city'].setValidators(null);
+    homeAddressGroup.controls['city'].updateValueAndValidity();
+    homeAddressGroup.controls['state'].setValidators(null);
+    homeAddressGroup.controls['state'].updateValueAndValidity();
+    this.isHomeAddressStateOregon$.next(homeAddressGroup.controls['state']?.value === StatesInUSA.Oregon);
+    homeAddressGroup.controls['county'].setValidators(null);
+    homeAddressGroup.controls['county'].updateValueAndValidity();    
+
+    if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      homePhoneGroup.controls['phoneNbr'].setValidators(null);
+      homePhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      homePhoneGroup.controls['phoneNbr'].setValidators(null);
+      homePhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((cellPhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      cellPhoneGroup.controls['phoneNbr'].setValidators(null);
+      cellPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((workPhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      workPhoneGroup.controls['phoneNbr'].setValidators(null);
+      workPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+    }
+
+    if ((otherPhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
+      otherPhoneGroup.controls['phoneNbr'].setValidators(null);
+      otherPhoneGroup.controls['phoneNbr'].updateValueAndValidity();
+
+      if (otherPhoneGroup.controls['phoneNbr']?.valid) {
+        otherPhoneGroup.controls['otherPhoneNote'].setValidators(null);
+        otherPhoneGroup.controls['otherPhoneNote'].updateValueAndValidity();
+      }
+    }
+
+    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
+      emailGroup.controls['email'].setValidators(null);
+      emailGroup.controls['email'].updateValueAndValidity();
+    }
+
+    if (this.preferredContactMethods.length > 0) {
+      this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(null);
+      this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
+    }
+    
+    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
+      ffContactGroup.controls['contactName'].setValidators(null);
+      ffContactGroup.controls['contactName'].updateValueAndValidity();
+      ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
+      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
+      ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
+      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
+
+      if (ffContactGroup.controls['contactRelationshipCode']?.value === 'O') {
+        ffContactGroup.controls['otherDesc'].setValidators(null);
+        ffContactGroup.controls['otherDesc'].updateValueAndValidity();
+      }
+    }
+  }
+}

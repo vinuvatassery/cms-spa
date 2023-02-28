@@ -161,7 +161,13 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
             this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
           }
           this.updateWorkflowCount(true);
-        }        
+        }  
+        else{
+          this.enableAllSexualIdentities();
+        }      
+      }
+      else{
+        this.enableAllSexualIdentities();
       }
     });
   }
@@ -175,6 +181,14 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
         this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);       
       })
       this.cdr.detectChanges();
+    }
+  }
+
+  enableAllSexualIdentities(){
+    if(this.disableSexualIdentity.length>0){
+      this.disableSexualIdentity.forEach((sexualIdentity: any) => {
+        this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
+      });
     }
   }
 }

@@ -136,7 +136,7 @@
         ? 'Change Insurance Priority'
         : 'Select Insurance Priority'
     }}</kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"></case-management-set-health-insurance-priority>
+  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"(priorityAdded)="priorityAdded()"></case-management-set-health-insurance-priority>
 </kendo-dialog>
 
 <!-- Delete Modal -->

@@ -25,6 +25,7 @@ export class ClientEligibilityComponent implements OnInit {
 
   @Output() getQuestionsResponse = new EventEmitter<any>();
   @Output() changeApplicationAcceptedStatus = new EventEmitter<any>();
+  @Output() changeIsSaveAndContinueAcceptance = new EventEmitter<any>();
 
 
   private reviewQuestionAnswerSubscription!: Subscription;
@@ -50,8 +51,8 @@ export class ClientEligibilityComponent implements OnInit {
   //questions: any = [];
   reviewQuestionCode = ReviewQuestionCode;
   acceptedApplicationStatus = true;
-  btnDisabled = false; 
-  
+  btnDisabled = false;
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -122,7 +123,7 @@ export class ClientEligibilityComponent implements OnInit {
     this.getQuestionsResponse.emit(this.questions);
   }
 
-  notesChanged(){    
+  notesChanged(){
     this.getQuestionsResponse.emit(this.questions);
   }
 
@@ -227,7 +228,12 @@ export class ClientEligibilityComponent implements OnInit {
 
   onCloseAcceptanceClicked() {
     this.isOpenAcceptance = false;
-    this.isSaveAndContinueAcceptance = false;
+    if (this.isSaveAndContinueAcceptance)
+    {
+      this.isSaveAndContinueAcceptance = false;
+      this.changeIsSaveAndContinueAcceptance.emit();
+    }
+
   }
 
   isOpenAcceptanceClicked() {
@@ -271,7 +277,7 @@ export class ClientEligibilityComponent implements OnInit {
       default:
         break;
     }
-    
+
     const documents=this.documents.filter((m: any) => m.entityTypeCode === entityTypeCode);
     if(documents.length>0){
       return true;

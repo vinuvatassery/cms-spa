@@ -574,3 +574,20 @@ display: inline-block;
     min-height: 37px;
   }
 }
+
+.auto-complete-with-template{
+  .k-list-item{
+      padding: 0px;
+      span{
+          padding: 8px 16px;
+          display: inline-block;  
+          width: 100%;
+      }  
+  }
+  .template-list-wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid: gap 0px;
+    align-items: center;
+  }
+}

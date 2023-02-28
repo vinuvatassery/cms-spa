@@ -24,6 +24,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private saveClickSubscription !: Subscription;  /** Public Methods **/
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   hasNoIncome = false;
@@ -80,6 +81,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -87,6 +89,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -414,5 +417,30 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   checkValidations(){
     this.submitIncomeDetailsForm();
     return this.noIncomeDetailsForm.valid;
+  }
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.removeValidations();
+      const gridDataRefinerValue = {
+        skipCount: this.incomeFacade.skipCount,
+        pagesize: this.incomeFacade.gridPageSizes[0]?.value,
+        sortColumn : 'incomeSourceCodeDesc',
+        sortType : 'asc',
+      };
+      this.loadIncomeListHandle(gridDataRefinerValue)
+     }
+    });
+  }
+
+  removeValidations(){
+    if (this.hasNoIncome) {
+      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators(null);
+      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValidators(null);
+      this.noIncomeDetailsForm.controls['noIncomeNote'].setValidators(null);
+      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].updateValueAndValidity();
+      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].updateValueAndValidity();
+      this.noIncomeDetailsForm.controls['noIncomeNote'].updateValueAndValidity();
+    }
   }
 }

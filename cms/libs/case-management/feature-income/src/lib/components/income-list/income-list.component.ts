@@ -248,7 +248,7 @@ onIncomeActionClicked(
   }
 
   handleFileSelected(event: any, dataItem: any) {
-    this.dependentFacade.ShowLoader();
+    this.dependentFacade.showLoader();
     if (event && event.files.length > 0) {
       const formData: any = new FormData();
       let file = event.files[0].rawFile
@@ -267,7 +267,7 @@ onIncomeActionClicked(
           this.loadIncomeData();
           this.loadDependentsProofofSchools();
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
-          this.dependentFacade.HideLoader();
+          this.dependentFacade.hideLoader();
           this.showHideImageUploadLoader(false, dataItem);
 
         },

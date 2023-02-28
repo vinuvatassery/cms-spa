@@ -195,7 +195,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
   discardChanges(){
     this.isShowDiscardConfirmPopup = false;
-    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
+    this.workflowFacade.discardChanges(true);
   }
   /** Private Methods */
   private loadQueryParams() {

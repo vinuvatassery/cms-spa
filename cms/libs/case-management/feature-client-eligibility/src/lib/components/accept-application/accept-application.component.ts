@@ -33,7 +33,7 @@ export class AcceptApplicationComponent implements OnInit {
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
   @Input() isEdit!: boolean;
-  btnDisabled = false; 
+  btnDisabled = false;
 
   /** Constructor **/
   constructor(
@@ -149,14 +149,15 @@ export class AcceptApplicationComponent implements OnInit {
   startDateOnChange(startDate:Date)
   {
     if( this.eligibilityForm.controls['eligibilityEndDate'].value !==null){
-      const endDate = this.intl.parseDate(
-        Intl.DateTimeFormat('en-US').format(
-          this.eligibilityForm.controls['eligibilityEndDate'].value
-        )
-      );
+      const endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
+
      if (startDate > endDate) {
-         this.eligibilityForm.controls['eligibilityEndDate'].setValue(null);
+         this.dateValidate();
        }
+     else
+      {
+        this.eligibilityForm.controls['eligibilityEndDate'].updateValueAndValidity();
+      }
 
     }
     this.assignEnddate();
@@ -249,7 +250,7 @@ export class AcceptApplicationComponent implements OnInit {
       new Date(acceptedApplication.eligibilityEndDate)
     );
   }
-  dateValidate(event: Event)
+  dateValidate()
   {
     const endDate=this.eligibilityForm.controls['eligibilityEndDate'].value;
     const startDate= this.eligibilityForm.controls['eligibilityStartDate'].value;

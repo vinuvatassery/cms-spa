@@ -28,7 +28,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadSessionSubscription!:Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
-
+  private discardChangesSubscription !: Subscription;
    /** Public properties **/
   isValid:boolean=true;
   applicantInfo = {} as ApplicantInfo;
@@ -63,6 +63,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -70,6 +71,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -925,4 +927,26 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.appInfoForm.valid;
   }
 
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workFlowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.removeValidators();
+      if(this.clientId==null || this.clientCaseEligibilityId==null){
+        this.clientFacade.applicationInfoSubject.next(this.applicantInfo);
+        this.appInfoForm.reset();
+        this.appInfoForm.updateValueAndValidity();
+      }
+      else{
+        this.loadApplicantInfo();
+      }
+     }
+    });
+  }
+
+  public removeValidators() {
+    for (const key in this.appInfoForm.controls) {
+      this.appInfoForm.controls[key].setValidators(null);
+      this.appInfoForm.controls[key].updateValueAndValidity();
+    }
+  }
 }

@@ -12,7 +12,7 @@ import {
 } from '@angular/forms'
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
-import { SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
+import { SnackBarNotificationType,LoaderService,NotificationSnackbarService } from '@cms/shared/util-core';
 
 /** External libraries **/
 import { first, Subscription, Observable } from 'rxjs';
@@ -51,6 +51,8 @@ export class SetPharmacyPriorityComponent implements OnInit {
   clientCaseEligibilityId: string = "";
   isDisabled = false;
   priorityInfo = {} as PharmacyPriority;
+  btnDisabled = false; 
+  showRequiredValidation = false;
 
   /** Private properties **/
   private loadSessionSubscription!: Subscription;
@@ -61,7 +63,8 @@ export class SetPharmacyPriorityComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly loaderService: LoaderService,
     private readonly workflowFacade: WorkflowFacade,
-    private readonly lov: LovFacade,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private  readonly lov: LovFacade,
     private cdr: ChangeDetectorRef
   ) {
 
@@ -99,6 +102,14 @@ export class SetPharmacyPriorityComponent implements OnInit {
 
   public onChangePriority(value: any, index: any): void {
     this.priorityValidation = false;
+    this.showRequiredValidation = false;
+    const changedItem = this.savePriorityObjectList[index];
+    let existItemIndex = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === value && i.clientPharmacyId !== changedItem?.clientPharmacyId);
+    if(existItemIndex !== -1 && this.savePriorityObjectList[existItemIndex]){
+      this.notificationSnackbarService.errorSnackBar('Priorities cannot be duplicated.');
+      this.savePriorityObjectList[existItemIndex].priorityCode = null;
+    }
+
     this.savePriorityObjectList[index].priorityCode = value;
     this.copyLoadPriorties = this.priorities.filter(m => m.lovCode != value);
     this.copyLoadPriorties = this.priorities;
@@ -113,6 +124,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
       this.copyLoadPriorties = this.priorities.filter((x: any) => x.lovCode === PriorityCode.Primary || x.lovCode === PriorityCode.Secondary || x.lovCode === PriorityCode.Tertiary);
     }
   }
+
   loadSessionData() {
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
@@ -127,14 +139,18 @@ export class SetPharmacyPriorityComponent implements OnInit {
       });
 
   }
-  private loadClientPharmacies() {
-
-    this.clientpharmacies$.subscribe(list => {
-      this.savePriorityObjectList = JSON.parse(JSON.stringify(list));
-      this.copyLoadPriorties = this.priorities;
-      if (this.savePriorityObjectList.length == 1) {
-        this.copyLoadPriorties = this.priorities.filter((x: any) => x.lovCode === PriorityCode.Primary);
-
+  private loadClientPharmacies(){
+   
+    this.clientpharmacies$.subscribe(list =>{
+      this.savePriorityObjectList =JSON.parse(JSON.stringify(list));
+      for(let priority of this.savePriorityObjectList){
+          priority.priorityCode = priority.priorityCode?.replace(/\s/g, '');
+      }
+      this.copyLoadPriorties= this.priorities;
+      if( this.savePriorityObjectList.length == 1)
+      {
+        this.copyLoadPriorties = this.priorities.filter((x:any) =>x.lovCode === PriorityCode.Primary  );
+        
       }
       else if (this.savePriorityObjectList.length == 2) {
         this.copyLoadPriorties = this.priorities.filter((x: any) => x.lovCode === PriorityCode.Primary || x.lovCode === PriorityCode.Secondary);
@@ -152,41 +168,32 @@ export class SetPharmacyPriorityComponent implements OnInit {
     this.closeChangePriority.emit();
   }
 
-  onSavePriority() {
-    this.priorityValidation = false;
-    let primaryCodeDuplicate: number = 0;
-    let secondaryCodeDuplicate: number = 0;
-    let tertiaryCodeDuplicate: number = 0;
-    for (let i of this.savePriorityObjectList) {
-      const element = this.savePriorityObjectList[i];
-      if (element.priorityCode === PriorityCode.Primary) {
-        primaryCodeDuplicate++;
-      }
-      if (element.priorityCode === PriorityCode.Secondary) {
-        secondaryCodeDuplicate++;
-      }
-      if (element.priorityCode === PriorityCode.Tertiary) {
-        tertiaryCodeDuplicate++;
-      }
-    }
-    if (primaryCodeDuplicate > 1 || secondaryCodeDuplicate > 1 || tertiaryCodeDuplicate > 1) {
-      this.priorityValidation = true;
-      return;
-    }
-
-    this.loaderService.show();
-    this.drugPharmacyFacade.updatePharmacyPriority(this.savePriorityObjectList).subscribe({
-      next: (x: any) => {
-        if (x) {
+  onSavePriority()
+  {
+     const isValid = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === '' || i.priorityCode === null || i.priorityCode === undefined) === -1;
+  if(!isValid){
+      this.showRequiredValidation = true;
+      return; 
+  }
+    if(!this.priorityValidation)
+    {
+      this.loaderService.show();
+      this.btnDisabled =true;
+      this.drugPharmacyFacade.updatePharmacyPriority(this.savePriorityObjectList).subscribe((x:any) =>{
+        if(x){
           this.loaderService.hide();
           this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
           this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
           this.onCloseChangePriorityClicked();
         }
-      },
-      error: (error: any) => {
-        this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
-      }
-    });
+      },(error:any) =>{
+        this.btnDisabled = false;
+        this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
+      });
+    }
+    else
+    {
+      this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
+    }
   }
 }

@@ -55,7 +55,8 @@
           formControlName ="eligibilityEndDate"
           formatPlaceholder="formatPattern"
           placeholder=""
-          (keyup)="dateValidate($event)">
+          (keyup)="dateValidate()"
+          (valueChange)="dateValidate()">
         </kendo-datepicker>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!eligibilityForm.controls['eligibilityEndDate'].valid && !eligibilityForm.controls['eligibilityEndDate'].hasError('incorrect')">Eligibility end is required.</kendo-formerror>
