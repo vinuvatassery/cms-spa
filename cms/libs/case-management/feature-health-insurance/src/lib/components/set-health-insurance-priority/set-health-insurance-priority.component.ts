@@ -47,8 +47,8 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   ngOnInit(): void {
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId,this.caseEligibilityId).subscribe((data: any) => {
-      this.gridList=data;
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId).subscribe((data: any) => {
+      this.gridList = data;
       this.gridList.forEach((row: any) => {
         this.form.addControl(
           row.clientInsurancePolicyId,
@@ -61,7 +61,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       this.insurancePolicyFacade.hideLoader();
       this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
     });
-    
+
 
   }
 
@@ -70,7 +70,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.lovFacade.getCaseCodeLovs();
   }
   public onChangePriority(value: any, insurance: any): void {
-    if (value === PriorityCode.Primary) {    
+    if (value === PriorityCode.Primary) {
       if (insurance.canPayForMedicationFlag === "N") {
         this.notificationSnackbarService.warningSnackBar('Primary insurance always consists of insurance that pays for medications.');
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
@@ -84,7 +84,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }
-    else if (value === PriorityCode.Secondary) {      
+    else if (value === PriorityCode.Secondary) {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
@@ -94,9 +94,9 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
     const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode);
-    if (primarySelections.length === 2) {      
+    if (primarySelections.length === 2) {
       if (this.dateRangeOverlaps(primarySelections[0].startDate, primarySelections[0].endDate, primarySelections[1].startDate, primarySelections[1].endDate)) {
-       const previousControl=primarySelections.find((m:any)=>m.clientInsurancePolicyId!==insurance.clientInsurancePolicyId);
+        const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId !== insurance.clientInsurancePolicyId);
         this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
         this.notificationSnackbarService.warningSnackBar(errorMessage);
         return true;
@@ -105,16 +105,16 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     return false;
   }
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
-    if(aEnd === null && bEnd === null){
-      if(aStart === bStart) return true;
+    if (aEnd === null && bEnd === null) {
+      if (aStart === bStart) return true;
     }
-    if(aEnd === null){
-      if(aStart >= bStart   && aStart <= bEnd)return true;
+    if (aEnd === null) {
+      if (aStart >= bStart && aStart <= bEnd) return true;
     }
-    if(bEnd === null){
-      if(bStart >= aStart  && bStart <=aEnd)return true;
+    if (bEnd === null) {
+      if (bStart >= aStart && bStart <= aEnd) return true;
     }
-    if (aStart <= bStart && bStart <= aEnd)return true;
+    if (aStart <= bStart && bStart <= aEnd) return true;
     if (aStart <= bEnd && bEnd <= aEnd) return true;
     if (bStart < aStart && aEnd < bEnd) return true;
     return false;
@@ -127,6 +127,10 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
+    if (this.gridList.length<=3 && !this.form.valid) {
+      this.formSubmitted = true;
+      return;
+    }
     let primaryExist = false;
     let secondaryExist = false;
     const tertiaryExist = this.gridList.some((m: any) => m.priorityCode === PriorityCode.Tertiary);

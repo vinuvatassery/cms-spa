@@ -476,6 +476,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.isSummaryFileUploaded = true;
     this.isProofFileUploaded = true;
     this.isInsuranceFileUploaded = true;
+    this.isMedicareCardFileUploaded=true;
     const oregonPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
@@ -675,6 +676,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         ]);
         this.healthInsuranceForm.controls[key].updateValueAndValidity();
       });
+
+      if (this.healthInsuranceForm.value.onLisFlag == 'Y') {
+        this.isMedicareCardFileUploaded = (this.copyOfMedicareCardFiles?.length > 0 && !!this.copyOfMedicareCardFiles[0].name) ? true : false;
+        if (!this.isMedicareCardFileUploaded) {
+          this.medicareCardFilesExceedsFileSizeLimit = false;
+        }
+      }
     }
     if (this.ddlInsuranceType === HealthInsurancePlan.QualifiedHealthPlan || this.ddlInsuranceType === HealthInsurancePlan.OffExchangePlan || this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan || this.ddlInsuranceType === HealthInsurancePlan.Cobra || (this.ddlInsuranceType === HealthInsurancePlan.Medicare && this.medicareInsuranceInfoCheck)) {
       this.isInsuranceFileUploaded = (this.copyOfInsuranceCardFiles?.length > 0 && !!this.copyOfInsuranceCardFiles[0].name) ? true : false;
