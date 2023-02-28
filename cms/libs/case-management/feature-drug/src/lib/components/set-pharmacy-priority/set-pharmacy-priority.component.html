@@ -12,7 +12,7 @@
             [(ngModel)]="pharmacy.priorityCode" [ngModelOptions]="{standalone: true}" [valuePrimitive]="true"
             textField="lovDesc" valueField="lovCode" [data]="copyLoadPriorties">
           </kendo-dropdownlist>
-          <kendo-formerror *ngIf="priorityValidation">Duplicate priorties.</kendo-formerror>
+          <kendo-formerror *ngIf="showRequiredValidation && !(pharmacy.priorityCode)">Priority is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
     </div>
@@ -26,7 +26,7 @@
         aria-label="cancel updating priority">
         Cancel
       </button>
-      <button kendoButton [primary]="true" (click)="onSavePriority()" aria-label="update priority" [disabled]="btnDisabled">
+      <button kendoButton [primary]="true" (click)="onSavePriority()"  aria-label="update priority" [disabled]="btnDisabled">
        {{pharmacyPriorityModalButtonText}}
       </button>
     </div>

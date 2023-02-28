@@ -23,7 +23,7 @@
             placeholder="Search Case Manager Name or PNumber"               
             [filterable]="true"   
             (close)="searchCloseEvent();"
-            [popupSettings]="{popupClass: 'healthcaresearch-list', animate: true, appendTo:'component' }"
+            [popupSettings]="{popupClass: 'healthcaresearch-list auto-complete-with-template', animate: true, appendTo:'component' }"
             (filterChange)="onsearchTextChange($event)"  
           >          
             <ng-template kendoAutoCompleteItemTemplate let-dataItem >   

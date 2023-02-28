@@ -54,6 +54,16 @@
   max-width: 320px;
   min-width: 280px;
 }
+
+.profile-pic
+{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    background: $light-bgcolor;
+}
 .k-popover {
   border: 1px solid $theme-border;
   background: $white;
