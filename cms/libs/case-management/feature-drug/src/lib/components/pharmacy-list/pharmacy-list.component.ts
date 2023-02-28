@@ -108,6 +108,16 @@ export class PharmacyListComponent implements OnInit {
   private loadClientPharmacies() {
     this.clientpharmacies$.subscribe({
       next: (pharmacies: ClientPharmacy[]) => {
+        if(pharmacies && pharmacies.length === 0 ){
+         
+          this.isEditPharmacyPriorityTitle = false;
+          this.pharmacyPriorityModalButtonText = 'Save';
+        }
+        else
+        {
+          this.isEditPharmacyPriorityTitle = true;
+          this.pharmacyPriorityModalButtonText = 'Update';
+        }
         pharmacies.forEach((pharmacyData: ClientPharmacy) => {
           pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
         });

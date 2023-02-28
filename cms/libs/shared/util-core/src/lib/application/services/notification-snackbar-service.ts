@@ -63,4 +63,13 @@ export class NotificationSnackbarService {
         };
         this.snackbarSubject.next(snackbarMessage);
       }
+      warningSnackBar( subtitle : any)
+      {
+        const snackbarMessage: any = {
+          title: SnackBarNotificationType.WARNING,
+          subtitle: subtitle,
+          type: SnackBarNotificationType.WARNING,
+        };
+        this.snackbarSubject.next(snackbarMessage);
+      }
 }
