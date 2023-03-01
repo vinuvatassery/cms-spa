@@ -7,7 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'case-management-group-detail',
   templateUrl: './group-detail.component.html',
-  styleUrls: ['./group-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupDetailComponent{

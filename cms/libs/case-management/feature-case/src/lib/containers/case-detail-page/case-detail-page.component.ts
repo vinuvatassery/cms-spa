@@ -14,7 +14,6 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 @Component({
   selector: 'case-management-case-detail-page',
   templateUrl: './case-detail-page.component.html',
-  styleUrls: ['./case-detail-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseDetailPageComponent implements OnInit, OnDestroy {

@@ -12,7 +12,6 @@ import { SnackBarNotificationType, LoggingService, NotificationSnackbarService }
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-plan-name',
   templateUrl: './medical-premium-detail-insurance-plan-name.component.html',
-  styleUrls: ['./medical-premium-detail-insurance-plan-name.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalPremiumDetailInsurancePlanNameComponent {

@@ -54,7 +54,9 @@
               }
             ]
           }
-        ]
+        ],
+        "sonarjs/cognitive-complexity": "off",
+        "sonarjs/no-identical-expressions": "off"
       }
     },
     {

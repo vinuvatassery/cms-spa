@@ -8,7 +8,6 @@ import { first, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-health-care-provider-list',
   templateUrl: './health-care-provider-list.component.html',
-  styleUrls: ['./health-care-provider-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HealthCareProviderListComponent implements  OnChanges {

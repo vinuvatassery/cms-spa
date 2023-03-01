@@ -11,7 +11,6 @@ import { groupBy } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-client-edit-view-race-and-ethnicity',
   templateUrl: './client-edit-view-race-and-ethnicity.component.html',
-  styleUrls: ['./client-edit-view-race-and-ethnicity.component.scss'],
 })
 export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   @Input() appInfoForm: FormGroup;

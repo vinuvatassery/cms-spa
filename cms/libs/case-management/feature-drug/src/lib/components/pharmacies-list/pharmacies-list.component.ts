@@ -9,7 +9,6 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',
-  styleUrls: ['./pharmacies-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class PharmaciesListComponent implements OnInit {

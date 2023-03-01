@@ -9,7 +9,6 @@ import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-medical-premium-detail-aptc',
   templateUrl: './medical-premium-detail-aptc.component.html',
-  styleUrls: ['./medical-premium-detail-aptc.component.scss'],
 })
 export class MedicalPremiumDetailAPTCComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;

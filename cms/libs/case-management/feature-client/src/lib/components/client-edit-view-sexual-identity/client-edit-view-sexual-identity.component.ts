@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-client-edit-view-sexual-identity',
   templateUrl: './client-edit-view-sexual-identity.component.html',
-  styleUrls: ['./client-edit-view-sexual-identity.component.scss'],
 })
 export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy {
   @Input() appInfoForm: FormGroup;

@@ -7,7 +7,6 @@ import { CompletionChecklist, StatusFlag, WorkflowFacade,PronounCode, ClientFaca
 @Component({
   selector: 'case-management-client-edit-view-pronoun',
   templateUrl: './client-edit-view-pronoun.component.html',
-  styleUrls: ['./client-edit-view-pronoun.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewPronounComponent implements OnInit,OnDestroy {

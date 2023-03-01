@@ -23,7 +23,6 @@ import { SnackBarNotificationType,LoaderService,NotificationSnackbarService } fr
 @Component({
   selector: 'case-management-set-pharmacy-priority',
   templateUrl: './set-pharmacy-priority.component.html',
-  styleUrls: ['./set-pharmacy-priority.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetPharmacyPriorityComponent implements OnInit {

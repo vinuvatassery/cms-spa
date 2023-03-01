@@ -12,7 +12,6 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-list',
   templateUrl: './medical-premium-list.component.html',
-  styleUrls: ['./medical-premium-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 

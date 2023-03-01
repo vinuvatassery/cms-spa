@@ -17,7 +17,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
-  styleUrls: ['./employer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerListComponent implements OnInit, OnChanges {

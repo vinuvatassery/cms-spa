@@ -7,7 +7,6 @@ import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-carrier-name',
   templateUrl: './medical-premium-detail-insurance-carrier-name.component.html',
-  styleUrls: ['./medical-premium-detail-insurance-carrier-name.component.scss'],
 })
 export class MedicalPremiumDetailInsuranceCarrierNameComponent
   implements OnInit

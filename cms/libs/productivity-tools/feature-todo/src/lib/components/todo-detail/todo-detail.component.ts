@@ -11,7 +11,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'productivity-tools-todo-detail',
   templateUrl: './todo-detail.component.html',
-  styleUrls: ['./todo-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoDetailComponent implements OnInit {

@@ -12,7 +12,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'case-management-address-detail',
   templateUrl: './address-detail.component.html',
-  styleUrls: ['./address-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressDetailComponent implements OnInit {

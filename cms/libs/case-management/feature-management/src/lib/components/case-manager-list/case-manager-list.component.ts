@@ -7,7 +7,6 @@ import { first, Subject } from 'rxjs';
 @Component({
   selector: 'case-management-case-manager-list',
   templateUrl: './case-manager-list.component.html',
-  styleUrls: ['./case-manager-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseManagerListComponent implements OnInit {

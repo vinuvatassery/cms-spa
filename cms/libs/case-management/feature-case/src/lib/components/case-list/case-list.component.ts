@@ -16,7 +16,6 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-case-list',
   templateUrl: './case-list.component.html',
-  styleUrls: ['./case-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseListComponent implements OnInit, OnChanges {

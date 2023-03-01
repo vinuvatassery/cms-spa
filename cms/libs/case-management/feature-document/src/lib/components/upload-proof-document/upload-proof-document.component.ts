@@ -5,7 +5,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-upload-proof-document',
   templateUrl: './upload-proof-document.component.html',
-  styleUrls: ['./upload-proof-document.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadProofDocumentComponent {

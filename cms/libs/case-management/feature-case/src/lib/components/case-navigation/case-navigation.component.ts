@@ -14,7 +14,6 @@ import { LoaderService, LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-case-navigation',
   templateUrl: './case-navigation.component.html',
-  styleUrls: ['./case-navigation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseNavigationComponent implements OnInit {

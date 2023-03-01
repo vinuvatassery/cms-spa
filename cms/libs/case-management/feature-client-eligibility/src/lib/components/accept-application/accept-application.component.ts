@@ -12,7 +12,6 @@ import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-accept-application',
   templateUrl: './accept-application.component.html',
-  styleUrls: ['./accept-application.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AcceptApplicationComponent implements OnInit {

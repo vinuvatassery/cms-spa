@@ -14,7 +14,6 @@ import { LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'productivity-tools-notification-panel',
   templateUrl: './notification-panel.component.html',
-  styleUrls: ['./notification-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationPanelComponent implements OnInit {

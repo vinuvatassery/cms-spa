@@ -13,7 +13,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-send-text-message',
   templateUrl: './send-text-message.component.html',
-  styleUrls: ['./send-text-message.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendTextMessageComponent implements OnInit {

@@ -20,7 +20,6 @@ import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag, Workflow
 @Component({
   selector: 'case-management-client-eligibility-page',
   templateUrl: './client-eligibility-page.component.html',
-  styleUrls: ['./client-eligibility-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterViewInit {

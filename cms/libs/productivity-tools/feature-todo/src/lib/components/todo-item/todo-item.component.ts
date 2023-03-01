@@ -4,8 +4,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 @Component({
   selector: 'productivity-tools-todo-item',
   templateUrl: './todo-item.component.html',
-  styleUrls: ['./todo-item.component.scss'],
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoItemComponent {

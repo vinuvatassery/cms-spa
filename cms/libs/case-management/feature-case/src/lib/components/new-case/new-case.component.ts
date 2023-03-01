@@ -14,7 +14,6 @@ import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
-  styleUrls: ['./new-case.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewCaseComponent implements OnInit  {

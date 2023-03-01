@@ -17,7 +17,6 @@ import { LoaderService, UserProfileService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-case-detailed-summary',
   templateUrl: './case-details.component.html',
-  styleUrls: ['./case-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit {

@@ -6,7 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-cd4-count-list',
   templateUrl: './cd4-count.component.html',
-  styleUrls: ['./cd4-count.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cd4CountComponent {

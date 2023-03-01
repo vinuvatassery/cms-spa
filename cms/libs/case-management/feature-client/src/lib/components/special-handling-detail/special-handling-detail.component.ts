@@ -11,7 +11,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'case-management-special-handling-detail',
   templateUrl: './special-handling-detail.component.html',
-  styleUrls: ['./special-handling-detail.component.scss'], 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpecialHandlingDetailComponent implements OnInit {

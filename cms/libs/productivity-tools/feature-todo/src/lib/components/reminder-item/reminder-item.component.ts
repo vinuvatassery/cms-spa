@@ -4,8 +4,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 @Component({
   selector: 'productivity-tools-reminder-item',
   templateUrl: './reminder-item.component.html',
-  styleUrls: ['./reminder-item.component.scss'],
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderItemComponent {

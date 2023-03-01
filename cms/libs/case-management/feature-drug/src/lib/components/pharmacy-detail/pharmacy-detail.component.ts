@@ -15,7 +15,6 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'case-management-pharmacy-detail',
   templateUrl: './pharmacy-detail.component.html',
-  styleUrls: ['./pharmacy-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyDetailComponent implements OnInit {

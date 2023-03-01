@@ -14,7 +14,6 @@ import { SnackBarNotificationType, NotificationSnackbarService } from '@cms/shar
 @Component({
   selector: 'case-management-set-health-insurance-priority',
   templateUrl: './set-health-insurance-priority.component.html',
-  styleUrls: ['./set-health-insurance-priority.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetHealthInsurancePriorityComponent implements OnInit {

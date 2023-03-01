@@ -7,7 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'case-management-eligibility-period-detail',
   templateUrl: './eligibility-period-detail.component.html',
-  styleUrls: ['./eligibility-period-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EligibilityPeriodDetailComponent implements OnInit {

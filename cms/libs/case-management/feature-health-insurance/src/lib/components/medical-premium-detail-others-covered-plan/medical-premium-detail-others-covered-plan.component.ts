@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-medical-premium-detail-others-covered-plan',
   templateUrl: './medical-premium-detail-others-covered-plan.component.html',
-  styleUrls: ['./medical-premium-detail-others-covered-plan.component.scss'],
 })
 export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;

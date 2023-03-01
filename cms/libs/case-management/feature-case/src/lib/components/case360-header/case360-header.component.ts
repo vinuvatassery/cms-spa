@@ -6,7 +6,6 @@ import { DialItemAnimation } from '@progress/kendo-angular-buttons';
 @Component({
   selector: 'case-management-case360-header',
   templateUrl: './case360-header.component.html',
-  styleUrls: ['./case360-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Case360HeaderComponent implements OnInit{
