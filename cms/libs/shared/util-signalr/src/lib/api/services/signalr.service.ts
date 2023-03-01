@@ -6,15 +6,12 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import * as signalR from '@microsoft/signalr';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Enums **/
-import { HubMethodTypes } from '@cms/shared/util-core';
-/** Providers **/
-import { ConfigurationProvider } from '@cms/shared/util-core';
-/** Services **/
-import { OidcSecurityService } from '@cms/shared/util-oidc';
-/** rxjs **/
 import { lastValueFrom } from 'rxjs';
+/** Internal libraries **/
+import { HubMethodTypes, ConfigurationProvider } from '@cms/shared/util-core';
+import { OidcSecurityService } from '@cms/shared/util-oidc';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -71,7 +68,7 @@ export class SignalrService {
         nextRetryDelayInMilliseconds: (retryContext) => {
           this.notify('AutoReconnect', retryContext.elapsedMilliseconds);
           const crypto = window.crypto;
-          var array = new Uint32Array(1);
+          const array = new Uint32Array(1);
           crypto.getRandomValues(array); 
           const randomNum = array[0];
           return randomNum * 10000;

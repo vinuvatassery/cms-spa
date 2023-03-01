@@ -7,7 +7,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import { CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
-import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
 @Component({
   selector: 'case-management-duplicate-client-found',

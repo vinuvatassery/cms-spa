@@ -5,7 +5,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade, LovType } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { groupBy } from '@progress/kendo-data-query';
 
 @Component({

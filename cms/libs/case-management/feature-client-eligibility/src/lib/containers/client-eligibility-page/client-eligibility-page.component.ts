@@ -15,10 +15,7 @@ import {
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag } from '@cms/case-management/domain';
-import {
-  WorkflowFacade,
-} from '@cms/case-management/domain';
+import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-client-eligibility-page',

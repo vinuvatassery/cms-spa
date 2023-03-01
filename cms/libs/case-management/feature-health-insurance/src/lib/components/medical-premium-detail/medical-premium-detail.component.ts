@@ -248,7 +248,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
       healthInsurancePolicy.insuranceCarrierId
     );
-    //this.insurancePlanFacade.carrierNameChangeSubject.next(healthInsurancePolicy.insuranceCarrierId);
+    
     if (healthInsurancePolicy.insuranceCarrierId) {
       this.insuranceCarrierNameChange(healthInsurancePolicy.insuranceCarrierId);
     }

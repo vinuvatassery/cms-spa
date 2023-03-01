@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { ClientEligibilityFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -10,7 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
   styleUrls: ['./group-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupDetailComponent implements OnInit {
+export class GroupDetailComponent{
  currentDate = new Date();
  public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Public properties **/
@@ -20,10 +20,4 @@ export class GroupDetailComponent implements OnInit {
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade
   ) {}
-
-  /** Lifecycle hooks **/
-  ngOnInit(): void {
-  }
-
-  /** Private methods **/
 }

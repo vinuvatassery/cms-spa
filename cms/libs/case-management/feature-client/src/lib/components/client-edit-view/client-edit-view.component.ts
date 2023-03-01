@@ -211,20 +211,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
 
   ngAfterViewChecked() {  
-    let firstName = '';
-    let lastName ='';
-    if(this.appInfoForm.controls["firstName"].value === null){
-      firstName = ''
-    }
-    else{
-      firstName = this.appInfoForm.controls["firstName"].value
-    }
-    if(this.appInfoForm.controls["lastName"].value === null){
-      lastName = ''
-    }
-    else{
-      lastName = this.appInfoForm.controls["lastName"].value
-    }
+    let firstName = this.appInfoForm.controls["firstName"].value ?? '';
+    let lastName =this.appInfoForm.controls["lastName"].value ?? '';
     this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');

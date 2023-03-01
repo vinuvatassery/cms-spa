@@ -10,15 +10,15 @@ import {
 import {
   FormGroup
 } from '@angular/forms'
-import { Lov, LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
-import { SnackBarNotificationType,LoaderService,NotificationSnackbarService } from '@cms/shared/util-core';
-
 /** External libraries **/
 import { first, Subscription, Observable } from 'rxjs';
-/** Facades **/
-import { DrugPharmacyFacade, WorkflowFacade, PharmacyPriority, PriorityCode } from '@cms/case-management/domain';
+/** Internal libraries **/
+import { DrugPharmacyFacade, WorkflowFacade, PharmacyPriority, PriorityCode, } from '@cms/case-management/domain';
+import { Lov, LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType,LoaderService,NotificationSnackbarService } from '@cms/shared/util-core';
+
 
 @Component({
   selector: 'case-management-set-pharmacy-priority',
@@ -179,16 +179,20 @@ export class SetPharmacyPriorityComponent implements OnInit {
     {
       this.loaderService.show();
       this.btnDisabled =true;
-      this.drugPharmacyFacade.updatePharmacyPriority(this.savePriorityObjectList).subscribe((x:any) =>{
-        if(x){
-          this.loaderService.hide();
-          this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
-          this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
-          this.onCloseChangePriorityClicked();
+      this.drugPharmacyFacade.updatePharmacyPriority(this.savePriorityObjectList)
+      .subscribe({
+        next: (x:any) =>{
+          if(x){
+            this.loaderService.hide();
+            this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
+            this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
+            this.onCloseChangePriorityClicked();
+          }
+        },
+        error: (error:any) =>{
+          this.btnDisabled = false;
+          this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
         }
-      },(error:any) =>{
-        this.btnDisabled = false;
-        this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
       });
     }
     else

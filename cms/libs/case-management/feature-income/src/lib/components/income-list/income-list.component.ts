@@ -280,21 +280,25 @@ onIncomeActionClicked(
   }
   viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
     this.loaderService.show()
-    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
-      const fileUrl = window.URL.createObjectURL(data);
-      if (type === 'download') {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = fileUrl;
-        downloadLink.download = documentName;
-        downloadLink.click();
-      } else {
-        window.open(fileUrl, "_blank");
+    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId)
+    .subscribe({
+      next: (data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (type === 'download') {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+        } else {
+          window.open(fileUrl, "_blank");
+        }
+        this.loaderService.hide();
+      }, 
+      error: (error) => {
+        this.loaderService.hide();
+        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
       }
-      this.loaderService.hide();
-    }, (error) => {
-      this.loaderService.hide();
-      this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
-    })
+    });
   }
 
   loadDependents(){

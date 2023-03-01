@@ -1,6 +1,5 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/

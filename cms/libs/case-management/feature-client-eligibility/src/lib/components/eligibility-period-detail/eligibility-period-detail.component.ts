@@ -24,14 +24,10 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadDdlGroups();
     this.loadDdlStatus();
   }
 
   /** Private methods **/
-  private loadDdlGroups() {
-  }
-
   private loadDdlStatus() {
     this.clientEligibilityFacade.loadDdlStatus();
   }

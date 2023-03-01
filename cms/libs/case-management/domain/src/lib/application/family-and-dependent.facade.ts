@@ -1,25 +1,20 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { SnackBar } from '@cms/shared/ui-common';
-import { Subject } from 'rxjs';
 /** External libraries **/
-
+import { Subject } from 'rxjs';
+import { SortDescriptor } from '@progress/kendo-data-query';
+import { IntlService } from '@progress/kendo-angular-intl';
+/** Internal libraries **/
 import { Dependent } from '../entities/dependent';
 import { ClientDependentGroupDesc} from '../enums/client-dependent-group.enum';
 import { DependentTypeCode } from '../enums/dependent-type.enum';
-/** Data services **/
 import { DependentDataService } from '../infrastructure/dependent.data.service';
-/** Providers **/
-import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-
-
-/** Facade **/
-import { LoaderService } from '@cms/shared/util-core';
-import { SortDescriptor } from '@progress/kendo-data-query';
+import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { IntlService } from '@progress/kendo-angular-intl';
+import { SnackBar } from '@cms/shared/ui-common';
+
 
 @Injectable({ providedIn: 'root' })
 export class FamilyAndDependentFacade {
@@ -102,12 +97,12 @@ export class FamilyAndDependentFacade {
   DeleteDependent(dependentId: string): void {
    this.showLoader();
     this.dependentDataService.deleteDependent(dependentId).subscribe({
-      next: (dependentdeleteResponse) => {
-       if(dependentdeleteResponse == true)
+      next: (deleteResponse) => {
+       if(deleteResponse ?? false)
        {
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')
        }
-        this.dependentdeleteSubject.next(dependentdeleteResponse);
+        this.dependentdeleteSubject.next(deleteResponse);
         this.hideLoader();
       },
       error: (err) => {

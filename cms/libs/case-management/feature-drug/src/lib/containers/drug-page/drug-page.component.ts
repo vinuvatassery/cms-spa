@@ -7,7 +7,7 @@ import { UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade,
    PrescriptionDrugFacade, PrescriptionDrug,
     StatusFlag, CompletionChecklist,
-    PrescriptionDrugDocument, NavigationType,
+    NavigationType,
     ClientDocumentFacade, YesNoFlag } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/

@@ -176,10 +176,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       initialAdjustment.push(data);
     });
 
-    // if(this.contactInfo?.homeAddressProof?.documentName){
-    //   this.updateHomeAddressProofCount(!this.isEdit);
-    // }
-
     if (initialAdjustment.length > 0) {
       this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
     }
@@ -1083,7 +1079,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation= false;
-      var removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
+      const removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
       removeButton[0]?.click();
     }    
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);    
