@@ -1,21 +1,30 @@
 {
   "environment": "Development",
   "version": "v0.1",
-  "caseApiUrl": "https://localhost:44362/api",
-  "sysConfigApiUrl": "https://localhost:44352/api",
-  "signalrHubUrl": "https://localhost:5200/notification",
-  "gridSkipCount":0,
-  "snackbarHideAfter":"5000",
-  "gridPageSizeValues" : [
-    {"text": "5", "value": 5}, 
-    {"text": "10", "value": 10},
-    {"text": "20", "value": 20}   
+  "caseApiUrl": "http://localhost:44362/api",
+  "sysConfigApiUrl": "http://localhost:44352/api",
+  "signalrHubUrl": "http://localhost:5200/notification",
+  "gridSkipCount": 0,
+  "snackbarHideAfter": "5000",
+  "gridPageSizeValues": [
+    {
+      "text": "5",
+      "value": 5
+    },
+    {
+      "text": "10",
+      "value": 10
+    },
+    {
+      "text": "20",
+      "value": 20
+    }
   ],
-  "snackbarAnimationDuration":"600",
-  "uploadFileSizeLimit":"26214400",
+  "snackbarAnimationDuration": "600",
+  "uploadFileSizeLimit": "26214400",
   "instrumentationKey": "d208c057-65ff-4fa0-9e47-b4d35712daa4",
-  "dateFormat":"yyyy-MM-dd",
-  "displaydateFormat":"MM/dd/yyyy",
+  "dateFormat": "yyyy-MM-dd",
+  "displaydateFormat": "MM/dd/yyyy",
   "oidc": {
     "sendAccessToken": true,
     "authority": "https://login.microsoftonline.com/bf61c743-739e-485a-8e3d-b313fa1a759b/v2.0",
@@ -29,6 +38,9 @@
     "autoUserInfo": false,
     "useRefreshToken": true,
     "logLevel": "",
-    "secureRoutes": ["https://localhost:44362/api","https://localhost:44352/api"]
+    "secureRoutes": [
+      "http://localhost:44362/api",
+      "http://localhost:44352/api"
+    ]
   }
 }

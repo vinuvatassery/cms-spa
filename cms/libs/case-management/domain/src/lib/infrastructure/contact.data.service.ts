@@ -8,7 +8,6 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ContactInfo } from '../entities/contact';
 import { Income } from '../entities/income';
-import { urlToHttpOptions } from 'url';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -19,7 +18,7 @@ export class ContactDataService {
     private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider) { }
 
-  /** Public methods **/  
+  /** Public methods **/
 
   loadDdlIncomeTypes() {
     return of(['Work', 'Self-employment', 'Unemployment Insurance', 'Supplemental Security Income (SSI)',
@@ -171,8 +170,8 @@ export class ContactDataService {
     ]);
   }
 
-   
-  
+
+
   loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
     return this.http.get<ContactInfo>(this.getUrl(clientId, clientCaseEligibilityId));
   }
@@ -225,7 +224,7 @@ export class ContactDataService {
       }
       else {
         fd.append(k, obj[i]);
-       
+
       }
     }
   }
@@ -243,5 +242,5 @@ export class ContactDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}`,);
 
   }
-  
+
 }
