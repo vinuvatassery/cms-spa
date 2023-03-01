@@ -363,7 +363,7 @@ export class WorkflowFacade {
       
       const processCompletion: WorkflowProcessCompletionStatus = {
         processId: wf.processId,
-        calculatedTotalCount: workflowProgress && workflowProgress?.requiredDatapointsCount != 0 ? workflowProgress?.requiredDatapointsCount : (wf?.requiredCount === 0 ? 1 : wf?.requiredCount),
+        calculatedTotalCount: totalCount,
         completedCount: workflowProgress ? workflowProgress?.completedDatapointsCount : 0,
         completionChecklist: completionChecklist
       };

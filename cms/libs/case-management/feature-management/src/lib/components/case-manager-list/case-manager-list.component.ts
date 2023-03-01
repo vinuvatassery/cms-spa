@@ -124,7 +124,7 @@ export class CaseManagerListComponent implements OnInit {
   onDeleteConfirmHandle($event : any)
   {
     
-    if(($event ?? false))
+    if(!($event ?? false))
     {
       this.onDeleteConfirmCloseClicked()
     }
