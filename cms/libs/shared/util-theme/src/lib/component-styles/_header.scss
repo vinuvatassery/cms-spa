@@ -167,7 +167,7 @@
     padding: $size-xx $size-xlg;
     text-transform: capitalize;
     font-family: $font-family;
-    justify-content: start;
+    justify-content: flex-start;
     opacity: 0.8;
     margin-bottom: $size-xl;
     &:hover {
@@ -335,7 +335,7 @@ max-width: 400px;
 //       border-bottom: 1px solid $theme-border !important;
 //       text-transform: capitalize !important;
 //       padding: $size-xx $size-xlg !important;
-//       justify-content: start;
+//       justify-content: flex-start;
 //       width: 100%;
 //       border-radius: $size-0;
 //     }
