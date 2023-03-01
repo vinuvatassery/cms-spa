@@ -80,6 +80,9 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
 
   public RaceAndEthnicityhange(value: any): void {
+    value.forEach((element:any) => {
+      element.checked=true
+    });
     this.RaceAndEthnicityChange.emit(true);
     // if (Array.isArray(value) && value.length == 1) {
     //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(value[0]);
@@ -87,5 +90,17 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
     //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
     // }
     // console.log('valueChange', value);
+  }
+
+  getCheckedItems(currentItem:any){
+    var values=this.appInfoForm.controls['RaceAndEthnicity']?.value;
+
+    if(values.length>0){
+      let item= values.find((x:any)=>x.lovCode==currentItem.lovCode);
+      if(item){
+        return true;
+      }
+    }
+    return false;
   }
 }
