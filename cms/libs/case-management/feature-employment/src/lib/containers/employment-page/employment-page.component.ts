@@ -108,7 +108,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       sort: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
     };
-    if (this.isEmployedGridDisplay ?? false) {
+    if (!(this.isEmployedGridDisplay ?? false)) {
       this.pageSizes = this.employmentFacade.gridPageSizes;
       this.employmentFacade.loadEmployers(
         this.clientCaseEligibilityId,

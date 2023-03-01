@@ -211,7 +211,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     const yesIncome: CompletionChecklist = {
       dataPointName: 'incomeFlag_yes',
-      status: this.hasNoIncome  ? StatusFlag.Yes :StatusFlag.No
+      status: !this.hasNoIncome  ? StatusFlag.Yes :StatusFlag.No
     };
 
     this.workflowFacade.updateBasedOnDtAttrChecklist([noIncome, yesIncome]);
