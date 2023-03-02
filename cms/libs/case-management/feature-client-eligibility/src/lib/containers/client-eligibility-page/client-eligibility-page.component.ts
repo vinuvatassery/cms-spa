@@ -77,18 +77,18 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
 
   private createWorkflowChecklist(value: any){
     const completionChecklist: CompletionChecklist[] = [];
-      if(value){
+      if(!value) return;
         value?.forEach((que:any) => {
           let isAllChildQueAnswered = true;
-          if(que?.responseAnswerId && que?.childQuestions?.length > 0){
-            const isChildRespRequired = que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
-            if(isChildRespRequired){
+          const isChildRespRequired = que?.responseAnswerId 
+                                      && que?.childQuestions?.length > 0 
+                                      && que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
+          if(isChildRespRequired){
               isAllChildQueAnswered = que?.childQuestions?.findIndex((chdQue:any) => chdQue?.responseAnswerId != undefined && chdQue?.notes) !== -1;
-            }
           }
           const item: CompletionChecklist = {
             dataPointName: que?.reviewQuestionId,
-            status: que?.responseAnswerId && isAllChildQueAnswered === true ? StatusFlag.Yes :  StatusFlag.No
+            status: que?.responseAnswerId && isAllChildQueAnswered ? StatusFlag.Yes :  StatusFlag.No
           };
           completionChecklist.push(item);
         });
@@ -96,7 +96,6 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
         if(completionChecklist?.length > 0){
           this.workflowFacade.replaceChecklist(completionChecklist);
         }
-      }
   }
 
 

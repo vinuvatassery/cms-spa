@@ -160,30 +160,16 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
 private updateFormCompleteCount(prev: any, curr: any) {
   let completedDataPoints: CompletionChecklist[] = [];
   Object.keys(this.parentForm.controls).forEach(key => {
-    if (prev && curr) {
-      if (prev[key] !== curr[key]) {
-        let item: CompletionChecklist = {
-          dataPointName: key,
-          status: curr[key] ? StatusFlag.Yes : StatusFlag.No
-        };
-       
-        completedDataPoints.push(item);
-      }
-    }
-    else {
-      if (this.parentForm?.get(key)?.value && this.parentForm?.get(key)?.valid) {
-        let item: CompletionChecklist = {
-          dataPointName: key,
-          status: StatusFlag.Yes
-        };
+    const isValueChanged = prev && curr && prev[key] !== curr[key];
+    const isFormValidAndFilled = !prev && this.parentForm?.get(key)?.value && this.parentForm?.get(key)?.valid;
 
-        completedDataPoints.push(item);
-      }
-    }
+    if (isValueChanged || isFormValidAndFilled) {
+      const status = isValueChanged ? curr[key] ? StatusFlag.Yes : StatusFlag.No : StatusFlag.Yes;
+      completedDataPoints.push({ dataPointName: key, status });
+    }    
   });
 
   if (completedDataPoints.length > 0) {
-   
    this.workFlowFacade.updateChecklist(completedDataPoints);
   }
 }
