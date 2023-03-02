@@ -18,10 +18,6 @@ import { RolesAndPermissionsListComponent } from './components/roles-and-permiss
 import { RolesAndPermissionsDetailComponent } from './components/roles-and-permissions-detail/roles-and-permissions-detail.component';
 import { DeactivateRolesAndPermissionsConfirmationComponent } from './components/deactivate-roles-and-permissions-confirmation/deactivate-roles-and-permissions-confirmation.component';
 import { SystemConfigFeatureLovModule } from '@cms/system-config/feature-lov';
-// import { SystemConfigFeatureHousingCoordinationManagementModule } from '@cms/system-config/feature-housing-coordination-management';
-// import { SystemConfigFeatureFinancialsModule } from '@cms/system-config/feature-financials';
-// import { SystemConfigFeatureCommunicationModule } from '@cms/system-config/feature-communication';
-// import { SystemConfigFeatureClientProfileManagementModule } from '@cms/system-config/feature-client-profile-management';
  
 @NgModule({
   imports: [
@@ -31,10 +27,6 @@ import { SystemConfigFeatureLovModule } from '@cms/system-config/feature-lov';
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureLovModule,
-    // SystemConfigFeatureHousingCoordinationManagementModule,
-    // SystemConfigFeatureFinancialsModule,
-    // SystemConfigFeatureCommunicationModule,
-    // SystemConfigFeatureClientProfileManagementModule
   ],
   declarations: [
     UserListComponent,
