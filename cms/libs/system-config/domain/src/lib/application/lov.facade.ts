@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { NotificationSnackbarService,SnackBarNotificationType,LoggingService  } from '@cms/shared/util-core';
@@ -6,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Lov } from '../entities/lov';
 import { AcceptedCaseStatusCode } from '../enums/accepted-case-status-code.enum';
+import { ApplicantInfoLovType } from '../enums/applicant-info-lov-types.enum';
 import { LovType } from '../enums/lov-types.enum';
 
 
@@ -32,7 +34,7 @@ export class LovFacade {
   private lovMaterialYesSubject = new BehaviorSubject<Lov[]>([]);
   private lovTransgenderSubject = new BehaviorSubject<Lov[]>([]);
   private lovSexAtBirthSubject = new BehaviorSubject<Lov[]>([]);
-  private lovSexulaIdentitySubject = new BehaviorSubject<Lov[]>([]);
+  private lovSexualIdentitySubject = new BehaviorSubject<Lov[]>([]);
   private lovGenderSubject = new BehaviorSubject<Lov[]>([]);
   private lovSpokenWriottenLanguageSubject = new BehaviorSubject<Lov[]>([]);
   private lovEnglishProficiencySubject = new BehaviorSubject<Lov[]>([]);
@@ -53,6 +55,7 @@ export class LovFacade {
   private lovPrioritySubject=new BehaviorSubject<Lov[]>([]);
   private lovOtherEthnicitySubject=new BehaviorSubject<Lov[]>([]);
   private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
+  private lovApplicantInfoSubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -65,7 +68,7 @@ export class LovFacade {
   materialsyeslov$ = this.lovMaterialYesSubject.asObservable();
   transgenderlov$ = this.lovTransgenderSubject.asObservable();
   sexAtBirthlov$ = this.lovSexAtBirthSubject.asObservable();
-  sexulaIdentitylov$ = this.lovSexulaIdentitySubject.asObservable();
+  sexulaIdentitylov$ = this.lovSexualIdentitySubject.asObservable();
   genderlov$ = this.lovGenderSubject.asObservable();
   spokenWrittenLanguagelov$ = this.lovSpokenWriottenLanguageSubject.asObservable();
   englishProficiencylov$ = this.lovEnglishProficiencySubject.asObservable();
@@ -86,6 +89,7 @@ export class LovFacade {
   pharmacyPrioritylov$=this.lovPrioritySubject.asObservable();
   otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
   aptclov$=this.lovAptcSubject.asObservable();
+  applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
 
 
         /** Public methods **/
@@ -187,7 +191,7 @@ getSexAtBirthLovs(): void {
 getSexulaIdentityLovs(): void {
   this.lovDataService.getLovsbyType(LovType.SexulaIdentity).subscribe({
     next: (lovResponse) => {
-      this.lovSexulaIdentitySubject.next(lovResponse);
+      this.lovSexualIdentitySubject.next(lovResponse);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
@@ -407,6 +411,66 @@ getAptcLovs(): void {
     },
   });
 }
+
+getApplicantInfoLovs(): void {
+ // const arr = ['ENGLISH_PROFICIENCY','SPOKEN_WRITTEN_LANGUAGE','GENDER','MATERIAL_IN_ALTERNATE_FORMAT','ETHNICITY_OTHER_CATEGORIES','TRANSGENDER','SEX_AT_BIRTH','PRONOUNS','SEXUAL_IDENTITY','ETHNICITY','RACE'];
+  const lovTypeArr = Object.values(ApplicantInfoLovType);
+  const lovTypes = lovTypeArr.toString();
+  let raceIdentityArr : any = [];
+  this.lovDataService.getLovTypesbyTypes(lovTypes).subscribe({
+    next: (lovResponse) => {
+      debugger;
+      lovResponse.forEach((element:any) => {
+        debugger;
+        if(element[0]?.lovTypeCode === ApplicantInfoLovType.EnglishProficiency){
+          this.lovEnglishProficiencySubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Gender){
+          this.lovGenderSubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.SpokenWrittenLanguage){
+          this.lovSpokenWriottenLanguageSubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.MaterialInAlternateFormat)
+        {
+          this.lovMaterialSubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.EthnicityOtherCategories)
+        {
+          this.lovOtherEthnicitySubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Transgender)
+        {
+          this.lovTransgenderSubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.SexAtBirth)
+        {
+          this.lovSexAtBirthSubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Pronouns)
+        {
+          this.lovPronounSubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.SexualIdentity)
+        {
+          this.lovSexualIdentitySubject.next(element);
+        }
+        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Ethnicity || element[0]?.lovTypeCode === ApplicantInfoLovType.Race)
+        {
+          raceIdentityArr.push(element);
+          if(raceIdentityArr.length === 2)
+          {
+            this.lovRaceSubject.next(raceIdentityArr);
+          }
+        }
+      });
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+
 }
 
 

@@ -30,7 +30,7 @@ export class ClientEditViewTransgenderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.lovFacade.getTransgenderLovs();
+    //this.lovFacade.getTransgenderLovs();
     this.loadTransgenders();
   }
   private loadTransgenders() {
@@ -46,7 +46,7 @@ export class ClientEditViewTransgenderComponent implements OnInit {
         new FormControl('')
       );
       this.appInfoForm.addControl(this.DescriptionField, new FormControl(''));
-      this.Transgenders = data.filter((x:any)=>x.lovCode !== TransGenderCode.dontKnow 
+      this.Transgenders = data.filter((x:any)=>x.lovCode !== TransGenderCode.dontKnow
       && x.lovCode !== TransGenderCode.dontKnowQustion && x.parentCode != TransGenderCode.yesParentCode);
       this.yesGendersList = data.filter((x: any)=> x.parentCode == TransGenderCode.yesParentCode);
     });

@@ -13,8 +13,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 import { LovFacade, LovType } from '@cms/system-config/domain';
 
-import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa' 
- 
+import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa'
+
 @Component({
   selector: 'case-management-client-edit-view',
   templateUrl: './client-edit-view.component.html',
@@ -22,8 +22,8 @@ import { IntlDateService,DataQuery} from '@cms/shared/ui-tpa'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit,OnDestroy {
- 
-     
+
+
   /** Output Properties **/
  @Output() AppInfoChanged = new EventEmitter<{completedDataPoints: CompletionChecklist[], updateWorkflowCount:boolean}>();
  @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();
@@ -32,15 +32,15 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
  @Output() ApplicantNameChange = new EventEmitter<any>();
 
   /** Public properties **/
-  public currentDate = new Date(); 
+  public currentDate = new Date();
   rdoTransgenders$ = this.clientfacade.rdoTransGenders$;
   rdoSexAssigned$ = this.clientfacade.rdoSexAssigned$;
 
-  rdoMaterials$ = this.lovFacade.materialslov$;  
-  materialsyeslov$ = this.lovFacade.materialsyeslov$; 
+  rdoMaterials$ = this.lovFacade.materialslov$;
+  materialsyeslov$ = this.lovFacade.materialsyeslov$;
   spokenWrittenLanguagelov$ = this.lovFacade.spokenWrittenLanguagelov$;
   englishProficiencylov$ = this.lovFacade.englishProficiencylov$;
-  
+
   //this.clientfacade.rdoInterpreters$;
 
   rdoDeafs$ = this.clientfacade.rdoDeaf$;
@@ -88,7 +88,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   racialIdentityOptions!: any;
   popupClassMultiSelect = 'multiSelectSearchPopup';
   public racialName: any = [];
-  public formUiStyle : UIFormStyle = new UIFormStyle();  
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   appInfoForm!: FormGroup;
   ageMinLimit=1;
   ageMaxLimit=9999999999;
@@ -104,7 +104,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   startAgeDressingBathingDifficultyInputDisable!:boolean;
   startAgeConcentratingDifficultyInputDisable!:boolean;
   startAgeErrandsDifficultyInputDisable!:boolean;
- 
+
 
   pronounForm!:FormGroup;
   adjustmentAttributeList!: string[];
@@ -135,7 +135,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   showNameDuplicateLoaderField = '';
   showSsnDuplicateLoader:boolean=false;
   otherEthnicityList:any[]=[];
- 
+
   /** Constructor**/
   constructor(private readonly clientfacade: ClientFacade,
     private readonly elementRef: ElementRef,
@@ -150,7 +150,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     private readonly ref: ChangeDetectorRef,  ) { }
 
   /** Lifecycle hooks **/
-  
+
   ngOnInit(): void {
     this.loadDdlRacialIdentities();
     this.loadDdlPrimaryIdentities();
@@ -168,23 +168,23 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
     this.LoadLovs();
-    this.loadDdlOtherIdentities(); 
-    this.buildForm(); 
-     this.addAppInfoFormChangeSubscription();    
-     this.loadApplicantInfoSubscription();   
+    this.loadDdlOtherIdentities();
+    this.buildForm();
+     this.addAppInfoFormChangeSubscription();
+     this.loadApplicantInfoSubscription();
      this.ValidateFields.emit(this.appInfoForm);
   }
- 
+
   ngOnDestroy(): void {
     this.applicantInfoSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
-    adjustControls.forEach((control: any) => {   
+    adjustControls.forEach((control: any) => {
       control.addEventListener('click', this.adjustAttributeChanged.bind(this));
-    }); 
-  } 
+    });
+  }
 
   setRaceAndEthnicityData(value:any){
     this.raceAndEthnicity = value;
@@ -221,7 +221,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }
   }
 
-  ngAfterViewChecked() {  
+  ngAfterViewChecked() {
     let firstName = '';
     let lastName ='';
     if(this.appInfoForm.controls["firstName"].value === null){
@@ -239,7 +239,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     this.ApplicantNameChange.emit(firstName+'  '+lastName);
     const initialAjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
-    adjustControls.forEach((control: any) => {     
+    adjustControls.forEach((control: any) => {
       const data: CompletionChecklist = {
         dataPointName: control.name,
         status: control.checked ? StatusFlag.Yes : StatusFlag.No
@@ -252,13 +252,13 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
     }
   }
 
-  public onClose(event: any) {    
-      //event.preventDefault();   
+  public onClose(event: any) {
+      //event.preventDefault();
   }
   public clearForm(): void {
     //this.form.reset();
   }
-  /** Private methods **/ 
+  /** Private methods **/
 
   private buildForm() {
     this.appInfoForm = this.formBuilder.group({
@@ -299,22 +299,23 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       spokenLanguage:[''],
       writtenLanguage:[''],
       englishProficiency:[''],
-      RaceAndEthnicity: [[]] 
+      RaceAndEthnicity: [[]]
 
-    });  
+    });
 
-  } 
+  }
   private LoadLovs(){
-    this.lovFacade.getMaterialLovs();
+    //this.lovFacade.getMaterialLovs();
     this.lovFacade.getMaterialYesLovs();
-    this.lovFacade.getSpokenWrittenLanguageLovs();
-    this.lovFacade.getEnglishProficiencyLovs();
-    this.lovFacade.getOtherEthnicityIdentitiesLovs();
+    //this.lovFacade.getSpokenWrittenLanguageLovs();
+    //this.lovFacade.getEnglishProficiencyLovs();
+    this.lovFacade.getApplicantInfoLovs();
+    //this.lovFacade.getOtherEthnicityIdentitiesLovs();
   }
   private loadApplicantInfoSubscription(){
-    
-    this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{   
-      this.textboxDisable  = true; 
+
+    this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{
+      this.textboxDisable  = true;
       this.yesMaterialDisable = true;
       this.interpreterTypeInputDisable = true;
       this.startAgeDeafOrHearingInputDisable = true;
@@ -334,7 +335,7 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls["prmInsFirstName"].enable();
       this.appInfoForm.controls["prmInsLastName"].enable();
       this.appInfoForm.controls["ssn"].enable();
-      }      
+      }
 
       this.applicantInfo = applicantInfo;
       if(this.applicantInfo.clientCaseId !== null){
@@ -344,8 +345,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
         this.adjustAttributeInit();
       }
     }
-   
-  }); 
+
+  });
 }
 
 private assignModelToForm(applicantInfo:ApplicantInfo){
@@ -363,7 +364,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
 
   }
   this.appInfoForm.controls["lastName"].setValue(applicantInfo.client?.lastName)
-  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined && 
+  if(applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag !== undefined &&
     applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag === StatusFlag.Yes){
     this.appInfoForm.controls['officialIdsNotApplicable'].setValue(true);
     this.appInfoForm.controls["officialIdFirstName"].setValue(null);
@@ -396,7 +397,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls["prmInsLastName"].enable();
 
  }
-  this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));   
+  this.appInfoForm.controls["dateOfBirth"].setValue(new Date(applicantInfo.client?.dob));
   if(applicantInfo.client?.ssnNotApplicableFlag ==StatusFlag.Yes){
     this.appInfoForm.controls["ssnNotApplicable"].setValue(true);
     this.appInfoForm.controls["ssn"].setValue(null);
@@ -416,7 +417,7 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   else{
     this.isVisible = false
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
-  } 
+  }
 
   const Transgender=applicantInfo.client?.clientTransgenderCode?.trim();
   if(Transgender == TransGenderCode.YES_F_TO_M || Transgender == TransGenderCode.YES_M_TO_F) {
@@ -436,12 +437,12 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls['BirthGenderDescription']?.setValue(applicantInfo.client.genderAtBirthDesc);
   }
 
-  
+
   this.assignRaceAndEthnicityToForm();
 
   this.appInfoForm.controls["materialInAlternateFormatCode"].setValue(this.applicantInfo.client.materialInAlternateFormatCode);
   this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(this.applicantInfo.client.materialInAlternateFormatDesc);
-  if(this.applicantInfo.client.materialInAlternateFormatCode !== null && 
+  if(this.applicantInfo.client.materialInAlternateFormatCode !== null &&
     this.applicantInfo.client.materialInAlternateFormatCode ==='YES'){
       this.yesMaterialDisable = false;
       this.appInfoForm.controls["materialInAlternateFormatOther"].setValue(
@@ -450,57 +451,57 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
   }
   this.appInfoForm.controls["interpreterCode"].setValue(this.applicantInfo.client.interpreterCode);
   this.appInfoForm.controls["interpreterType"].setValue(this.applicantInfo.client.interpreterType);
-  if(this.applicantInfo.client.interpreterCode !== null && 
+  if(this.applicantInfo.client.interpreterCode !== null &&
     this.applicantInfo.client.interpreterCode ==='YES'){
       this.interpreterTypeInputDisable = false;
   }
   this.appInfoForm.controls["deafOrHearingCode"].setValue(this.applicantInfo.client.deafOrHearingCode);
   this.appInfoForm.controls["startAgeDeafOrHearing"].setValue(this.applicantInfo.client.startAgeDeafOrHearing);
-  if(this.applicantInfo.client.deafOrHearingCode !== null && 
+  if(this.applicantInfo.client.deafOrHearingCode !== null &&
     this.applicantInfo.client.deafOrHearingCode ==='YES'){
       this.startAgeDeafOrHearingInputDisable = false;
   }
 
   this.appInfoForm.controls["blindSeeingCode"].setValue(this.applicantInfo.client.blindSeeingCode);
   this.appInfoForm.controls["startAgeBlindSeeing"].setValue(this.applicantInfo.client.startAgeBlindSeeing);
-  if(this.applicantInfo.client.blindSeeingCode !== null && 
+  if(this.applicantInfo.client.blindSeeingCode !== null &&
     this.applicantInfo.client.blindSeeingCode ==='YES'){
       this.startAgeBlindSeeingInputDisable = false;
   }
 
   this.appInfoForm.controls["limitingConditionCode"].setValue(this.applicantInfo.client.limitingConditionCode);
-  
+
   this.appInfoForm.controls["walkingClimbingDifficultyCode"].setValue(this.applicantInfo.client.walkingClimbingDifficultyCode);
   this.appInfoForm.controls["startAgeWalkingClimbingDifficulty"].setValue(this.applicantInfo.client.startAgeWalkingClimbingDifficulty);
-  if(this.applicantInfo.client.walkingClimbingDifficultyCode !== null && 
+  if(this.applicantInfo.client.walkingClimbingDifficultyCode !== null &&
     this.applicantInfo.client.walkingClimbingDifficultyCode ==='YES'){
       this.startAgeWalkingClimbingDifficultyInputDisable = false;
   }
 
   this.appInfoForm.controls["dressingBathingDifficultyCode"].setValue(this.applicantInfo.client.dressingBathingDifficultyCode);
   this.appInfoForm.controls["startAgeDressingBathingDifficulty"].setValue(this.applicantInfo.client.startAgeDressingBathingDifficulty);
-  if(this.applicantInfo.client.dressingBathingDifficultyCode !== null && 
+  if(this.applicantInfo.client.dressingBathingDifficultyCode !== null &&
     this.applicantInfo.client.dressingBathingDifficultyCode ==='YES'){
       this.startAgeDressingBathingDifficultyInputDisable = false;
   }
 
   this.appInfoForm.controls["concentratingDifficultyCode"].setValue(this.applicantInfo.client.concentratingDifficultyCode);
   this.appInfoForm.controls["startAgeConcentratingDifficulty"].setValue(this.applicantInfo.client.startAgeConcentratingDifficulty);
-  if(this.applicantInfo.client.concentratingDifficultyCode !== null && 
+  if(this.applicantInfo.client.concentratingDifficultyCode !== null &&
     this.applicantInfo.client.concentratingDifficultyCode ==='YES'){
       this.startAgeConcentratingDifficultyInputDisable = false;
   }
 
   this.appInfoForm.controls["errandsDifficultyCode"].setValue(this.applicantInfo.client.errandsDifficultyCode);
   this.appInfoForm.controls["startAgeErrandsDifficulty"].setValue(this.applicantInfo.client.startAgeErrandsDifficulty);
-  if(this.applicantInfo.client.errandsDifficultyCode !== null && 
+  if(this.applicantInfo.client.errandsDifficultyCode !== null &&
     this.applicantInfo.client.errandsDifficultyCode ==='YES'){
       this.startAgeErrandsDifficultyInputDisable = false;
   }
   this.appInfoForm.controls["spokenLanguage"].setValue(this.applicantInfo.client.spokenLanguageCode);
   this.appInfoForm.controls["writtenLanguage"].setValue(this.applicantInfo.client.writtenLanguageCode);
   this.appInfoForm.controls["englishProficiency"].setValue(this.applicantInfo.client.englishProficiencyCode);
-  
+
   this.adjustAttributeInit();
 }
   private assignRaceAndEthnicityToForm() {
@@ -552,7 +553,7 @@ updateWorkflowCount(data: any){
   this.AppInfoChanged.emit({completedDataPoints: workFlowData, updateWorkflowCount: true});
 }
 
-  private adjustAttributeChanged(event: Event) { 
+  private adjustAttributeChanged(event: Event) {
     this.updateAdjustAttribute((event.target as HTMLInputElement).name, (event.target as HTMLInputElement).checked ? StatusFlag.Yes : StatusFlag.No)
   }
 
@@ -572,10 +573,10 @@ updateWorkflowCount(data: any){
         distinctUntilChanged(),
         startWith(null), pairwise()
       )
-      .subscribe(([prev, curr]: [any, any]) => {  
-        if(this.allowWorkflowCountUpdate === true) {            
-          this.updateFormCompleteCount(prev, curr); 
-        }     
+      .subscribe(([prev, curr]: [any, any]) => {
+        if(this.allowWorkflowCountUpdate === true) {
+          this.updateFormCompleteCount(prev, curr);
+        }
       });
 
   }
@@ -628,7 +629,7 @@ updateWorkflowCount(data: any){
         };
 
         completedDataPoints.push(item);
-      }  
+      }
     });
 
     let trans = this.appInfoForm.controls['Transgender']?.value;
@@ -676,7 +677,7 @@ updateWorkflowCount(data: any){
       completedDataPoints.push({ dataPointName: 'concentratingDifficulty', status: StatusFlag.Yes });
     }
 
-    
+
     let errandsDifficulty = this.appInfoForm.controls['errandsDifficultyCode']?.value;
     if( errandsDifficulty && (errandsDifficulty !==StatusFlag.Yes || (errandsDifficulty===StatusFlag.Yes && this.appInfoForm.controls['startAgeErrandsDifficulty']?.value))){
       completedDataPoints.push({ dataPointName: 'errandsDifficulty', status: StatusFlag.Yes });
@@ -761,18 +762,18 @@ updateWorkflowCount(data: any){
     this.clientfacade.loadDdlEnglishProficiencies();
   }
 
- 
+
   /** Internal event methods **/
   onMiddleNameChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
       this.appInfoForm.controls['middleName'].disable();
       this.appInfoForm.controls['middleName'].removeValidators(Validators.required);
-      this.appInfoForm.controls['middleName'].updateValueAndValidity();      
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();
     }
     else {
       this.appInfoForm.controls['middleName'].enable();
-      this.appInfoForm.controls['middleName'].updateValueAndValidity();    
+      this.appInfoForm.controls['middleName'].updateValueAndValidity();
     }
   }
   onInsuranceCardChecked(event: Event) {
@@ -971,7 +972,7 @@ updateWorkflowCount(data: any){
             }
           }
           else{
-            
+
           }
           this.showNameDuplicateLoader = false;
           this.showNameDuplicateLoaderField = '';
