@@ -244,39 +244,42 @@ export class WorkflowFacade {
     const AdjustAttributes = workflowMaster?.datapointsAdjustment
       ?.filter((adj: DatapointsAdjustment) => adj.adjustmentTypeCode === DataPointType.Ajusted);
 
-    if (processCompChecklist && AdjustAttributes) {
-      ajustData?.forEach((data: CompletionChecklist) => {
-        const curAdjItem: DatapointsAdjustment = this.deepCopy(AdjustAttributes)?.filter((adt: DatapointsAdjustment) => adt.datapointName === data?.dataPointName)[0];
-        const children: DatapointsAdjustment[] = this.deepCopy(AdjustAttributes)?.filter((adt: DatapointsAdjustment) => adt.parentId === curAdjItem?.dataPointAdjustmentId);
+    const isChecklistUpdateRequired = processCompChecklist && AdjustAttributes;
+    if (!isChecklistUpdateRequired) return;
+    ajustData?.forEach((data: CompletionChecklist) => {
+      const curAdjItem: DatapointsAdjustment = this.deepCopy(AdjustAttributes)?.filter((adt: DatapointsAdjustment) => adt.datapointName === data?.dataPointName)[0];
+      const children: DatapointsAdjustment[] = this.deepCopy(AdjustAttributes)?.filter((adt: DatapointsAdjustment) => adt.parentId === curAdjItem?.dataPointAdjustmentId);
 
-        if (curAdjItem && children) {
-          children?.forEach(child => {
-            if (data?.status == StatusFlag.Yes) {
-              if (curAdjItem?.adjustmentOperator === AdjustOperator.Add) {
-                this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
-              }
-              if (curAdjItem?.adjustmentOperator === AdjustOperator.Remove) {
-                const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
-                processCompChecklist.completionChecklist = newList;
-              }
+      if (curAdjItem && children) {
+        children?.forEach(child => {
+          const isYesStatus = data?.status === StatusFlag.Yes;
+          const isAddOperator = curAdjItem?.adjustmentOperator === AdjustOperator.Add;
+          const isRemoveOperator = curAdjItem?.adjustmentOperator === AdjustOperator.Remove;
+          if (isYesStatus) {
+            if (isAddOperator) {
+              this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
             }
-            else if (data?.status == StatusFlag.No) {
-              if (curAdjItem?.adjustmentOperator === AdjustOperator.Add) {
-                const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
-                processCompChecklist.completionChecklist = newList;
-              }
-              if (curAdjItem?.adjustmentOperator === AdjustOperator.Remove) {
-                this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
-              }
+            if (isRemoveOperator) {
+              const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
+              processCompChecklist.completionChecklist = newList;
             }
-          });
-        }
-      });
-
-      const compStatusIndex = this.completionChecklist.findIndex((chklst: WorkflowProcessCompletionStatus) => chklst.processId === processId);
-      if (compStatusIndex != null) {
-        this.completionChecklist[compStatusIndex].completionChecklist = processCompChecklist?.completionChecklist;
+          }
+          else if (!isYesStatus) {
+            if (isAddOperator) {
+              const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
+              processCompChecklist.completionChecklist = newList;
+            }
+            if (isRemoveOperator) {
+              this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
+            }
+          }
+        });
       }
+    });
+
+    const compStatusIndex = this.completionChecklist.findIndex((chklst: WorkflowProcessCompletionStatus) => chklst.processId === processId);
+    if (compStatusIndex != -1) {
+      this.completionChecklist[compStatusIndex].completionChecklist = processCompChecklist?.completionChecklist;
     }
   }
 
@@ -354,13 +357,13 @@ export class WorkflowFacade {
 
       const workflowProgress = this.deepCopy(workflowSession.workFlowProgress).filter((wp: WorkFlowProgress) => wp.processId === wf.processId)[0];
       let totalCount = 0;
-      if(workflowProgress && workflowProgress?.requiredDatapointsCount != 0){
+      if (workflowProgress && workflowProgress?.requiredDatapointsCount != 0) {
         totalCount = workflowProgress?.requiredDatapointsCount;
       }
-      else{
+      else {
         totalCount = (wf?.requiredCount === 0 ? 1 : wf?.requiredCount);
       }
-      
+
       const processCompletion: WorkflowProcessCompletionStatus = {
         processId: wf.processId,
         calculatedTotalCount: totalCount,
