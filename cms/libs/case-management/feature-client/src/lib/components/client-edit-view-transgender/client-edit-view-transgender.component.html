@@ -33,8 +33,7 @@
                   [fillMode]="formUiStyle.inputFillMode"
                   [formControlName]="DescriptionField"
                   [maxlength]="50"
-                  [disabled]="
-                    appInfoForm.controls['Transgender'].value !== 'NOT_LISTED' "
+                  [disabled]="textboxDisable"
                   placeholder="Enter Answer"
                   (blur)="descriptionChange()" 
                 ></kendo-textbox>

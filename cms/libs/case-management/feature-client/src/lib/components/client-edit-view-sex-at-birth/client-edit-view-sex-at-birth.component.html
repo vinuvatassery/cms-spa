@@ -27,15 +27,13 @@
               ></kendo-label>
               <div class="flex-row" *ngIf="gender.lovCode === 'NOT_LISTED'">
                 <div class="flex-col flex-col-6">
-
-               
                 <kendo-floatinglabel text="Enter Sex Assigned at Birth">
                   <kendo-textbox
                   aria-label="Enter Sex Assigned at Birth"
                   [fillMode]="formUiStyle.inputFillMode"
                     [formControlName]="DescriptionField"
                     [maxlength]="50"
-                    [disabled]="appInfoForm.controls['BirthGender'].value !== 'NOT_LISTED'"
+                    [disabled]="textboxDisable"
                     placeholder="Enter Sex Assigned at Birth" 
                     (blur)="descriptionChange()"
                   ></kendo-textbox>

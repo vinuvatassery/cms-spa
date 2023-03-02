@@ -93,8 +93,11 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   ageMinLimit=1;
   ageMaxLimit=9999999999;
 
-
+  genderTextboxDisable!:boolean;
   textboxDisable!:boolean;
+  transgenderTextboxDisable!:boolean;
+  sexualIdentityTextboxDisable!:boolean;
+  sexAtBirthTextboxDisable!:boolean;
   optionButtonValid!:boolean;
   yesMaterialDisable!:boolean;
   interpreterTypeInputDisable!: boolean;
@@ -313,16 +316,20 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
   }
   private loadApplicantInfoSubscription(){
     
-    this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{   
+    this.applicantInfoSubscription = this.applicantInfo$.subscribe((applicantInfo)=>{  
+      this.genderTextboxDisable=true; 
       this.textboxDisable  = true; 
-      this.yesMaterialDisable = true;
-      this.interpreterTypeInputDisable = true;
-      this.startAgeDeafOrHearingInputDisable = true;
-      this.startAgeBlindSeeingInputDisable = true;
-      this.startAgeWalkingClimbingDifficultyInputDisable = true;
-      this.startAgeDressingBathingDifficultyInputDisable = true;
-      this.startAgeConcentratingDifficultyInputDisable = true;
-      this.startAgeErrandsDifficultyInputDisable = true;
+      this.transgenderTextboxDisable=true;
+      this.sexualIdentityTextboxDisable=true;
+      this.sexAtBirthTextboxDisable=false;
+      this.yesMaterialDisable = false;
+      this.interpreterTypeInputDisable = false;
+      this.startAgeDeafOrHearingInputDisable = false;
+      this.startAgeBlindSeeingInputDisable = false;
+      this.startAgeWalkingClimbingDifficultyInputDisable = false;
+      this.startAgeDressingBathingDifficultyInputDisable = false;
+      this.startAgeConcentratingDifficultyInputDisable = false;
+      this.startAgeErrandsDifficultyInputDisable = false;
 
     if(applicantInfo.client !=undefined){
       this.isVisible =false;
@@ -418,23 +425,23 @@ private assignModelToForm(applicantInfo:ApplicantInfo){
     this.appInfoForm.controls["registerToVote"].setValue(StatusFlag.No);
   } 
 
-  const Transgender=applicantInfo.client?.clientTransgenderCode?.trim();
-  if(Transgender == TransGenderCode.YES_F_TO_M || Transgender == TransGenderCode.YES_M_TO_F) {
-    this.appInfoForm.controls['Transgender']?.setValue(TransGenderCode.YES);
-    this.appInfoForm.controls['yesTransgender']?.setValue(Transgender);
-  }
-  else {
-    this.appInfoForm.controls['Transgender']?.setValue(Transgender);
-  }
-  if (Transgender==='NOT_LISTED') {
-    this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.client.clientTransgenderDesc);
-  }
+  // const Transgender=applicantInfo.client?.clientTransgenderCode?.trim();
+  // if(Transgender == TransGenderCode.YES_F_TO_M || Transgender == TransGenderCode.YES_M_TO_F) {
+  //   this.appInfoForm.controls['Transgender']?.setValue(TransGenderCode.YES);
+  //   this.appInfoForm.controls['yesTransgender']?.setValue(Transgender);
+  // }
+  // else {
+  //   this.appInfoForm.controls['Transgender']?.setValue(Transgender);
+  // }
+  // if (Transgender==='NOT_LISTED') {
+  //   this.appInfoForm.controls['TransgenderDescription']?.setValue(applicantInfo.client.clientTransgenderDesc);
+  // }
 
-  const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
-  this.appInfoForm.controls['BirthGender']?.setValue(BirthGender);
-  if (BirthGender==='NOT_LISTED') {
-    this.appInfoForm.controls['BirthGenderDescription']?.setValue(applicantInfo.client.genderAtBirthDesc);
-  }
+  // const BirthGender=applicantInfo.client.genderAtBirthCode.trim();
+  // this.appInfoForm.controls['BirthGender']?.setValue(BirthGender);
+  // if (BirthGender==='NOT_LISTED') {
+  //   this.appInfoForm.controls['BirthGenderDescription']?.setValue(applicantInfo.client.genderAtBirthDesc);
+  // }
 
   
   this.assignRaceAndEthnicityToForm();

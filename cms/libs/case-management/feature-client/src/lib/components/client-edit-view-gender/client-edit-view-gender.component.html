@@ -23,7 +23,7 @@
       </label>
 
       <div class="flex-row" *ngIf="gender.lovCode === 'NOT_LISTED'">
-        <span class="flex-col flex-col-6">
+        <span class="flex-col flex-col-6"> 
           <kendo-floatinglabel text="Enter Gender">
             <kendo-textbox
               aria-label="enter gender"
@@ -31,7 +31,7 @@
               [formControlName]="DescriptionField"
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="maxLengthFifty"
-              [disabled]="!appInfoForm.controls[ControlPrefix + gender.lovCode].value"
+              [disabled]="textboxDisable"
               (blur)="descriptionChange()"
             >
             </kendo-textbox>

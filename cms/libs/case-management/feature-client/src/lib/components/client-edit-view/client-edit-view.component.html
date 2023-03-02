@@ -229,19 +229,19 @@
   </section>
 
   <!-- Applicant gender Section Checkboxes -->
-  <case-management-client-edit-view-gender [appInfoForm]="appInfoForm"></case-management-client-edit-view-gender>
+  <case-management-client-edit-view-gender [appInfoForm]="appInfoForm" [textboxDisable]="genderTextboxDisable"></case-management-client-edit-view-gender>
 
   <!-- Applicant transgender Section Checkboxes -->
   <case-management-client-edit-view-transgender
-    [appInfoForm]="appInfoForm"></case-management-client-edit-view-transgender>
+    [appInfoForm]="appInfoForm" [textboxDisable]="transgenderTextboxDisable"></case-management-client-edit-view-transgender>
 
   <!-- Applicant sexual orientation or sexual identity Section Checkboxes -->
   <case-management-client-edit-view-sexual-identity
-    [appInfoForm]="appInfoForm"></case-management-client-edit-view-sexual-identity>
+    [appInfoForm]="appInfoForm" [textboxDisable]="sexualIdentityTextboxDisable"></case-management-client-edit-view-sexual-identity>
 
   <!-- Applicant sex assigned at birth Section Checkboxes -->
   <case-management-client-edit-view-sex-at-birth
-    [appInfoForm]="appInfoForm"></case-management-client-edit-view-sex-at-birth>
+    [appInfoForm]="appInfoForm" [textboxDisable]="sexAtBirthTextboxDisable"></case-management-client-edit-view-sex-at-birth>
 
   <!-- Applicant racial or ethnic identity?  Section dropdown -->
   <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm"
