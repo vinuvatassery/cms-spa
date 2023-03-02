@@ -1,8 +1,8 @@
 {
   "environment": "Development",
   "version": "v0.1",
-  "caseApiUrl": "http://localhost:44362/api",
-  "sysConfigApiUrl": "http://localhost:44352/api",
+  "caseApiUrl": "https://localhost:44362/api",
+  "sysConfigApiUrl": "https://localhost:44352/api",
   "signalrHubUrl": "http://localhost:5200/notification",
   "gridSkipCount": 0,
   "snackbarHideAfter": "5000",
@@ -39,8 +39,8 @@
     "useRefreshToken": true,
     "logLevel": "",
     "secureRoutes": [
-      "http://localhost:44362/api",
-      "http://localhost:44352/api"
+      "https://localhost:44362/api",
+      "https://localhost:44352/api"
     ]
   }
 }
