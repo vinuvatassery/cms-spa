@@ -419,45 +419,43 @@ getApplicantInfoLovs(): void {
   let raceIdentityArr : any = [];
   this.lovDataService.getLovTypesbyTypes(lovTypes).subscribe({
     next: (lovResponse) => {
-      debugger;
       lovResponse.forEach((element:any) => {
-        debugger;
-        if(element[0]?.lovTypeCode === ApplicantInfoLovType.EnglishProficiency){
-          this.lovEnglishProficiencySubject.next(element);
+        if(element.key === ApplicantInfoLovType.EnglishProficiency){
+          this.lovEnglishProficiencySubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Gender){
-          this.lovGenderSubject.next(element);
+        else if(element.key === ApplicantInfoLovType.Gender){
+          this.lovGenderSubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.SpokenWrittenLanguage){
-          this.lovSpokenWriottenLanguageSubject.next(element);
+        else if(element.key === ApplicantInfoLovType.SpokenWrittenLanguage){
+          this.lovSpokenWriottenLanguageSubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.MaterialInAlternateFormat)
+        else if(element.key === ApplicantInfoLovType.MaterialInAlternateFormat)
         {
-          this.lovMaterialSubject.next(element);
+          this.lovMaterialSubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.EthnicityOtherCategories)
+        else if(element.key === ApplicantInfoLovType.EthnicityOtherCategories)
         {
-          this.lovOtherEthnicitySubject.next(element);
+          this.lovOtherEthnicitySubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Transgender)
+        else if(element.key === ApplicantInfoLovType.Transgender)
         {
-          this.lovTransgenderSubject.next(element);
+          this.lovTransgenderSubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.SexAtBirth)
+        else if(element.key === ApplicantInfoLovType.SexAtBirth)
         {
-          this.lovSexAtBirthSubject.next(element);
+          this.lovSexAtBirthSubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Pronouns)
+        else if(element.key === ApplicantInfoLovType.Pronouns)
         {
-          this.lovPronounSubject.next(element);
+          this.lovPronounSubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.SexualIdentity)
+        else if(element.key === ApplicantInfoLovType.SexualIdentity)
         {
-          this.lovSexualIdentitySubject.next(element);
+          this.lovSexualIdentitySubject.next(element.value);
         }
-        else if(element[0]?.lovTypeCode === ApplicantInfoLovType.Ethnicity || element[0]?.lovTypeCode === ApplicantInfoLovType.Race)
+        else if(element.key === ApplicantInfoLovType.Ethnicity || element.key === ApplicantInfoLovType.Race)
         {
-          raceIdentityArr.push(element);
+          raceIdentityArr.push(element.value);
           if(raceIdentityArr.length === 2)
           {
             this.lovRaceSubject.next(raceIdentityArr);
