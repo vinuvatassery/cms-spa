@@ -58,7 +58,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.lovFacade.getCaseCodeLovs();
   }
   public onChangePriority(value: any, insurance: any): void {
-    if (value === PriorityCode.Primary) {    
+    if (value === PriorityCode.Primary) {
       if (insurance.canPayForMedicationFlag === "N") {
         this.notificationSnackbarService.warningSnackBar('Primary insurance always consists of insurance that pays for medications.');
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
@@ -72,7 +72,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }
-    else if (value === PriorityCode.Secondary) {      
+    else if (value === PriorityCode.Secondary) {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
@@ -82,9 +82,9 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
     const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode);
-    if (primarySelections.length === 2) {      
+    if (primarySelections.length === 2) {
       if (this.dateRangeOverlaps(primarySelections[0].startDate, primarySelections[0].endDate, primarySelections[1].startDate, primarySelections[1].endDate)) {
-       const previousControl=primarySelections.find((m:any)=>m.clientInsurancePolicyId!==insurance.clientInsurancePolicyId);
+        const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId !== insurance.clientInsurancePolicyId);
         this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
         this.notificationSnackbarService.warningSnackBar(errorMessage);
         return true;
@@ -92,21 +92,17 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     }
     return false;
   }
+
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
-    if(aEnd === null && bEnd === null){
-      if(aStart === bStart) return true;
-    }
-    if(aEnd === null){
-      if(aStart >= bStart   && aStart <= bEnd)return true;
-    }
-    if(bEnd === null){
-      if(bStart >= aStart  && bStart <=aEnd)return true;
-    }
-    if (aStart <= bStart && bStart <= aEnd)return true;
+    if (aEnd === null && bEnd === null && aStart === bStart) return true;
+    if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;
+    if (bEnd === null && bStart >= aStart && bStart <= aEnd) return true;
+    if (aStart <= bStart && bStart <= aEnd) return true;
     if (aStart <= bEnd && bEnd <= aEnd) return true;
     if (bStart < aStart && aEnd < bEnd) return true;
     return false;
   }
+
   onModalCloseClicked() {
     this.isCloseInsuranceModal.emit();
   }
@@ -141,17 +137,17 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     }
     this.insurancePolicyFacade.showLoader();
     this.insurancePolicyFacade.setHealthInsurancePolicyPriority(this.gridList)
-    .subscribe({
-      next: (x: any) => {
-        this.insurancePolicyFacade.hideLoader();
-        this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
-        this.onModalCloseClicked();
-        this.priorityAdded.emit();
-    }, 
-      error:(error: any) => {
-        this.insurancePolicyFacade.hideLoader();
-        this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
-      }
-    });
+      .subscribe({
+        next: (x: any) => {
+          this.insurancePolicyFacade.hideLoader();
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
+          this.onModalCloseClicked();
+          this.priorityAdded.emit();
+        },
+        error: (error: any) => {
+          this.insurancePolicyFacade.hideLoader();
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+      });
   }
 }

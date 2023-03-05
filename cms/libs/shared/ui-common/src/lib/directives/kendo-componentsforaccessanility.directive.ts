@@ -8,66 +8,72 @@ import { Directive, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
 export class KendoFileSelectDirective {
 
   constructor(public renderer: Renderer2, public hostElement: ElementRef) { }
-  ngOnInit() { 
+  ngOnInit() {
     const ariaLabel = this.hostElement.nativeElement.getAttribute('aria-label');
     const inputElement = this.hostElement.nativeElement.children[0].children[0].children[0];
     this.renderer.setAttribute(inputElement, 'aria-label', ariaLabel);
-  }}
+  }
+}
 
-// Create for accessability fixes for arial label
-@Directive({
-  selector: 'kendo-upload'
-})
-export class KendoFileUploadDirective {
-  constructor(public renderer: Renderer2, public hostElement: ElementRef) { }
-  ngOnInit() { 
-    const ariaLabel = this.hostElement.nativeElement.getAttribute('aria-label');
-    const inputElement = this.hostElement.nativeElement.children[0].children[0].children[0];
-    this.renderer.setAttribute(inputElement, 'aria-label', ariaLabel);
-  }}
+// // Create for accessability fixes for arial label
+// @Directive({
+//   selector: 'kendo-upload'
+// })
+// export class KendoFileUploadDirective {
+//   constructor(public renderer: Renderer2, public hostElement: ElementRef) { }
+//   ngOnInit() {
+//     this.setAriaLabel();
+//   }
+
+//   private setAriaLabel() {
+//     const ariaLabel = this.hostElement.nativeElement.getAttribute('aria-label');
+//     const inputElement = this.hostElement.nativeElement.children[0].children[0].children[0];
+//     this.renderer.setAttribute(inputElement, 'aria-label', ariaLabel);
+//   }
+// }
 
 // Create for accessability fixes for auto focusing the multicolumn combo box , autocomplete
 
 @Directive({
-  selector:'[autofocusfield]'
+  selector: '[autofocusfield]'
 })
-export class FormFieldAutoFocus implements AfterViewInit{ 
-  constructor(public elementRef: ElementRef){} 
-  ngAfterViewInit(){  
-    setTimeout(()=>{                           // <<<---using ()=> syntax
+export class FormFieldAutoFocus implements AfterViewInit {
+  constructor(public elementRef: ElementRef) { }
+  ngAfterViewInit() {
+    setTimeout(() => {                           // <<<---using ()=> syntax
       this.elementRef.nativeElement.children[0].children[0].focus();
-  }, 200); 
+    }, 200);
   }
 }
 // Create for accessability fixes for auto focusing the textboxes 
 
 
 @Directive({
-  selector:'[textFieldautofocus]'
+  selector: '[textFieldautofocus]'
 })
-export class TextFieldFormFieldAutoFocus implements AfterViewInit{
+export class TextFieldFormFieldAutoFocus implements AfterViewInit {
 
-  constructor(public elementRef: ElementRef){}
+  constructor(public elementRef: ElementRef) { }
 
-  ngAfterViewInit(){
-    setTimeout(()=>{                           // <<<---using ()=> syntax
+  ngAfterViewInit() {
+    setTimeout(() => {                           // <<<---using ()=> syntax
       this.elementRef.nativeElement.children[1].focus();
-  }, 300); 
+    }, 300);
   }
 }
 // Create for accessability fixes for auto focusing the dropdown 
 
 @Directive({
-  selector:'[dropdownFieldautofocus]'
+  selector: '[dropdownFieldautofocus]'
 })
-export class DropDownFieldFormFieldAutoFocus implements AfterViewInit{
+export class DropDownFieldFormFieldAutoFocus implements AfterViewInit {
 
-  constructor(public elementRef: ElementRef){}
+  constructor(public elementRef: ElementRef) { }
 
-  ngAfterViewInit(){ 
-    setTimeout(()=>{
-      this.elementRef.nativeElement.focus(); 
-  }, 300); 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.elementRef.nativeElement.focus();
+    }, 300);
   }
 }
 

@@ -29,7 +29,7 @@ export class SignalrService {
     private readonly oidcSecurityService: OidcSecurityService,
     private readonly configurationProvider: ConfigurationProvider
   ) {
-    //this.initialize(); // NOSONAR
+    //NOSONAR this.initialize();
   }
 
   /** Private methods **/
@@ -63,7 +63,7 @@ export class SignalrService {
       .withUrl(this.configurationProvider.appSettings.signalrHubUrl, {
         accessTokenFactory: () => lastValueFrom(this.oidcSecurityService.getAccessToken())
       })
-      //.withUrl(this.configurationProvider.appSettings.signalrHubUrl) // NOSONAR
+      //.withUrl(this.configurationProvider.appSettings.signalrHubUrl) NOSONAR
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (retryContext) => {
           this.notify('AutoReconnect', retryContext.elapsedMilliseconds);

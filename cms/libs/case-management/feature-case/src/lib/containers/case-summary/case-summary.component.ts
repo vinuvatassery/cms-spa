@@ -163,10 +163,13 @@ private updateFormCompleteCount(prev: any, curr: any) {
     const isValueChanged = prev && curr && prev[key] !== curr[key];
     const isFormValidAndFilled = !prev && this.parentForm?.get(key)?.value && this.parentForm?.get(key)?.valid;
 
-    if (isValueChanged || isFormValidAndFilled) {
-      const status = isValueChanged ? curr[key] ? StatusFlag.Yes : StatusFlag.No : StatusFlag.Yes;
+    if (isValueChanged) {
+      const status = curr[key] ? StatusFlag.Yes : StatusFlag.No;
       completedDataPoints.push({ dataPointName: key, status });
     }    
+    else if(isFormValidAndFilled) {
+      completedDataPoints.push({ dataPointName: key, status: StatusFlag.Yes });
+    }
   });
 
   if (completedDataPoints.length > 0) {

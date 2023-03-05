@@ -255,24 +255,7 @@ export class WorkflowFacade {
           const isYesStatus = data?.status === StatusFlag.Yes;
           const isAddOperator = curAdjItem?.adjustmentOperator === AdjustOperator.Add;
           const isRemoveOperator = curAdjItem?.adjustmentOperator === AdjustOperator.Remove;
-          if (isYesStatus) {
-            if (isAddOperator) {
-              this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
-            }
-            if (isRemoveOperator) {
-              const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
-              processCompChecklist.completionChecklist = newList;
-            }
-          }
-          else if (!isYesStatus) {
-            if (isAddOperator) {
-              const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== child?.datapointName);
-              processCompChecklist.completionChecklist = newList;
-            }
-            if (isRemoveOperator) {
-              this.addChkListItem(processCompChecklist?.completionChecklist, child?.datapointName);
-            }
-          }
+          this.updateAdjItem(processCompChecklist, child?.datapointName, isYesStatus, isAddOperator, isRemoveOperator);
         });
       }
     });
@@ -280,6 +263,27 @@ export class WorkflowFacade {
     const compStatusIndex = this.completionChecklist.findIndex((chklst: WorkflowProcessCompletionStatus) => chklst.processId === processId);
     if (compStatusIndex != -1) {
       this.completionChecklist[compStatusIndex].completionChecklist = processCompChecklist?.completionChecklist;
+    }
+  }
+
+  private updateAdjItem(processCompChecklist: WorkflowProcessCompletionStatus, datapointName: string, isYesStatus:boolean, isAddOperator:boolean, isRemoveOperator : boolean){
+    if (isYesStatus) {
+      if (isAddOperator) {
+        this.addChkListItem(processCompChecklist?.completionChecklist, datapointName);
+      }
+      if (isRemoveOperator) {
+        const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== datapointName);
+        processCompChecklist.completionChecklist = newList;
+      }
+    }
+    else if (!isYesStatus) {
+      if (isAddOperator) {
+        const newList = processCompChecklist?.completionChecklist?.filter((chkitem: CompletionChecklist) => chkitem?.dataPointName !== datapointName);
+        processCompChecklist.completionChecklist = newList;
+      }
+      if (isRemoveOperator) {
+        this.addChkListItem(processCompChecklist?.completionChecklist, datapointName);
+      }
     }
   }
 

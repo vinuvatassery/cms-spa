@@ -20,8 +20,9 @@ import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
-import {KendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
+import {KendoFileSelectDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
 import { CaseManagerCardComponent } from './hiv-case-manager-card/case-manager-card.component';
+import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessibility.directive';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
