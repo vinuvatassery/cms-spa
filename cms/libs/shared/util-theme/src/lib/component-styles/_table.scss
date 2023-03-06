@@ -29,7 +29,7 @@ $pagination-height : 48px;
     font-size: $font-size;
     font-family: $font-family-medium;
     white-space: normal;
-    vertical-align: middle;
+    vertical-align: middle !important;
     font-weight: normal;
     .k-link{
       &:hover{
@@ -37,7 +37,8 @@ $pagination-height : 48px;
     
         }
     }
-   
+  
+
   }
   .k-grid-header-sticky {
     border-left-color: material-color($hive-neutral-palette, 600) !important;
@@ -51,8 +52,42 @@ $pagination-height : 48px;
 }
   .k-grid-header {
     padding: $size-0 !important;
+    .k-filterable {
+      > .k-cell-inner .k-link{
+        padding-inline-end: 20px;
+      }
+      .k-grid-column-menu {
+        position: relative;
+        right: 10px;
+        padding: $size-0;
+        height: $size-xxxl;
+        width: $size-xxxl;
+        top: $size-0;
+        display: flex;
+        border-radius: 2px;
+        margin-left: 5px;
+        &:active{
+          background: $white;
+          .k-icon{
+            color: $black;
+          }
+        }
+        &:hover{
+          background: rgba($black,0.5);
+       
+        }
+     
+      }
+    
+    }
+
+    .k-table-th{
+      .k-column-resizer{
+        border-right: 1px solid rgba($white,0.5);
+       }
+    }
   }
-  td {
+  td.k-table-td {
     padding: $size-l $size-xl;
     border-left-color: material-color($hive-neutral-palette, 200);
   }
@@ -384,34 +419,7 @@ table,
   }
 }
 /*table filter icon*/
-.k-filterable {
-  > .k-cell-inner .k-link{
-    padding-inline-end: 20px;
-  }
-  .k-grid-column-menu {
-    position: relative;
-    right: 30px;
-    padding: $size-0;
-    height: $size-xxxl;
-    width: $size-xxxl;
-    top: $size-0;
-    display: flex;
-    border-radius: 2px;
-    margin-left: 5px;
-    &:active{
-      background: $white;
-      .k-icon{
-        color: $black;
-      }
-    }
-    &:hover{
-      background: rgba($black,0.5);
-   
-    }
- 
-  }
 
-}
 
 .k-grid-columnmenu-popup{
   .k-columnmenu-item{
