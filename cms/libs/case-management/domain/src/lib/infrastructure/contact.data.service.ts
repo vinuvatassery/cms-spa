@@ -19,7 +19,7 @@ export class ContactDataService {
     private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider) { }
 
-  /** Public methods **/  
+  /** Public methods **/
 
   loadDdlIncomeTypes() {
     return of(['Work', 'Self-employment', 'Unemployment Insurance', 'Supplemental Security Income (SSI)',
@@ -171,8 +171,8 @@ export class ContactDataService {
     ]);
   }
 
-   
-  
+
+
   loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
     return this.http.get<ContactInfo>(this.getUrl(clientId, clientCaseEligibilityId));
   }
@@ -205,12 +205,12 @@ export class ContactDataService {
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 
-  saveIncome(clientIncome: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+  saveIncome(clientId : any, clientIncome: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income`, clientIncome);
   }
 
-  updateNoIncomeData(noIncomeData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
+  updateNoIncomeData(clientId : any, noIncomeData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/no-income`, noIncomeData);
   }
 
   FormData_append_object(fd: FormData, obj: any, key?: any) {
@@ -225,23 +225,23 @@ export class ContactDataService {
       }
       else {
         fd.append(k, obj[i]);
-       
+
       }
     }
   }
 
-  editIncome(clientIncome: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+  editIncome(clientId : any, clientIncomeId : any, clientIncome: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`, clientIncome);
 
   }
 
-  deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}/${clientId}/${clientCaseEligibilityId}`,);
+  deleteIncome(clientIncomeId : string, clientId : any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`,);
   }
 
-  loadIncomeDetailsService(clientIncomeId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}`,);
+  loadIncomeDetailsService(clientId : any, clientIncomeId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`,);
 
   }
-  
+
 }

@@ -94,7 +94,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(){
     this.workflowFacade.enableSaveButton();
-  } 
+  }
 
   /** Private methods **/
   private incomeNoteWordCount() {
@@ -143,7 +143,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.submitIncomeDetailsForm();
       if (this.noIncomeDetailsForm.valid && isValid) {
         this.loaderService.show();
-        return this.incomeFacade.save(this.noIncomeData);
+        return this.incomeFacade.save(this.clientId, this.noIncomeData);
       }
     }
     else{
@@ -157,7 +157,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeData.noIncomeSignatureNotedDate = null;
         this.noIncomeData.noIncomeNote = null;
         this.loaderService.show();
-        return this.incomeFacade.save(this.noIncomeData)
+        return this.incomeFacade.save(this.clientId, this.noIncomeData)
         .pipe
         (
         catchError((err: any) => {
@@ -167,7 +167,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         )
       }
       else
-      { 
+      {
         this.incomeFacade.errorShowHideSnackBar( "Please fill the income details")
         return  of(false);
       }

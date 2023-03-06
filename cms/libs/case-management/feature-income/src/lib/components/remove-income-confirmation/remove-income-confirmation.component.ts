@@ -23,7 +23,7 @@ export class RemoveIncomeConfirmationComponent {
   btnDisabled = false
   /** Constructor **/
   constructor(
-    private readonly incomeFacade: IncomeFacade, 
+    private readonly incomeFacade: IncomeFacade,
     private readonly router: Router,
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade) { }
@@ -35,34 +35,34 @@ export class RemoveIncomeConfirmationComponent {
 
   // loading case details like session id, eligibility id , clientid and clientcaseid
   loadCase(){
-    this.sessionId = this.route.snapshot.queryParams['sid'];    
+    this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
      this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-     .subscribe((session: any) => {      
-      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-      this.clientId =JSON.parse(session.sessionData).clientId   
-     });        
+     .subscribe((session: any) => {
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId
+      this.clientId =JSON.parse(session.sessionData).clientId
+     });
   }
   /** Internal event methods **/
 
   // click on Delete employer confirmation
   removeIncome() {
     // this.incomeFacade.showLoader();
-    if (this.selectedIncome) {      
+    if (this.selectedIncome) {
       this.btnDisabled = true;
       this.incomeFacade.ShowLoader();
-      this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId, this.clientCaseEligibilityId ).subscribe({
-        next: (response: any) => {        
-          this.onRemoveIncomeConfirmationClosed();     
+      this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId).subscribe({
+        next: (response: any) => {
+          this.onRemoveIncomeConfirmationClosed();
           this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully') 
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully')
           this.sendDetailToIncomeList.next(true);
         },
         error: (err: any) => {
           this.btnDisabled = false;
           this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );
