@@ -23,7 +23,6 @@ export class SexualOrientationListComponent implements OnInit {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-        // this.onUserDetailsClicked(true);
       },
     },
     {
@@ -31,7 +30,6 @@ export class SexualOrientationListComponent implements OnInit {
       text: "Reorder",
       icon: "format_list_numbered",
       click: (): void => {
-      //  this.onUserDeactivateClicked()
       },
     },
     {
@@ -47,7 +45,6 @@ export class SexualOrientationListComponent implements OnInit {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-      // this.onOpenDeleteTodoClicked()
       },
     },
     

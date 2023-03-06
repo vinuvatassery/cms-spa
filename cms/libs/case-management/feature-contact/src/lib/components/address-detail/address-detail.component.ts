@@ -12,7 +12,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'case-management-address-detail',
   templateUrl: './address-detail.component.html',
-  styleUrls: ['./address-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressDetailComponent implements OnInit {
@@ -43,16 +42,11 @@ export class AddressDetailComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadDdlAddressType();
-    this.loadDdlCountries();
     this.loadDdlStates();
     this.onEditAddressClicked();
   }
 
   /** Private methods **/
-  private loadDdlCountries() {
-    //this.contactFacade.loadDdlCountries();
-  }
-
   private loadDdlAddressType() {
     this.contactFacade.loadDdlAddressType();
   }

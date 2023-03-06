@@ -11,7 +11,6 @@ import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-manag
 @Component({
   selector: 'case-management-client-edit-view-sex-at-birth',
   templateUrl: './client-edit-view-sex-at-birth.component.html',
-  styleUrls: ['./client-edit-view-sex-at-birth.component.scss'],
 })
 export class ClientEditViewSexAtBirthComponent implements OnInit {
   @Input() appInfoForm: FormGroup;

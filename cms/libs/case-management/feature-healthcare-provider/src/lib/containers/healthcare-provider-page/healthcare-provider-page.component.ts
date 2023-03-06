@@ -86,16 +86,17 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
    {    
         this.healthProvider.loadProviderStatusStatus(this.clientId);
         this.checkBoxSubscription= 
-        this.healthCareProvideGetFlag$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-      ((x: boolean)=>
-      {  
-             
-        this.isProvidersGridDisplay = x     
-        if(this.isProvidersGridDisplay === true)
-        {
-          this.updateWorkFlowStatus();
-        }
-      });
+        this.healthCareProvideGetFlag$.pipe(
+          filter(x=> typeof x === 'boolean')
+        )
+        .subscribe((x: boolean)=>
+        {  
+          this.isProvidersGridDisplay = x ?? false     
+          if(this.isProvidersGridDisplay)
+          {
+            this.updateWorkFlowStatus();
+          }
+        });
    }
 
    loadProvidersHandle( gridDataRefinerValue : any ): void
@@ -109,7 +110,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
           sortType : gridDataRefinerValue.sortType,
         }
    
-        if((this.isProvidersGridDisplay ?? false) == false)
+        if(!(this.isProvidersGridDisplay ?? false))
         {
           this.pageSizes = this.healthProvider.gridPageSizes;
         this.healthProvider.loadHealthCareProviders(this.clientId
@@ -130,7 +131,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         forkJoin([of(navigationType), this.save()])
       ),  
     ).subscribe(([navigationType, isSaved ]) => {         
-      if (isSaved == true) {    
+      if (isSaved ) {    
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
         this.checkBoxSubscription.unsubscribe();      
         this.workFlowFacade.navigate(navigationType);
@@ -143,7 +144,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
 
   private save() {     
-    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.providersStatus = (this.isProvidersGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
     
         if(this.showProvidervalidationbox && !this.isProvidersGridDisplay)
         {        
@@ -154,24 +155,24 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         {
           this.showProvidervalidationboxSubject.next(false)
           this.healthProvider.showLoader();    
-          return  this.healthProvider.updateHealthCareProvidersFlag
-            (this.clientId,this.providersStatus)
-            .pipe
-            (
+          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus)
+          .pipe(
             catchError((err: any) => { 
               this.healthProvider.hideLoader();                     
               this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
               return  of(false);
             })  
-            )  
+          );  
         }
      }
 
 
      showHideValidation() 
      {    
-      this.showProvidervalidation$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-      ((x: boolean)=>
+      this.showProvidervalidation$.pipe(
+        filter(x=> typeof x === 'boolean')
+      )
+      .subscribe((x: boolean)=>
       {        
         this.showProvidervalidationbox = x;       
       });     
@@ -180,16 +181,16 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   onProviderValueChanged() {   
      
     this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
-    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.providersStatus = (this.isProvidersGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
     
     this.showProvidervalidationboxSubject.next(false)
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
       (this.clientId,this.providersStatus).subscribe((isSaved) => {  
         this.healthProvider.hideLoader();       
-        if (isSaved == true) {    
+        if (isSaved) {    
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
-          if(this.isProvidersGridDisplay === true)
+          if(this.isProvidersGridDisplay ?? false)
             {
               this.updateWorkFlowStatus();
             }   

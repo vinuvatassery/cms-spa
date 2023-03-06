@@ -4,7 +4,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-email-detail',
   templateUrl: './email-detail.component.html',
-  styleUrls: ['./email-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailDetailComponent {

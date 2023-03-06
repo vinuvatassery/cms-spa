@@ -1,7 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { ClientProfile } from '@cms/case-management/domain';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'case-management-client-read-only-view',

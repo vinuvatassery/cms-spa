@@ -7,7 +7,6 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-reject-application',
   templateUrl: './reject-application.component.html',
-  styleUrls: ['./reject-application.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RejectApplicationComponent {

@@ -1,8 +1,6 @@
 <div class="add-client-wrapper" kendoRippleContainer [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}">
   <div class="add-client_left">
     <!-- Case Navigation -->
-    <!-- Case Navigation -->
-
     <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$"
       [navigationEvent]="workflowNavigationEvent" (workflowChange)="applyWorkflowChanges($event)" [currentSession]="currentSession">
     </case-management-case-navigation>
@@ -63,7 +61,6 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
-          <!-- <input kendoTextBox /> -->
           <kendo-textbox [disabled]="true" placeholder="Assigned Case Worker" [(ngModel)]="clientCaseStatusData.assignedCwUserName" aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>

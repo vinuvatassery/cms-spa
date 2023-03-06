@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';   
 @Component({
   selector: 'common-account-settings',

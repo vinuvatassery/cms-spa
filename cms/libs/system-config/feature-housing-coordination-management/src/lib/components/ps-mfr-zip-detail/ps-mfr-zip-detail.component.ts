@@ -3,7 +3,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-ps-mfr-zip-detail',
   templateUrl: './ps-mfr-zip-detail.component.html',
-  styleUrls: ['./ps-mfr-zip-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

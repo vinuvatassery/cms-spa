@@ -6,8 +6,8 @@ export type SortOrder = 'asc' | 'desc';
 export class SortPipe implements PipeTransform {
   transform(
     value: any[],
-    sortOrder: SortOrder | string = 'asc',
-    sortKey: string
+    sortKey: string,
+    sortOrder: SortOrder | string = 'asc'
   ): any {
     sortOrder = sortOrder && (sortOrder.toLowerCase() as any);
 

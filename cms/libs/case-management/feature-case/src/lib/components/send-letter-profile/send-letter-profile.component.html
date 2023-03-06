@@ -90,7 +90,6 @@
     [userImage$]="userImage$"
     (profilePhotoEvent)="getCaseWorkerPhoto($event)"
      ></case-management-hiv-case-manager-card>
-     <!-- <common-user-profile-card></common-user-profile-card> -->
   </ng-template>
 </kendo-popover>
 
@@ -103,72 +102,3 @@
   <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
   <case-management-accept-application  (isCloseModalEvent)="onCloseEligibilityInfoClicked()" [isEdit]="isEdit"  [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-accept-application>
 </kendo-dialog>
-  <!-- <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
-  <section class="k-dialog-body">
-    <p class="text-muted mb-2">
-      Edit Status, Group, and Eligibility Period as needed. Click “Update” to
-      commit the changes.
-    </p>
-    <div class="flex-row">
-      <div class="flex-col">
-        <kendo-floatinglabel text="Case Status">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSendLetters$ | async">
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Group">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSendLetters$ | async">
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="Eligibility Start Date">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-DD-YYY"
-            formatPlaceholder="formatPattern"
-            [(ngModel)]="currentDate"
-          >
-          </kendo-datepicker>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="Eligibility End Date">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-DD-YYY"
-            formatPlaceholder="formatPattern"
-            [(ngModel)]="currentDate"
-          >
-          </kendo-datepicker>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Assigned Case Worker">
-          <kendo-textbox aria-label="Sara John" [disabled]="true" value="Sara John"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-    </div>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button
-          aria-label="Cancel eligibility info"
-          kendoButton
-          [primary]="true"
-          look="outline"
-          (click)="onCloseEligibilityInfoClicked()"
-        >
-          Cancel
-        </button>
-        <button
-          aria-label="Update eligibility info"
-          kendoButton
-          [primary]="true"
-        >
-          Update
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog> -->

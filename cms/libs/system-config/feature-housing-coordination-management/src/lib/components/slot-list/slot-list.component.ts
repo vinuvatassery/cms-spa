@@ -4,7 +4,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-slot-list',
   templateUrl: './slot-list.component.html',
-  styleUrls: ['./slot-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
