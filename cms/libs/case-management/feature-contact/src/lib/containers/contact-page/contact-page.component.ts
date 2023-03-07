@@ -1639,9 +1639,13 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   removePhoneNumberValidation(phoneType: string){
-    if(this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.hasValidator){
-    this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
-    this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
+    if(phoneType !== 'contactPhoneNbr' && this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.hasValidator){
+      this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
+      this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
+    }
+    else{
+      this.contactInfoForm?.get(`familyAndFriendsContact.contactPhoneNbr`)?.setValidators(null);
+      this.contactInfoForm?.get(`familyAndFriendsContact.contactPhoneNbr`)?.updateValueAndValidity();
     }
   }
 }

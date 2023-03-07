@@ -933,13 +933,14 @@
               formControlName="contactPhoneNbr"
               mask="(999) 000-0000"
               placeholder="Contact's Phone Number"
+              (valueChange)="removePhoneNumberValidation('contactPhoneNbr')"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
              <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">
               Contact's Phone Number is required
             </kendo-formerror>
             <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.pattern">
-              Not a valid phone number format 
+              Contact's Phone Number must have 10 digits
             </kendo-formerror>
           </kendo-formfield>
           </div>
