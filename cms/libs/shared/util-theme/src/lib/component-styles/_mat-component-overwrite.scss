@@ -1,8 +1,8 @@
 /* Calendar */
 .k-calendar {
-  max-width: 300px;
+  // max-width: 300px;
   &.k-calendar-infinite {
-    max-width: 350px;
+    // max-width: 350px;
   }
   .k-calendar-navigation{
     li{
@@ -20,11 +20,11 @@
   color: $app-primary !important;
   font-family: $font-family-medium;
   border: 1px solid $app-primary;
-  padding: 4px 8px 2px;
+  // padding: 4px 8px 2px;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
 }
 .k-calendar .k-content .k-today,
 .k-calendar .k-calendar-content .k-today,
@@ -32,7 +32,7 @@
   color: $app-primary !important;
   span {
     background-color: material-color($hive-primary-palette, 100) !important;
-    border: 1px solid $app-primary;
+    // border: 1px solid $app-primary;
     font-family: $font-family-medium;
     color: $app-primary !important;
   }
@@ -69,10 +69,10 @@
     }
   }
 }
-.k-empty.k-calendar-td {
-  height: 2px;
-  line-height: 0;
-}
+// .k-empty.k-calendar-td {
+//   height: 2px;
+//   line-height: 0;
+// }
 
 /* Time Picker */
 .k-timeselector {
