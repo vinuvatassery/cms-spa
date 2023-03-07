@@ -7,7 +7,6 @@ import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-medical-premium-detail-careassist-pay',
   templateUrl: './medical-premium-detail-careassist-pay.component.html',
-  styleUrls: ['./medical-premium-detail-careassist-pay.component.scss'],
 })
 export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;

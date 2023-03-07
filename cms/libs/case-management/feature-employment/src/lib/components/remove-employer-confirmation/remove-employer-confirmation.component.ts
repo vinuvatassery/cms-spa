@@ -7,7 +7,6 @@ import {  SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-employer-confirmation',
   templateUrl: './remove-employer-confirmation.component.html',
-  styleUrls: ['./remove-employer-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemoveEmployerConfirmationComponent implements OnInit{

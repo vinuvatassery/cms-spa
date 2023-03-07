@@ -8,7 +8,6 @@ import { filter, Subscription, BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'common-bread-crumb',
   templateUrl: './bread-crumb.component.html',
-  styleUrls: ['./bread-crumb.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BreadCrumbComponent {

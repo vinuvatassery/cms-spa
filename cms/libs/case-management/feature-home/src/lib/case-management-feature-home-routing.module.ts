@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CaseDetailPageComponent, CaseSummaryComponent } from '@cms/case-management/feature-case';
-import { NewCaseComponent } from '@cms/case-management/feature-case';
 
 const routes: Routes = [ 
   {

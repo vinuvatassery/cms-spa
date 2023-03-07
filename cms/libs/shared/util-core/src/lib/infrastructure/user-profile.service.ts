@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '../api/providers/configuration.provider';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { LoggingService } from '../api/services/logging.service';
 import { LoaderService } from '../application/services/app-loader.service';
 @Injectable({
   providedIn: 'root'

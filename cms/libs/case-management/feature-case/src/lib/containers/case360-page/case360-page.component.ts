@@ -3,10 +3,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Enums **/
-import { ClientProfile, CommunicationEvents, ScreenType } from '@cms/case-management/domain';
-/** Facades **/
-import { CaseFacade } from '@cms/case-management/domain';
+/** Internal libraries **/
+import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
 import { UserManagementFacade } from '@cms/system-config/domain';

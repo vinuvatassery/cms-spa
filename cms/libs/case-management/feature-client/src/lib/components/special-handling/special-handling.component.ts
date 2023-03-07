@@ -6,7 +6,6 @@ import { ClientFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-special-handling',
   templateUrl: './special-handling.component.html',
-  styleUrls: ['./special-handling.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpecialHandlingComponent implements OnInit {

@@ -32,7 +32,6 @@ public state!: State;
       text: "Send CER Reminders",
       // icon: "done",
       click: (): void => {
-        // this.onDoneClicked();
       },
     },
     {
@@ -40,7 +39,6 @@ public state!: State;
       text: "Send Restricted Notices",
       // icon: "edit",
       click: (): void => {
-      //  this.onOpenTodoDetailsClicked()
       },
     },
    

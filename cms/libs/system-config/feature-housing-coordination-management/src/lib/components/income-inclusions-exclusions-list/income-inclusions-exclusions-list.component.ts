@@ -4,7 +4,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-income-inclusions-exclusions-list',
   templateUrl: './income-inclusions-exclusions-list.component.html',
-  styleUrls: ['./income-inclusions-exclusions-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

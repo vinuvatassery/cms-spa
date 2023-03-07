@@ -1,10 +1,9 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Income } from '../entities/income';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 
@@ -160,7 +159,7 @@ export class IncomeFacade {
   saveClientIncome(clientId : any,clientIncome: any, proofOfIncomeFile: any) {
 
     const formData: any = new FormData();
-    for (var key in clientIncome) {
+    for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
@@ -176,7 +175,7 @@ export class IncomeFacade {
   }
   editClientIncome(clientId : any, clientIncomeId : any, clientIncome:any, proofOfIncomeFile:any){
     const formData: any = new FormData();
-    for (var key in clientIncome) {
+    for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }

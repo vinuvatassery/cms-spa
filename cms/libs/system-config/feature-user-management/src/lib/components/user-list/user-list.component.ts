@@ -1,7 +1,6 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { PagerPosition, PagerType } from '@progress/kendo-angular-grid/pager/pager-settings';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({

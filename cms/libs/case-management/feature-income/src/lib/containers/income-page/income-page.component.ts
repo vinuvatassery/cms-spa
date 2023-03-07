@@ -1,13 +1,13 @@
 
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, AfterViewInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRef, AfterViewInit, } from '@angular/core';
 /** External libraries **/
-import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, Observable, tap } from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle } from '@cms/shared/ui-tpa';
-import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
+import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -210,11 +210,11 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private adjustAttributeChanged() {
     const noIncome: CompletionChecklist = {
       dataPointName: 'incomeFlag_no',
-      status: this.hasNoIncome === true ? StatusFlag.Yes :StatusFlag.No
+      status: this.hasNoIncome  ? StatusFlag.Yes :StatusFlag.No
     };
     const yesIncome: CompletionChecklist = {
       dataPointName: 'incomeFlag_yes',
-      status: this.hasNoIncome === false ? StatusFlag.Yes :StatusFlag.No
+      status: !this.hasNoIncome  ? StatusFlag.Yes :StatusFlag.No
     };
 
     this.workflowFacade.updateBasedOnDtAttrChecklist([noIncome, yesIncome]);
@@ -327,14 +327,14 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.noIncomeDetailsForm.controls[
         'noIncomeNote'
       ].updateValueAndValidity();
-      var signeddate=this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value;
-      var todayDate= new Date();
-      if(signeddate>todayDate){
+      const signedDate=this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value;
+      const todayDate= new Date();
+      if(signedDate>todayDate){
         this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setErrors({'incorrect':true})
       }
-      // this.onDoneClicked();
+
       if (this.noIncomeDetailsForm.valid) {
-        this.noIncomeData.noIncomeFlag = this.hasNoIncome == true ? "Y" : "N";
+        this.noIncomeData.noIncomeFlag = this.hasNoIncome ? StatusFlag.Yes :StatusFlag.No;
         this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.noIncomeData.clientId = this.clientId
         this.noIncomeData.noIncomeClientSignedDate = new Date(this.intl.formatDate(this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value, this.dateFormat));

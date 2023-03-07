@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** Providers **/
-import { ConfigurationProvider, LoaderService, NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
+import { LoaderService, NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 /** Data services **/
 import { PrescriptionDrugDataService } from '../infrastructure/prescription-drug.data.service';

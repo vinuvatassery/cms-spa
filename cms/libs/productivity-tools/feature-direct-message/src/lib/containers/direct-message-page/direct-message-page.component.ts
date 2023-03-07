@@ -6,7 +6,6 @@ import { DirectMessageFacade } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'productivity-tools-direct-message-page',
   templateUrl: './direct-message-page.component.html',
-  styleUrls: ['./direct-message-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DirectMessagePageComponent implements OnInit {

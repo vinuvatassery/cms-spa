@@ -8,7 +8,6 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-app-history-list',
   templateUrl: './application-history-list.component.html',
-  styleUrls: ['./application-history-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHistoryListComponent implements OnInit {
