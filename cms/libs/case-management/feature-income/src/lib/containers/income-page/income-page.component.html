@@ -25,7 +25,9 @@
                   <kendo-floatinglabel text="Date Client Signed">
                     <kendo-datepicker autofocusfield [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                       formatPlaceholder="formatPattern" aria-label="Date Client Signed" name="Date Client Signed"
-                      formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate  placeholder="" >
+                      formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate  placeholder=""
+                      (keyup)="dateChange()"
+                      (valueChange)="dateChange()">
                     </kendo-datepicker>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid && !noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Date Client
