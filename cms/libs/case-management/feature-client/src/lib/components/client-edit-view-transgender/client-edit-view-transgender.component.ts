@@ -30,7 +30,6 @@ export class ClientEditViewTransgenderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.lovFacade.getTransgenderLovs();
     this.loadTransgenders();
   }
   private loadTransgenders() {

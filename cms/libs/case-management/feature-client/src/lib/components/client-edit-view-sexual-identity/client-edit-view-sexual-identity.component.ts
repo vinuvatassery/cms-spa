@@ -37,7 +37,6 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   SexulaIdentities: any = [];
 
   ngOnInit(): void {
-    //this.lovFacade.getSexulaIdentityLovs();
     this.loadSexulaIdentities();
     this.loadApplicantInfoSubscription();
   }

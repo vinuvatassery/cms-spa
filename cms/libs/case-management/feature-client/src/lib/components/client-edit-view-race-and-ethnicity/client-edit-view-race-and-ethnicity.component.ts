@@ -38,7 +38,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
     this.raceAndEthnicityPrimaryNotListed=false;
   }
   ngOnInit(): void {
-    //this.lovFacade.getRaceLovs();
     this.loadRaceAndEthnicity();
     this.appInfoForm.addControl('RaceAndEthnicityPrimary', new FormControl({}));
     this.appInfoForm.addControl('Ethnicity', new FormControl([]));

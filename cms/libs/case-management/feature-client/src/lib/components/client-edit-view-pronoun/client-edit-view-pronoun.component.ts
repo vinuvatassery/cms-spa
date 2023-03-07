@@ -40,7 +40,6 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
    }
 
    ngOnInit(): void {
-    //this.lovFacade.getPronounLovs();
     this.loadPronouns();
     this.loadApplicantInfoSubscription();
     this.formChangeSubscription();

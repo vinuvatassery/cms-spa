@@ -36,7 +36,6 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   }
   Genders: any = [];
   ngOnInit(): void {
-    //this.lovFacade.getGenderLovs();
     this.loadGendersLov();
     this.loadApplicantInfoSubscription();
   }

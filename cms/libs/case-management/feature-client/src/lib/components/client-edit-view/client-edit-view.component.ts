@@ -305,12 +305,8 @@ export class ClientEditViewComponent implements OnInit,OnDestroy {
 
   }
   private LoadLovs(){
-    //this.lovFacade.getMaterialLovs();
     this.lovFacade.getMaterialYesLovs();
-    //this.lovFacade.getSpokenWrittenLanguageLovs();
-    //this.lovFacade.getEnglishProficiencyLovs();
     this.lovFacade.getApplicantInfoLovs();
-    //this.lovFacade.getOtherEthnicityIdentitiesLovs();
   }
   private loadApplicantInfoSubscription(){
 

@@ -413,7 +413,6 @@ getAptcLovs(): void {
 }
 
 getApplicantInfoLovs(): void {
- // const arr = ['ENGLISH_PROFICIENCY','SPOKEN_WRITTEN_LANGUAGE','GENDER','MATERIAL_IN_ALTERNATE_FORMAT','ETHNICITY_OTHER_CATEGORIES','TRANSGENDER','SEX_AT_BIRTH','PRONOUNS','SEXUAL_IDENTITY','ETHNICITY','RACE'];
   const lovTypeArr = Object.values(ApplicantInfoLovType);
   const lovTypes = lovTypeArr.toString();
   let raceIdentityArr : any = [];
