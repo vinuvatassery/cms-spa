@@ -1,11 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-/** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
-/** Entities **/
-import { Search } from '../entities/search';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../entities/client-case';
 @Injectable({ providedIn: 'root' })

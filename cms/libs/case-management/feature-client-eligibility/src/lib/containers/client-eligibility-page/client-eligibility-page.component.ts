@@ -7,23 +7,19 @@ import {
   OnDestroy,
   AfterViewInit,
 } from '@angular/core';
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag } from '@cms/case-management/domain';
-import {
-  WorkflowFacade,
-} from '@cms/case-management/domain';
+import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-client-eligibility-page',
   templateUrl: './client-eligibility-page.component.html',
-  styleUrls: ['./client-eligibility-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -81,18 +77,18 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
 
   private createWorkflowChecklist(value: any){
     const completionChecklist: CompletionChecklist[] = [];
-      if(value){
+      if(value) {
         value?.forEach((que:any) => {
           let isAllChildQueAnswered = true;
-          if(que?.responseAnswerId && que?.childQuestions?.length > 0){
-            const isChildRespRequired = que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
-            if(isChildRespRequired){
+          const isChildRespRequired = que?.responseAnswerId 
+                                      && que?.childQuestions?.length > 0 
+                                      && que?.answers?.findIndex((ans:any) => ans?.answerCode === 'NO' && ans?.reviewQuestionAnswerId === que?.responseAnswerId) !== -1;
+          if(isChildRespRequired){
               isAllChildQueAnswered = que?.childQuestions?.findIndex((chdQue:any) => chdQue?.responseAnswerId != undefined && chdQue?.notes) !== -1;
-            }
           }
           const item: CompletionChecklist = {
             dataPointName: que?.reviewQuestionId,
-            status: que?.responseAnswerId && isAllChildQueAnswered === true ? StatusFlag.Yes :  StatusFlag.No
+            status: que?.responseAnswerId && isAllChildQueAnswered ? StatusFlag.Yes :  StatusFlag.No
           };
           completionChecklist.push(item);
         });
@@ -111,16 +107,14 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
   }
 
   private save() {
-    this.formSubmited = true;
+    this.formSubmited = true; 
     this.ref.detectChanges();
     let questions = JSON.parse(JSON.stringify(this.questoinsResponse));
     let inValid = false;
     questions.forEach((parent: any) => {
       if (parent.answerCode === 'NO') {
         parent.childQuestions.forEach((child: any) => {
-          if (child.answerCode === 'YES' && child.notes?.length < 1) {
-            inValid = true;
-          }
+          inValid = child.answerCode === 'YES' && child.notes?.length < 1;
           questions.push(child);
         });
       }
@@ -128,36 +122,31 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
       delete parent.answers;
     });
 
-    if (!inValid && !questions.some((m: any) => m?.responseAnswerId === undefined)) {
+    const isAllQuestionsAnswered = !inValid && !questions.some((m: any) => m?.responseAnswerId === undefined);
+    if (isAllQuestionsAnswered) {
       this.formSubmited = false;
       this.loaderService.show();
-      this.saveAndUpdate(questions).subscribe(
-        (data: any) => {
-          if (data.length > 0) {
+      this.saveAndUpdate(questions).subscribe({
+        next: (data: any) => {
+          if (data?.length > 0) {
             data.forEach((el: any) => {
               let ques = this.questoinsResponse.find((m:any) => m.reviewQuestionAnswerId === el.reviewQuestionAnswerId);
-              if (ques !== undefined)
+              if (ques)
                 ques.reviewQuestionResponseId = el.reviewQuestionResponseId;
 
             });
+
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Eligibility checklist save successfully');
             this.loaderService.hide();
-            if(!this.acceptedApplicationStatus)
-            {
-              this.isSaveAndContinueAcceptance = true;
-              this.ref.detectChanges();
-            }
-            else
-            {
-              this.isSaveAndContinueAcceptance = false;
-            }
+            this.isSaveAndContinueAcceptance = !this.acceptedApplicationStatus;
+            this.ref.detectChanges();
           }
         },
-        (error: any) => {
+        error: (error: any) => { 
           this.showHideSnackBar(SnackBarNotificationType.ERROR, error);
           this.loaderService.hide();
         }
-      );
+    });
     }
   }
   saveAndUpdate(questoinsResponse: any) {
@@ -165,14 +154,12 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
 
       return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(questoinsResponse);
     }
-
     else {
       return this.reviewQuestionResponseFacade.saveReviewQuestionResponse(questoinsResponse)
 
     }
-
-
   }
+
   changeApplicationAcceptedStatus(value: any)
   {
     this.acceptedApplicationStatus = value;

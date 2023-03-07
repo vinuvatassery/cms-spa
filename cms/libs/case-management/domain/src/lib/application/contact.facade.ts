@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
-import { LovFacade, ZipCodeFacade } from '@cms/system-config/domain'
+import { ZipCodeFacade } from '@cms/system-config/domain'
 import { catchError, of } from 'rxjs';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 

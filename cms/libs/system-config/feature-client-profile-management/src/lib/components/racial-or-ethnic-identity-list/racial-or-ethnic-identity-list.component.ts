@@ -23,7 +23,6 @@ export class RacialOrEthnicIdentityListComponent implements OnInit {
      text: "Edit",
      icon: "edit",
      click: (): void => {
-       // this.onUserDetailsClicked(true);
      },
    },
    {
@@ -39,7 +38,6 @@ export class RacialOrEthnicIdentityListComponent implements OnInit {
      text: "Delete",
      icon: "delete",
      click: (): void => {
-     // this.onOpenDeleteTodoClicked()
      },
    },
    

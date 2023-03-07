@@ -11,7 +11,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-phone-detail',
   templateUrl: './phone-detail.component.html',
-  styleUrls: ['./phone-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneDetailComponent implements OnInit {

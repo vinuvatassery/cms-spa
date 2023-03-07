@@ -4,7 +4,6 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 @Component({
   selector: 'case-management-remove-pharmacy',
   templateUrl: './remove-pharmacy.component.html',
-  styleUrls: ['./remove-pharmacy.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemovePharmacyComponent {

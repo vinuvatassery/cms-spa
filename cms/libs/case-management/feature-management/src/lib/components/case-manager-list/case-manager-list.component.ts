@@ -7,7 +7,6 @@ import { first, Subject } from 'rxjs';
 @Component({
   selector: 'case-management-case-manager-list',
   templateUrl: './case-manager-list.component.html',
-  styleUrls: ['./case-manager-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseManagerListComponent implements OnInit {
@@ -52,7 +51,7 @@ export class CaseManagerListComponent implements OnInit {
       text: "Edit Case Manager",
       icon: "edit",
       click: (clientCaseId : string,caseManagerId : string): void => {
-        if(this.editButtonEmitted == false)
+        if(!(this.editButtonEmitted ?? false))
         {
           this.editButtonEmitted = true;
           this.deleteCaseManagerCaseId = clientCaseId
@@ -124,7 +123,7 @@ export class CaseManagerListComponent implements OnInit {
   onDeleteConfirmHandle($event : any)
   {
     
-    if($event == false)
+    if(!($event ?? false))
     {
       this.onDeleteConfirmCloseClicked()
     }
@@ -169,7 +168,7 @@ export class CaseManagerListComponent implements OnInit {
    this.assignCaseManagerStatus$.pipe(first((addResponse: any ) => addResponse != null))
    .subscribe((addResponse: any) =>
    {  
-     if(addResponse ===true)
+     if(addResponse ?? false)
      {        
        this.loadManagers();
        this.onCloseCsManagerSearchClicked()

@@ -6,7 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-health-care-provider-detail',
   templateUrl: './health-care-provider-detail.component.html',
-  styleUrls: ['./health-care-provider-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HealthCareProviderDetailComponent implements OnInit {

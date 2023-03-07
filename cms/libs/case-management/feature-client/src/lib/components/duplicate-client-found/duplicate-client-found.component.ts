@@ -1,14 +1,16 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {
+import { Component, 
+  ChangeDetectionStrategy,
   OnInit,
   Input,
   Output,
   EventEmitter
 } from '@angular/core';
-import { CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
-import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
+/** Internal Libraries **/
+import { CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+
 @Component({
   selector: 'case-management-duplicate-client-found',
   templateUrl: './duplicate-client-found.component.html',

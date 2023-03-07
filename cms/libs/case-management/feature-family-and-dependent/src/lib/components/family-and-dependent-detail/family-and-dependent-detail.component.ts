@@ -8,7 +8,7 @@ import { groupBy, GroupResult } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DependentTypeCode } from '@cms/case-management/domain';
-import { debounceTime, distinctUntilChanged, first, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, Subject } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Lov } from '@cms/system-config/domain';
 

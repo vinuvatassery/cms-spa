@@ -36,7 +36,6 @@
               (close)="searchCloseEvent();"
               (filterChange)="onsearchTextChange($event)"           
             >    
-            <!-- (close)="searchCloseEvent();"       -->
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
                 <span class="pr-1 namecolumn" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
                 <span class="pr-1 dobcolumn" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>

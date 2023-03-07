@@ -62,36 +62,10 @@ export interface ScreenFlowStep {
 }
 
 export interface ScreenData {
-  // screen_id: number;
   name: string;
   url: string;
-  // active_flag: string;
-  // create_user: string;
-  // create_date: Date;
-  // last_update_user: string;
-  // last_update_date: Date;
-
-  // screen_flow_step_id: number;
-  // screen_flow_id: number;
-  // screen_id: number;
   sequence_nbr: number;
   screen_flow_step_type_code: string;
-  // active_flag: string;
-  // create_user: string;
-  // create_date: Date;
-  // last_update_user: string;
-  // last_update_date: Date;
-
-  // screen_flow_progress_id: number;
-  // screen_flow_step_id: number;
   current_screen_flag?: string;
   visited_flag?: string;
-  // user_id?: number;
-  // case_id?: number;
-  // client_case_eligibility_id?: number;
-  // create_user: string;
-  // create_date: Date;
-  // last_update_user: string;
-  // last_update_date: Date;
-  // first_visited_date: Date;
 }

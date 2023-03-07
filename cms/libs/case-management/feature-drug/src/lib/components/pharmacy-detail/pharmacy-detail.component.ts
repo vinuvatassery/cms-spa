@@ -7,16 +7,14 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 /** Facades **/
 import { Pharmacy } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { Subject } from '@microsoft/signalr';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'case-management-pharmacy-detail',
   templateUrl: './pharmacy-detail.component.html',
-  styleUrls: ['./pharmacy-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyDetailComponent implements OnInit {
@@ -34,8 +32,6 @@ export class PharmacyDetailComponent implements OnInit {
   @Output() removePharmacyEvent = new EventEmitter<string>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Public properties **/
-  // pharmacies$ = this.drugPharmacyFacade.pharmacies$;
-  // ddlStates$ = this.drugPharmacyFacade.ddlStates$;
   isOpenNewPharmacyClicked = false;
   filteredSelectedPharmacy!: any;
   pharmacyForm!: FormGroup;

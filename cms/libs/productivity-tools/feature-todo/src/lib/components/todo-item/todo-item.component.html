@@ -37,57 +37,11 @@
         class="small-i-btn app-dropdown-action"
         [popupSettings]="{ popupClass: popupClass1, animate: true }"
       >
-        <!-- <span
-          class="material-icons"
-          aria-label="actions"
-          aria-hidden="true"
-          role="menuitem"
-          >more_vert</span
-        > -->
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
           <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
             <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
             <label>   {{ dataItem.text }} </label>
         </button>
-         
-          <!-- <div class="notification-list_more-btn-wrap">
-            <button
-              kendoButton
-              look="flat"
-              class="btn-h-primary"
-            .  aria-label="done todo"
-            >
-              <span class="material-icons" aria-label="done" aria-hidden="true"
-                >done</span
-              >
-              Done
-            </button>
-            <button
-              kendoButton
-              look="flat"
-              class="btn-h-primary"
-              aria-label="edit todo"
-            >
-              <span class="material-icons" aria-label="edit" aria-hidden="true"
-                >edit</span
-              >
-              Edit
-            </button>
-            <button
-              kendoButton
-              look="flat"
-              class="btn-h-danger"
-              aria-label="delete todo"
-            >
-              <span
-                class="material-icons"
-                aria-label="delete"
-                aria-hidden="true"
-                >delete</span
-              >
-              Delete
-            </button>
-          </div> -->
         </ng-template>
       </kendo-dropdownbutton>
     </div>
