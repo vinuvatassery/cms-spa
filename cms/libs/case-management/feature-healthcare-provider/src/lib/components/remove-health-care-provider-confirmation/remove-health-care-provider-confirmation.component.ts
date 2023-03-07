@@ -10,7 +10,6 @@ import {
   @Component({
     selector: 'case-management-health-care-provider-remove-confirmation',
     templateUrl: './remove-health-care-provider-confirmation.component.html',
-    styleUrls: ['./remove-health-care-provider-confirmation.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
 

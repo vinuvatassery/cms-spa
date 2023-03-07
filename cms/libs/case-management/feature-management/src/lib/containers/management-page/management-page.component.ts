@@ -1,14 +1,12 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute,  Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
-import { ActivatedRoute,  Router } from '@angular/router';
-import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-management-page',
@@ -99,8 +97,8 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   getCaseManagerStatus()
   {
     this.caseManagerFacade.getCaseManagerStatus(this.clientCaseId);
-    this.getCaseManagerHasManagerStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-    ((x: boolean)=>
+    this.getCaseManagerHasManagerStatus$.pipe(filter(x=> typeof x === 'boolean'))
+    .subscribe((x: boolean)=>
     {   
       //Currently has HIV Case Manager?
       this.hasManager='';
@@ -111,8 +109,8 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.gridVisibleSubject.next(x);
     });
 
-    this.getCaseManagerNeedManagerStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-    ((x: boolean)=>
+    this.getCaseManagerNeedManagerStatus$.pipe(filter(x=> typeof x === 'boolean'))
+    .subscribe((x: boolean)=>
     {  
       //Would you like one?
       this.needManager='';
@@ -166,13 +164,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         {
         return  this.caseManagerFacade.updateCaseManagerStatus
           (this.clientCaseId , this.hasManager , this.needManager)
-          .pipe
-          (
-          catchError((err: any) => {                     
-            this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
-            return  of(false);
-          })  
-          )  
+          .pipe(
+            catchError((err: any) => {                     
+              this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
+              return  of(false);
+            })  
+          );  
         }
         else
         {

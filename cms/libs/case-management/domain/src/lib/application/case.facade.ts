@@ -12,10 +12,8 @@ import { Case } from '../entities/case';
 
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
-import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
-import { ClientProfileCase } from '../entities/client-profile-cases';
 
 
 

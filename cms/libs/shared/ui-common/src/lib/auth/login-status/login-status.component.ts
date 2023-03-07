@@ -5,7 +5,6 @@ import { AuthService } from '@cms/shared/util-oidc';
 @Component({
   selector: 'common-login-status',
   templateUrl: './login-status.component.html',
-  styleUrls: ['./login-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginStatusComponent {

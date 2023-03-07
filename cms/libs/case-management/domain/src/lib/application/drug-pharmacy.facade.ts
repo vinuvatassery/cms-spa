@@ -1,13 +1,12 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Data services **/
 import { DrugDataService } from '../infrastructure/drug.data.service';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { PriorityCode } from '../enums/priority-code.enum';
 import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
@@ -142,10 +141,7 @@ export class DrugPharmacyFacade {
       },
     });
   }
-  // save(): Observable<boolean> {
-  //   //TODO: save api call   
-  //   return of(true);
-  // }
+
  updatePharmacyPriority(pharmacyPriority: any): Observable<any> {
     return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
   }
@@ -173,7 +169,6 @@ export class DrugPharmacyFacade {
     return this.drugDataService.getPharmacyById(vendorId).subscribe({
       next: (response:Pharmacy) => {
         response.vendorFullName = `${response.vendorName} #${response.address1} ${response.address2} ${response.cityCode} ${response.stateCode} ${response.zip}`;
-        //this.pharmaciesSubject.next(response);
         this.selectedPharmacySubject.next(response);
         this.loaderService.hide();
       },

@@ -1,12 +1,11 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { ManagementFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-cd4-count-list',
   templateUrl: './cd4-count.component.html',
-  styleUrls: ['./cd4-count.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cd4CountComponent {

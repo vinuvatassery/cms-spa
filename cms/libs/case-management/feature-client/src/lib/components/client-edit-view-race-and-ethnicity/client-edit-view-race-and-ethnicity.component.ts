@@ -3,17 +3,14 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade, LovType } from '@cms/system-config/domain';
-import { ClientFacade } from '@cms/case-management/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { groupBy } from '@progress/kendo-data-query';
 
 @Component({
   selector: 'case-management-client-edit-view-race-and-ethnicity',
   templateUrl: './client-edit-view-race-and-ethnicity.component.html',
-  styleUrls: ['./client-edit-view-race-and-ethnicity.component.scss'],
 })
 export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
@@ -80,11 +77,5 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
   public RaceAndEthnicityhange(value: any): void {
     this.RaceAndEthnicityChange.emit(true);
-    // if (Array.isArray(value) && value.length == 1) {
-    //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue(value[0]);
-    // } else {
-    //   this.appInfoForm.controls['RaceAndEthnicityPrimary']?.setValue({});
-    // }
-    // console.log('valueChange', value);
   }
 }

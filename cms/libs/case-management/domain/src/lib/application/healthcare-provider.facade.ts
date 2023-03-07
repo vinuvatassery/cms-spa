@@ -80,12 +80,12 @@ export class HealthcareProviderFacade {
     this.showLoader();
     this.healthcareProviderDataService.removeHealthCareProvider(clientId,ProviderId)
     .subscribe({
-      next: (removeHealthCareProvidersResponse) => {        
-        if(removeHealthCareProvidersResponse == true)
+      next: (removeResponse) => {        
+        if(removeResponse ?? false)
         {     
          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic Removed Successfully')  
         } 
-        this.healthCareProvideRemoveSubject.next(removeHealthCareProvidersResponse);       
+        this.healthCareProvideRemoveSubject.next(removeResponse);       
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      

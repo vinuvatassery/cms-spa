@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-client-edit-view-gender',
   templateUrl: './client-edit-view-gender.component.html',
-  styleUrls: ['./client-edit-view-gender.component.scss'],
 })
 export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   @Input() appInfoForm: FormGroup;
@@ -102,6 +101,33 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
     });
   }
 
+  private onDoNotKnowSelected(){
+    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowAnswer].value === true &&
+      !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowQustion].value === true){
+      this.disableGender.forEach((gender:any) => {
+        this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
+      });
+    }
+   }
+
+   private onDoNotAnswerSelected(){
+    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnow].value === true &&
+      !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowQustion].value === true){
+      this.disableGender.forEach((gender:any) => {
+        this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
+      });
+    }
+   }
+
+   private onDoNotKnowQuestion(){
+    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnow].value === true &&
+      !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowAnswer].value === true){
+      this.disableGender.forEach((gender:any) => {
+        this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
+      });
+    }
+   }
+
   enableDisableGender(checked:boolean,lovCode:any){
     switch(lovCode){
       case GenderCode.dontKnow:
@@ -117,28 +143,13 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
         }
         else{
           if(lovCode === GenderCode.dontKnow){
-            if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowAnswer].value === true &&
-              !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowQustion].value === true){
-              this.disableGender.forEach((gender:any) => {
-                this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
-              });
-            }
+            this.onDoNotKnowSelected();
           }
           if(lovCode ===GenderCode.dontKnowAnswer){
-            if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowQustion].value === true){
-              this.disableGender.forEach((gender:any) => {
-                this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
-              });
-            }
+            this.onDoNotAnswerSelected();
           }
           if(lovCode ===GenderCode.dontKnowQustion){
-            if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[ControlPrefix.gender + GenderCode.dontKnowAnswer].value === true){
-              this.disableGender.forEach((gender:any) => {
-                this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].enable();
-              });
-            }
+            this.onDoNotKnowQuestion();
           }
         }
       }
@@ -149,6 +160,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
     }
    }
+
   onCheckChange(event: any, lovCode: string) {
     this.enableDisableGender(event.target.checked,lovCode);
     this.appInfoForm.controls['GenderGroup'].removeValidators(Validators.required);

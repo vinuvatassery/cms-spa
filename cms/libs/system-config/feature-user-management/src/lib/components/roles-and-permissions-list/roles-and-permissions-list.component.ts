@@ -28,7 +28,6 @@ export class RolesAndPermissionsListComponent implements OnInit {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-        // this.onUserDetailsClicked(true);
       },
     },
     {
@@ -36,7 +35,6 @@ export class RolesAndPermissionsListComponent implements OnInit {
       text: "Duplicate",
       icon: "copy_all",
       click: (): void => {
-      //  this.onRoleDeactivateClicked()
       },
     },
     {
@@ -52,7 +50,6 @@ export class RolesAndPermissionsListComponent implements OnInit {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-      // this.onOpenDeleteTodoClicked()
       },
     },
     

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
@@ -7,7 +7,6 @@ import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-carrier-name',
   templateUrl: './medical-premium-detail-insurance-carrier-name.component.html',
-  styleUrls: ['./medical-premium-detail-insurance-carrier-name.component.scss'],
 })
 export class MedicalPremiumDetailInsuranceCarrierNameComponent
   implements OnInit
@@ -44,18 +43,25 @@ public isLoading =false;
 
   private loadInsuranceCarrierName() {
     this.isLoading=true;
-    this.vendorFacade.loadAllVendors().subscribe(
-      (data: any) => {
+    this.vendorFacade.loadAllVendors().subscribe({
+      next: (data: any) => {
         if (!Array.isArray(data)) return;
-        this.carrierNames = data.sort((a: any, b: any) => (a.vendorName > b.vendorName) ? 1 : ((b.vendorName > a.vendorName) ? -1 : 0));        
+        this.sortCarrier(data);   
         this.insuranceCarrierNameData.emit(this.carrierNames);
         this.isLoading=false;  
-        this.insurancePlanFacade.planLoaderSubject.next(false)     
+        this.insurancePlanFacade.planLoaderSubject.next(false);    
       },
-      (error: any) => {
+      error: (error: any) => { 
         this.isLoading=false;
       }
-    );
+  });
+  }
+
+  private sortCarrier(data:any){
+    this.carrierNames = data.sort((a: any, b: any) => {
+    if(a.vendorName > b.vendorName) return 1;
+    return (b.vendorName > a.vendorName) ? -1 : 0;
+    });
   }
 
   public insuranceCarrierNameChangeValue(value: string): void {

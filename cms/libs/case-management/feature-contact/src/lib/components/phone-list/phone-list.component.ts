@@ -6,7 +6,6 @@ import { ContactFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-phone-list',
   templateUrl: './phone-list.component.html',
-  styleUrls: ['./phone-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneListComponent implements OnInit {

@@ -1,4 +1,4 @@
-export class clientCaseEligibilityFlag{
+export class ClientCaseEligibilityFlag{
 
         clientCaseEligibilityFlagId :string|null=null;
         clientCaseEligibilityId :string|null=null;

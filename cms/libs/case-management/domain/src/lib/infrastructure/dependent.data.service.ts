@@ -2,7 +2,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs/internal/observable/of';
 
 
 /** Providers **/

@@ -7,7 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'productivity-tools-reminder-detail',
   templateUrl: './reminder-detail.component.html',
-  styleUrls: ['./reminder-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderDetailComponent implements OnInit {

@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component,  OnInit,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges, OnDestroy,} from '@angular/core';
+  Component,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges,} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
@@ -8,7 +8,6 @@ import { first, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-health-care-provider-list',
   templateUrl: './health-care-provider-list.component.html',
-  styleUrls: ['./health-care-provider-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HealthCareProviderListComponent implements  OnChanges {
@@ -175,7 +174,7 @@ pageselectionchange(data: any) {
         this.removeHealthProvider$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((deleteResponse: any) =>
         {  
-          if(deleteResponse == true)
+          if(deleteResponse ?? false)
           {
             this.loadHealthCareProvidersList()
           }

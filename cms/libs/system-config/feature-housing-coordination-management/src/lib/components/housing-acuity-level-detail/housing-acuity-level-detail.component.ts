@@ -3,7 +3,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-housing-acuity-level-detail',
   templateUrl: './housing-acuity-level-detail.component.html',
-  styleUrls: ['./housing-acuity-level-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -2,13 +2,12 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Entities **/
 import { Document } from '../entities/document';
 /** Data services **/
 import { DocumentDataService } from '../infrastructure/document.data.service';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentFacade {

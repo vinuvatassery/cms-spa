@@ -6,7 +6,6 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'system-config-user-management-page',
   templateUrl: './user-management-page.component.html',
-  styleUrls: ['./user-management-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManagementPageComponent implements OnInit {

@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'common-loader-component',
   templateUrl: './loader.component.html',
-  styleUrls: ['./loader.component.scss'],
 })
 export class LoaderComponent {
  

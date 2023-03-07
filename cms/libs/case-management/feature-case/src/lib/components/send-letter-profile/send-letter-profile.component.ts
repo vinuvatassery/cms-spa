@@ -12,7 +12,6 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-send-letter-profile',
   templateUrl: './send-letter-profile.component.html',
-  styleUrls: ['./send-letter-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendLetterProfileComponent implements OnInit {
