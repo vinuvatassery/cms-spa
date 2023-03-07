@@ -341,17 +341,17 @@ export class ClientDataService {
   }
   save(applicantInfo: ApplicantInfo) {  
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients`,
       applicantInfo,
 
     )}
-    load(clientCaseId:any,eligibilityId:any){
+    load(clientId:any,caseId:any,eligibilityId:any){
       return this.http.get<ApplicantInfo>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client/${clientCaseId}/${eligibilityId}`,);
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/cases/${caseId}/eligibility-periods/${eligibilityId}`,);
        }
-    update(applicantInfo: ApplicantInfo) {  
+    update(applicantInfo: ApplicantInfo,clientId:any) {  
       return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}`,
         applicantInfo,
     
     )}

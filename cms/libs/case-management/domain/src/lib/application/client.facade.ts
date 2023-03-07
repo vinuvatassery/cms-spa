@@ -280,11 +280,11 @@ export class ClientFacade {
   save(applicantInfo:ApplicantInfo) {
       return this.clientDataService.save(applicantInfo);
   }
-  load(clientCaseId:any,eligibilityId:any) {
-      return this.clientDataService.load(clientCaseId,eligibilityId);
+  load(clientId:any,clientCaseId:any,eligibilityId:any) {
+      return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
-  update(applicantInfo:ApplicantInfo) {
-    return this.clientDataService.update(applicantInfo);
+  update(applicantInfo:ApplicantInfo,clientId:any) {
+    return this.clientDataService.update(applicantInfo,clientId);
   }
   searchDuplicateClient(clientData:any){
     return this.clientDataService.searchDuplicateClient(clientData);

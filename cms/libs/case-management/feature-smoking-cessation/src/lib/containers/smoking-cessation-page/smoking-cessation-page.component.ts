@@ -30,6 +30,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   tareaCessationNote = '';
   clientCaseId!: any;
   clientCaseEligibilityId!: any
+  clientId:any;
   sessionId!: any;
   public smokingCessationForm!: FormGroup;
   smokingCessation: SmokingCessation = {
@@ -88,6 +89,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
         if (session !== null && session !== undefined && session.sessionData !== undefined) {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+          this.clientId = JSON.parse(session.sessionData).clientId
           this.loadSmokingCessation();
         }
       });
@@ -103,9 +105,9 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
 
   private loadSmokingCessation() {
     this.isDisabled = true;
-    this.loaderService.show()
+    this.loaderService.show();
     this.smokingCessationFacade.loadSmokingCessation(this.clientCaseEligibilityId,
-      this.clientCaseId).subscribe({
+      this.clientCaseId,this.clientId).subscribe({
         next: response => {
           this.smokingCessationForm.reset();
           this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.smokingCessationNote)
@@ -168,7 +170,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
       this.loaderService.show();
       this.smokingCessation.clientCaseEligibilityId = this.clientCaseEligibilityId;
       this.smokingCessation.clientCaseId = this.clientCaseId;
-      return this.smokingCessationFacade.updateSmokingCessation(this.smokingCessation);
+      return this.smokingCessationFacade.updateSmokingCessation(this.smokingCessation,this.clientId);
 
     }
     return of(false)

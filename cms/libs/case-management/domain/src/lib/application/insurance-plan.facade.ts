@@ -17,7 +17,7 @@ export class InsurancePlanFacade {
     /** Public methods **/
 
    
-    loadInsurancePlanByProviderId(providerId:string) {
-        return this.insurancePlanDataService.loadInsurancePlanByProviderId(providerId);
+    loadInsurancePlanByProviderId(insurancePlanId:string) {
+        return this.insurancePlanDataService.loadInsurancePlanByProviderId(insurancePlanId);
       }
 }
