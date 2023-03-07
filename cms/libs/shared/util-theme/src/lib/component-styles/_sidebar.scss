@@ -8,7 +8,7 @@ cms-sidenav {
 }
 .app-l-sidebar {
   border-color: $theme-border;
-  width: $app-leftmenu-width;
+  width: $app-left_menu-width;
   transition: ease-in all 0.3s;
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -16,7 +16,7 @@ cms-sidenav {
     max-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
-    width: $app-leftmenu-width;
+    width: $app-left_menu-width;
     height: 100%;
   }
   .sidebar-hamburger {
