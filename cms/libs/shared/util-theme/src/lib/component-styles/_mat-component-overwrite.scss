@@ -1,66 +1,41 @@
 /* Calendar */
 .k-calendar {
-  // max-width: 300px;
-  &.k-calendar-infinite {
-    // max-width: 350px;
-  }
-  .k-calendar-navigation{
-    li{
-      &:hover{
-        // background-color: material-color($hive-primary-palette, 100) !important;
+  .k-calendar-navigation {
+    li {
+      &:hover {
         color: $app-primary !important;
       }
     }
   }
- 
-}
-.k-calendar .k-footer .k-nav-today,
-.k-calendar .k-calendar-header .k-today
-{
-  color: $app-primary !important;
-  font-family: $font-family-medium;
-  border: 1px solid $app-primary;
-  // padding: 4px 8px 2px;
-  border-radius: 4px;
-  // display: flex;
-  // align-items: center;
-  // justify-content: center;
-}
-.k-calendar .k-content .k-today,
-.k-calendar .k-calendar-content .k-today,
-.k-calendar .k-content .k-selected.k-today  {
-  color: $app-primary !important;
-  span {
-    background-color: material-color($hive-primary-palette, 100) !important;
-    // border: 1px solid $app-primary;
-    font-family: $font-family-medium;
+
+  .k-footer .k-nav-today,
+  .k-calendar-header .k-today {
     color: $app-primary !important;
+    font-family: $font-family-medium;
+    border: 1px solid $app-primary;
+    border-radius: 4px;
   }
-}
-.k-calendar .k-state-hover .k-link,
-.k-calendar td:hover .k-link,
-.k-calendar td.k-state-hover .k-link,
-.k-calendar .k-calendar-td:hover .k-link,
-.k-calendar .k-calendar-td.k-state-hover .k-link,
-.k-calendar .k-calendar-td.k-selected   {
-  background-color: $app-primary !important;
-  border: 1px solid $app-primary;
-  font-family: $font-family-medium;
-  color: $white !important;
-  span,
-  .k-link {
-    color: $white !important;
-    background-color: $app-primary;
+
+  .k-content .k-today,
+  .k-calendar-content .k-today,
+  .k-content .k-selected.k-today {
+    color: $app-primary !important;
+    span {
+      background-color: material-color($hive-primary-palette, 100) !important;
+      font-family: $font-family-medium;
+      color: $app-primary !important;
+    }
   }
-}
-.k-calendar .k-state-selected {
-  color: $white !important;
-  span,
-  .k-link {
-    color: $white !important;
-    background-color: $app-primary;
-  }
-  &.k-state-focused {
+
+  .k-state-hover .k-link,
+  td:hover .k-link,
+  td.k-state-hover .k-link,
+  .k-calendar-td:hover .k-link,
+  .k-calendar-td.k-state-hover .k-link,
+  .k-calendar-td.k-selected {
+    background-color: $app-primary !important;
+    border: 1px solid $app-primary;
+    font-family: $font-family-medium;
     color: $white !important;
     span,
     .k-link {
@@ -68,11 +43,24 @@
       background-color: $app-primary;
     }
   }
+
+  .k-state-selected {
+    color: $white !important;
+    span,
+    .k-link {
+      color: $white !important;
+      background-color: $app-primary;
+    }
+    &.k-state-focused {
+      color: $white !important;
+      span,
+      .k-link {
+        color: $white !important;
+        background-color: $app-primary;
+      }
+    }
+  }
 }
-// .k-empty.k-calendar-td {
-//   height: 2px;
-//   line-height: 0;
-// }
 
 /* Time Picker */
 .k-timeselector {
@@ -95,7 +83,7 @@
 }
 /*Global Search*/
 
-.header-mobilesearchbutton{
+.header-mobilesearchbutton {
   display: none;
   width: 34px;
   height: 34px;
@@ -106,7 +94,7 @@
   position: absolute;
   right: 152px;
   top: 13px;
-  .material-icons{
+  .material-icons {
     font-size: 24px;
   }
 }
@@ -149,26 +137,24 @@
       min-width: 300px;
       max-width: 300px;
     }
-    .k-searchbar{
+    .k-searchbar {
       min-height: 36px;
     }
- 
   }
-
 
   kendo-multicolumncombobox > .k-button {
     display: none;
-  } 
+  }
 }
-.hidedropicon  kendo-combobox > .k-button {
-  display: none ;
+.hidedropicon kendo-combobox > .k-button {
+  display: none;
 }
-.field-label-hide{
-  .k-label{
+.field-label-hide {
+  .k-label {
     display: none;
   }
 }
-.input-inline-loader{
+.input-inline-loader {
   position: absolute;
   right: 8px;
   background: #fff;
@@ -180,9 +166,9 @@
   z-index: 2;
 }
 
-.inline-search-loader{
+.inline-search-loader {
   position: relative;
-  .input-inline-loader{
+  .input-inline-loader {
     top: 28px;
   }
 }
@@ -235,14 +221,14 @@
   position: relative;
   z-index: 2;
   &:before {
-    content: ''; 
+    content: '';
     width: 50px;
     height: 50px;
     border-radius: 100%;
     -webkit-animation: click-wave 0.8s;
     -moz-animation: click-wave 0.8s;
     animation: click-wave 0.8s;
-    background: material-color($hive-primary-palette, 200); 
+    background: material-color($hive-primary-palette, 200);
     display: block;
     position: relative;
     z-index: 100;
@@ -283,46 +269,43 @@
   }
 }
 
-
-
- .k-menu-popup{
+.k-menu-popup {
   margin-right: 15px;
- }
+}
 
- .combotable_search_list{
-
-
-   .k-table-td,  .k-table-th{
+.combotable_search_list {
+  .k-table-td,
+  .k-table-th {
     border-left: 0px;
     border-right: 0px;
     padding: 8px 4px;
     cursor: pointer;
     text-overflow: unset;
     white-space: normal;
-    &:first-child{
+    &:first-child {
       padding-left: 10px;
     }
-    &:last-child{
+    &:last-child {
       padding-right: 6px;
     }
-    em{
+    em {
       font-weight: 500;
       font-style: normal;
     }
-    .text-muted{
+    .text-muted {
       color: rgba($black, 0.6);
     }
   }
-  .k-table-th{
+  .k-table-th {
     padding: 0px !important;
   }
-  .k-table-td{
-    border:0px;
+  .k-table-td {
+    border: 0px;
     color: $black;
   }
- 
- }
+}
 
- .k-no-data, .k-nodata{
+.k-no-data,
+.k-nodata {
   min-height: 40px;
- }
+}

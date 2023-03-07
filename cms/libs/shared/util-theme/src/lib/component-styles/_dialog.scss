@@ -6,13 +6,10 @@
   }
   .k-dialog {
     .k-window-titlebar {
-      padding: $size-xxxl $size-xxx $size-l $size-xxx;
-      // position: relative;
+      padding: $size-xxxl $size-xxx $size-l $size-xxx; 
       white-space: normal;
-      .k-window-title {
-        // padding: $size-xx $size-0 $size-0 $size-0;
-        font-size: $font-size-xx;
-        // display: flex;
+      .k-window-title { 
+        font-size: $font-size-xx; 
         align-items: center;
         white-space: normal;
         line-height: normal;
@@ -50,14 +47,13 @@
           margin-left: $size-xx;
         }
       }
-      .justify-content-end{
+      .justify-content-end {
         width: 100%;
       }
       .k-danger-link {
         box-shadow: none;
       }
     }
- 
   }
 
   &-full {
@@ -111,8 +107,7 @@
         width: calc(100% - 1rem);
       }
     }
-    justify-content: flex-start;
-    // top: 50px;
+    justify-content: flex-start; 
   }
   &-mdl {
     .k-dialog {
@@ -124,8 +119,7 @@
         width: calc(100% - 1rem);
       }
     }
-    justify-content: flex-start;
-    // top: 50px;
+    justify-content: flex-start; 
   }
   &-md {
     .k-dialog {
@@ -137,8 +131,7 @@
         width: calc(100% - 1rem);
       }
     }
-    justify-content: flex-start;
-    // top: 50px;
+    justify-content: flex-start; 
   }
   &-sm {
     .k-dialog {
@@ -150,39 +143,24 @@
         width: calc(100% - 1rem);
       }
     }
-    justify-content: flex-start;
-    // top: 50px;
+    justify-content: flex-start; 
   }
   &-np {
     .k-dialog {
       top: 50px;
     }
 
-    .k-content {
-      // padding: 1px;
-    }
     .k-window-content,
     .k-prompt-container {
       max-height: inherit;
       padding: 0px;
-      // max-height: 65vh;
-      // overflow-y: auto !important;
-    }
-    section {
-      // padding-left: 0 !important;
-      // &.k-dialog-body {
-      //   padding:16px 24px;
-      //   max-height: 65vh;
-      //   overflow-y: auto;
-      // }
     }
   }
   &-top {
     justify-content: flex-start;
-    // top: 50px;
   }
   &-wid-md-full {
-    align-items: flex-end;
+    align-items: flex-end; 
     .k-dialog {
       width: 50%;
       height: 100%;
@@ -191,13 +169,13 @@
       }
       .k-content,
       .k-window-content {
-        // padding: $size-0 !important;
-        // max-height: inherit;
+        padding: $size-0 !important;
+        max-height: inherit;
       }
       .app-c-tab {
         height: 100%;
         .k-content {
-          // padding: $size-0 $size-xxx !important;
+           padding: $size-0 $size-xxx !important;
           &.k-state-active {
             background: material-color($hive-neutral-palette, 50) !important;
             padding: $size-0 $size-xxx !important;

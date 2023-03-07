@@ -94,7 +94,7 @@
         position: absolute;
         right: -5px;
         top: -3px;
-        background: $badge-alets;
+        background: $badge-alerts;
         color: $white !important;
         border-radius: $border-radius-xlg;
         padding: $size-m;
@@ -153,9 +153,7 @@
   max-width: 100%;
 }
 .user-setting-dropdown {
-  min-width: 250px;
-  // margin-right: $size-xxx;
-  // margin-top: $size-l;
+  min-width: 250px; 
   .k-list .k-item {
     padding: $size-0;
     background: $white !important;
@@ -285,9 +283,7 @@ max-width: 400px;
     flex-direction: column;
     gap: $size-m;
     width: 100%;
-    // .text-muted{
-    //   color: $inputlabelolor;
-    // }
+ 
   }
   .k-dropdown-button {
     max-height: 30px;
@@ -321,23 +317,4 @@ max-width: 400px;
     }
   }
 }
-
-// .more-action-dropdown {
-//   .notification-list_more-btn-wrap {
-//     display: flex;
-//     flex-direction: column;
-//   }
-//   .k-list .k-item {
-//     padding: 0px 0;
-//     .k-button {
-//       background: $white !important;
-//       background-color: $white !important;
-//       border-bottom: 1px solid $theme-border !important;
-//       text-transform: capitalize !important;
-//       padding: $size-xx $size-xlg !important;
-//       justify-content: flex-start;
-//       width: 100%;
-//       border-radius: $size-0;
-//     }
-//   }
-// }
+ 

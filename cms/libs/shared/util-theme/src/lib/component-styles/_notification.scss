@@ -31,7 +31,7 @@
     color: $white;
   }
   &.badge-warn {
-    background: $badge-alets;
+    background: $badge-alerts;
     color: $white;
   }
   &.badge-warn-light {
@@ -145,16 +145,13 @@
   z-index: 99999999;
   pointer-events: none;
   user-select: none;
-  cursor: pointer;
-  // -webkit-backdrop-filter: blur(1px);
-  // backdrop-filter: blur(1px);
+  cursor: pointer; 
   .loader-item {
     width: 80px;
     height: 80px;
     align-items: center;
     justify-content: center;
-    display: flex;
-    // background: rgba(0, 0, 0, 65%);
+    display: flex; 
     border-radius: 50%;
     .k-i-loading {
       font-size: 60px;
