@@ -22,7 +22,7 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
   btnDisabled = false;
   /** Constructor **/
   constructor(
-    private readonly employmentFacade: EmploymentFacade, 
+    private readonly employmentFacade: EmploymentFacade,
     private readonly router: Router,
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade) { }
@@ -34,14 +34,14 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
 
   // loading case details like session id, eligibility id , clientid and clientcaseid
   loadCase(){
-    this.sessionId = this.route.snapshot.queryParams['sid'];    
+    this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
      this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-     .subscribe((session: any) => {      
-      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-      this.clientId =JSON.parse(session.sessionData).clientId   
-     });        
+     .subscribe((session: any) => {
+      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId
+      this.clientId =JSON.parse(session.sessionData).clientId
+     });
   }
   /** Internal event methods **/
 
@@ -51,17 +51,17 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.selectedEmployer) {
       this.btnDisabled = true
-      this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
+      this.employmentFacade.deleteEmployer(this.clientId,this.selectedEmployer.clientEmployerId).subscribe({
         next: (response) => {
           this.onRemoveEmployerConfirmationClosed();
-          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer removed successfully')  
-          this.deleteUpdateEmploymentEvent.next(response);  
-          this.employmentFacade.hideLoader() 
+          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer removed successfully')
+          this.deleteUpdateEmploymentEvent.next(response);
+          this.employmentFacade.hideLoader()
         },
         error: (err) => {
           this.btnDisabled = false;
           this.employmentFacade.hideLoader()
-          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );
