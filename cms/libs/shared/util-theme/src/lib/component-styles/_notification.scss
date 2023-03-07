@@ -120,7 +120,7 @@
   border-radius: $border-radius-xl;
   background: material-color($hive-primary-palette, 300);
 }
-.app-pageloader-on {
+.app-page_loader-on {
   common-loader-component{
     position: fixed;
     z-index: 9999999;
