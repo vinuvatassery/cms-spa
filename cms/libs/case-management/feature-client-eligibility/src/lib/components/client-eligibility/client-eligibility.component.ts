@@ -73,7 +73,7 @@ export class ClientEligibilityComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSessionData();
-    this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(QuestionTypeCode.reviewChecklist);
+    
 
   }
   ngOnDestroy(): void {
@@ -166,6 +166,7 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientId = sessionData.clientId;
           this.eligibilityForm.controls['clientCaseEligibilityId'].setValue(this.clientCaseEligibilityId);
           this.loadDocumentsAndEligibility();
+          this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(this.clientCaseEligibilityId, QuestionTypeCode.reviewChecklist);
         }
       });
   }

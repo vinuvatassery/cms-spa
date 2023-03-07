@@ -15,9 +15,9 @@ export class ReviewQuestionAnswerDataService {
 
     /** pubic methods**/
     
-    getReviewQuestionAnswerByQuestionTypeCode(questionTypeCode: string) {
+    getReviewQuestionAnswerByQuestionTypeCode(clientCaseEligibilityId:string, questionTypeCode: string) {
         return this.http.get<ReviewQuestionAnswer[]>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/review-questions-answers/${questionTypeCode}`
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/checklist/questionTypeCode=${questionTypeCode}`
         );
     }
 }

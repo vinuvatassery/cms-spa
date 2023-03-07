@@ -31,9 +31,9 @@ export class ReviewQuestionAnswerFacade {
 
     }
 
-    getReviewQuestionAnswerByQuestionTypeCode(questionTypeCode: string) {
+    getReviewQuestionAnswerByQuestionTypeCode(clientCaseEligibilityId:string,questionTypeCode: string) {
         this.loaderService.show();
-        this.reviewQuestionAnswerDataService.getReviewQuestionAnswerByQuestionTypeCode(questionTypeCode).subscribe({
+        this.reviewQuestionAnswerDataService.getReviewQuestionAnswerByQuestionTypeCode(clientCaseEligibilityId,questionTypeCode).subscribe({
             next: (response) => {
                 this.loaderService.hide();
                 this.reviewQuestionAnswersSubject.next(response);

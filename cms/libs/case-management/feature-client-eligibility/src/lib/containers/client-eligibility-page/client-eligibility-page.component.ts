@@ -150,12 +150,14 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     }
   }
   saveAndUpdate(questoinsResponse: any) {
+    let clientCaseEligibilityId:string='';
+    clientCaseEligibilityId=questoinsResponse[0]?.clientCaseEligibilityId;
     if (questoinsResponse.some((m: any) => m.reviewQuestionResponseId !== undefined)) {
 
-      return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(questoinsResponse);
+      return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(clientCaseEligibilityId,questoinsResponse);
     }
     else {
-      return this.reviewQuestionResponseFacade.saveReviewQuestionResponse(questoinsResponse)
+      return this.reviewQuestionResponseFacade.saveReviewQuestionResponse(clientCaseEligibilityId,questoinsResponse)
 
     }
   }

@@ -146,7 +146,7 @@ export class MedicalPremiumListComponent implements OnInit {
   handleInsuranceType(dataItem: any) {
     this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
-    this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
+    this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientId,dataItem.clientInsurancePolicyId);
   }
 
   handleHealthInsuranceCloseClicked() {
@@ -238,7 +238,7 @@ export class MedicalPremiumListComponent implements OnInit {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
-        this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
+        this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientId, dataItem.clientInsurancePolicyId);
     }
     if (type == 'priority') {
       this.selectedInsurance=dataItem;

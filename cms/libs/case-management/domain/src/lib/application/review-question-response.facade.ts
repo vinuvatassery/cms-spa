@@ -46,11 +46,11 @@ export class ReviewQuestionResponseFacade {
         });
     }
 
-    saveReviewQuestionResponse(reviewQuestionResponse: any) : Observable<any> {
-        return this.reviewQuestionResponseDataService.saveReviewQuestionResponse(reviewQuestionResponse);
+    saveReviewQuestionResponse(clientCaseEligibilityId:string,reviewQuestionResponse: any) : Observable<any> {
+        return this.reviewQuestionResponseDataService.saveReviewQuestionResponse(clientCaseEligibilityId,reviewQuestionResponse);
       }
-      updateReviewQuestionResponse(reviewQuestionResponse: any) : Observable<any> {
-        return this.reviewQuestionResponseDataService.updateReviewQuestionResponse(reviewQuestionResponse);
+      updateReviewQuestionResponse(clientCaseEligibilityId:string,reviewQuestionResponse: any) : Observable<any> {
+        return this.reviewQuestionResponseDataService.updateReviewQuestionResponse(clientCaseEligibilityId,reviewQuestionResponse);
       }
 
 }

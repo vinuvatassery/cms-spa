@@ -25,15 +25,15 @@ export class HealthInsurancePolicyDataService {
     );
   }
 
-  getHealthInsurancePolicyById(clientInsurancePolicyId: string) {
+  getHealthInsurancePolicyById(clientId:string, insurancePolicyId: string) {
     return this.http.get<HealthInsurancePolicy>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy/${clientInsurancePolicyId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies/${insurancePolicyId}`
     );
   }
 
-  getCarrierContactInfo(carrierId: any) {
+  getCarrierContactInfo(vendorId: any) {
     return this.http.get<CarrierContactInfo>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/carrier/contact-info/${carrierId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/vendors/${vendorId}`
     );
   }
   setHealthInsurancePolicyPriority(healthInsurancePolicies: any) {
@@ -48,8 +48,8 @@ export class HealthInsurancePolicyDataService {
   deleteInsurancePolicy(insurancePolicyId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
   }
-  updateInsuranceFlags(insuranceFlagsData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
+  updateInsuranceFlags(clientId:any, insuranceFlagsData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies/flags`, insuranceFlagsData);
   }
   loadCoPaysAndDeductibles() {
     return of([

@@ -341,7 +341,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     let caseEligibilityFlagsData = this.insuranceFlagForm.value;
     caseEligibilityFlagsData["clientCaseEligibilityId"] = this.clientCaseEligibilityId;
     caseEligibilityFlagsData["clientId"] = this.clientId;
-    return this.insurancePolicyFacade.saveInsuranceFlags(caseEligibilityFlagsData)
+    return this.insurancePolicyFacade.saveInsuranceFlags(this.clientId,caseEligibilityFlagsData)
   }
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {

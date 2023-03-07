@@ -122,9 +122,9 @@ export class HealthInsurancePolicyFacade {
     return this.healthInsurancePolicyService.getCarrierContactInfo(carrierId);
   }
 
-  getHealthInsurancePolicyById(clientInsurancePolicyId: string): void {
+  getHealthInsurancePolicyById(clientId:string, clientInsurancePolicyId: string): void {
     this.showLoader();
-    this.healthInsurancePolicyService.getHealthInsurancePolicyById(clientInsurancePolicyId).subscribe({
+    this.healthInsurancePolicyService.getHealthInsurancePolicyById(clientId,clientInsurancePolicyId).subscribe({
       next: (response) => {
         this.hideLoader();
         this.healthInsurancePolicySubject.next(response);
@@ -144,8 +144,8 @@ export class HealthInsurancePolicyFacade {
   deleteInsurancePolicy(insurancePolicyId: any) {
     return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
   }
-  saveInsuranceFlags(insuranceFlags: any): Observable<any> {
-    return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
+  saveInsuranceFlags(clientId:any,insuranceFlags: any): Observable<any> {
+    return this.healthInsurancePolicyService.updateInsuranceFlags(clientId,insuranceFlags);
   }
   loadCoPaysAndDeductibles() {
     this.healthInsurancePolicyService.loadCoPaysAndDeductibles().subscribe({

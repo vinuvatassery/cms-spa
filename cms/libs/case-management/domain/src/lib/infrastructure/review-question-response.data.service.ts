@@ -16,14 +16,14 @@ export class ReviewQuestionResponseDataService {
     
     getReviewQuestionResponseByClientCaseEligibilityId(clientCaseEligibilityId: string) {
         return this.http.get(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/review-questions-responses/${clientCaseEligibilityId}`
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/checklist-responses`
         );
     }
-    saveReviewQuestionResponse(reviewQuestionResponse: any) {
-        return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/review-questions-responses`, reviewQuestionResponse);
+    saveReviewQuestionResponse(clientCaseEligibilityId:string,reviewQuestionResponse: any) {
+        return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/checklist-responses`, reviewQuestionResponse);
       }
     
-      updateReviewQuestionResponse(reviewQuestionResponse: any) {
-        return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/review-questions-responses`, reviewQuestionResponse);
+      updateReviewQuestionResponse(clientCaseEligibilityId:string,reviewQuestionResponse: any) {
+        return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/checklist-responses`, reviewQuestionResponse);
       }
 }
