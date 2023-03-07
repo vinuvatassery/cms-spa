@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy,ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy,ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-client-edit-view-sexual-identity',
   templateUrl: './client-edit-view-sexual-identity.component.html',
-  styleUrls: ['./client-edit-view-sexual-identity.component.scss'],
 })
 export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy {
   @Input() appInfoForm: FormGroup;
@@ -90,28 +89,13 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
         }
         else {
           if (lovCode === SexualIdentityCode.dontKnow) {
-            if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
-              this.disableSexualIdentity.forEach((sexualIdentity: any) => {
-                this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
-              });
-            }
+            this.onDoNotKnowSelected();
           }
           if (lovCode === SexualIdentityCode.dontWant) {
-            if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
-              this.disableSexualIdentity.forEach((sexualIdentity: any) => {
-                this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
-              });
-            }
+            this.onDoNotAnswerSelected();
           }
           if (lovCode === SexualIdentityCode.dontKnowQustion) {
-            if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true) {
-              this.disableSexualIdentity.forEach((sexualIdentity: any) => {
-                this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
-              });
-            }
+            this.onDoNotKnowQuestion();
           }
         }
       }
@@ -122,6 +106,34 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
       this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
     }
   }
+
+  private onDoNotKnowSelected(){
+    if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true &&
+      !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
+      this.disableSexualIdentity.forEach((sexualIdentity: any) => {
+        this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
+      });
+    }
+   }
+
+   private onDoNotAnswerSelected(){
+    if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
+      !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
+      this.disableSexualIdentity.forEach((sexualIdentity: any) => {
+        this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
+      });
+    }
+   }
+
+   private onDoNotKnowQuestion(){
+    if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
+      !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true) {
+      this.disableSexualIdentity.forEach((sexualIdentity: any) => {
+        this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
+      });
+    }
+   }
+
   private loadSexulaIdentities() {
     this.SexulaIdentityLovs$.subscribe((data) => {
       if (!Array.isArray(data)) return;
@@ -156,7 +168,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
         if (applicantInfo.clientSexualIdentityList !== null && applicantInfo.clientSexualIdentityList !== undefined
           && applicantInfo.clientSexualIdentityList.length > 0) {
           this.assignSexualIdentityToForm(applicantInfo.clientSexualIdentityList);
-          var otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
+          const otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
           if (otherSexualIdentities.length > 0) {
             this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
           }

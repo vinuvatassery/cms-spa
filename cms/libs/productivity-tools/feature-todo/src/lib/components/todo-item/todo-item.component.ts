@@ -4,8 +4,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 @Component({
   selector: 'productivity-tools-todo-item',
   templateUrl: './todo-item.component.html',
-  styleUrls: ['./todo-item.component.scss'],
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoItemComponent {
@@ -17,7 +15,6 @@ export class TodoItemComponent {
       text: "Done",
       icon: "done",
       click: (): void => {
-        // this.onDoneClicked();
       },
     },
     {
@@ -25,7 +22,6 @@ export class TodoItemComponent {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-      //  this.onOpenTodoDetailsClicked()
       },
     },
     {
@@ -33,7 +29,6 @@ export class TodoItemComponent {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-      // this.onOpenDeleteTodoClicked()
       },
     },
     

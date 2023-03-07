@@ -149,7 +149,6 @@
         <div class="grid-custom-paginationtemplates d-flex">
   
           <div class="d-flex align-items-center">
-            <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
             <label class="mr-1">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
               [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
@@ -168,13 +167,6 @@
   
         </div>
       </ng-template>
-        <!-- <kendo-grid-column
-        field="options"
-        title=""
-        [width]="50"
-        fieldType='actions'
-      > 
-      </kendo-grid-column> -->
       </kendo-grid>
     </div>
   </section>

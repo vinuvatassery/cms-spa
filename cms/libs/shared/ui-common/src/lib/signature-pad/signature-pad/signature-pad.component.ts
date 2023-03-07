@@ -4,8 +4,9 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
   ViewChild,
+  AfterViewInit, 
+  OnDestroy
 } from '@angular/core';
-import { AfterViewInit, OnDestroy } from '@angular/core';
 /** External libraries **/
 import { saveAs } from '@progress/kendo-file-saver';
 import {

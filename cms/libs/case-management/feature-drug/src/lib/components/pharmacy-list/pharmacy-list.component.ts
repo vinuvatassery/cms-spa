@@ -10,7 +10,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-pharmacy-list',
   templateUrl: './pharmacy-list.component.html',
-  styleUrls: ['./pharmacy-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyListComponent implements OnInit {

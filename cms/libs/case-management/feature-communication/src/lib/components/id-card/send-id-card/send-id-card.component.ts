@@ -9,7 +9,6 @@ import {
 @Component({
   selector: 'case-management-send-id-card',
   templateUrl: './send-id-card.component.html',
-  styleUrls: ['./send-id-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendIdCardComponent {

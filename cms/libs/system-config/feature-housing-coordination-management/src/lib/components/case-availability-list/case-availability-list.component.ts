@@ -10,7 +10,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-case-availability-list',
   templateUrl: './case-availability-list.component.html',
-  styleUrls: ['./case-availability-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

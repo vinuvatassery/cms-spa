@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
@@ -18,12 +19,18 @@ export class HttpLoggingInterceptor implements HttpInterceptor {
 
     // extend server response observable with logging
     return next.handle(req).pipe(
-      tap(
-        // Succeeds when there is a response; ignore other events
-        (event) => (ok = event instanceof HttpResponse ? 'succeeded' : ''),
-        // Operation failed; error is an HttpErrorResponse
-        (error) => (ok = 'failed')
-      ),
+      tap({
+        next: (event: HttpEvent<any>) => {
+          if (event instanceof HttpResponse) {
+            // Succeeds when there is a response; ignore other events
+            ok = event instanceof HttpResponse ? 'succeeded' : '';
+          }
+        }, 
+        error: () => {
+          // Operation failed; error is an HttpErrorResponse
+          ok = 'failed';
+        } 
+      }),
       // Log when response observable either completes or errors
       finalize(() => {
         const elapsed = Date.now() - started;

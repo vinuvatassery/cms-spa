@@ -74,14 +74,13 @@ export class OptionbuttonListComponent implements OnInit {
       this.textFieldDisable = true;
       this.updateDataPointCount(true);
     } 
-    if(!(this.appInfoForm.controls[this.OptionControlerName].value.toUpperCase()  ===YesNoFlag.Yes.toUpperCase()) && 
+    if(this.appInfoForm.controls[this.OptionControlerName].value.toUpperCase()  !== YesNoFlag.Yes.toUpperCase() && 
     (this.appInfoForm.controls[this.textControlerName] !== undefined )){
       this.appInfoForm.controls[this.textControlerName].removeValidators(Validators.required);
       this.appInfoForm.controls[this.textControlerName].updateValueAndValidity();  
       if(this.OptionControlerName === 'materialInAlternateFormatCode'){
         this.appInfoForm.controls["materialInAlternateFormatDesc"].setValue(null);
       }  
-      
     }
   }
   onChange(event:any){

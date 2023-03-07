@@ -6,7 +6,6 @@ import { TodoFacade } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'productivity-tools-todo-list',
   templateUrl: './todo-list.component.html',
-  styleUrls: ['./todo-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoListComponent implements OnInit {
@@ -14,7 +13,6 @@ export class TodoListComponent implements OnInit {
   todoGrid$ = this.todoFacade.todoGrid$;
   isOpenDeleteTodo = false;
   isOpenTodo = false;
-  // moreactions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
 
@@ -25,7 +23,6 @@ export class TodoListComponent implements OnInit {
       text: "Done",
       icon: "done",
       click: (): void => {
-        // this.onDoneClicked();
       },
     },
     {

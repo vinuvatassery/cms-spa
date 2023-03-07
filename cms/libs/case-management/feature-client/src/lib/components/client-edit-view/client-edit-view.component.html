@@ -14,7 +14,6 @@
 
         </kendo-floatinglabel>
       </div>
-      <!-- [disabled]="isMiddleNameChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Middle Initial">
           <kendo-textbox aria-label="middle initial"  [fillMode]="formUiStyle.inputFillMode"
@@ -42,7 +41,6 @@
             formControlName="lastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
           <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
-          <!-- <input kendoTextBox [fillMode]="fillMode" aria-label="last name" /> -->
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 inlineloaderwrapper"  *ngIf="showNameDuplicateLoader">
@@ -55,7 +53,6 @@
     </div>
   </section>
 
-  <!-- [disabled]="isInsuranceCardChecked" -->
   <!-- Applicant Insurance Section  -->
   <section kendoRippleContainer>
     <div class="flex-row">
@@ -70,7 +67,6 @@
             name on primary insurance card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
-      <!-- [disabled]="isInsuranceCardChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Primary Insurance Card">
           <kendo-textbox aria-label="last name on primary insurance card" [fillMode]="formUiStyle.inputFillMode"
@@ -96,7 +92,6 @@
   <!-- Applicant Official Section  -->
   <section kendoRippleContainer>
     <div class="flex-row">
-      <!-- [disabled]="isOfficialIdChecked" -->
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="First Name on Official ID">
           <kendo-textbox aria-label="first name on official id" placeholder="First Name on Official ID" [fillMode]="formUiStyle.inputFillMode"
@@ -110,7 +105,6 @@
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Official ID">
-          <!-- [disabled]="isOfficialIdChecked" -->
           <kendo-textbox aria-label="last name on official id" placeholder="Last Name on Official ID" [fillMode]="formUiStyle.inputFillMode"
             formControlName="officialIdLastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
@@ -120,7 +114,6 @@
           Name on Official ID is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
-        <!-- (change)="onOfficialIdChecked($event)" -->
         <span class="app-checkboxwidtext-wrapper">
           <input type="checkbox" class="adjust-attr" id="officialIdsNotApplicable" name="officialIdsNotApplicable"
             kendoCheckBox aria-labelledby="officialIdsNotApplicable" formControlName="officialIdsNotApplicable"

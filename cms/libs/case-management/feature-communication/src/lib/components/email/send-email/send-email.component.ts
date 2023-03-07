@@ -7,11 +7,10 @@ import {
   EventEmitter,
   Input,
 } from '@angular/core';
-/** Enums **/
-import { CommunicationEvents } from '@cms/case-management/domain';
-/** Facades**/
-import { CommunicationFacade } from '@cms/case-management/domain';
+/** Internal Libraries **/
+import { CommunicationEvents, CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+
 @Component({
   selector: 'case-management-send-email',
   templateUrl: './send-email.component.html',

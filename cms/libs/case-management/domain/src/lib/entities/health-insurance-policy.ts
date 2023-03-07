@@ -1,6 +1,6 @@
 import { Dependent } from "./dependent";
 
-export class healthInsurancePolicy {
+export class HealthInsurancePolicy {
         clientInsurancePolicyId: string | null = null;
         clientId: number | null = null;
         insuranceCarrierId: string | null = null;
@@ -73,7 +73,7 @@ export class healthInsurancePolicy {
         //removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
 }
 
-export class othersCoveredOnPlan {
+export class OthersCoveredOnPlan {
         relationshipDescription: string = "";
         relationshipCode: string = "";
         firstName: string = "";

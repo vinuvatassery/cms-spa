@@ -17,7 +17,6 @@ export class NotificationListComponent {
       text: "Snooze",
       icon: "snooze",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
  
@@ -27,7 +26,6 @@ export class NotificationListComponent {
       text: "Discard",
       icon: "notifications_off",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
       },
     },
    

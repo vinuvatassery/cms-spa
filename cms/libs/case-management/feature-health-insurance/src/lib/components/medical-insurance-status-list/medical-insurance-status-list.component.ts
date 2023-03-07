@@ -6,7 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-medical-insurance-status-list',
   templateUrl: './medical-insurance-status-list.component.html',
-  styleUrls: ['./medical-insurance-status-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalInsuranceStatusListComponent implements OnInit {
@@ -29,7 +28,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       text: "Copy Status",
       icon: "content_copy",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
     {
@@ -37,7 +35,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       text: "Edit Status",
       icon: "edit",
       click: (): void => {
-      //  this.onDeactivateEmailAddressClicked()
       },
     },
     

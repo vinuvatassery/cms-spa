@@ -16,8 +16,6 @@ export class AppErrorHandler extends ErrorHandler {
 
   /** Public methods **/
   override handleError(error: Error | HttpErrorResponse) {
-    const displayMessage = 'An error occurred, ' + error.message;
-    //this.notificationsService.error(displayMessage);
     super.handleError(error);
   }
 }

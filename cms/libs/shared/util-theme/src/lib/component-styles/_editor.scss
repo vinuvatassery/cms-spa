@@ -36,19 +36,15 @@
         padding: 0;
         border-radius: 50%;
         background: $black-e;
-      }
-      .attachment-item_name {
+        span {
+          font-size: $font-size-l;
+          color: material-color($hive-neutral-palette, 900);
+        }
       }
       .attachment-item_size {
         color: lighten($black-3, 20%);
         font-size: $font-size-s;
         margin: $size-0 $size-m;
-      }
-      .attachment-item_remove {
-        span {
-          font-size: $font-size-l;
-          color: material-color($hive-neutral-palette, 900);
-        }
       }
     }
   }
