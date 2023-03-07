@@ -296,9 +296,15 @@
     border-color: $error-color-1 !important;
   }
 
-  
-}
 
+}
+.k-timepicker{
+ .k-input-outline{
+  &:focus-within {
+    border: 0px solid transparent !important;
+  }
+ }
+}
 .input-icon-left {
   .k-input-prefix {
     position: absolute;
