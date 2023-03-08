@@ -69,21 +69,13 @@ export class ClientEligibilityFacade {
     this.loaderService.hide();
   }
 
-  getEligibility(clientCaseEligibilityId: string, clientId: string,clientCaseId:any){
-    return this.clientEligibilityDataService.getEligibility(clientCaseEligibilityId,clientId,clientCaseId);
+  getEligibility(clientId: string,clientCaseId:any,clientCaseEligibilityId: string,type:string){
+    return this.clientEligibilityDataService.getEligibility(clientId,clientCaseId,clientCaseEligibilityId,type);
   }
 
   saveAcceptedApplication(acceptedApplication:any,caseId:any,eligibilityId:any)
   {
     return this.clientEligibilityDataService.saveAcceptedApplication(acceptedApplication,caseId,eligibilityId);
   }
-  getAcceptedApplication(clientCaseId:string,clientCaseEligibilityId:string)
-  {
-    return this.clientEligibilityDataService.getAcceptedApplication(clientCaseId,clientCaseEligibilityId);
-  }
-  getClientEligibilityInfo(clientCaseEligibilityId: string, clientId: number, clientCaseId: string)
-  {
-    return this.clientEligibilityDataService.getClientEligibilityInfo(clientId,clientCaseId,clientCaseEligibilityId);
-
-  }
+  
 }
