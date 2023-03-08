@@ -262,7 +262,7 @@ onIncomeActionClicked(
       formData.append("clientCaseId", this.clientCaseId)
       formData.append("EntityId", dataItem.clientDependentId)
       this.showHideImageUploadLoader(true, dataItem);
-      this.dependentFacade.uploadDependentProofOfSchool(formData).subscribe({
+      this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
         next: (response: any) => {
           this.loadIncomeData();
           this.loadDependentsProofofSchools();

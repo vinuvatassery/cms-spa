@@ -68,7 +68,7 @@ export class FamilyAndDependentFacade {
     if(type == SnackBarNotificationType.ERROR)
     {
        const err= subtitle;
-       this.loggingService.logException(err)
+      this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
     this.hideLoader();
@@ -94,106 +94,101 @@ export class FamilyAndDependentFacade {
     this.loaderService.hide();
   }
 
-  DeleteDependent(dependentId: string): void {
-   this.showLoader();
-    this.dependentDataService.deleteDependent(dependentId).subscribe({
+  DeleteDependent(eligibilityId: string, dependentId: string): void {
+    this.showLoader();
+    this.dependentDataService.deleteDependent(eligibilityId, dependentId).subscribe({
       next: (deleteResponse) => {
-       if(deleteResponse ?? false)
-       {
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Removed Successfully')
-       }
+        if (deleteResponse ?? false) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent Removed Successfully')
+        }
         this.dependentdeleteSubject.next(deleteResponse);
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  AddNewDependent(dependent: Dependent): void {
+  AddNewDependent(eligibilityId: string, dependent: Dependent): void {
     this.showLoader();
-    this.dependentDataService.addNewDependent(dependent).subscribe({
+    this.dependentDataService.addNewDependent(eligibilityId, dependent).subscribe({
       next: (addNewdependentsResponse) => {
-        if(addNewdependentsResponse)
-        {
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New Dependent Added Successfully')
+        if (addNewdependentsResponse) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New Dependent Added Successfully')
         }
 
         this.dependentAddNewSubject.next(addNewdependentsResponse);
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  UpdateNewDependent(dependent: Dependent): void {
+  UpdateNewDependent(eligibilityId: string, dependent: Dependent): void {
     this.showLoader();
-    this.dependentDataService.updateNewDependent(dependent).subscribe({
+    this.dependentDataService.updateNewDependent(eligibilityId, dependent).subscribe({
       next: (updateNewdependentsResponse) => {
-
-        if(updateNewdependentsResponse)
-        {
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent data Updated')
+        if (updateNewdependentsResponse) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent data Updated')
         }
 
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  GetNewDependent(dependentId: string) : void {
+  GetNewDependent(eligibilityId: string, dependentId: string): void {
     this.showLoader();
-    this.dependentDataService.getNewDependent(dependentId).subscribe({
+    this.dependentDataService.getNewDependent(eligibilityId, dependentId).subscribe({
       next: (getNewdependentsResponse) => {
         this.dependentGetNewSubject.next(getNewdependentsResponse);
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
 
-  GetExistingClientDependent(clientDependentId: string) : void {
+  GetExistingClientDependent(eligibilityId: string, clientDependentId: string): void {
     this.showLoader();
-    this.dependentDataService.getExistingClientDependent(clientDependentId , DependentTypeCode.CAClient).subscribe({
+    this.dependentDataService.getExistingClientDependent(eligibilityId, clientDependentId, DependentTypeCode.CAClient).subscribe({
       next: (dependentGetExistingResponse) => {
         this.dependentGetExistingSubject.next(dependentGetExistingResponse);
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  loadDependents(clientId : number , skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+  loadDependents(eligibilityId: string, clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string): void {
     this.showLoader();
-    this.dependentDataService.loadDependents(clientId, skipcount ,maxResultCount  ,sort , sortType ).subscribe({
-      next: (dependentsResponse : any) => {
-              if(dependentsResponse)
-              {
-                  const gridView = {
-                    data : dependentsResponse["items"] ,
-                    total:  dependentsResponse["totalCount"]
-                    };
-                const workFlowdata: CompletionChecklist[] = [{
-                  dataPointName: 'family_dependents',
-                  status: (parseInt(dependentsResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
-                }];
+    this.dependentDataService.loadDependents(eligibilityId, clientId, skipcount, maxResultCount, sort, sortType).subscribe({
+      next: (dependentsResponse: any) => {
+        if (dependentsResponse) {
+          const gridView = {
+            data: dependentsResponse["items"],
+            total: dependentsResponse["totalCount"]
+          };
+          const workFlowdata: CompletionChecklist[] = [{
+            dataPointName: 'family_dependents',
+            status: (parseInt(dependentsResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
+          }];
 
-                this.workflowFacade.updateChecklist(workFlowdata);
-                this.dependentsSubject.next(gridView);
-               }
-               this.hideLoader();
+          this.workflowFacade.updateChecklist(workFlowdata);
+          this.dependentsSubject.next(gridView);
+        }
+        this.hideLoader();
       },
       error: (err) => {
         this.workflowFacade.updateChecklist([{
@@ -241,11 +236,11 @@ export class FamilyAndDependentFacade {
 
           if(key?.clientDependentId === '00000000-0000-0000-0000-000000000000')
           {
-              key.memberType = ClientDependentGroupDesc.Clients
+            key.memberType = ClientDependentGroupDesc.Clients
           }
           else
           {
-              key.memberType = ClientDependentGroupDesc.Dependents
+            key.memberType = ClientDependentGroupDesc.Dependents
           }
         });
         this.dependentSearchSubject.next(dependentSearchResponse);
@@ -258,13 +253,12 @@ export class FamilyAndDependentFacade {
 
 
 
-  AddExistingDependent(data : any) : void {
+  AddExistingDependent(eligibilityId: string, data: any): void {
     this.showLoader();
-    this.dependentDataService.addExistingDependent(data ).subscribe({
+    this.dependentDataService.addExistingDependent(eligibilityId, data).subscribe({
       next: (dependentStatusResponse) => {
-        if(dependentStatusResponse)
-        {
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent added successfully')
+        if (dependentStatusResponse) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent added successfully')
         }
 
         this.existdependentStatusSubject.next(dependentStatusResponse);
@@ -279,7 +273,7 @@ export class FamilyAndDependentFacade {
   loadClientDependents(clientId: number) {
     this.dependentDataService.loadClientDependents(clientId).subscribe({
       next: (dependentsResponse : any) => {
-              this.clientDependentsSubject.next(dependentsResponse);
+        this.clientDependentsSubject.next(dependentsResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -287,11 +281,11 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  uploadDependentProofOfSchool(dependentProof:any){
-    return this.dependentDataService.uploadDependentProofOfSchool(dependentProof);
+  uploadDependentProofOfSchool(eligibilityId: string, dependentId: string, dependentProof: any) {
+    return this.dependentDataService.uploadDependentProofOfSchool(eligibilityId, dependentId, dependentProof);
   }
 
-  saveAndContinueDependents(clientId:number, clientCaseEligibilityId : string, hasDependentsStatus : string) {
+  saveAndContinueDependents(clientId: number, clientCaseEligibilityId: string, hasDependentsStatus: string) {
     this.showLoader();
     return this.dependentDataService.saveAndContinueDependents(clientId, clientCaseEligibilityId, hasDependentsStatus)
 
