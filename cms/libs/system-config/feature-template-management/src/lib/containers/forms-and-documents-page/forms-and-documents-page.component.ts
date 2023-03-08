@@ -6,7 +6,6 @@ import { TemplateManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'system-config-forms-and-documents-page',
   templateUrl: './forms-and-documents-page.component.html',
-  styleUrls: ['./forms-and-documents-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormsAndDocumentsPageComponent implements OnInit {

@@ -34,7 +34,6 @@ export class EventLogComponent implements OnInit {
       text: "Sort Ascending",
       icon: "arrow_upward",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
     {
@@ -42,7 +41,6 @@ export class EventLogComponent implements OnInit {
       text: "Sort Descending",
       icon: "arrow_downward",
       click: (): void => {
-      //  this.onDeactivateEmailAddressClicked()
       },
     },
     {
@@ -50,7 +48,6 @@ export class EventLogComponent implements OnInit {
       text: "Filter",
       icon: "filter_list",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
       },
     },
   ];

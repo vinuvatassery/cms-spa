@@ -1,6 +1,5 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable, Subject } from 'rxjs';
 import { SmokingCessation } from '../entities/smoking-cessation';
 import { SmokingCessationDataService } from '../infrastructure/smoking-cessation.data.service';

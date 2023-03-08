@@ -41,7 +41,6 @@ export class RegionAssignmentListComponent implements OnInit {
         text: "Deactivate",
         icon: "block",
         click: (): void => {
-       //  this.onPronounsDeactivateClicked()
         },
       },
       {
@@ -49,7 +48,6 @@ export class RegionAssignmentListComponent implements OnInit {
         text: "Delete",
         icon: "delete",
         click: (): void => {
-        // this.onOpenDeleteTodoClicked()
         },
       },
       

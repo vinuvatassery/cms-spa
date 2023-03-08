@@ -191,7 +191,7 @@ pageselectionchange(data: any) {
   handleDeleteConfirmationClicked(event: any) {
     this.deletebuttonEmitted = false;       
     this.openDeleteConfirmation =false;    
-    if(event?.isDelete == true)
+    if(event?.isDelete ?? false)
     {
       if(event?.clientDependentId)
       {
@@ -199,7 +199,7 @@ pageselectionchange(data: any) {
         this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((dependentData: any) =>
         {  
-          if(dependentData == true)
+          if(dependentData ?? false)
           {
             this.loadFamilyDependents()
           }

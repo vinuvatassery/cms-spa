@@ -2,12 +2,10 @@
 import { Injectable } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
-import { Observable, of, Subject } from 'rxjs';
-import { CaseManager } from '../entities/case-manager';
+import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
 import { UserDefaultRoles } from '../enums/user-default-roles.enum';
-import { YesNoFlag } from '../enums/yes-no-flag.enum';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
 import { WorkflowFacade } from './workflow.facade';
 

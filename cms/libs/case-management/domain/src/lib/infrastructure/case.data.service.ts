@@ -19,26 +19,26 @@ import { CaseHistory } from '../entities/case-history';
 export class CaseDataService {
   /** Constructor**/
   constructor(private readonly http: HttpClient,
-    private configurationProvider : ConfigurationProvider) {}
+    private configurationProvider: ConfigurationProvider) { }
 
-    
+
   /** Public methods **/
-  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string) {     
+  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
     return this.http.get<ClientProfileCase[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/client-profile/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
 
   }
 
-  loadClientProfile(clientCaseEligibilityId : string) {     
+  loadClientProfile(clientCaseEligibilityId: string) {
     return this.http.get<ClientProfileCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/clientCaseEligibilityId=${clientCaseEligibilityId}`
     );
 
   }
 
-  loadClientProfileHeader(clientId : number) {     
+  loadClientProfileHeader(clientId: number) {
     return this.http.get<ClientProfileCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/header/clientId=${clientId}`
     );
@@ -46,33 +46,36 @@ export class CaseDataService {
   }
 
 
-  loadCaseHistory() : Observable<CaseHistory[]>
-  {
+  loadCaseHistory(): Observable<CaseHistory[]> {
     return of([
-      { caseNumber: 13, 
-        caseStatus: 'New', 
-        eligibilityPeriods: 2 ,
-        startDate: '01/01/2020' ,
+      {
+        caseNumber: 13,
+        caseStatus: 'New',
+        eligibilityPeriods: 2,
+        startDate: '01/01/2020',
         endDate: '01/01/2020'
-      }  , 
-      { caseNumber: 12, 
-        caseStatus: 'DisEnrolled', 
-        eligibilityPeriods: 12 ,
-        startDate: '01/01/2020' ,
-        endDate: '01/01/2020'
-      }
-      , 
-      { caseNumber: 11, 
-        caseStatus: 'DisEnrolled', 
-        eligibilityPeriods: 15 ,
-        startDate: '01/01/2020' ,
+      },
+      {
+        caseNumber: 12,
+        caseStatus: 'DisEnrolled',
+        eligibilityPeriods: 12,
+        startDate: '01/01/2020',
         endDate: '01/01/2020'
       }
-      , 
-      { caseNumber: 10, 
-        caseStatus: 'DisEnrolled', 
-        eligibilityPeriods: 15 ,
-        startDate: '01/01/2020' ,
+      ,
+      {
+        caseNumber: 11,
+        caseStatus: 'DisEnrolled',
+        eligibilityPeriods: 15,
+        startDate: '01/01/2020',
+        endDate: '01/01/2020'
+      }
+      ,
+      {
+        caseNumber: 10,
+        caseStatus: 'DisEnrolled',
+        eligibilityPeriods: 15,
+        startDate: '01/01/2020',
         endDate: '01/01/2020'
       }
     ]);
@@ -80,8 +83,8 @@ export class CaseDataService {
   loadCasesold(): Observable<Case[]> {
     return of([
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'John Sakariya',
         Pronouns: 'She/Her/Hers',
         ID: 100,
@@ -93,8 +96,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 101,
@@ -106,8 +109,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'Clara Stephen',
         Pronouns: 'She/Her/Hers',
         ID: 102,
@@ -119,8 +122,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'David Miller',
         Pronouns: 'She/Her/Hers',
         ID: 103,
@@ -132,8 +135,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'Johny Slot',
         Pronouns: 'She/Her/Hers',
         ID: 104,
@@ -145,8 +148,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'Chris Fedex',
         Pronouns: 'She/Her/Hers',
         ID: 105,
@@ -158,8 +161,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'Amaze Judge',
         Pronouns: 'She/Her/Hers',
         ID: 106,
@@ -171,8 +174,8 @@ export class CaseDataService {
         EligibilityEndDate: '01-03-2022',
       },
       {
-        CaseId:'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
-        ClientId:'2',
+        CaseId: 'B7A89F10-50B8-4D0A-8789-FFD108DDCA96',
+        ClientId: '2',
         ClientName: 'Dude Vills',
         Pronouns: 'She/Her/Hers',
         ID: 107,
@@ -186,108 +189,23 @@ export class CaseDataService {
     ]);
   }
 
-  loadCaseBySearchText(text : string) {
-      return this.http.get<ClientCase[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/clients/SearchText=${text}`
-      );   
-  
+  loadCaseBySearchText(text: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/clients/SearchText=${text}`
+    );
+
   }
 
   loadCasesForAuthuser(): Observable<Case[]> {
-    return of([
-      {
-        ClientName: 'John Sakariya',
-        Pronouns: 'She/Her/Hers',
-        ID: 100,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-      {
-        ClientName: 'David Miller',
-        Pronouns: 'She/Her/Hers',
-        ID: 101,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-      {
-        ClientName: 'Clara Stephen',
-        Pronouns: 'She/Her/Hers',
-        ID: 102,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-      {
-        ClientName: 'David Miller',
-        Pronouns: 'She/Her/Hers',
-        ID: 103,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-      {
-        ClientName: 'Johny Slot',
-        Pronouns: 'She/Her/Hers',
-        ID: 104,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-      {
-        ClientName: 'Chris Fedex',
-        Pronouns: 'She/Her/Hers',
-        ID: 105,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-      {
-        ClientName: 'Amaze Judge',
-        Pronouns: 'She/Her/Hers',
-        ID: 106,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-      {
-        ClientName: 'Dude Vills',
-        Pronouns: 'She/Her/Hers',
-        ID: 107,
-        URN: 100000,
-        PreferredContact: '(415) 123-4567',
-        Status: 'ACCEPT',
-        Group: 'Group 1',
-        EligibilityStartDate: '01-01-2022',
-        EligibilityEndDate: '01-03-2022',
-      },
-    ]);
+    return this.getClients();
   }
 
   loadRecentCases(): Observable<Case[]> {
+    return this.getClients();
+  }
+
+  private getClients() {
     return of([
       {
         ClientName: 'John Sakariya',
@@ -421,21 +339,21 @@ export class CaseDataService {
   }
 
 
-    loadCasesById(clientCaseId : string) {
-      return this.http.get<ClientCase[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/clients/cases/${clientCaseId}`
-      );
-    }
+  loadCasesById(clientCaseId: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/clients/cases/${clientCaseId}`
+    );
+  }
 
 
   loadDdlPrograms() {
 
     return this.http.get<Program[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/client-case/programs`
     );
-}
+  }
 
 
 
@@ -457,20 +375,20 @@ export class CaseDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case`,
       caseData
     );
-  }  
-  updateCaseStatus(caseData: any,clientCaseId:any) {
+  }
+  updateCaseStatus(caseData: any, clientCaseId: any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/status`,caseData
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/status`, caseData
     );
   }
-  loadCasesStatusById(clientCaseId : string) {
+  loadCasesStatusById(clientCaseId: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/cases/${clientCaseId}/status`
     );
   }
-	getSessionInfoByCaseId(clientCaseId:any){
-  return this.http.get(
+  getSessionInfoByCaseId(clientCaseId: any) {
+    return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/SessionSearch`);
   }
 }

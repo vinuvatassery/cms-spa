@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ReviewQuestionAnswer } from '../entities/review-question-answer';
 
 
 @Injectable({ providedIn: 'root' })

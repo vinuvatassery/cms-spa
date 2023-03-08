@@ -10,7 +10,6 @@ import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-employer-detail',
   templateUrl: './employer-detail.component.html',
-  styleUrls: ['./employer-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerDetailComponent implements OnInit{

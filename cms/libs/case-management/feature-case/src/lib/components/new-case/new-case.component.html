@@ -29,8 +29,6 @@
             [filterable]="true"
             (filterChange)="onsearchTextChange($event)"
             (selectionChange)="onClientSelected($event)">
-          <!-- (close)="$event.preventDefault(); " -->
-          <!-- title="Name" -->
             <kendo-combobox-column>
               <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
                 <span  >{{ dataItem.clientFullName }}</span>

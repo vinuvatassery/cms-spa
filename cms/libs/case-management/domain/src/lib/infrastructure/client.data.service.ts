@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
-import { empty } from 'rxjs';
 import { ApplicantInfo } from '../entities/applicant-info';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
@@ -125,174 +124,38 @@ export class ClientDataService {
   }
 
   loadRdoMaterials() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoInterpreter() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoDeaf() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoBlind() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoWalking() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoDressingOrBathing() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoConcentration() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoErrands() {
+    return this.getPossibleAnswers();
+  }
+
+  getPossibleAnswers(){
     return of([
       {
         value: 'Yes',

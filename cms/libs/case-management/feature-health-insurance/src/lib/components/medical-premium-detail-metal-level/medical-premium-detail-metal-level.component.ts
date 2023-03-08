@@ -8,7 +8,6 @@ import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-medical-premium-detail-metal-level',
   templateUrl: './medical-premium-detail-metal-level.component.html',
-  styleUrls: ['./medical-premium-detail-metal-level.component.scss'],
 })
 export class MedicalPremiumDetailMetalLevelComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;

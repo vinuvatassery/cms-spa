@@ -1,18 +1,21 @@
 /** Angular **/
-import { AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ElementRef, OnDestroy, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 /** External Libraries **/
 import { Subscription, of, mergeMap, forkJoin, distinctUntilChanged, startWith, pairwise, BehaviorSubject, catchError, map, tap, debounceTime } from 'rxjs';
-
-/** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, ContactFacade, NavigationType, ContactInfo, ClientAddress, AddressTypeCode, ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact, CompletionChecklist, ClientDocument, ClientCaseElgblty, ClientDocumentFacade, HomeAddressProof, StatesInUSA } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { StatusFlag } from '@cms/case-management/domain';
-import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
+/** Internal Libraries **/
+import {
+  WorkflowFacade, CompletionStatusFacade, ContactFacade,
+  NavigationType, ContactInfo, ClientAddress, AddressTypeCode,
+  ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact,
+  CompletionChecklist, ClientDocument, ClientCaseElgblty,
+  ClientDocumentFacade, HomeAddressProof, StatesInUSA, StatusFlag
+} from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ActivatedRoute,Router } from '@angular/router';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -83,7 +86,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly snackbarService: NotificationSnackbarService,
     private readonly route: ActivatedRoute,
     public readonly clientDocumentFacade: ClientDocumentFacade,
-    private readonly router :Router,
+    private readonly router: Router,
     private readonly configurationProvider: ConfigurationProvider,
   ) { }
 
@@ -163,7 +166,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
   }
 
-  private adjustAttributeInit(updateOnWorkflow:boolean) {
+  private adjustAttributeInit(updateOnWorkflow: boolean) {
     const initialAdjustment: CompletionChecklist[] = [];
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {
@@ -174,10 +177,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
       initialAdjustment.push(data);
     });
-
-    // if(this.contactInfo?.homeAddressProof?.documentName){
-    //   this.updateHomeAddressProofCount(!this.isEdit);
-    // }
 
     if (initialAdjustment.length > 0) {
       this.workflowFacade.updateBasedOnDtAttrChecklist(initialAdjustment);
@@ -207,7 +206,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         startWith(null), pairwise()
       )
       .subscribe(([prev, curr]: [any, any]) => {
-        if(this.allowWorkflowCountUpdate === true){
+        if (this.allowWorkflowCountUpdate === true) {
           this.updateFormCompleteCount(prev, curr);
         }
       });
@@ -216,18 +215,19 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.contactInfoForm.controls).forEach(groupkey => {
-      if (prev && curr) {
-        if (prev[groupkey] !== curr[groupkey]) {
-          Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
-            if (prev[groupkey][key] !== curr[groupkey][key]) {
-              let item: CompletionChecklist = {
-                dataPointName: `${groupkey}_${key}`,
-                status: curr[groupkey][key] ? StatusFlag.Yes : StatusFlag.No
-              };
-              completedDataPoints.push(item);
-            }
-          });
-        }
+      const isFormChanged = prev && curr && prev[groupkey] !== curr[groupkey];
+      if (isFormChanged) {
+        Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
+          const isValueChanged = prev[groupkey][key] !== curr[groupkey][key];
+          const dataPointName = `${groupkey}_${key}`;
+          if (isValueChanged) {
+            let item: CompletionChecklist = {
+              dataPointName: dataPointName,
+              status: curr[groupkey][key] ? StatusFlag.Yes : StatusFlag.No
+            };
+            completedDataPoints.push(item);
+          }
+        });
       }
     });
 
@@ -236,7 +236,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private updateWorkflowChecklist(updateOnWorkflow:boolean) {
+  private updateWorkflowChecklist(updateOnWorkflow: boolean) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.contactInfoForm.controls).forEach(groupkey => {
       Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
@@ -261,7 +261,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       status: this.contactInfo?.friendsOrFamilyContact?.contactRelationshipCode === 'O' ? StatusFlag.Yes : StatusFlag.No
     };
     completedDataPoints.push(otherDesc);
-    
+
     if (completedDataPoints.length > 0) {
       this.workflowFacade.updateChecklist(completedDataPoints, true);
     }
@@ -270,7 +270,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadPreferredContactMethod() {
     this.showPreferredContactLoader = true;
-    const preferredContact: string[] = [];
     const homePhone = (this.contactInfoForm.get('homePhone') as FormGroup)?.controls['phoneNbr'];
     const cellPhone = (this.contactInfoForm.get('cellPhone') as FormGroup)?.controls['phoneNbr'];
     const workPhone = (this.contactInfoForm.get('workPhone') as FormGroup)?.controls['phoneNbr'];
@@ -282,34 +281,45 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const isValidOtherPhone = otherPhone?.value && otherPhone?.valid && !((this.contactInfoForm.get('otherPhone') as FormGroup)?.controls['applicableFlag']?.value ?? false);
     const isValidEmail = email?.value && email?.valid && !((this.contactInfoForm.get('email') as FormGroup)?.controls['applicableFlag']?.value ?? false);
     this.setMessageConsentVisibility(isValidHomePhone, isValidCellPhone, isValidWorkPhone, isValidOtherPhone, isValidEmail);
-    if (isValidHomePhone) {
-      preferredContact.push(this.formatPhoneNumber(homePhone?.value ?? ''));
-    }
-    if (isValidCellPhone) {
-      preferredContact.push(this.formatPhoneNumber(cellPhone?.value ?? ''));
-    }
-    if (isValidWorkPhone) {
-      preferredContact.push(this.formatPhoneNumber(workPhone?.value));
-    }
-    if (isValidOtherPhone) {
-      preferredContact.push(this.formatPhoneNumber(otherPhone?.value ?? ''));
-    }
-    if (isValidEmail) {
-    const match = email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/);
-      if(match){
-        preferredContact.push(email?.value ?? '');
-      }
-    }
-    this.preferredContactMethods = preferredContact;
+    this.addPreferredContact({isValidHomePhone,homePhone, 
+      isValidCellPhone, cellPhone, 
+      isValidWorkPhone, workPhone, 
+      isValidOtherPhone, otherPhone, 
+      isValidEmail, email});
+  }
 
-    if (this.preferredContactMethods.length > 0) {
+  private addPreferredContact(contact: any){ 
+    const preferredContact: string[] = [];
+      if (contact?.isValidHomePhone) {
+        preferredContact.push(this.formatPhoneNumber(contact?.homePhone?.value ?? ''));
+      }
+      if (contact?.isValidCellPhone) {
+        preferredContact.push(this.formatPhoneNumber(contact?.cellPhone?.value ?? ''));
+      }
+      if (contact?.isValidWorkPhone) {
+        preferredContact.push(this.formatPhoneNumber(contact?.workPhone?.value));
+      }
+      if (contact?.isValidOtherPhone) {
+        preferredContact.push(this.formatPhoneNumber(contact?.otherPhone?.value ?? ''));
+      }
+      if (contact?.isValidEmail) {
+        const match = contact?.email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/);
+        if (match) {
+          preferredContact.push(contact?.email?.value ?? '');
+        }
+      }
+      this.preferredContactMethods = preferredContact;
+      this.resetPreferredContact(preferredContact);
+  }
+
+  private resetPreferredContact(preferredContact : string []){
+    if (preferredContact?.length > 0) {
       const selectPreferredCode = this.contactInfoForm?.get('email.preferredContactMethod')?.value;
       if (selectPreferredCode && !this.preferredContactMethods?.includes(selectPreferredCode)) {
         this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
       }
       this.updatePreferredContactCount(true);
       this.showPreferredContactLoader = false;
-
     }
     else {
       this.contactInfoForm?.get('email.preferredContactMethod')?.removeValidators(Validators.required);
@@ -395,14 +405,27 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setValidation() {
+    const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
+    this.setAddressValidation();
+    this.setPhoneEmailValidation();
+    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
+      ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]);
+      ffContactGroup.controls['contactName'].updateValueAndValidity();
+      ffContactGroup.controls['contactRelationshipCode'].setValidators([Validators.required]);
+      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
+      ffContactGroup.controls['contactPhoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
+      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
+
+      if (ffContactGroup.controls['contactRelationshipCode']?.value === 'O') {
+        ffContactGroup.controls['otherDesc'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+        ffContactGroup.controls['otherDesc'].updateValueAndValidity();
+      }
+    }
+  }
+
+  private setAddressValidation(){
     const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
     const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
-    const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
-    const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
-    const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
-    const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
-    const emailGroup = this.contactInfoForm.get('email') as FormGroup;
-    const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
     mailingAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
     mailingAddressGroup.controls['address1'].updateValueAndValidity();
     mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+$')]);
@@ -434,8 +457,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     homeAddressGroup.controls['state'].updateValueAndValidity();
     this.isHomeAddressStateOregon$.next(homeAddressGroup.controls['state']?.value === StatesInUSA.Oregon);
     homeAddressGroup.controls['county'].setValidators([Validators.required]);
-    homeAddressGroup.controls['county'].updateValueAndValidity();    
+    homeAddressGroup.controls['county'].updateValueAndValidity();
+  }
 
+  private setPhoneEmailValidation(){
+    const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
+    const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
+    const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
+    const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
+    const emailGroup = this.contactInfoForm.get('email') as FormGroup;
     if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
       homePhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
       homePhoneGroup.controls['phoneNbr'].updateValueAndValidity();
@@ -466,7 +496,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
+    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) {
       emailGroup.controls['email'].setValidators([Validators.required, Validators.email]);
       emailGroup.controls['email'].updateValueAndValidity();
     }
@@ -474,20 +504,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.preferredContactMethods.length > 0) {
       this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(Validators.required);
       this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
-    }
-    
-    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
-      ffContactGroup.controls['contactName'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]);
-      ffContactGroup.controls['contactName'].updateValueAndValidity();
-      ffContactGroup.controls['contactRelationshipCode'].setValidators([Validators.required]);
-      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
-      ffContactGroup.controls['contactPhoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
-      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
-
-      if (ffContactGroup.controls['contactRelationshipCode']?.value === 'O') {
-        ffContactGroup.controls['otherDesc'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
-        ffContactGroup.controls['otherDesc'].updateValueAndValidity();
-      }
     }
   }
 
@@ -568,9 +584,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
           this.workflowFacade.navigate(navigationType);
         }
-        else{
+        else {
           this.workflowFacade.enableSaveButton();
-        } 
+        }
       },
       error: (err) => {
         this.loaderService.hide();
@@ -593,7 +609,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return of(false);
   }
 
-  validateMailingAddress(isNoPopup:boolean = false) {
+  validateMailingAddress(isNoPopup: boolean = false) {
     if (this.isNoMailAddressValidationRequired) return;
     const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
     const changedMailingAddress: MailAddress = {
@@ -601,13 +617,13 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       address2: mailingAddressGroup?.controls['address2']?.value ?? '',
       city: mailingAddressGroup?.controls['city']?.value ?? '',
       state: mailingAddressGroup?.controls['state']?.value ?? '',
-      zip5: mailingAddressGroup?.controls['zip']?.value ?? ''      
+      zip5: mailingAddressGroup?.controls['zip']?.value ?? ''
     }
 
     const isValid = mailingAddressGroup?.controls['address1']?.valid && (mailingAddressGroup?.controls['address1']?.value !== '' && mailingAddressGroup?.controls['address1']?.value !== null)
-                    && mailingAddressGroup?.controls['city']?.valid && (mailingAddressGroup?.controls['city']?.value !== '' && mailingAddressGroup?.controls['city']?.value !== null)
-                    && mailingAddressGroup?.controls['state']?.valid && (mailingAddressGroup?.controls['state']?.value !== '' && mailingAddressGroup?.controls['state']?.value !== null)
-                    && mailingAddressGroup?.controls['zip']?.valid && (mailingAddressGroup?.controls['zip']?.value !== '' && mailingAddressGroup?.controls['zip']?.value !== null)
+      && mailingAddressGroup?.controls['city']?.valid && (mailingAddressGroup?.controls['city']?.value !== '' && mailingAddressGroup?.controls['city']?.value !== null)
+      && mailingAddressGroup?.controls['state']?.valid && (mailingAddressGroup?.controls['state']?.value !== '' && mailingAddressGroup?.controls['state']?.value !== null)
+      && mailingAddressGroup?.controls['zip']?.valid && (mailingAddressGroup?.controls['zip']?.value !== '' && mailingAddressGroup?.controls['zip']?.value !== null)
 
     if (!isValid) return;
     if (this.mailAddressEntered && !isNoPopup) {
@@ -618,11 +634,16 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         && this.mailAddressEntered.zip5 === changedMailingAddress?.zip5) {
         return;
       }
-    } 
+    }
     this.mailAddressEntered = changedMailingAddress;
     this.showMailAddressValidationLoader$.next(true);
+    this.uspsMailingAddressValidation(isNoPopup, changedMailingAddress);
+
+  }
+
+  private uspsMailingAddressValidation(isNoPopup: boolean, changedMailingAddress: MailAddress){
     this.addressValidationFacade.validate(changedMailingAddress).subscribe({
-      next:(validationResp: AddressValidation | null)=>{
+      next: (validationResp: AddressValidation | null) => {
         this.showMailAddressValidationLoader$.next(false);
         if (validationResp?.isValid ?? false) {
           this.mailAddressSuggested = validationResp?.address;
@@ -631,11 +652,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         else {
           this.mailingAddressIsNotValid = true;
         }
-        if(isNoPopup === false){
+        if (isNoPopup === false) {
           this.mailAddressValidationPopupVisibility$.next(true);
         }
       },
-      error:(err:any)=>{
+      error: (err: any) => {
         this.showMailAddressValidationLoader$.next(false);
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
@@ -643,7 +664,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-  validateHomeAddress(isNoPopup:boolean = false) {
+  validateHomeAddress(isNoPopup: boolean = false) {
     if (this.isNoMailAddressValidationRequired) return;
     const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
     const changedMailingAddress: MailAddress = {
@@ -651,13 +672,13 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       address2: homeAddressGroup?.controls['address2']?.value ?? '',
       city: homeAddressGroup?.controls['city']?.value ?? '',
       state: homeAddressGroup?.controls['state']?.value ?? '',
-      zip5: homeAddressGroup?.controls['zip']?.value ?? ''      
+      zip5: homeAddressGroup?.controls['zip']?.value ?? ''
     }
 
     const isValid = homeAddressGroup?.controls['address1']?.valid && (changedMailingAddress?.address1 !== '' && changedMailingAddress?.address1 !== null)
-                    && homeAddressGroup?.controls['city']?.valid && (changedMailingAddress?.city !== '' && changedMailingAddress?.city !== null)
-                    && (changedMailingAddress?.state !== '' && changedMailingAddress?.state !== null)
-                    && homeAddressGroup?.controls['zip']?.valid && (changedMailingAddress?.zip5 !== '' && changedMailingAddress?.zip5 !== null)
+      && homeAddressGroup?.controls['city']?.valid && (changedMailingAddress?.city !== '' && changedMailingAddress?.city !== null)
+      && (changedMailingAddress?.state !== '' && changedMailingAddress?.state !== null)
+      && homeAddressGroup?.controls['zip']?.valid && (changedMailingAddress?.zip5 !== '' && changedMailingAddress?.zip5 !== null)
 
     if (!isValid) return;
     if (this.homeAddressEntered && !isNoPopup) {
@@ -671,8 +692,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.homeAddressEntered = changedMailingAddress;
     this.showHomeAddressValidationLoader$.next(true);
-    this.addressValidationFacade.validate(changedMailingAddress).subscribe({
-      next:(validationResp: AddressValidation | null)=>{
+    this.uspsHomeAddressValidation(isNoPopup, changedMailingAddress);
+  }
+
+  private uspsHomeAddressValidation(isNoPopup: boolean, changedHomeAddress: MailAddress){
+    this.addressValidationFacade.validate(changedHomeAddress).subscribe({
+      next: (validationResp: AddressValidation | null) => {
         this.showHomeAddressValidationLoader$.next(false);
         if (validationResp?.isValid ?? false) {
           this.homeAddressSuggested = validationResp?.address;
@@ -681,11 +706,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         else {
           this.homeAddressIsNotValid = true;
         }
-        if(isNoPopup === false){
+        if (isNoPopup === false) {
           this.homeAddressValidationPopupVisibility$.next(true);
         }
       },
-      error:(err:any)=>{
+      error: (err: any) => {
         this.showHomeAddressValidationLoader$.next(false);
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
@@ -855,13 +880,16 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     else if (preferredContactCode === email?.email) {
       email.preferredFlag = StatusFlag.Yes;
     }
+    
+    return this.saveContact(this.workflowFacade.clientId, this.workflowFacade.clientCaseEligibilityId , contactInfoData);   
+  }
 
-
+  private saveContact(clientId: number | undefined, clientCaseEligibilityId: string | undefined, contactInfo: ContactInfo){
     if (this.isEdit) {
-      return this.updateContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', contactInfoData);
+      return this.updateContactInfo(clientId ?? 0, clientCaseEligibilityId ?? '', contactInfo);
     }
 
-    return this.contactFacade.createContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '', contactInfoData);
+    return this.contactFacade.createContactInfo(clientId ?? 0, clientCaseEligibilityId ?? '', contactInfo);
   }
 
   private updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfoData: ContactInfo) {
@@ -880,7 +908,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (data) {
           this.isEdit = (data?.address && data?.address?.length > 0 && data?.phone && data?.phone?.length > 0) ?? false;
           this.contactInfo = data;
-          if(isFormFillRequired){
+          if (isFormFillRequired) {
             this.setFormValues();
           }
           if (!this.isEdit) {
@@ -901,18 +929,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isNoMailAddressValidationRequired = true;
       const homeAddress = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
       const mailingAddress = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
-      const homePhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
-      const cellPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
-      const workPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
-      const otherPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+
       if (mailingAddress) {
         this.contactInfoForm.get('mailingAddress')?.patchValue(mailingAddress);
         this.mailAddressEntered = {
-          address1:mailingAddress?.address1,
-          address2:mailingAddress?.address2,
-          city:mailingAddress?.city,
-          state:mailingAddress?.state,
-          zip5:mailingAddress?.zip
+          address1: mailingAddress?.address1,
+          address2: mailingAddress?.address2,
+          city: mailingAddress?.city,
+          state: mailingAddress?.state,
+          zip5: mailingAddress?.zip
         };
       }
 
@@ -928,76 +953,32 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressProofFlag === StatusFlag.Yes);
         this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.patchValue(this.contactInfo?.clientCaseEligibility?.housingStabilityCode);
         this.homeAddressEntered = {
-          address1:homeAddress?.address1,
-          address2:homeAddress?.address2,
-          city:homeAddress?.city,
-          state:homeAddress?.state,
-          zip5:homeAddress?.zip
+          address1: homeAddress?.address1,
+          address2: homeAddress?.address2,
+          city: homeAddress?.city,
+          state: homeAddress?.state,
+          zip5: homeAddress?.zip
         };
       }
-
-
-      if (homePhone) {
-        this.contactInfoForm.get('homePhone.phoneNbr')?.patchValue(homePhone?.phoneNbr);
-        this.contactInfoForm?.get('homePhone.applicableFlag')?.patchValue(homePhone?.applicableFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.patchValue(homePhone?.detailMsgConsentFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.patchValue(homePhone?.smsTextConsentFlag === StatusFlag.Yes);
-      }
-
-      if (cellPhone) {
-        this.contactInfoForm.get('cellPhone.phoneNbr')?.patchValue(cellPhone?.phoneNbr);
-        this.contactInfoForm?.get('cellPhone.applicableFlag')?.patchValue(cellPhone?.applicableFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.patchValue(cellPhone?.detailMsgConsentFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.patchValue(cellPhone?.smsTextConsentFlag === StatusFlag.Yes);
-      }
-
-      if (workPhone) {
-        this.contactInfoForm.get('workPhone.phoneNbr')?.patchValue(workPhone?.phoneNbr);
-        this.contactInfoForm?.get('workPhone.applicableFlag')?.patchValue(workPhone?.applicableFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.patchValue(workPhone?.detailMsgConsentFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.patchValue(workPhone?.smsTextConsentFlag === StatusFlag.Yes);
-      }
-
-      if (otherPhone) {
-        this.contactInfoForm.get('otherPhone.phoneNbr')?.patchValue(otherPhone?.phoneNbr);
-        this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.patchValue(otherPhone?.otherPhoneNote);
-        if(otherPhone?.phoneNbr){
-          this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
-        }
-        this.contactInfoForm?.get('otherPhone.applicableFlag')?.patchValue(otherPhone?.applicableFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.patchValue(otherPhone?.detailMsgConsentFlag === StatusFlag.Yes);
-        this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.patchValue(otherPhone?.smsTextConsentFlag === StatusFlag.Yes);
-      }
-
-
-      this.contactInfoForm.get('email.email')?.patchValue(this.contactInfo?.email?.email);
-      this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('email.detailMsgFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('email.paperlessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes);
-      this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
-        homePhone,
-        cellPhone,
-        workPhone,
-        otherPhone,
-        this.contactInfo?.email);
+      this.setPhoneEmailContact();
 
 
       this.contactInfoForm.get('familyAndFriendsContact')?.patchValue(this.contactInfo?.friendsOrFamilyContact);
       this.contactInfoForm.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.patchValue(this.contactInfo?.friendsOrFamilyContact?.noFriendOrFamilyContactFlag === StatusFlag.Yes);
-      if(this.contactInfo?.homeAddressProof?.documentName){
-      this.homeAddressProofFile = [
-        {
-          name: this.contactInfo?.homeAddressProof?.documentName,
-          size: this.contactInfo?.homeAddressProof?.documentSize,
-          src: this.contactInfo?.homeAddressProof?.documentPath,
-          uid: this.contactInfo?.homeAddressProof?.documentId,
-          documentId: this.contactInfo?.homeAddressProof?.documentId,
-        },
-      ];
-    }
-    else{
-      this.homeAddressProofFile=[];
-    }    
+      if (this.contactInfo?.homeAddressProof?.documentName) {
+        this.homeAddressProofFile = [
+          {
+            name: this.contactInfo?.homeAddressProof?.documentName,
+            size: this.contactInfo?.homeAddressProof?.documentSize,
+            src: this.contactInfo?.homeAddressProof?.documentPath,
+            uid: this.contactInfo?.homeAddressProof?.documentId,
+            documentId: this.contactInfo?.homeAddressProof?.documentId,
+          },
+        ];
+      }
+      else {
+        this.homeAddressProofFile = [];
+      }
       this.loadPreferredContactMethod();
       this.loaderService.hide();
       this.isNoMailAddressValidationRequired = false;
@@ -1007,9 +988,60 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.adjustAttributeInit(!this.isEdit);
   }
 
+  private setPhoneEmailContact(){
+    const homePhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
+    const cellPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
+    const workPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
+    const otherPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+    if (homePhone) {
+      this.contactInfoForm.get('homePhone.phoneNbr')?.patchValue(homePhone?.phoneNbr);
+      this.contactInfoForm?.get('homePhone.applicableFlag')?.patchValue(homePhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.patchValue(homePhone?.detailMsgConsentFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.patchValue(homePhone?.smsTextConsentFlag === StatusFlag.Yes);
+    }
+
+    if (cellPhone) {
+      this.contactInfoForm.get('cellPhone.phoneNbr')?.patchValue(cellPhone?.phoneNbr);
+      this.contactInfoForm?.get('cellPhone.applicableFlag')?.patchValue(cellPhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.patchValue(cellPhone?.detailMsgConsentFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.patchValue(cellPhone?.smsTextConsentFlag === StatusFlag.Yes);
+    }
+
+    if (workPhone) {
+      this.contactInfoForm.get('workPhone.phoneNbr')?.patchValue(workPhone?.phoneNbr);
+      this.contactInfoForm?.get('workPhone.applicableFlag')?.patchValue(workPhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.patchValue(workPhone?.detailMsgConsentFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.patchValue(workPhone?.smsTextConsentFlag === StatusFlag.Yes);
+    }
+
+    if (otherPhone) {
+      this.contactInfoForm.get('otherPhone.phoneNbr')?.patchValue(otherPhone?.phoneNbr);
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.patchValue(otherPhone?.otherPhoneNote);
+      if (otherPhone?.phoneNbr) {
+        this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
+      }
+      this.contactInfoForm?.get('otherPhone.applicableFlag')?.patchValue(otherPhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.patchValue(otherPhone?.detailMsgConsentFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.patchValue(otherPhone?.smsTextConsentFlag === StatusFlag.Yes);
+    }
+
+
+    this.contactInfoForm.get('email.email')?.patchValue(this.contactInfo?.email?.email);
+    this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes);
+    this.contactInfoForm?.get('email.detailMsgFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
+    this.contactInfoForm?.get('email.paperlessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes);
+    this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
+      homePhone,
+      cellPhone,
+      workPhone,
+      otherPhone,
+      this.contactInfo?.email);
+
+  }
+
   private addMailingAddressChangeSubscription() {
     (this.contactInfoForm.get('mailingAddress') as FormGroup).valueChanges
-      .subscribe(() => {      
+      .subscribe(() => {
         if ((this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false) === true) {
           this.setSameAsMailingAddressFlagChanges(true);
         }
@@ -1081,11 +1113,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isNoProofOfHomeChecked = isChecked;
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
-      this.showAddressProofSizeValidation= false;
-      var removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
+      this.showAddressProofSizeValidation = false;
+      const removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
       removeButton[0]?.click();
-    }    
-    this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);    
+    }
+    this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
 
   private setVisibilityByHomePhoneNotApplicable(isChecked: boolean) {
@@ -1179,7 +1211,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (selectedValue === 'O') {
       this.showRelationshipOtherDec = true;
-      otherDesc.status = StatusFlag.Yes;      
+      otherDesc.status = StatusFlag.Yes;
     }
     else {
       this.showRelationshipOtherDec = false;
@@ -1256,7 +1288,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   private setSameAsMailingAddressFlagChanges(value: boolean) {
-    this.isNoMailAddressValidationRequired =true;
+    this.isNoMailAddressValidationRequired = true;
     const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
     if (value) {
       const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
@@ -1289,7 +1321,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       homeAddressGroup?.controls['state']?.setValue(StatesInUSA.Oregon);
       this.isHomeAddressStateOregon$.next(true);
     }
-    this.isNoMailAddressValidationRequired =false;
+    this.isNoMailAddressValidationRequired = false;
   }
 
   private setHomeAddress(address: ClientAddress) {
@@ -1315,7 +1347,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private updatePreferredContactCount(isCompleted: boolean) {
     const data: CompletionChecklist[] = [{
-      dataPointName: 'preferredContactMethod_applicableFlag',  
+      dataPointName: 'preferredContactMethod_applicableFlag',
       status: isCompleted ? StatusFlag.Yes : StatusFlag.No
     }];
 
@@ -1458,7 +1490,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     return (this.contactInfoForm.get('mailingAddress') as FormGroup).controls as any;
   }
 
-private addSaveForLaterSubscription(): void {
+  private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
@@ -1483,14 +1515,14 @@ private addSaveForLaterSubscription(): void {
     });
   }
 
-  checkValidations(){
+  checkValidations() {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined)
-    if(isAddressProofRequired){
+    if (isAddressProofRequired) {
       this.showAddressProofRequiredValidation = true;
     }
-    if(this.contactInfoForm.valid && !this.showAddressProofRequiredValidation){
+    if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation) {
       return true;
     }
     return false;
@@ -1498,22 +1530,18 @@ private addSaveForLaterSubscription(): void {
 
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
-     if(response){
-      this.contactInfoForm.reset();
-      this.removeValidators();
-      this.loadContactInfo();
-     }
+      if (response) {
+        this.contactInfoForm.reset();
+        this.removeValidators();
+        this.loadContactInfo();
+      }
     });
   }
 
   public removeValidators() {
     const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
     const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
-    const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
-    const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
-    const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
-    const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
-    const emailGroup = this.contactInfoForm.get('email') as FormGroup;
+
     const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
     mailingAddressGroup.controls['address1'].setValidators(null);
     mailingAddressGroup.controls['address1'].updateValueAndValidity();
@@ -1544,8 +1572,31 @@ private addSaveForLaterSubscription(): void {
     homeAddressGroup.controls['state'].updateValueAndValidity();
     this.isHomeAddressStateOregon$.next(homeAddressGroup.controls['state']?.value === StatesInUSA.Oregon);
     homeAddressGroup.controls['county'].setValidators(null);
-    homeAddressGroup.controls['county'].updateValueAndValidity();    
+    homeAddressGroup.controls['county'].updateValueAndValidity();
 
+   
+    this.removePhoneEmailValidation();
+    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
+      ffContactGroup.controls['contactName'].setValidators(null);
+      ffContactGroup.controls['contactName'].updateValueAndValidity();
+      ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
+      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
+      ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
+      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
+
+      if (ffContactGroup.controls['contactRelationshipCode']?.value === 'O') {
+        ffContactGroup.controls['otherDesc'].setValidators(null);
+        ffContactGroup.controls['otherDesc'].updateValueAndValidity();
+      }
+    }
+  }
+
+  private removePhoneEmailValidation(){
+    const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
+    const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
+    const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
+    const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
+    const emailGroup = this.contactInfoForm.get('email') as FormGroup;
     if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false) {
       homePhoneGroup.controls['phoneNbr'].setValidators(null);
       homePhoneGroup.controls['phoneNbr'].updateValueAndValidity();
@@ -1576,7 +1627,7 @@ private addSaveForLaterSubscription(): void {
       }
     }
 
-    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) { 
+    if ((emailGroup.controls['applicableFlag']?.value ?? false) === false) {
       emailGroup.controls['email'].setValidators(null);
       emailGroup.controls['email'].updateValueAndValidity();
     }
@@ -1585,19 +1636,12 @@ private addSaveForLaterSubscription(): void {
       this.contactInfoForm?.get('email.preferredContactMethod')?.setValidators(null);
       this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
     }
-    
-    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
-      ffContactGroup.controls['contactName'].setValidators(null);
-      ffContactGroup.controls['contactName'].updateValueAndValidity();
-      ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
-      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
-      ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
-      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
-
-      if (ffContactGroup.controls['contactRelationshipCode']?.value === 'O') {
-        ffContactGroup.controls['otherDesc'].setValidators(null);
-        ffContactGroup.controls['otherDesc'].updateValueAndValidity();
-      }
+  }
+  
+  removePhoneNumberValidation(phoneType: string){
+    if(this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.hasValidator){
+    this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
+    this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
     }
   }
 }

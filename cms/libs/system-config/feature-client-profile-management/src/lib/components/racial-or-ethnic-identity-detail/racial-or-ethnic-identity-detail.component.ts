@@ -3,7 +3,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-racial-or-ethnic-identity-detail',
   templateUrl: './racial-or-ethnic-identity-detail.component.html',
-  styleUrls: ['./racial-or-ethnic-identity-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

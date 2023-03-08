@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { ManagementFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -7,7 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-viral-load',
   templateUrl: './viral-load.component.html',
-  styleUrls: ['./viral-load.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViralLoadComponent {

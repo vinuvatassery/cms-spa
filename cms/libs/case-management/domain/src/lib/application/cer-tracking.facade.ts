@@ -1,7 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 /** External libraries **/
@@ -10,7 +9,6 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Cer } from '../entities/cer';
 /** Data services **/
 import { CerDataService } from '../infrastructure/cer.data.service';
-import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 @Injectable({ providedIn: 'root' })
 export class CerTrackingFacade {

@@ -13,6 +13,5 @@ export * from './lib/components/ps-mfr-zip-list/ps-mfr-zip-list.component';
 export * from './lib/components/service-provider-list/service-provider-list.component';
 export * from './lib/components/income-inclusions-exclusions-detail/income-inclusions-exclusions-detail.component';
 export * from './lib/components/region-assignment-detail/region-assignment-detail.component';
-//export * from './lib/components/ps-fmr-zip-detail/ps-fmr-zip-detail.component';
 export * from './lib/components/service-provider-detail/service-provider-detail.component';
 export * from './lib/components/housing-acuity-level-detail/housing-acuity-level-detail.component';
