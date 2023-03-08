@@ -22,10 +22,10 @@
   </kendo-popover>
 
   <!-- Main Title Section -->
-  <section class="app-l-mainTittle">
+  <section class="app-l-mainTittle" *ngIf="loadedClientHeader?.clientFullName">
     <h2 class="title-md">
-      Donna Summer
-      <span class="normal-text text-muted pl-1">(Donny Summer)</span>
+      {{loadedClientHeader?.clientFullName}}
+      <span class="normal-text text-muted pl-1">({{loadedClientHeader?.clientOfficialIdFullName}})</span>
       <span
         class="title-star-icon icon-filled"
         kendoPopoverAnchor
@@ -41,31 +41,31 @@
           >star</span
         >
       </span>
-      <span class="client-pronouns text-muted">She/Her/Hers</span>
+      <span class="client-pronouns text-muted">{{loadedClientHeader?.pronouns}}</span>
     </h2>
     <div class="title-client-info-block">
-      <span class="title-client-info">ID 200923</span>
-      <span class="title-client-info">CASE ID 3456</span>
-      <span class="title-client-info">URN225522</span>
+      <span class="title-client-info">ID {{loadedClientHeader?.clientId}}</span>
+      <span class="title-client-info">CASE ID {{loadedClientHeader?.clientCaseIdentity}}</span>
+      <span class="title-client-info">URN {{loadedClientHeader?.urn}}</span>
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Start New Status Period"
         (click)="onStatusPeriodDetailClicked()"
-        >ACCEPT</span
+        >{{loadedClientHeader?.caseStatus}}</span
       >
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Change Group"
         (click)="onGroupDetailClicked()"
-        >GROUP 2</span
+        >GROUP {{loadedClientHeader?.group}}</span
       >
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Edit Status Period Dates"
         (click)="onStatusPeriodDetailClicked()"
-        >06-01-2020 - 12-31-2020</span
+        >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eilgibilityEndDate}}</span
       >
-      <span class="title-client-info">FPL 153%</span>
+      <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}%</span>
     </div>
   </section>
 

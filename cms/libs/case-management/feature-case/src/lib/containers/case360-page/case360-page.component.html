@@ -34,7 +34,7 @@
 
   <!-- Case Details Tab Sections -->
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
-    <kendo-tabstrip-tab title="Client" [selected]="true">
+    <kendo-tabstrip-tab title="Client" [selected]="clientInfoVisible$ | async">
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Client Info" [selected]="true">

@@ -233,7 +233,8 @@ private getQueryParams()
           fpl:clientHeaderData?.fpl,
           clientFullName: clientHeaderData?.clientFullName,       
           pronouns:  clientHeaderData?.pronouns,
-          clientCaseIdentity : clientHeaderData?.clientCaseIdentity
+          clientCaseIdentity : clientHeaderData?.clientCaseIdentity,
+          clientOfficialIdFullName : clientHeaderData?.clientOfficialIdFullName
          }
          
          this.clientHeaderSubject.next(clientHeader);
