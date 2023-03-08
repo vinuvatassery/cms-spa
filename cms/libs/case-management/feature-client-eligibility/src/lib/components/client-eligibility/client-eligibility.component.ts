@@ -171,7 +171,7 @@ export class ClientEligibilityComponent implements OnInit {
   }
   loadDocumentsAndEligibility() {
     let documents = this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId);
-    let eligibility = this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId, this.clientId);
+    let eligibility = this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId, this.clientId,this.clientCaseId);
     this.loaderService.show();
     forkJoin([documents, eligibility]).subscribe(
       (results: any) => {

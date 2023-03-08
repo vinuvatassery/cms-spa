@@ -92,7 +92,7 @@ export class AcceptApplicationComponent implements OnInit {
       this.populateEligibility();
       this.loaderService.show();
       this.btnDisabled = true
-    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication).subscribe({
+    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId).subscribe({
       next: (data) => {
         if(!this.isEdit)
         {
