@@ -6,8 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
   templateUrl: './co-pays-and-deductibles-list.component.html',
-  styleUrls: ['./co-pays-and-deductibles-list.component.scss'],
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoPaysAndDeductiblesListComponent implements OnInit {

@@ -19,7 +19,6 @@ export class ReminderListComponent {
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
   isShowReminderDetailsModal = false;
-  // reminderActions: Array<any> = [{}];
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
 
   public reminderActions = [
@@ -36,19 +35,8 @@ export class ReminderListComponent {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-      //  this.onSendNewEmailClicked()
       },
     },
-    // {
-    //   buttonType:"btn-h-danger",
-    //   text: "Delete",
-    //   icon: "delete",
-    //   click: (): void => {
-    //   //  this.onNewSMSTextClicked()
-    //   },
-    // },
-    
- 
   ];
 
   /** Internal event methods **/

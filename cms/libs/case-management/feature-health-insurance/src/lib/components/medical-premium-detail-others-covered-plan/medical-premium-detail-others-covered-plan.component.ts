@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { FamilyAndDependentFacade, StatusFlag } from '@cms/case-management/domain';
+import { FamilyAndDependentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-medical-premium-detail-others-covered-plan',
   templateUrl: './medical-premium-detail-others-covered-plan.component.html',
-  styleUrls: ['./medical-premium-detail-others-covered-plan.component.scss'],
 })
 export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;

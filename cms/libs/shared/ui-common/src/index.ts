@@ -28,6 +28,7 @@ export * from './lib/pipes/phone.pipe';
 
 /** Directives **/
 export * from './lib/directives/kendo-componentsforaccessanility.directive';
+export * from './lib/directives/kendo-file-upload-accessibility.directive';
 
 /** Enums **/
 export * from './lib/enums/yes-no-flag-enum';

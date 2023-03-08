@@ -4,9 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { PriorityCode } from '../enums/priority-code.enum';
 import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
-import { PharmacyPriority } from '../entities/pharmacy-priority';
 @Injectable({ providedIn: 'root' })
 export class DrugDataService {
   /** Constructor**/

@@ -8,16 +8,15 @@ import {
   Output,
   OnChanges,
 } from '@angular/core';
-/** Enums **/
-import { ScreenType } from '@cms/case-management/domain';
-/** Facades **/
-import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+/** External Libraries **/
 import { State } from '@progress/kendo-data-query';
+/** Internal Libraries **/
+import { ClientEmployer, EmploymentFacade, ScreenType } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
-  styleUrls: ['./employer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerListComponent implements OnInit, OnChanges {

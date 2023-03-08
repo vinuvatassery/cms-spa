@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -10,7 +9,6 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-drugs-purchased-list',
   templateUrl: './drugs-purchased-list.component.html',
-  styleUrls: ['./drugs-purchased-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class DrugsPurchasedListComponent implements OnInit {
