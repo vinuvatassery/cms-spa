@@ -120,6 +120,7 @@ export class EmployerDetailComponent implements OnInit{
               if (this.isAdd) {
                 this.employmentFacade.createEmployer(this.employer).subscribe({
                   next: (response) => { 
+                    this.employmentFacade.employmentValidSubject.next(true);
                     this.addUpdateEmploymentEvent.next(response);  
                     this.closeModal.emit(true);
                     this.employmentFacade.hideLoader();
