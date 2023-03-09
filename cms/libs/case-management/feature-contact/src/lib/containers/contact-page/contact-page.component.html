@@ -437,7 +437,8 @@
               mask="(999) 000-0000" 
               formatPlaceholder="formatPattern"
               placeholder=" " 
-              (blur)="loadPreferredContactMethod()" 
+              (blur)="loadPreferredContactMethod()"
+              (valueChange)="removePhoneNumberValidation('homePhone')"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
@@ -511,6 +512,7 @@
               mask="(999) 000-0000" 
               placeholder="Cell Phone" 
               (blur)="loadPreferredContactMethod()" 
+              (valueChange)="removePhoneNumberValidation('cellPhone')"
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
@@ -585,6 +587,7 @@
                 mask="(999) 000-0000" 
                 placeholder="Work Phone" 
                 (blur)="loadPreferredContactMethod()" 
+                (valueChange)="removePhoneNumberValidation('workPhone')"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
@@ -660,6 +663,7 @@
                 mask="(999) 000-0000" 
                 placeholder="Other Phone" 
                 (blur)="loadPreferredContactMethod()" 
+                (valueChange)="removePhoneNumberValidation('otherPhone')"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">

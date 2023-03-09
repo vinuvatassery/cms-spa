@@ -1639,4 +1639,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('email.preferredContactMethod')?.updateValueAndValidity();
     }
   }
+  
+  removePhoneNumberValidation(phoneType: string){
+    if(this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.hasValidator){
+    this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
+    this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
+    }
+  }
 }
