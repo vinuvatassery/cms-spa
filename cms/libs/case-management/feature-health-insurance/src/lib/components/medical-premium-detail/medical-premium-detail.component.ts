@@ -314,8 +314,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
           healthInsurancePolicy.insuranceCarrierId as string
         );
       }
-      this.bindInsurance(healthInsurancePolicy);
+      
     }
+    this.bindInsurance(healthInsurancePolicy);
   }
 
   private bindPremiumDetails(healthInsurancePolicy: HealthInsurancePolicy) {
