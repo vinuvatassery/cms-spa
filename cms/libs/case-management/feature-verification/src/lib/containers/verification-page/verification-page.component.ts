@@ -4,6 +4,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } 
 import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-management/domain';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -13,15 +14,18 @@ import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-ma
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  hivVerificationForm!:FormGroup;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
-    private verificationFacade: VerificationFacade) { }
+    private verificationFacade: VerificationFacade,private formBuilder: FormBuilder) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
+    this.buildForm();
     this.addSaveSubscription();
   }
 
@@ -34,6 +38,14 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   } 
 
   /** Private Methods **/
+
+  private buildForm() {
+    this.hivVerificationForm = this.formBuilder.group({
+      providerEmailAddress: ['', [Validators.required, Validators.email]],
+      providerOption:['']
+    });
+
+  }
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       //tap(() => this.workflowFacade.disableSaveButton()), TODO: uncomment while completing this page. This will prevent multiple clicks on save & continue button. 

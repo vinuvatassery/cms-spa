@@ -1,3 +1,4 @@
+<form [formGroup]="hivVerificationForm" *ngIf="hivVerificationForm">
 <div class="client-data-block">
   <h3>HIV Verification</h3>
   <section>
@@ -9,18 +10,16 @@
         <input
           type="radio"
           kendoRadioButton
-          name="verificationMethod"
+          name="providerOption"
           value="Request from Case Manager"
           aria-labelledby="RequestfromCaseManager"
-          [(ngModel)]="rdoVerificationMethod"
+          formControlName="providerOption"
           [disabled]="
             rdoVerificationMethod ===
-              'Request from Healthcare Provider via email' ||
-            rdoVerificationMethod === 'Upload an attachment'
-          "
-          
-          id="RequestfromCaseManager"
-          
+              'Request from Healthcare Provider' ||
+            rdoVerificationMethod === 'Upload an attachment'"          
+          id="RequestfromCaseManager"      
+          (change)="providerChange($event)"
         />
         <kendo-label
           class="k-radio-label"
@@ -28,21 +27,21 @@
           for="RequestfromCaseManager"
         ></kendo-label>
       </span>
-
       <span class="app-radiobtnwidtext-wrapper">
         <input
           type="radio"
           kendoRadioButton
-          name="verificationMethod"
-          value="Request from Healthcare Provider via email"
-          [(ngModel)]="rdoVerificationMethod"
+          name="providerOption"
+          value="Request from Healthcare Provider"
           aria-labelledby="fromHealthcareProviderviaemail"
           id="fromHealthcareProviderviaemail"
+          formControlName="providerOption"
+          (change)="providerChange($event)"
           
         />
         <kendo-label
           class="k-radio-label"
-          text="Request from Healthcare Provider via email"
+          text="Request from Healthcare Provider"
           for="fromHealthcareProviderviaemail"
         ></kendo-label>
       </span>
@@ -51,11 +50,12 @@
         <input
           type="radio"
           kendoRadioButton
-          name="verificationMethod"
+          name="providerOption"
           value="Upload an attachment"
-          [(ngModel)]="rdoVerificationMethod" 
           id="verificationMethodUploadanattachment"
           aria-labelledby="verificationMethodUploadanattachment"
+          formControlName="providerOption"
+          (change)="providerChange($event)"
         />
         <kendo-label
           class="k-radio-label"
@@ -66,9 +66,10 @@
     </div>
     </fieldset>
   </section>
-  <div *ngIf="rdoVerificationMethod">
+  <div >
     <case-management-hiv-verification-request
-      [data]="rdoVerificationMethod"
+      [hivVerificationForm]="hivVerificationForm"
     ></case-management-hiv-verification-request>
   </div>
 </div>
+</form>
