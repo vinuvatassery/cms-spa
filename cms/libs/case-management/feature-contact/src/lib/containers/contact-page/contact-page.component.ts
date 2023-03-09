@@ -314,6 +314,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private resetPreferredContact(preferredContact : string []){
     if (preferredContact?.length > 0) {
+      this.contactInfoForm?.get('email.preferredContactMethod')?.enable();
       const selectPreferredCode = this.contactInfoForm?.get('email.preferredContactMethod')?.value;
       if (selectPreferredCode && !this.preferredContactMethods?.includes(selectPreferredCode)) {
         this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
@@ -324,6 +325,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     else {
       this.contactInfoForm?.get('email.preferredContactMethod')?.removeValidators(Validators.required);
       this.contactInfoForm?.get('email.preferredContactMethod')?.reset();
+      this.contactInfoForm?.get('email.preferredContactMethod')?.disable();
       this.updatePreferredContactCount(false);
       this.showPreferredContactLoader = false;
     }
