@@ -254,7 +254,10 @@
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"
-  (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"></case-management-remove-income-confirmation>
+  (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [clientCaseId]="clientCaseId"></case-management-remove-income-confirmation>
 
 
 </kendo-dialog>

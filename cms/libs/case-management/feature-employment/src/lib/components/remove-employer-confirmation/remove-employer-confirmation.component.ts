@@ -12,35 +12,20 @@ import {  SnackBarNotificationType } from '@cms/shared/util-core';
 export class RemoveEmployerConfirmationComponent implements OnInit{
   /** Public properties **/
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
+  @Input() clientCaseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
+
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
   @Output() deleteUpdateEmploymentEvent = new EventEmitter<any>();
   sessionId!: string;
-  clientId: any;
-  clientCaseId : any;
-  clientCaseEligibilityId : any;
   btnDisabled = false;
   /** Constructor **/
   constructor(
-    private readonly employmentFacade: EmploymentFacade, 
-    private readonly router: Router,
-    private route: ActivatedRoute,
-    private workflowFacade: WorkflowFacade) { }
+    private readonly employmentFacade: EmploymentFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCase();
-  }
-
-  // loading case details like session id, eligibility id , clientid and clientcaseid
-  loadCase(){
-    this.sessionId = this.route.snapshot.queryParams['sid'];    
-    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-     this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-     .subscribe((session: any) => {      
-      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-      this.clientId =JSON.parse(session.sessionData).clientId   
-     });        
   }
   /** Internal event methods **/
 
