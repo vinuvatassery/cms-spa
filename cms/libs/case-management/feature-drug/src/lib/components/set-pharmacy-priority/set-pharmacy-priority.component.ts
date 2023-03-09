@@ -44,7 +44,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   pharmacyPriority$: Lov[] = [];
   sessionId: any = "";
-  clientId: any;
   clientPharmacyId: any;
   clientCaseId: any;
   pharmacyPriorityList: any;

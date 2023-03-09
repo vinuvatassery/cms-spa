@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
+  Input
 } from '@angular/core';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
