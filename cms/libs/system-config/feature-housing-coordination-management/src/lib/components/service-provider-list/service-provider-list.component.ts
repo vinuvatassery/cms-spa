@@ -39,7 +39,6 @@ export class ServiceProviderListComponent implements OnInit {
         text: "Duplicate",
         icon: "copy_all",
         click: (): void => {
-        //  this.onUserDeactivateClicked()
         },
       },
       {
@@ -47,7 +46,6 @@ export class ServiceProviderListComponent implements OnInit {
         text: "Deactivate",
         icon: "block",
         click: (): void => {
-       //  this.onPronounsDeactivateClicked()
         },
       },
       {
@@ -55,7 +53,6 @@ export class ServiceProviderListComponent implements OnInit {
         text: "Delete",
         icon: "delete",
         click: (): void => {
-        // this.onOpenDeleteTodoClicked()
         },
       }, 
       

@@ -3,7 +3,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-region-assignment-detail',
   templateUrl: './region-assignment-detail.component.html',
-  styleUrls: ['./region-assignment-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

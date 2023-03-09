@@ -1,19 +1,15 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef
 } from '@angular/core';
+/** External Libraries **/
 import { Subject } from 'rxjs/internal/Subject';
-/** Enums **/
-import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade } from '@cms/case-management/domain';
-/**  Facades **/
-import { IncomeFacade, Income, FamilyAndDependentFacade } from '@cms/case-management/domain';
-/** Entities **/
-import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
-
 import { State } from '@progress/kendo-data-query';
-
+/** Internal Libraries **/
+import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
+import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
-import { LoaderService,  LoggingService,  NotificationSnackbarService,  SnackBarNotificationType,} from '@cms/shared/util-core';
+import { LoaderService,  LoggingService,  SnackBarNotificationType,} from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -56,25 +52,20 @@ export class IncomeListComponent implements OnInit {
   isIncomeAvailable:boolean = true;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
-  // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
       buttonType:"btn-h-primary",
       text: "Attach from computer",
       id: "proofOfSchoolUploaded",
-      // icon: "edit",
       click: (event: any,dataItem: any): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
     {
       buttonType:"btn-h-primary",
       text: "Attach from client/'s attachments",
       id: "attachfromclient",
-      // icon: "star",
       click: (event: any,dataItem: any): void => {
-      //  this.onDeactivateEmailAddressClicked()
       },
     },
 
@@ -82,7 +73,6 @@ export class IncomeListComponent implements OnInit {
       buttonType:"btn-h-danger",
       text: "Remove file",
       id: "removefile",
-      // icon: "delete",
       click: (event: any,dataItem: any): void => {
       this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
       },
@@ -97,9 +87,6 @@ export class IncomeListComponent implements OnInit {
       text: "Edit Income",
         icon: "edit",
         type: 'edit',
-        // click: (): void => {
-        //   this.onIncomeClicked(true);
-        // },
     },
 
 
@@ -107,9 +94,6 @@ export class IncomeListComponent implements OnInit {
       buttonType:"btn-h-danger",
       text: "Delete Income",
       icon: "delete",
-      // click: (): void => {
-      // this.onDeleteEmployerDetailsClicked('john')
-      // },
       type: 'delete',
     },
 
@@ -145,12 +129,17 @@ export class IncomeListComponent implements OnInit {
   }
   /** Private methods **/
   private loadIncomes() {
-    this.incomeFacade.incomesResponse$.subscribe((incomeresponse:any)=>{
-      this.incomesTotal=incomeresponse;
-      this.cdr.detectChanges();
-    })
-    this.incomeFacade.HideLoader();
+    this.incomeFacade.incomesResponse$.subscribe({
+      next:(incomeResponse:any)=>{
+        this.incomesTotal=incomeResponse;
+        this.cdr.detectChanges();
+      },
+      error:(error: any) => {
+        this.loggingService.logException(error);
+      }
+    });
 
+    this.incomeFacade.HideLoader();
     this.incomes$.subscribe({
       next:(income:any) => {
         this.updateWorkFlowStatus(income?.total > 0);
@@ -297,21 +286,25 @@ onIncomeActionClicked(
   }
   viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
     this.loaderService.show()
-    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
-      const fileUrl = window.URL.createObjectURL(data);
-      if (type === 'download') {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = fileUrl;
-        downloadLink.download = documentName;
-        downloadLink.click();
-      } else {
-        window.open(fileUrl, "_blank");
+    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId)
+    .subscribe({
+      next: (data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (type === 'download') {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+        } else {
+          window.open(fileUrl, "_blank");
+        }
+        this.loaderService.hide();
+      }, 
+      error: (error) => {
+        this.loaderService.hide();
+        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
       }
-      this.loaderService.hide();
-    }, (error) => {
-      this.loaderService.hide();
-      this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
-    })
+    });
   }
 
   loadDependents(){

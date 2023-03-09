@@ -24,7 +24,6 @@ export class GenderListComponent implements OnInit {
      text: "Edit",
      icon: "edit",
      click: (): void => {
-       // this.onUserDetailsClicked(true);
      },
    },
    {
@@ -32,7 +31,6 @@ export class GenderListComponent implements OnInit {
      text: "Reorder",
      icon: "format_list_numbered",
      click: (): void => {
-     //  this.onUserDeactivateClicked()
      },
    },
    {
@@ -48,7 +46,6 @@ export class GenderListComponent implements OnInit {
      text: "Delete",
      icon: "delete",
      click: (): void => {
-     // this.onOpenDeleteTodoClicked()
      },
    },
    

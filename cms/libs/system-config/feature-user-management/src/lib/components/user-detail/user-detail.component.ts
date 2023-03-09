@@ -12,7 +12,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-user-detail',
   templateUrl: './user-detail.component.html',
-  styleUrls: ['./user-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserDetailComponent implements OnInit {

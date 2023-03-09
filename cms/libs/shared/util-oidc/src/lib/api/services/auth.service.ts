@@ -30,19 +30,16 @@ export class AuthService {
         if(this.authenticated){
           this.userProfileService.getUserProfile();
         }
-        //console.warn('authenticated: ', isAuthenticated);
       }
     );
 
     this.oidcSecurityService.userData$.subscribe(({ userData }) => {
       this.user = userData;
-      //console.warn('user: ', JSON.stringify(userData));
     });
 
     this.eventService
       .registerForEvents()
       .subscribe((result: OidcClientNotification<AuthStateResult>) => {
-        //console.warn('Event Received, ', JSON.stringify(result));
       });
 
     this.eventService
@@ -55,8 +52,6 @@ export class AuthService {
       )
       .subscribe((result) => {
         console.warn('Token Expired, ', JSON.stringify(result));
-        // if (result?.type === 4 && result?.value?.isAuthenticated === false)
-        //   this.logoffAndRevokeTokens();
       });
   }
 
@@ -89,7 +84,6 @@ export class AuthService {
 
   checkAuth() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
-      //console.warn('CheckAuth(): ' + JSON.stringify(isAuthenticated));
     });
   }
 }

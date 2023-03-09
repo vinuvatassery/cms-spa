@@ -107,7 +107,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       sortType : gridDataRefinerValue.sortType,
     }
 
-    if((this.isFamilyGridDisplay ?? false) == false)
+    if(!(this.isFamilyGridDisplay ?? false))
     {
       this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
     this.familyAndDependentFacade.loadDependents(this.clientId
@@ -139,7 +139,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved ]) => {
-      if (isSaved == true) {
+      if (isSaved) {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')
         this.checkBoxSubscription.unsubscribe();
         this.workflowFacade.navigate(navigationType);
@@ -182,12 +182,12 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   /** Internal event methods **/
   onNoFamilyMemberClicked() {
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;
-    this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.familyStatus = (this.isFamilyGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
     this.familyAndDependentFacade.updateDependentStatus
     (this.clientCaseEligibilityId,this.familyStatus).subscribe((isSaved) => {
-      if (isSaved == true) {
+      if (isSaved ?? false) {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')
-        if(this.isFamilyGridDisplay === true)
+        if(this.isFamilyGridDisplay ?? false)
         {
           this.updateWorkFlowStatus();
         }

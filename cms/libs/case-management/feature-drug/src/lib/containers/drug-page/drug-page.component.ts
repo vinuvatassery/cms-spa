@@ -1,15 +1,16 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoin, mergeMap, of, Subscription, tap, BehaviorSubject } from 'rxjs';
 /** Facades **/
 import { UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist, PrescriptionDrugDocument, ClientDocumentFacade, YesNoFlag } from '@cms/case-management/domain';
+import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade,
+   PrescriptionDrugFacade, PrescriptionDrug,
+    StatusFlag, CompletionChecklist,
+    NavigationType,
+    ClientDocumentFacade, YesNoFlag } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
-import { NavigationType } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { ActivatedRoute, Router } from '@angular/router';
 

@@ -1,6 +1,5 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -89,10 +88,6 @@ export class ManagementFacade {
         console.error('err', err);
       },
     });
-  }
- 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
-  }
+  } 
+
 }

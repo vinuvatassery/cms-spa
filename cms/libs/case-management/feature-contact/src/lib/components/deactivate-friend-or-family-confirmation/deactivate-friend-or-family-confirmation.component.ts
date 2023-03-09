@@ -6,7 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-deactivate-friend-or-family-confirmation',
   templateUrl: './deactivate-friend-or-family-confirmation.component.html',
-  styleUrls: ['./deactivate-friend-or-family-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeactivateFriendOrFamilyConfirmationComponent implements OnInit {

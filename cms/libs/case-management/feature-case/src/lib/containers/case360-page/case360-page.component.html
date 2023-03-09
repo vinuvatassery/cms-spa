@@ -28,61 +28,6 @@
           <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
           <label> {{ dataItem.text }} </label>
         </button>
-
-        <!-- <button
-          kendoButton
-          look="flat"
-          aria-label="New Letter"
-          (click)="onSendNewLetterClicked()"
-        >
-          <span
-            class="material-icons"
-            aria-label="New Letter"
-            aria-hidden="true"
-            >markunread_mailbox</span
-          >
-          New Letter
-        </button> -->
-        <!-- <button
-          kendoButton
-          look="flat"
-          aria-label="New Email"
-          (click)="onSendNewEmailClicked()"
-        >
-          <span class="material-icons" aria-label="New Email" aria-hidden="true"
-            >mail_outline</span
-          >
-          New Email
-        </button> -->
-        <!-- <button
-          kendoButton
-          look="flat"
-          aria-label="New SMS Text"
-          (click)="onNewSMSTextClicked()"
-        >
-          <span
-            class="material-icons"
-            aria-label="New SMS Text"
-            aria-hidden="true"
-            >comment</span
-          >
-          New SMS Text
-        </button> -->
-        <!-- <button
-          kendoButton
-          look="flat"
-          aria-label="New ID Card"
-          (click)="onIdCardClicked()"
-        >
-          <span
-            class="material-icons"
-            aria-label="New ID Card"
-            aria-hidden="true"
-            >call_to_action</span
-          >
-          New ID Card
-        </button> -->
-
       </ng-template>
     </kendo-dropdownbutton>
   </div>
@@ -90,7 +35,6 @@
   <!-- Case Details Tab Sections -->
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="true">
-      <!-- [selected]="clientInfoVisible$ | async" -->
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Client Info" [selected]="true">

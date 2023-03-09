@@ -4,7 +4,6 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 import { Observable, of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Income } from '../entities/income';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 
@@ -162,7 +161,7 @@ export class IncomeFacade {
   saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
 
     const formData: any = new FormData();
-    for (var key in clientIncome) {
+    for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
@@ -178,7 +177,7 @@ export class IncomeFacade {
   }
   editClientIncome(clientIncome:any, proofOfIncomeFile:any){
     const formData: any = new FormData();
-    for (var key in clientIncome) {
+    for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
