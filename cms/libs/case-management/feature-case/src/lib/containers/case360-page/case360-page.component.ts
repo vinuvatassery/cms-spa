@@ -202,7 +202,7 @@ private getQueryParams()
   loadReadOnlyClientInfoEventHandler()
   {
     
-    this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);
+    this.caseFacade.loadClientProfile(this.profileClientId);
     this.onClientProfileLoad()
   }
 
