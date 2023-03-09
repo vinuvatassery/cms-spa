@@ -50,12 +50,6 @@
               aria-label="profile avathar"
             >
               <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                <!-- <img
-                  src="../assets/images/avatar-1.png"
-                  alt="Profile Avatar"
-                  class="profile-avatar"
-                  hidden
-                /> -->
                 <span class="profile-text-avatar">AK</span>
               </div>
             </button>
@@ -86,55 +80,11 @@
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
-              <!-- <span
-                class="material-icons"
-                aria-label="actions"
-                aria-hidden="true"
-                role="menuitem"
-                >more_vert</span
-              > -->
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
                   <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
               </button>
-
-
-                <!-- <button
-                  kendoButton
-                  icon="edit"
-                  look="flat"
-                  class="btn-h-primary"
-                  (click)="onFriendOrFamilyDetailClicked(true)"
-                  aria-label="edit contact"
-                >
-                  Edit Contact
-                </button>
-                <button
-                  kendoButton
-                  look="flat"
-                  class="btn-h-primary"
-                  (click)="onDeactivateFriendOrFamilyClicked()"
-                  aria-label="deactivate contact"
-                >
-                  <span
-                    class="material-icons"
-                    aria-label="block"
-                    aria-hidden="true"
-                  >
-                    block
-                  </span>
-                  Deactivate Contact
-                </button>
-                <button
-                  kendoButton
-                  icon="delete"
-                  look="flat"
-                  class="btn-h-danger"
-                  aria-label="delete contact"
-                >
-                  Delete Contact
-                </button> -->
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>

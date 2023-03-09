@@ -6,7 +6,6 @@ import { ContactFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-friend-or-family-list',
   templateUrl: './friend-or-family-list.component.html',
-  styleUrls: ['./friend-or-family-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FriendOrFamilyListComponent implements OnInit {

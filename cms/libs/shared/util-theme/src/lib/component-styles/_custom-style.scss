@@ -584,4 +584,10 @@ display: inline-block;
           width: 100%;
       }  
   }
+  .template-list-wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 0px;
+    align-items: center;
+  }
 }

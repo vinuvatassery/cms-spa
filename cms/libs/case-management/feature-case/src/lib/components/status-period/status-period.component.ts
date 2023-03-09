@@ -55,9 +55,7 @@ export class StatusPeriodComponent implements OnInit {
       sort: this.sort,
     };
   }
-  ngOnChanges(): void {
- 
-  }
+
   /** Private methods **/
   private loadStatusPeriod() {
     this.statusPeriodFacade.loadStatusPeriod();

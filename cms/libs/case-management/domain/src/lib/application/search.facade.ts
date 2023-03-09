@@ -2,8 +2,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Entities **/
-import { Search } from '../entities/search';
 /** Data services **/
 import { SearchDataService } from '../infrastructure/search.data.service';
 import {  LoggingService, NotificationSnackbarService, SnackBarNotificationType,LoaderService, ConfigurationProvider } from '@cms/shared/util-core';

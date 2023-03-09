@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
-import { Observable, first } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { CompletionChecklist, HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
@@ -12,7 +12,6 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-list',
   templateUrl: './medical-premium-list.component.html',
-  styleUrls: ['./medical-premium-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
@@ -49,7 +48,6 @@ export class MedicalPremiumListComponent implements OnInit {
 
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
-  // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -59,7 +57,6 @@ export class MedicalPremiumListComponent implements OnInit {
       type: "Edit",
       click: (): void => {
         this.handleHealthInsuranceOpenClicked('edit');
-        // this.handleInsuranceType(dataItem.InsuranceType)
       },
     },
 
@@ -129,9 +126,10 @@ export class MedicalPremiumListComponent implements OnInit {
   onChangePriorityCloseClicked() {
     this.isOpenedChangePriorityModal = false;
     this.isTriggerPriorityPopup = false;
+  }
+  priorityAdded(){
     this.loadInsurancePolicies();
   }
-
   onChangePriorityOpenClicked() {
     this.isOpenedChangePriorityModal = true;
   }
@@ -146,7 +144,6 @@ export class MedicalPremiumListComponent implements OnInit {
 
   /** External event methods **/
   handleInsuranceType(dataItem: any) {
-    //this.insuranceType = insuranceType;
     this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
     this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);

@@ -14,7 +14,6 @@ import { LoaderService, LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-case-navigation',
   templateUrl: './case-navigation.component.html',
-  styleUrls: ['./case-navigation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseNavigationComponent implements OnInit {
@@ -55,7 +54,7 @@ export class CaseNavigationComponent implements OnInit {
       next: (routes: any) => {
         if (routes.length > 0) {
           this.routes = routes;
-          const maxSequenceNumber = this.routes.reduce((prev, curr) => prev = prev > curr.sequenceNbr ? prev : curr.sequenceNbr, 0);
+          const maxSequenceNumber = this.routes.reduce((prev, curr) => prev > curr.sequenceNbr ? prev : curr.sequenceNbr, 0);
           this.review = this.routes.filter((route: WorkFlowProgress) => route.sequenceNbr === maxSequenceNumber)[0];
           this.isNotReadyForReview = this.routes.findIndex((route: any) => route.visitedFlag == StatusFlag.No && route.sequenceNbr !== maxSequenceNumber) != -1;
           this.navigate(routes)
@@ -142,12 +141,10 @@ export class CaseNavigationComponent implements OnInit {
   /** Internal event methods **/
   onApplicationReviewClicked() {
     this.onRouteChange(this.review, true);
-    //this.isApplicationReviewOpened = true;
   }
 
   onApplicationReviewClosed() {
     this.onRouteChange(this.review, false, true);
-    //this.isApplicationReviewOpened = false;
   }
 
   onRouteChange(route: WorkFlowProgress, isReview: boolean = false, isReset: boolean = false) {

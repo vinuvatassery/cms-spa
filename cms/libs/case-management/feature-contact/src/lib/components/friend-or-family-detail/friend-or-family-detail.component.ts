@@ -11,7 +11,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-friend-or-family-detail',
   templateUrl: './friend-or-family-detail.component.html',
-  styleUrls: ['./friend-or-family-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FriendOrFamilyDetailComponent implements OnInit {

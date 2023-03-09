@@ -1,4 +1,3 @@
-<!-- <form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">    -->
   <form [formGroup]="existHealthProvderForm" (ngSubmit)="onExistHealthProvderSubmit()">   
   <input type="hidden" formControlName="providerId"> 
   <input type="hidden" formControlName="selectedProviderId"> 
@@ -31,14 +30,16 @@
             autofocusfield 
             valueField ="selectedCustomProvider"                           
             placeholder="Provider who treats their HIV"               
-            [filterable]="true"              
-            [popupSettings]="{popupClass: 'healthcaresearch-list', animate: true, appendTo:'component' }"
+            [filterable]="true"
+            [popupSettings]="{popupClass: 'healthcaresearch-list auto-complete-with-template', animate: true, appendTo:'component' }"
             (filterChange)="onsearchTextChange($event)"  
           >          
             <ng-template kendoAutoCompleteItemTemplate let-dataItem >   
-              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
-              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.clinicName }}</span>
-              <span class="pr-1" (click)="onSearchTemplateClick(dataItem)"> {{ dataItem.address }}</span>     
+              <div class="template-list-wrapper" (click)="onSearchTemplateClick(dataItem)"> 
+              <span class="pr-1" >{{ dataItem.fullName}}</span>
+              <span class="pr-1" > {{ dataItem.clinicName }}</span>
+              <span class="pr-1" > {{ dataItem.address }}</span>  
+            </div>   
             </ng-template>    
            
           </kendo-autocomplete>  

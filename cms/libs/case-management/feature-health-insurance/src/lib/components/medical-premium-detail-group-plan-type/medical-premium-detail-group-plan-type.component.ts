@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 @Component({
   selector: 'case-management-medical-premium-detail-group-plan-type',
   templateUrl: './medical-premium-detail-group-plan-type.component.html',
-  styleUrls: ['./medical-premium-detail-group-plan-type.component.scss'],
 })
 export class MedicalPremiumDetailGroupPlanTypeComponent{
   @Input() isViewContentEditable!: boolean;

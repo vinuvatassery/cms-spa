@@ -13,7 +13,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-template-picker',
   templateUrl: './template-picker.component.html',
-  styleUrls: ['./template-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplatePickerComponent implements OnInit {
