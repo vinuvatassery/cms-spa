@@ -35,15 +35,14 @@ export class NotificationSnackbarService {
           {
             errorData?.error?.errors?.forEach((item : any)=> {
               errorMessage += item?.errorMessage+' ';
-            });           
+            });    
+            
+            subtitleText = errorMessage
           }
           else
-          {
-             //exception plugin result DTO
-              errorMessage =  errorData?.error?.details == null ? errorData?.error?.message : errorData?.error?.details
-              errorMessage = errorMessage ? errorMessage: (errorData?.message ?? '');
-          }         
-          subtitleText = errorMessage ?? errorData?.name ;   
+          {            
+              subtitleText = errorBody?.error?.error?.message
+          } 
         }
 
         const snackbarMessage: any = {
