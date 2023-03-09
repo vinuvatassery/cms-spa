@@ -39,26 +39,28 @@ export class ClientDocumentFacade {
     }
 
     viewOrDownloadFile(eventType: string, clientDocumentId: string, documentName: string) {
-        if (clientDocumentId=== undefined || clientDocumentId === '') {
-            //this.snackbarService.errorSnackBar('clientDocumentId is required.');
+        if (clientDocumentId === undefined || clientDocumentId === '') {
             return;
         }
         this.loaderService.show()
-        this.getClientDocumentsViewDownload(clientDocumentId).subscribe((data: any) => {
+        this.getClientDocumentsViewDownload(clientDocumentId).subscribe({
+            next: (data: any) => {
 
-            const fileUrl = window.URL.createObjectURL(data);
-            if (eventType === 'view') {
-                window.open(fileUrl, "_blank");
-            } else {
-                const downloadLink = document.createElement('a');
-                downloadLink.href = fileUrl;
-                downloadLink.download = documentName;
-                downloadLink.click();
+                const fileUrl = window.URL.createObjectURL(data);
+                if (eventType === 'view') {
+                    window.open(fileUrl, "_blank");
+                } else {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = documentName;
+                    downloadLink.click();
+                }
+                this.loaderService.hide();
+            },
+            error: (error: any) => {
+                this.loaderService.hide();
+                this.showSnackBar(SnackBarNotificationType.ERROR, error)
             }
-            this.loaderService.hide();
-        }, (error) => {
-            this.loaderService.hide();
-            this.showSnackBar(SnackBarNotificationType.ERROR, error)
         })
     }
 }

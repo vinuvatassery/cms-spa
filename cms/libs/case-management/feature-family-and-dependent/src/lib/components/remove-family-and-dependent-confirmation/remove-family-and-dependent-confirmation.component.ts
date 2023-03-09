@@ -5,7 +5,6 @@ import { DependentTypeCode } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-remove-family-and-dependent-confirmation',
   templateUrl: './remove-family-and-dependent-confirmation.component.html',
-  styleUrls: ['./remove-family-and-dependent-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemoveFamilyAndDependentConfirmationComponent {

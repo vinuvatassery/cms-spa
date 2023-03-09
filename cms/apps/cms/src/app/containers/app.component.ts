@@ -5,7 +5,6 @@ import { AuthService } from '@cms/shared/util-oidc';
 @Component({
   selector: 'cms-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {

@@ -1,13 +1,12 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClientEmployer, IncomeFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { IncomeFacade, WorkflowFacade } from '@cms/case-management/domain';
 import {  first } from 'rxjs';
 import {  SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-income-confirmation',
   templateUrl: './remove-income-confirmation.component.html',
-  styleUrls: ['./remove-income-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemoveIncomeConfirmationComponent {
