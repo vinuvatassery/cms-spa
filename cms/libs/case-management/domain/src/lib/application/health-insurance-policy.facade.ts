@@ -97,7 +97,7 @@ export class HealthInsurancePolicyFacade {
     }
     this.formDataAppendObject(formData, healthInsurancePolicy);
 
-    return this.healthInsurancePolicyService.saveHealthInsurancePolicy(formData);
+    return this.healthInsurancePolicyService.saveHealthInsurancePolicy(healthInsurancePolicy.clientId, formData);
   }
   updateHealthInsurancePolicy(healthInsurancePolicy: any) {
     const formData = new FormData();
@@ -115,7 +115,7 @@ export class HealthInsurancePolicyFacade {
     }
     this.formDataAppendObject(formData, healthInsurancePolicy);
 
-    return this.healthInsurancePolicyService.updateHealthInsurancePolicy(formData);
+    return this.healthInsurancePolicyService.updateHealthInsurancePolicy(healthInsurancePolicy.clientId,healthInsurancePolicy.clientInsurancePolicyId, formData);
   }
 
   getCarrierContactInfo(carrierId: any) {
@@ -141,8 +141,8 @@ export class HealthInsurancePolicyFacade {
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
     return this.healthInsurancePolicyService.deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId);
   }
-  deleteInsurancePolicy(insurancePolicyId: any) {
-    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
+  deleteInsurancePolicy(clientId:any, insurancePolicyId: any) {
+    return this.healthInsurancePolicyService.deleteInsurancePolicy(clientId,insurancePolicyId);
   }
   saveInsuranceFlags(clientId:any,insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(clientId,insuranceFlags);

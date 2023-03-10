@@ -12,15 +12,15 @@ export class HealthInsurancePolicyDataService {
     private configurationProvider: ConfigurationProvider
   ) { }
 
-  saveHealthInsurancePolicy(healthInsurancePolicy: any) {
+  saveHealthInsurancePolicy(clientId:any,healthInsurancePolicy: any) {
     return this.http.post<HealthInsurancePolicy>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies`,
       healthInsurancePolicy
     );
   }
-  updateHealthInsurancePolicy(healthInsurancePolicy: any) {
+  updateHealthInsurancePolicy(clientId:any,insurancePolicyId:any, healthInsurancePolicy: any) {
     return this.http.put<HealthInsurancePolicy>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies/${insurancePolicyId}`,
       healthInsurancePolicy
     );
   }
@@ -45,8 +45,8 @@ export class HealthInsurancePolicyDataService {
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
   }
-  deleteInsurancePolicy(insurancePolicyId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
+  deleteInsurancePolicy(clientId:any, insurancePolicyId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies/${insurancePolicyId}`);
   }
   updateInsuranceFlags(clientId:any, insuranceFlagsData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies/flags`, insuranceFlagsData);
@@ -258,12 +258,12 @@ export class HealthInsurancePolicyDataService {
   }
   loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any, sortBy:any, sortType:any) {
     let params = new HttpParams();
-    params = params.append('clientId',clientId);
+    //params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
     params = params.append('skipCount',skipCount);
     params = params.append('maxResultCount',pageSize);
     params = params.append('sorting',sortBy);
     params = params.append('sortType',sortType);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies`,{params:params});
   }
 }

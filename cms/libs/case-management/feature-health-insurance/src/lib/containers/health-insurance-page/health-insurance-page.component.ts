@@ -365,7 +365,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     if (insurancePolicyId != undefined) {
       this.ShowLoader();
       this.closeDeleteModal = false;
-      this.insurancePolicyFacade.deleteInsurancePolicy(insurancePolicyId).subscribe({
+      this.insurancePolicyFacade.deleteInsurancePolicy(this.clientId, insurancePolicyId).subscribe({
         next: () => {
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
