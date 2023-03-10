@@ -39,11 +39,11 @@ export class SmokingCessationFacade {
      {
        this.loaderService.hide();
      }
-    updateSmokingCessation(smokingCessation:SmokingCessation):Observable<any> 
+    updateSmokingCessation(smokingCessation:SmokingCessation,clientId:any):Observable<any> 
     {
-        return this.smokingCessationDataService.updateSmokingCessation(smokingCessation);
+        return this.smokingCessationDataService.updateSmokingCessation(smokingCessation,clientId);
     }
-    loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any) {
-        return this.smokingCessationDataService.loadSmokingCessation(clientCaseEligibilityId,clientCaseId);
+    loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any,clientId:any) {
+        return this.smokingCessationDataService.loadSmokingCessation(clientCaseEligibilityId,clientCaseId,clientId);
       }
 }
