@@ -77,6 +77,20 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
 
   public RaceAndEthnicityhange(value: any): void {
+    value.forEach((element: any) => {
+      element.checked = true
+    });
     this.RaceAndEthnicityChange.emit(true);
+  }
+
+  getCheckedItems(currentItem: any) {
+    var values = this.appInfoForm.controls['RaceAndEthnicity']?.value;
+    if (values.length > 0) {
+      let item = values.find((x: any) => x.lovCode == currentItem.lovCode);
+      if (item) {
+        return true;
+      }
+    }
+    return false;
   }
 }

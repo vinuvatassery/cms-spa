@@ -75,6 +75,7 @@
                     kendoCheckBox
                     attr.aria-labelledby="{{dataItem.lovDesc}}"
                     [id]="dataItem.lovDesc"
+                    [checked]="getCheckedItems(dataItem)"
                   />
                   <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
                     dataItem.lovDesc
