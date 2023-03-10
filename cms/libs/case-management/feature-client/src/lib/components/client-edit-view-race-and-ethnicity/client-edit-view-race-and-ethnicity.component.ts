@@ -77,9 +77,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
 
   public RaceAndEthnicityhange(value: any): void {
-    value.forEach((element: any) => {
-      element.checked = true
-    });
     this.RaceAndEthnicityChange.emit(true);
   }
 
