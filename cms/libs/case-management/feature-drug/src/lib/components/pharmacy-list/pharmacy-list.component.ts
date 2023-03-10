@@ -10,7 +10,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-pharmacy-list',
   templateUrl: './pharmacy-list.component.html',
-  styleUrls: ['./pharmacy-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyListComponent implements OnInit {
@@ -23,6 +22,7 @@ export class PharmacyListComponent implements OnInit {
   @Input() removePharmacyResponse$!: Observable<boolean>;
   @Input() triggerPriorityPopup$!: Observable<boolean>;
   @Input() searchLoaderVisibility$!: Observable<boolean>;
+  @Input() clientId: any;
 
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();

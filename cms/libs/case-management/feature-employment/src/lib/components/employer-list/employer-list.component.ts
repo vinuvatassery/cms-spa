@@ -7,17 +7,17 @@ import {
   EventEmitter,
   Output,
   OnChanges,
+  ChangeDetectorRef
 } from '@angular/core';
-/** Enums **/
-import { ScreenType } from '@cms/case-management/domain';
-/** Facades **/
-import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+/** External Libraries **/
 import { State } from '@progress/kendo-data-query';
+/** Internal Libraries **/
+import { ClientEmployer, EmploymentFacade, ScreenType } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
-  styleUrls: ['./employer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerListComponent implements OnInit, OnChanges {
@@ -25,6 +25,10 @@ export class EmployerListComponent implements OnInit, OnChanges {
   @Input() data!: any;
   @Input() employment$: any;
   @Input() isGridLoaderShow: any;
+  @Input() clientCaseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
+
   @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/
@@ -34,6 +38,8 @@ export class EmployerListComponent implements OnInit, OnChanges {
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
   selectedEmployer: ClientEmployer = new ClientEmployer();
+  employmentValid$ = this.employmentFacade.employmentValid$;
+  isEmployerAvailable:boolean = true;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public sortValue = this.employmentFacade.sortValue;
   public sortType = this.employmentFacade.sortType;
@@ -59,13 +65,17 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef) {}
 
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
     this.addEmployerButtonDisplay();
     this.loadEmployments();
+    this.employmentValid$.subscribe(response=>{
+      this.isEmployerAvailable = response;
+      this.cdr.detectChanges();
+    }) 
     
   }
 

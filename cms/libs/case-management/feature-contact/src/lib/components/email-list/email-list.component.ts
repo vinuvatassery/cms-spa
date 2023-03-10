@@ -6,7 +6,6 @@ import { ContactFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-email-list',
   templateUrl: './email-list.component.html',
-  styleUrls: ['./email-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailListComponent implements OnInit {

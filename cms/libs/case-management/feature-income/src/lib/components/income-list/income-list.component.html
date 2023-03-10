@@ -155,6 +155,7 @@
        </ng-template>
       </kendo-grid>
     </div>
+    <kendo-formerror *ngIf="!isIncomeAvailable"> A Response is required.</kendo-formerror>
     <div
       class="block-section mt-1 text-right"
       *ngIf="!isAddIncomeButtonAndFooterNoteDisplay"
@@ -208,20 +209,15 @@
           <kendo-dropdownbutton  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"
             aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }"  > 
          
-            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>  <!-- <button kendoButton look="flat" *ngIf="buttondataItem.text === 'Attach from computer'" [attr.aria-label]="buttondataItem.text"
-            class="upoadlistbtn" [class]="buttondataItem.buttonType" aria-hidden="false"> 
-            <label [for]="proofOfSchoolUploaded"> {{ buttondataItem.text }} </label>
-          </button> --> 
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>  
 
           <button   kendoButton *ngIf="buttondataItem.id === 'attachfromclient' || (buttondataItem.id === 'removefile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
-            <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
             <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
             <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span class="material-icons middleicon">
               delete
               </span> {{ buttondataItem.text }}  </label>
         </button>
           <button  kendoButton  *ngIf="buttondataItem.id === 'proofOfSchoolUploaded' "  class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
-            <!-- <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span> -->
             <label  [for]="proofOfSchoolUploaded"> {{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? 'Upload New from computer' : 'Attach from computer ' }} </label>
         </button>
           </ng-template>
@@ -258,7 +254,10 @@
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"
-  (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"></case-management-remove-income-confirmation>
+  (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [clientCaseId]="clientCaseId"></case-management-remove-income-confirmation>
 
 
 </kendo-dialog>

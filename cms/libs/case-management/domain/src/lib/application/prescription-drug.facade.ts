@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** Providers **/
-import { ConfigurationProvider, LoaderService, NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
+import { LoaderService, NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 /** Data services **/
 import { PrescriptionDrugDataService } from '../infrastructure/prescription-drug.data.service';
@@ -23,16 +23,16 @@ export class PrescriptionDrugFacade {
   ) { }
 
   updatePrescriptionDrug(prescriptionDrug: any): Observable<any> {
-    const formData: any = new FormData();
-    for (let key in prescriptionDrug) {
-      if (typeof prescriptionDrug[key] == 'object') {
-        for (let childKey in prescriptionDrug[key]) {
-          formData.append(`${key}[${childKey}]`, prescriptionDrug[key][childKey]);
-        }
-      }
-      formData.append(key, prescriptionDrug[key]);
-    }
-    return this.prescriptionDrugDataService.updatePrescriptionDrugService(prescriptionDrug?.clientId, formData).pipe(
+    // const formData: any = new FormData();
+    // for (let key in prescriptionDrug) {
+    //   if (typeof prescriptionDrug[key] == 'object') {
+    //     for (let childKey in prescriptionDrug[key]) {
+    //       formData.append(`${key}[${childKey}]`, prescriptionDrug[key][childKey]);
+    //     }
+    //   }
+    //   formData.append(key, prescriptionDrug[key]);
+    // }
+    return this.prescriptionDrugDataService.updatePrescriptionDrugService(prescriptionDrug?.clientId, prescriptionDrug).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);

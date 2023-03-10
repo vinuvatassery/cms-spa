@@ -9,6 +9,7 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } 
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
 import {LovFacade } from '@cms/system-config/domain'
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { YesNoFlag } from '@cms/shared/ui-common';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   isFamilyGridDisplay =true;
   clientCaseId! : string;
   sessionId! : string;
+  isDependentAvailable:boolean= false;
   pageSizes = this.familyAndDependentFacade.gridPageSizes;
   sortValue  = this.familyAndDependentFacade.sortValue;
   sortType  = this.familyAndDependentFacade.sortType;
@@ -69,6 +71,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+   
   }
 
   ngOnDestroy(): void {
@@ -104,7 +107,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       sortType : gridDataRefinerValue.sortType,
     }
 
-    if((this.isFamilyGridDisplay ?? false) == false)
+    if(!(this.isFamilyGridDisplay ?? false))
     {
       this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
     this.familyAndDependentFacade.loadDependents(this.clientId
@@ -120,6 +123,14 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.isFamilyGridDisplay = x
 
     });
+    this.dependentList$.subscribe(dependents=>{
+      if(dependents.total > 0){
+        this.isDependentAvailable = true;        
+      }
+      else{
+        this.isDependentAvailable = false;        
+      }
+    });
   }
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
@@ -128,7 +139,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe(([navigationType, isSaved ]) => {
-      if (isSaved == true) {
+      if (isSaved) {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')
         this.checkBoxSubscription.unsubscribe();
         this.workflowFacade.navigate(navigationType);
@@ -140,8 +151,14 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
 
   private save() {
     this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
-    return  this.familyAndDependentFacade.saveAndContinueDependents
-      (this.clientId, this.clientCaseEligibilityId, this.familyStatus)
+    if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)){
+      this.familyAndDependentFacade.dependentValidSubject.next(false);
+      return of(false);
+    }
+    else{
+      this.familyAndDependentFacade.dependentValidSubject.next(true);
+      return  this.familyAndDependentFacade.saveAndContinueDependents
+        (this.clientId, this.clientCaseEligibilityId, this.familyStatus)
       .pipe
       (
       catchError((err: any) => {
@@ -149,6 +166,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
         return  of(false);
       })
       )
+    }
     }
 
      private updateWorkFlowStatus()
@@ -164,12 +182,12 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   /** Internal event methods **/
   onNoFamilyMemberClicked() {
     this.isFamilyGridDisplay = !this.isFamilyGridDisplay;
-    this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.familyStatus = (this.isFamilyGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
     this.familyAndDependentFacade.updateDependentStatus
     (this.clientCaseEligibilityId,this.familyStatus).subscribe((isSaved) => {
-      if (isSaved == true) {
+      if (isSaved ?? false) {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')
-        if(this.isFamilyGridDisplay === true)
+        if(this.isFamilyGridDisplay ?? false)
         {
           this.updateWorkFlowStatus();
         }

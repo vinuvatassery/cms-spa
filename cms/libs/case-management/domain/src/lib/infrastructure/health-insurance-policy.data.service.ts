@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { healthInsurancePolicy } from '../entities/health-insurance-policy';
+import { HealthInsurancePolicy } from '../entities/health-insurance-policy';
 import { CarrierContactInfo } from '../entities/carrier-contact-info';
 import { of } from 'rxjs';
 
@@ -13,20 +13,20 @@ export class HealthInsurancePolicyDataService {
   ) { }
 
   saveHealthInsurancePolicy(healthInsurancePolicy: any) {
-    return this.http.post<healthInsurancePolicy>(
+    return this.http.post<HealthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
       healthInsurancePolicy
     );
   }
   updateHealthInsurancePolicy(healthInsurancePolicy: any) {
-    return this.http.put<healthInsurancePolicy>(
+    return this.http.put<HealthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy`,
       healthInsurancePolicy
     );
   }
 
   getHealthInsurancePolicyById(clientInsurancePolicyId: string) {
-    return this.http.get<healthInsurancePolicy>(
+    return this.http.get<HealthInsurancePolicy>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy/${clientInsurancePolicyId}`
     );
   }

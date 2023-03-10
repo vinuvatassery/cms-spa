@@ -10,7 +10,6 @@ import {
   @Component({
     selector: 'case-management-case-manager-remove-confirmation',
     templateUrl: './remove-case-manager-confirmation.component.html',
-    styleUrls: ['./remove-case-manager-confirmation.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
 

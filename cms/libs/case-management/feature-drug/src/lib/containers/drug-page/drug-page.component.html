@@ -3,7 +3,6 @@
   <form [formGroup]="prescriptionDrugForm">
   <section>
    
-    <!-- <form [formGroup]="prescriptionDrugForm"> -->
       <fieldset class="k-form-fieldset">
         <legend class="k-form-legend"> <h5 class="mt-1">
           Are they currently taking prescription drugs for HIV (anti-retrovirals)?
@@ -121,7 +120,6 @@
     </kendo-formfield>
     </div>
     </fieldset>
-  <!-- </form> -->
   </section>
  
 </form>
@@ -143,6 +141,7 @@
     (editPharmacyInit)="editPharmacyInit($event)"
     (editPharmacyClick)="editPharmacy($event)"
     (removePharmacyClick)="removePharmacy($event)"
+    [clientId]="clientId"
     ></case-management-pharmacy-list>
   </section>
 </div>

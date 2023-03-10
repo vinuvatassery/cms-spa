@@ -12,10 +12,8 @@ import { Case } from '../entities/case';
 
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
-import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
-import { ClientProfileCase } from '../entities/client-profile-cases';
 
 
 
@@ -100,9 +98,9 @@ export class CaseFacade {
   }
 
   /** Public methods **/
-  loadClientProfile(clientCaseEligibilityId : string): void {
+  loadClientProfile(clientId : number): void {
     this.showLoader();
-    this.caseDataService.loadClientProfile(clientCaseEligibilityId).subscribe({
+    this.caseDataService.loadClientProfile(clientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileSubject.next(clientProfileResponse);
         this.hideLoader();   

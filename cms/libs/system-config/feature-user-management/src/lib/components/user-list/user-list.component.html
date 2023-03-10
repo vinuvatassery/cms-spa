@@ -33,7 +33,6 @@
     <span class="material-icons">search</span>
     <kendo-floatinglabel text="Search">
       <kendo-textbox  [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-      <!-- <input kendoTextBox /> -->
     </kendo-floatinglabel>
   </span>
   <span>
@@ -120,61 +119,6 @@
  
         </ng-template>
       </kendo-dropdownbutton>
-
-        <!-- <div class="TableActionPopup">
-          <button
-            kendoButton
-            aria-label="user name"
-            [popover]="onTableActionClicked"
-            showOn="click"
-            kendoPopoverAnchor
-            class="k-icon-button "
-          >
-            <span class="material-icons" aria-label="action" aria-hidden="true"
-              >more_vert</span
-            >
-          </button>
-    
-          <kendo-popover #onTableActionClicked width="150" position="bottom">
-            <ng-template kendoPopoverBodyTemplate>
-              <div class="TableActionInner">
-                <button
-                  kendoButton
-                  icon="edit"
-                  look="flat"
-                  class="btn-h-primary"
-                  aria-label="edit user"
-                  (click)="onUserDetailsClicked(true)"
-                >
-                  Edit
-                </button>
-                <button
-                  kendoButton
-                  look="flat"
-                  class="btn-h-primary"
-                  aria-label="deactivate user"
-                  (click)="onUserDeactivateClicked()"
-                >
-                  <span
-                    class="material-icons"
-                    aria-label="deactivate"
-                    aria-hidden="true"
-                    >block</span
-                  >Deactivate
-                </button>
-                <button
-                  kendoButton
-                  icon="delete"
-                  look="flat"
-                  class="btn-h-danger"
-                  aria-label="delete user"
-                >
-                  Delete
-                </button>
-              </div>
-            </ng-template>
-          </kendo-popover>
-        </div> -->
       </ng-template>
     </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
@@ -182,7 +126,6 @@
       <div class="grid-custom-paginationtemplates d-flex">
 
         <div class="d-flex align-items-center">
-          <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
           <label class="mr-1">Rows Per Page</label> 
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
             [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>

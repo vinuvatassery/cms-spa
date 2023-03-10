@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** interal libraries **/
+/** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 // entities library
@@ -33,11 +33,13 @@ export class EmploymentFacade {
   private employersDetailsSubject = new BehaviorSubject<any>([]);
   private employmentStatusGetSubject = new Subject<any>();
   private employersStatusSubject = new BehaviorSubject<any>([]);
+  employmentValidSubject = new Subject<boolean>();
   /** Public properties **/
   employers$ = this.employersSubject.asObservable();
   employersDetails$ = this.employersDetailsSubject.asObservable();
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
   employersStatus$ = this.employersStatusSubject.asObservable();
+  employmentValid$ = this.employmentValidSubject.asObservable();
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();

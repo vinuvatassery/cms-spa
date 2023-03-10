@@ -14,7 +14,6 @@ import { SnackBarNotificationType, NotificationSnackbarService } from '@cms/shar
 @Component({
   selector: 'case-management-set-health-insurance-priority',
   templateUrl: './set-health-insurance-priority.component.html',
-  styleUrls: ['./set-health-insurance-priority.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetHealthInsurancePriorityComponent implements OnInit {
@@ -104,21 +103,17 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     }
     return false;
   }
+
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
-    if (aEnd === null && bEnd === null) {
-      if (aStart === bStart) return true;
-    }
-    if (aEnd === null) {
-      if (aStart >= bStart && aStart <= bEnd) return true;
-    }
-    if (bEnd === null) {
-      if (bStart >= aStart && bStart <= aEnd) return true;
-    }
+    if (aEnd === null && bEnd === null && aStart === bStart) return true;
+    if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;
+    if (bEnd === null && bStart >= aStart && bStart <= aEnd) return true;
     if (aStart <= bStart && bStart <= aEnd) return true;
     if (aStart <= bEnd && bEnd <= aEnd) return true;
     if (bStart < aStart && aEnd < bEnd) return true;
     return false;
   }
+
   onModalCloseClicked() {
     this.isCloseInsuranceModal.emit();
   }
@@ -156,15 +151,18 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       return;
     }
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.setHealthInsurancePolicyPriority(this.gridList).subscribe((x: any) => {
-
-      this.insurancePolicyFacade.hideLoader();
-      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
-      this.onModalCloseClicked();
-      this.priorityAdded.emit();
-    }, (error: any) => {
-      this.insurancePolicyFacade.hideLoader();
-      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
-    });
+    this.insurancePolicyFacade.setHealthInsurancePolicyPriority(this.gridList)
+      .subscribe({
+        next: (x: any) => {
+          this.insurancePolicyFacade.hideLoader();
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
+          this.onModalCloseClicked();
+          this.priorityAdded.emit();
+        },
+        error: (error: any) => {
+          this.insurancePolicyFacade.hideLoader();
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+      });
   }
 }

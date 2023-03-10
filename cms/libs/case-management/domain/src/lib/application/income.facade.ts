@@ -1,10 +1,9 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Income } from '../entities/income';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 
@@ -22,6 +21,7 @@ export class IncomeFacade {
   private incomesSubject = new BehaviorSubject<any>([]);
   private incomesResponseSubject = new BehaviorSubject<any>([]);
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
+  incomeValidSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlIncomeTypes$ = this.ddlIncomeTypesSubject.asObservable();
@@ -31,6 +31,7 @@ export class IncomeFacade {
   incomes$ = this.incomesSubject.asObservable();
   incomesResponse$ = this.incomesResponseSubject.asObservable();
   dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
+  incomeValid$ = this.incomeValidSubject.asObservable();
 
   /** Constructor**/
   constructor(
@@ -160,7 +161,7 @@ export class IncomeFacade {
   saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
 
     const formData: any = new FormData();
-    for (var key in clientIncome) {
+    for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }
@@ -176,7 +177,7 @@ export class IncomeFacade {
   }
   editClientIncome(clientIncome:any, proofOfIncomeFile:any){
     const formData: any = new FormData();
-    for (var key in clientIncome) {
+    for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
         formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
       }

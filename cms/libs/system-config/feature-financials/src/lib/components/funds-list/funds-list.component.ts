@@ -36,7 +36,6 @@ export class FundsListComponent implements OnInit {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-        // this.onSlotDetailClicked();
       },
     }, 
     {
@@ -44,7 +43,6 @@ export class FundsListComponent implements OnInit {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-        // this.onSlotDetailClicked();
       },
     }, 
  

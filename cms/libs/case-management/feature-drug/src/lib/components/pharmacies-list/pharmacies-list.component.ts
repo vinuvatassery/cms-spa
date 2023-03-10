@@ -2,23 +2,20 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
-  Input,
-  EventEmitter,
-  Output,
+  Input
 } from '@angular/core';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { Observable } from 'rxjs';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',
-  styleUrls: ['./pharmacies-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class PharmaciesListComponent implements OnInit {
-    
+  
+    /** Input properties **/
+  @Input() clientId: any;
   /** Public properties **/
   pharmaciesList$ = this.drugPharmacyFacade.pharmaciesList$;
   isOpenChangePriorityClicked = false;

@@ -1,9 +1,9 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, } from '@angular/core';
 /** Facades **/
 import { IncomeFacade, StatusFlag, IncomeTypeCode,ClientDocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
+import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
@@ -224,6 +224,7 @@ export class IncomeDetailComponent implements OnInit {
           )
           .subscribe({
             next: (incomeResponse) => {
+              this.incomeFacade.incomeValidSubject.next(true);
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
@@ -314,8 +315,8 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
-    var endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
-    var startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
+    const endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
+    const startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
     if(endDate<=startDate && this.IncomeDetailsForm.controls['incomeEndDate'].value ){
       this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({'incorrect':true})
     }

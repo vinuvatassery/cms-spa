@@ -1,8 +1,8 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
-import { first, Observable, forkJoin, Subscription } from 'rxjs';
+import { first, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { YesNoFlag,WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionAnswer, ReviewQuestionCode, QuestionTypeCode } from '@cms/case-management/domain';
+import { YesNoFlag,WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode,EligibilityRequestType } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import {
   LoaderService,
@@ -171,10 +171,10 @@ export class ClientEligibilityComponent implements OnInit {
   }
   loadDocumentsAndEligibility() {
     let documents = this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId);
-    let eligibility = this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId, this.clientId);
+    let eligibility = this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.applicationEligibility);
     this.loaderService.show();
-    forkJoin([documents, eligibility]).subscribe(
-      (results: any) => {
+    forkJoin([documents, eligibility]).subscribe({
+      next: (results: any) => {
         if (results.length === 0) return;
         this.documents = results[0];
         this.eligibility = results[1];
@@ -182,11 +182,11 @@ export class ClientEligibilityComponent implements OnInit {
         this.loaderService.hide();
         this.loadReviewQuestionAnswers();
       }
-      , (error) => {
+      , error: (error) => {
         this.showSnackBar(SnackBarNotificationType.ERROR, error);
         this.loaderService.hide();
       }
-    );
+  });
 
   }
   getSavedQuestionsResponse() {

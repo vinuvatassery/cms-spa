@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { first } from 'rxjs';
 /** Facades **/
-import { CaseFacade,WorkflowFacade,ClientEligibilityFacade, ClientEligibilityInfo } from '@cms/case-management/domain';
+import { CaseFacade,WorkflowFacade,ClientEligibilityFacade, ClientEligibilityInfo,EligibilityRequestType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService,SnackBarNotificationType} from '@cms/shared/util-core';
@@ -12,7 +12,6 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-send-letter-profile',
   templateUrl: './send-letter-profile.component.html',
-  styleUrls: ['./send-letter-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendLetterProfileComponent implements OnInit {
@@ -87,7 +86,7 @@ export class SendLetterProfileComponent implements OnInit {
   }
   loadEligibilityInfo()
   {
-    this.clientEligibilityFacade.getClientEligibilityInfo(this.clientCaseEligibilityId, this.clientId,this.clientCaseId).subscribe({
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.clientEligibilityInfo).subscribe({
       next: (data:any) => {
         this.clientEligibilityInfo = data;
         this.changeDetector.detectChanges();

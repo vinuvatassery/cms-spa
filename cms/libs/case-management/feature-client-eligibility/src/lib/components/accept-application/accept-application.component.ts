@@ -1,21 +1,17 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 /** Facades **/
-import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, UserDefaultRoles } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, UserDefaultRoles,EligibilityRequestType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade,UserManagementFacade } from '@cms/system-config/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
-
-
-
 @Component({
   selector: 'case-management-accept-application',
   templateUrl: './accept-application.component.html',
-  styleUrls: ['./accept-application.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AcceptApplicationComponent implements OnInit {
@@ -32,6 +28,7 @@ export class AcceptApplicationComponent implements OnInit {
   acceptedApplication= new AcceptedApplication();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   caseOwners$ = this.loginUserFacade.usersByRole$;
+  @Input() clientId: string = '';
   @Input() clientCaseId: string = '';
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
@@ -92,7 +89,7 @@ export class AcceptApplicationComponent implements OnInit {
       this.populateEligibility();
       this.loaderService.show();
       this.btnDisabled = true
-    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication).subscribe({
+    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId).subscribe({
       next: (data) => {
         if(!this.isEdit)
         {
@@ -175,7 +172,6 @@ export class AcceptApplicationComponent implements OnInit {
       {
         const startdate = new Date(this.eligibilityForm.controls['eligibilityStartDate'].value);
         let enddate = startdate.setMonth(startdate.getMonth() + 6);
-        //this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(enddate));
         const endDateValue = new Date(enddate);
         const newEndDateValue = new Date(endDateValue.getFullYear(), endDateValue.getMonth() + 1, 0)
         this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(newEndDateValue));
@@ -191,18 +187,11 @@ export class AcceptApplicationComponent implements OnInit {
         this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(enddate));
       }
     }
-    // else if (this.eligibilityForm.controls['groupCode'].value !== GroupCode.BRIDGE && this.eligibilityForm.controls['caseStatusCode'].value !== CaseStatusCode.accept)
-    // {
-    //   if(this.eligibilityForm.controls['eligibilityStartDate'].value)
-    //   {
-    //     this.eligibilityForm.controls['eligibilityEndDate'].setValue(null);
-    //   }
-    // }
   }
   loaddata()
   {
     this.loaderService.show();
-    this.clientEligibilityFacade.getAcceptedApplication(this.clientCaseId,this.clientCaseEligibilityId).subscribe({
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.acceptedEligibility).subscribe({
       next: (data:any) => {
         if(!this.isEdit)
         {
