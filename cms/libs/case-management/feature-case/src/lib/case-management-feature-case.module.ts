@@ -40,6 +40,7 @@ import { CaseManagementFeatureManagementModule } from '@cms/case-management/feat
 import { CaseManagementFeatureDocumentModule } from '@cms/case-management/feature-document';
 import { StatusPeriodComponent } from './components/status-period/status-period.component';
 import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
+import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 
 
 @NgModule({
@@ -84,7 +85,8 @@ import { AppHistoryListComponent } from './components/application-history/applic
     CaseDetailsSummaryComponent,
     StatusPeriodComponent,
     PageCompletionStatusComponent,
-    AppHistoryListComponent
+    AppHistoryListComponent,
+    Case360HeaderNotificationsComponent
   ],
   exports: [
     CasePageComponent,
@@ -101,7 +103,8 @@ import { AppHistoryListComponent } from './components/application-history/applic
     CaseSummaryComponent,
     CaseDetailsSummaryComponent,
     StatusPeriodComponent,
-    AppHistoryListComponent
+    AppHistoryListComponent,
+    Case360HeaderNotificationsComponent
   ],
 })
 export class CaseManagementFeatureCaseModule {}

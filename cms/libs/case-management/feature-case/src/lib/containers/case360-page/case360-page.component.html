@@ -30,13 +30,13 @@
         </button>
       </ng-template>
     </kendo-dropdownbutton>
-  </div>
-
+  </div> 
   <!-- Case Details Tab Sections -->
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="clientInfoVisible$ | async">
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
+          
           <kendo-tabstrip-tab title="Client Info" [selected]="true">
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
@@ -50,7 +50,7 @@
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Contact Info">
+          <kendo-tabstrip-tab title="Contact Info" *ifPermission='["Pharmacy_Claims_Create_Update","Pharmacy_Claims_Create_Update"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-row mb-1">

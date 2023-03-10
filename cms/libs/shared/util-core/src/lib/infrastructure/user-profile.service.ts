@@ -9,6 +9,7 @@ import { LoaderService } from '../application/services/app-loader.service';
 export class UserProfileService {
   private getUserProfileData = new BehaviorSubject<any>([]);
   getProfile$ = this.getUserProfileData.asObservable();
+  userSubject!: BehaviorSubject<any>;
 
   constructor(private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider,
@@ -23,12 +24,18 @@ export class UserProfileService {
     this.loaderService.hide();
   }
 
+  getUserPermissons()
+  {   
+    return this.userSubject?.value?.permissions;
+  }
+
   getUserProfile() {
     this.showLoader();
     this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`).subscribe({
       next: (response: any) => {
         if (response) {
           this.getUserProfileData.next(response);
+          this.userSubject = new BehaviorSubject<any>(response);         
         }
         this.hideLoader();
       },
