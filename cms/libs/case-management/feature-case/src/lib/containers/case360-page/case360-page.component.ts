@@ -4,10 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade } from '@cms/case-management/domain';
+import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -25,8 +25,7 @@ export class Case360PageComponent implements OnInit {
   loadedClient$ = this.clientSubject.asObservable();
   loadedClientHeader$ = this.clientHeaderSubject.asObservable();
   clientInfoVisible$ = this.clientInfoVisibleSubject.asObservable();
-  clientHeaderVisible$ = this.clientHeaderVisibleSubject.asObservable();
-
+  clientHeaderVisible$ = this.clientHeaderVisibleSubject.asObservable(); 
   /** Public properties **/  
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
@@ -203,7 +202,7 @@ private getQueryParams()
   loadReadOnlyClientInfoEventHandler()
   {
     
-    this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);
+    this.caseFacade.loadClientProfile(this.profileClientId);
     this.onClientProfileLoad()
   }
 
@@ -241,8 +240,7 @@ private getQueryParams()
          this.clientHeaderSubject.next(clientHeader);
          if(clientHeader?.clientCaseEligibilityId)
          {
-          this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;          
-          this.clientInfoVisibleSubject.next(true);        
+          this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;         
          }
       }
     });

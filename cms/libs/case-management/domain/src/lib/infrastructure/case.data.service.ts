@@ -31,9 +31,9 @@ export class CaseDataService {
 
   }
 
-  loadClientProfile(clientCaseEligibilityId: string) {
+  loadClientProfile(profileClientId: number) {
     return this.http.get<ClientProfileCase[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/clientCaseEligibilityId=${clientCaseEligibilityId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/clientId=${profileClientId}`
     );
 
   }

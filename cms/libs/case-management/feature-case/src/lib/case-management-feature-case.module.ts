@@ -42,7 +42,6 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
 import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
 import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 
-
 @NgModule({
   imports: [
     CaseManagementFeatureCaseRoutingModule,
@@ -86,7 +85,7 @@ import { Case360HeaderNotificationsComponent } from './components/case360-header
     StatusPeriodComponent,
     PageCompletionStatusComponent,
     AppHistoryListComponent,
-    Case360HeaderNotificationsComponent
+    Case360HeaderNotificationsComponent 
   ],
   exports: [
     CasePageComponent,
