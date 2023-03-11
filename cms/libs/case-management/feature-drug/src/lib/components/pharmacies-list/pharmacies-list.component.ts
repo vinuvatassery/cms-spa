@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
+  Input
 } from '@angular/core';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -12,7 +13,9 @@ import { State } from '@progress/kendo-data-query';
   encapsulation: ViewEncapsulation.None,
 })
 export class PharmaciesListComponent implements OnInit {
-    
+  
+    /** Input properties **/
+  @Input() clientId: any;
   /** Public properties **/
   pharmaciesList$ = this.drugPharmacyFacade.pharmaciesList$;
   isOpenChangePriorityClicked = false;
