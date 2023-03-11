@@ -94,7 +94,7 @@ export class FamilyAndDependentFacade {
     this.loaderService.hide();
   }
 
-  DeleteDependent(eligibilityId: string, dependentId: string): void {
+  deleteDependent(eligibilityId: string, dependentId: string): void {
     this.showLoader();
     this.dependentDataService.deleteDependent(eligibilityId, dependentId).subscribe({
       next: (deleteResponse) => {
@@ -110,7 +110,7 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  AddNewDependent(eligibilityId: string, dependent: Dependent): void {
+  addNewDependent(eligibilityId: string, dependent: Dependent): void {
     this.showLoader();
     this.dependentDataService.addNewDependent(eligibilityId, dependent).subscribe({
       next: (addNewdependentsResponse) => {
@@ -127,7 +127,7 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  UpdateNewDependent(eligibilityId: string, dependent: Dependent): void {
+  updateNewDependent(eligibilityId: string, dependent: Dependent): void {
     this.showLoader();
     this.dependentDataService.updateNewDependent(eligibilityId, dependent).subscribe({
       next: (updateNewdependentsResponse) => {
@@ -144,7 +144,7 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  GetNewDependent(eligibilityId: string, dependentId: string): void {
+  getNewDependent(eligibilityId: string, dependentId: string): void {
     this.showLoader();
     this.dependentDataService.getNewDependent(eligibilityId, dependentId).subscribe({
       next: (getNewdependentsResponse) => {
@@ -158,7 +158,7 @@ export class FamilyAndDependentFacade {
   }
 
 
-  GetExistingClientDependent(eligibilityId: string, clientDependentId: string): void {
+  getExistingClientDependent(eligibilityId: string, clientDependentId: string): void {
     this.showLoader();
     this.dependentDataService.getExistingClientDependent(eligibilityId, clientDependentId, DependentTypeCode.CAClient).subscribe({
       next: (dependentGetExistingResponse) => {
@@ -253,7 +253,7 @@ export class FamilyAndDependentFacade {
 
 
 
-  AddExistingDependent(eligibilityId: string, data: any): void {
+  addExistingDependent(eligibilityId: string, data: any): void {
     this.showLoader();
     this.dependentDataService.addExistingDependent(eligibilityId, data).subscribe({
       next: (dependentStatusResponse) => {

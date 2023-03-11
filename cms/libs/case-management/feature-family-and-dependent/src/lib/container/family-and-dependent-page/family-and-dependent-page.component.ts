@@ -188,29 +188,29 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
    dependent.clientId =this.clientId ;
     if(dependentData.clientDependentId && dependentData.clientDependentId !='')
     {
-      this.familyAndDependentFacade.UpdateNewDependent(this.clientCaseEligibilityId, dependentData);
+      this.familyAndDependentFacade.updateNewDependent(this.clientCaseEligibilityId, dependentData);
     }
     else
     {
-    this.familyAndDependentFacade.AddNewDependent(this.clientCaseEligibilityId, dependentData);
+    this.familyAndDependentFacade.addNewDependent(this.clientCaseEligibilityId, dependentData);
     }
   }
 
-  GetNewDependentHandle(dependentId : string)
+  getNewDependentHandle(dependentId : string)
   {
-    this.familyAndDependentFacade.GetNewDependent(this.clientCaseEligibilityId, dependentId);
+    this.familyAndDependentFacade.getNewDependent(this.clientCaseEligibilityId, dependentId);
   }
 
-  GetExistclientDependentEventHandle(dependentId : string)
+  getExistclientDependentEventHandle(dependentId : string)
   {
-    this.familyAndDependentFacade.GetExistingClientDependent(this.clientCaseEligibilityId, dependentId);
+    this.familyAndDependentFacade.getExistingClientDependent(this.clientCaseEligibilityId, dependentId);
   }
 
   deleteDependentParamHandle(clientDependentId : any)
   {
       if(clientDependentId)
       {
-       this.familyAndDependentFacade.DeleteDependent(this.clientCaseEligibilityId, clientDependentId);
+       this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, clientDependentId);
       }
   }
 
@@ -219,10 +219,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.loadDependentSearch($event )
   }
 
-  AddUpdateExistingDependentHandle(data : any)
+  addUpdateExistingDependentHandle(data : any)
   {
     data.parentClientId =   this.clientId
-    this.familyAndDependentFacade.AddExistingDependent(this.clientCaseEligibilityId, data);
+    this.familyAndDependentFacade.addExistingDependent(this.clientCaseEligibilityId, data);
   }
 
   private addSaveForLaterSubscription(): void {
