@@ -10,7 +10,7 @@ import {
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { HealthInsurancePolicyFacade, PriorityCode } from '@cms/case-management/domain';
-import { SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { SnackBarNotificationType, NotificationSnackbarService, NotificationSource } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-set-health-insurance-priority',
   templateUrl: './set-health-insurance-priority.component.html',
@@ -60,12 +60,12 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   public onChangePriority(value: any, insurance: any): void {
     if (value === PriorityCode.Primary) {
       if (insurance.canPayForMedicationFlag === "N") {
-        this.notificationSnackbarService.warningSnackBar('Primary insurance always consists of insurance that pays for medications.');
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'Primary insurance always consists of insurance that pays for medications.', NotificationSource.UI)
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
       if (insurance.dentalPlanFlag === "Y") {
-        this.notificationSnackbarService.warningSnackBar('A dental plan cannot be the set Primary Insurance even if the only plan is dental.');
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A dental plan cannot be the set Primary Insurance even if the only plan is dental.', NotificationSource.UI)
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
@@ -86,7 +86,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       if (this.dateRangeOverlaps(primarySelections[0].startDate, primarySelections[0].endDate, primarySelections[1].startDate, primarySelections[1].endDate)) {
         const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId !== insurance.clientInsurancePolicyId);
         this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
-        this.notificationSnackbarService.warningSnackBar(errorMessage);
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,errorMessage, NotificationSource.UI)
         return true;
       }
     }
@@ -120,7 +120,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       primaryExist = true;
     }
     if (!primaryExist) {
-      this.notificationSnackbarService.warningSnackBar('A Primary Insurance is required');
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A Primary Insurance is required', NotificationSource.UI)
       return;
     }
     const multipleSecondarySelection = this.gridList.filter((m: any) => m.priorityCode === PriorityCode.Secondary);
@@ -128,11 +128,11 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       secondaryExist = true;
     }
     if (tertiaryExist && !secondaryExist) {
-      this.notificationSnackbarService.warningSnackBar('A Tertiary Insurance cannot be created if there is no Secondary Insurance');
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A Tertiary Insurance cannot be created if there is no Secondary Insurance', NotificationSource.UI)
       return;
     }
     if (secondaryExist && !primaryExist) {
-      this.notificationSnackbarService.warningSnackBar('A Secondary Insurance ​can be created when there is no Primary Insurance');
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A Secondary Insurance ​can be created when there is no Primary Insurance', NotificationSource.UI)
       return;
     }
     this.insurancePolicyFacade.showLoader();

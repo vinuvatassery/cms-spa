@@ -7,5 +7,12 @@ export enum SnackBarNotificationType{
 export enum SnackBarNotificationText{
     SUCCESS = 'Success',
     ERROR = 'Error',
-    WARNING = 'warning'
+    WARNING = 'warning',
+    GENERIC = 'Something went wrong in user interface , please contact system admin'
+}
+
+
+export enum NotificationSource{
+    UI = 'UI',
+    API = 'API'   
 }

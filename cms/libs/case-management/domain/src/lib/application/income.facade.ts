@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider, NotificationSource } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -52,7 +52,7 @@ export class IncomeFacade {
 
     errorShowHideSnackBar( subtitle : any)
     {
-      this.notificationSnackbarService.errorSnackBar(subtitle)
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
     }
 
     ShowLoader()
