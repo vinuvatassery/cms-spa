@@ -39,6 +39,7 @@ export class FamilyAndDependentFacade {
   private dependentGetNewSubject = new Subject<any>();
   private dependentdeleteSubject = new Subject<any>();
   private dependentGetExistingSubject = new Subject<any>();
+  dependentValidSubject = new Subject<boolean>();
   displaydateFormat = this.configurationProvider.appSettings.displaydateFormat;
   /** Public properties **/
   products$ = this.productsSubject.asObservable();
@@ -54,6 +55,7 @@ export class FamilyAndDependentFacade {
   dependentGetNew$ = this.dependentGetNewSubject.asObservable();
   dependentdelete$ = this.dependentdeleteSubject.asObservable();
   dependentGetExisting$ = this.dependentGetExistingSubject.asObservable();
+  dependentValid$ = this.dependentValidSubject.asObservable();
 
 
   snackbarMessage!: SnackBar;

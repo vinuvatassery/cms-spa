@@ -11,7 +11,8 @@
     "analyze": "npm run build -- --stats-json && webpack-bundle-analyzer ./dist/apps/cms/stats.json",
     "format:check": "prettier apps/cms/**/*.{html,ts,json,md,scss} apps/cmp/**/*.{html,ts,json,md,scss} apps/cp/**/*.{html,ts,json,md,scss} libs/**/*.{html,ts,json,md,scss} --check",
     "format:test": "prettier apps/cms/**/*.{html,ts,json,md,scss} apps/cmp/**/*.{html,ts,json,md,scss} apps/cp/**/*.{html,ts,json,md,scss} libs/**/*.{html,ts,json,md,scss} --list-different",
-    "format:write": "prettier apps/cms/**/*.{html,ts,json,md,scss} apps/cmp/**/*.{html,ts,json,md,scss} apps/cp/**/*.{html,ts,json,md,scss} libs/**/*.{html,ts,json,md,scss} --write"
+    "format:write": "prettier apps/cms/**/*.{html,ts,json,md,scss} apps/cmp/**/*.{html,ts,json,md,scss} apps/cp/**/*.{html,ts,json,md,scss} libs/**/*.{html,ts,json,md,scss} --write",
+    "sonar": "sonar-scanner"
   },
   "private": true,
   "dependencies": {
@@ -96,6 +97,7 @@
     "postcss-preset-env": "7.5.0",
     "postcss-url": "10.1.3",
     "prettier": "2.6.2",
+    "sonar-scanner": "^3.1.0",
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
     "typescript": "4.8.4",
