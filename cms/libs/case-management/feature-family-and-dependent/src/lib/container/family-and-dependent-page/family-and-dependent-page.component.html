@@ -36,12 +36,12 @@
           [sort]="sort"
           [existdependentStatus$]="existdependentStatus$"
           (addUpdateDependentEvent)="addUpdateDependentHandle($event)"
-          (GetNewDependentHandleEvent)="GetNewDependentHandle($event)"        
+          (GetNewDependentHandleEvent)="getNewDependentHandle($event)"        
           (loadDependentsEvent)="loadDependentsHandle($event)"     
           (deleteDependentsEvent)="deleteDependentParamHandle($event)"    
           (searchTextHandleEvent)="searchTextHandleEventHandle($event)"
-          (GetExistclientDependentEvent)="GetExistclientDependentEventHandle($event)"       
-          (addExistingClientEvent)="AddUpdateExistingDependentHandle($event)"
+          (GetExistclientDependentEvent)="getExistclientDependentEventHandle($event)"       
+          (addExistingClientEvent)="addUpdateExistingDependentHandle($event)"
           >         
           </case-management-family-and-dependent-list>
         </div>
