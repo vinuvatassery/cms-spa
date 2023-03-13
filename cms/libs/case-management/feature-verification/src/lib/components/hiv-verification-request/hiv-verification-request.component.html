@@ -1,4 +1,4 @@
-<section>
+<section [formGroup]="hivVerificationForm" >
   <div  *ngIf="!isSendRequest">
     <div class="flex-row " [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'Request from Healthcare Provider'} ">
      <div class="flex-col flex-col-6"   *ngIf="(providerValue$ | async) === 'Request from Healthcare Provider'">

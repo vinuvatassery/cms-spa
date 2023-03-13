@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { VerificationFacade } from '@cms/case-management/domain';
 
@@ -29,7 +29,10 @@ export class HivVerificationRequestComponent implements OnInit {
    
   }
   onSendRequestClicked() {
-    this.isSendRequest = true;
+    this.hivVerificationForm.markAllAsTouched();
+    this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required,Validators.email])
+    this.hivVerificationForm.controls["providerEmailAddress"].updateValueAndValidity();
+   // this.isSendRequest = true;
   }
 
   onResendRequestClicked() {
