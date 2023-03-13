@@ -26,20 +26,21 @@
     Forms and Attachments
   </kendo-dialog-titlebar>
   <section>
-    <kendo-expansionpanel class="app-c-expansion-panel">
+    <kendo-expansionpanel class="app-c-expansion-panel" *ngFor="let folder of foldersList">
       <ng-template kendoExpansionPanelTitleDirective>
         <div class="header-content">
           <span class="material-icons" aria-label="files" aria-hidden="true"
             >folder</span
           >
-          <span>ID Proof</span>
+          <span>{{folder[0].folderName}}</span>
         </div>
       </ng-template>
       <div class="app-c-attachments">
         <ul aria-label="uploaded attachments">
-          <li aria-label="uploaded attachments list">
+          <li aria-label="uploaded attachments list" *ngFor="let item of folder">
             <span class="attachments-buttons-wrap">
-              <button kendoButton look="flat" aria-label="download attachment">
+              <button kendoButton look="flat" aria-label="download attachment"
+              (click)="onDownloadTemplateClick('download',item.documentTemplateId, item.name)">
                 <span
                   class="material-icons"
                   aria-label="download"
@@ -47,7 +48,8 @@
                   >file_download</span
                 >
               </button>
-              <button kendoButton look="flat" aria-label="open in new tab">
+              <button kendoButton look="flat" aria-label="open in new tab"
+              (click)="onViewTemplateClick('view',item.documentTemplateId, item.name)">
                 <span
                   class="material-icons"
                   aria-label="open in new tab"
@@ -55,12 +57,12 @@
                   >open_in_new</span
                 >
               </button>
-              <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span>
-              <span class="text-muted file-size">2MB</span>
+              <span>{{item.name}}</span>
+              <span class="text-muted file-size">{{item.sequenceNbr}}</span>
             </span>
-            <span class="attachments-date">Last Updated 10-10-2021</span>
+            <span class="attachments-date">Last Updated {{item.lastModificationTime}}</span>
           </li>
-          <li aria-label="uploaded attachments list">
+          <!-- <li aria-label="uploaded attachments list">
             <span class="attachments-buttons-wrap">
               <button kendoButton look="flat" aria-label="download attachment">
                 <span
@@ -128,11 +130,11 @@
               <span class="text-muted file-size">2MB</span>
             </span>
             <span class="attachments-date">Last Updated 10-10-2021</span>
-          </li>
+          </li> -->
         </ul>
       </div>
     </kendo-expansionpanel>
-    <kendo-expansionpanel class="app-c-expansion-panel">
+    <!-- <kendo-expansionpanel class="app-c-expansion-panel">
       <ng-template kendoExpansionPanelTitleDirective>
         <div class="header-content">
           <span class="material-icons" aria-label="files" aria-hidden="true"
@@ -393,6 +395,11 @@
           </li>
         </ul>
       </div>
-    </kendo-expansionpanel>
+    </kendo-expansionpanel> -->
   </section>
 </kendo-dialog>
+
+
+
+
+<!-- I am stepping out next 1-2 hours for doctor appointment  -->
