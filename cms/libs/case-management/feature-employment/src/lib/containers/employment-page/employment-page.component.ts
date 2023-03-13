@@ -146,9 +146,10 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.isEmployedFlag = (this.isEmployedGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No;
       this.employmentFacade.showLoader();
       if(this.isEmployedGridDisplay === false && this.employerListCount <= 0){
-        this.employmentFacade.errorShowHideSnackBar( "Please fill the employment details");
+        this.employmentFacade.employmentValidSubject.next(false);
         return  of(false);
       }else{
+        this.employmentFacade.employmentValidSubject.next(true);
         return this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
       .pipe( 

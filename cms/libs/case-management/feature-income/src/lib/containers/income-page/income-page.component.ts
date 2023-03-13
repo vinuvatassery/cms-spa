@@ -150,6 +150,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.hasNoIncome && this.incomeData.clientIncomes != null)
       {
         this.loaderService.show();
+        this.incomeFacade.incomeValidSubject.next(true);
         this.noIncomeData.noIncomeFlag = StatusFlag.No;
         this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.noIncomeData.clientId = this.clientId
@@ -165,7 +166,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       else
       {
-        this.incomeFacade.errorShowHideSnackBar( "Please fill the income details")
+        this.incomeFacade.incomeValidSubject.next(false);
         return  of(false);
       }
     }

@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 /** Facades **/
-import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, UserDefaultRoles } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, AcceptedApplication, GroupCode, CaseStatusCode, UserDefaultRoles,EligibilityRequestType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade,UserManagementFacade } from '@cms/system-config/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -28,6 +28,7 @@ export class AcceptApplicationComponent implements OnInit {
   acceptedApplication= new AcceptedApplication();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   caseOwners$ = this.loginUserFacade.usersByRole$;
+  @Input() clientId: string = '';
   @Input() clientCaseId: string = '';
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
@@ -88,7 +89,7 @@ export class AcceptApplicationComponent implements OnInit {
       this.populateEligibility();
       this.loaderService.show();
       this.btnDisabled = true
-    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication).subscribe({
+    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId).subscribe({
       next: (data) => {
         if(!this.isEdit)
         {
@@ -190,7 +191,7 @@ export class AcceptApplicationComponent implements OnInit {
   loaddata()
   {
     this.loaderService.show();
-    this.clientEligibilityFacade.getAcceptedApplication(this.clientCaseId,this.clientCaseEligibilityId).subscribe({
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.acceptedEligibility).subscribe({
       next: (data:any) => {
         if(!this.isEdit)
         {

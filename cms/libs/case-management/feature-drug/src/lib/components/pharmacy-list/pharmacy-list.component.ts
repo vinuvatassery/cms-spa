@@ -22,6 +22,7 @@ export class PharmacyListComponent implements OnInit {
   @Input() removePharmacyResponse$!: Observable<boolean>;
   @Input() triggerPriorityPopup$!: Observable<boolean>;
   @Input() searchLoaderVisibility$!: Observable<boolean>;
+  @Input() clientId: any;
 
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
