@@ -23,6 +23,7 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
 import {KendoFileSelectDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
 import { CaseManagerCardComponent } from './hiv-case-manager-card/case-manager-card.component';
 import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessibility.directive';
+import { PermissionManagerDirective } from './directives/permission-manager.directive';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -47,7 +48,8 @@ import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessi
     FormFieldAutoFocus, 
     TextFieldFormFieldAutoFocus,
     DropDownFieldFormFieldAutoFocus,
-    CaseManagerCardComponent
+    CaseManagerCardComponent,
+    PermissionManagerDirective
   ],
   exports: [
     LoginStatusComponent,
@@ -70,7 +72,8 @@ import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessi
     FormFieldAutoFocus, 
     TextFieldFormFieldAutoFocus,
     DropDownFieldFormFieldAutoFocus,
-    CaseManagerCardComponent
+    CaseManagerCardComponent,
+    PermissionManagerDirective
   ],
 })
 export class SharedUiCommonModule {}
