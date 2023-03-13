@@ -17,13 +17,15 @@ import { SnackBarNotificationType, NotificationSnackbarService } from '@cms/shar
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetHealthInsurancePriorityComponent implements OnInit {
+  @Input() caseEligibilityId: any;
+  @Input() clientId:any;
   @Input() selectedInsurance: any;
-  @Input() gridList: any;
   @Input() insurancePriorityModalButtonText: any;
   @Output() isCloseInsuranceModal = new EventEmitter();
   @Output() priorityAdded = new EventEmitter();
 
   /** Public properties **/
+  gridList: any;
   ddlMedicalHealthPlanPriority$ = this.lovFacade.priorityCodeType$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   form: FormGroup;
@@ -43,13 +45,22 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadDdlMedicalHealthPlanPriority();
-    this.gridList.forEach((row: any) => {
-      this.form.addControl(
-        row.clientInsurancePolicyId,
-        new FormControl(row.priorityCode, Validators.required)
-      );
+    this.insurancePolicyFacade.showLoader();
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId).subscribe((data: any) => {
+      this.gridList = data;
+      this.gridList.forEach((row: any) => {
+        this.form.addControl(
+          row.clientInsurancePolicyId,
+          new FormControl(row.priorityCode, Validators.required)
+        );
+      });
+      this.insurancePolicyFacade.hideLoader();
+      this.cdr.detectChanges();
+    }, (error: any) => {
+      this.insurancePolicyFacade.hideLoader();
+      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
     });
-    this.cdr.detectChanges();
+
 
   }
 
@@ -111,6 +122,10 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
+    if (this.gridList.length<=3 && !this.form.valid) {
+      this.formSubmitted = true;
+      return;
+    }
     let primaryExist = false;
     let secondaryExist = false;
     const tertiaryExist = this.gridList.some((m: any) => m.priorityCode === PriorityCode.Tertiary);
