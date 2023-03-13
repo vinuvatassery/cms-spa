@@ -158,9 +158,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeData.noIncomeSignatureNotedDate = null;
         this.noIncomeData.noIncomeNote = null;
         this.loaderService.show();
-        return this.incomeFacade.save(this.clientId, this.noIncomeData)
-        .pipe
-        (
+        return this.incomeFacade.save(this.clientId, this.noIncomeData).pipe(
         catchError((err: any) => {
           this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
           return  of(false);
