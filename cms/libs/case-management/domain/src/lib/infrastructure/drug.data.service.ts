@@ -204,11 +204,11 @@ export class DrugDataService {
   }
 
   loadClientPharmacyList(clientId: number) {
-    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`);
+    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies`);
   }
 
   searchPharmacies(searchText: string) {
-    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacy/search?searchText=${searchText}`);
+    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies?searchText=${searchText}`);
   }
 
   getPharmacyById(vendorId: string) {
@@ -216,7 +216,7 @@ export class DrugDataService {
   }
 
   addClientPharmacy(clientId: number, pharmacy: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`, pharmacy);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies`, pharmacy);
   }
 
   editClientPharmacy(clientId: number, clientPharmacyId: string, pharmacy: any) {
