@@ -25,7 +25,7 @@ export class PermissionManagerDirective implements OnInit, OnDestroy {
     this.subscription.push(
 
       this.userProfileService.getProfile$
-      .pipe(first(profile => profile[0].permissions != null))
+      .pipe(first(profile => profile[0]?.permissions != null))
       .subscribe((profile:any)=>{       
             
             this.permission =profile[0]?.permissions 

@@ -64,8 +64,10 @@ export class AuthService {
     this.oidcSecurityService.authorize();
   }
 
-  logOut(): void {
-    this.oidcSecurityService.logoff();
+  logOut(): void {   
+    this.oidcSecurityService.logoff().subscribe((result) => {      
+    });
+
   }
 
   logoffAndRevokeTokens(): void {
