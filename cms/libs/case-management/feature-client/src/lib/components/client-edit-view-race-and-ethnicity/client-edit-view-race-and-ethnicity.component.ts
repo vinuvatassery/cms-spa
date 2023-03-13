@@ -81,7 +81,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   }
 
   getCheckedItems(currentItem: any) {
-    var values = this.appInfoForm.controls['RaceAndEthnicity']?.value;
+    let values = this.appInfoForm.controls['RaceAndEthnicity']?.value;
     if (values.length > 0) {
       let item = values.find((x: any) => x.lovCode == currentItem.lovCode);
       if (item) {

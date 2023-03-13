@@ -2,8 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
-  FormGroup,
-  Validators,
+  FormGroup
 } from '@angular/forms';
 import {  LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
