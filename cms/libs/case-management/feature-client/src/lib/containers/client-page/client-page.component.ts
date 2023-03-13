@@ -1021,7 +1021,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantName = name;
   }
 
-  private addSaveForLaterSubscription(): void {
+  private addSaveForLaterSubscription(): void {    
     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       if (this.checkValidations()) {
         this.saveAndUpdate().subscribe((response: any) => {
