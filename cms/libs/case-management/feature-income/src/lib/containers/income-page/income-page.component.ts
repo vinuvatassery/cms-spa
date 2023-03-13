@@ -94,7 +94,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(){
     this.workflowFacade.enableSaveButton();
-  } 
+  }
 
   /** Private methods **/
   private incomeNoteWordCount() {
@@ -165,7 +165,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         }));
       }
       else
-      { 
+      {
         this.incomeFacade.incomeValidSubject.next(false);
         return  of(false);
       }
@@ -443,5 +443,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].updateValueAndValidity();
       this.noIncomeDetailsForm.controls['noIncomeNote'].updateValueAndValidity();
     }
+  }
+  dateChange()
+  {
+    this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value);
   }
 }
