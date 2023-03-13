@@ -645,6 +645,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.appInfoForm.markAllAsTouched();
     this.appInfoForm.updateValueAndValidity();
     this.setValidationsSectionOne();
+    this.setValidationforSexAtBirth();
+    this.setTransgenderValidations();
     this.setRegisterToVoteValidation();
     this.setPronounValidation();
     this.setMaterialCodeValidation();
@@ -657,6 +659,41 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setLanguageValidation(); 
     this.setRaceAndGenderValidation(); 
     this.appInfoForm.updateValueAndValidity();
+  }
+
+  private setValidationforSexAtBirth(){
+    let sexAtBirthValue=this.appInfoForm.controls['BirthGender'].value;
+    if (sexAtBirthValue === 'NOT_LISTED') {
+      this.appInfoForm.controls['BirthGenderDescription'].setValidators(
+        Validators.required
+      );
+    } else {
+      this.appInfoForm.controls['BirthGenderDescription'].removeValidators(
+        Validators.required
+      );
+    }
+    this.appInfoForm.controls['BirthGenderDescription'].updateValueAndValidity();
+  }
+
+  setTransgenderValidations(){
+    let transgenderValue=this.appInfoForm.controls['Transgender'].value;
+    if (transgenderValue === 'NOT_LISTED') {
+      this.appInfoForm.controls['TransgenderDescription'].setValidators(
+        Validators.required
+      );
+    } else {
+      this.appInfoForm.controls['TransgenderDescription'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls[
+        'TransgenderDescription'
+      ].updateValueAndValidity();
+    }
+    if(transgenderValue === TransGenderCode.YES) {
+      this.appInfoForm.controls['yesTransgender'].setValidators(
+        Validators.required
+      );
+    }
   }
 
   private setValidationsSectionOne() {

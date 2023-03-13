@@ -55,7 +55,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadSessionSubscription!: Subscription;
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),
-    noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+    noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
     noIncomeNote: new FormControl('', []),
   });
   /** Constructor **/
@@ -260,7 +260,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeFlag = true;
         this.noIncomeDetailsForm = new FormGroup({
           noIncomeClientSignedDate: new FormControl('', []),
-          noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+          noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
           noIncomeNote: new FormControl('', []),
         });
         this.noIncomeDetailsFormChangeSubscription();
@@ -291,7 +291,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.hasNoIncome) {
       this.noIncomeDetailsForm = new FormGroup({
         noIncomeClientSignedDate: new FormControl('', []),
-        noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+        noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
         noIncomeNote: new FormControl('', []),
       });
       this.isNodateSignatureNoted = true;

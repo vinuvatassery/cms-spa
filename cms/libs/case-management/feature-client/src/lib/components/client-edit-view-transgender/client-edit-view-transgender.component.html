@@ -33,14 +33,12 @@
                   [fillMode]="formUiStyle.inputFillMode"
                   [formControlName]="DescriptionField"
                   [maxlength]="50"
-                  [disabled]="
-                    appInfoForm.controls['Transgender'].value !== 'NOT_LISTED' "
                   placeholder="Enter Answer"
                   (blur)="descriptionChange()" 
                 ></kendo-textbox>
                   </kendo-floatinglabel>
               <kendo-formerror
-                *ngIf="!appInfoForm.controls[DescriptionField].valid"
+                *ngIf="!appInfoForm.controls[DescriptionField].valid && !appInfoForm.controls[DescriptionField].disabled"
                 >Are they transgender is required.</kendo-formerror
               >
                 </div>

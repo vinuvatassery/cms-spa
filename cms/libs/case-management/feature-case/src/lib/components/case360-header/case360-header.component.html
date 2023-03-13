@@ -27,14 +27,14 @@
       Donna Summer
       <span class="normal-text text-muted pl-1">(Donny Summer)</span>
       <span
-        class="title-star-icon icon-filled"
-        kendoPopoverAnchor
-        [popover]="userDetails"
-        showOn="hover"
+        class="title-star-icon icon-filled" 
         aria-label="user details"
         aria-hidden="true"
       >
         <span
+        kendoPopoverAnchor
+        [popover]="userDetails"
+        showOn="hover"
           class="material-icons"
           aria-label="user information star"
           aria-hidden="true"
@@ -70,7 +70,7 @@
   </section>
 
   <!-- User Details Popover -->
-  <kendo-popover #userDetails width="330">
+  <kendo-popover #userDetails [width]="380" position="bottom">
     <ng-template kendoPopoverBodyTemplate>
       <section class="user-details-block">
         <div class="flex-row">

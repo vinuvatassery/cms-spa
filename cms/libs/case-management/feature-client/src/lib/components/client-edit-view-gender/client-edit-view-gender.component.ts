@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 })
 export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
   @Input() appInfoForm: FormGroup;
+  @Input() textboxDisable!:boolean;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   GenderLovs$ = this.lovFacade.genderlov$;
   applicantInfo$ = this.clientfacade.applicantInfo$;
@@ -74,6 +75,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
       this.appInfoForm.controls[ControlPrefix.gender +gender.clientGenderCode]?.setValue(true);
       if(gender.clientGenderCode===GenderCode.notListed && gender.otherDesc!==null){
         this.appInfoForm.controls[this.DescriptionField]?.setValue(gender.otherDesc);
+        this.textboxDisable = false;
       }
       this.appInfoForm.controls['GenderGroup']?.setValue(gender.clientGenderCode);      
     })
@@ -93,13 +95,16 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
           this.updateWorkflowCount(true);
         }  
         else{
+          this.textboxDisable=true;
           this.enableAllGender();
         }      
       }
       else{
+        this.textboxDisable=true;
         this.enableAllGender();
       }
     });
+    this.cdr.detectChanges();
   }
 
   private onDoNotKnowSelected(){
@@ -131,6 +136,9 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
 
   enableDisableGender(checked:boolean,lovCode:any){  
     switch(lovCode){  
+      case GenderCode.notListed:
+        this.textboxDisable = !checked;
+        break;
       case GenderCode.dontKnow:
       case GenderCode.dontKnowAnswer:
       case GenderCode.dontKnowQustion:{
@@ -139,6 +147,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
             this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].setValue(false);
             this.appInfoForm.controls[ ControlPrefix.gender + gender.lovCode].disable();
             this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
+            this.textboxDisable = true; 
           });   
           break;
         }
