@@ -1,10 +1,8 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Validators, FormGroup, FormControl,} from '@angular/forms';
-import { first } from 'rxjs';
 import {  SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({

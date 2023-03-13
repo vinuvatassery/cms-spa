@@ -1,14 +1,10 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectorRef, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
-import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoin, mergeMap, of, Subscription, tap, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Facades **/
-import { UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade,
-   PrescriptionDrugFacade, PrescriptionDrug,
-    StatusFlag, CompletionChecklist,
-    NavigationType,
-    ClientDocumentFacade, YesNoFlag } from '@cms/case-management/domain';
+import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade,   PrescriptionDrugFacade, PrescriptionDrug,
+    StatusFlag, CompletionChecklist,    NavigationType, YesNoFlag } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
@@ -22,14 +18,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Public properties **/
-  // public uploadRemoveUrl = 'removeUrl';
-  // uploadedBenefitSummaryFile: any[] = [];
-  // summaryBenefitFiles: any;
-  // uploadFileRestrictions: UploadFileRistrictionOptions =
-  //   new UploadFileRistrictionOptions();
   prescriptionDrugForm!: FormGroup;
   prescriptionDrug!: PrescriptionDrug;
-  // isBenefitsChanged = true;
   clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
   pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
   searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
@@ -41,10 +31,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   clientCaseEligibilityId: string = '';
   sessionId: any = '';
   clientId: any;
-  clientCaseId: any;
-  // summaryBenefitsValidator: boolean = false;
-  // isSummaryOfBenefitsRequired$ = new BehaviorSubject<boolean>(false);
-  // showDocRequiredValidation = false;
+  clientCaseId: any;  
   nonPreferredFlagValidation = false;
   prescriptionInfo = {} as PrescriptionDrug;
 

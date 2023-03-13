@@ -9,8 +9,6 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } 
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
 import {LovFacade } from '@cms/system-config/domain'
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { YesNoFlag } from '@cms/shared/ui-common';
-
 
 @Component({
   selector: 'case-management-family-and-dependent-page',
@@ -150,7 +148,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   private save() {
-    this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No
     if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)){
       this.familyAndDependentFacade.dependentValidSubject.next(false);
       return of(false);
@@ -159,9 +157,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.familyAndDependentFacade.dependentValidSubject.next(true);
       return  this.familyAndDependentFacade.saveAndContinueDependents
         (this.clientId, this.clientCaseEligibilityId, this.familyStatus)
-      .pipe
-      (
-      catchError((err: any) => {
+      .pipe(catchError((err: any) => {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         return  of(false);
       })
