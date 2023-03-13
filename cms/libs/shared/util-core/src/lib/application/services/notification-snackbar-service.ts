@@ -46,7 +46,7 @@ export class NotificationSnackbarService {
           }
           else
           {            
-              subtitleText = errorBody?.error?.error?.message ?? this.configurationProvider.appSettings.uiOriginExceptionGenMessage
+              subtitleText = errorBody?.error?.error?.message ?? this.configurationProvider.appSettings.genericErrorMessage
           } 
         }
 
