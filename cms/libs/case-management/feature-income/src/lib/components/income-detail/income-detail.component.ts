@@ -225,6 +225,7 @@ export class IncomeDetailComponent implements OnInit {
           )
           .subscribe({
             next: (incomeResponse) => {
+              this.incomeFacade.incomeValidSubject.next(true);
               this.incomeFacade.HideLoader();
               this.incomeFacade.ShowHideSnackBar(
                 SnackBarNotificationType.SUCCESS,

@@ -11,14 +11,15 @@ import {  SnackBarNotificationType } from '@cms/shared/util-core';
 })
 export class RemoveIncomeConfirmationComponent {
   @Input() selectedIncome: any;
+  @Input() clientCaseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
   @Output() closePopup: EventEmitter<boolean> = new EventEmitter();
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() deleteUpdateIncomeEvent = new EventEmitter<any>();
+
   sessionId!: string;
-  clientId: any;
-  clientCaseId : any;
-  clientCaseEligibilityId : any;
   btnDisabled = false
   /** Constructor **/
   constructor(
@@ -29,20 +30,9 @@ export class RemoveIncomeConfirmationComponent {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCase();
+
   }
 
-  // loading case details like session id, eligibility id , clientid and clientcaseid
-  loadCase(){
-    this.sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-     this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-     .subscribe((session: any) => {
-      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
-      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId
-      this.clientId =JSON.parse(session.sessionData).clientId
-     });
-  }
   /** Internal event methods **/
 
   // click on Delete employer confirmation

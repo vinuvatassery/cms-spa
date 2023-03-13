@@ -7,6 +7,7 @@ import {
   EventEmitter,
   Output,
   OnChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
@@ -24,9 +25,12 @@ export class EmployerListComponent implements OnInit, OnChanges {
   @Input() data!: any;
   @Input() employment$: any;
   @Input() isGridLoaderShow: any;
+  @Input() clientCaseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
+
   @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
-  @Input() clientId!: any;
   /** Public properties **/
   filterable = false;
   isAddEmployerButtonDisplayed!: boolean;
@@ -34,6 +38,8 @@ export class EmployerListComponent implements OnInit, OnChanges {
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
   selectedEmployer: ClientEmployer = new ClientEmployer();
+  employmentValid$ = this.employmentFacade.employmentValid$;
+  isEmployerAvailable:boolean = true;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public sortValue = this.employmentFacade.sortValue;
   public sortType = this.employmentFacade.sortType;
@@ -59,13 +65,17 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef) {}
 
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
     this.addEmployerButtonDisplay();
     this.loadEmployments();
+    this.employmentValid$.subscribe(response=>{
+      this.isEmployerAvailable = response;
+      this.cdr.detectChanges();
+    })
 
   }
 

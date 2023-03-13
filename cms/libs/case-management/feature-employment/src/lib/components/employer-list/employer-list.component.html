@@ -66,7 +66,7 @@
         </ng-template>
       </kendo-grid>
     </div>
-
+    <kendo-formerror *ngIf="!isEmployerAvailable"> A Response is required.</kendo-formerror>
     <!-- add employer button -->
     <div class="flex-row">
       <div class="flex-col mt-1">
@@ -86,8 +86,12 @@
   <kendo-dialog-titlebar>
     {{ isAdd ? 'Add Employer' : 'Edit Employer ' }}
   </kendo-dialog-titlebar>
-  <case-management-employer-detail [sessionClientId]="clientId" (addUpdateEmploymentEvent)="updateEmploymentHandle($event)" [isAdd]="isAdd" [selectedEmployer]="selectedEmployer"
-    (closeModal)="onEmployerClosed()">
+  <case-management-employer-detail [sessionClientId]="clientId" (addUpdateEmploymentEvent)="updateEmploymentHandle($event)" [isAdd]="isAdd"
+    [selectedEmployer]="selectedEmployer"
+    (closeModal)="onEmployerClosed()"
+    [clientCaseId]="clientCaseId"
+    [clientCaseEligibilityId]="clientCaseEligibilityId"
+    [clientId]="clientId">
   </case-management-employer-detail>
 </kendo-dialog>
 
@@ -96,5 +100,8 @@
 <kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete employer?">
   <case-management-remove-employer-confirmation (deleteUpdateEmploymentEvent)="updateEmploymentHandle($event)" [selectedEmployer]="selectedEmployer"
-    (closeModal)="onRemoveEmployerConfirmationClosed()"></case-management-remove-employer-confirmation>
+    (closeModal)="onRemoveEmployerConfirmationClosed()"
+    [clientCaseId]="clientCaseId"
+    [clientCaseEligibilityId]="clientCaseEligibilityId"
+    [clientId]="clientId"></case-management-remove-employer-confirmation>
 </kendo-dialog>
