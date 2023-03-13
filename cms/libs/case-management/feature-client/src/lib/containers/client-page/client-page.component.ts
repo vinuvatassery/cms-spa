@@ -157,7 +157,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.applicantInfo.clientCaseEligibilityAndFlag === undefined) {
       this.applicantInfo.clientCaseEligibilityAndFlag = new ClientCaseEligibilityAndFlag;
     }
-    this.clientFacade.load(this.clientCaseId, this.clientCaseEligibilityId).subscribe({
+    this.clientFacade.load(this.clientId,this.clientCaseId, this.clientCaseEligibilityId).subscribe({
       next: response => {
         if (response) {
           /**Populating Client */
@@ -258,7 +258,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.populateApplicantInfoModel();
       if (this.clientCaseEligibilityId !== null && this.clientCaseEligibilityId !== undefined) {
         this.message = 'Applicant info updated successfully';
-        return this.clientFacade.update(this.applicantInfo).pipe(
+        return this.clientFacade.update(this.applicantInfo,this.clientId).pipe(
           catchError((error: any) => {
             if (error) {
               this.clientFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
@@ -645,6 +645,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.appInfoForm.markAllAsTouched();
     this.appInfoForm.updateValueAndValidity();
     this.setValidationsSectionOne();
+    this.setValidationforSexAtBirth();
+    this.setTransgenderValidations();
     this.setRegisterToVoteValidation();
     this.setPronounValidation();
     this.setMaterialCodeValidation();
@@ -657,6 +659,41 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setLanguageValidation(); 
     this.setRaceAndGenderValidation(); 
     this.appInfoForm.updateValueAndValidity();
+  }
+
+  private setValidationforSexAtBirth(){
+    let sexAtBirthValue=this.appInfoForm.controls['BirthGender'].value;
+    if (sexAtBirthValue === 'NOT_LISTED') {
+      this.appInfoForm.controls['BirthGenderDescription'].setValidators(
+        Validators.required
+      );
+    } else {
+      this.appInfoForm.controls['BirthGenderDescription'].removeValidators(
+        Validators.required
+      );
+    }
+    this.appInfoForm.controls['BirthGenderDescription'].updateValueAndValidity();
+  }
+
+  setTransgenderValidations(){
+    let transgenderValue=this.appInfoForm.controls['Transgender'].value;
+    if (transgenderValue === 'NOT_LISTED') {
+      this.appInfoForm.controls['TransgenderDescription'].setValidators(
+        Validators.required
+      );
+    } else {
+      this.appInfoForm.controls['TransgenderDescription'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls[
+        'TransgenderDescription'
+      ].updateValueAndValidity();
+    }
+    if(transgenderValue === TransGenderCode.YES) {
+      this.appInfoForm.controls['yesTransgender'].setValidators(
+        Validators.required
+      );
+    }
   }
 
   private setValidationsSectionOne() {
@@ -984,7 +1021,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantName = name;
   }
 
-  private addSaveForLaterSubscription(): void {
+  private addSaveForLaterSubscription(): void {    
     this.saveForLaterClickSubscription = this.workFlowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       if (this.checkValidations()) {
         this.saveAndUpdate().subscribe((response: any) => {

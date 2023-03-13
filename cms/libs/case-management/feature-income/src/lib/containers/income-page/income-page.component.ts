@@ -55,7 +55,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadSessionSubscription!: Subscription;
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),
-    noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+    noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
     noIncomeNote: new FormControl('', []),
   });
   /** Constructor **/
@@ -94,7 +94,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(){
     this.workflowFacade.enableSaveButton();
-  } 
+  }
 
   /** Private methods **/
   private incomeNoteWordCount() {
@@ -150,6 +150,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.hasNoIncome && this.incomeData.clientIncomes != null)
       {
         this.loaderService.show();
+        this.incomeFacade.incomeValidSubject.next(true);
         this.noIncomeData.noIncomeFlag = StatusFlag.No;
         this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.noIncomeData.clientId = this.clientId
@@ -164,8 +165,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         }));
       }
       else
-      { 
-        this.incomeFacade.errorShowHideSnackBar( "Please fill the income details")
+      {
+        this.incomeFacade.incomeValidSubject.next(false);
         return  of(false);
       }
     }
@@ -259,7 +260,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeFlag = true;
         this.noIncomeDetailsForm = new FormGroup({
           noIncomeClientSignedDate: new FormControl('', []),
-          noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+          noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
           noIncomeNote: new FormControl('', []),
         });
         this.noIncomeDetailsFormChangeSubscription();
@@ -290,7 +291,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.hasNoIncome) {
       this.noIncomeDetailsForm = new FormGroup({
         noIncomeClientSignedDate: new FormControl('', []),
-        noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+        noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
         noIncomeNote: new FormControl('', []),
       });
       this.isNodateSignatureNoted = true;
@@ -442,5 +443,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].updateValueAndValidity();
       this.noIncomeDetailsForm.controls['noIncomeNote'].updateValueAndValidity();
     }
+  }
+  dateChange()
+  {
+    this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value);
   }
 }

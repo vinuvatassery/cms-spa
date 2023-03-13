@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 export class VerificationFacade {
 
     save():Observable<boolean>{
-        //TODO: save api call   
+        //TODO: save api call //NOSONAR   
         return of(true);
       }
 }

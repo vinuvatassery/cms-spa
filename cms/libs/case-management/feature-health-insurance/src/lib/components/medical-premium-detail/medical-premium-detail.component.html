@@ -15,7 +15,7 @@
           <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
             (valueChange)="onHealthInsuranceTypeChanged()" formControlName="insuranceType" textField="lovDesc"
-            valueField="lovCode" [disabled]="isViewContentEditable || isEdit" [valuePrimitive]="true"
+            valueField="lovCode"  [valuePrimitive]="true"
             [loading] = "(insuranceTypeList$ | async)?.length===0" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -29,12 +29,12 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Benificiary ID Number">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="Medicare Benificiary ID Number"
+            <kendo-textbox  aria-label="Medicare Benificiary ID Number"
               placeholder="Medicare Benificiary ID Number" formControlName="medicareBeneficiaryIdNbr" [maxlength]="20"
               [fillMode]="formUiStyle.inputFillMode">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid">Medicare Benificiary
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid && !healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].disabled">Medicare Benificiary
             ID Number is required.</kendo-formerror>
         </div>
         <div class="flex-col">
@@ -42,35 +42,35 @@
             <kendo-dropdownlist aria-label="Medicare Coverage Type" [fillMode]="formUiStyle.dropDownFillMode"
               [data]="medicareCoverageTypeList$ | async" (valueChange)="onMedicareCoverageTypeChanged()"
               formControlName="medicareCoverageTypeCode" textField="lovDesc" valueField="lovCode"
-              [disabled]="isViewContentEditable" [valuePrimitive]="true">
+              [valuePrimitive]="true">
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareCoverageTypeCode'].valid">Medicare Coverage
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareCoverageTypeCode'].valid && !healthInsuranceForm.controls['medicareCoverageTypeCode'].disabled">Medicare Coverage
             Type is required.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part A Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part A Start Date" formControlName="medicarePartAStartDate"
-              [disabled]="isViewContentEditable" formatPlaceholder="formatPattern" placeholder="">
+               formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartAStartDate'].valid">Medicare Part A Start
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartAStartDate'].valid && !healthInsuranceForm.controls['medicarePartAStartDate'].disabled">Medicare Part A Start
             Date is required.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part B Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part B Start Date" formControlName="medicarePartBStartDate"
-              [disabled]="isViewContentEditable" formatPlaceholder="formatPattern" placeholder="">
+               formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid">Medicare Part B Start
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid && !healthInsuranceForm.controls['medicarePartBStartDate'].disabled">Medicare Part B Start
             Date is required.</kendo-formerror>
         </div>
         <div class="flex-col mt-2">
           <span class="app-checkboxwidtext-wrapper">
-            <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox aria-labelledby="qmb" id="qmb"
+            <input  type="checkbox" kendoCheckBox aria-labelledby="qmb" id="qmb"
               formControlName="onQmbFlag" />
             <label class="k-checkbox-label" for="qmb">On Qualified Medicare Beneficiary (QMB)</label>
           </span>
@@ -83,12 +83,12 @@
             </legend>
             <div class="component-list-h">
               <span class="app-radiobtnwidtext-wrapper">
-                <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="onLisFlag"
+                <input type="radio" kendoRadioButton name="onLisFlag"
                   aria-labelledby="LowIncomeSusidyYes" formControlName="onLisFlag" id="LowIncomeSusidyYes" value="Y" />
                 <kendo-label class="k-radio-label" for="LowIncomeSusidyYes" text="Yes"></kendo-label>
               </span>
               <span class="app-radiobtnwidtext-wrapper">
-                <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="onLisFlag"
+                <input type="radio"  kendoRadioButton name="onLisFlag"
                   aria-labelledby="LowIncomeSusidyNo" formControlName="onLisFlag" id="LowIncomeSusidyNo" value="N" />
                 <kendo-label class="k-radio-label" for="LowIncomeSusidyNo" text="No"></kendo-label>
               </span>
@@ -135,37 +135,37 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance Start Date">
             <kendo-datepicker aria-label="Insurance Start Date" [fillMode]="formUiStyle.dateInputFillMode"
-              format="MM-dd-yyyy" formControlName="insuranceStartDate" [disabled]="isViewContentEditable"
+              format="MM-dd-yyyy" formControlName="insuranceStartDate" 
               formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid ">Insurance Start Date is
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid && !healthInsuranceForm.controls['insuranceStartDate'].disabled">Insurance Start Date is
             required.</kendo-formerror>
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="endDateMin" (focus)="changeMinDate()" (blur)="endDateOnChange()"
-              (valueChange)="endDateValueChange($event)" [disabled]="isViewContentEditable"
+              (valueChange)="endDateValueChange($event)" 
               formControlName="insuranceEndDate" formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror
-            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate">Insurance
+            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate && !healthInsuranceForm.controls['insuranceEndDate'].disabled">Insurance
             End Date is required.</kendo-formerror>
           <kendo-formerror
-            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate">End Date must be after Start Date.</kendo-formerror>
+            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate && !healthInsuranceForm.controls['insuranceEndDate'].disabled">End Date must be after Start Date.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="lainsurance id number"
+            <kendo-textbox  aria-label="insurance id number"
               placeholder="Insurance ID Number" formControlName="insuranceIdNumber" [maxlength]="20"
               [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded">
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded && !healthInsuranceForm.controls['insuranceIdNumber'].disabled">
             Insurance ID Number is required.</kendo-formerror>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded && !healthInsuranceForm.controls['insuranceIdNumber'].disabled">
             Special characters not allowed.</kendo-formerror>
         </div>
         <div class="flex-col mat-form-sm-b-space">

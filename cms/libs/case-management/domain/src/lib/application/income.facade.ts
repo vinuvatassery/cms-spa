@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { Observable } from 'rxjs';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider, NotificationSource  } from '@cms/shared/util-core';
+import { Observable,Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
@@ -21,6 +21,7 @@ export class IncomeFacade {
   private incomesSubject = new BehaviorSubject<any>([]);
   private incomesResponseSubject = new BehaviorSubject<any>([]);
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
+  incomeValidSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlIncomeTypes$ = this.ddlIncomeTypesSubject.asObservable();
@@ -30,6 +31,7 @@ export class IncomeFacade {
   incomes$ = this.incomesSubject.asObservable();
   incomesResponse$ = this.incomesResponseSubject.asObservable();
   dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
+  incomeValid$ = this.incomeValidSubject.asObservable();
 
   /** Constructor**/
   constructor(
@@ -52,7 +54,7 @@ export class IncomeFacade {
 
     errorShowHideSnackBar( subtitle : any)
     {
-      this.notificationSnackbarService.errorSnackBar(subtitle)
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
     }
 
     ShowLoader()

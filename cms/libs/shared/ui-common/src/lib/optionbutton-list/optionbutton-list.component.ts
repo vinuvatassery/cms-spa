@@ -1,4 +1,4 @@
-import { Component, OnInit,Input,Output, EventEmitter  } from '@angular/core';
+import { Component, OnInit,Input,Output, EventEmitter, ChangeDetectorRef  } from '@angular/core';
 import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -47,13 +47,15 @@ export class OptionbuttonListComponent implements OnInit {
 
      /** Constructor **/
   constructor(private formBuilder: FormBuilder,
-    private readonly lovFacade : LovFacade) {
+    private readonly lovFacade : LovFacade,
+    private readonly cdr : ChangeDetectorRef) {
       this.appInfoForm = this.formBuilder.group({Material: [''],});
     }
 
       /** Lifecycle hooks **/
   ngOnInit(): void {
     this.textFieldDisable = true;
+    this.detectOptionChange();
   }
 
   private updateDataPointCount(isCompleted:boolean){
@@ -97,4 +99,20 @@ export class OptionbuttonListComponent implements OnInit {
   onOtherChanged(event:any){
     this.updateDataPointCount(this.appInfoForm.controls[this.otherControlerName]?.value ? true : false);
   }
+
+  detectOptionChange() {
+    this.textFieldDisable = false;
+    this.cdr.detectChanges();
+    this.appInfoForm?.get(this.OptionControlerName)?.valueChanges.subscribe((changedValue: any) => {
+      if (changedValue && changedValue != "" && changedValue.toUpperCase() == YesNoFlag.Yes.toUpperCase()) {
+        this.textFieldDisable = false;
+        this.cdr.detectChanges();
+      }
+      else {
+        this.textFieldDisable = true;
+        this.cdr.detectChanges();
+      }
+    })
+  }
+
 }

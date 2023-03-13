@@ -29,7 +29,7 @@ $pagination-height : 48px;
     font-size: $font-size;
     font-family: $font-family-medium;
     white-space: normal;
-    vertical-align: middle;
+    vertical-align: middle !important;
     font-weight: normal;
     .k-link{
       &:hover{
@@ -37,7 +37,8 @@ $pagination-height : 48px;
     
         }
     }
-   
+  
+
   }
   .k-grid-header-sticky {
     border-left-color: material-color($hive-neutral-palette, 600) !important;
@@ -51,8 +52,42 @@ $pagination-height : 48px;
 }
   .k-grid-header {
     padding: $size-0 !important;
+    .k-filterable {
+      > .k-cell-inner .k-link{
+        padding-inline-end: 8px;
+      }
+      .k-grid-column-menu {
+        position: relative;
+        right: 10px;
+        padding: $size-0;
+        height: $size-xxxl;
+        width: $size-xxxl;
+        top: $size-0;
+        display: flex;
+        border-radius: 2px;
+        margin-left: 5px;
+        &:active{
+          background: $white;
+          .k-icon{
+            color: $black;
+          }
+        }
+        &:hover{
+          background: rgba($black,0.5);
+       
+        }
+     
+      }
+    
+    }
+
+    .k-table-th{
+      .k-column-resizer{
+        border-right: 1px solid rgba($white,0.5);
+       }
+    }
   }
-  td {
+  td.k-table-td {
     padding: $size-l $size-xl;
     border-left-color: material-color($hive-neutral-palette, 200);
   }
@@ -69,7 +104,7 @@ $pagination-height : 48px;
   .k-footer-template {
     td,
     .k-grid-footer-sticky {
-      background-color: $gridfootercolor !important;
+      background-color: $grid_footer_color !important;
       color: $white !important;
       border-left-color: material-color($hive-neutral-palette, 900) !important;
       border-right-color: material-color($hive-neutral-palette, 900) !important;
@@ -165,8 +200,7 @@ $pagination-height : 48px;
 /*Table Filter Section*/
 .table-filter-section {
   display: flex;
-  margin-bottom: $size-xx;
-  // gap: 16px;
+  margin-bottom: $size-xx; 
   .filter-section_items {
     width: 100%;
     &.filter--select {
@@ -175,8 +209,7 @@ $pagination-height : 48px;
         border-top-right-radius: 0px !important;
         border-bottom-right-radius: 0px !important;
         background: material-color($hive-neutral-palette, 100) !important;
-        border:1px solid material-color($hive-neutral-palette, 100) !important;
-        // background: #efefef;
+        border:1px solid material-color($hive-neutral-palette, 100) !important; 
       }
       @media (max-width: $breakpoint-xlg) {
         max-width: 125px;
@@ -384,34 +417,7 @@ table,
   }
 }
 /*table filter icon*/
-.k-filterable {
-  > .k-cell-inner .k-link{
-    padding-inline-end: 20px;
-  }
-  .k-grid-column-menu {
-    position: relative;
-    right: 30px;
-    padding: $size-0;
-    height: $size-xxxl;
-    width: $size-xxxl;
-    top: $size-0;
-    display: flex;
-    border-radius: 2px;
-    margin-left: 5px;
-    &:active{
-      background: $white;
-      .k-icon{
-        color: $black;
-      }
-    }
-    &:hover{
-      background: rgba($black,0.5);
-   
-    }
- 
-  }
 
-}
 
 .k-grid-columnmenu-popup{
   .k-columnmenu-item{
@@ -475,8 +481,7 @@ table,
    &.k-numerictextbox, &.k-focus {
         margin: 0 0px;
         width: 100%;
-        max-width: 30px;
-        /* display: inline-block; */
+        max-width: 30px; 
         border-bottom: 0px;
         background: transparent;
     }
@@ -499,8 +504,7 @@ table,
   }
   .k-pager-nav{
     width: $pagination-height;
-    height: $pagination-height;
-    /* height: 100%; */
+    height: $pagination-height; 
     border-radius: 0px;
   }
  
@@ -524,7 +528,7 @@ table,
 }
 
 .k-pager-wrap, .k-pager{
-  background: $light-bgcolor;
+  background: $light-bg_color;
   padding: 0px;
 }
 

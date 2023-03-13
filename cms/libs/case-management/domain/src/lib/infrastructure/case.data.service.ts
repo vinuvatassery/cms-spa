@@ -26,21 +26,21 @@ export class CaseDataService {
   loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
     return this.http.get<ClientProfileCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/client-profile/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
 
   }
 
-  loadClientProfile(clientCaseEligibilityId: string) {
+  loadClientProfile(clientId: number) {
     return this.http.get<ClientProfileCase[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/clientCaseEligibilityId=${clientCaseEligibilityId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/profile`
     );
 
   }
 
   loadClientProfileHeader(clientId: number) {
     return this.http.get<ClientProfileCase[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-profile/clients/header/clientId=${clientId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/profile-header`
     );
 
   }

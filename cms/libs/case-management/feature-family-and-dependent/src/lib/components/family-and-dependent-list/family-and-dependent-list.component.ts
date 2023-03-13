@@ -1,18 +1,17 @@
 /** Angular **/
 import {
   Component,  OnInit,  ChangeDetectionStrategy,  Input,
-   OnChanges, EventEmitter,  Output,} from '@angular/core';
+   OnChanges, EventEmitter,  Output,ChangeDetectorRef} from '@angular/core';
 import {  Router ,ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { Subject } from 'rxjs/internal/Subject';
 import { UIFormStyle } from '@cms/shared/ui-tpa' 
 /** Enums **/
-import { DependentTypeCode, ScreenType } from '@cms/case-management/domain';
+import { DependentTypeCode, ScreenType, FamilyAndDependentFacade } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
 import {  State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
-
 
 @Component({
   selector: 'case-management-family-and-dependent-list',
@@ -49,9 +48,11 @@ CAClient = DependentTypeCode.CAClient;
   @Output() searchTextHandleEvent = new EventEmitter<any>(); 
   @Output() addExistingClientEvent = new EventEmitter<any>(); 
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  dependentValid$ = this.familyAndDependentFacade.dependentValid$;
 
     /**Constructor */
-    constructor( private router: Router , private activatedRoute : ActivatedRoute) { }
+    constructor( private router: Router , private activatedRoute : ActivatedRoute,
+      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef) { }
 
     isEditFamilyMember!: boolean;
     isAddOrEditFamilyDependentDisplay!: boolean;
@@ -67,7 +68,8 @@ CAClient = DependentTypeCode.CAClient;
     openDeleteConfirmation! : boolean
     deletebuttonEmitted = false
     editbuttonEmitted = false
-    deleteRequest$ = this.deleteRequestSubject.asObservable();  
+    deleteRequest$ = this.deleteRequestSubject.asObservable(); 
+    isDependentAvailable:boolean=true; 
     public  state!: State
   public actions = [
     {
@@ -113,7 +115,11 @@ CAClient = DependentTypeCode.CAClient;
 
   ngOnInit(): void {   
   
-    this.addOrEditFamilyDependentDisplay();      
+    this.addOrEditFamilyDependentDisplay();  
+    this.dependentValid$.subscribe(response=>{
+      this.isDependentAvailable = response;
+      this.cd.detectChanges();
+    })    
     }
 // updating the pagination infor based on dropdown selection
 pageselectionchange(data: any) {
@@ -224,7 +230,8 @@ pageselectionchange(data: any) {
     .subscribe((addResponse: any) =>
     {  
       if(addResponse?.clientDependentId)
-      {        
+      {     
+        this.familyAndDependentFacade.dependentValidSubject.next(true);   
         this.loadFamilyDependents()
         this.onFamilyMemberClosed()
       }

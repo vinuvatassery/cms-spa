@@ -48,6 +48,8 @@ export class IncomeListComponent implements OnInit {
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
   proofOfSchoolDocument!:any
+  incomeValid$ = this.incomeFacade.incomeValid$;
+  isIncomeAvailable:boolean = true;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -113,6 +115,10 @@ export class IncomeListComponent implements OnInit {
     this.loadIncomes();
     this.loadDependents();
     this.includeAddIncomeButtonAndFooterNote();
+    this.incomeValid$.subscribe(response=>{
+      this.isIncomeAvailable = response;
+      this.cdr.detectChanges();
+    })    
   }
 
   ngOnChanges(){
@@ -262,7 +268,7 @@ onIncomeActionClicked(
       formData.append("clientCaseId", this.clientCaseId)
       formData.append("EntityId", dataItem.clientDependentId)
       this.showHideImageUploadLoader(true, dataItem);
-      this.dependentFacade.uploadDependentProofOfSchool(formData).subscribe({
+      this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
         next: (response: any) => {
           this.loadIncomeData();
           this.loadDependentsProofofSchools();
