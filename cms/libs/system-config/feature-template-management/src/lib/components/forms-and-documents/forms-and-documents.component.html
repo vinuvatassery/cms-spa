@@ -21,17 +21,16 @@
           <li aria-label="uploaded attachments list" *ngFor="let item of folder">
             <span class="attachments-buttons-wrap">
               <button kendoButton look="flat" aria-label="download attachment"
-                (click)="onDownloadTemplateClick('download',item.documentTemplateId, item.name)">
+                (click)="onDownloadViewTemplateClick('download',item.documentTemplateId, item.name)">
                 <span class="material-icons" aria-label="download" aria-hidden="true">file_download</span>
               </button>
               <button kendoButton look="flat" aria-label="open in new tab"
-                (click)="onViewTemplateClick('view',item.documentTemplateId, item.name)">
+                (click)="onDownloadViewTemplateClick('view',item.documentTemplateId, item.name)">
                 <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
               </button>
               <span>{{item.name}}</span>
-              <span class="text-muted file-size">{{item.sequenceNbr}}</span>
             </span>
-            <span class="attachments-date">Last Updated {{item.lastModificationTime}}</span>
+            <span class="attachments-date">Last Updated {{item.lastModificationTime | date: 'MM/dd/YYYY'}}</span>
           </li>
         </ul>
       </div>
