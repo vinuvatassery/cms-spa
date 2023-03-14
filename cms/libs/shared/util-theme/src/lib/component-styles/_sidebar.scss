@@ -8,7 +8,7 @@ cms-sidenav {
 }
 .app-l-sidebar {
   border-color: $theme-border;
-  width: $app-leftmenu-width;
+  width: $app-left_menu-width;
   transition: ease-in all 0.3s;
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -16,7 +16,7 @@ cms-sidenav {
     max-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
-    width: $app-leftmenu-width;
+    width: $app-left_menu-width;
     height: 100%;
   }
   .sidebar-hamburger {
@@ -98,7 +98,7 @@ cms-sidenav {
         cursor: pointer;
         letter-spacing: .5px;
         .sidebar-menu_label-badge {
-          background: $badge-alets;
+          background: $badge-alerts;
           color: $white !important;
           border-radius: $border-radius-sm;
           padding: $size-s $size-m;

@@ -212,7 +212,7 @@
   kendoRippleContainer
   *ngIf="isNewReminderOpened"
   (close)="onNewReminderClosed()"
-  class="app-c-modal app-c-modal-md"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar> Create New Reminder for Donna </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
@@ -223,7 +223,7 @@
   kendoRippleContainer
   *ngIf="isNotificationsAndRemindersOpened"
   (close)="onNotificationsAndRemindersClosed()"
-  class="app-c-modal app-c-modal-wid-md-full"
+  class="app-c-modal app-c-modal-wid-md-full no_body_padding-modal"
   
 >
   <kendo-dialog-titlebar>

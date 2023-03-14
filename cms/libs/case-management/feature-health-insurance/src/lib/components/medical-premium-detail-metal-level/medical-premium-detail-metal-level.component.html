@@ -6,7 +6,6 @@
       [data]="MetalLevels"
       textField="lovDesc"
       valueField="lovCode"
-      [disabled]="isViewContentEditable"
       aria-label="Metal Level"
     >
     <ng-template kendoDropDownListItemTemplate let-dataItem>
@@ -14,5 +13,5 @@
       </ng-template>
     </kendo-dropdownlist>
   </kendo-floatinglabel>
-  <kendo-formerror *ngIf="!healthInsuranceForm.controls['metalLevel'].valid">Metal Level is required.</kendo-formerror>
+  <kendo-formerror *ngIf="!healthInsuranceForm.controls['metalLevel'].valid && !healthInsuranceForm.controls['metalLevel'].disabled">Metal Level is required.</kendo-formerror>
 </dvi>
