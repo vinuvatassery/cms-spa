@@ -1,18 +1,17 @@
 <section [formGroup]="hivVerificationForm" >
   <div  *ngIf="!isSendRequest">
-    <div class="flex-row " [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'Request from Healthcare Provider'} ">
-     <div class="flex-col flex-col-6"   *ngIf="(providerValue$ | async) === 'Request from Healthcare Provider'">
+    <div class="flex-row " [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
+     <div class="flex-col flex-col-6"   *ngIf="isEmailFieldVisible">
 
    
       <kendo-floatinglabel  text="Healthcare Provider’s Email Address">
       <kendo-textbox aria-label="healthcare providers email address"  placeholder="Healthcare Provider’s Email Address"
         [fillMode]="formUiStyle.inputFillMode" formControlName="providerEmailAddress">   
       </kendo-textbox>
-        <!-- <input kendoTextBox aria-label="healthcare providers email address" /> -->
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid">Enter valid Email Address.</kendo-formerror>
     </div>
-      <div *ngIf="(providerValue$ | async) !== 'Upload an attachment'" class="mt-2 flex-col flex-col-5">
+      <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'" class="mt-2 flex-col flex-col-5">
         <button
           kendoButton
           [primary]="true"
@@ -27,17 +26,17 @@
     </div>
     <div class="flex-row ">
       <div class="flex-col flex-col-8"> 
-      <kendo-formhint *ngIf="(providerValue$ | async) === 'Request from Case Manager'"
+      <kendo-formhint *ngIf="(providerValue$ | async) === 'CASE_MANAGER'"
         >Their Case Manager will receive a notification to provide HIV
         Verification. Once they submit the form, you will receive a notification
         to approve or deny it.</kendo-formhint>
       <kendo-formhint
-        *ngIf="(providerValue$ | async) === 'Request from Healthcare Provider'"
+        *ngIf="isEmailFieldVisible"
         >Their provider will receive an email to fill and sign an HIV Verification form. 
         Once they submit the form, you will receive a notification to approve or deny it.</kendo-formhint>
     </div>
     </div>
-    <div class="flex-row" *ngIf="(providerValue$ | async) === 'Upload an attachment'">
+    <div class="flex-row" *ngIf="(providerValue$ | async) === 'UPLOAD_ATTACHMENT'">
       <div class="flex-col flex-col-6">  
       <kendo-upload   #Uploadanattachment   id="Uploadanattachment" aria-label="upload proof" name="upload proof"
       [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false"  
