@@ -29,8 +29,7 @@
                 [formControlName]="DescriptionField"
                 [fillMode]="formUiStyle.inputFillMode"
                 [maxlength]="50"
-                [disabled]="
-                  !appInfoForm.controls[ControlPrefix + Identity.lovCode].value "
+                [disabled]="textboxDisable"
                 placeholder="Enter Sexual Orientation or Sexual Identity" 
                 (blur)="descriptionChange()"
               >

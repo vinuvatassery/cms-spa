@@ -98,9 +98,9 @@ export class CaseFacade {
   }
 
   /** Public methods **/
-  loadClientProfile(clientId : number): void {
+  loadClientProfile(profileClientId : number): void {
     this.showLoader();
-    this.caseDataService.loadClientProfile(clientId).subscribe({
+    this.caseDataService.loadClientProfile(profileClientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileSubject.next(clientProfileResponse);
         this.hideLoader();   

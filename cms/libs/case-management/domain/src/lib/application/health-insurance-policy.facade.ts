@@ -138,6 +138,10 @@ export class HealthInsurancePolicyFacade {
     return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
   }
 
+  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any) {
+    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId);
+  }
+
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
     return this.healthInsurancePolicyService.deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId);
   }

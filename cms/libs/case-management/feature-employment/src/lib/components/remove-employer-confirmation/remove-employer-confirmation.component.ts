@@ -1,15 +1,13 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
-import {  first } from 'rxjs';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import { ClientEmployer, EmploymentFacade} from '@cms/case-management/domain';
 import {  SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-employer-confirmation',
   templateUrl: './remove-employer-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RemoveEmployerConfirmationComponent implements OnInit{
+export class RemoveEmployerConfirmationComponent{
   /** Public properties **/
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
   @Input() clientCaseEligibilityId: any;
@@ -24,12 +22,7 @@ export class RemoveEmployerConfirmationComponent implements OnInit{
   constructor(
     private readonly employmentFacade: EmploymentFacade) { }
 
-  /** Lifecycle hooks **/
-  ngOnInit(): void {
-  }
-  /** Internal event methods **/
-
-  // click on Delete employer confirmation
+   /** Internal event methods **/ 
   removeEmployer() {
     this.employmentFacade.showLoader()
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;

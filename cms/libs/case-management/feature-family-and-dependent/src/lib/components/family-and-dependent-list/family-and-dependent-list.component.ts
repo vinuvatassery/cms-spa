@@ -7,14 +7,11 @@ import {  Router ,ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/internal/Subject';
 import { UIFormStyle } from '@cms/shared/ui-tpa' 
 /** Enums **/
-import { DependentTypeCode, ScreenType } from '@cms/case-management/domain';
+import { DependentTypeCode, ScreenType, FamilyAndDependentFacade } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
 import {  State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
-import { FamilyAndDependentFacade } from '@cms/case-management/domain';
-
-
 
 @Component({
   selector: 'case-management-family-and-dependent-list',

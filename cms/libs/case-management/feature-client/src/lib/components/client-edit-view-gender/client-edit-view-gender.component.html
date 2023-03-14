@@ -31,7 +31,7 @@
               [formControlName]="DescriptionField"
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="maxLengthFifty"
-              [disabled]="!appInfoForm.controls[ControlPrefix + gender.lovCode].value"
+              [disabled]="textboxDisable"
               (blur)="descriptionChange()"
             >
             </kendo-textbox>
