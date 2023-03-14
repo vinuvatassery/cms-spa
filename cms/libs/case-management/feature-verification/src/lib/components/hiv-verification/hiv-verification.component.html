@@ -25,63 +25,6 @@
             ></kendo-label>
          
         </span>
-      <!-- <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          name="providerOption"
-          value="Request from Case Manager"
-          aria-labelledby="RequestfromCaseManager"
-          formControlName="providerOption"
-          [disabled]="
-            rdoVerificationMethod ===
-              'Request from Healthcare Provider' ||
-            rdoVerificationMethod === 'Upload an attachment'"          
-          id="RequestfromCaseManager"      
-          (change)="providerChange($event)"
-        />
-        <kendo-label
-          class="k-radio-label"
-          text="Request from Case Manager"
-          for="RequestfromCaseManager"
-        ></kendo-label>
-      </span>
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          name="providerOption"
-          value="Request from Healthcare Provider"
-          aria-labelledby="fromHealthcareProviderviaemail"
-          id="fromHealthcareProviderviaemail"
-          formControlName="providerOption"
-          (change)="providerChange($event)"
-          
-        />
-        <kendo-label
-          class="k-radio-label"
-          text="Request from Healthcare Provider"
-          for="fromHealthcareProviderviaemail"
-        ></kendo-label>
-      </span>
-
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          name="providerOption"
-          value="Upload an attachment"
-          id="verificationMethodUploadanattachment"
-          aria-labelledby="verificationMethodUploadanattachment"
-          formControlName="providerOption"
-          (change)="providerChange($event)"
-        />
-        <kendo-label
-          class="k-radio-label"
-          text="Upload an attachment"
-          for="verificationMethodUploadanattachment"
-        ></kendo-label>
-      </span> -->
     </div>
     <kendo-formerror *ngIf="!hivVerificationForm.controls['providerOption'].valid">A response is required.</kendo-formerror>
     </fieldset>

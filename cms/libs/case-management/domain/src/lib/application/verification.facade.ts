@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External Libraries **/
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 /** Internal Libraries **/
 import { ClientHivVerification, VerificationDataService } from '@cms/case-management/domain';
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService } from '@cms/shared/util-core';

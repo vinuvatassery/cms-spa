@@ -27,7 +27,6 @@ export class HivVerificationComponent implements OnInit {
     this.lovFacade.getVerificationMethodLovs();
     this.hivVerificationForm?.get('providerOption')?.valueChanges.subscribe(val => {
       this.cd.detectChanges();
-      //this.message = val;
     });
    
   }
