@@ -65,8 +65,8 @@ export class AuthService {
   }
 
   logOut(): void {   
-    this.oidcSecurityService.logoff().subscribe((result) => {      
-    });
+    // this.oidcSecurityService.logoff().subscribe((result) => {      
+    // });
 
   }
 
