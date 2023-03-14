@@ -11,11 +11,10 @@ import { SharedUtilOidcModule } from '@cms/shared/util-oidc';
 import { AppRoutingModule } from './app-routing.module';
 
 import { LayoutComponent } from './components/layout/layout.component';
-import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { SharedUiCommonModule, SideNavigationComponent } from '@cms/shared/ui-common';
 import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-tools/feature-notification';
 import { CaseManagementFeatureCaseModule } from '@cms/case-management/feature-case';
 import { SystemConfigFeatureTemplateManagementModule } from '@cms/system-config/feature-template-management';
-import { SideNavigationComponent } from '@cms/system-config/feature-navigation-menu';
 
 const COMPONENTS = [AppComponent, LayoutComponent, SideNavigationComponent];
 @NgModule({
