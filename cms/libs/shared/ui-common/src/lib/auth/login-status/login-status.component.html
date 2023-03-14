@@ -7,7 +7,8 @@
     showOn="click"
     kendoPopoverAnchor  >
     <div class="app-c-avatar">
-      <span class="profile-text-avatar">XX</span>
+      <span class="profile-text-avatar">{{userData?.firstName.substring(0,1) +
+        userData?.lastName.substring(0,1)}}</span>
     </div>
   </button>
   <kendo-popover #onTableActionClicked width="250" position="bottom">
@@ -15,11 +16,13 @@
       <div class="app-c-card user-setting-dropdown">
         <div class="app-c-card-header card-header-border-bottom">
           <div class="app-c-avatar avatar-lg">
-            <span class="profile-text-avatar">XX</span>
+            <span class="profile-text-avatar">{{userData?.firstName.substring(0,1) +
+              userData?.lastName.substring(0,1)}}</span>
           </div>
           <div class="app-c-card-header-title">
-            <h3 class="card-mainTitle">{{ onGetUser()?.name }}</h3>
-            <p class="card-subTitle">Program coordinator</p>
+            <h3 class="card-mainTitle">{{onGetUser()?.name}}</h3>
+            <p *ngIf="userData?.pOrNbr" class="card-subTitle">({{userData?.pOrNbr}})</p>
+            <p class="card-subTitle">{{userData?.roleCode}}</p>
           </div>
         </div>
         <div class="app-c-card-footer">
