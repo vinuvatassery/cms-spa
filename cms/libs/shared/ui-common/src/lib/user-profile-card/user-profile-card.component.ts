@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -8,15 +8,15 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class UserProfileCardComponent implements OnInit{
+export class UserProfileCardComponent implements OnInit  , OnDestroy{
 
    @Input() userId !: any 
-   @Input() reassign !: boolean 
-  
+   @Input() reassign? : boolean  = false
+   @Input() sendEmail? : boolean = false
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
   imageLoaderVisible =true;
-  userData! : any
+  businessLogicPopupOpen = false;
  
     /** Constructor**/
     constructor(     
@@ -32,17 +32,35 @@ export class UserProfileCardComponent implements OnInit{
  
     loadprofilePhoto()
     {   
-     this.userManagementFacade.getUserImage(this.userId)
+      if(this.userId)
+      {
+        this.userManagementFacade.getUserImage(this.userId)
+      }
     }
 
     loadprofileData()
     { 
-     this.userManagementFacade.getUsersById(this.userId)    
+      if(this.userId)
+      {
+        this.userManagementFacade.getUserById(this.userId)  
+      }  
     }
    
     onLoad()
     {    
      this.imageLoaderVisible = false;
     }
-   
+    ngOnDestroy(): void {
+      debugger
+    }
+
+    openBusinessPopup()
+    {
+       this.businessLogicPopupOpen = true;
+    }
+
+    businessLogicPopupClose()
+    {
+      this.businessLogicPopupOpen = false;
+   }
  }

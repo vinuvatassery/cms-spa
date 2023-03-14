@@ -1,20 +1,25 @@
 
 <div class="app-popover-header use-profile-card-wrapper">
     
-      <div>    
-        <div *ngIf="imageLoaderVisible" class="app-c-avatar avatar-lg">     
-            <span></span>
-          </div>
-            <span *ngIf="imageLoaderVisible" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+      <div  [ngClass]="imageLoaderVisible === false ? 'app-c-avatar avatar-lg' : '' ">    
+        
           <img [hidden]="imageLoaderVisible" [src]="userImage$ | async" alt="case manager image" class="profile-pic" (load)="onLoad()"/> 
       </div> 
+      <div >    
+        <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userById$ | async as userById;">
+          <span class="profile-text-avatar" *ngIf="imageLoaderVisible">
+          {{userById.firstName.charAt(0)}}{{userById?.lastName?.charAt(0)}} 
+          </span>
+        </div>
+      </div>  
       <div *ngIf="userById$ | async as userById;">   
-        <h5>{{userById?.fullName}}  <span class="text-muted">({{userById?.pOrNbr}})</span></h5>
+        <h5>{{userById?.fullName}}  <span class="text-muted" *ngIf="userById?.pOrNbr">({{userById?.pOrNbr}})</span></h5>
         <p></p>
         {{userById?.domainCode}} <span class="text-muted"></span>
         <p></p>
-      {{userById?.sssistorGroupCode}} <span class="text-muted"></span>
+      {{userById?.assistorGroupCode}} <span class="text-muted"></span>
         <p></p>
+        {{userById?.jobTitle}} <span class="text-muted"></span>
       </div>
     </div>
     <div class="app-popover-body" *ngIf="userById$ | async as userById;">    
@@ -47,10 +52,33 @@
         </div> 
 
       </div>    
-    <div class="app-card-bottom-buttons" *ngIf="reassign">
+    <div class="app-card-bottom-buttons" *ngIf="sendEmail">
       <a   fillMode ="clear" kendoButton   themeColor="primary" href="mailto:userById?.emailAddress"> Send Email</a>
     </div>
     <div class="app-card-bottom-buttons" *ngIf="reassign">
-      <a   fillMode ="clear" kendoButton   themeColor="primary">RE-ASSIGN CASE</a>
+      <a   fillMode ="clear" kendoButton   themeColor="primary" (click)="openBusinessPopup()">RE-ASSIGN CASE</a>
     </div>
     </div>
+
+
+<kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Re-assign Case">
+
+  <section class="k-dialog-body mb-2">
+    <p>
+      This feature is part of future scope of work for the ORCares project.
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+          (click)="businessLogicPopupClose()">
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Re-assign" (click)="businessLogicPopupClose()">
+          Re-assign
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

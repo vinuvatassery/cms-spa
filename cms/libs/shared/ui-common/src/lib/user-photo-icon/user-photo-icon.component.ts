@@ -1,10 +1,11 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'common-user-photo-icon',
   templateUrl: './user-photo-icon.component.html',
+  styleUrls: ['./user-photo-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
@@ -16,7 +17,7 @@ export class UserPhotoIconComponent implements OnInit{
   userById$ = this.userManagementFacade.usersById$;
   imageLoaderVisible =true;
   userData! : any
- 
+
     /** Constructor**/
     constructor(     
       private userManagementFacade : UserManagementFacade
@@ -25,18 +26,29 @@ export class UserPhotoIconComponent implements OnInit{
 
   /** Lifecycle hooks **/
   ngOnInit(): void {  
-   this.loadprofilePhoto();  ;     
+   this.loadprofilePhoto();  
+   this.loadprofileData();      
  }
 
     loadprofilePhoto()
     {   
-     this.userManagementFacade.getUserImage(this.userId)
+      if(this.userId)
+      {
+        this.userManagementFacade.getUserImage(this.userId)
+      }
     }
    
+    loadprofileData()
+    { 
+      if(this.userId)
+      {
+        this.userManagementFacade.getUserById(this.userId)  
+      }  
+    }
    
     onLoad()
     {    
      this.imageLoaderVisible = false;
     }
-   
+  
  }

@@ -100,8 +100,8 @@ export class UserManagementFacade {
   /** Public methods **/
 
   ///for case manager hover popup //NOSONAR 
-  getUsersById(userId : string): void {
-    this.userDataService.getUsersById(userId).subscribe({
+  getUserById(userId : string): void {
+    this.userDataService.getUserById(userId).subscribe({
       next: (userDataResponse) => {        
         this.userByIdSubject.next(userDataResponse);
       },
