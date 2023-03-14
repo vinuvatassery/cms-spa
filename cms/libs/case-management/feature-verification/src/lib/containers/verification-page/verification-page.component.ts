@@ -35,8 +35,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
   /** Private Methods **/
   private addSaveSubscription(): void {
-    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
-      //tap(() => this.workflowFacade.disableSaveButton()), TODO: uncomment while completing this page. This will prevent multiple clicks on save & continue button. 
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(      
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
@@ -50,8 +49,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private save() {
-    let isValid = true;
-    // TODO: validate the form
+    let isValid = true;   
     if (isValid) {
       return this.verificationFacade.save();
     }

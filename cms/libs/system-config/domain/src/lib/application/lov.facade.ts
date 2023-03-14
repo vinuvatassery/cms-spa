@@ -1,4 +1,3 @@
-import { filter } from 'rxjs';
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { NotificationSnackbarService,SnackBarNotificationType,LoggingService  } from '@cms/shared/util-core';
@@ -416,7 +415,7 @@ getApplicantInfoLovs(): void {
   const lovTypeArr = Object.values(ApplicantInfoLovType);
   const lovTypes = lovTypeArr.toString();
   let raceIdentityArr : any = [];
-  this.lovDataService.getLovTypesbyTypes(lovTypes).subscribe({
+  this.lovDataService.getLovsbyTypes(lovTypes).subscribe({
     next: (lovResponse) => {
       lovResponse.forEach((element:any) => {
         if(element.key === ApplicantInfoLovType.EnglishProficiency){

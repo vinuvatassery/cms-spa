@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 })
 export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy {
   @Input() appInfoForm: FormGroup;
-
+  @Input() textboxDisable!:boolean;
   SexulaIdentityLovs$ = this.lovFacade.sexulaIdentitylov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   ControlPrefix = ControlPrefix.sexualIdentity;
@@ -75,6 +75,9 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   }
   enableDisableSexualIdentity(checked: boolean, lovCode: any) {
     switch (lovCode) {
+      case SexualIdentityCode.notListed:
+        this.textboxDisable = !checked;
+        break;
       case SexualIdentityCode.dontKnow:
       case SexualIdentityCode.dontWant:
       case SexualIdentityCode.dontKnowQustion: {
@@ -83,6 +86,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].setValue(false);
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].disable();
             this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
+            this.textboxDisable = true; 
           });
           break;
         }
@@ -174,12 +178,15 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
           this.updateWorkflowCount(true);
         }
         else{
+          this.textboxDisable=true;
           this.enableAllSexualIdentities();
         }
       }
       else{
+        this.textboxDisable=true;
         this.enableAllSexualIdentities();
       }
+      this.cdr.detectChanges();
     });
   }
   private assignSexualIdentityToForm(clientSexualIdentityList: any) {
@@ -188,6 +195,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
         this.appInfoForm.controls[this.ControlPrefix + identity.clientSexualIdentityCode]?.setValue(true);
         if (identity.clientSexualIdentityCode === SexualIdentityCode.notListed && identity.otherDesc !== null) {
           this.appInfoForm.controls['SexualIdentityDescription']?.setValue(identity.otherDesc);
+          this.textboxDisable = false;
         }
         this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
       })

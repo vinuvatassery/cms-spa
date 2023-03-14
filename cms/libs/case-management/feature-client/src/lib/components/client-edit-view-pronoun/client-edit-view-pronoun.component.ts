@@ -75,12 +75,12 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
             this.updateWorkflowCount(true);
           }
           else{
-            this.textboxDisable=false;
+            this.textboxDisable=true;
             this.enableAllPronouns();
           }
         }
         else{
-          this.textboxDisable=false;
+          this.textboxDisable=true;
           this.enableAllPronouns();
         }
       });

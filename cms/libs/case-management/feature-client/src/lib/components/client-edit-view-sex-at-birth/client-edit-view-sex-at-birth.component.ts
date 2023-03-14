@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
-  FormGroup,
-  Validators,
+  FormGroup
 } from '@angular/forms';
 import {  LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -22,13 +21,15 @@ export class ClientEditViewSexAtBirthComponent implements OnInit {
   constructor(
     private readonly lovFacade: LovFacade,
     private readonly workflowFacade: WorkflowFacade,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     this.appInfoForm = this.formBuilder.group({ BirthGenderInit: [''] });
   }
 
   ngOnInit(): void {
     this.loadGendersAtBirth();
+    this.detectFormChange()
   }
   private loadGendersAtBirth() {
     this.GendersAtBirthLovs$.subscribe((data) => {
@@ -53,20 +54,26 @@ export class ClientEditViewSexAtBirthComponent implements OnInit {
 
   onTransgenderRdoClicked(lovCode: string) {
     if (lovCode === 'NOT_LISTED') {
-      this.appInfoForm.controls[this.DescriptionField].setValidators(
-        Validators.required
-      );
       this.descriptionChange();
     } else {
-      this.appInfoForm.controls[this.DescriptionField].removeValidators(
-        Validators.required
-      );
-      this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
       this.updateWorkflowCount(true);
     }
   }
 
   descriptionChange() {
     this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
+  }
+
+  detectFormChange() {
+    this.appInfoForm?.get('BirthGender')?.valueChanges.subscribe((changedValue: any) => {
+      if (changedValue && changedValue != "" && changedValue == 'NOT_LISTED') {
+        this.appInfoForm.controls['BirthGenderDescription'].enable();
+        this.cdr.detectChanges();
+      }
+      else {
+        this.appInfoForm.controls['BirthGenderDescription'].disable();
+        this.cdr.detectChanges();
+      }
+    })
   }
 }

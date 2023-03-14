@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
-  FormGroup,
-  Validators,
+  FormGroup
 } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -24,13 +23,15 @@ export class ClientEditViewTransgenderComponent implements OnInit {
   constructor(
     private readonly lovFacade: LovFacade,
     private readonly workflowFacade: WorkflowFacade,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     this.appInfoForm = this.formBuilder.group({ TransgenderInit: [''] });
   }
 
   ngOnInit(): void {
     this.loadTransgenders();
+    this.detectFormChange();
   }
   private loadTransgenders() {
     this.TransgenderLovs$.subscribe((data) => {
@@ -62,27 +63,26 @@ export class ClientEditViewTransgenderComponent implements OnInit {
 
   onTransgenderRdoClicked(lovCode: string) {
     if (lovCode === 'NOT_LISTED') {
-      this.appInfoForm.controls[this.DescriptionField].setValidators(
-        Validators.required
-      );
       this.descriptionChange();
     } else {
-      this.appInfoForm.controls[this.DescriptionField].removeValidators(
-        Validators.required
-      );
-      this.appInfoForm.controls[
-        this.DescriptionField
-      ].updateValueAndValidity();
       this.updateWorkflowCount(true);
-    }
-    if(lovCode === TransGenderCode.YES) {
-      this.appInfoForm.controls['yesTransgender'].setValidators(
-        Validators.required
-      );
     }
   }
 
   descriptionChange() {
     this.updateWorkflowCount(this.appInfoForm.controls[this.DescriptionField]?.value ? true : false);
+  }
+
+  detectFormChange() {
+    this.appInfoForm?.get('Transgender')?.valueChanges.subscribe((changedValue: any) => {
+      if (changedValue && changedValue != "" && changedValue == 'NOT_LISTED') {
+        this.appInfoForm.controls[this.DescriptionField].enable();
+        this.cdr.detectChanges();
+      }
+      else {
+        this.appInfoForm.controls[this.DescriptionField].disable();
+        this.cdr.detectChanges();
+      }
+    })
   }
 }

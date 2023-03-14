@@ -22,16 +22,7 @@ export class PrescriptionDrugFacade {
     private readonly snackbarService: NotificationSnackbarService,
   ) { }
 
-  updatePrescriptionDrug(prescriptionDrug: any): Observable<any> {
-    // const formData: any = new FormData();
-    // for (let key in prescriptionDrug) {
-    //   if (typeof prescriptionDrug[key] == 'object') {
-    //     for (let childKey in prescriptionDrug[key]) {
-    //       formData.append(`${key}[${childKey}]`, prescriptionDrug[key][childKey]);
-    //     }
-    //   }
-    //   formData.append(key, prescriptionDrug[key]);
-    // }
+  updatePrescriptionDrug(prescriptionDrug: any): Observable<any> {  
     return this.prescriptionDrugDataService.updatePrescriptionDrugService(prescriptionDrug?.clientId, prescriptionDrug).pipe(
       catchError((err: any) => {
         this.loaderService.hide();

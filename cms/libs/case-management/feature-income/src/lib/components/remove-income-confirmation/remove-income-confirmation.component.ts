@@ -2,7 +2,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IncomeFacade, WorkflowFacade } from '@cms/case-management/domain';
-import {  first } from 'rxjs';
 import {  SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-remove-income-confirmation',
@@ -28,14 +27,7 @@ export class RemoveIncomeConfirmationComponent {
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade) { }
 
-  /** Lifecycle hooks **/
-  ngOnInit(): void {
-
-  }
-
-  /** Internal event methods **/
-
-  // click on Delete employer confirmation
+  /** Internal event methods **/ 
   removeIncome() {
     if (this.selectedIncome) {      
       this.btnDisabled = true;
