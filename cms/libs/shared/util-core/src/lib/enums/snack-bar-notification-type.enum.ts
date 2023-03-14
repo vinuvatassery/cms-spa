@@ -9,3 +9,9 @@ export enum SnackBarNotificationText{
     ERROR = 'Error',
     WARNING = 'warning'
 }
+
+
+export enum NotificationSource{
+    UI = 'UI',
+    API = 'API'   
+}

@@ -56,8 +56,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
   }
   private addSaveSubscription(): void {
-    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
-      //tap(() => this.workflowFacade.disableSaveButton()), TODO: uncomment while completing this page. This will prevent multiple clicks on save & continue button. 
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(      
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),

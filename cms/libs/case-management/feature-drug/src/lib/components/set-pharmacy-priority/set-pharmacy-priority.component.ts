@@ -12,12 +12,12 @@ import {
 } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
-import { first, Subscription, Observable } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 /** Internal libraries **/
 import { DrugPharmacyFacade, WorkflowFacade, PharmacyPriority, PriorityCode, } from '@cms/case-management/domain';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SnackBarNotificationType,LoaderService,NotificationSnackbarService } from '@cms/shared/util-core';
+import { SnackBarNotificationType,LoaderService,NotificationSnackbarService, NotificationSource } from '@cms/shared/util-core';
 
 
 @Component({
@@ -103,7 +103,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
     const changedItem = this.savePriorityObjectList[index];
     let existItemIndex = this.savePriorityObjectList?.findIndex(i=>i.priorityCode === value && i.clientPharmacyId !== changedItem?.clientPharmacyId);
     if(existItemIndex !== -1 && this.savePriorityObjectList[existItemIndex]){
-      this.notificationSnackbarService.errorSnackBar('Priorities cannot be duplicated.');
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,'Priorities cannot be duplicated.', NotificationSource.UI)
       this.savePriorityObjectList[existItemIndex].priorityCode = null;
     }
 
@@ -180,7 +180,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
     }
     else
     {
-      this.notificationSnackbarService.errorSnackBar('Priorities can not be duplicated.');
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,'Priorities can not be duplicated.');
     }
   }
 }

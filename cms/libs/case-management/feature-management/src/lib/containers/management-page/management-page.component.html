@@ -11,7 +11,7 @@
           kendoRadioButton      
           name="HIVManager"  
           aria-labelledby="currentlyHasHivManagerYes"
-          id="hivManager1"  
+          id="currentlyHasHivManagerYes"  
           tabindex="1"  
           [(ngModel)]="hasManager"   
           value="Y"  
@@ -19,7 +19,7 @@
           (change)="handlehasManagerRadioChange($event)" />
         <kendo-label
           class="k-radio-label"  
-          for="hivManager1"        
+          for="currentlyHasHivManagerYes"        
           text="Yes"       
           ></kendo-label>
       </span>
@@ -29,7 +29,7 @@
           kendoRadioButton  
           aria-labelledby="currentlyHasHivManagerNo"    
           name="HIVManager"
-          id="hivManager2"    
+          id="currentlyHasHivManagerNo"    
           tabindex="2"    
           [(ngModel)]="hasManager"   
           value="N"   
@@ -37,7 +37,7 @@
           (change)="handlehasManagerRadioChange($event)" />
         <kendo-label
           class="k-radio-label"    
-          for="hivManager2"       
+          for="currentlyHasHivManagerNo"       
           text="No"></kendo-label>
       </span>
     </div>
@@ -74,7 +74,7 @@
           kendoRadioButton
           name="HIVNeedManager"
           aria-labelledby="currentlyNeedHivManagerYes"
-          id="hivManager3"
+          id="currentlyNeedHivManagerYes"
           tabindex="1"
           [(ngModel)]="needManager"   
           value="Y" 
@@ -82,7 +82,7 @@
         />
         <kendo-label
           class="k-radio-label"
-          for="hivManager3"
+          for="currentlyNeedHivManagerYes"
           text="Yes"
         > </kendo-label>
       </span>
@@ -92,7 +92,7 @@
           kendoRadioButton
           aria-labelledby="currentlyNeedHivManagerNo"
           name="HIVNeedManager"
-          id="hivManager4"
+          id="currentlyNeedHivManagerNo"
           tabindex="2"
           [(ngModel)]="needManager"   
           value="N" 
@@ -100,7 +100,7 @@
         />
         <kendo-label
           class="k-radio-label"
-          for="WouldyoulikeoneNo"
+          for="currentlyNeedHivManagerNo"
           text="No"
         ></kendo-label>
       </span>

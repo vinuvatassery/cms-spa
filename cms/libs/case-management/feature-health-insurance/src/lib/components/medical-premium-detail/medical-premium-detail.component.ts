@@ -314,8 +314,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
           healthInsurancePolicy.insuranceCarrierId as string
         );
       }
-      this.bindInsurance(healthInsurancePolicy);
+      
     }
+    this.bindInsurance(healthInsurancePolicy);
   }
 
   private bindPremiumDetails(healthInsurancePolicy: HealthInsurancePolicy) {
@@ -1051,6 +1052,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     else {
       this.medicareInsuranceInfoCheck = true;
     }
+    (this.healthInsuranceForm.controls['newOthersCoveredOnPlan'] as FormArray).clear();
   }
 
   onModalCloseClicked() {
@@ -1185,6 +1187,27 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsuranceForm.controls["othersCoveredOnPlanFlag"].disable();
       this.healthInsuranceForm.controls["othersCoveredOnPlan"].disable();
       this.healthInsuranceForm.controls["isClientPolicyHolderFlag"].disable();
+      this.healthInsuranceForm.controls["insuranceType"].disable();
+      this.healthInsuranceForm.controls["insuranceStartDate"].disable();
+      this.healthInsuranceForm.controls["insuranceEndDate"].disable();
+      this.healthInsuranceForm.controls["insuranceIdNumber"].disable();
+      this.healthInsuranceForm.controls["insuranceCarrierName"].disable()
+      this.healthInsuranceForm.controls["insurancePlanName"].disable();
+      this.healthInsuranceForm.controls["metalLevel"].disable();
+      this.healthInsuranceForm.controls["groupPlanType"].disable();
+      this.healthInsuranceForm.controls["medicareBeneficiaryIdNbr"].disable();
+      this.healthInsuranceForm.controls["medicareCoverageTypeCode"].disable();
+      this.healthInsuranceForm.controls["medicarePartAStartDate"].disable();
+      this.healthInsuranceForm.controls["medicarePartBStartDate"].disable();
+      this.healthInsuranceForm.controls["onQmbFlag"].disable();
+      this.healthInsuranceForm.controls["premiumPaidThruDate"].disable();
+      this.healthInsuranceForm.controls["nextPremiumDueDate"].disable();
+      this.healthInsuranceForm.controls["premiumAmt"].disable();
+      this.healthInsuranceForm.controls["premiumFrequencyCode"].disable();
+      this.healthInsuranceForm.controls["paymentIdNbr"].disable();
+      this.healthInsuranceForm.controls["policyHolderFirstName"].disable();
+      this.healthInsuranceForm.controls["policyHolderLastName"].disable();
+      this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].disable();
     }
     else {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
@@ -1195,6 +1218,40 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsuranceForm.controls["othersCoveredOnPlanFlag"].enable();
       this.healthInsuranceForm.controls["othersCoveredOnPlan"].enable();
       this.healthInsuranceForm.controls["isClientPolicyHolderFlag"].enable();
+      if(this.isEdit){
+        this.healthInsuranceForm.controls["insuranceType"].disable();
+      }
+      else{
+        this.healthInsuranceForm.controls["insuranceType"].enable();
+      }
+      this.healthInsuranceForm.controls["insuranceStartDate"].enable();
+      this.healthInsuranceForm.controls["insuranceEndDate"].enable();
+      this.healthInsuranceForm.controls["insuranceIdNumber"].enable();
+      this.healthInsuranceForm.controls["insuranceCarrierName"].enable();
+      this.healthInsuranceForm.controls["insurancePlanName"].enable();
+      this.healthInsuranceForm.controls["metalLevel"].enable();
+      this.healthInsuranceForm.controls["groupPlanType"].enable();
+      this.healthInsuranceForm.controls["medicareBeneficiaryIdNbr"].enable()
+      this.healthInsuranceForm.controls["medicareCoverageTypeCode"].enable();
+      this.healthInsuranceForm.controls["medicarePartAStartDate"].enable()
+      this.healthInsuranceForm.controls["medicarePartBStartDate"].enable();
+      this.healthInsuranceForm.controls["onQmbFlag"].enable();
+      this.healthInsuranceForm.controls["premiumPaidThruDate"].enable();
+      this.healthInsuranceForm.controls["nextPremiumDueDate"].enable();
+      this.healthInsuranceForm.controls["premiumAmt"].enable();
+      this.healthInsuranceForm.controls["premiumFrequencyCode"].enable();
+      this.healthInsuranceForm.controls["paymentIdNbr"].enable();
+      if(this.sameAsInsuranceIdFlag){
+        this.healthInsuranceForm.controls["paymentIdNbr"].disable();
+
+      }
+      else
+      {
+        this.healthInsuranceForm.controls["paymentIdNbr"].enable();
+      }
+      this.healthInsuranceForm.controls["policyHolderFirstName"].enable();
+      this.healthInsuranceForm.controls["policyHolderLastName"].enable();
+      this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].enable();
     }
   }
 

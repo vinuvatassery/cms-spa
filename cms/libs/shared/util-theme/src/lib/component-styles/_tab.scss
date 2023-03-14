@@ -22,11 +22,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      &:after {
-        // bottom: 1px;
-        // width: 0px;
-        // display: none !important;
-      }
+  
       &:before {
         width: 0px;
         height: 2px;
@@ -41,9 +37,7 @@
         font-family: $font-family-medium;
         color: $app-primary;
         transition: ease-in all 0.2s;
-        &:after {
-        //   display: none;
-        }
+    
         &:before {
           width: 100%;
           transition: ease-in all 0.4s;
