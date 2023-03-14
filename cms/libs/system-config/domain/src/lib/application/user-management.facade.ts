@@ -38,6 +38,7 @@ export class UserManagementFacade {
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
   private userImageSubject = new Subject<any>();
+  private userByIdSubject = new Subject<any>(); 
  
   /** Public properties **/
   users$ = this.userSubject.asObservable();
@@ -66,6 +67,7 @@ export class UserManagementFacade {
   clientProfilServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
+  usersById$ = this.userByIdSubject.asObservable();
   
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
@@ -96,6 +98,20 @@ export class UserManagementFacade {
     }
 
   /** Public methods **/
+
+  ///for case manager hover popup //NOSONAR 
+  getUsersById(userId : string): void {
+    this.userDataService.getUsersById(userId).subscribe({
+      next: (userDataResponse) => {        
+        this.userByIdSubject.next(userDataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  } 
+
+
   getUserImage(userId : string): void {    
     this.userDataService.getUserImage(userId).subscribe({
       next: (userImageResponse : any) => {        

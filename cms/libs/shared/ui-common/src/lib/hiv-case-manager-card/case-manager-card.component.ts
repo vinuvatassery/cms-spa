@@ -8,8 +8,9 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseManagerCardComponent implements OnInit{
- @Input() gridHoverDataItem !: any 
+ @Input() user !: any 
  @Input() userImage$ : any
+ 
 
  @Output() loadprofilePhotoEvent =  new EventEmitter<string>();
 
@@ -23,7 +24,7 @@ export class CaseManagerCardComponent implements OnInit{
 
    loadprofilePhoto()
    { 
-    this.loadprofilePhotoEvent.emit(this.gridHoverDataItem?.caseManagerId)   
+    this.loadprofilePhotoEvent.emit(this.user?.caseManagerId)   
    }
   
    onLoad()

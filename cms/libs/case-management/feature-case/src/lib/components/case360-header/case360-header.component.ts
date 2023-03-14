@@ -12,6 +12,7 @@ import { DialItemAnimation } from '@progress/kendo-angular-buttons';
 export class Case360HeaderComponent implements OnInit{
   /** Public properties **/
   @Input() loadedClientHeader : any
+  @Input() caseManagerId : any
   @Output() loadClientProfileInfoEvent =  new EventEmitter();
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;

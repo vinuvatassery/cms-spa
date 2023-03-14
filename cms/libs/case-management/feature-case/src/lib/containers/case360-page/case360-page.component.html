@@ -1,5 +1,6 @@
 <common-bread-crumb></common-bread-crumb>
 <case-management-case360-header
+[caseManagerId]="caseManagerId"
 [loadedClientHeader]="loadedClientHeader$ | async"
 (loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
 ></case-management-case360-header>
@@ -40,11 +41,9 @@
           <kendo-tabstrip-tab title="Client Info" [selected]="true" *ifPermission='["Client_Profile_Claims_Client_ClientInfo_Tab"]'>  
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-client-read-only-view
-                [userImage$]="userImage$"
-                [clientProfile]="loadedClient$ | async"
+                <case-management-client-read-only-view  
+                [clientProfile]="loadedClient$ | async"              
                 (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"
-                (loadprofilePhotoEvent)="getCaseManagerImage($event)"
                 ></case-management-client-read-only-view>
                 <case-management-special-handling></case-management-special-handling>
               </div>

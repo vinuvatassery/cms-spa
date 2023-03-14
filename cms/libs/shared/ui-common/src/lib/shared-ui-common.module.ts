@@ -24,6 +24,7 @@ import {KendoFileSelectDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocu
 import { CaseManagerCardComponent } from './hiv-case-manager-card/case-manager-card.component';
 import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessibility.directive';
 import { PermissionManagerDirective } from './directives/permission-manager.directive';
+import { UserPhotoIconComponent} from './user-photo-icon/user-photo-icon.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -49,7 +50,8 @@ import { PermissionManagerDirective } from './directives/permission-manager.dire
     TextFieldFormFieldAutoFocus,
     DropDownFieldFormFieldAutoFocus,
     CaseManagerCardComponent,
-    PermissionManagerDirective
+    PermissionManagerDirective,
+    UserPhotoIconComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -73,7 +75,8 @@ import { PermissionManagerDirective } from './directives/permission-manager.dire
     TextFieldFormFieldAutoFocus,
     DropDownFieldFormFieldAutoFocus,
     CaseManagerCardComponent,
-    PermissionManagerDirective
+    PermissionManagerDirective,
+    UserPhotoIconComponent
   ],
 })
 export class SharedUiCommonModule {}

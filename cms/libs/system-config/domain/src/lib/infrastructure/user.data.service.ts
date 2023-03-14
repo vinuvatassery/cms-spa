@@ -18,6 +18,13 @@ export class UserDataService {
     private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
+  getUsersById(userId : string) {
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/users/${userId}`
+    );  
+  }  
+
   getUsersByRole(roleCode : string) {
     return this.http.get<LoginUser[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
