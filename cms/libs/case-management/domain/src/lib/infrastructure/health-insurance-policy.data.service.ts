@@ -43,7 +43,7 @@ export class HealthInsurancePolicyDataService {
     );
   }
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/{clientCaseEligibilityId}/insurance-policies`);
   }
   deleteInsurancePolicy(clientId:any, insurancePolicyId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/insurance-policies/${insurancePolicyId}`);
