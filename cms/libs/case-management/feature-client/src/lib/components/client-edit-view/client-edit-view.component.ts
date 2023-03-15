@@ -157,7 +157,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     this.loadRdoConcentration();
     this.loadRdoErrands();
     this.loadTareaRaceAndEthinicity();
-    this.LoadLovs();
+    this.loadLovs();
     this.loadDdlOtherIdentities();
     this.buildForm();
     this.addAppInfoFormChangeSubscription();
@@ -276,7 +276,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     });
 
   }
-  private LoadLovs(){
+  private loadLovs(){
     this.lovFacade.getMaterialYesLovs();
     this.lovFacade.getApplicantInfoLovs();
   }
