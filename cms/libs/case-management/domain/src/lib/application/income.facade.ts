@@ -154,8 +154,8 @@ export class IncomeFacade {
     });
   }
 
-  save(clientId : any, noIncomeData : any): Observable<any> {
-    return this.contactDataService.updateNoIncomeData(clientId, noIncomeData);
+  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {
+    return this.contactDataService.updateNoIncomeData(clientCaseEligibilityId, noIncomeData);
   }
 
   saveClientIncome(clientId : any,clientIncome: any, proofOfIncomeFile: any) {

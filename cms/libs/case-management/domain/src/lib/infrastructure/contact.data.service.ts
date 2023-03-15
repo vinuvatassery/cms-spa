@@ -207,8 +207,8 @@ export class ContactDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income`, clientIncome);
   }
 
-  updateNoIncomeData(clientId : any, noIncomeData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/no-income`, noIncomeData);
+  updateNoIncomeData(clientCaseEligibilityId : any, noIncomeData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/income`, noIncomeData);
   }
 
   formDataAppendObject(fd: FormData, obj: any, key?: any) {
