@@ -66,8 +66,7 @@ import { ClientImportantInfoComponent } from './components/client-important-info
     CaseManagementFeatureHealthInsuranceModule,
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
-    CaseManagementFeatureDocumentModule,
-    
+    CaseManagementFeatureDocumentModule    
   ],
   declarations: [
     LastVisitedCasesComponent,

@@ -3,21 +3,21 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
-  selector: 'common-user-profile-card',
-  templateUrl: './user-profile-card.component.html',
+  selector: 'common-user-photo-icon',
+  templateUrl: './user-photo-icon.component.html',
+  styleUrls: ['./user-photo-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class UserProfileCardComponent implements OnInit {
+export class UserPhotoIconComponent implements OnInit{
 
-   @Input() userId !: any 
-   @Input() reassign? : boolean  = false
-   @Input() sendEmail? : boolean = false
+   @Input() userId !: any  
+  
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
   imageLoaderVisible =true;
-  businessLogicPopupOpen = false;
- 
+  userData! : any
+
     /** Constructor**/
     constructor(     
       private userManagementFacade : UserManagementFacade
@@ -26,10 +26,10 @@ export class UserProfileCardComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {  
-   this.loadprofilePhoto();
-   this.loadprofileData();     
+   this.loadprofilePhoto();  
+   this.loadprofileData();      
  }
- 
+
     loadprofilePhoto()
     {   
       if(this.userId)
@@ -37,7 +37,7 @@ export class UserProfileCardComponent implements OnInit {
         this.userManagementFacade.getUserImage(this.userId)
       }
     }
-
+   
     loadprofileData()
     { 
       if(this.userId)
@@ -50,14 +50,5 @@ export class UserProfileCardComponent implements OnInit {
     {    
      this.imageLoaderVisible = false;
     }
-    
-    openBusinessPopup()
-    {
-       this.businessLogicPopupOpen = true;
-    }
-
-    businessLogicPopupClose()
-    {
-      this.businessLogicPopupOpen = false;
-   }
+  
  }
