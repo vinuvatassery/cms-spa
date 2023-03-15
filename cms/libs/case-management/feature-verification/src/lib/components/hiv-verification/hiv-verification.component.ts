@@ -23,7 +23,6 @@ export class HivVerificationComponent implements OnInit {
 
   }
   ngOnInit(): void {
-
     this.lovFacade.getVerificationMethodLovs();
     this.hivVerificationForm?.get('providerOption')?.valueChanges.subscribe(val => {
       this.cd.detectChanges();

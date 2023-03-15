@@ -47,11 +47,11 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   } 
 
   /** Private Methods **/
-
   private buildForm() {
     this.hivVerificationForm = this.formBuilder.group({
       providerEmailAddress: [''],
-      providerOption:['']
+      providerOption:[''],
+      verificationStatusDate:['']
     });
 
   }
@@ -84,10 +84,15 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private load(){
+    this.verificationFacade.showLoader();
     this.verificationFacade.getHivVerification( this.clientId).subscribe({
       next:(data)=>{
-        if(data === null){
-          
+        if(data !== null){
+          this.hivVerificationForm.controls["providerEmailAddress"].setValue(data["verificationToEmail"]);
+          this.hivVerificationForm.controls["providerOption"].setValue(data["verificationMethodCode"]);
+          this.hivVerificationForm.controls["verificationStatusDate"].setValue(data["verificationStatusDate"]);
+          this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+          this.verificationFacade.hideLoader();
         }
       },
       error:(error)=>{
@@ -96,15 +101,12 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             SnackBarNotificationType.ERROR,
             error
           );
+          this.verificationFacade.hideLoader();
         }
       }
     });
   }
-  private populateClientHivVerificationForm(){
-
-  }
   private save() {
-    // TODO: validate the form
     this.validateForm();
     this.cdr.detectChanges();
     if (this.hivVerificationForm.valid) {

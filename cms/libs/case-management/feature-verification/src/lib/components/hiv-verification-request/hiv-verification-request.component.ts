@@ -6,7 +6,7 @@ import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries **/
 import { VerificationFacade, ClientHivVerification, VerificationStatusCode, VerificationTypeCode } from '@cms/case-management/domain';
-import { SnackBarNotificationType} from '@cms/shared/util-core';
+import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 
 
 @Component({
@@ -17,7 +17,6 @@ import { SnackBarNotificationType} from '@cms/shared/util-core';
 })
 export class HivVerificationRequestComponent implements OnInit {
   /** Input properties **/
-  //@Input() data!: string;
   @Input() hivVerificationForm!: FormGroup;
   @Input() clientId!: number;
   public uploadRemoveUrl = 'removeUrl';
@@ -27,24 +26,37 @@ export class HivVerificationRequestComponent implements OnInit {
   isSendRequest = false;
   isResendRequest = false;
   isEmailFieldVisible=false;
+  sentDate !:Date ;
   clientHivVerification:ClientHivVerification = new ClientHivVerification;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
   new UploadFileRistrictionOptions();
 
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,
-    private intl: IntlService){}
+    private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,){}
   /** Internal event methods **/
   ngOnInit(): void {
     this.providerValue$.subscribe(data=>{
-      this.isSendRequest = false;
       this.providerOption = data;
       if(data==='HEALTHCARE_PROVIDER'){
-        this.isEmailFieldVisible = true;
+        if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
+          this.isSendRequest = true;
+          this.sentDate = new Date(this.intl.formatDate(this.hivVerificationForm.controls["verificationStatusDate"].value, this.dateFormat))
+        }
+        if(this.isResendRequest || !this.isSendRequest){
+          this.isEmailFieldVisible = true;
+          this.isSendRequest = false;
+        }
+        else{
+          this.isEmailFieldVisible = false;
+        }
       }
       else{
         this.isEmailFieldVisible = false;
+        this.isSendRequest = false;
+        this.isResendRequest = false;
       }
       this.cdr.detectChanges();
     });
@@ -83,11 +95,13 @@ export class HivVerificationRequestComponent implements OnInit {
     this.verificationFacade.showLoader();
     this.verificationFacade.save( this.clientHivVerification).subscribe({
       next:(data)=>{
+        this.sentDate =  this.clientHivVerification.verificationStatusDate;
         this.verificationFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Client hiv verification inserted successfully.'
         );
         this.verificationFacade.hideLoader();
+        this.cdr.detectChanges();
       },
       error:(error)=>{
         if (error) {
