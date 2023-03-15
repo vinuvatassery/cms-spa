@@ -46,9 +46,11 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   ngOnInit(): void {
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId).subscribe((data: any) => {
-      this.gridList = data;
-      this.gridList.forEach((row: any) => {
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId)
+    .subscribe({
+      next: (data: any) => {
+        this.gridList = data;
+        this.gridList.forEach((row: any) => {
         this.form.addControl(
           row.clientInsurancePolicyId,
           new FormControl(row.priorityCode, Validators.required)
@@ -56,9 +58,11 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       });
       this.insurancePolicyFacade.hideLoader();
       this.cdr.detectChanges();
-    }, (error: any) => {
-      this.insurancePolicyFacade.hideLoader();
-      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      },
+      error: (error: any) => {
+        this.insurancePolicyFacade.hideLoader();
+      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+      }
     });
 
 
