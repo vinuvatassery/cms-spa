@@ -28,17 +28,17 @@ export class RemoveEmployerConfirmationComponent{
     this.selectedEmployer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.selectedEmployer) {
       this.btnDisabled = true
-      this.employmentFacade.deleteEmployer(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
+      this.employmentFacade.deleteEmployer(this.clientId,this.selectedEmployer.clientEmployerId).subscribe({
         next: (response) => {
           this.onRemoveEmployerConfirmationClosed();
-          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer removed successfully')  
-          this.deleteUpdateEmploymentEvent.next(response);  
-          this.employmentFacade.hideLoader() 
+          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer removed successfully')
+          this.deleteUpdateEmploymentEvent.next(response);
+          this.employmentFacade.hideLoader()
         },
         error: (err) => {
           this.btnDisabled = false;
           this.employmentFacade.hideLoader()
-          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );
