@@ -19,6 +19,7 @@ export * from './lib/user-profile-card/user-profile-card.component';
 export * from './lib/loader/loader.component';
 export * from './lib/loader/grid-loader.component';
 export * from './lib/optionbutton-list/optionbutton-list.component';
+export * from './lib/side-navigation/side-navigation.component';
 export * from './lib/user-photo-icon/user-photo-icon.component';
 
 /** Pipes **/

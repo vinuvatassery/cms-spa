@@ -143,7 +143,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.submitIncomeDetailsForm();
       if (this.noIncomeDetailsForm.valid && isValid) {
         this.loaderService.show();
-        return this.incomeFacade.save(this.noIncomeData);
+        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData);
       }
     }
     else{
@@ -158,11 +158,12 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeData.noIncomeSignatureNotedDate = null;
         this.noIncomeData.noIncomeNote = null;
         this.loaderService.show();
-        return this.incomeFacade.save(this.noIncomeData).pipe(
-          catchError((err: any) => {
-            this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
-            return  of(false);
-        }));
+        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
+        catchError((err: any) => {
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          return  of(false);
+        })
+        )
       }
       else
       {
