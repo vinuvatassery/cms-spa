@@ -53,6 +53,8 @@ export class LovFacade {
   private lovPrioritySubject=new BehaviorSubject<Lov[]>([]);
   private lovOtherEthnicitySubject=new BehaviorSubject<Lov[]>([]);
   private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
+  private lovColumnDroplistSubject = new BehaviorSubject<Lov[]>([]);
+
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -86,6 +88,7 @@ export class LovFacade {
   pharmacyPrioritylov$=this.lovPrioritySubject.asObservable();
   otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
   aptclov$=this.lovAptcSubject.asObservable();
+  ColumnDroplistlov$ = this.lovColumnDroplistSubject.asObservable();
 
 
         /** Public methods **/
@@ -401,6 +404,16 @@ getAptcLovs(): void {
   this.lovDataService.getLovsbyType(LovType.Aptc).subscribe({
     next: (lovResponse) => {
       this.lovAptcSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getColumnDroplistLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.ColumnDroplist).subscribe({
+    next: (lovResponse) => {
+      this.lovColumnDroplistSubject.next(lovResponse);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)

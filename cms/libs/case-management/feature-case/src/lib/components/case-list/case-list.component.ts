@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade } from '@cms/case-management/domain';
- 
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-case-list',
@@ -30,26 +30,29 @@ public state!: State;
   @Input() sortValue : any;
   @Input() sortType : any;
   @Input() sort : any;
- 
+  @Input() columnDroplist$ : any;
+
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
+  selectedColumn: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  @Output() loadCasesListEvent = new EventEmitter<any>(); 
- 
+  @Output() loadCasesListEvent = new EventEmitter<any>();
+
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadDdlGridColumns();
+    this.selectedColumn = 'ALL';
   }
-  ngOnChanges(): void {    
+  ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort
-      };        
-    this.loadProfileCasesList() 
+      };
+    this.loadProfileCasesList()
   }
 
   pageselectionchange(data: any) {
@@ -57,19 +60,19 @@ public state!: State;
     this.state.skip = 0;
     this.loadProfileCasesList()
   }
-  public dataStateChange(stateData: any): void {         
+  public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field
+    this.sortValue = stateData.sort[0]?.field ?? 'clientFullName'
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
     this.state=stateData;
-    this.loadProfileCasesList();   
+    this.loadProfileCasesList();
 }
-  private loadProfileCasesList(): void {   
-    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)    
+  private loadProfileCasesList(): void {
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)
   }
    loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
    {
-     const gridDataRefinerValue = 
+     const gridDataRefinerValue =
      {
        skipCount: skipcountValue,
        pagesize : maxResultCountValue,

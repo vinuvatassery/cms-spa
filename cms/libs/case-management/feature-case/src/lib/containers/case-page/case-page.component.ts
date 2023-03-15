@@ -17,7 +17,7 @@ import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CasePageComponent implements OnInit {
-  /** Public Properties **/ 
+  /** Public Properties **/
   selectedTab: CaseScreenTab = 0;
   isRightReminderBarEnabled = true;
   isNewCaseDialogClicked = false;
@@ -27,20 +27,22 @@ export class CasePageComponent implements OnInit {
   public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
   savedcaseForm! : FormGroup ;
   formButtonDisabled! : boolean
+  columnDroplist$ = this.lovFacade.ColumnDroplistlov$;
+
 
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
   ddlPrograms$ = this.caseFacade.ddlPrograms$;
-  ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;  
+  ddlCaseOrigins$ = this.lovFacade.caseoriginlov$;
 
   pageSizes = this.caseFacade.gridPageSizes;
   sortValue  = this.caseFacade.sortValue;
   sortType  = this.caseFacade.sortType;
   sort  = this.caseFacade.sort;
- 
+
   /** Constructor**/
-    
+
     constructor(private readonly router: Router,
       private readonly caseFacade: CaseFacade,
       private readonly workflowFacade :WorkflowFacade,
@@ -49,56 +51,57 @@ export class CasePageComponent implements OnInit {
     ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit() {    
+  ngOnInit() {
+    this.loadColumnDroplist();
     this.loadCases();
   }
 
   /** Private methods **/
-  private loadCases(): void {   
+  private loadCases(): void {
     this.caseFacade.loadCasesForAuthuser();
-    this.caseFacade.loadRecentCases();    
+    this.caseFacade.loadRecentCases();
       /** methods for case popup **/
-     
-      this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);     
+
+      this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
       this.caseFacade.loadDdlPrograms();
       this.lovFacade.getCaseOriginLovs();
   }
 
   /** Getters **/
   get caseScreenTab(): typeof CaseScreenTab {
-    return CaseScreenTab; 
+    return CaseScreenTab;
   }
 
   /** Internal event methods **/
-  onTabSelected(e: any) {    
+  onTabSelected(e: any) {
     this.selectedTab = e.index;
-   
-    switch(this.selectedTab) { 
-      case CaseScreenTab.CER_TRACKING: { 
+
+    switch(this.selectedTab) {
+      case CaseScreenTab.CER_TRACKING: {
         this.isRightReminderBarEnabled = false;
-         break; 
-      } 
-      case CaseScreenTab.MY_CASES: { 
+         break;
+      }
+      case CaseScreenTab.MY_CASES: {
         //associated with the logged in caseworker,
         this.isRightReminderBarEnabled = true;
-         break; 
-      } 
-      case CaseScreenTab.RECENT: { 
+         break;
+      }
+      case CaseScreenTab.RECENT: {
         //recently worked on by the logged in caseworker
         this.isRightReminderBarEnabled = true;
-        break; 
-     } 
-     case CaseScreenTab.ALL: { 
+        break;
+     }
+     case CaseScreenTab.ALL: {
       //All of the clients in the system
       this.isRightReminderBarEnabled = true;
-      break; 
-     } 
-      default: 
-      { 
-         //statements; 
-         break; 
-      } 
-   } 
+      break;
+     }
+      default:
+      {
+         //statements;
+         break;
+      }
+   }
   }
 
   onNewCaseDialogOpened() {
@@ -111,19 +114,19 @@ export class CasePageComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param caseForm 
+   *
+   * @param caseForm
    * a new workflow session
-   * is created for the 
+   * is created for the
    * logged in user
    */
-  newcaseSaved(caseForm : FormGroup){    
+  newcaseSaved(caseForm : FormGroup){
     if(caseForm.valid)
     {
       this.savedcaseForm  = caseForm
       this.formButtonDisabled = true;
-      this.workflowFacade.createNewSession(caseForm);  
-   }    
+      this.workflowFacade.createNewSession(caseForm);
+   }
   }
 
   handleSearchTextChange(text : string)
@@ -133,7 +136,7 @@ export class CasePageComponent implements OnInit {
 
   loadCasesListEventHandler(gridDataRefinerValue : any)
   {
-    const gridDataRefiner = 
+    const gridDataRefiner =
     {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount : gridDataRefinerValue.pagesize,
@@ -141,14 +144,20 @@ export class CasePageComponent implements OnInit {
       sortType : gridDataRefinerValue.sortType,
     }
     this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);   
+    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
   }
 
-      /** grid event methods **/  
-  
+  loadColumnDroplist()
+  {
+    this.lovFacade.getColumnDroplistLovs();
+  }
+
+      /** grid event methods **/
+
     loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
-     {      
+     {
        this.pageSizes = this.caseFacade.gridPageSizes;
         this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue);
      }
+
 }

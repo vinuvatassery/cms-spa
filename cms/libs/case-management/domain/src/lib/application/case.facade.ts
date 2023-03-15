@@ -19,7 +19,7 @@ import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
-  /** Private properties **/  
+  /** Private properties **/
   private myCasesSubject = new BehaviorSubject<Case[]>([]);
   private recentCaseSubject = new BehaviorSubject<Case[]>([]);
   private caseSearchedSubject = new BehaviorSubject<any>([]);
@@ -52,10 +52,10 @@ export class CaseFacade {
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
   updateCase$ = this.updateCaseSubject.asObservable();
-  getCase$ = this.getCaseSubject.asObservable(); 
-  getCaseHistory$ = this.getCaseHistorySubject.asObservable(); 
-  clientProfile$ = this.clientProfileSubject.asObservable(); 
-  clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable(); 
+  getCase$ = this.getCaseSubject.asObservable();
+  getCaseHistory$ = this.getCaseHistorySubject.asObservable();
+  clientProfile$ = this.clientProfileSubject.asObservable();
+  clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable();
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -87,7 +87,7 @@ export class CaseFacade {
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
     if(type == SnackBarNotificationType.ERROR)
     {
        const err= subtitle;
@@ -103,10 +103,10 @@ export class CaseFacade {
     this.caseDataService.loadClientProfile(profileClientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileSubject.next(clientProfileResponse);
-        this.hideLoader();   
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -116,10 +116,10 @@ export class CaseFacade {
     this.caseDataService.loadClientProfileHeader(clientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
-        this.hideLoader();   
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -128,11 +128,11 @@ export class CaseFacade {
   loadCaseHistory(): void {
     this.caseDataService.loadCaseHistory().subscribe({
       next: (casesHistoryResponse) => {
-        
+
         this.getCaseHistorySubject.next(casesHistoryResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -143,17 +143,17 @@ export class CaseFacade {
       next: (casesResponse  : any) => {
         this.casesSubject.next(casesResponse);
         if(casesResponse )
-        {      
+        {
             const gridView = {
-              data : casesResponse["items"] ,        
-              total:  casesResponse["totalCount"]  
-              };    
+              data : casesResponse["items"] ,
+              total:  casesResponse["totalCount"]
+              };
           this.casesSubject.next(gridView);
          }
-         this.hideLoader();      
+         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -164,7 +164,7 @@ export class CaseFacade {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -175,7 +175,7 @@ export class CaseFacade {
         this.myCasesSubject.next(result);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -186,7 +186,7 @@ export class CaseFacade {
         this.recentCaseSubject.next(result);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -197,7 +197,7 @@ export class CaseFacade {
         this.lastVisitedCasesSubject.next(lastVisitedCasesResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -208,7 +208,7 @@ export class CaseFacade {
         this.ddlGridColumnsSubject.next(ddlGridColumnsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -219,7 +219,7 @@ export class CaseFacade {
         this.ddlCommonActionsSubject.next(ddlCommonActionsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -232,7 +232,7 @@ export class CaseFacade {
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -242,7 +242,7 @@ export class CaseFacade {
         this.ddlSendLettersSubject.next(ddlSendLettersResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -253,7 +253,7 @@ export class CaseFacade {
         this.ddlProgramsSubject.next(ddlProgramsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -267,7 +267,7 @@ export class CaseFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -278,7 +278,7 @@ export class CaseFacade {
         this.ddlEmploymentEPSubject.next(ddlEmploymentEPResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -289,7 +289,7 @@ export class CaseFacade {
         this.ddlEmploymentEPSubject.next(data);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -309,19 +309,19 @@ export class CaseFacade {
         return  this.caseDataService.UpdateCase(caseData)
 
   }
-  
+
   getSessionInfoByCaseId(clientCaseId:any){
     return  this.caseDataService.getSessionInfoByCaseId(clientCaseId)
   }
-    updateCaseStatus(clientCaseId : any,caseStatusCode:any) 
-    { 
-          const caseData = { 
-            caseStatusCode  : caseStatusCode          
-          }      
+    updateCaseStatus(clientCaseId : any,caseStatusCode:any)
+    {
+          const caseData = {
+            caseStatusCode  : caseStatusCode
+          }
           return  this.caseDataService.updateCaseStatus(caseData,clientCaseId)
     }
 
-  getCaseStatusById(clientCaseId : string ) {    
+  getCaseStatusById(clientCaseId : string ) {
      return  this.caseDataService.loadCasesStatusById(clientCaseId)
   }
 
