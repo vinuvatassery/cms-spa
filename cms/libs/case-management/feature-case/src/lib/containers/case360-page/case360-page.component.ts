@@ -44,7 +44,7 @@ export class Case360PageComponent implements OnInit {
   isNewSMSTextOpened = false;
   profileClientId = 0
   clientCaseEligibilityId! : string;
-  caseManagerId! : string;
+  caseWorkerId! : string;
   clientHeaderTabs: any = [];
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -235,7 +235,7 @@ private getQueryParams()
           pronouns:  clientHeaderData?.pronouns,
           clientCaseIdentity : clientHeaderData?.clientCaseIdentity,
           clientOfficialIdFullName : clientHeaderData?.clientOfficialIdFullName,
-          caseManagerId   : clientHeaderData?.caseManagerId ,           
+          caseWorkerId   : clientHeaderData?.caseWorkerId ,           
          }
          
          this.clientHeaderSubject.next(clientHeader);
@@ -243,9 +243,9 @@ private getQueryParams()
          {
           this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;         
          }   
-         if(clientHeader?.caseManagerId)
+         if(clientHeader?.caseWorkerId)
          {
-          this.caseManagerId = clientHeader?.caseManagerId;         
+          this.caseWorkerId = clientHeader?.caseWorkerId;         
          }        
       }
     });

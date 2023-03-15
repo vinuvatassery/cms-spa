@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -8,7 +8,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class UserProfileCardComponent implements OnInit  , OnDestroy{
+export class UserProfileCardComponent implements OnInit {
 
    @Input() userId !: any 
    @Input() reassign? : boolean  = false
@@ -50,10 +50,7 @@ export class UserProfileCardComponent implements OnInit  , OnDestroy{
     {    
      this.imageLoaderVisible = false;
     }
-    ngOnDestroy(): void {
-      debugger
-    }
-
+    
     openBusinessPopup()
     {
        this.businessLogicPopupOpen = true;
