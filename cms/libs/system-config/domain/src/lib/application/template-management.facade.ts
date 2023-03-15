@@ -45,44 +45,16 @@ export class TemplateManagementFacade {
     this.snackbarService.manageSnackBar(type, subtitle);
   }
 
+  //NOSONAR TODO: Call the GET API and update the subject with values
   getTemplates(templateId?: string) {
-    this.templateDataService.getTemplates(templateId).subscribe({
-      next: (templateResponse) => {
-        this.templatesListSubject.next(templateResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
+    //NOSONAR this.templateDataService.getTemplates(templateId).subscribe({
+    //   next: (templateResponse) => {
+    //     this.templatesListSubject.next(templateResponse);
+    //   },
+    //   error: (err) => {
+    //     console.error('err', err);
+    //   },
+    // });
   }
 
-  getTemplatesViewDownload(templateId: string) {
-    return this.templateDataService.getTemplatesViewDownload(templateId);
-  }
-
-  viewOrDownloadTemplate(eventType: string, templateId: string, templateName: string) {
-    if (templateId === undefined || templateId === '') {
-      return;
-    }
-    this.loaderService.show()
-    this.getTemplatesViewDownload(templateId).subscribe({
-      next: (data: any) => {
-
-        const fileUrl = window.URL.createObjectURL(data);
-        if (eventType === 'view') {
-          window.open(fileUrl, "_blank");
-        } else {
-          const downloadLink = document.createElement('a');
-          downloadLink.href = fileUrl;
-          downloadLink.download = templateName;
-          downloadLink.click();
-        }
-        this.loaderService.hide();
-      },
-      error: (error: any) => {
-        this.loaderService.hide();
-        this.showSnackBar(SnackBarNotificationType.ERROR, error);
-      }
-    });
-  }
 }

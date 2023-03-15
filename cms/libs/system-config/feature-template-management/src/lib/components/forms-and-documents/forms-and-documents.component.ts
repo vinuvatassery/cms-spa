@@ -1,7 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TemplateManagementFacade } from '@cms/system-config/domain';
-import { StringDecoder } from 'string_decoder';
 
 @Component({
   selector: 'system-config-forms-and-documents',
@@ -34,8 +33,8 @@ export class FormsAndDocumentsComponent {
     this.isOpenAttachment = true;
   }
 
+  //NOSONAR TODO - Add the download or view API call
   onDownloadViewTemplateClick(viewType: string, documentTemplateId: string, name: string) {
-    this.templateManagementFacade.viewOrDownloadTemplate(viewType, documentTemplateId, name);
   }
 
 }

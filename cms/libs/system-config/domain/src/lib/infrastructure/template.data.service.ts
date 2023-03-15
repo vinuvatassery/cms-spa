@@ -31,18 +31,12 @@ export class TemplateDataService {
     ]);
   }
 
+  //NOSONAR TODO - Add API to fetch templates
   getTemplates(templateId?: string) {
-    let url = `/case-management/templates` + (!!templateId ? `?templateId=${templateId}` : '');
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + url
-    );
+    //NOSONAR let url = `/case-management/templates` + (!!templateId ? `?templateId=${templateId}` : '');
+    // return this.http.get(
+    //   `${this.configurationProvider.appSettings.caseApiUrl}` + url
+    // );
   }
 
-  getTemplatesViewDownload(templateId: string) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${templateId}`
-      , {
-        responseType: 'blob'
-      });
-  }
 }
