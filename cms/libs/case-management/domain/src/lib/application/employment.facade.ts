@@ -25,7 +25,7 @@ export class EmploymentFacade {
   public sortValue = 'employerName'
   public sortType = ''
   public sort: SortDescriptor[] = [{
-    field: this.sortValue, 
+    field: this.sortValue,
   }];
 
   /** Private properties **/
@@ -75,8 +75,8 @@ export class EmploymentFacade {
 
 
   // Loading the unemployment status
-  loadEmploymentStatus(clientCaseEligibilityId: string): void {
-    this.employersDataService.loadEmploymentStatusService(clientCaseEligibilityId).subscribe({
+  loadEmploymentStatus(clientId : any, clientCaseEligibilityId: string): void {
+    this.employersDataService.loadEmploymentStatusService(clientId, clientCaseEligibilityId).subscribe({
       next: (employmentStatusGetResponse) => {
         this.employmentStatusGetSubject.next(employmentStatusGetResponse);
       },
@@ -89,6 +89,7 @@ export class EmploymentFacade {
 
   // Loading the employmet lists
   loadEmployers(
+    clientId : any,
     clientCaseEligibilityId: string,
     skipcount: number,
     maxResultCount: number,
@@ -98,6 +99,7 @@ export class EmploymentFacade {
     this.showLoader();
     this.employersDataService
       .loadEmploymentService(
+        clientId,
         clientCaseEligibilityId,
         skipcount,
         maxResultCount,
@@ -126,34 +128,34 @@ export class EmploymentFacade {
   }
 
   // Loading the employmet details based on employerid
-  loadEmployersDetails(clientCaseEligibilityId: string, clientEmployerId: string) {
+  loadEmployersDetails(clientId : string, clientEmployerId: string) {
     return this.employersDataService.loadEmployersDetailsService(
-      clientCaseEligibilityId,
+      clientId,
       clientEmployerId
     );
   }
 
   // creating a new employer
-  createEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.employersDataService.createClientNewEmployerService(clientEmployer);
+  createEmployer(clientId : any, clientEmployer: ClientEmployer): Observable<any> {
+    return this.employersDataService.createClientNewEmployerService(clientId, clientEmployer);
   }
 
   // updating the employer
-  updateEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.employersDataService.updateClientEmployerService(clientEmployer);
+  updateEmployer(clientId : any, clientEmployer: ClientEmployer, clientEmployerId : string): Observable<any> {
+    return this.employersDataService.updateClientEmployerService(clientId, clientEmployer, clientEmployerId);
   }
 
   // removing the employer
-  deleteEmployer(clientCaseEligibilityId: string, clientEmployerId: string) {
+  deleteEmployer(clientId : any, clientEmployerId: string) {
     return this.employersDataService.removeClientEmployerService(
-      clientCaseEligibilityId,
+      clientId,
       clientEmployerId
     );
   }
 
   // updating the unemployment stats
-  unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-    return this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed);
+  unEmploymentUpdate(clientId : any, clientCaseEligibilityId: string, isEmployed: string) {
+    return this.employersDataService.employmentStatusUpdateService(clientId, clientCaseEligibilityId, isEmployed);
   }
 
   updateWorkFlowCount(status: StatusFlag) {

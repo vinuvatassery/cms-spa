@@ -6,11 +6,13 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { Template } from '../entities/template';
+import { ConfigurationProvider } from 'libs/shared/util-core/src/lib/shared-util-core.module';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadTemplates(): Observable<Template[]> {
@@ -28,4 +30,13 @@ export class TemplateDataService {
       },
     ]);
   }
+
+  //NOSONAR TODO - Add API to fetch templates
+  getTemplates(templateId?: string) {
+    //NOSONAR let url = `/case-management/templates` + (!!templateId ? `?templateId=${templateId}` : '');
+    // return this.http.get(
+    //   `${this.configurationProvider.appSettings.caseApiUrl}` + url
+    // );
+  }
+
 }

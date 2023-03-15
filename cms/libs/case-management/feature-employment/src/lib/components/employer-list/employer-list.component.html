@@ -86,7 +86,7 @@
   <kendo-dialog-titlebar>
     {{ isAdd ? 'Add Employer' : 'Edit Employer ' }}
   </kendo-dialog-titlebar>
-  <case-management-employer-detail (addUpdateEmploymentEvent)="updateEmploymentHandle($event)" [isAdd]="isAdd" 
+  <case-management-employer-detail [sessionClientId]="clientId" (addUpdateEmploymentEvent)="updateEmploymentHandle($event)" [isAdd]="isAdd"
     [selectedEmployer]="selectedEmployer"
     (closeModal)="onEmployerClosed()"
     [clientCaseId]="clientCaseId"
