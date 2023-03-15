@@ -42,6 +42,10 @@ export class HealthInsurancePolicyDataService {
       healthInsurancePolicies
     );
   }
+  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/clients/${clientId}/eligibility/${clientCaseEligibilityId}/priority`);
+  }
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/{clientCaseEligibilityId}/insurance-policies`);
   }

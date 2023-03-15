@@ -20,6 +20,7 @@ export * from './lib/loader/loader.component';
 export * from './lib/loader/grid-loader.component';
 export * from './lib/optionbutton-list/optionbutton-list.component';
 export * from './lib/hiv-case-manager-card/case-manager-card.component';
+export * from './lib/side-navigation/side-navigation.component';
 
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';
@@ -29,6 +30,7 @@ export * from './lib/pipes/phone.pipe';
 /** Directives **/
 export * from './lib/directives/kendo-componentsforaccessanility.directive';
 export * from './lib/directives/kendo-file-upload-accessibility.directive';
+export * from './lib/directives/permission-manager.directive';
 
 /** Enums **/
 export * from './lib/enums/yes-no-flag-enum';

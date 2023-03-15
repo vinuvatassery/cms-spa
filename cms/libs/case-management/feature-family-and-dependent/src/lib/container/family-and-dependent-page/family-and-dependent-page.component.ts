@@ -9,8 +9,6 @@ import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } 
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
 import {LovFacade } from '@cms/system-config/domain'
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { YesNoFlag } from '@cms/shared/ui-common';
-
 
 @Component({
   selector: 'case-management-family-and-dependent-page',
@@ -110,7 +108,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     if(!(this.isFamilyGridDisplay ?? false))
     {
       this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
-    this.familyAndDependentFacade.loadDependents(this.clientId
+    this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId
       , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
     }
   }
@@ -150,7 +148,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   private save() {
-    this.familyStatus = this.isFamilyGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No
     if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)){
       this.familyAndDependentFacade.dependentValidSubject.next(false);
       return of(false);
@@ -159,9 +157,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.familyAndDependentFacade.dependentValidSubject.next(true);
       return  this.familyAndDependentFacade.saveAndContinueDependents
         (this.clientId, this.clientCaseEligibilityId, this.familyStatus)
-      .pipe
-      (
-      catchError((err: any) => {
+      .pipe(catchError((err: any) => {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         return  of(false);
       })
@@ -207,29 +203,29 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
    dependent.clientId =this.clientId ;
     if(dependentData.clientDependentId && dependentData.clientDependentId !='')
     {
-      this.familyAndDependentFacade.UpdateNewDependent(dependentData);
+      this.familyAndDependentFacade.updateNewDependent(this.clientCaseEligibilityId, dependentData);
     }
     else
     {
-    this.familyAndDependentFacade.AddNewDependent(dependentData);
+    this.familyAndDependentFacade.addNewDependent(this.clientCaseEligibilityId, dependentData);
     }
   }
 
-  GetNewDependentHandle(dependentId : string)
+  getNewDependentHandle(dependentId : string)
   {
-    this.familyAndDependentFacade.GetNewDependent(dependentId);
+    this.familyAndDependentFacade.getNewDependent(this.clientCaseEligibilityId, dependentId);
   }
 
-  GetExistclientDependentEventHandle(dependentId : string)
+  getExistclientDependentEventHandle(dependentId : string)
   {
-    this.familyAndDependentFacade.GetExistingClientDependent(dependentId);
+    this.familyAndDependentFacade.getExistingClientDependent(this.clientCaseEligibilityId, dependentId);
   }
 
   deleteDependentParamHandle(clientDependentId : any)
   {
       if(clientDependentId)
       {
-       this.familyAndDependentFacade.DeleteDependent(clientDependentId);
+       this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, clientDependentId);
       }
   }
 
@@ -238,10 +234,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.loadDependentSearch($event )
   }
 
-  AddUpdateExistingDependentHandle(data : any)
+  addUpdateExistingDependentHandle(data : any)
   {
     data.parentClientId =   this.clientId
-    this.familyAndDependentFacade.AddExistingDependent(data);
+    this.familyAndDependentFacade.addExistingDependent(this.clientCaseEligibilityId, data);
   }
 
   private addSaveForLaterSubscription(): void {

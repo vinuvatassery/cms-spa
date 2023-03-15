@@ -15,7 +15,7 @@ import { EmployersDataService } from '../infrastructure/employers.data.service';
 import { StatusFlag } from '../enums/status-flag.enum'
 import { WorkflowFacade } from './workflow.facade'
 /** Providers **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
@@ -50,7 +50,7 @@ export class EmploymentFacade {
 
   errorShowHideSnackBar( subtitle : any)
   {
-    this.notificationSnackbarService.errorSnackBar(subtitle)
+    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
   }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
