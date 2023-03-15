@@ -5,7 +5,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries **/
-import { VerificationFacade, ClientHivVerification, VerificationStatusCode, VerificationTypeCode } from '@cms/case-management/domain';
+import { VerificationFacade, ClientHivVerification, VerificationStatusCode, VerificationTypeCode, ProviderOption } from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 
 
@@ -40,7 +40,7 @@ export class HivVerificationRequestComponent implements OnInit {
   ngOnInit(): void {
     this.providerValue$.subscribe(data=>{
       this.providerOption = data;
-      if(data==='HEALTHCARE_PROVIDER'){
+      if(data=== ProviderOption.HealthCareProvider){
         if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
           this.isSendRequest = true;
           this.sentDate = new Date(this.intl.formatDate(this.hivVerificationForm.controls["verificationStatusDate"].value, this.dateFormat))
@@ -63,7 +63,7 @@ export class HivVerificationRequestComponent implements OnInit {
    
   }
   onSendRequestClicked() { 
-    if (this.providerOption === 'HEALTHCARE_PROVIDER') {
+    if (this.providerOption ===ProviderOption.HealthCareProvider) {
       this.hivVerificationForm.markAllAsTouched();
       this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email])
       this.hivVerificationForm.controls["providerEmailAddress"].updateValueAndValidity();

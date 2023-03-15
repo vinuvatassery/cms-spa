@@ -91,9 +91,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           this.hivVerificationForm.controls["providerEmailAddress"].setValue(data["verificationToEmail"]);
           this.hivVerificationForm.controls["providerOption"].setValue(data["verificationMethodCode"]);
           this.hivVerificationForm.controls["verificationStatusDate"].setValue(data["verificationStatusDate"]);
-          this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
-          this.verificationFacade.hideLoader();
+          this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);          
         }
+        this.verificationFacade.hideLoader();
       },
       error:(error)=>{
         if (error) {
