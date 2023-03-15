@@ -52,11 +52,13 @@
         </div> 
 
       </div>    
-    <div class="app-card-bottom-buttons" *ngIf="sendEmail">
-      <a   fillMode ="clear" kendoButton   themeColor="primary" href="mailto:userById?.emailAddress"> Send Email</a>
+    <div class="app-card-bottom-buttons" *ngIf="sendEmail"> 
+        <a href="mailto:userById?.emailAddress">      <button  kendoButton [primary]="true" look="flat" aria-label="RE-ASSIGN CASE"> Send Email    </button></a>
     </div>
-    <div class="app-card-bottom-buttons" *ngIf="reassign">
-      <a   fillMode ="clear" kendoButton   themeColor="primary" (click)="openBusinessPopup()">RE-ASSIGN CASE</a>
+    <div class="app-card-bottom-buttons" *ngIf="reassign"> 
+      <button  kendoButton [primary]="true" look="flat" aria-label="RE-ASSIGN CASE" (click)="openBusinessPopup()">
+        Re-assign
+      </button>
     </div>
     </div>
 
@@ -72,11 +74,11 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+        <button kendoButton [primary]="true" look="flat" aria-label="Cancel" look="outline"
           (click)="businessLogicPopupClose()">
           Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Re-assign" (click)="businessLogicPopupClose()">
+        </button> 
+        <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="businessLogicPopupClose()">
           Re-assign
         </button>
       </div>
