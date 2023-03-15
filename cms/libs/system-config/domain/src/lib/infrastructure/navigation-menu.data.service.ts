@@ -16,7 +16,7 @@ export class NavigationMenuService {
   getNavigationMenu() {
     return this.http.get<NavigationMenu[]>(
         `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-        `/system-config/navigation-menus`
+        `/system-config/menu`
     );
   }
 }
