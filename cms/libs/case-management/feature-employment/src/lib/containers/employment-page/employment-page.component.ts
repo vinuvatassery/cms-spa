@@ -91,7 +91,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   /** Internal event methods **/
   // loading the unemployment status
   private loadEmploymentStatus(): void {
-    this.employmentFacade.loadEmploymentStatus(this.clientId, this.clientCaseEligibilityId);
+    this.employmentFacade.loadEmploymentStatus(this.clientCaseEligibilityId);
     this.checkBoxSubscription = this.employmentStatus$
       .pipe(filter((x) => typeof x === 'boolean'))
       .subscribe((x: boolean) => {
@@ -152,7 +152,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       }else{
         this.employmentFacade.employmentValidSubject.next(true);
         return this.employmentFacade
-      .unEmploymentUpdate(this.clientId, this.clientCaseEligibilityId, this.isEmployedFlag)
+      .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
       .pipe(
         catchError((err: any) => {
           if (err?.error) {
