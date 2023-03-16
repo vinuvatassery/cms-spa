@@ -73,7 +73,7 @@
   <!-- User Details Popover -->
     <kendo-popover #userDetails [width]="380" position="bottom">
       <ng-template kendoPopoverBodyTemplate>
-        <case-management-client-important-info [clientId]="loadedClientHeader?.clientId"></case-management-client-important-info>
+        <case-management-client-important-info [clientCaseId]="loadedClientHeader?.clientCaseId"></case-management-client-important-info>
       </ng-template>
      </kendo-popover>
 

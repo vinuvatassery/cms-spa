@@ -11,7 +11,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 export class ClientImportantInfoComponent {
     /** Public properties **/
-    @Input() clientId! : number
+    @Input() clientCaseId! : string
 
 
 
