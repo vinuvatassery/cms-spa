@@ -220,11 +220,11 @@ export class DrugDataService {
   }
 
   editClientPharmacy(clientId: number, clientPharmacyId: string, pharmacy: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy/${clientPharmacyId}`, pharmacy);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies/${clientPharmacyId}`, pharmacy);
   }
 
   removeClientPharmacy(clientId: number, clientPharmacyId: string) {
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy/${clientPharmacyId}`);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies/${clientPharmacyId}`);
   }
  savePharmacyPriorityService(pharmacyPriority: any) {
     return this.http.post(

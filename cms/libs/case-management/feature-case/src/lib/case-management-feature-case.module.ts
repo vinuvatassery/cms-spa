@@ -65,8 +65,7 @@ import { Case360HeaderNotificationsComponent } from './components/case360-header
     CaseManagementFeatureHealthInsuranceModule,
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
-    CaseManagementFeatureDocumentModule,
-    
+    CaseManagementFeatureDocumentModule    
   ],
   declarations: [
     LastVisitedCasesComponent,

@@ -28,7 +28,6 @@ export class ClientEditViewSexAtBirthComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.lovFacade.getSexAtBirthLovs();
     this.loadGendersAtBirth();
     this.detectFormChange()
   }

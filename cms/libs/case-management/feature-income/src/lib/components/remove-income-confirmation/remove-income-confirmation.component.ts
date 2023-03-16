@@ -22,27 +22,27 @@ export class RemoveIncomeConfirmationComponent {
   btnDisabled = false
   /** Constructor **/
   constructor(
-    private readonly incomeFacade: IncomeFacade, 
+    private readonly incomeFacade: IncomeFacade,
     private readonly router: Router,
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade) { }
 
   /** Internal event methods **/ 
   removeIncome() {
-    if (this.selectedIncome) {      
+    if (this.selectedIncome) {
       this.btnDisabled = true;
       this.incomeFacade.ShowLoader();
-      this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId, this.clientCaseEligibilityId ).subscribe({
-        next: (response: any) => {        
-          this.onRemoveIncomeConfirmationClosed();     
+      this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId).subscribe({
+        next: (response: any) => {
+          this.onRemoveIncomeConfirmationClosed();
           this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully') 
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully')
           this.sendDetailToIncomeList.next(true);
         },
         error: (err: any) => {
           this.btnDisabled = false;
           this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)   
+          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );
