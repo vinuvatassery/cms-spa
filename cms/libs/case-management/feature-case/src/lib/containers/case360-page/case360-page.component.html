@@ -43,8 +43,12 @@
                 <case-management-client-read-only-view
                 [userImage$]="userImage$"
                 [clientProfile]="loadedClient$ | async"
+                [clientId]="profileClientId"
+                [clientCaseEligibilityId]="clientCaseEligibilityId"
+                [clientCaseId]="clientCaseId"
                 (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"
                 (loadprofilePhotoEvent)="getCaseManagerImage($event)"
+                (onUpdateApplicantInfo)="loadHeaderAndProfile()"
                 ></case-management-client-read-only-view>
                 <case-management-special-handling></case-management-special-handling>
               </div>

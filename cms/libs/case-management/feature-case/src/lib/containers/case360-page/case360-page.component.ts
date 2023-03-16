@@ -46,6 +46,7 @@ export class Case360PageComponent implements OnInit {
   isNewSMSTextOpened = false;
   profileClientId = 0
   clientCaseEligibilityId! : string;
+  clientCaseId!:any;
   clientHeaderTabs: any = [];
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -242,6 +243,10 @@ private getQueryParams()
          {
           this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;         
          }
+         if(clientHeader?.clientCaseId)
+         {
+          this.clientCaseId = clientHeader?.clientCaseId;         
+         }
       }
     });
   }
@@ -290,7 +295,7 @@ private getQueryParams()
           englishProficiency   : clientData?.englishProficiency , 
           ethnicIdentity   : clientData?.ethnicIdentity , 
           racialIdentities   : clientData?.racialIdentities , 
-          primaryRacialIdentity   : clientData?.primaryRacialIdentity 
+          primaryRacialIdentity   : clientData?.primaryRacialIdentity
          }
          
          this.clientSubject.next(client);
@@ -306,5 +311,10 @@ private getQueryParams()
       {
       this.userManagementFacade.getUserImage(assignedCaseManagerId);
       }
+  }
+
+  loadHeaderAndProfile(){
+    this.loadClientProfileInfoEventHandler();
+    this.loadReadOnlyClientInfoEventHandler();
   }
 }
