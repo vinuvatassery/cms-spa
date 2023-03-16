@@ -22,6 +22,34 @@ export class MedicalPaymentListComponent implements OnInit {
     {text: 'All', value: 100}
   ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  
+  public actions = [
+    {
+      buttonType:"btn-h-danger",
+      text: "Deactivate",
+      icon: "block",
+      click: (): void => {
+      //  this.onDeactivatePhoneNumberClicked()
+      },
+    },
+    {
+      buttonType:"btn-h-primary",
+      text: "Edit Doc",
+      icon: "edit",
+      click: (): void => {
+      //  this.isOpenDocAttachment = true
+      },
+    },
+   
+    {
+      buttonType:"btn-h-danger",
+      text: "Remove",
+      icon: "delete",
+      click: (): void => {
+      //  this.onDeactivatePhoneNumberClicked()
+      },
+    },
+  ];
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
 
