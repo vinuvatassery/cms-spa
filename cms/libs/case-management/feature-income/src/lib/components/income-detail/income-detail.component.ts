@@ -155,7 +155,7 @@ export class IncomeDetailComponent implements OnInit {
   // loading Income detail based on id service call
   loadIncomeDetails() {
     this.incomeFacade
-      .loadIncomeDetails(this.selectedIncome.clientIncomeId)
+      .loadIncomeDetails(this.clientId, this.selectedIncome.clientIncomeId)
       .subscribe({
         next: (response) => {
           if (response) {
@@ -215,10 +215,11 @@ export class IncomeDetailComponent implements OnInit {
       }
       this.btnDisabled =true;
       if (!this.isEditValue) {
-        
+
         this.incomeFacade.ShowLoader();
         this.incomeFacade
           .saveClientIncome(
+            this.clientId,
             this.IncomeDetailsForm.value,
             this.proofOfIncomeFiles
           )
@@ -253,9 +254,11 @@ export class IncomeDetailComponent implements OnInit {
         }
 
         incomeData['activeFlag'] = this.selectedIncome.activeFlag;
-       
+
         this.incomeFacade
           .editClientIncome(
+            this.clientId,
+            this.selectedIncome.clientIncomeId,
             this.IncomeDetailsForm.value,
             this.proofOfIncomeFiles
           )
