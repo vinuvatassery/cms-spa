@@ -4,12 +4,12 @@ import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender,
   ClientRace, ClientSexualIdentity, ClientCaseEligibilityFlag,
-  ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag, ControlPrefix,
+  ClientCaseEligibilityAndFlag, YesNoFlag, ControlPrefix,
   MaterialFormat, PronounCode, TransGenderCode, ApplicantInfo
 } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
+import { of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-client-read-only-view',
