@@ -135,14 +135,14 @@
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated on XX-XX-XXXX
+        <span class="badge-dot-info bdi-left"></span> Last Updated on {{clientProfile?.lastModificationTime | date:'MM/dd/yyyy'}}
         by
-        <!-- <a
+        <a
           kendoPopoverAnchor
           [popover]="onUserProfileDetailsHovered"
           showOn="hover"
-          >John Kelly</a
-        > -->
+          >{{clientProfile?.lastModifierId}}</a
+        >
       </p>
     </div>
   </div>
@@ -151,7 +151,13 @@
 <!-- User Card Profile Details Popover -->
 <kendo-popover #onCaseManagerDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
-    <common-user-profile-card></common-user-profile-card>
+    <common-user-profile-card [userId]="clientProfile?.caseManagerId"></common-user-profile-card>
+  </ng-template>
+</kendo-popover>
+
+<kendo-popover #onUserProfileDetailsHovered width="330">
+  <ng-template kendoPopoverBodyTemplate>
+    <common-user-profile-card [userId]="clientProfile?.lastModifierId"></common-user-profile-card>
   </ng-template>
 </kendo-popover>
 

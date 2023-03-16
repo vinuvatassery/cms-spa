@@ -35,4 +35,7 @@ export class ClientProfile {
      ethnicIdentity  : string  |null=null;
      racialIdentities  : string []=[];
      primaryRacialIdentity  : string |null=null;
+     lastModificationTime : string |null=null;
+     lastModifierName : string |null=null;
+     lastModifierId : string |null=null;
 }

@@ -300,7 +300,10 @@ private getQueryParams()
           englishProficiency   : clientData?.englishProficiency , 
           ethnicIdentity   : clientData?.ethnicIdentity , 
           racialIdentities   : clientData?.racialIdentities , 
-          primaryRacialIdentity   : clientData?.primaryRacialIdentity
+          primaryRacialIdentity   : clientData?.primaryRacialIdentity,
+          lastModificationTime : clientData?.lastModificationTime,
+          lastModifierName : clientData?.lastModifierName,
+          lastModifierId : clientData?.lastModifierId
          }
          
          this.clientSubject.next(client);
