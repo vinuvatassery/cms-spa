@@ -63,12 +63,32 @@
       [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
     <kendo-grid-column field="email" title="Email" [width]="120">
     </kendo-grid-column>
+    <kendo-grid-column field="phone" title="Phone" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column field="genders" title="Gender" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column field="homeAddress" title="Home Address" [width]="120">
+    </kendo-grid-column>
     <kendo-grid-column *ngIf="selectedTab === 1 || selectedTab === 2" field="assignedCw" title="Assigned to" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="client name" kendoButton look="flat" class="card-link-button">
+        <button aria-label="client name" kendoButton look="flat" class="card-link-button"
+        kendoPopoverAnchor
+        [popover]="userCard"
+        showOn="hover">
           {{ dataItem.assignedCw }}
         </button>
+
+          <kendo-popover #userCard width="330" position="left">
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card
+              [userId]="dataItem.assignedCwUserId"
+              [reassign]=true
+              ></common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
       </ng-template>
+
+
     </kendo-grid-column>
 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
