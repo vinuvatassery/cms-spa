@@ -54,6 +54,7 @@ export class LovFacade {
   private lovPrioritySubject=new BehaviorSubject<Lov[]>([]);
   private lovOtherEthnicitySubject=new BehaviorSubject<Lov[]>([]);
   private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
+  private lovVerificationMethodSubject = new BehaviorSubject<Lov[]>([]);
   private lovApplicantInfoSubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
@@ -88,6 +89,7 @@ export class LovFacade {
   pharmacyPrioritylov$=this.lovPrioritySubject.asObservable();
   otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
   aptclov$=this.lovAptcSubject.asObservable();
+  verificationMethod$ = this.lovVerificationMethodSubject.asObservable();
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
 
 
@@ -404,6 +406,16 @@ getAptcLovs(): void {
   this.lovDataService.getLovsbyType(LovType.Aptc).subscribe({
     next: (lovResponse) => {
       this.lovAptcSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getVerificationMethodLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.VerificationMethod).subscribe({
+    next: (lovResponse) => {
+      this.lovVerificationMethodSubject.next(lovResponse);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
