@@ -9,7 +9,7 @@ import {
   OnChanges,
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { State } from '@progress/kendo-data-query';
@@ -31,6 +31,7 @@ public state!: State;
   @Input() sortType : any;
   @Input() sort : any;
   @Input() columnDroplist$ : any;
+  @Input() selectedTab: CaseScreenTab = 0;
 
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
