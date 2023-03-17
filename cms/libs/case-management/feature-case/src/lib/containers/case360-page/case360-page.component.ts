@@ -45,6 +45,7 @@ export class Case360PageComponent implements OnInit {
   isNewSMSTextOpened = false;
   profileClientId = 0
   clientCaseEligibilityId! : string;
+	clientCaseId!:any;
   caseWorkerId! : string;
   clientHeaderTabs: any = [];
   clientCaseId! : string
@@ -254,6 +255,10 @@ private getQueryParams()
          {
           this.caseWorkerId = clientHeader?.caseWorkerId;         
          }        
+         if(clientHeader?.clientCaseId)
+         {
+          this.clientCaseId = clientHeader?.clientCaseId;         
+         }
       }
     });
   }
@@ -302,7 +307,10 @@ private getQueryParams()
           englishProficiency   : clientData?.englishProficiency , 
           ethnicIdentity   : clientData?.ethnicIdentity , 
           racialIdentities   : clientData?.racialIdentities , 
-          primaryRacialIdentity   : clientData?.primaryRacialIdentity 
+          primaryRacialIdentity   : clientData?.primaryRacialIdentity,
+          lastModificationTime : clientData?.lastModificationTime,
+          lastModifierName : clientData?.lastModifierName,
+          lastModifierId : clientData?.lastModifierId
          }
          
          this.clientSubject.next(client);
@@ -312,4 +320,9 @@ private getQueryParams()
    
   }
   
+
+  loadHeaderAndProfile(){
+    this.loadClientProfileInfoEventHandler();
+    this.loadReadOnlyClientInfoEventHandler();
+  }
 }

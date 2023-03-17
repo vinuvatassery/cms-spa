@@ -16,10 +16,10 @@ export class EmployersDataService {
   /** Public methods **/
 
   ///get employment status  for checkbox
-  loadEmploymentStatusService(clientId : any, clientCaseEligibilityId: string) {
+  loadEmploymentStatusService(clientCaseEligibilityId: string) {
     return this.http.get<ClientEmployer[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/clients/${clientId}/employers/status?clientCaseEligibilityId=${clientCaseEligibilityId}`
+        `/case-management/eligibility-periods/${clientCaseEligibilityId}/employers`
     );
   }
 
@@ -80,13 +80,12 @@ export class EmployersDataService {
 
   // updating the unemployment status
   employmentStatusUpdateService(
-    clientId : any,
     clientCaseEligibilityId: string,
     isEmployed: string
   ) {
     return this.http.patch(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/clients/${clientId}/employers/status/${isEmployed}?clientCaseEligibilityId=${clientCaseEligibilityId}`,
+        `/case-management/eligibility-periods/${clientCaseEligibilityId}/employers/${isEmployed}`,
       ''
     );
   }
