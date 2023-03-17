@@ -25,6 +25,8 @@ export class ContactFacade {
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
+  showAddPopupSubject = new BehaviorSubject<boolean>(false);
+  editAddressSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -40,6 +42,8 @@ export class ContactFacade {
   phoneNumbers$ = this.phoneNumbersSubject.asObservable();
   emailAddress$ = this.emailAddressesSubject.asObservable();
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
+  showAddPopup$ = this.showAddPopupSubject.asObservable();
+  editAddress$ =this.editAddressSubject.asObservable();
 
   /** Constructor**/
   constructor(

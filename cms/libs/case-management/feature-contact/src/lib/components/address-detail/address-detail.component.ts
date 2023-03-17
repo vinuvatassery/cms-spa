@@ -182,7 +182,8 @@ export class AddressDetailComponent implements OnInit {
     this.isDeactivateValue = true;
     this.isDeactivateAddressPopup = true;
   }
-  onAddressValidationCloseClicked() {
+  onAddressValidationCloseClicked(val:boolean) { 
+    this.contactFacade.editAddressSubject.next(val);
     this.closeValidationPopup();
   }
 
@@ -200,6 +201,7 @@ export class AddressDetailComponent implements OnInit {
       this.selectedAddressForm.reset();
   }
   onUseSelectedAddressClicked() {
+    this.contactFacade.editAddressSubject.next(false);
     this.selectedAddressForm.markAllAsTouched();
     if (this.selectedAddressForm.valid) {
       if (this.selectedAddressForm.controls['chosenAddress']?.value === 'addressSuggested') {
@@ -255,6 +257,9 @@ export class AddressDetailComponent implements OnInit {
     })
   }
 
+  closePopup(){
+    this.contactFacade.showAddPopupSubject.next(false);
+  }
   onDdlAddressTypeValueChange(event: any) {
     this.resetValidators();
     switch (event) {
@@ -291,18 +296,25 @@ export class AddressDetailComponent implements OnInit {
 
     }
   }
-  createAddress() {
-    this.loaderService.show();
+  createAddress() {    
     this.validateForm();
     this.populateForm();
-    if (this.addressForm.valid) {
+    let editAddress = false;
+    this.contactFacade.editAddress$.subscribe(edit=>{
+      editAddress = edit;
+    })
+    if(editAddress){this.validateAddress();}
+    if (this.addressForm.valid && !editAddress) {
+      this.loaderService.show();
       return this.contactFacade.createAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.clientAddress).subscribe({
         next:(data)=>{
           this.loaderService.hide();
+          this.contactFacade.showAddPopupSubject.next(false);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Saved Successfully")
         },
-        error:(erroe)=>{
-          this.loaderService.hide();
+        error:(error)=>{
+          this.contactFacade.showAddPopupSubject.next(false);
+           this.loaderService.hide();
         }
       })     
     }

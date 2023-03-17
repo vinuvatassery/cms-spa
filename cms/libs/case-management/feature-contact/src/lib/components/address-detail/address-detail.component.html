@@ -87,16 +87,14 @@
         <span> Validating address...</span> 
       </span>           
     </div>
-    <div class="flex-row" *ngIf="!addressIsValid">
-      <div class="flex-col flex-col-6">
+    <div class="flex-col" *ngIf="!addressIsValid">
       <span class="app-c-badge badge-warn-light mt-3">
         <span class="material-icons" aria-label="income Information" aria-hidden="true">
           info
         </span>
             USPS can't validate this address.
       </span>   
-    </div>       
-    </div>
+    </div>  
     <div class="flex-col">
       <kendo-formfield>
         <kendo-floatinglabel text="County" class="inline-search-loader">
@@ -178,6 +176,7 @@
         [primary]="true"
         look="outline"
         aria-label="cancel address"
+        (click)="closePopup()"
       >
         Cancel
       </button>
@@ -191,12 +190,12 @@
 
 
 <!-- Address Validation Modal -->
-<kendo-dialog *ngIf="addressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked()"
+<kendo-dialog *ngIf="addressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked(true)"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Mailing Address Validation">
   <section class="k-dialog-body mb-2">
     <div *ngIf="!addressIsValid">
       <p >
-        We cannot validate the address below. Please review and make edits if needed.
+        We can't validate the address below. Click "Edit Address" to make changes or click "Use this Address" to continue without making changes.
       </p>
         <div class="mt-2 ml-3">
         <p>  {{addressEntered?.address1 | uppercase }}   </p>   
@@ -258,8 +257,11 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked()" aria-label="OKAY" *ngIf="!addressIsValid">
-          OKAY
+        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(true)" aria-label="OKAY" *ngIf="!addressIsValid">
+          EDIT ADDRESS
+        </button>
+        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(false)" aria-label="OKAY" *ngIf="!addressIsValid">
+          USE THIS ADDRESS
         </button>
         <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked()"  aria-label="USE SELECTED ADDRESS" *ngIf="addressIsValid">
           USE SELECTED ADDRESS

@@ -14,10 +14,12 @@ export class AddressListComponent implements OnInit {
   @Input() clientId!: number;
   @Input() caseEligibilityId!: string;
   /** Public properties**/
-  addressGridView:any[]=[];
+  showAddPopup$ = this.contactFacade.showAddPopup$ ;
+  editAddress$  = this.contactFacade.editAddress$;
+  address$ = this.contactFacade.address$;
+ 	addressGridView:any[]=[];
   allAddressList:any[]=[];
   isEditAddress!: boolean;
-  isAddressDetailPopup = false;
   isDeactivateAddressPopup = false;
   showHistoricalFlag!:boolean;
   gridOptionData: Array<any> = [{ text: 'Options' }];
@@ -71,11 +73,13 @@ export class AddressListComponent implements OnInit {
 
   /** Internal event methods **/
   onAddressDetailClosed() {
-    this.isAddressDetailPopup = false;
+    this.contactFacade.showAddPopupSubject.next(false);
+    //this.isAddressDetailPopup = false;
   }
 
   onAddressDetailClicked(editValue: boolean) {
-    this.isAddressDetailPopup = true;
+    this.contactFacade.showAddPopupSubject.next(true);
+    //this.isAddressDetailPopup = true;
     this.isEditAddress = editValue;
   }
 
