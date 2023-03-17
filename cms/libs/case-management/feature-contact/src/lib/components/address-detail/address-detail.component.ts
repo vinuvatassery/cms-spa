@@ -161,7 +161,15 @@ export class AddressDetailComponent implements OnInit {
   private resetValidators() {
     Object.keys(this.addressForm.controls).forEach((key: string) => {     
         this.addressForm.controls[key].removeValidators(Validators.required);
-        this.addressForm.controls[key].updateValueAndValidity();      
+        this.addressForm.controls[key].updateValueAndValidity();         
+    });
+  }
+  private resetData() {
+    Object.keys(this.addressForm.controls).forEach((key: string) => {  
+       
+        if(key !== 'addressType'){          
+          this.addressForm.controls[key].setValue('');
+        }   
     });
   }
   private disableAllFields(){
@@ -262,6 +270,7 @@ export class AddressDetailComponent implements OnInit {
   }
   onDdlAddressTypeValueChange(event: any) {
     this.resetValidators();
+    this.resetData();
     switch (event) {
       case 'U':
         this.addressForm.controls["address1"].disable();
