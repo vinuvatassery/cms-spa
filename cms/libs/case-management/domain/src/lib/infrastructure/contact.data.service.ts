@@ -247,7 +247,15 @@ export class ContactDataService {
   }
 
   getClientAddress(clientId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address`,);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address`);
+  }
+
+  deleteClientAddress(clientId:any,clientAddressId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientAddressId=${clientAddressId}`);
+  }
+
+  deactivateClientAddress(clientId:any,clientAddressId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactive?clientAddressId=${clientAddressId}`);
   }
   
 }
