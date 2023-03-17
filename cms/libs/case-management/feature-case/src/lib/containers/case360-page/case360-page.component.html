@@ -43,7 +43,11 @@
               <div class="block-section mt-1">
                 <case-management-client-read-only-view  
                 [clientProfile]="loadedClient$ | async"              
+                [clientId]="profileClientId"
+                [clientCaseEligibilityId]="clientCaseEligibilityId"
+                [clientCaseId]="clientCaseId"
                 (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"
+                (onUpdateApplicantInfo)="loadHeaderAndProfile()"
                 ></case-management-client-read-only-view>
                 <case-management-special-handling></case-management-special-handling>
               </div>
