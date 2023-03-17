@@ -8,6 +8,8 @@
         kendoCheckBox
         aria-labelledby="AddressesshowHistorical"
         id="AddressesshowHistorical"
+        [(ngModel)]="showHistoricalFlag"
+        (change)="handleShowHistoricalClick()"
       />
       <label class="k-checkbox-label" for="AddressesshowHistorical"
         >Show historical</label
@@ -17,8 +19,8 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [data]="address$ | async">
-        <kendo-grid-column field="type" title="Type" [width]="80">
+      <kendo-grid [kendoGridBinding]="addressGridView">
+        <kendo-grid-column field="addressType" title="Type" [width]="80">
         </kendo-grid-column>
         <kendo-grid-column field="address1" title="Address1" [width]="150">
         </kendo-grid-column>
@@ -33,10 +35,18 @@
         <kendo-grid-column field="county" title="County" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column
-          field="effectiveDate"
+          field="startDate"
           title="Effective Date"
           [width]="100"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
+            {{dataItem.startDate | date:'MM/dd/yyyy'}}
+          </span>
+          <ng-template #endDateBlock>
+            {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
+          </ng-template>
+        </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="50">
           <ng-template kendoGridCellTemplate let-dataItem>

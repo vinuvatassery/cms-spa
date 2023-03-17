@@ -1,7 +1,7 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 /** facades **/
-import { ContactFacade } from '@cms/case-management/domain';
+import { ContactFacade, StatusFlag } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-address-list',
@@ -14,10 +14,12 @@ export class AddressListComponent implements OnInit {
   @Input() clientId!: number;
   @Input() caseEligibilityId!: string;
   /** Public properties**/
-  address$ = this.contactFacade.address$;
+  addressGridView:any[]=[];
+  allAddressList:any[]=[];
   isEditAddress!: boolean;
   isAddressDetailPopup = false;
   isDeactivateAddressPopup = false;
+  showHistoricalFlag!:boolean;
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -50,7 +52,7 @@ export class AddressListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade) {}
+  constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -59,7 +61,12 @@ export class AddressListComponent implements OnInit {
 
   /** Private methods **/
   private loadAddress() {
-    this.contactFacade.loadAddress();
+    this.contactFacade.getClientAddress(this.clientId);
+    this.contactFacade.address$.subscribe((address:any)=>{
+      this.addressGridView= address.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
+      this.allAddressList=address;
+      this.cdr.detectChanges();
+    })
   }
 
   /** Internal event methods **/
@@ -78,5 +85,15 @@ export class AddressListComponent implements OnInit {
 
   onDeactivateAddressClicked() {
     this.isDeactivateAddressPopup = true;
+  }
+
+  handleShowHistoricalClick(){
+    if(this.showHistoricalFlag){
+      this.addressGridView=this.allAddressList;
+    }
+    else{
+      this.addressGridView= this.allAddressList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
+    }
+    this.cdr.detectChanges();
   }
 }

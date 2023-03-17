@@ -8,7 +8,7 @@ import { Contact, ContactInfo,ClientAddress } from '../entities/contact';
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain'
 import { catchError, of } from 'rxjs';
-import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -45,11 +45,33 @@ export class ContactFacade {
   constructor(
     private readonly contactDataService: ContactDataService,
     private readonly loggingService: LoggingService,
+    private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly zipCodeFacade: ZipCodeFacade
   ) { }
 
   /** Public methods **/
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+        const err= subtitle;    
+        this.loggingService.logException(err)
+      }  
+        this.snackbarService.manageSnackBar(type,subtitle)
+        this.hideLoader();   
+  }
+
+  showLoader()
+  {
+    this.loaderService.show();
+  }
+    
+  hideLoader()
+  {
+    this.loaderService.hide();
+  }
+
   loadDdlStates(): void {
     this.zipCodeFacade.getStates().subscribe({
       next: (ddlStatesResponse) => {
@@ -81,17 +103,6 @@ export class ContactFacade {
         this.ddlPreferredContactMethodsSubject.next(
           ddlPreferredContactMethodsResponse
         );
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
-
-  loadAddress(): void {
-    this.contactDataService.loadAddresses().subscribe({
-      next: (addressesResponse) => {
-        this.addressesSubject.next(addressesResponse);
       },
       error: (err) => {
         this.loggingService.logException(err);
@@ -198,5 +209,18 @@ export class ContactFacade {
         return of(false);
       })
     );
+  }
+
+  getClientAddress(clientId:any){
+    this.showLoader();
+    return this.contactDataService.getClientAddress(clientId).subscribe({
+      next: (addressesResponse) => {
+        this.hideLoader();
+        this.addressesSubject.next(addressesResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      }
+    });
   }
 }

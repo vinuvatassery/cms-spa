@@ -245,5 +245,9 @@ export class ContactDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}`,);
 
   }
+
+  getClientAddress(clientId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address`,);
+  }
   
 }
