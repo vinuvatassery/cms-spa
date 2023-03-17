@@ -137,9 +137,9 @@ export class CaseFacade {
     });
   }
 
-  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string , columnName : string, filter : string): void {
     this.showLoader();
-    this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType).subscribe({
+    this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType, columnName,filter).subscribe({
       next: (casesResponse  : any) => {
         this.casesSubject.next(casesResponse);
         if(casesResponse )

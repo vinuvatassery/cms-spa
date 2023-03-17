@@ -36,6 +36,7 @@ public state!: State;
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   selectedColumn: any;
+  filter : any
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>();
 
@@ -53,7 +54,13 @@ public state!: State;
       take: this.pageSizes[0]?.value,
       sort: this.sort
       };
+    if(!this.selectedColumn)
+    {
+      this.selectedColumn = null;
+      this.filter = null;
+    }
     this.loadProfileCasesList()
+
   }
 
   pageselectionchange(data: any) {
@@ -69,9 +76,9 @@ public state!: State;
     this.loadProfileCasesList();
 }
   private loadProfileCasesList(): void {
-    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.selectedColumn,this.filter)
   }
-   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
+   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : string, filter : string)
    {
      const gridDataRefinerValue =
      {
@@ -79,6 +86,8 @@ public state!: State;
        pagesize : maxResultCountValue,
        sortColumn : sortValue,
        sortType : sortTypeValue,
+       columnName : columnName,
+       filter : filter
      }
      this.loadCasesListEvent.next(gridDataRefinerValue)
    }
@@ -89,5 +98,11 @@ public state!: State;
     this.caseFacade.loadDdlGridColumns();
     this.isGridLoaderShow = false;
 
+  }
+
+  onChange(event :any)
+  {
+    this.filter = event;
+    this.loadProfileCasesList();
   }
 }

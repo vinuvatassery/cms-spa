@@ -23,10 +23,10 @@ export class CaseDataService {
 
 
   /** Public methods **/
-  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string, columnName : string, filter : string) {
     return this.http.get<ClientProfileCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&ColumnName=${columnName}&Filter=${filter}`
     );
 
   }

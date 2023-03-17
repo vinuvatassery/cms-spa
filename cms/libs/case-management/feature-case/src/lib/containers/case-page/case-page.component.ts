@@ -142,9 +142,11 @@ export class CasePageComponent implements OnInit {
       maxResultCount : gridDataRefinerValue.pagesize,
       sort : gridDataRefinerValue.sortColumn,
       sortType : gridDataRefinerValue.sortType,
+      columnName : gridDataRefinerValue.columnName,
+      filter : gridDataRefinerValue.filter
     }
     this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
+    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, gridDataRefiner.columnName, gridDataRefiner.filter);
   }
 
   loadColumnDroplist()
@@ -154,10 +156,10 @@ export class CasePageComponent implements OnInit {
 
       /** grid event methods **/
 
-    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
+    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : string, filter : string)
      {
        this.pageSizes = this.caseFacade.gridPageSizes;
-        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue);
+        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter);
      }
 
 }
