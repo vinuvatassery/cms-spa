@@ -14,31 +14,25 @@
           <div class="flex-col">
             <h5>Preferred Contact</h5>
             <ul aria-label="preferred contact menu" class="user-bullet-list">
-              <li aria-label="preferred contact menu item">
-                (123) 456-7890 (Cell)
-              </li>
-              <li aria-label="preferred contact menu item">
-                Messages OK, SMS Text OK
-              </li>
+              <li aria-label="preferred contact menu item" *ngIf="clientProfileImpInfo$?.preferredContact">
+               {{clientProfileImpInfo$?.preferredContact}}
+              </li>             
             </ul>
           </div>
           <div class="flex-col">
             <h5>Case Manager</h5>
             <ul aria-label="case manager menu">
-              <li aria-label="case manager menu item">Mr. Roger Federal</li>
-              <li aria-label="case manager menu item">(123) 456-7890</li>
-              <li aria-label="case manager menu item">samolemail@email.com</li>
+              <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerFullName">{{clientProfileImpInfo$?.caseManagerFullName}}</li>
+              <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerPhone">{{clientProfileImpInfo$?.caseManagerPhone}}</li>
+              <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerEmail">{{clientProfileImpInfo$?.caseManagerEmail}}</li>
             </ul>
           </div>
           <div class="flex-col">
             <h5>Special Handling</h5>
-            <ul aria-label="special handling menu" class="user-bullet-list">
-              <li aria-label="special handling menu item">
-                Lorem Ipsum has been the industry's standard dummy
-              </li>
-              <li aria-label="special handling menu item">
-                The industry's standard dummy
-              </li>
+            <ul aria-label="special handling menu" class="user-bullet-list" *ngFor="let clientDisability of clientProfileImpInfo$?.clientDisabilities">
+              <li *ngIf="clientDisability" aria-label="special handling menu item">
+                {{clientDisability}}
+              </li>              
             </ul>
           </div>
         </div>

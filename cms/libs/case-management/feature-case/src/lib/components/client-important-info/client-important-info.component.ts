@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 
 @Component({
@@ -9,10 +9,15 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class ClientImportantInfoComponent {
+export class ClientImportantInfoComponent implements OnInit{
     /** Public properties **/
     @Input() clientCaseId! : string
+    @Input() clientProfileImpInfo$ : any
+    @Output() loadClientImpInfoEvent =  new EventEmitter();
 
-
-
+         /** Lifecycle hooks **/
+    ngOnInit(): void 
+    {
+       this.loadClientImpInfoEvent.emit()  
+    }
 }
