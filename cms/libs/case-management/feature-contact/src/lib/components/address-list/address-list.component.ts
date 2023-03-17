@@ -14,9 +14,10 @@ export class AddressListComponent implements OnInit {
   @Input() clientId!: number;
   @Input() caseEligibilityId!: string;
   /** Public properties**/
+  showAddPopup$ = this.contactFacade.showAddPopup$ ;
+  editAddress$  = this.contactFacade.editAddress$;
   address$ = this.contactFacade.address$;
   isEditAddress!: boolean;
-  isAddressDetailPopup = false;
   isDeactivateAddressPopup = false;
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -64,11 +65,13 @@ export class AddressListComponent implements OnInit {
 
   /** Internal event methods **/
   onAddressDetailClosed() {
-    this.isAddressDetailPopup = false;
+    this.contactFacade.showAddPopupSubject.next(false);
+    //this.isAddressDetailPopup = false;
   }
 
   onAddressDetailClicked(editValue: boolean) {
-    this.isAddressDetailPopup = true;
+    this.contactFacade.showAddPopupSubject.next(true);
+    //this.isAddressDetailPopup = true;
     this.isEditAddress = editValue;
   }
 

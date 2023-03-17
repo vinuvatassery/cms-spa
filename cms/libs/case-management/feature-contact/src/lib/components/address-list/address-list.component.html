@@ -107,7 +107,7 @@
 
 <!-- Address Detail Popup-->
 <kendo-dialog
-  *ngIf="isAddressDetailPopup"
+  *ngIf="( showAddPopup$ |async)"
   (close)="onAddressDetailClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
