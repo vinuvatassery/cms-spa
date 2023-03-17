@@ -45,7 +45,6 @@ export class Case360PageComponent implements OnInit {
   isNewSMSTextOpened = false;
   profileClientId = 0
   clientCaseEligibilityId! : string;
-	clientCaseId!:any;
   caseWorkerId! : string;
   clientHeaderTabs: any = [];
   clientCaseId! : string

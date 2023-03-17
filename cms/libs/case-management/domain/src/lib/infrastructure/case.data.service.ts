@@ -47,7 +47,7 @@ export class CaseDataService {
 
   loadClientImportantInfo(clientCaseId: string) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientCaseId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientCaseId}/info`
     );
 
   }

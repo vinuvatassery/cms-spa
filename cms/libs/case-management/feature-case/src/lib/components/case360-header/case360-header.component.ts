@@ -46,4 +46,5 @@ export class Case360HeaderComponent implements OnInit{
   {
     this.loadClientImpInfoEvent.emit()  
   }
+  
 }
