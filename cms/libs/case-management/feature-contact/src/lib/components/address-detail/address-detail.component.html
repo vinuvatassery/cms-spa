@@ -1,4 +1,4 @@
-<section class="k-dialog-body">
+<section class="k-dialog-body" [formGroup]="addressForm">
   <p class="text-muted mb-2" *ngIf="!isEditValue">
     Adding a new address will deactivate the current address for that type. For
     example, adding a new mailing address will deactivate the current mailing
@@ -8,70 +8,130 @@
     Edit or deactivate the client's home address.
   </p>
   <div class="flex-row">
-    <div class="flex-col" *ngIf="!isEditValue"> 
+    <div class="flex-col" *ngIf="!isEditValue">
+    <kendo-formfield> 
       <kendo-floatinglabel text="Choose Address Type">
         <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ddlAddressTypes$ | async"
           (valueChange)="onDdlAddressTypeValueChange($event)"
+          formControlName="addressType"
+          textField="lovDesc" valueField="lovCode"
+          [valuePrimitive]="true" 
         >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror>Address Type is required.</kendo-formerror>
+    </kendo-formfield>
     </div>
     <div class="flex-col">
+    <kendo-formfield>
       <kendo-floatinglabel text="Address line 1">
-        <kendo-textbox aria-label="address line 1"   placeholder="Address line 1" [disabled]="isAddressLine1Disabled && !isEditValue"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="address line 1"   placeholder="Address line 1"   
+        [fillMode]="formUiStyle.inputFillMode"
+        formControlName="address1"
+        (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror>Address line 1 is required.</kendo-formerror>
+    </kendo-formfield>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Address line 2">
-        <kendo-textbox aria-label="address line 2" placeholder="Address line 2"  [disabled]="isAddressLine2Disabled && !isEditValue"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="address line 2" placeholder="Address line 2"    [fillMode]="formUiStyle.inputFillMode"
+        formControlName="address2"
+        (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
+    <kendo-formfield>
       <kendo-floatinglabel text="City">
-        <kendo-textbox aria-label="city" placeholder="City"  [disabled]="isCityDisabled && !isEditValue"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="city" placeholder="City"    
+        [fillMode]="formUiStyle.inputFillMode"
+        formControlName="city"
+        (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror>City is required.</kendo-formerror>
+    </kendo-formfield>
     </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="State">
-        <kendo-dropdownlist
-        aria-label="state" 
-        [fillMode]="formUiStyle.dropDownFillMode"
+    <div class="flex-col flex-col-6">     
+        <kendo-formfield>
+        <kendo-floatinglabel text="State">
+          <kendo-dropdownlist 
+          aria-label="State" 
+          [fillMode]="formUiStyle.dropDownFillMode"
+          formControlName="state"
           [data]="ddlStates$ | async"
-          [disabled]="isStateDisabled && !isEditValue"
-        >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
+          textField="stateName"
+          valueField="stateCode"
+          [valuePrimitive]="true" placeholder="State"
+          (blur)="validateAddress()"
+          >
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+        <kendo-formerror>State is required</kendo-formerror>
+      </kendo-formfield>
     </div>
     <div class="flex-col flex-col-6">
+    <kendo-formfield>
       <kendo-floatinglabel text="Zip">
-        <kendo-textbox aria-label="Zip" placeholder="Zip"   [disabled]="isCityDisabled && !isEditValue"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="Zip" placeholder="Zip"    
+        [fillMode]="formUiStyle.inputFillMode"
+        formControlName="zip" (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror>Zip is required.</kendo-formerror>
+    </kendo-formfield>
+    </div>
+    <div class="flex-col" *ngIf="showAddressValidationLoader$ | async">
+      <span class="app-c-badge  mt-3">       
+        <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+        <span> Validating address...</span> 
+      </span>           
+    </div>
+    <div class="flex-row" *ngIf="!addressIsValid">
+      <div class="flex-col flex-col-6">
+      <span class="app-c-badge badge-warn-light mt-3">
+        <span class="material-icons" aria-label="income Information" aria-hidden="true">
+          info
+        </span>
+            USPS can't validate this address.
+      </span>   
+    </div>       
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="County">
-        <kendo-dropdownlist
-        aria-label="Country" 
-        [fillMode]="formUiStyle.dropDownFillMode"
+      <kendo-formfield>
+        <kendo-floatinglabel text="County" class="inline-search-loader">
+          <span *ngIf="showCountyLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+          <kendo-dropdownlist 
+          aria-label="County" 
+          [fillMode]="formUiStyle.dropDownFillMode"
+          formControlName="country"
           [data]="ddlCountries$ | async"
-          [disabled]="isCoutryDisabled && !isEditValue"
-        >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
+          textField="countyName"
+          valueField="countyCode"
+          [valuePrimitive]="true"  placeholder="Country"
+          >
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+        <kendo-formerror>County is required</kendo-formerror>
+      </kendo-formfield>
     </div>
     <div class="flex-col" *ngIf="!isEditValue">
+    <kendo-formfield>
       <kendo-floatinglabel text="Effective date">
         <kendo-datepicker
-        aria-label="Effective date" 
-        [fillMode]="formUiStyle.dateInputFillMode"
+          aria-label="Effective date" 
+          [fillMode]="formUiStyle.dateInputFillMode"
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
-          [disabled]="isEffectiveDateDisabled"
-          [(ngModel)]="currentDate"
+          formControlName="effectiveDate"
+          [min]="currentDate"
+          (keyup)="validateEffectiveDate($event)"
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="effectiveDateValidator">Effective date is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!effectiveDateValidator">Effective Date should be greater than Current Date.</kendo-formerror>
+    </kendo-formfield>
     </div>
     <div class="flex-col" *ngIf="isEditValue">
       <span class="app-checkboxwidtext-wrapper"> 
@@ -121,9 +181,90 @@
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="add or update address">
+      <button kendoButton [primary]="true" aria-label="add or update address"(click)="createAddress()">
         {{ isEditValue ? 'Update' : 'Add' }}
       </button>
     </div>
   </div>
 </kendo-dialog-actions>
+
+
+
+<!-- Address Validation Modal -->
+<kendo-dialog *ngIf="addressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Mailing Address Validation">
+  <section class="k-dialog-body mb-2">
+    <div *ngIf="!addressIsValid">
+      <p >
+        We cannot validate the address below. Please review and make edits if needed.
+      </p>
+        <div class="mt-2 ml-3">
+        <p>  {{addressEntered?.address1 | uppercase }}   </p>   
+       <p> {{addressEntered?.address2 | uppercase }}   </p>  
+       <p>    {{addressEntered?.city | uppercase }}, {{addressEntered?.state}} {{addressEntered?.zip5}}</p>
+       
+        </div> 
+    </div>
+   <div *ngIf="addressIsValid">
+    <p >
+      We found the address similar to the one entered. Please select which one to use.
+    </p>
+    <form [formGroup]="selectedAddressForm">
+    <kendo-formfield>
+    <div class="flex-row mt-4 break">
+      <div class="flex-col flex-col-6">
+          <span>
+          <input
+          type="radio"
+          id="chosenmailAddressEntered" 
+          name="chosenAddress"  
+          value="addressEntered" 
+          formControlName="chosenAddress"             
+          kendoRadioButton
+          aria-labelledby="chosenmailAddressEntered" 
+          />
+          <kendo-label for="chosenmailAddressEntered" text="Address Entered"></kendo-label> 
+        </span>
+        <div class="mt-2 ml-3 break">
+      <p>  {{addressEntered?.address1 | uppercase }} </p> 
+      <p> {{addressEntered?.address2 | uppercase }} </p> 
+      <p>  {{addressEntered?.city | uppercase }}, {{addressEntered?.state}} {{addressEntered?.zip5}}</p>
+        </div >
+      </div>
+      <div class="flex-col flex-col-6">
+          <span>
+          <input
+          type="radio"
+          id="chosenmailAddressSuggested"
+          name="chosenAddress"
+          aria-labelledby="chosenmailAddressSuggested"
+          value="addressSuggested"
+          formControlName="chosenAddress"
+          kendoRadioButton
+          />
+          <kendo-label for="chosenmailAddressSuggested" text="Suggested Address"></kendo-label>  
+        </span>
+      <div class="mt-2 ml-3 break">
+        <p>   {{addressSuggested?.address1}}</p>
+        <p>  {{addressSuggested?.address2}} </p>
+        <p>  {{addressSuggested?.city}}, {{addressSuggested?.state}} {{addressSuggested?.zip5}}</p>
+      </div>
+      </div>
+    </div> 
+  </kendo-formfield>    
+</form>
+   </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked()" aria-label="OKAY" *ngIf="!addressIsValid">
+          OKAY
+        </button>
+        <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked()"  aria-label="USE SELECTED ADDRESS" *ngIf="addressIsValid">
+          USE SELECTED ADDRESS
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

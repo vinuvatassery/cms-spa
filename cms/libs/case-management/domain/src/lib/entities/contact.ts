@@ -16,6 +16,7 @@ export interface ClientAddress {
   state?: string;
   zip?: string;
   county?: string;
+  startDate?:Date;
   concurrencyStamp?: string;
 }
 

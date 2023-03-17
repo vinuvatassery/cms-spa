@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ContactInfo } from '../entities/contact';
+import { ClientAddress, ContactInfo } from '../entities/contact';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -186,6 +186,10 @@ export class ContactDataService {
       , fd, { reportProgress: true, });
   }
 
+  createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+       return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+       clientAddress);
+  }
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
     const fd = new FormData();
     if (contactInfo?.homeAddressProof?.document) {

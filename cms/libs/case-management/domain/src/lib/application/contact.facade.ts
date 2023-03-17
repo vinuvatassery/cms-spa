@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact, ContactInfo } from '../entities/contact';
+import { Contact, ContactInfo,ClientAddress } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain'
@@ -182,6 +182,10 @@ export class ContactFacade {
           return of(false);
         })
       );
+  }
+
+  createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+    return this.contactDataService.createAddress(clientId, clientCaseEligibilityId, clientAddress);
   }
 
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {

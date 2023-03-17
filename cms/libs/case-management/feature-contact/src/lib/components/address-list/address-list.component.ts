@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 /** facades **/
 import { ContactFacade } from '@cms/case-management/domain';
 
@@ -9,6 +9,10 @@ import { ContactFacade } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressListComponent implements OnInit {
+
+  /** Input properties**/
+  @Input() clientId!: number;
+  @Input() caseEligibilityId!: string;
   /** Public properties**/
   address$ = this.contactFacade.address$;
   isEditAddress!: boolean;

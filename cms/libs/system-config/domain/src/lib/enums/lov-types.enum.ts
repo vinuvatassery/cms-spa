@@ -30,4 +30,5 @@ export enum LovType {
     Group = 'GROUP_CODE',
     Aptc='APTC',
     EthnicityNotListed = 'NOT_LISTED',
+    AddressType = 'ADDRESS_TYPE'
   }

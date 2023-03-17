@@ -49,6 +49,7 @@ export class Case360PageComponent implements OnInit {
   clientHeaderTabs: any = [];
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  clientId:any;
   public SendActions = [
     {
       buttonType: "btn-h-primary",
@@ -219,7 +220,8 @@ private getQueryParams()
     {
       if(clientHeaderData?.clientId > 0)
       {    
-        
+        this.clientId =clientHeaderData?.clientId;
+        this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
          const  clientHeader = {
              
           clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
