@@ -16,7 +16,6 @@ export class AddressListComponent implements OnInit {
   /** Public properties**/
   showAddPopup$ = this.contactFacade.showAddPopup$ ;
   editAddress$  = this.contactFacade.editAddress$;
-  address$ = this.contactFacade.address$;
  	addressGridView:any[]=[];
   allAddressList:any[]=[];
   isEditAddress!: boolean;
