@@ -7,6 +7,18 @@
     width: $size-xxxx + $size-m;
     height: $size-xxxx + $size-m;
   }
+  &.profile-img-avatar-sm{
+    max-width: 24px;
+    max-height: 24px;
+    height: 24px;
+    width: 24px;
+  }
+  &.profile-img-avatar-md{
+    max-width: 40px;
+    max-height: 40px;
+    height: 40px;
+    width: 40px;
+  }
   .profile-text-avatar {
     width: $size-xxxx + $size-m;
     height: $size-xxxx + $size-m;
@@ -74,3 +86,5 @@
     }
   }
 }
+
+ 

@@ -16,7 +16,7 @@ export class LovDataService {
 
   /** Public methods **/
   getLovsbyType(lovType : string) {
-        
+
     return this.http.get<Lov[]>(
         `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
         `/system-config/lovs/${lovType}`
@@ -24,7 +24,7 @@ export class LovDataService {
   }
 
   getLovsbyTypes(lovType : string) {
-        
+
     return this.http.get<Lov[]>(
         `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
         `/system-config/lovs/types/${lovType}`
@@ -32,10 +32,17 @@ export class LovDataService {
   }
 
   getLovsbyParent(lovType : string ,parentCode : string) {
-        
+
     return this.http.get<Lov[]>(
         `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
         `/system-config/lovs/${lovType}/${parentCode}`
     );
+  }
+  getLovTypesbyTypes(lovType : string ) {
+
+    return this.http.get<Lov[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/lovs/lovtypes/${lovType}`
+  );
   }
 }

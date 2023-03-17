@@ -1,6 +1,6 @@
 <div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer kendoTooltip>
-  <div class="assigned-to-right">
-    Assigned To
+  <div class="assigned-to-right" *ngIf="caseWorkerId">
+   <span> Assigned To</span>
     <button
       kendoButton
       [primary]="true"
@@ -9,15 +9,16 @@
       [popover]="userCard"
       showOn="hover"
       aria-label="assigned to"
-    >
-      <div mat-card-avatar class="app-c-avatar avatar-sm">
-        <span class="profile-text-avatar">AK</span>
-      </div>
+    >    
+    <common-user-photo-icon  [userId]="caseWorkerId"></common-user-photo-icon>        
     </button>
   </div>
   <kendo-popover #userCard width="330" position="left">
     <ng-template kendoPopoverBodyTemplate>
-      <common-user-profile-card></common-user-profile-card>
+      <common-user-profile-card 
+      [userId]="caseWorkerId"     
+      [reassign]=true      
+      ></common-user-profile-card>
     </ng-template>
   </kendo-popover>
 
