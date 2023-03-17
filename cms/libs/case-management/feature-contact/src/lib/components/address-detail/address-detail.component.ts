@@ -313,7 +313,6 @@ export class AddressDetailComponent implements OnInit {
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Saved Successfully")
         },
         error:(error)=>{
-          this.contactFacade.showAddPopupSubject.next(false);
            this.loaderService.hide();
         }
       })     
