@@ -20,4 +20,24 @@ export class ClientImportantInfoComponent implements OnInit{
     {
        this.loadClientImpInfoEvent.emit()  
     }
+
+    clientDisabilitiesValidator(object : any)
+    {
+     if(object?.filter((x : any)=>x !="").length > 0)
+     {
+      return true
+     }
+     return false;
+    }
+
+    infoObjectValidator(object : any)
+    {
+      if(object == null || object?.caseManagerEmail || object?.caseManagerFullName || object?.caseManagerPhone 
+        || this.clientDisabilitiesValidator(object?.clientDisabilities) || object?.clientNotes.length > 0
+        || object?.preferredContact)
+      {
+      return true;
+      }
+      return false
+    }
 }
