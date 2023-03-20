@@ -7,6 +7,9 @@ import {
   HttpErrorInterceptor,
   HttpLoggingInterceptor,
 } from './application/http-interceptors';
+import {
+  OidcSecurityService
+} from 'angular-auth-oidc-client';
 /** Services **/
 import { AppErrorHandler } from './application/services/app-error-handler.service';
 import { LocalStorageService } from './infrastructure/local-storage.service';
@@ -14,7 +17,8 @@ import { NotificationService } from './api/services/notification.service';
 import { LoggingService } from './api/services/logging.service';
 import { ConfigurationProvider } from './api/providers/configuration.provider';
 import { UserProfileService } from './infrastructure/user-profile.service';
-export { ConfigurationProvider, LocalStorageService, NotificationService,LoggingService, UserProfileService };
+
+export { ConfigurationProvider, OidcSecurityService, LocalStorageService, NotificationService,LoggingService, UserProfileService };
 
 @NgModule({
   imports: [CommonModule],

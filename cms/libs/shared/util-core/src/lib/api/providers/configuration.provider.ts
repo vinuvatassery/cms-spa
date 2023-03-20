@@ -20,7 +20,7 @@ export class ConfigurationProvider {
     const config$ = this.http.get<any>('./assets/config.json').pipe(
       map((config: any) => {
         this.config = config;
-
+        
         return {
           authority: config.oidc.authority,
           authWellknownEndpointUrl: config.oidc.authWellknownEndpointUrl,
