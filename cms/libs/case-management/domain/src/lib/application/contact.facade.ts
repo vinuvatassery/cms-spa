@@ -7,7 +7,7 @@ import { Contact, ContactInfo,ClientAddress } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain'
-import { catchError, of } from 'rxjs';
+import { catchError, of,Subject } from 'rxjs';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
@@ -27,6 +27,8 @@ export class ContactFacade {
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
   showAddPopupSubject = new BehaviorSubject<boolean>(false);
   editAddressSubject = new BehaviorSubject<boolean>(false);
+  editedAddressSubject = new Subject<any>();
+  
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -44,6 +46,7 @@ export class ContactFacade {
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
   showAddPopup$ = this.showAddPopupSubject.asObservable();
   editAddress$ =this.editAddressSubject.asObservable();
+  editedAddress$ =this.editedAddressSubject.asObservable();
 
   /** Constructor**/
   constructor(

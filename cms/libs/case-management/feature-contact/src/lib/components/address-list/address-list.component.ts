@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 /** facades **/
-import { ContactFacade, StatusFlag } from '@cms/case-management/domain';
+import { ClientAddress, ContactFacade, StatusFlag } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-address-list',
@@ -23,13 +23,18 @@ export class AddressListComponent implements OnInit {
   showHistoricalFlag!:boolean;
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  clientAddress!:ClientAddress;
   public actions = [
     {
       buttonType: "btn-h-primary",
       text: "Edit Address",
       icon: "edit",
-      click: (): void => {
-        this.onAddressDetailClicked(true);
+      click: (address:any): void => {
+        if(address.clientAddressId !== undefined){
+          this.clientAddress = address;
+        }       
+          this.contactFacade.editedAddressSubject.next(this.clientAddress);
+          this.onAddressDetailClicked(true);
       },
     },
     {
@@ -73,15 +78,13 @@ export class AddressListComponent implements OnInit {
   /** Internal event methods **/
   onAddressDetailClosed() {
     this.contactFacade.showAddPopupSubject.next(false);
-    //this.isAddressDetailPopup = false;
   }
 
   onAddressDetailClicked(editValue: boolean) {
     this.contactFacade.showAddPopupSubject.next(true);
-    //this.isAddressDetailPopup = true;
     this.isEditAddress = editValue;
   }
-
+ 
   onDeactivateAddressClosed() {
     this.isDeactivateAddressPopup = false;
   }
