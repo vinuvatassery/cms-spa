@@ -25,6 +25,7 @@
 <!-- Case List table -->
 <div class="app-c-table">
   <kendo-grid 
+  [filterable]="true"
   [pageSize]="state.take" 
   [pageable]="true" 
   [sortable]="true" 
@@ -32,9 +33,10 @@
   [groupable]="false"
   [reorderable]="true"
   [resizable]="true" 
-  [columnMenu]="{ filter: false }"
+  [columnMenu]="{filter: false }"
   [sort]="state.sort"
   (dataStateChange)="dataStateChange($event)"  
+  (filterChange)="filterChange($event)"
   [loading]="isGridLoaderShow" 
   [data]="cases | async">
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
@@ -45,17 +47,35 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="pronouns" title="Pronouns" [sortable]="false"   [width]="120">
+    <kendo-grid-column field="pronouns" [includeInChooser]="false" title="Pronouns" [sortable]="false"   [width]="120">
     </kendo-grid-column>
-    <kendo-grid-column field="clientId" title="ID" [width]="70"></kendo-grid-column>
+    <kendo-grid-column field="clientId" title="ID" filter="numeric" [width]="70"></kendo-grid-column>
     <kendo-grid-column field="urn" title="URN" [width]="70"></kendo-grid-column>
     <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="caseStatus" title="Status" [width]="80"></kendo-grid-column>
-    <kendo-grid-column field="group" title="Group" [width]="80"></kendo-grid-column>
+    <kendo-grid-column field="group" title="Group" [width]="80">
+
+      <ng-template kendoGridFilterMenuTemplate
+        let-column="column"
+        let-filter="filter"
+        let-filterService="filterService"
+        >
+        <kendo-multiselect
+            style="width:220px"
+            [data]="cases"
+            textField="group"
+            valueField="group"
+            [valuePrimitive]="true"
+            (valueChange)="categoryChange($event, filterService)"
+            >
+        </kendo-multiselect>
+   </ng-template>
+
+    </kendo-grid-column>
     <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="100"
-      [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
+      [format]="{ date: 'MM-dd-yyyy' }" filter="date"></kendo-grid-column>
     <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="110"
-      [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
+      [format]="{ date: 'MM-dd-yyyy' }" filter="date"></kendo-grid-column>
       
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">

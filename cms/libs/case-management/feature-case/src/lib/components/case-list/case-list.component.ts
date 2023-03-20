@@ -12,7 +12,8 @@ import {
 import { CaseFacade } from '@cms/case-management/domain';
  
 import { UIFormStyle } from '@cms/shared/ui-tpa' 
-import { State } from '@progress/kendo-data-query';
+import { FilterService } from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-case-list',
   templateUrl: './case-list.component.html',
@@ -36,6 +37,7 @@ public state!: State;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>(); 
  
+  //public filter: CompositeFilterDescriptor;
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade) {}
 
@@ -51,13 +53,29 @@ public state!: State;
       };        
     this.loadProfileCasesList() 
   }
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    //this.filter = filter;
+   // this.gridData = filterBy(sampleProducts, filter);
+  }
+  public categoryChange(values: string[], filterService: FilterService): void {
+    debugger
+    filterService.filter({
+        filters: values.map(value => ({
+            field: "group",
+            operator: "eq",
+            value
+        })),
+        logic: "or"
+    });
+}
 
   pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadProfileCasesList()
   }
-  public dataStateChange(stateData: any): void {         
+  public dataStateChange(stateData: any): void {     
+    debugger    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
