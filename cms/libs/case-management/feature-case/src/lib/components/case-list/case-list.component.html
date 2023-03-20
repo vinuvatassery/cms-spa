@@ -9,7 +9,6 @@
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-    <span  class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
     <kendo-floatinglabel text="Search">
       <kendo-textbox (valueChange)="onChange($event)" aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
@@ -69,6 +68,10 @@
     <kendo-grid-column field="genders" title="Gender" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="homeAddress" title="Home Address" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column field="ssn" title="SSN" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column *ngIf="selectedTab === 1 || selectedTab === 2" field="assignedCw" title="Assigned to" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>

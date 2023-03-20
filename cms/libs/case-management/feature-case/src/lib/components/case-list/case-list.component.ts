@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade, CaseScreenTab } from '@cms/case-management/domain';
-
+import { Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { State } from '@progress/kendo-data-query';
 @Component({
@@ -20,7 +20,8 @@ import { State } from '@progress/kendo-data-query';
 })
 export class CaseListComponent implements OnInit, OnChanges {
 
-public isGridLoaderShow = false;
+public isGridLoaderShow = true;
+@Input() searchLoaderVisibility$!: Observable<boolean>;
 
 
 public state!: State;
@@ -35,8 +36,8 @@ public state!: State;
 
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
-  selectedColumn: any;
-  filter : any
+  selectedColumn!: any;
+  filter! : any
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>();
 
@@ -56,8 +57,8 @@ public state!: State;
       };
     if(!this.selectedColumn)
     {
-      this.selectedColumn = null;
-      this.filter = null;
+      this.selectedColumn = "";
+      this.filter = "";
     }
     this.loadProfileCasesList()
 
@@ -78,7 +79,7 @@ public state!: State;
   private loadProfileCasesList(): void {
     this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.selectedColumn,this.filter)
   }
-   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : string, filter : string)
+   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any)
    {
      const gridDataRefinerValue =
      {
@@ -94,9 +95,10 @@ public state!: State;
 
   /** Private methods **/
   private loadDdlGridColumns() {
-    this.isGridLoaderShow = true;
     this.caseFacade.loadDdlGridColumns();
-    this.isGridLoaderShow = false;
+    this.searchLoaderVisibility$.subscribe((data : any) => {
+      this.isGridLoaderShow = data;
+    });
 
   }
 

@@ -37,6 +37,8 @@ export class CaseFacade {
   private casesSubject  = new Subject<any>();
   private clientProfileSubject  = new Subject<any>();
   private clientProfileHeaderSubject  = new Subject<any>();
+  private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -56,6 +58,8 @@ export class CaseFacade {
   getCaseHistory$ = this.getCaseHistorySubject.asObservable();
   clientProfile$ = this.clientProfileSubject.asObservable();
   clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable();
+  searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
+
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -137,8 +141,9 @@ export class CaseFacade {
     });
   }
 
-  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string , columnName : string, filter : string): void {
-    this.showLoader();
+  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string , columnName : any, filter : any): void {
+    //this.showLoader();
+    this.searchLoaderVisibilitySubject.next(true);
     this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType, columnName,filter).subscribe({
       next: (casesResponse  : any) => {
         this.casesSubject.next(casesResponse);
@@ -150,9 +155,11 @@ export class CaseFacade {
               };
           this.casesSubject.next(gridView);
          }
-         this.hideLoader();
+         ///this.hideLoader();
+         this.searchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
+        this.searchLoaderVisibilitySubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });

@@ -28,6 +28,7 @@ export class CasePageComponent implements OnInit {
   savedcaseForm! : FormGroup ;
   formButtonDisabled! : boolean
   columnDroplist$ = this.lovFacade.ColumnDroplistlov$;
+  searchLoaderVisibility$ = this.caseFacade.searchLoaderVisibility$;
 
 
   /** Public properties for case popup**/
@@ -156,7 +157,7 @@ export class CasePageComponent implements OnInit {
 
       /** grid event methods **/
 
-    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : string, filter : string)
+    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any)
      {
        this.pageSizes = this.caseFacade.gridPageSizes;
         this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter);
