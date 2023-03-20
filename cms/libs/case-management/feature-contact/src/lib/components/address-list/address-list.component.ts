@@ -103,4 +103,8 @@ export class AddressListComponent implements OnInit {
     }
     this.cdr.detectChanges();
   }
+
+  public rowClass = (args:any) => ({
+    "table-row-disabled": !(args.dataItem.activeFlag == StatusFlag.Yes),
+  });
 }
