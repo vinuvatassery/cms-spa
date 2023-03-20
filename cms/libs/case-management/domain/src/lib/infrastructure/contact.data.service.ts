@@ -190,6 +190,12 @@ export class ContactDataService {
        return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
        clientAddress);
   }
+
+  updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+    clientAddress);
+  }
+
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
     const fd = new FormData();
     if (contactInfo?.homeAddressProof?.document) {

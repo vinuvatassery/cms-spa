@@ -35,6 +35,7 @@ export class AddressListComponent implements OnInit {
         }       
           this.contactFacade.editedAddressSubject.next(this.clientAddress);
           this.onAddressDetailClicked(true);
+          this.contactFacade.editAddressSubject.next(false);
       },
     },
     {

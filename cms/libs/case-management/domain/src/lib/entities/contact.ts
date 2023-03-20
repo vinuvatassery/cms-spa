@@ -18,6 +18,7 @@ export interface ClientAddress {
   county?: string;
   startDate?:Date;
   concurrencyStamp?: string;
+  activeFlag?:string;
 }
 
 export interface ClientPhone {

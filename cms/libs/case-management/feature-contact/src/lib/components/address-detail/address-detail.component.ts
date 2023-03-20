@@ -10,10 +10,10 @@ import {  FormControl, FormGroup, Validators,FormBuilder } from '@angular/forms'
 import {  BehaviorSubject, of, Subscription } from 'rxjs';
 
 /** Internal Libraries **/
-import { ContactFacade, StatesInUSA, ClientAddress } from '@cms/case-management/domain';
+import { ContactFacade, StatesInUSA, ClientAddress, StatusFlag } from '@cms/case-management/domain';
 import { LovFacade,MailAddress,AddressValidationFacade, AddressValidation } from '@cms/system-config/domain';
 import { UIFormStyle, IntlDateService } from '@cms/shared/ui-tpa'
-import { SnackBarNotificationType,NotificationSnackbarService, ConfigurationProvider, LoaderService} from '@cms/shared/util-core';
+import { SnackBarNotificationType,NotificationSnackbarService, ConfigurationProvider, LoaderService, LoggingService} from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-address-detail',
@@ -37,7 +37,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   editedAddress$ = this.contactFacade.editedAddress$;  
   editedAddressSubscription!:Subscription;
   stateSubscription!:Subscription;
-  countrySubscription!:Subscription;
+  countySubscription!:Subscription;
   isDeactivateValue!: boolean;
   isDeactivateAddressPopup = true;
   isAddressLine1Disabled = true;
@@ -45,7 +45,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   isZIPDisabled = true;
   isCityDisabled = true;
   isStateDisabled = true;
-  isCountryDisabled = true;
+  isCountyDisabled = true;
   isEffectiveDateDisabled = true;
   addressIsValid=true
   addressForm!:FormGroup;
@@ -56,10 +56,10 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   addressValidationPopupVisibility$ = new BehaviorSubject(false);  
   showAddressValidationLoader$= new BehaviorSubject(false);  
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  //mailingAddressIsNotValid: boolean = false;
   addressEntered: MailAddress | undefined;
   addressSuggested: MailAddress | undefined;
   clientAddress!: ClientAddress ;
+  addressType!:string;
 
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade,
@@ -67,7 +67,8 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     private readonly addressValidationFacade: AddressValidationFacade,
     private readonly snackbarService: NotificationSnackbarService,
     public readonly intl: IntlDateService,private readonly configurationProvider: ConfigurationProvider,    
-    private loaderService: LoaderService,private readonly cd: ChangeDetectorRef) {}
+    private loaderService: LoaderService,private readonly cd: ChangeDetectorRef,
+    private readonly loggingService: LoggingService) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -79,12 +80,13 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.loadAddressTypeLovs();
     this.disableAllFields();
     this.pageSubscription();
+    if(!this.isEditValue){this.address =null;}
    
   }
   ngOnDestroy(): void {
     this.editedAddressSubscription.unsubscribe();
     this.stateSubscription.unsubscribe();
-    this.countrySubscription.unsubscribe();
+    this.countySubscription.unsubscribe();
   }
   /** Private methods **/
   private pageSubscription(){
@@ -93,12 +95,11 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     });
     this.stateSubscription = this.ddlStates$.subscribe(state=>{
       if(this.isEditValue){
-        this.addressForm.controls["state"].setValue(this.address.stateCode);
+        this.addressForm.controls["state"].setValue(this.address?.stateCode);
       }
     });
-    this.countrySubscription = this.  ddlCountries$.subscribe(country=>{
-      debugger;
-      this.addressForm.controls["country"].setValue(this.address.county);
+    this.countySubscription = this.  ddlCountries$.subscribe(county=>{
+      this.addressForm.controls["county"].setValue(this.address?.county);
     })
   }
    private loadDdlStates() {
@@ -117,7 +118,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       this.isZIPDisabled = true;
       this.isCityDisabled = true;
       this.isStateDisabled = true;
-      this.isCountryDisabled = true;
+      this.isCountyDisabled = true;
     }
   }
 
@@ -129,8 +130,9 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       city: [''],
       state: [''],
       zip: [''],
-      country: [''],
-      effectiveDate:['']
+      county: [''],
+      effectiveDate:[''],
+      sameAsMailingAddress:['']
     });
   }
   private buildAddressValidationForm() {
@@ -161,9 +163,9 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.addressForm.controls["state"].setValidators([Validators.required]);
       this.addressForm.controls["state"].updateValueAndValidity();
    }
-   if(addressType ==='H' || addressType === 'U'){
-    this.addressForm.controls["country"].setValidators([Validators.required]);
-      this.addressForm.controls["country"].updateValueAndValidity();
+   if((addressType ==='H' || addressType === 'U') && !this.isEditValue){
+    this.addressForm.controls["county"].setValidators([Validators.required]);
+      this.addressForm.controls["county"].updateValueAndValidity();
    }
 
 
@@ -174,7 +176,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       address2: this.addressForm?.controls['address2']?.value,
       city: this.addressForm?.controls['city']?.value,
       state: this.addressForm?.controls['state']?.value,
-      county: this.addressForm?.controls['country']?.value,
+      county: this.addressForm?.controls['county']?.value,
       zip: this.addressForm?.controls['zip']?.value,
       addressTypeCode: this.addressForm?.controls['addressType']?.value,
       clientId:this.clientId,
@@ -202,7 +204,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.addressForm.controls["city"].disable();
     this.addressForm.controls["state"].disable();
     this.addressForm.controls["zip"].disable();
-    this.addressForm.controls["country"].disable();
+    this.addressForm.controls["county"].disable();
     this.addressForm.controls["effectiveDate"].disable();
   }
   private bindModelToForm(address:any){
@@ -213,6 +215,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.addressForm.controls["city"].setValue(address.city);
     this.addressForm.controls["zip"].setValue(address.zip);
     this.addressForm.controls["effectiveDate"].setValue(address.startDate);
+    this.addressForm.controls["sameAsMailingAddress"].setValue(address.sameAsMailingAddressFlag === StatusFlag.Yes?true:false); 
     this.onDdlAddressTypeValueChange(address.addressTypeCode);
     this.addressForm.markAllAsTouched();
     this.cd.detectChanges();
@@ -305,6 +308,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.contactFacade.showAddPopupSubject.next(false);
   }
   onDdlAddressTypeValueChange(event: any) {
+    this.addressType =  this.addressForm.controls["addressType"].value;
     this.resetValidators();
     if(!this.isEditValue){ this.resetData(); }
     switch (event) {
@@ -315,7 +319,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
         this.addressForm.controls["state"].enable();
         this.addressForm.controls["state"].setValue('OR');
         this.addressForm.controls["zip"].disable();
-        this.addressForm.controls["country"].enable();
+        this.addressForm.controls["county"].enable();
         this.addressForm.controls["effectiveDate"].enable();
         break;
       case 'H':
@@ -325,7 +329,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
         this.addressForm.controls["state"].enable();
         this.addressForm.controls["state"].setValue('OR');
         this.addressForm.controls["zip"].enable();
-        this.addressForm.controls["country"].enable();
+        this.addressForm.controls["county"].enable();
         this.addressForm.controls["effectiveDate"].enable();
         break;
       case 'M':
@@ -335,13 +339,14 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
         this.addressForm.controls["state"].enable();
         this.addressForm.controls["state"].setValue('');
         this.addressForm.controls["zip"].enable();
-        this.addressForm.controls["country"].disable();
+        this.addressForm.controls["county"].disable();
         this.addressForm.controls["effectiveDate"].enable();
         break;
 
     }
+    this.cd.detectChanges();
   }
-  createAddress() {    
+  createAddress() {   
     this.validateForm();
     this.populateModel();
     let editAddress = false;
@@ -349,18 +354,40 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       editAddress = edit;
     })
     if(editAddress){this.validateAddress();}
-    if (this.addressForm.valid && !editAddress) {
+    if (this.addressForm.valid && !editAddress) 
+    {
       this.loaderService.show();
+      if(!this.isEditValue){
       return this.contactFacade.createAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.clientAddress).subscribe({
         next:(data)=>{
           this.loaderService.hide();
           this.contactFacade.showAddPopupSubject.next(false);
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Saved Successfully")
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Saved Successfully.")
         },
         error:(error)=>{
+          this.loggingService.logException(error);
            this.loaderService.hide();
         }
-      })     
+      });
+    }
+    else{
+      this.clientAddress.clientAddressId = this.address.clientAddressId;
+      this.clientAddress.concurrencyStamp = this.address.concurrencyStamp;
+      this.clientAddress.activeFlag = StatusFlag.Yes
+      this.clientAddress.sameAsMailingAddressFlag = this.addressForm?.controls['sameAsMailingAddress']?.value?StatusFlag.Yes:StatusFlag.No;
+      return this.contactFacade.updateAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.clientAddress).subscribe({
+        next:(data)=>{
+          this.loaderService.hide();
+          this.contactFacade.showAddPopupSubject.next(false);
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Updated Successfully.")
+        },
+        error:(error)=>{
+          this.loggingService.logException(error);
+           this.loaderService.hide();
+        }
+      });
+    }
+
     }
     return of(false);
   }

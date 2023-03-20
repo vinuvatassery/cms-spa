@@ -95,18 +95,18 @@
             USPS can't validate this address.
       </span>   
     </div>  
-    <div class="flex-col">
+    <div class="flex-col"  *ngIf="!isEditValue ||(isEditValue && addressType !== 'M')">
       <kendo-formfield>
         <kendo-floatinglabel text="County" class="inline-search-loader">
           <span *ngIf="showCountyLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
           <kendo-dropdownlist 
           aria-label="County" 
           [fillMode]="formUiStyle.dropDownFillMode"
-          formControlName="country"
+          formControlName="county"
           [data]="ddlCountries$ | async"
           textField="countyName"
           valueField="countyCode"
-          [valuePrimitive]="true"  placeholder="Country"
+          [valuePrimitive]="true"  placeholder="County"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -131,13 +131,14 @@
       <kendo-formerror *ngIf="!effectiveDateValidator">Effective Date should be greater than Current Date.</kendo-formerror>
     </kendo-formfield>
     </div>
-    <div class="flex-col" *ngIf="isEditValue">
+    <div class="flex-col" *ngIf="isEditValue && this.addressForm.controls['addressType'].value !== 'M'">
       <span class="app-checkboxwidtext-wrapper"> 
       <input
         type="checkbox"
         kendoCheckBox
         aria-labelledby="applyChangesToMailingAddress"
         id="applyChangesToMailingAddress"
+        formControlName="sameAsMailingAddress"
       />
 
       <label class="k-checkbox-label" for="applyChangesToMailingAddress"

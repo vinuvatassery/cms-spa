@@ -206,6 +206,10 @@ export class ContactFacade {
     return this.contactDataService.createAddress(clientId, clientCaseEligibilityId, clientAddress);
   }
 
+  updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+    return this.contactDataService.updateAddress(clientId, clientCaseEligibilityId, clientAddress);
+  }
+
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
     return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo).pipe(
       catchError((err: any) => {
