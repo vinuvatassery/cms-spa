@@ -1,5 +1,5 @@
 <section class="user-details-block">
-  <section *ngIf="infoObjectValidator(clientProfileImpInfo$)" class="client-important-loader">
+  <section *ngIf="!clientProfileImpInfo$" class="client-important-loader">
     <span class="k-icon k-i-loading k-input-loading-icon"></span>
   </section>
   <div *ngIf="!infoObjectValidator(clientProfileImpInfo$)" class="no-data-available">

@@ -35,9 +35,9 @@ export class ClientImportantInfoComponent implements OnInit{
       if(object == null || object?.caseManagerEmail || object?.caseManagerFullName || object?.caseManagerPhone 
         || this.clientDisabilitiesValidator(object?.clientDisabilities) || object?.clientNotes.length > 0
         || object?.preferredContact)
-      {
+      {        
       return true;
-      }
+      }      
       return false
     }
 }
