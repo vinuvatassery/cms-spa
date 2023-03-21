@@ -1,8 +1,9 @@
 export interface ActiveSessions {
+    activeSessionId: string;
     clientId: number;
-    clientFullName: string;
+    clientName: string;
     clientCaseId: string;
     sessionId: string;
     entityId: string;
-    caseStatusCode:string;
+    caseStatusCode: string;
 }

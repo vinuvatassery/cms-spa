@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
-import { Subject } from 'rxjs';
+import { catchError, of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -14,12 +14,13 @@ import { Case } from '../entities/case';
 import { CaseDataService } from '../infrastructure/case.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
+import { ActiveSessions } from '../entities/active-sessions';
 
 
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
-  /** Private properties **/  
+  /** Private properties **/
   private myCasesSubject = new BehaviorSubject<Case[]>([]);
   private recentCaseSubject = new BehaviorSubject<Case[]>([]);
   private caseSearchedSubject = new BehaviorSubject<any>([]);
@@ -33,10 +34,10 @@ export class CaseFacade {
   private ddlSendLettersSubject = new BehaviorSubject<any>([]);
   private updateCaseSubject = new Subject<any>();
   private getCaseSubject = new Subject<any>();
-  private getCaseHistorySubject =new BehaviorSubject<any[]>([]);
-  private casesSubject  = new Subject<any>();
-  private clientProfileSubject  = new Subject<any>();
-  private clientProfileHeaderSubject  = new Subject<any>();
+  private getCaseHistorySubject = new BehaviorSubject<any[]>([]);
+  private casesSubject = new Subject<any>();
+  private clientProfileSubject = new Subject<any>();
+  private clientProfileHeaderSubject = new Subject<any>();
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -52,10 +53,10 @@ export class CaseFacade {
   ddlCommonActions$ = this.ddlCommonActionsSubject.asObservable();
   ddlSendLetters$ = this.ddlSendLettersSubject.asObservable();
   updateCase$ = this.updateCaseSubject.asObservable();
-  getCase$ = this.getCaseSubject.asObservable(); 
-  getCaseHistory$ = this.getCaseHistorySubject.asObservable(); 
-  clientProfile$ = this.clientProfileSubject.asObservable(); 
-  clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable(); 
+  getCase$ = this.getCaseSubject.asObservable();
+  getCaseHistory$ = this.getCaseHistorySubject.asObservable();
+  clientProfile$ = this.clientProfileSubject.asObservable();
+  clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable();
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -66,60 +67,57 @@ export class CaseFacade {
     field: this.sortValue,
     dir: 'asc'
   }];
+  activeSession!: ActiveSessions[];
   constructor(
     private readonly caseDataService: CaseDataService,
-    private readonly loggingService : LoggingService,
-    private readonly loaderService: LoaderService ,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly loggingService: LoggingService,
+    private readonly loaderService: LoaderService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
     public readonly intl: IntlService,
-    private readonly configurationProvider : ConfigurationProvider,
+    private readonly configurationProvider: ConfigurationProvider,
 
   ) { }
 
-  showLoader()
-  {
+  showLoader() {
     this.loaderService.show();
   }
 
-  hideLoader()
-  {
+  hideLoader() {
     this.loaderService.hide();
   }
 
-  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
-    if(type == SnackBarNotificationType.ERROR)
-    {
-       const err= subtitle;
-       this.loggingService.logException(err)
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.hideLoader();
   }
 
   /** Public methods **/
-  loadClientProfile(profileClientId : number): void {
+  loadClientProfile(profileClientId: number): void {
     this.showLoader();
     this.caseDataService.loadClientProfile(profileClientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileSubject.next(clientProfileResponse);
-        this.hideLoader();   
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  loadClientProfileHeader(clientId : number): void {
+  loadClientProfileHeader(clientId: number): void {
     this.showLoader();
     this.caseDataService.loadClientProfileHeader(clientId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
-        this.hideLoader();   
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -128,43 +126,42 @@ export class CaseFacade {
   loadCaseHistory(): void {
     this.caseDataService.loadCaseHistory().subscribe({
       next: (casesHistoryResponse) => {
-        
+
         this.getCaseHistorySubject.next(casesHistoryResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string): void {
     this.showLoader();
-    this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType).subscribe({
-      next: (casesResponse  : any) => {
+    this.caseDataService.loadCases(CaseScreenType, skipcount, maxResultCount, sort, sortType).subscribe({
+      next: (casesResponse: any) => {
         this.casesSubject.next(casesResponse);
-        if(casesResponse )
-        {      
-            const gridView = {
-              data : casesResponse["items"] ,        
-              total:  casesResponse["totalCount"]  
-              };    
+        if (casesResponse) {
+          const gridView = {
+            data: casesResponse["items"],
+            total: casesResponse["totalCount"]
+          };
           this.casesSubject.next(gridView);
-         }
-         this.hideLoader();      
+        }
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  loadCaseBySearchText(text : string): void {
+  loadCaseBySearchText(text: string): void {
     this.caseDataService.loadCaseBySearchText(text).subscribe({
       next: (caseBySearchTextResponse) => {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -175,7 +172,7 @@ export class CaseFacade {
         this.myCasesSubject.next(result);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -186,19 +183,52 @@ export class CaseFacade {
         this.recentCaseSubject.next(result);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  loadLastVisitedCases(): void {
-    this.caseDataService.loadLastVisitedCases().subscribe({
+  loadActiveSession(): void {
+    this.caseDataService.loadActiveSession().subscribe({
       next: (lastVisitedCasesResponse) => {
+        this.activeSession = lastVisitedCasesResponse;
         this.lastVisitedCasesSubject.next(lastVisitedCasesResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
+    });
+  }
+
+  createActiveSession(session: any) {
+    return this.caseDataService.createActiveSession(session).pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    ).subscribe();
+  }
+
+  updateActiveSessionOrder(session: any[]) {
+    return this.caseDataService.updateActiveSessionOrder(session).pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    );
+  }
+
+  deleteActiveSession(activeSessionId: string) {
+    return this.caseDataService.deleteActiveSession(activeSessionId).pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    ).subscribe((response) => {
+      if (response) {
+        this.loadActiveSession();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Session Removed Successfully')
+      }
     });
   }
 
@@ -208,7 +238,7 @@ export class CaseFacade {
         this.ddlGridColumnsSubject.next(ddlGridColumnsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -219,12 +249,11 @@ export class CaseFacade {
         this.ddlCommonActionsSubject.next(ddlCommonActionsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
-  loadCasesById(clientCaseId : string)
-  {
+  loadCasesById(clientCaseId: string) {
     this.showLoader();
     this.caseDataService.loadCasesById(clientCaseId).subscribe({
       next: (ddlcaseGetResponse) => {
@@ -232,7 +261,7 @@ export class CaseFacade {
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -242,7 +271,7 @@ export class CaseFacade {
         this.ddlSendLettersSubject.next(ddlSendLettersResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -253,7 +282,7 @@ export class CaseFacade {
         this.ddlProgramsSubject.next(ddlProgramsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -267,7 +296,7 @@ export class CaseFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -278,7 +307,7 @@ export class CaseFacade {
         this.ddlEmploymentEPSubject.next(ddlEmploymentEPResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -289,40 +318,38 @@ export class CaseFacade {
         this.ddlEmploymentEPSubject.next(data);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
 
-  UpdateCase(existingCaseFormData : FormGroup ,clientCaseId : string )
-  {
-       this.showLoader();
-        const caseData = {
-          clientCaseId  : clientCaseId,
-          assignedCwUserId : existingCaseFormData?.controls["caseOwnerId"].value ,
-          caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
-          caseStartDate: existingCaseFormData?.controls["applicationDate"].value ,
-          concurrencyStamp :  existingCaseFormData?.controls["concurrencyStamp"].value
-        }
-        caseData.caseStartDate =this.intl.formatDate(caseData.caseStartDate,this.dateFormat)
-        return  this.caseDataService.UpdateCase(caseData)
-
-  }
-  
-  getSessionInfoByCaseId(clientCaseId:any){
-    return  this.caseDataService.getSessionInfoByCaseId(clientCaseId)
-  }
-    updateCaseStatus(clientCaseId : any,caseStatusCode:any) 
-    { 
-          const caseData = { 
-            caseStatusCode  : caseStatusCode          
-          }      
-          return  this.caseDataService.updateCaseStatus(caseData,clientCaseId)
+  UpdateCase(existingCaseFormData: FormGroup, clientCaseId: string) {
+    this.showLoader();
+    const caseData = {
+      clientCaseId: clientCaseId,
+      assignedCwUserId: existingCaseFormData?.controls["caseOwnerId"].value,
+      caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
+      caseStartDate: existingCaseFormData?.controls["applicationDate"].value,
+      concurrencyStamp: existingCaseFormData?.controls["concurrencyStamp"].value
     }
+    caseData.caseStartDate = this.intl.formatDate(caseData.caseStartDate, this.dateFormat)
+    return this.caseDataService.UpdateCase(caseData)
 
-  getCaseStatusById(clientCaseId : string ) {    
-     return  this.caseDataService.loadCasesStatusById(clientCaseId)
+  }
+
+  getSessionInfoByCaseId(clientCaseId: any) {
+    return this.caseDataService.getSessionInfoByCaseId(clientCaseId)
+  }
+  updateCaseStatus(clientCaseId: any, caseStatusCode: any) {
+    const caseData = {
+      caseStatusCode: caseStatusCode
+    }
+    return this.caseDataService.updateCaseStatus(caseData, clientCaseId)
+  }
+
+  getCaseStatusById(clientCaseId: string) {
+    return this.caseDataService.loadCasesStatusById(clientCaseId)
   }
 
 }

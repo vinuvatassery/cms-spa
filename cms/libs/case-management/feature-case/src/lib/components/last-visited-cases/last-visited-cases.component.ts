@@ -1,9 +1,13 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-/** Facades **/
+/** External service **/
+import { mergeMap, of } from 'rxjs';
+import { DragEndEvent } from "@progress/kendo-angular-sortable";
+/** Internal service **/
 import { CaseFacade, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { ActiveSessions } from 'libs/case-management/domain/src/lib/entities/active-sessions';
+import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-last-visited-cases',
@@ -16,7 +20,9 @@ export class LastVisitedCasesComponent implements OnInit {
   lastVisitedCases$ = this.caseFacade.lastVisitedCases$;
 
   /** Constructor**/
-  constructor(private readonly caseFacade: CaseFacade, private readonly router: Router) {
+  constructor(private readonly caseFacade: CaseFacade,
+    private readonly router: Router,
+    private readonly notificationSnackbarService: NotificationSnackbarService) {
     this.loadLastVisitedCases();
   }
 
@@ -27,11 +33,10 @@ export class LastVisitedCasesComponent implements OnInit {
 
   /** Private methods **/
   private loadLastVisitedCases() {
-    this.caseFacade.loadLastVisitedCases();
+    this.caseFacade.loadActiveSession();
   }
 
   getQueryParams(caseDetail: any): object {
-    //console.log(caseDetail);
     return {
       type: WorkflowTypeCode.NewCase,
       sid: caseDetail.SessionId,
@@ -44,12 +49,40 @@ export class LastVisitedCasesComponent implements OnInit {
       this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);
       return;
     }
-    
+
     this.router.navigate(['case-management/case-detail'], {
       queryParams: {
         sid: session?.sessionId,
         eid: session?.entityId
       },
     });
+  }
+
+  public onDragEnd(e: DragEndEvent): void {
+    if (e.index !== e.oldIndex) {
+      this.lastVisitedCases$
+        .pipe(mergeMap((activeSessions: ActiveSessions[]) => this.updateActiveSessionOrder(activeSessions)))
+        .subscribe(() => {
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Active Session Order Changed Successfully')
+        });
+    }
+  }
+
+  private updateActiveSessionOrder(activeSessions: ActiveSessions[]) {
+    if (!activeSessions) return of(false);
+    let sessionUpdate: any[] = [];
+    activeSessions.forEach((session, i) => {
+      const seq = {
+        activeSessionId: session.activeSessionId,
+        sequenceNbr: i,
+      };
+      sessionUpdate.push(seq);
+    });
+
+    return this.caseFacade.updateActiveSessionOrder(sessionUpdate);
+  }
+
+  deleteActiveSession(activeSessionId: string) {
+    return this.caseFacade.deleteActiveSession(activeSessionId);
   }
 }

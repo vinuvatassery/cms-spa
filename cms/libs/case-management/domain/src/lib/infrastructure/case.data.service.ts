@@ -299,8 +299,20 @@ export class CaseDataService {
     ]);
   }
 
-  loadLastVisitedCases():Observable<ActiveSessions[]> {
-    return this.http.get<ActiveSessions[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-worker/active-sessions`);
+  loadActiveSession(): Observable<ActiveSessions[]> {
+    return this.http.get<ActiveSessions[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`);
+  }
+
+  createActiveSession(session: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
+  }
+
+  updateActiveSessionOrder(session: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
+  }
+
+  deleteActiveSession(activeSessionId: any) {
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions/${activeSessionId}`);
   }
 
   loadDdlGridColumns() {
