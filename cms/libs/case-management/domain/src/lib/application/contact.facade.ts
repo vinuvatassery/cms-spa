@@ -7,8 +7,9 @@ import { Contact, ContactInfo } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain'
-import { catchError, of } from 'rxjs';
-import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { catchError, of, Subject } from 'rxjs';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -25,6 +26,7 @@ export class ContactFacade {
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
+  private clientPhonesSubject =  new Subject<any>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -40,14 +42,50 @@ export class ContactFacade {
   phoneNumbers$ = this.phoneNumbersSubject.asObservable();
   emailAddress$ = this.emailAddressesSubject.asObservable();
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
+  clientPhones$ = this.clientPhonesSubject.asObservable();
+
+  public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
+  public sortValue = ' '
+  public sortType = 'asc'
+
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
+
 
   /** Constructor**/
   constructor(
     private readonly contactDataService: ContactDataService,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
-    private readonly zipCodeFacade: ZipCodeFacade
+    private readonly zipCodeFacade: ZipCodeFacade,   
+    private readonly notificationSnackbarService : NotificationSnackbarService ,
+    private readonly loaderService: LoaderService,
+    private configurationProvider : ConfigurationProvider 
   ) { }
+
+
+  showLoader()
+  {
+    this.loaderService.show();
+  }
+
+  hideLoader()
+  {
+    this.loaderService.hide();
+  }
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+    if(type == SnackBarNotificationType.ERROR)
+    {
+       const err= subtitle;    
+       this.loggingService.logException(err)
+    }  
+    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.hideLoader();   
+  }
+
 
   /** Public methods **/
   loadDdlStates(): void {
@@ -195,4 +233,32 @@ export class ContactFacade {
       })
     );
   }
+
+
+  //#region client profile //NOSONAR
+    loadClientPhones(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated : boolean): void {
+      this.showLoader();
+      this.contactDataService.loadClientPhones(clientId , skipcount ,maxResultCount  ,sort , sortType,showDeactivated).subscribe({
+        next: (clientPhonesResponse : any) => {        
+          if(clientPhonesResponse)
+          {      
+            const gridView = {
+              data : clientPhonesResponse["items"] ,        
+              total:  clientPhonesResponse["totalCount"]      
+              };      
+          
+            this.clientPhonesSubject.next(gridView);
+            this.hideLoader();    
+          }
+          else{
+          this.hideLoader();    
+          }
+        },
+        error: (err) => {      
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+        },
+      });
+    }
+
+  //#endregion client profile //NOSONAR
 }

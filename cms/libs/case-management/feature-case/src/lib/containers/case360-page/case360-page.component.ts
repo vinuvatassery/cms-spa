@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade} from '@cms/case-management/domain';
+import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade, ContactFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
 @Component({
@@ -33,6 +33,7 @@ export class Case360PageComponent implements OnInit {
   clientProfile$ = this.caseFacade.clientProfile$;
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;
+  clientPhones$ = this.contactFacade.clientPhones$;
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
@@ -49,6 +50,10 @@ export class Case360PageComponent implements OnInit {
   clientHeaderTabs: any = [];
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  pageSizes = this.contactFacade.gridPageSizes;
+  sortValue  = this.contactFacade.sortValue;
+  sortType  = this.contactFacade.sortType;
+  sort  = this.contactFacade.sort;
   public SendActions = [
     {
       buttonType: "btn-h-primary",
@@ -87,7 +92,8 @@ export class Case360PageComponent implements OnInit {
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly contactFacade : ContactFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -317,5 +323,23 @@ private getQueryParams()
   loadHeaderAndProfile(){
     this.loadClientProfileInfoEventHandler();
     this.loadReadOnlyClientInfoEventHandler();
+  }
+
+
+  loadClientPhonesHandle( gridDataRefinerValue : any ): void
+  {    
+      const gridDataRefiner = 
+      {
+        skipcount: gridDataRefinerValue.skipCount,
+        maxResultCount : gridDataRefinerValue.pagesize,
+        sort : gridDataRefinerValue.sortColumn,
+        sortType : gridDataRefinerValue.sortType,
+        showDeactivated: gridDataRefinerValue.showDeactivated
+      } 
+      
+        this.pageSizes = this.contactFacade.gridPageSizes;
+      this.contactFacade.loadClientPhones(this.profileClientId
+        , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType,gridDataRefinerValue.showDeactivated);       
+      
   }
 }

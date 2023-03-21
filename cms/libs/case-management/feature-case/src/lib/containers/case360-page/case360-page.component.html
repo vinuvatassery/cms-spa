@@ -67,7 +67,14 @@
                     </div>
                     <!-- Phone Section -->
                     <div class="flex-col">
-                      <case-management-phone-list></case-management-phone-list>
+                      <case-management-phone-list
+                      [pageSizes]="pageSizes"
+                      [sortValue]="sortValue"
+                      [sortType]="sortType"
+                      [sort]="sort"
+                      [clientPhonesData$]="clientPhones$"                                 
+                      (loadClientPhonesListEvent)="loadClientPhonesHandle($event)"          
+                     ></case-management-phone-list>
                     </div>
                     <!-- Email Section -->
                     <div class="flex-col">

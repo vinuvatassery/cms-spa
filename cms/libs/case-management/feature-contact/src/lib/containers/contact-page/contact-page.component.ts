@@ -1645,5 +1645,5 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
     this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
     }
-  }
+  } 
 }

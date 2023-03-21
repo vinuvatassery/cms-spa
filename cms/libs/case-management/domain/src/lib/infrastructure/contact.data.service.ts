@@ -242,4 +242,14 @@ export class ContactDataService {
 
   }
 
+
+  loadClientPhones(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {     
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/clients/${clientId}/phones?showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+    
+  }
+  
+
 }
