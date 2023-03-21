@@ -75,8 +75,8 @@ export class EmploymentFacade {
 
 
   // Loading the unemployment status
-  loadEmploymentStatus(clientId : any, clientCaseEligibilityId: string): void {
-    this.employersDataService.loadEmploymentStatusService(clientId, clientCaseEligibilityId).subscribe({
+  loadEmploymentStatus(clientCaseEligibilityId: string): void {
+    this.employersDataService.loadEmploymentStatusService(clientCaseEligibilityId).subscribe({
       next: (employmentStatusGetResponse) => {
         this.employmentStatusGetSubject.next(employmentStatusGetResponse);
       },
@@ -154,8 +154,8 @@ export class EmploymentFacade {
   }
 
   // updating the unemployment stats
-  unEmploymentUpdate(clientId : any, clientCaseEligibilityId: string, isEmployed: string) {
-    return this.employersDataService.employmentStatusUpdateService(clientId, clientCaseEligibilityId, isEmployed);
+  unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
+    return this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed);
   }
 
   updateWorkFlowCount(status: StatusFlag) {

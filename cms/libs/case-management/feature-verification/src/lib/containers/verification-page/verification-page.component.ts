@@ -1,9 +1,12 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
-import { forkJoin, mergeMap, of, Subscription } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-management/domain';
+import { VerificationFacade, NavigationType, WorkflowFacade } from '@cms/case-management/domain';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SnackBarNotificationType} from '@cms/shared/util-core';
 
 
 @Component({
@@ -13,16 +16,26 @@ import { WorkflowFacade, VerificationFacade, NavigationType } from '@cms/case-ma
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  hivVerificationForm!:FormGroup;
+  sessionId!: string;
+  clientCaseId!: string;
+  clientId!: number;
+  private loadSessionSubscription!: Subscription;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
-    private verificationFacade: VerificationFacade) { }
+    private verificationFacade: VerificationFacade,private formBuilder: FormBuilder,
+    private readonly cdr: ChangeDetectorRef,private workFlowFacade: WorkflowFacade,
+    private route: ActivatedRoute) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
+    this.buildForm();
     this.addSaveSubscription();
+    this.loadSessionData();
   }
 
   ngOnDestroy(): void {
@@ -34,6 +47,14 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   } 
 
   /** Private Methods **/
+  private buildForm() {
+    this.hivVerificationForm = this.formBuilder.group({
+      providerEmailAddress: [''],
+      providerOption:[''],
+      verificationStatusDate:['']
+    });
+
+  }
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(      
       mergeMap((navigationType: NavigationType) =>
@@ -48,12 +69,56 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
+  private loadSessionData() {
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        if (session && session?.sessionData) {
+          this.clientCaseId = JSON.parse(session.sessionData)?.ClientCaseId
+          this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;      
+          this.load();
+        }
+
+      });
+  }
+
+  private load(){
+    this.verificationFacade.showLoader();
+    this.verificationFacade.getHivVerification( this.clientId).subscribe({
+      next:(data)=>{
+        if(data !== null){
+          this.hivVerificationForm.controls["providerEmailAddress"].setValue(data["verificationToEmail"]);
+          this.hivVerificationForm.controls["providerOption"].setValue(data["verificationMethodCode"]);
+          this.hivVerificationForm.controls["verificationStatusDate"].setValue(data["verificationStatusDate"]);
+          this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);          
+        }
+        this.verificationFacade.hideLoader();
+      },
+      error:(error)=>{
+        if (error) {
+          this.verificationFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+          this.verificationFacade.hideLoader();
+        }
+      }
+    });
+  }
   private save() {
-    let isValid = true;   
-    if (isValid) {
-      return this.verificationFacade.save();
+    this.validateForm();
+    this.cdr.detectChanges();
+    if (this.hivVerificationForm.valid) {
+      return of(true);
     }
     
     return of(false)
+  }
+  private validateForm(){
+    this.hivVerificationForm.markAllAsTouched();
+    this.hivVerificationForm.controls["providerOption"].setValidators([Validators.required])
+    this.hivVerificationForm.controls["providerOption"].updateValueAndValidity();
+    this.hivVerificationForm.updateValueAndValidity();
   }
 }
