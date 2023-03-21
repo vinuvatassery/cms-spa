@@ -4,9 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade} from '@cms/case-management/domain';
+import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade, IncomeFacade, EmploymentFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
+
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -87,7 +88,9 @@ export class Case360PageComponent implements OnInit {
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly incomeFacade: IncomeFacade,
+    private readonly employmentFacade: EmploymentFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -97,7 +100,7 @@ export class Case360PageComponent implements OnInit {
     this.caseSelection();
     this.loadDdlFamilyAndDependentEP();
     this.loadDdlEPEmployments();
-    this.getQueryParams()  
+    this.getQueryParams(); 
   }
 
   /** Private methods **/
@@ -128,6 +131,16 @@ private getQueryParams()
 
   private loadDdlEPEmployments(): void {
     this.caseFacade.loadDdlEPEmployments();
+  }
+
+  private loadIncomeData(clientId: any, eligibilityId: any, skipCount: number,
+    pageSize: number, sortBy: string, sortType: string) {
+   this.incomeFacade.loadIncomes(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
+  }
+
+  private loadEmploymentData(clientId: any, eligibilityId: any, skipCount: number,
+    pageSize: number, sortBy: string, sortType: string) {
+    this.employmentFacade.loadEmployers(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
   }
 
   /** Internal event methods **/
@@ -211,6 +224,60 @@ private getQueryParams()
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
+
+  public loadIncomes(){
+    this.loadIncomeData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      this.incomeFacade.skipCount,
+      this.incomeFacade.gridPageSizes[0].value,
+      this.incomeFacade.sortValue,
+      this.incomeFacade.sortType);
+  }
+
+  loadIncomeListHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sortColumn : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
+    };
+    this.loadIncomeData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType
+    );
+  }
+
+  public loadEmployments(){
+    this.loadEmploymentData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      this.employmentFacade.skipCount,
+      this.employmentFacade.gridPageSizes[0].value,
+      this.employmentFacade.sortValue,
+      this.employmentFacade.sortType);
+  }
+
+  loadEmploymentsHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+    this.loadEmploymentData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType
+    );
+  }
  
 
   onClientProfileHeaderLoad()
@@ -253,6 +320,8 @@ private getQueryParams()
           this.clientCaseId = clientHeader?.clientCaseId;         
          }
       }
+      this.loadIncomes();
+      this.loadEmployments();
     });
   }
   onClientProfileLoad()

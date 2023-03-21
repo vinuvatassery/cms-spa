@@ -124,7 +124,9 @@
                     </div>
                   </div>
                   <div class="flex-col">
-                    <case-management-income-list [data]="screenName"></case-management-income-list>
+                    <case-management-income-list [data]="screenName" [clientId]="profileClientId"
+                    [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"
+                    (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
                   </div>
                 </div>
               </div>
@@ -145,7 +147,9 @@
                     </div>
                   </div>
                   <div class="flex-col">
-                    <case-management-employer-list [data]="screenName"></case-management-employer-list>
+                    <case-management-employer-list [data]="screenName" [clientCaseId]="clientCaseId"
+                    [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="profileClientId"
+                    (loadEmploymentsEvent)="loadEmploymentsHandle($event)"></case-management-employer-list>
                   </div>
                 </div>
               </div>
