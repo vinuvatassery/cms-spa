@@ -10,7 +10,8 @@
   <div class="flex-row">
     <div class="flex-col" *ngIf="!isEditValue">
     <kendo-formfield> 
-      <kendo-floatinglabel text="Choose Address Type">
+      <kendo-floatinglabel text="Choose Address Type" class="inline-search-loader">
+        <span *ngIf="showAddressTypeLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
         <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ddlAddressTypes$ | async"
@@ -29,7 +30,7 @@
       <kendo-floatinglabel text="Address line 1">
         <kendo-textbox aria-label="address line 1"   placeholder="Address line 1"   
         [fillMode]="formUiStyle.inputFillMode"
-        formControlName="address1"
+        formControlName="address1"  [maxlength]="100"
         (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror>Address line 1 is required.</kendo-formerror>
@@ -38,7 +39,7 @@
     <div class="flex-col">
       <kendo-floatinglabel text="Address line 2">
         <kendo-textbox aria-label="address line 2" placeholder="Address line 2"    [fillMode]="formUiStyle.inputFillMode"
-        formControlName="address2"
+        formControlName="address2"  [maxlength]="100"
         (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
@@ -47,7 +48,7 @@
       <kendo-floatinglabel text="City">
         <kendo-textbox aria-label="city" placeholder="City"    
         [fillMode]="formUiStyle.inputFillMode"
-        formControlName="city"
+        formControlName="city"  [maxlength]="20"
         (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror>City is required.</kendo-formerror>
@@ -55,7 +56,8 @@
     </div>
     <div class="flex-col flex-col-6">     
         <kendo-formfield>
-        <kendo-floatinglabel text="State">
+        <kendo-floatinglabel text="State" class="inline-search-loader">
+          <span *ngIf="showStateLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
           <kendo-dropdownlist 
           aria-label="State" 
           [fillMode]="formUiStyle.dropDownFillMode"
@@ -68,14 +70,15 @@
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
-        <kendo-formerror>State is required</kendo-formerror>
+        <kendo-formerror *ngIf="!addressForm.controls['state'].valid && addressForm.controls['state'].value === ''">State is required</kendo-formerror>
+        <kendo-formerror  *ngIf="!addressForm.controls['state'].valid && addressForm.controls['state'].value !== 'OR' &&  addressForm.controls['state'].value !== ''">Home address must be in Oregon.</kendo-formerror>
       </kendo-formfield>
     </div>
     <div class="flex-col flex-col-6">
     <kendo-formfield>
       <kendo-floatinglabel text="Zip">
         <kendo-textbox aria-label="Zip" placeholder="Zip"    
-        [fillMode]="formUiStyle.inputFillMode"
+        [fillMode]="formUiStyle.inputFillMode"   [maxlength]="10"
         formControlName="zip" (blur)="validateAddress()">   </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror>Zip is required.</kendo-formerror>
@@ -257,10 +260,17 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(true)" aria-label="OKAY" *ngIf="!addressIsValid">
-          EDIT ADDRESS
-        </button>
+      <div>
+        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(true)" look="flat"
+        aria-label="preview letter" *ngIf="!addressIsValid">
+        <span class="material-icons">
+          border_color</span>
+      EDIT ADDRESS
+    </button>
+      </div>
+      <div class="justify-content-end"> 
+             
+     
         <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(false)" aria-label="OKAY" *ngIf="!addressIsValid">
           USE THIS ADDRESS
         </button>

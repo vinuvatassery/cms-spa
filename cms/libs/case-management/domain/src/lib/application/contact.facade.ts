@@ -25,6 +25,7 @@ export class ContactFacade {
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
+  showLoaderOnState = new BehaviorSubject<boolean>(false);
   showAddPopupSubject = new BehaviorSubject<boolean>(false);
   editAddressSubject = new BehaviorSubject<boolean>(false);
   editedAddressSubject = new Subject<any>();
@@ -47,6 +48,7 @@ export class ContactFacade {
   showAddPopup$ = this.showAddPopupSubject.asObservable();
   editAddress$ =this.editAddressSubject.asObservable();
   editedAddress$ =this.editedAddressSubject.asObservable();
+  showLoaderOnState$ = this.showLoaderOnState.asObservable();
 
   /** Constructor**/
   constructor(
@@ -83,9 +85,11 @@ export class ContactFacade {
     this.zipCodeFacade.getStates().subscribe({
       next: (ddlStatesResponse) => {
         this.ddlStatesSubject.next(ddlStatesResponse);
+        this.showLoaderOnState.next(false);
       },
       error: (err) => {
         this.loggingService.logException(err);
+        this.showLoaderOnState.next(false);
       },
     });
   }

@@ -10,7 +10,7 @@ import {  FormControl, FormGroup, Validators,FormBuilder } from '@angular/forms'
 import {  BehaviorSubject, of, Subscription } from 'rxjs';
 
 /** Internal Libraries **/
-import { ContactFacade, StatesInUSA, ClientAddress, StatusFlag } from '@cms/case-management/domain';
+import { ContactFacade, StatesInUSA, ClientAddress, StatusFlag, AddressType } from '@cms/case-management/domain';
 import { LovFacade,MailAddress,AddressValidationFacade, AddressValidation } from '@cms/system-config/domain';
 import { UIFormStyle, IntlDateService } from '@cms/shared/ui-tpa'
 import { SnackBarNotificationType,NotificationSnackbarService, ConfigurationProvider, LoaderService, LoggingService} from '@cms/shared/util-core';
@@ -51,6 +51,8 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   addressForm!:FormGroup;
   selectedAddressForm!:FormGroup;
   showCountyLoader = this.contactFacade.showloaderOnCounty$;
+  showStateLoader = this.contactFacade.showLoaderOnState$;
+  showAddressTypeLoader = this.lovFacade.showLoaderOnAddressType$; 
   effectiveDateValidator:boolean= true;
   address!:any;
   addressValidationPopupVisibility$ = new BehaviorSubject(false);  
@@ -103,6 +105,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     })
   }
    private loadDdlStates() {
+    this.contactFacade.showLoaderOnState.next(true);
     this.contactFacade.loadDdlStates();
   }
   private loadAddressTypeLovs(){
@@ -147,31 +150,32 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.addressForm.controls["addressType"].setValidators([Validators.required]);
     this.addressForm.controls["addressType"].updateValueAndValidity();
     let addressType = this.addressForm.controls["addressType"].value;
-   if(addressType ==='H' || addressType === 'M'){
+   if(addressType ===AddressType.Home || addressType === AddressType.Mailing){
       this.addressForm.controls["address1"].setValidators([Validators.required]);
       this.addressForm.controls["address1"].updateValueAndValidity();
       this.addressForm.controls["zip"].setValidators([Validators.required]);
       this.addressForm.controls["zip"].updateValueAndValidity();
+      this.addressForm.controls["state"].setValidators([Validators.required]);
+      this.addressForm.controls["state"].updateValueAndValidity();
    }
-   if(addressType ==='H' || addressType === 'M' || addressType === 'U'){
+   if(addressType === AddressType.Home || addressType === AddressType.Mailing || addressType === AddressType.UnHoused){
       this.addressForm.controls["city"].setValidators([Validators.required]);
       this.addressForm.controls["city"].updateValueAndValidity();
       this.addressForm.controls["effectiveDate"].setValidators([Validators.required]);
       this.addressForm.controls["effectiveDate"].updateValueAndValidity();
-   }
-   if(addressType === 'M'){
-    this.addressForm.controls["state"].setValidators([Validators.required]);
-      this.addressForm.controls["state"].updateValueAndValidity();
-   }
-   if((addressType ==='H' || addressType === 'U') && !this.isEditValue){
-    this.addressForm.controls["county"].setValidators([Validators.required]);
+   }  
+   if((addressType === AddressType.Home || addressType === AddressType.UnHoused) && !this.isEditValue){
+      this.addressForm.controls["county"].setValidators([Validators.required]);
       this.addressForm.controls["county"].updateValueAndValidity();
+      if( this.addressForm.controls["state"].value !== 'OR'){
+        this.addressForm.controls['state'].setErrors({ 'incorrect': true });
+      }
    }
 
 
   }
   private populateModel(){
-    this.clientAddress =  {
+    this.clientAddress = {
       address1: this.addressForm?.controls['address1']?.value,
       address2: this.addressForm?.controls['address2']?.value,
       city: this.addressForm?.controls['city']?.value,
@@ -179,9 +183,8 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       county: this.addressForm?.controls['county']?.value,
       zip: this.addressForm?.controls['zip']?.value,
       addressTypeCode: this.addressForm?.controls['addressType']?.value,
-      clientId:this.clientId,
-      startDate:  new Date(this.intl.formatDate(this.addressForm?.controls['effectiveDate'].value, this.dateFormat))
-      
+      clientId: this.clientId,
+      startDate: new Date(this.intl.formatDate(this.addressForm?.controls['effectiveDate'].value, this.dateFormat)),
     }
   }
   private resetValidators() {
@@ -208,7 +211,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.addressForm.controls["effectiveDate"].disable();
   }
   private bindModelToForm(address:any){
-    this.address = address;
+    this.address = address;    
     this.addressForm.controls["addressType"].setValue(address.addressTypeCode);
     this.addressForm.controls["address1"].setValue(address.address1);
     this.addressForm.controls["address2"].setValue(address.address2);

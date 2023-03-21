@@ -54,6 +54,7 @@ export class LovFacade {
   private lovOtherEthnicitySubject=new BehaviorSubject<Lov[]>([]);
   private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -88,6 +89,7 @@ export class LovFacade {
   otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
   aptclov$=this.lovAptcSubject.asObservable();
   addressType$ = this.lovAddressTypeSubject.asObservable();
+  showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
 
 
         /** Public methods **/
@@ -411,12 +413,15 @@ getAptcLovs(): void {
 }
 
 getAddressTypeLovs(): void {
+  this.showLoaderOnAddressType.next(true);
   this.lovDataService.getLovsbyType(LovType.AddressType).subscribe({
     next: (lovResponse) => {
       this.lovAddressTypeSubject.next(lovResponse);
+      this.showLoaderOnAddressType.next(false);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.showLoaderOnAddressType.next(false);
     },
   });
 }

@@ -86,6 +86,7 @@ export * from './lib/enums/review-question-code.enum';
 export * from './lib/enums/question-type-code.enum';
 export * from './lib/enums/trans-gender-code.enum';
 export * from './lib/enums/eligibility-request-type.enum';
+export * from './lib/enums/address-type.enum';
 
 
 /** Data services **/
