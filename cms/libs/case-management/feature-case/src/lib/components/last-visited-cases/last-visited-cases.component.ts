@@ -18,7 +18,10 @@ import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shar
 export class LastVisitedCasesComponent implements OnInit {
   /** Public properties **/
   lastVisitedCases$ = this.caseFacade.lastVisitedCases$;
-
+  skeletonActiveLoader = false;
+  skeletonCounts = [
+    1,2,3,4,5
+  ]
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,
     private readonly router: Router,
