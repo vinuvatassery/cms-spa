@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 /** facades **/
-import { ClientAddress, ContactFacade, StatusFlag } from '@cms/case-management/domain';
+import { ClientAddress, ContactFacade, StatusFlag, AddressType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-address-list',
@@ -20,10 +20,15 @@ export class AddressListComponent implements OnInit {
   allAddressList:any[]=[];
   isEditAddress!: boolean;
   isDeactivateAddressPopup = false;
+  isDeleteAddressPopup = false;
   showHistoricalFlag!:boolean;
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientAddress!:ClientAddress;
+  isDeactivateFlag:boolean = false;
+  isDeleteFlag:boolean = false;
+  showFormFieldsFlag:boolean = false;
+  clientAddressId!:any;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -42,16 +47,22 @@ export class AddressListComponent implements OnInit {
       buttonType: "btn-h-primary",
       text: "Deactivate Address",
       icon: "block",
-      click: (): void => {
-       this.onDeactivateAddressClicked()
+      click: (address:any): void => {
+        if(address.clientAddressId){
+          this.clientAddress = address;
+          this.onDeactivateAddressClicked(address)
+        }
       },
     },
     {
       buttonType: "btn-h-danger",
       text: "Delete Address",
       icon: "delete",
-      click: (): void => {
-      //  this.onDeactivateAddressClicked()
+      click: (address:any): void => {
+        if(address.clientAddressId){
+          this.clientAddress = address;
+          this.onDeleteAddressClicked(address)
+        }
       },
     },
    
@@ -72,6 +83,9 @@ export class AddressListComponent implements OnInit {
     this.contactFacade.address$.subscribe((address:any)=>{
       this.addressGridView= address.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
       this.allAddressList=address;
+      if(this.showHistoricalFlag){
+        this.addressGridView=this.allAddressList
+      }
       this.cdr.detectChanges();
     })
   }
@@ -84,14 +98,45 @@ export class AddressListComponent implements OnInit {
   onAddressDetailClicked(editValue: boolean) {
     this.contactFacade.showAddPopupSubject.next(true);
     this.isEditAddress = editValue;
+    this.showFormFieldsFlag=false;
+    this.isDeactivateFlag=false;
+    this.isDeleteFlag=false;
   }
  
   onDeactivateAddressClosed() {
     this.isDeactivateAddressPopup = false;
   }
 
-  onDeactivateAddressClicked() {
-    this.isDeactivateAddressPopup = true;
+  onDeactivateAddressClicked(address:any) {
+    if(address.addressTypeCode == AddressType.Home||address.addressTypeCode == AddressType.UnHoused){
+      this.isDeactivateAddressPopup = true;
+    }
+    if(address.addressTypeCode == AddressType.Mailing){
+      this.showFormFieldsFlag=true;
+      this.isEditAddress=false;
+      this.isDeactivateFlag=true;
+      this.isDeleteFlag=false;
+      this.clientAddressId=address.clientAddressId;
+      this.contactFacade.showAddPopupSubject.next(true);
+    }
+  }
+  
+  onDeleteAddressClicked(address:any){
+    if(address.addressTypeCode == AddressType.Home||address.addressTypeCode == AddressType.UnHoused){
+      this.isDeleteAddressPopup = true;
+    }
+    if(address.addressTypeCode == AddressType.Mailing){
+      this.showFormFieldsFlag=true;
+      this.isEditAddress=false;
+      this.isDeactivateFlag=false;
+      this.isDeleteFlag=true;
+      this.clientAddressId=address.clientAddressId;
+      this.contactFacade.showAddPopupSubject.next(true);
+    }
+  }
+
+  onDeleteAddressClosed() {
+    this.isDeleteAddressPopup = false;
   }
 
   handleShowHistoricalClick(){
@@ -107,4 +152,24 @@ export class AddressListComponent implements OnInit {
   public rowClass = (args:any) => ({
     "table-row-disabled": !(args.dataItem.activeFlag == StatusFlag.Yes),
   });
+
+  closeDeactivateModalAndReload(event:any){
+    this.onDeactivateAddressClosed();
+    this.contactFacade.getClientAddress(this.clientId);
+  }
+
+  closeDeleteModalAndReload(event:any){
+    this.onDeleteAddressClosed();
+    this.contactFacade.getClientAddress(this.clientId);
+  }
+
+  onAddressDetailCloseEvent(event:any){
+    this.contactFacade.getClientAddress(this.clientId);
+    this.onAddressDetailClosed();
+  }
+
+  onDeactivateButtonClick(event:any){
+    this.contactFacade.showAddPopupSubject.next(false);
+    this.onDeactivateAddressClicked(this.clientAddress)
+  }
 }

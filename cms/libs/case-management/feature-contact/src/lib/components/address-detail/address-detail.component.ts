@@ -3,7 +3,7 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input,OnDestroy,ChangeDetectorRef
+  Input,OnDestroy,ChangeDetectorRef, Output, EventEmitter
 } from '@angular/core';
 import {  FormControl, FormGroup, Validators,FormBuilder } from '@angular/forms';
 /** External Libraries **/
@@ -29,7 +29,14 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   @Input() isEditValue!: boolean;
   @Input() clientId!: number;
   @Input() caseEligibilityId!: string;
+  @Input() showFormFields!:boolean;
+  @Input() deactivateFlag!:boolean;
+  @Input() deleteFlag!:boolean;
+  @Input() clientAddressId!:any;
 
+
+  @Output() detailModalCloseEvent= new EventEmitter<any>();
+  @Output() deactivateButtonClick= new EventEmitter<any>();
   /** Public properties **/
   ddlCountries$ = this.contactFacade.ddlCountries$;
   ddlStates$ = this.contactFacade.ddlStates$;
@@ -83,6 +90,9 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.disableAllFields();
     this.pageSubscription();
     if(!this.isEditValue){this.address =null;}
+    if(this.showFormFields){
+      this.onDdlAddressTypeValueChange('M');
+    }
    
   }
   ngOnDestroy(): void {
@@ -229,8 +239,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   }
 
   onDeactivateClicked() {
-    this.isDeactivateValue = true;
-    this.isDeactivateAddressPopup = true;
+    this.deactivateButtonClick.emit(true)
   }
   onAddressValidationCloseClicked(val:boolean) { 
     this.contactFacade.editAddressSubject.next(val);
@@ -364,7 +373,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       return this.contactFacade.createAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.clientAddress).subscribe({
         next:(data)=>{
           this.loaderService.hide();
-          this.contactFacade.showAddPopupSubject.next(false);
+          this.detailModalCloseEvent.emit(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Saved Successfully.")
         },
         error:(error)=>{
@@ -381,7 +390,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       return this.contactFacade.updateAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.clientAddress).subscribe({
         next:(data)=>{
           this.loaderService.hide();
-          this.contactFacade.showAddPopupSubject.next(false);
+          this.detailModalCloseEvent.emit(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Updated Successfully.")
         },
         error:(error)=>{
@@ -393,5 +402,62 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
 
     }
     return of(false);
+  }
+
+  deactivateAndAdd(){
+    this.addressForm.controls["addressType"].setValue(AddressType.Mailing);
+    this.addressForm.controls["effectiveDate"].setValue(new Date());
+    this.validateForm();
+    this.populateModel();
+    if (this.clientAddress && this.addressForm.valid) {
+      this.contactFacade.showLoader();
+      this.contactFacade.deactivateClientAddress(this.clientId, this.clientAddressId).subscribe({
+        next: (response: any) => {
+          if(response){
+            this.contactFacade.hideLoader();
+            this.createNewMailingAddress();
+          }
+        },
+        error: (error: any) => {
+          this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,error)
+        }
+      })
+    }
+  }
+
+  deleteAndAdd(){
+    this.addressForm.controls["addressType"].setValue(AddressType.Mailing);
+    this.addressForm.controls["effectiveDate"].setValue(new Date());
+    this.validateForm();
+    this.populateModel();
+    if (this.clientAddress && this.addressForm.valid) {
+      this.contactFacade.showLoader();
+      this.contactFacade.deleteClientAddress(this.clientId, this.clientAddressId).subscribe({
+        next: (response: any) => {
+          if(response){
+            this.contactFacade.hideLoader();
+            this.createNewMailingAddress();
+          }
+        },
+        error: (error: any) => {
+          this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,error)
+        }
+      })
+    }
+  }
+
+  createNewMailingAddress(){
+    this.loaderService.show();
+      this.contactFacade.createAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.clientAddress).subscribe({
+        next:(data)=>{
+          this.loaderService.hide();
+          this.detailModalCloseEvent.emit(true);
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Client Address Saved Successfully.")
+        },
+        error:(error)=>{
+          this.loggingService.logException(error);
+           this.loaderService.hide();
+        }
+      });
   }
 }

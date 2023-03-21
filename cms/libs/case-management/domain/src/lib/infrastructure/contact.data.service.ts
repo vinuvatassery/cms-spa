@@ -261,7 +261,11 @@ export class ContactDataService {
   }
 
   deactivateClientAddress(clientId:any,clientAddressId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactive?clientAddressId=${clientAddressId}`);
+    let clientAddress={
+      ClientId:clientId,
+      ClientAddressId:clientAddressId
+    }
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactive`,clientAddress);
   }
   
 }

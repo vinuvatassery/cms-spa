@@ -122,11 +122,17 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isEditAddress ? 'Edit Address' : 'Add Address'
+    isEditAddress ? 'Edit Address' : isDeactivateFlag ? 'Deactivate and Add Mailing Address' : isDeleteFlag ? 'Delete and Add Mailing Address' : 'Add Address'
   }}</kendo-dialog-titlebar>
   <case-management-address-detail
     [isEditValue]="isEditAddress"
     [clientId]="clientId" [caseEligibilityId]="caseEligibilityId"
+    [showFormFields]="showFormFieldsFlag"
+    [deactivateFlag]="isDeactivateFlag"
+    [deleteFlag]="isDeleteFlag"
+    [clientAddressId]="clientAddressId"
+    (detailModalCloseEvent)="onAddressDetailCloseEvent($event)"
+    (deactivateButtonClick)="onDeactivateButtonClick($event)"
   ></case-management-address-detail>
 </kendo-dialog>
 
@@ -137,5 +143,15 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Deactivate home address?"
 >
-  <case-management-deactivate-address-confirmation></case-management-deactivate-address-confirmation>
+  <case-management-deactivate-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModalAndReload($event)"></case-management-deactivate-address-confirmation>
+</kendo-dialog>
+
+<!-- Delete home address Popup-->
+<kendo-dialog
+  *ngIf="isDeleteAddressPopup"
+  (close)="onDeleteAddressClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Delete home address"
+>
+  <case-management-delete-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModalAndReload($event)"></case-management-delete-address-confirmation>
 </kendo-dialog>

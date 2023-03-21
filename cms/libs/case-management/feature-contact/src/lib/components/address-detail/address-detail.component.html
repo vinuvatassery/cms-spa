@@ -1,5 +1,5 @@
 <section class="k-dialog-body" [formGroup]="addressForm">
-  <p class="text-muted mb-2" *ngIf="!isEditValue">
+  <p class="text-muted mb-2" *ngIf="!isEditValue && !deactivateFlag && !deleteFlag">
     Adding a new address will deactivate the current address for that type. For
     example, adding a new mailing address will deactivate the current mailing
     address.
@@ -7,8 +7,14 @@
   <p class="text-muted mb-2" *ngIf="isEditValue">
     Edit or deactivate the client's home address.
   </p>
+  <p class="text-muted mb-2" *ngIf="deactivateFlag">
+    To deactivate the current mailing address, you must add a new one
+  </p>
+  <p class="text-muted mb-2" *ngIf="deleteFlag">
+    To delete the current mailing address, you must add a new one.
+  </p>
   <div class="flex-row">
-    <div class="flex-col" *ngIf="!isEditValue">
+    <div class="flex-col" *ngIf="!isEditValue && !showFormFields">
     <kendo-formfield> 
       <kendo-floatinglabel text="Choose Address Type" class="inline-search-loader">
         <span *ngIf="showAddressTypeLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
@@ -98,7 +104,7 @@
             USPS can't validate this address.
       </span>   
     </div>  
-    <div class="flex-col"  *ngIf="!isEditValue ||(isEditValue && addressType !== 'M')">
+    <div class="flex-col"  *ngIf="!isEditValue && !showFormFields ||(isEditValue && addressType !== 'M')">
       <kendo-formfield>
         <kendo-floatinglabel text="County" class="inline-search-loader">
           <span *ngIf="showCountyLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
@@ -116,7 +122,7 @@
         <kendo-formerror>County is required</kendo-formerror>
       </kendo-formfield>
     </div>
-    <div class="flex-col" *ngIf="!isEditValue">
+    <div class="flex-col" *ngIf="!isEditValue && !showFormFields">
     <kendo-formfield>
       <kendo-floatinglabel text="Effective date">
         <kendo-datepicker
@@ -163,16 +169,6 @@
       >
         Deactivate
       </button>
-      <div *ngIf="isDeactivateValue">
-        <kendo-dialog
-          *ngIf="isDeactivateAddressPopup"
-          (close)="onDeactivateAddressClosed()"
-          class="app-c-modal app-c-modal-sm app-c-modal-np"
-          title="Deactivate home address?"
-        >
-          <case-management-deactivate-address-confirmation></case-management-deactivate-address-confirmation>
-        </kendo-dialog>
-      </div>
     </div>
     <div class="justify-content-end">
       <button
@@ -182,10 +178,19 @@
         aria-label="cancel address"
         (click)="closePopup()"
       >
-        Cancel
+        CANCEL
       </button>
-      <button kendoButton [primary]="true" aria-label="add or update address"(click)="createAddress()">
-        {{ isEditValue ? 'Update' : 'Add' }}
+      <button *ngIf="!isEditValue && !deactivateFlag && !deleteFlag" kendoButton [primary]="true" aria-label="add or update address"(click)="createAddress()">
+        ADD
+      </button>
+      <button *ngIf="isEditValue" kendoButton [primary]="true" aria-label="add or update address"(click)="createAddress()">
+        UPDATE
+      </button>
+      <button *ngIf="deleteFlag" kendoButton [primary]="true" aria-label="add or update address"(click)="deleteAndAdd()">
+        DELETE & ADD
+      </button>
+      <button *ngIf="deactivateFlag" kendoButton [primary]="true" aria-label="add or update address"(click)="deactivateAndAdd()">
+        DEACTIVATE & ADD
       </button>
     </div>
   </div>
