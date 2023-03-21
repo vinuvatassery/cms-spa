@@ -71,53 +71,15 @@
   </section>
 
   <!-- User Details Popover -->
-  <kendo-popover #userDetails [width]="380" position="bottom">
-    <ng-template kendoPopoverBodyTemplate>
-      <section class="user-details-block">
-        <div class="flex-row">
-          <div class="flex-col">
-            <h5>Case Worker Notes</h5>
-            <ul aria-label="case worker notes menu" class="user-bullet-list">
-              <li aria-label="case worker notes menu item">Abusive language</li>
-              <li aria-label="case worker notes menu item">
-                Immediately transfer to Lorem Ipsum
-              </li>
-            </ul>
-          </div>
-          <div class="flex-col">
-            <h5>Preferred Contact</h5>
-            <ul aria-label="preferred contact menu" class="user-bullet-list">
-              <li aria-label="preferred contact menu item">
-                (123) 456-7890 (Cell)
-              </li>
-              <li aria-label="preferred contact menu item">
-                Messages OK, SMS Text OK
-              </li>
-            </ul>
-          </div>
-          <div class="flex-col">
-            <h5>Case Manager</h5>
-            <ul aria-label="case manager menu">
-              <li aria-label="case manager menu item">Mr. Roger Federal</li>
-              <li aria-label="case manager menu item">(123) 456-7890</li>
-              <li aria-label="case manager menu item">samolemail@email.com</li>
-            </ul>
-          </div>
-          <div class="flex-col">
-            <h5>Special Handling</h5>
-            <ul aria-label="special handling menu" class="user-bullet-list">
-              <li aria-label="special handling menu item">
-                Lorem Ipsum has been the industry's standard dummy
-              </li>
-              <li aria-label="special handling menu item">
-                The industry's standard dummy
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </ng-template>
-  </kendo-popover>
+    <kendo-popover #userDetails [width]="380" position="bottom">
+      <ng-template kendoPopoverBodyTemplate>
+        <case-management-client-important-info 
+        [clientCaseId]="loadedClientHeader?.clientCaseId"
+        [clientProfileImpInfo$] ="clientProfileImpInfo$ | async"
+        (loadClientImpInfoEvent)="loadClientImpInfo()">
+      </case-management-client-important-info>
+      </ng-template>
+     </kendo-popover>
 
   <!-- Banners -->
   <case-management-case360-header-notifications></case-management-case360-header-notifications>

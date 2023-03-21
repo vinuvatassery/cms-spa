@@ -33,6 +33,7 @@ export class Case360PageComponent implements OnInit {
   clientProfile$ = this.caseFacade.clientProfile$;
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;
+  clientProfileImpInfo$ = this.caseFacade.clientProfileImpInfo$;
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
@@ -44,9 +45,9 @@ export class Case360PageComponent implements OnInit {
   isNewSMSTextOpened = false;
   profileClientId = 0
   clientCaseEligibilityId! : string;
-	clientCaseId!:any;
   caseWorkerId! : string;
   clientHeaderTabs: any = [];
+  clientCaseId! : string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public SendActions = [
@@ -198,6 +199,11 @@ private getQueryParams()
     this.isIdCardOpened = false;
   }
 
+  loadClientImpInfo()
+  {
+    this.caseFacade.loadClientImportantInfo(this.clientCaseId);
+  }
+
   loadReadOnlyClientInfoEventHandler()
   {
     
@@ -238,7 +244,7 @@ private getQueryParams()
           clientOfficialIdFullName : clientHeaderData?.clientOfficialIdFullName,
           caseWorkerId   : clientHeaderData?.caseWorkerId ,           
          }
-         
+         this.clientCaseId = clientHeader?.clientCaseId
          this.clientHeaderSubject.next(clientHeader);
          if(clientHeader?.clientCaseEligibilityId)
          {
