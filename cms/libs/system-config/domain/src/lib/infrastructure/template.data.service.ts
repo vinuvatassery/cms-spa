@@ -6,13 +6,12 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { Template } from '../entities/template';
-import { ConfigurationProvider } from 'libs/shared/util-core/src/lib/shared-util-core.module';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider) { }
+  constructor(private readonly http: HttpClient
+   ) { }
 
   /** Public methods **/
   loadTemplates(): Observable<Template[]> {
