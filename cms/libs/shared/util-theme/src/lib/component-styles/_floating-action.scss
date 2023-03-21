@@ -79,6 +79,8 @@
 /* User details popover*/
 .user-details-block {
   padding: $size-xlg;
+  max-height: 80vh;
+  overflow-y: auto;
   h5 {
     margin: $size-s $size-0 $size-m;
   }

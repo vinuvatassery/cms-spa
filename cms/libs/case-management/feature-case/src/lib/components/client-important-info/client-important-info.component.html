@@ -1,41 +1,46 @@
-
-   
-      <section class="user-details-block"  *ngIf="infoObjectValidator(clientProfileImpInfo$)">
-        <div class="flex-row">
-          <div class="flex-col" *ngIf="clientProfileImpInfo$?.clientNotes.length > 0 ">
-            <h5>Case Worker Notes</h5>
-            <ul aria-label="case worker notes menu" class="user-bullet-list" *ngFor="let note of clientProfileImpInfo$?.clientNotes">
-              <li aria-label="case worker notes menu item">{{note}}</li>             
-            </ul>
-          </div>
-          <div class="flex-col" *ngIf="clientProfileImpInfo$?.preferredContact">
-            <h5>Preferred Contact</h5>
-            <ul aria-label="preferred contact menu" class="user-bullet-list">
-              <li aria-label="preferred contact menu item">
-               {{clientProfileImpInfo$?.preferredContact}}
-              </li>             
-            </ul>
-          </div>
-          <div class="flex-col" *ngIf="clientProfileImpInfo$?.caseManagerFullName">
-            <h5>Case Manager</h5>
-            <ul aria-label="case manager menu">
-              <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerFullName">{{clientProfileImpInfo$?.caseManagerFullName}}</li>
-              <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerPhone">{{clientProfileImpInfo$?.caseManagerPhone}}</li>
-              <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerEmail">{{clientProfileImpInfo$?.caseManagerEmail}}</li>
-            </ul>
-          </div>
-          <div class="flex-col" *ngIf="clientDisabilitiesValidator(clientProfileImpInfo$?.clientDisabilities)">
-            <h5>Special Handling</h5>
-            <ul aria-label="special handling menu" class="user-bullet-list" *ngFor="let clientDisability of clientProfileImpInfo$?.clientDisabilities">
-              <li *ngIf="clientDisability" aria-label="special handling menu item">
-                {{clientDisability}}
-              </li>              
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section  *ngIf="!infoObjectValidator(clientProfileImpInfo$)">
-        No data found
-      </section>
-
+<section class="user-details-block">
+  <section *ngIf="infoObjectValidator(clientProfileImpInfo$)" class="client-important-loader">
+    <span class="k-icon k-i-loading k-input-loading-icon"></span>
+  </section>
+  <div *ngIf="!infoObjectValidator(clientProfileImpInfo$)" class="no-data-available">
+    <span class="material-icons"> info </span>
+    <p> No data found</p>
+  </div>
+  <div class="flex-row" *ngIf="infoObjectValidator(clientProfileImpInfo$)">
+    <div class="flex-col" *ngIf="clientProfileImpInfo$?.clientNotes.length > 0 ">
+      <h5>Case Worker Notes</h5>
+      <ul aria-label="case worker notes menu" class="user-bullet-list"
+        *ngFor="let note of clientProfileImpInfo$?.clientNotes">
+        <li aria-label="case worker notes menu item">{{note}}</li>
+      </ul>
+    </div>
+    <div class="flex-col" *ngIf="clientProfileImpInfo$?.preferredContact">
+      <h5>Preferred Contact</h5>
+      <ul aria-label="preferred contact menu" class="user-bullet-list">
+        <li aria-label="preferred contact menu item">
+          {{clientProfileImpInfo$?.preferredContact}}
+        </li>
+      </ul>
+    </div>
+    <div class="flex-col" *ngIf="clientProfileImpInfo$?.caseManagerFullName">
+      <h5>Case Manager</h5>
+      <ul aria-label="case manager menu">
+        <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerFullName">
+          {{clientProfileImpInfo$?.caseManagerFullName}}</li>
+        <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerPhone">
+          {{clientProfileImpInfo$?.caseManagerPhone}}</li>
+        <li aria-label="case manager menu item" *ngIf="clientProfileImpInfo$?.caseManagerEmail">
+          {{clientProfileImpInfo$?.caseManagerEmail}}</li>
+      </ul>
+    </div>
+    <div class="flex-col" *ngIf="clientDisabilitiesValidator(clientProfileImpInfo$?.clientDisabilities)">
+      <h5>Special Handling</h5>
+      <ul aria-label="special handling menu" class="user-bullet-list"
+        *ngFor="let clientDisability of clientProfileImpInfo$?.clientDisabilities">
+        <li *ngIf="clientDisability" aria-label="special handling menu item">
+          {{clientDisability}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
