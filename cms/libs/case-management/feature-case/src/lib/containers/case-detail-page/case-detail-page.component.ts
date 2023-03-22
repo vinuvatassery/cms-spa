@@ -98,7 +98,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     private loaderService: LoaderService,
     private loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
-    private router: Router,
+    private readonly router: Router,
     private lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
   ) {

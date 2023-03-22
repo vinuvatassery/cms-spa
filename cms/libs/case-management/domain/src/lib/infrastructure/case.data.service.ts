@@ -40,7 +40,7 @@ export class CaseDataService {
   }
 
   loadClientProfileHeader(clientId: number) {
-    return this.http.get<ClientProfileCase[]>(
+    return this.http.get<ClientProfileCase>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/profile-header`
     );
 
@@ -304,15 +304,15 @@ export class CaseDataService {
   }
 
   createActiveSession(session: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
+    return this.http.post<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
   }
 
   updateActiveSessionOrder(session: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
+    return this.http.put<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
   }
 
   deleteActiveSession(activeSessionId: any) {
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions/${activeSessionId}`);
+    return this.http.delete<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions/${activeSessionId}`);
   }
 
   loadDdlGridColumns() {

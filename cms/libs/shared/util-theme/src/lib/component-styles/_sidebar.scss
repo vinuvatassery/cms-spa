@@ -207,7 +207,7 @@ cms-sidenav {
   }
   .menu-active-session-list{
     padding: $size-xlg1 $size-xlg1 0 $size-xlg1;
-    max-height: 41vh;
+    max-height: calc(100vh - 378px);
     overflow-y: auto;
   }
   &.menuToggled {

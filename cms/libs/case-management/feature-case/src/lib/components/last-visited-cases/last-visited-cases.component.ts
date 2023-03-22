@@ -2,12 +2,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 /** External service **/
-import { mergeMap, of } from 'rxjs';
+import { BehaviorSubject, mergeMap, of, tap } from 'rxjs';
 import { DragEndEvent } from "@progress/kendo-angular-sortable";
 /** Internal service **/
 import { CaseFacade, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { ActiveSessions } from 'libs/case-management/domain/src/lib/entities/active-sessions';
-import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-last-visited-cases',
@@ -18,15 +18,15 @@ import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shar
 export class LastVisitedCasesComponent implements OnInit {
   /** Public properties **/
   lastVisitedCases$ = this.caseFacade.lastVisitedCases$;
-  skeletonActiveLoader = false;
+  isRefreshLoaderVisible$ = this.caseFacade.activeSessionLoaderVisible$;
+  orderUpdateLoader$ = new BehaviorSubject<boolean>(false);
   skeletonCounts = [
-    1,2,3,4,5
+    1, 2, 3, 4, 5
   ]
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,
     private readonly router: Router,
     private readonly notificationSnackbarService: NotificationSnackbarService) {
-    this.loadLastVisitedCases();
   }
 
   /** Lifecycle hooks **/
@@ -57,22 +57,24 @@ export class LastVisitedCasesComponent implements OnInit {
       queryParams: {
         sid: session?.sessionId,
         eid: session?.entityId
-      },
+      }     
     });
+
   }
 
   public onDragEnd(e: DragEndEvent): void {
-    if (e.index !== e.oldIndex) {
-      this.lastVisitedCases$
-        .pipe(mergeMap((activeSessions: ActiveSessions[]) => this.updateActiveSessionOrder(activeSessions)))
-        .subscribe(() => {
-          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Active Session Order Changed Successfully')
-        });
-    }
+    this.lastVisitedCases$
+      .pipe(
+        tap(() => this.orderUpdateLoader$.next(true)),
+        mergeMap((activeSessions: ActiveSessions[]) => {
+          if (e.index !== e.oldIndex) { return this.updateActiveSessionOrder(activeSessions); }
+          return of(false);
+        }))
+      .subscribe(() => { this.orderUpdateLoader$.next(false); });
   }
 
   private updateActiveSessionOrder(activeSessions: ActiveSessions[]) {
-    if (!activeSessions) return of(false);
+    if (!activeSessions || activeSessions?.length <= 1) return of(false);
     let sessionUpdate: any[] = [];
     activeSessions.forEach((session, i) => {
       const seq = {

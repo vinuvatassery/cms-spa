@@ -10,29 +10,28 @@
         {{(lastVisitedCases$ | async)?.length}} of 10
       </span>
     </div>
-    <div class="menu-active-session-list" [ngClass]="{'active-session-loader-active': skeletonActiveLoader}">
-      <div class="active-session-loader" *ngIf="skeletonActiveLoader">
+    <div class="menu-active-session-list" [ngClass]="{'active-session-loader-active': (orderUpdateLoader$ | async)}">
+      <div class="active-session-loader" *ngIf="(orderUpdateLoader$ | async)">
         <span class="k-icon k-i-loading k-input-loading-icon"></span>
       </div>
-      <kendo-sortable [kendoSortableBinding]="lastVisitedCases$ | async" [animation]="true"
-        (dragEnd)="onDragEnd($event)">
-        <ng-template let-item="item">
-          <div class="last-visited-case">
-            <button aria-label="remove last visited case" (click)="deleteActiveSession(item.activeSessionId)"
-              kendoButton icon="close" look="flat" class="last-visited-case-close"></button>
-            <p class="last-visited-case-heading" (click)="onCaseClicked(item)"><strong>{{ item.clientName }}</strong>
-            </p>
-            <p class="last-visited-case-details" title="ID: {{ item.clientId }}">ID {{ item.clientId ?? '000' }}</p>
-          </div>
-        </ng-template>
-      </kendo-sortable>
-
-      <div *ngIf="skeletonActiveLoader"> 
-        <kendo-skeleton *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse" class="or-skeleton-loader"></kendo-skeleton>
- 
+      <div *ngIf="!(isRefreshLoaderVisible$ | async)">
+        <kendo-sortable [kendoSortableBinding]="lastVisitedCases$ | async" [animation]="true"
+          (dragEnd)="onDragEnd($event)">
+          <ng-template let-item="item">
+            <div class="last-visited-case">
+              <button aria-label="remove last visited case" (click)="deleteActiveSession(item.activeSessionId)"
+                kendoButton icon="close" look="flat" class="last-visited-case-close"></button>
+              <p class="last-visited-case-heading" (click)="onCaseClicked(item)"><strong>{{ item.clientName }}</strong>
+              </p>
+              <p class="last-visited-case-details" title="ID: {{ item.clientId }}">ID {{ item.clientId ?? '000' }}</p>
+            </div>
+          </ng-template>
+        </kendo-sortable>
       </div>
-
-
+      <div *ngIf="isRefreshLoaderVisible$ | async">
+        <kendo-skeleton *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
+          class="or-skeleton-loader"></kendo-skeleton>
+      </div>
     </div>
   </div>
 </div>

@@ -38,6 +38,7 @@ export class CaseFacade {
   private casesSubject = new Subject<any>();
   private clientProfileSubject = new Subject<any>();
   private clientProfileHeaderSubject = new Subject<any>();
+  private activeSessionLoaderVisibleSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -57,6 +58,7 @@ export class CaseFacade {
   getCaseHistory$ = this.getCaseHistorySubject.asObservable();
   clientProfile$ = this.clientProfileSubject.asObservable();
   clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable();
+  activeSessionLoaderVisible$  = this.activeSessionLoaderVisibleSubject.asObservable();
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -115,6 +117,13 @@ export class CaseFacade {
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
         this.hideLoader();
+        if (clientProfileResponse) {
+          const activeSession = {
+            clientCaseId: clientProfileResponse?.clientCaseId,
+            clientId: clientProfileResponse?.clientId
+          };
+          this.createActiveSession(activeSession);
+        }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -189,10 +198,12 @@ export class CaseFacade {
   }
 
   loadActiveSession(): void {
+    this.activeSessionLoaderVisibleSubject.next(true);
     this.caseDataService.loadActiveSession().subscribe({
       next: (lastVisitedCasesResponse) => {
         this.activeSession = lastVisitedCasesResponse;
         this.lastVisitedCasesSubject.next(lastVisitedCasesResponse);
+        this.activeSessionLoaderVisibleSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -201,12 +212,18 @@ export class CaseFacade {
   }
 
   createActiveSession(session: any) {
+    this.activeSessionLoaderVisibleSubject.next(true);
     return this.caseDataService.createActiveSession(session).pipe(
       catchError((err: any) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         return of(false);
       })
-    ).subscribe();
+    ).subscribe((response: boolean) => {
+      if (response) {
+        this.activeSessionLoaderVisibleSubject.next(false);
+        this.loadActiveSession();
+      }
+    });
   }
 
   updateActiveSessionOrder(session: any[]) {
@@ -219,12 +236,14 @@ export class CaseFacade {
   }
 
   deleteActiveSession(activeSessionId: string) {
+    this.activeSessionLoaderVisibleSubject.next(true);
     return this.caseDataService.deleteActiveSession(activeSessionId).pipe(
       catchError((err: any) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         return of(false);
       })
     ).subscribe((response) => {
+      this.activeSessionLoaderVisibleSubject.next(false);
       if (response) {
         this.loadActiveSession();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Session Removed Successfully')
