@@ -34,11 +34,12 @@
   </div> 
   <!-- Case Details Tab Sections -->
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
-    <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>  
+    <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'> 
       <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" 
+        class="app-c-tab app-c-sub-tab"  (tabSelect)="onClientProfileTabSelected($event)">
           
-          <kendo-tabstrip-tab title="Client Info" [selected]="true" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>  
+          <kendo-tabstrip-tab title="Client Info" [selected]="selectedClientTab === clientProfileTab.CLIENT_INFO" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>  
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-client-read-only-view  
@@ -54,7 +55,7 @@
             </ng-template>
           </kendo-tabstrip-tab>
           
-         <kendo-tabstrip-tab title="Contact Info" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>         
+         <kendo-tabstrip-tab title="Contact Info" [selected]="selectedClientTab === clientProfileTab.CONTACT_INFO" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
               <ng-template kendoTabContent>
                 <div class="block-section mt-1">
                   <div class="flex-row mb-1">
@@ -82,7 +83,7 @@
               </ng-template>
         </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Family & Dependents" *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'> 
+          <kendo-tabstrip-tab title="Family & Dependents" [selected]="selectedClientTab === clientProfileTab.FAMILY_DEPENDENTS" *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'> 
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-row">
@@ -104,7 +105,7 @@
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Income"  *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'> 
+          <kendo-tabstrip-tab title="Income" [selected]="selectedClientTab === clientProfileTab.INCOME" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-row">
@@ -132,7 +133,7 @@
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Employment" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'> 
+          <kendo-tabstrip-tab title="Employment" [selected]="selectedClientTab === clientProfileTab.EMPLOYMENT" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-row">

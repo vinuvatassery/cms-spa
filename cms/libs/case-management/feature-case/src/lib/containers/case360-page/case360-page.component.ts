@@ -4,9 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade, IncomeFacade, EmploymentFacade} from '@cms/case-management/domain';
+import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade, IncomeFacade, EmploymentFacade, ClientProfileTab} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
+import { SelectEvent } from '@progress/kendo-angular-layout';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -48,6 +49,7 @@ export class Case360PageComponent implements OnInit {
 	clientCaseId!:any;
   caseWorkerId! : string;
   clientHeaderTabs: any = [];
+  selectedClientTab: ClientProfileTab = 0;
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public SendActions = [
@@ -112,6 +114,11 @@ private getQueryParams()
   { 
   this.clientHeaderVisibleSubject.next(true); 
   }
+}
+
+ /** Getters **/
+ get clientProfileTab(): typeof ClientProfileTab {
+  return ClientProfileTab; 
 }
 
   private caseSelection() {
@@ -186,6 +193,24 @@ private getQueryParams()
 
   onIdCardClosed() {
     this.isIdCardOpened = false;
+  }
+
+  onClientProfileTabSelected(event: SelectEvent) {
+    this.selectedClientTab = event.index;
+    switch(this.selectedClientTab) {
+      case ClientProfileTab.INCOME:  { 
+        this.loadIncomes();
+        break; 
+       }
+      case ClientProfileTab.EMPLOYMENT: {
+        this.loadEmployments();
+        break;
+      } 
+      default: 
+      { 
+        break; 
+      }
+    }
   }
 
   /** External event methods **/
@@ -320,8 +345,6 @@ private getQueryParams()
           this.clientCaseId = clientHeader?.clientCaseId;         
          }
       }
-      this.loadIncomes();
-      this.loadEmployments();
     });
   }
   onClientProfileLoad()
