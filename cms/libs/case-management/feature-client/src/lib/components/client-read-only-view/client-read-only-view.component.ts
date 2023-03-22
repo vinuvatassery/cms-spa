@@ -91,7 +91,6 @@ export class ClientReadOnlyViewComponent implements OnInit{
     this.clientFacade.load(this.clientId,this.clientCaseId, this.clientCaseEligibilityId).subscribe({
       next: response => {
         if (response) {
-          debugger
           /**Populating Client */
           this.applicantInfo = new ApplicantInfo();
           this.applicantInfo.client = response.client;
