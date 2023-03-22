@@ -163,9 +163,9 @@ export class PharmaciesListComponent implements OnInit {
 
     this.drugPharmacyFacade.loadDrugPharmacyList(this.clientId,false,this.isShowHistoricalData);
     this.drugPharmacyFacade.clientPharmacies$.subscribe( pharmacies =>{
-      if(pharmacies && pharmacies.length > 0){
+
         this.handleClosePharmacyClicked();
-      }
+    
     })
     
   }
