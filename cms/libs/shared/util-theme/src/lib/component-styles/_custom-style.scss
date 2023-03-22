@@ -574,3 +574,19 @@
     align-items: center;
   }
 }
+
+.no-data-available{
+  .material-icons{
+    color: rgba($black, 0.6);
+  }
+  padding: 1rem;
+  text-align: center;
+}
+
+.client-important-loader{
+  padding: 2rem;
+  text-align: center;
+  span{
+    font-size: $font-size-xxx;
+  }
+}
