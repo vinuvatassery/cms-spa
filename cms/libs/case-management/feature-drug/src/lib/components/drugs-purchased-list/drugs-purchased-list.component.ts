@@ -1,7 +1,7 @@
 import {
   Component,
   OnInit,
-  ViewEncapsulation,
+  ViewEncapsulation,Input
 } from '@angular/core';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -12,8 +12,9 @@ import { State } from '@progress/kendo-data-query';
   encapsulation: ViewEncapsulation.None,
 })
 export class DrugsPurchasedListComponent implements OnInit {
+  @Input() clientId: any;
   /** Public properties **/
-  DrugsPurchased$ = this.drugPharmacyFacade.drugsPurchased$;
+  drugPurchases$ = this.drugPharmacyFacade.drugPurchases$;
   isOpenChangePriorityClicked = false;
   isOpenPharmacyClicked = false;
   isEditPharmacyListClicked = false;
@@ -25,7 +26,6 @@ export class DrugsPurchasedListComponent implements OnInit {
   public sort = this.drugPharmacyFacade.sort;
   public state!: State;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
-  // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -70,7 +70,7 @@ export class DrugsPurchasedListComponent implements OnInit {
 
   /** Private methods **/
   private loadDrugsPurchased() {
-    this.drugPharmacyFacade.loadDrugsPurchased();
+    this.drugPharmacyFacade.getDrugPurchasedList(this.clientId);
   }
 
   /** Internal event methods **/

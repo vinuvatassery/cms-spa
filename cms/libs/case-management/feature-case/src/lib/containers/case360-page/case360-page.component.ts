@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade} from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
 @Component({
@@ -37,6 +37,16 @@ export class Case360PageComponent implements OnInit {
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
+  //for add pharmacy
+  clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
+  pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
+  searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
+  addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
+  editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
+  removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
+  removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
+  triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
+  selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   isTodoDetailsOpened = false;
   isNewReminderOpened = false;
   isIdCardOpened = false;
@@ -89,7 +99,9 @@ export class Case360PageComponent implements OnInit {
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private drugPharmacyFacade: DrugPharmacyFacade,
+    private workflowFacade: WorkflowFacade,
   ) {}
 
   /** Lifecycle hooks **/
@@ -204,7 +216,21 @@ private getQueryParams()
   {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
-
+  searchPharmacy(searchText: string) {
+    this.drugPharmacyFacade.searchPharmacies(searchText);
+  }
+  addPharmacy(vendorId: string) {
+    let priorityCode :string = "";
+    this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
+     
+      priorityCode = priorityCodes;
+    })
+    this.drugPharmacyFacade.addDrugPharmacy(
+      this.profileClientId,
+      vendorId,
+      priorityCode
+    );
+  }
   loadReadOnlyClientInfoEventHandler()
   {
     
@@ -219,7 +245,18 @@ private getQueryParams()
     this.onClientProfileHeaderLoad()
   }
  
-
+  removePharmacy(clientPharmacyId: string) {
+    this.drugPharmacyFacade.removeClientPharmacy(
+      this.workflowFacade.clientId ?? 0,
+      clientPharmacyId
+    );
+  }
+  removeDrugPharmacyRsp(vendorId: any) {
+    this.drugPharmacyFacade.removeDrugPharmacy(
+      this.profileClientId ?? 0,
+      vendorId
+    );
+  }
   onClientProfileHeaderLoad()
   {  
     this.clientProfileHeader$?.pipe(first((clientHeaderData: any ) => clientHeaderData?.clientId > 0))
