@@ -15,6 +15,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { IntlService } from '@progress/kendo-angular-intl';
+import {ConfigurationProvider} from '@cms/shared/util-core';
+
+
 @Component({
   selector: 'case-management-case-list',
   templateUrl: './case-list.component.html',
@@ -75,6 +79,7 @@ public state!: State;
   columnName!: any;
 
   /** Public properties **/
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   groupLov$ = this.lovFacade.groupLov$;
   caseStatusType$ = this.lovFacade.caseStatusType$;
@@ -86,7 +91,10 @@ public state!: State;
   caseStatusTypes:any=[];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
-  constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade) {}
+  constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider,
+
+    ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -164,7 +172,15 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.columnName = stateFilter.field;
-      this.filter = stateFilter.value;
+      if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate')
+      {
+        let date = this.intl.formatDate(stateFilter.value, this.dateFormat);
+        this.filter = date;
+      }
+      else
+      {
+        this.filter = stateFilter.value;
+      }
       this.filteredBy = this.columns[this.columnName];
       this.isFiltered = true;
     }
