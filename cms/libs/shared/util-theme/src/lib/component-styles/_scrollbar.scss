@@ -27,3 +27,22 @@ html {
   scrollbar-width: thin;
   scrollbar-color: $drawer-scrollbar-color $drawer-scrollbar-bg;
 }
+  .menu-active-session-list{
+    &:hover{
+      visibility: visible;
+      &::-webkit-scrollbar-thumb,
+      &::-webkit-scrollbar-track{
+         visibility: visible !important;
+       
+       }
+    }
+ &::-webkit-scrollbar-thumb,
+ &::-webkit-scrollbar-track{
+    visibility: hidden !important;
+  
+  }
+}
+
+  
+ 
+ 

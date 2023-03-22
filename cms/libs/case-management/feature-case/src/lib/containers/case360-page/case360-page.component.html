@@ -35,10 +35,10 @@
     </kendo-dropdownbutton>
   </div> 
   <!-- Case Details Tab Sections -->
-  <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
+  <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>  
       <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip  #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           
           <kendo-tabstrip-tab title="Client Info" [selected]="true" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>  
             <ng-template kendoTabContent>

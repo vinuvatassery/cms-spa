@@ -48,6 +48,7 @@ export * from './lib/entities/review-question-answer';
 export * from './lib/entities/client-profile-cases';
 export * from './lib/entities/client-profile';
 export * from './lib/entities/client-hiv-verification';
+export * from './lib/entities/active-sessions';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
