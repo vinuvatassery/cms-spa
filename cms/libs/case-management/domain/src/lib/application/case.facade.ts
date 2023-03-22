@@ -37,6 +37,7 @@ export class CaseFacade {
   private casesSubject  = new Subject<any>();
   private clientProfileSubject  = new Subject<any>();
   private clientProfileHeaderSubject  = new Subject<any>();
+  private clientProfileImpInfoSubject  = new Subject<any>();
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -56,6 +57,7 @@ export class CaseFacade {
   getCaseHistory$ = this.getCaseHistorySubject.asObservable(); 
   clientProfile$ = this.clientProfileSubject.asObservable(); 
   clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable(); 
+  clientProfileImpInfo$ = this.clientProfileImpInfoSubject.asObservable(); 
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -98,6 +100,19 @@ export class CaseFacade {
   }
 
   /** Public methods **/
+  loadClientImportantInfo(clientCaseId: string): void {    
+    this.caseDataService.loadClientImportantInfo(clientCaseId).subscribe({
+      next: (clientImportantInfoResponse) => {
+        this.clientProfileImpInfoSubject.next(clientImportantInfoResponse);
+        this.hideLoader();   
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+      },
+    });
+  }
+
+
   loadClientProfile(profileClientId : number): void {
     this.showLoader();
     this.caseDataService.loadClientProfile(profileClientId).subscribe({
