@@ -56,6 +56,8 @@ export class LovFacade {
   private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
   private lovVerificationMethodSubject = new BehaviorSubject<Lov[]>([]);
   private lovApplicantInfoSubject = new BehaviorSubject<Lov[]>([]);
+  private lovColumnDroplistSubject = new BehaviorSubject<Lov[]>([]);
+
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -90,6 +92,7 @@ export class LovFacade {
   otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
   aptclov$=this.lovAptcSubject.asObservable();
   verificationMethod$ = this.lovVerificationMethodSubject.asObservable();
+  ColumnDroplistlov$ = this.lovColumnDroplistSubject.asObservable();
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
 
 
@@ -416,6 +419,16 @@ getVerificationMethodLovs(): void {
   this.lovDataService.getLovsbyType(LovType.VerificationMethod).subscribe({
     next: (lovResponse) => {
       this.lovVerificationMethodSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getColumnDroplistLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.ColumnDroplist).subscribe({
+    next: (lovResponse) => {
+      this.lovColumnDroplistSubject.next(lovResponse);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
