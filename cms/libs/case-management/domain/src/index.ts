@@ -90,6 +90,7 @@ export * from './lib/enums/eligibility-request-type.enum';
 export * from './lib/enums/verification-status-code.enum';
 export * from './lib/enums/verification-type-code.enum';
 export * from './lib/enums/provider-option.enum';
+export * from './lib/enums/address-type.enum';
 
 
 /** Data services **/

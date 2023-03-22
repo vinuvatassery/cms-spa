@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact, ContactInfo } from '../entities/contact';
+import { Contact, ContactInfo,ClientAddress } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain'
-import { catchError, of } from 'rxjs';
-import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { catchError, of,Subject } from 'rxjs';
+import { LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -25,6 +25,11 @@ export class ContactFacade {
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
+  showLoaderOnState = new BehaviorSubject<boolean>(false);
+  showAddPopupSubject = new BehaviorSubject<boolean>(false);
+  editAddressSubject = new BehaviorSubject<boolean>(false);
+  editedAddressSubject = new Subject<any>();
+  
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -40,23 +45,51 @@ export class ContactFacade {
   phoneNumbers$ = this.phoneNumbersSubject.asObservable();
   emailAddress$ = this.emailAddressesSubject.asObservable();
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
+  showAddPopup$ = this.showAddPopupSubject.asObservable();
+  editAddress$ =this.editAddressSubject.asObservable();
+  editedAddress$ =this.editedAddressSubject.asObservable();
+  showLoaderOnState$ = this.showLoaderOnState.asObservable();
 
   /** Constructor**/
   constructor(
     private readonly contactDataService: ContactDataService,
     private readonly loggingService: LoggingService,
+    private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly zipCodeFacade: ZipCodeFacade
   ) { }
 
   /** Public methods **/
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+        const err= subtitle;    
+        this.loggingService.logException(err)
+      }  
+        this.snackbarService.manageSnackBar(type,subtitle)
+        this.hideLoader();   
+  }
+
+  showLoader()
+  {
+    this.loaderService.show();
+  }
+    
+  hideLoader()
+  {
+    this.loaderService.hide();
+  }
+
   loadDdlStates(): void {
     this.zipCodeFacade.getStates().subscribe({
       next: (ddlStatesResponse) => {
         this.ddlStatesSubject.next(ddlStatesResponse);
+        this.showLoaderOnState.next(false);
       },
       error: (err) => {
         this.loggingService.logException(err);
+        this.showLoaderOnState.next(false);
       },
     });
   }
@@ -81,17 +114,6 @@ export class ContactFacade {
         this.ddlPreferredContactMethodsSubject.next(
           ddlPreferredContactMethodsResponse
         );
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
-
-  loadAddress(): void {
-    this.contactDataService.loadAddresses().subscribe({
-      next: (addressesResponse) => {
-        this.addressesSubject.next(addressesResponse);
       },
       error: (err) => {
         this.loggingService.logException(err);
@@ -184,6 +206,14 @@ export class ContactFacade {
       );
   }
 
+  createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+    return this.contactDataService.createAddress(clientId, clientCaseEligibilityId, clientAddress);
+  }
+
+  updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+    return this.contactDataService.updateAddress(clientId, clientCaseEligibilityId, clientAddress);
+  }
+
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
     return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo).pipe(
       catchError((err: any) => {
@@ -194,5 +224,26 @@ export class ContactFacade {
         return of(false);
       })
     );
+  }
+
+  getClientAddress(clientId:any){
+    this.showLoader();
+    return this.contactDataService.getClientAddress(clientId).subscribe({
+      next: (addressesResponse) => {
+        this.hideLoader();
+        this.addressesSubject.next(addressesResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      }
+    });
+  }
+
+  deleteClientAddress(clientId:any,clientAddressId:any){
+    return this.contactDataService.deleteClientAddress(clientId,clientAddressId);
+  }
+
+  deactivateClientAddress(clientId:any,clientAddressId:any){
+    return this.contactDataService.deactivateClientAddress(clientId,clientAddressId);
   }
 }
