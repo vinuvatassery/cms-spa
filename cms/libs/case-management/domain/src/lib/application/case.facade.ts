@@ -142,7 +142,6 @@ export class CaseFacade {
   }
 
   loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string , columnName : any, filter : any): void {
-    //this.showLoader();
     this.searchLoaderVisibilitySubject.next(true);
     this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType, columnName,filter).subscribe({
       next: (casesResponse  : any) => {

@@ -77,11 +77,13 @@ public state!: State;
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   groupLov$ = this.lovFacade.groupLov$;
+  caseStatusType$ = this.lovFacade.caseStatusType$;
   selectedColumn!: any;
   filter! : any
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
+  caseStatusTypes:any=[];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade) {}
@@ -90,6 +92,8 @@ public state!: State;
   ngOnInit(): void {
     this.loadDdlGridColumns();
     this.lovFacade.getGroupLovs();
+    this.lovFacade.getCaseStatusLovs();
+    this.getCaseStatusLovs();
     this.selectedColumn = 'ALL';
     this.getGroupLovs() ;
   }
@@ -101,6 +105,14 @@ public state!: State;
       }
     });
   }
+  private getCaseStatusLovs() {
+    this.caseStatusType$
+    .subscribe({
+      next: (data: any) => {
+        this.caseStatusTypes=data;
+      }
+    });
+  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -108,7 +120,8 @@ public state!: State;
       sort: this.sort
       };
       this.sortColumn = this.columns[this.sort[0]?.field];
-      this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': this.sort[0]?.dir === 'desc'? 'Descending': "";
+      this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
+      this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
       if(!this.selectedColumn)
       {
         this.selectedColumn = "";
@@ -129,6 +142,16 @@ public state!: State;
       }],
         logic: "or"
     });
+}
+dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+  filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovDesc
+    }],
+      logic: "or"
+  });
 }
 
  pageselectionchange(data: any) {
@@ -156,7 +179,8 @@ public state!: State;
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
     this.state=stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = stateData.sort[0]?.dir === 'asc'? 'Ascending': stateData.sort[0]?.dir === 'desc'? 'Descending': "";
+    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
+    this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
     this.loadProfileCasesList();
 }
   private loadProfileCasesList(): void {
@@ -193,7 +217,6 @@ public state!: State;
   }
   setToDefault()
   {
-    //this.grid.reorderColumn([]);
     this.pageSizes = this.caseFacade.gridPageSizes;
     this.sortValue  = this.caseFacade.sortValue;
     this.sortType  = this.caseFacade.sortType;
@@ -205,7 +228,8 @@ public state!: State;
       };
     this.gridFilter = {logic:'and',filters:[]}
     this.sortColumn = this.columns[this.sort[0]?.field];
-    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': this.sort[0]?.dir === 'desc'? 'Descending': "";
+    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
+    this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
     this.filter = "";
     this.columnName = "";
     this.selectedColumn = "ALL";
