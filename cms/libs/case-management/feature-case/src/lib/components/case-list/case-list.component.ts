@@ -11,7 +11,7 @@ import {
 /** Facades **/
 import { CaseFacade,CaseScreenTab } from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
@@ -24,9 +24,12 @@ export class CaseListComponent implements OnInit, OnChanges {
 
 public isGridLoaderShow = true;
 @Input() searchLoaderVisibility$!: Observable<boolean>;
-sortColumn = "Client Name";
-sortDir = "Ascending";
+sortColumn = "";
+sortDir = "";
 columnsReordered = false;
+filteredBy = "";
+searchValue = "";
+isFiltered = false;
 
 public state!: State;
   /*** Input properties ***/
@@ -57,6 +60,19 @@ public state!: State;
     insurancePolicyId:"Insurance Policy Id",
     assignedCw:"Assigned to"
   }
+  columnDroplist : any = {
+    SSN:"ssn",
+    HA:"homeAddress",
+    P:"phone",
+    URN:"urn",
+    NOIC:"insuranceFullName",
+    E:"email",
+    CN:"clientFullName",
+    IPI:"insurancePolicyId",
+    NOOI:"officialIdFullName",
+    CI:"clientId"
+  }
+  columnName!: any;
 
   /** Public properties **/
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
@@ -64,7 +80,7 @@ public state!: State;
   selectedColumn!: any;
   filter! : any
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  @Output() loadCasesListEvent = new EventEmitter<any>(); 
+  @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
@@ -91,12 +107,15 @@ public state!: State;
       take: this.pageSizes[0]?.value,
       sort: this.sort
       };
+      this.sortColumn = this.columns[this.sort[0]?.field];
+      this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': this.sort[0]?.dir === 'desc'? 'Descending': "";
       if(!this.selectedColumn)
       {
         this.selectedColumn = "";
+        this.columnName = "";
         this.filter = "";
-      }        
-    this.loadProfileCasesList() 
+      }
+    this.loadProfileCasesList()
   }
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
@@ -117,7 +136,21 @@ public state!: State;
     this.state.skip = 0;
     this.loadProfileCasesList()
   }
-  public dataStateChange(stateData: any): void {     
+  public dataStateChange(stateData: any): void {
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+      this.filter = stateFilter.value;
+      this.filteredBy = this.columns[this.columnName];
+      this.isFiltered = true;
+    }
+    else
+    {
+      this.filter = "";
+      this.columnName = "";
+      this.isFiltered = false
+    }
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? 'clientFullName'
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
@@ -127,7 +160,7 @@ public state!: State;
     this.loadProfileCasesList();
 }
   private loadProfileCasesList(): void {
-    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.selectedColumn,this.filter)
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter)
   }
    loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any)
    {
@@ -154,6 +187,7 @@ public state!: State;
 
   onChange(event :any)
   {
+    this.columnName = this.columnDroplist[this.selectedColumn];
     this.filter = event;
     this.loadProfileCasesList();
   }
@@ -169,16 +203,19 @@ public state!: State;
       take: this.pageSizes[0]?.value,
       sort: this.sort
       };
+    this.gridFilter = {logic:'and',filters:[]}
     this.sortColumn = this.columns[this.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': this.sort[0]?.dir === 'desc'? 'Descending': "";
+    this.filter = "";
+    this.columnName = "";
+    this.selectedColumn = "ALL";
+    this.searchValue = "";
+    this.isFiltered = false;
+    this.columnsReordered = false;
     this.loadProfileCasesList();
   }
   onColumnReorder(event:any)
   {
     this.columnsReordered = true;
   }
-  // onColumnMenuSelect(event : any)
-  // {
-  //   debugger;
-  // }
 }

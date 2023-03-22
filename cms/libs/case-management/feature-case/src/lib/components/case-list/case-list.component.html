@@ -10,7 +10,7 @@
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox (valueChange)="onChange($event)" aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+      <kendo-textbox [(ngModel)]="searchValue" (valueChange)="onChange($event)" aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
@@ -19,7 +19,8 @@
 <!-- Sorted Info -->
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items">{{sortColumn}}</span>
-  <span class="sort-items">No Filters</span>
+  <span *ngIf="!isFiltered" class="sort-items">No Filters</span>
+  <span *ngIf="isFiltered" class="sort-items">Filtered by {{filteredBy}}</span>
   <span *ngIf="!columnsReordered" class="sort-items">Default Columns</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
   <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
@@ -30,20 +31,20 @@
 <!-- Case List table -->
 <div class="app-c-table">
   <kendo-grid
-  (columnReorder)="onColumnReorder($event)" 
+  (columnReorder)="onColumnReorder($event)"
   [filter]="gridFilter"
-  [pageSize]="state.take" 
-  [pageable]="true" 
-  [sortable]="true" 
+  [pageSize]="state.take"
+  [pageable]="true"
+  [sortable]="true"
   [skip]="state.skip"
   [groupable]="false"
   [reorderable]="true"
-  [resizable]="true" 
+  [resizable]="true"
   [columnMenu]="{filter: true }"
   [sort]="state.sort"
-  (dataStateChange)="dataStateChange($event)"  
+  (dataStateChange)="dataStateChange($event)"
   (filterChange)="filterChange($event)"
-  [loading]="isGridLoaderShow" 
+  [loading]="isGridLoaderShow"
   [data]="cases | async">
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -72,7 +73,7 @@
         <kendo-dropdownlist
         [data]="groupData"
         textField="lovDesc"
-        valueField="lovTypeCode"
+        valueField="lovDesc"
         (valueChange)="groupFilterChange($event, filterService)"
       >
       </kendo-dropdownlist>
