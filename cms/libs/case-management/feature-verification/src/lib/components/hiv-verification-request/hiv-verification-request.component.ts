@@ -19,6 +19,7 @@ export class HivVerificationRequestComponent implements OnInit {
   /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
   @Input() clientId!: number;
+  userId!: any;
   public uploadRemoveUrl = 'removeUrl';
   /** Public properties **/
   providerValue$ = this.verificationFacade.providerValue$;
@@ -39,6 +40,7 @@ export class HivVerificationRequestComponent implements OnInit {
   /** Internal event methods **/
   ngOnInit(): void {
     this.providerValue$.subscribe(data=>{
+      this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
       if(data=== ProviderOption.HealthCareProvider){
         if(this.hivVerificationForm.controls["providerEmailAddress"].value !== null && this.hivVerificationForm.controls["providerEmailAddress"].value !== ''){
@@ -95,10 +97,12 @@ export class HivVerificationRequestComponent implements OnInit {
     this.verificationFacade.showLoader();
     this.verificationFacade.save( this.clientHivVerification).subscribe({
       next:(data)=>{
+        this.isResendRequest = false;
+        this.verificationFacade.hivVerificationSaveSubject.next(true);
         this.sentDate =  this.clientHivVerification.verificationStatusDate;
         this.verificationFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
-          'Client hiv verification inserted successfully.'
+          'Client hiv verification request sent successfully.'
         );
         this.verificationFacade.hideLoader();
         this.cdr.detectChanges();

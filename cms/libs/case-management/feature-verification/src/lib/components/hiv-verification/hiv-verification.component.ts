@@ -14,7 +14,7 @@ export class HivVerificationComponent implements OnInit {
 
    /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
-  @Input() clientId!: number;
+  @Input() clientId!: number;  
   /** Public properties **/
   rdoVerificationMethod!: string;
   verificationMethod$ = this.lovFacade.verificationMethod$;

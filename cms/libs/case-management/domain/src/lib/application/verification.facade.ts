@@ -9,6 +9,12 @@ import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, 
 @Injectable({ providedIn: 'root' })
 export class VerificationFacade {
 
+  /** Private properties **/
+  hivVerificationSaveSubject = new Subject<boolean>();
+
+  /** Public properties **/
+  hivVerificationSave$ = this.hivVerificationSaveSubject.asObservable();
+
   constructor(private readonly verificationDataService: VerificationDataService,
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
