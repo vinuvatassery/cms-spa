@@ -30,3 +30,4 @@ export * from './lib/application/navigation-menu.facade';
 /** Enums **/
 export * from './lib/enums/lov-types.enum';
 export * from './lib/enums/accepted-case-status-code.enum'
+export * from './lib/enums/applicant-info-lov-types.enum'

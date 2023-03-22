@@ -10,7 +10,8 @@ import { Template } from '../entities/template';
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient
+   ) { }
 
   /** Public methods **/
   loadTemplates(): Observable<Template[]> {
@@ -28,4 +29,13 @@ export class TemplateDataService {
       },
     ]);
   }
+
+  //NOSONAR TODO - Add API to fetch templates
+  getTemplates(templateId?: string) {
+    //NOSONAR let url = `/case-management/templates` + (!!templateId ? `?templateId=${templateId}` : '');
+    // return this.http.get(
+    //   `${this.configurationProvider.appSettings.caseApiUrl}` + url
+    // );
+  }
+
 }

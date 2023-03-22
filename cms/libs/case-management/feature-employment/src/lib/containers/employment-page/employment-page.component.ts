@@ -43,7 +43,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     private route: ActivatedRoute,
     private loaderService: LoaderService,
     private readonly cdr: ChangeDetectorRef
-    
+
   ) {}
 
   /** Lifecycle Hooks */
@@ -55,7 +55,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addDiscardChangesSubscription();
-    this.employmentList$.subscribe((emp:any) => {       
+    this.employmentList$.subscribe((emp:any) => {
       this.employerListCount = emp.total});
   }
 
@@ -111,6 +111,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     if (!(this.isEmployedGridDisplay ?? false)) {
       this.pageSizes = this.employmentFacade.gridPageSizes;
       this.employmentFacade.loadEmployers(
+        this.clientId,
         this.clientCaseEligibilityId,
         gridDataRefiner.skipcount,
         gridDataRefiner.maxResultCount,
@@ -132,7 +133,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       .subscribe(([navigationType, isSaved]) => {
         if (isSaved) {
           this.checkBoxSubscription.unsubscribe();
-          this.workflowFacade.navigate(navigationType); 
+          this.workflowFacade.navigate(navigationType);
           this.employmentFacade.hideLoader();
         } else {
           this.workflowFacade.enableSaveButton();
@@ -152,19 +153,19 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
         this.employmentFacade.employmentValidSubject.next(true);
         return this.employmentFacade
       .unEmploymentUpdate(this.clientCaseEligibilityId, this.isEmployedFlag)
-      .pipe( 
+      .pipe(
         catchError((err: any) => {
-          if (err?.error) { 
-            this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
+          if (err?.error) {
+            this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
           }
           return of(false);
         }),
       )
-      } 
+      }
   }
 
-  private employerSubscription(){  
-    this.employeeSubscription$.subscribe((emp:any) => {   
+  private employerSubscription(){
+    this.employeeSubscription$.subscribe((emp:any) => {
           this.employmentFacade.updateWorkFlowCount(emp?.total <= 0 && !this.isEmployedGridDisplay ? StatusFlag.No: StatusFlag.Yes);
     });
   }

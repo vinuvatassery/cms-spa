@@ -36,15 +36,14 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   SexulaIdentities: any = [];
 
   ngOnInit(): void {
-    this.lovFacade.getSexulaIdentityLovs();
     this.loadSexulaIdentities();
     this.loadApplicantInfoSubscription();
   }
   ngOnDestroy(): void {
     this.appInfoSubscription.unsubscribe();
-  }  
+  }
   setControlValidations() {
-    let isFieldCompleted = false; 
+    let isFieldCompleted = false;
     const sexulaIdentity = Object.keys(this.appInfoForm.controls).filter(m => m.includes(this.ControlPrefix));
     sexulaIdentity.forEach((gender: any) => {
       this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
@@ -52,12 +51,12 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
 
       const value = this.appInfoForm.controls[gender]?.value;
       if(value === true){
-        isFieldCompleted = (isFieldCompleted || value === true) 
+        isFieldCompleted = (isFieldCompleted || value === true)
                           && (
                                 (
-                                  gender === `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}` 
+                                  gender === `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}`
                                   && this.appInfoForm.controls[this.DescriptionField]?.value
-                                ) 
+                                )
                                 || gender !== `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}`
                              );
       }
@@ -71,10 +70,10 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   onCheckChange(event: any, lovCode: string) {
     this.appInfoForm.controls['SexualIdentityGroup'].removeValidators(Validators.required);
     this.appInfoForm.controls['SexualIdentityGroup'].updateValueAndValidity();
-    this.enableDisableSexualIdentity(event.target.checked, lovCode); 
+    this.enableDisableSexualIdentity(event.target.checked, lovCode);
     this.setControlValidations();
   }
-  enableDisableSexualIdentity(checked: boolean, lovCode: any) {  
+  enableDisableSexualIdentity(checked: boolean, lovCode: any) {
     switch (lovCode) {
       case SexualIdentityCode.notListed:
         this.textboxDisable = !checked;
@@ -165,7 +164,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
     }];
 
     this.workflowFacade.updateChecklist(workFlowdata);
-  }  
+  }
   private loadApplicantInfoSubscription() {
     this.appInfoSubscription = this.applicantInfo$.subscribe((applicantInfo) => {
       if (applicantInfo !== null) {
@@ -177,11 +176,11 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
             this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
           }
           this.updateWorkflowCount(true);
-        }  
+        }
         else{
           this.textboxDisable=true;
           this.enableAllSexualIdentities();
-        }      
+        }
       }
       else{
         this.textboxDisable=true;
@@ -198,7 +197,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
           this.appInfoForm.controls['SexualIdentityDescription']?.setValue(identity.otherDesc);
           this.textboxDisable = false;
         }
-        this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);       
+        this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
       })
       this.cdr.detectChanges();
     }

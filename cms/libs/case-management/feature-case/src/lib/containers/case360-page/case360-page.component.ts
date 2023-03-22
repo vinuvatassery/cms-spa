@@ -7,8 +7,6 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
-import { UserManagementFacade } from '@cms/system-config/domain';
-
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -22,6 +20,7 @@ export class Case360PageComponent implements OnInit {
   private clientHeaderSubject = new Subject<any>();
   private clientInfoVisibleSubject = new Subject<any>();
   private clientHeaderVisibleSubject = new Subject<any>();
+ 
   loadedClient$ = this.clientSubject.asObservable();
   loadedClientHeader$ = this.clientHeaderSubject.asObservable();
   clientInfoVisible$ = this.clientInfoVisibleSubject.asObservable();
@@ -29,12 +28,12 @@ export class Case360PageComponent implements OnInit {
   /** Public properties **/  
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
-  ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;
-  userImage$ = this.userManagementFacade.userImage$;
+  ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;  
   ddlFamilyAndDependentEP$ = this.caseFacade.ddlFamilyAndDependentEP$;
   clientProfile$ = this.caseFacade.clientProfile$;
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;
+  clientProfileImpInfo$ = this.caseFacade.clientProfileImpInfo$;
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
@@ -46,7 +45,9 @@ export class Case360PageComponent implements OnInit {
   isNewSMSTextOpened = false;
   profileClientId = 0
   clientCaseEligibilityId! : string;
+  caseWorkerId! : string;
   clientHeaderTabs: any = [];
+  clientCaseId! : string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId:any;
@@ -88,8 +89,7 @@ export class Case360PageComponent implements OnInit {
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
-    private readonly route: ActivatedRoute,
-    private userManagementFacade : UserManagementFacade
+    private readonly route: ActivatedRoute
   ) {}
 
   /** Lifecycle hooks **/
@@ -200,6 +200,11 @@ private getQueryParams()
     this.isIdCardOpened = false;
   }
 
+  loadClientImpInfo()
+  {
+    this.caseFacade.loadClientImportantInfo(this.clientCaseId);
+  }
+
   loadReadOnlyClientInfoEventHandler()
   {
     
@@ -213,6 +218,8 @@ private getQueryParams()
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
+ 
+
   onClientProfileHeaderLoad()
   {  
     this.clientProfileHeader$?.pipe(first((clientHeaderData: any ) => clientHeaderData?.clientId > 0))
@@ -236,13 +243,22 @@ private getQueryParams()
           clientFullName: clientHeaderData?.clientFullName,       
           pronouns:  clientHeaderData?.pronouns,
           clientCaseIdentity : clientHeaderData?.clientCaseIdentity,
-          clientOfficialIdFullName : clientHeaderData?.clientOfficialIdFullName           
+          clientOfficialIdFullName : clientHeaderData?.clientOfficialIdFullName,
+          caseWorkerId   : clientHeaderData?.caseWorkerId ,           
          }
-         
+         this.clientCaseId = clientHeader?.clientCaseId
          this.clientHeaderSubject.next(clientHeader);
          if(clientHeader?.clientCaseEligibilityId)
          {
           this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;         
+         }   
+         if(clientHeader?.caseWorkerId)
+         {
+          this.caseWorkerId = clientHeader?.caseWorkerId;         
+         }        
+         if(clientHeader?.clientCaseId)
+         {
+          this.clientCaseId = clientHeader?.clientCaseId;         
          }
       }
     });
@@ -292,7 +308,10 @@ private getQueryParams()
           englishProficiency   : clientData?.englishProficiency , 
           ethnicIdentity   : clientData?.ethnicIdentity , 
           racialIdentities   : clientData?.racialIdentities , 
-          primaryRacialIdentity   : clientData?.primaryRacialIdentity 
+          primaryRacialIdentity   : clientData?.primaryRacialIdentity,
+          lastModificationTime : clientData?.lastModificationTime,
+          lastModifierName : clientData?.lastModifierName,
+          lastModifierId : clientData?.lastModifierId
          }
          
          this.clientSubject.next(client);
@@ -301,12 +320,10 @@ private getQueryParams()
     });
    
   }
+  
 
-  getCaseManagerImage(assignedCaseManagerId : any)
-  {   
-      if(assignedCaseManagerId)
-      {
-      this.userManagementFacade.getUserImage(assignedCaseManagerId);
-      }
+  loadHeaderAndProfile(){
+    this.loadClientProfileInfoEventHandler();
+    this.loadReadOnlyClientInfoEventHandler();
   }
 }
