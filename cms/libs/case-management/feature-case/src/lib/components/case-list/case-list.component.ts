@@ -15,7 +15,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-case-list',
   templateUrl: './case-list.component.html',
@@ -67,7 +66,7 @@ public state!: State;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>(); 
   groupData:any=[]
-  public filter: CompositeFilterDescriptor={logic:'and',filters:[]};
+  public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade) {}
 
@@ -100,7 +99,7 @@ public state!: State;
     this.loadProfileCasesList() 
   }
  filterChange(filter: CompositeFilterDescriptor): void {
-    this.filter = filter;
+    this.gridFilter = filter;
   }
  groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({
