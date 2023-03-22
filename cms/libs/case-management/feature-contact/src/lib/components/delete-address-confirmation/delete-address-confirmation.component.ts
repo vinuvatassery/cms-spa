@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { ContactFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
