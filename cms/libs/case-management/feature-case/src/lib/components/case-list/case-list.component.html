@@ -18,14 +18,19 @@
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted by <span class="sort-items">Client Name</span>
+  Sorted {{sortDir}} by <span class="sort-items">{{sortColumn}}</span>
   <span class="sort-items">No Filters</span>
-  <span class="sort-items">Default Columns</span>
+  <span *ngIf="!columnsReordered" class="sort-items">Default Columns</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+    <a>Set to Default</a>
+  </button>
 </div>
 
 <!-- Case List table -->
 <div class="app-c-table">
   <kendo-grid
+  (columnReorder)="onColumnReorder($event)"
   [pageSize]="state.take"
   [pageable]="true"
   [sortable]="true"
@@ -64,12 +69,18 @@
     <kendo-grid-column field="email" title="Email" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="phone" title="Phone" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.phone | phone }}
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="genders" title="Gender" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="homeAddress" title="Home Address" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="ssn" title="SSN" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.ssn | ssn }}
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120">
     </kendo-grid-column>
