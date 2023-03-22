@@ -34,7 +34,7 @@
   </div> 
   <!-- Case Details Tab Sections -->
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
-    <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab"]'>  
+    <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab"]' >  
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
           
@@ -210,21 +210,34 @@
 
 
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Drugs" *ifPermission='["Client_Profile_Drugs_Tab"]'> 
+    <kendo-tabstrip-tab title="Drugs"  *ifPermission='["Client_Profile_Drugs_Tab"]'> 
 
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Pharmacies" [selected]="true" *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab"]'> 
+          <kendo-tabstrip-tab title="Pharmacies" [selected]="true" > 
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-pharmacies-list></case-management-pharmacies-list>
+                <case-management-pharmacies-list [clientId]="profileClientId"
+                [clientpharmacies$]="clientpharmacies$"
+                [pharmacysearchResult$]="pharmacysearchResult$"
+                [selectedPharmacy$]="selectedPharmacy$"
+                [addPharmacyResponse$]="addPharmacyRsp$"
+                [editPharmacyResponse$]="editPharmacyRsp$"
+                [removePharmacyResponse$]="removePharmacyRsp$"
+                [removeDrugPharmacyResponse$]="removeDrugPharmacyRsp$"
+                [triggerPriorityPopup$]="triggerPriorityPopup$"
+                [searchLoaderVisibility$]="searchLoaderVisibility$"
+                (removePharmacyClick)="removeDrugPharmacyRsp($event)"
+                (searchPharmacy)="searchPharmacy($event)"
+                (addPharmacyClick)="addPharmacy($event)"
+                ></case-management-pharmacies-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Drugs Purchased" *ifPermission='["Client_Profile_Drugs_Purchased_Tab"]'> 
+          <kendo-tabstrip-tab title="Drugs Purchased" *ifPermission='["Client_Profile_Drugs_Purchased_Tab"]' > 
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-drugs-purchased-list></case-management-drugs-purchased-list>
+                <case-management-drugs-purchased-list [clientId]="profileClientId" ></case-management-drugs-purchased-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>

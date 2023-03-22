@@ -52,6 +52,8 @@
   <span class="app-checkboxwidtext-wrapper"> 
     <input
       type="checkbox"
+      [disabled]="!selectedPharmacyId"
+      [(ngModel)]="isSetAsPrimary"
       kendoCheckBox
       aria-labelledby="Setasprimarypharmacy"
       id="Setasprimarypharmacy"

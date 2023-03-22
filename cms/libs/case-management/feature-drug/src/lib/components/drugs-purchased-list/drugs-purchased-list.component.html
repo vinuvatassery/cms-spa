@@ -8,24 +8,24 @@
     </div>
     <div class="flex-col mt-1">
         <div class="app-c-table">
-            <kendo-grid [pageSize]="5" [pageable]="true" [data]="DrugsPurchased$ | async">
-                <kendo-grid-column field="FillDate" title="Fill Date" [width]="100">
+            <kendo-grid [pageSize]="5" [pageable]="true" [data]="drugPurchases$ | async">
+                <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="100">
                 </kendo-grid-column>
-                <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="180"></kendo-grid-column>
-                <kendo-grid-column field="Drug" title="Drug" [width]="200"></kendo-grid-column>
-                <kendo-grid-column field="NDC" title="NDC" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="Qty" title="Qty" [width]="80"></kendo-grid-column>
-                <kendo-grid-column field="ClientGroup" title="Client Group" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="PayType" title="Pay Type" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="TransType" title="Trans Type" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="PayAmt" title="Pay Amt" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="IngrdCost" title="Ingrd Cost" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="PhmFee" title="Phm Fee" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="TotalDrug" title="Total Drug" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="PBMFee" title="PBM Fee" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="Revenue" title="Revenue" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="UC" title="UC" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="EntryDate" title="Entry Date" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="180"></kendo-grid-column>
+                <kendo-grid-column field="drugName" title="Drug" [width]="200"></kendo-grid-column>
+                <kendo-grid-column field="ndc" title="NDC" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="qty" title="Qty" [width]="80"></kendo-grid-column>
+                <kendo-grid-column field="clientGroup" title="Client Group" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="payType" title="Pay Type" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="transType" title="Trans Type" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="amountRequested" title="Pay Amt" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="ingrdCost" title="Ingrd Cost" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="phmFee" title="Phm Fee" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="totalDrug" title="Total Drug" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="pbmFee" title="PBM Fee" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="revenue" title="Revenue" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="uc" title="UC" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="entryDate" title="Entry Date" [width]="100"></kendo-grid-column>
 
 
                 <kendo-grid-column field="Option" title="Options" [width]="75" class="text-center" [sticky]="true">
