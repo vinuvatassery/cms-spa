@@ -106,7 +106,7 @@ export class Case360PageComponent implements OnInit {
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
     private drugPharmacyFacade: DrugPharmacyFacade,
-    private workflowFacade: WorkflowFacade,,
+    private workflowFacade: WorkflowFacade,
     private readonly router: Router
   ) { }
 
