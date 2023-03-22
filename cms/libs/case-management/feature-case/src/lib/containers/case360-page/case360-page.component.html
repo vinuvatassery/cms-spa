@@ -2,7 +2,9 @@
 <case-management-case360-header
 [caseWorkerId]="caseWorkerId"
 [loadedClientHeader]="loadedClientHeader$ | async"
+[clientProfileImpInfo$]="clientProfileImpInfo$"
 (loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
+(loadClientImpInfoEvent)="loadClientImpInfo()"
 ></case-management-case360-header>
 <case-management-common-actions></case-management-common-actions>
 
