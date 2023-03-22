@@ -9,7 +9,7 @@ import { DrugPharmacyFacade,WorkflowFacade,Pharmacy,StatusFlag,CompletionCheckli
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
-import { LoaderService,  LoggingService,  SnackBarNotificationType,} from '@cms/shared/util-core';
+import { LoggingService} from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',

@@ -9,8 +9,6 @@
   <div class="flex-col mt-1">
     <div class="app-c-table">
       <kendo-grid  [pageSize]="5" [pageable]="true"  [data]="pharmaciesList$ | async">
-        <!-- <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="180">
-        </kendo-grid-column> -->
          <kendo-grid-column field="pharmacyName" title="pharmacy Name" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
@@ -24,8 +22,6 @@
         <kendo-grid-column field="fax" title="Fax" [width]="130"></kendo-grid-column>
         <kendo-grid-column field="mailCode" title="Mail Codes" [width]="100"></kendo-grid-column>
         <kendo-grid-column field="address" title="Address" [width]="200"></kendo-grid-column>
-        <!-- <kendo-grid-column field="NABP" title="NABP" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="NCPDP" title="NCPDP" [width]="100"></kendo-grid-column> -->
         <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="120">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem?.effectiveDate| date: 'MM/dd/yyyy'}}
