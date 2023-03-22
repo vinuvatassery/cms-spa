@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade } from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
@@ -41,6 +41,16 @@ export class Case360PageComponent implements OnInit {
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
+  //for add pharmacy
+  clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
+  pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
+  searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
+  addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
+  editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
+  removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
+  removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
+  triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
+  selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   isTodoDetailsOpened = false;
   isNewReminderOpened = false;
   isIdCardOpened = false;
@@ -54,6 +64,7 @@ export class Case360PageComponent implements OnInit {
   clientCaseId! : string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  clientId:any;
   clientChangeSubscription$ = new Subscription();
   public SendActions = [
     {
@@ -94,6 +105,8 @@ export class Case360PageComponent implements OnInit {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
+    private drugPharmacyFacade: DrugPharmacyFacade,
+    private workflowFacade: WorkflowFacade,,
     private readonly router: Router
   ) { }
 
@@ -230,7 +243,21 @@ export class Case360PageComponent implements OnInit {
   {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
-
+  searchPharmacy(searchText: string) {
+    this.drugPharmacyFacade.searchPharmacies(searchText);
+  }
+  addPharmacy(vendorId: string) {
+    let priorityCode :string = "";
+    this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
+     
+      priorityCode = priorityCodes;
+    })
+    this.drugPharmacyFacade.addDrugPharmacy(
+      this.profileClientId,
+      vendorId,
+      priorityCode
+    );
+  }
   loadReadOnlyClientInfoEventHandler() {
     this.caseFacade.loadClientProfile(this.profileClientId);
     this.onClientProfileLoad()
@@ -241,12 +268,24 @@ export class Case360PageComponent implements OnInit {
     this.onClientProfileHeaderLoad()
   }
 
-
+  removePharmacy(clientPharmacyId: string) {
+    this.drugPharmacyFacade.removeClientPharmacy(
+      this.workflowFacade.clientId ?? 0,
+      clientPharmacyId
+    );
+  }
+  removeDrugPharmacyRsp(vendorId: any) {
+    this.drugPharmacyFacade.removeDrugPharmacy(
+      this.profileClientId ?? 0,
+      vendorId
+    );
+  }
   onClientProfileHeaderLoad() {
     this.clientProfileHeader$?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
-
+        this.clientId =clientHeaderData?.clientId;
+this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
           const clientHeader = {
 
             clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,

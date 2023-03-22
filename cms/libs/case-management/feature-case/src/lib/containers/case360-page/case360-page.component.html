@@ -65,7 +65,7 @@
                     </div>
                     <!-- Address Section -->
                     <div class="flex-col">
-                      <case-management-address-list></case-management-address-list>
+                      <case-management-address-list [clientId]="clientId" [caseEligibilityId]="clientCaseEligibilityId"></case-management-address-list>
                     </div>
                     <!-- Phone Section -->
                     <div class="flex-col">
@@ -219,14 +219,27 @@
           <kendo-tabstrip-tab title="Pharmacies" [selected]="true" *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'> 
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-pharmacies-list></case-management-pharmacies-list>
+                <case-management-pharmacies-list [clientId]="profileClientId"
+                [clientpharmacies$]="clientpharmacies$"
+                [pharmacysearchResult$]="pharmacysearchResult$"
+                [selectedPharmacy$]="selectedPharmacy$"
+                [addPharmacyResponse$]="addPharmacyRsp$"
+                [editPharmacyResponse$]="editPharmacyRsp$"
+                [removePharmacyResponse$]="removePharmacyRsp$"
+                [removeDrugPharmacyResponse$]="removeDrugPharmacyRsp$"
+                [triggerPriorityPopup$]="triggerPriorityPopup$"
+                [searchLoaderVisibility$]="searchLoaderVisibility$"
+                (removePharmacyClick)="removeDrugPharmacyRsp($event)"
+                (searchPharmacy)="searchPharmacy($event)"
+                (addPharmacyClick)="addPharmacy($event)"
+                ></case-management-pharmacies-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Drugs Purchased" *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'> 
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-drugs-purchased-list></case-management-drugs-purchased-list>
+                <case-management-drugs-purchased-list [clientId]="profileClientId" ></case-management-drugs-purchased-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
