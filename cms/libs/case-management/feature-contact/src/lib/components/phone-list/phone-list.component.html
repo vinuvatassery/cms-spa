@@ -90,12 +90,12 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
-          field="Option"
+          field="clientPhoneId"
           title="Options"
           [width]="75"
           class="text-center"
         >
-          <ng-template kendoGridCellTemplate let-dataItem>
+          <ng-template kendoGridCellTemplate let-clientPhone let-clientPhoneId="field">
             <kendo-dropdownbutton
               [data]="gridOption"
               icon="more-vertical"
@@ -106,8 +106,8 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
             
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
+                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(clientPhone?.clientPhoneId)">
                   <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
               </button> 
@@ -116,6 +116,7 @@
           </ng-template>
         </kendo-grid-column>
       </kendo-grid>
+      <div *ngIf="false"  class="k-i-loading"></div>
     </div>
   </div>
   <div class="flex-col mt-1">
@@ -123,7 +124,7 @@
       kendoButton
       [primary]="true"
       icon="add"
-      (click)="onPhoneNumberDetailClicked(false)"
+      (click)="onPhoneNumberDetailClicked(false,'')"
       aria-label="add phone number"
     >
       Phone Number
@@ -133,7 +134,7 @@
 
 <!-- Address Detail Popup-->
 <kendo-dialog
-  *ngIf="isPhoneNumberDetailPopup"
+  *ngIf=" editformVisible$ | async"
   (close)="onPhoneNumberDetailClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
@@ -142,6 +143,10 @@
   }}</kendo-dialog-titlebar>
   <case-management-phone-detail
     [isEditValue]="isEditPhoneNumber"
+    [lovClientPhoneDeviceType$]="lovClientPhoneDeviceType$"
+    [selectedPhoneData]="selectedPhoneData"
+    (addClientPhoneEvent)="addClientPhoneHandle($event)"   
+    (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()" 
   ></case-management-phone-detail>
 </kendo-dialog>
 

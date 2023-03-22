@@ -27,6 +27,11 @@ export class ContactFacade {
   private emailAddressesSubject = new BehaviorSubject<any>([]);
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
   private clientPhonesSubject =  new Subject<any>();
+  private clientPhoneSubject =  new Subject<any>();
+  private addClientPhoneSubject =  new Subject<any>();
+  private preferredClientPhoneSubject =  new Subject<any>();
+  private deactivateClientPhoneSubject =  new Subject<any>();
+  private removeClientPhoneSubject =  new Subject<any>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -43,6 +48,11 @@ export class ContactFacade {
   emailAddress$ = this.emailAddressesSubject.asObservable();
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
   clientPhones$ = this.clientPhonesSubject.asObservable();
+  clientPhone$ = this.clientPhoneSubject.asObservable();
+  addClientPhoneResponse$ = this.addClientPhoneSubject.asObservable();
+  preferredClientPhone$ = this.preferredClientPhoneSubject.asObservable();
+  deactivateClientPhone$ = this.deactivateClientPhoneSubject.asObservable();
+  removeClientPhone$ = this.removeClientPhoneSubject.asObservable();
 
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
@@ -237,7 +247,7 @@ export class ContactFacade {
 
   //#region client profile //NOSONAR
     loadClientPhones(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated : boolean): void {
-      this.showLoader();
+     
       this.contactDataService.loadClientPhones(clientId , skipcount ,maxResultCount  ,sort , sortType,showDeactivated).subscribe({
         next: (clientPhonesResponse : any) => {        
           if(clientPhonesResponse)
@@ -248,17 +258,106 @@ export class ContactFacade {
               };      
           
             this.clientPhonesSubject.next(gridView);
-            this.hideLoader();    
+          
           }
-          else{
-          this.hideLoader();    
-          }
+         
         },
         error: (err) => {      
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
         },
       });
     }
+
+    loadClientPhone(clientId : number,clientPhoneId : string): void {
+      this.showLoader();     
+      this.contactDataService.loadClientPhone(clientId , clientPhoneId).subscribe({
+        next: (clientPhoneReponse : any) => {        
+          if(clientPhoneReponse)
+          {                  
+            this.hideLoader()
+            this.clientPhoneSubject.next(clientPhoneReponse);
+          }         
+        },
+        error: (err) => {     
+          this.hideLoader() 
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+        },
+      });
+    }
+
+
+    
+    addClientPhone(phoneData: any) {   
+        this.loaderService.show();
+        return this.contactDataService.savePhone(phoneData).subscribe({
+          next: (response) => {
+            this.addClientPhoneSubject.next(response)  
+            if (response === true) { 
+              const message =  phoneData?.clientPhoneId ? 'Phone Data Updated Successfully' :'Phone Data Added Successfully'
+              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+            }
+            this.loaderService.hide();
+          },
+          error: (err) => {       
+            this.loaderService.hide();
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          },
+        });
+      }
+
+      preferredClientPhone(clientId : number,clientPhoneId : string) {   
+        this.loaderService.show();
+        return this.contactDataService.updateClientPhonePreferred(clientId ,clientPhoneId ).subscribe({
+          next: (response) => {
+            this.preferredClientPhoneSubject.next(response)  
+            if (response === true) { 
+              const message =   'Phone Data Updated Successfully' 
+              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+            }
+            this.loaderService.hide();
+          },
+          error: (err) => {       
+            this.loaderService.hide();
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          },
+        });
+      }
+
+      deactivateClientPhone(clientId : number,clientPhoneId : string) {   
+        this.loaderService.show();
+        return this.contactDataService.deactivateClientPhone(clientId ,clientPhoneId ).subscribe({
+          next: (response) => {
+            this.deactivateClientPhoneSubject.next(response)  
+            if (response === true) { 
+              const message =   'Phone Deactivated Successfully' 
+              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+            }
+            this.loaderService.hide();
+          },
+          error: (err) => {       
+            this.loaderService.hide();
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          },
+        });
+      }
+
+      removeClientPhone(clientId : number,clientPhoneId : string) {   
+        this.loaderService.show();
+        return this.contactDataService.removeClientPhone(clientId ,clientPhoneId ).subscribe({
+          next: (response) => {
+            this.removeClientPhoneSubject.next(response)  
+            if (response === true) { 
+              const message =   'Phone Deleted Successfully' 
+              this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+            }
+            this.loaderService.hide();
+          },
+          error: (err) => {       
+            this.loaderService.hide();
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          },
+        });
+      }
 
   //#endregion client profile //NOSONAR
 }

@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade, ContactFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { first, Subject } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -34,6 +35,12 @@ export class Case360PageComponent implements OnInit {
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;
   clientPhones$ = this.contactFacade.clientPhones$;
+  clientPhone$ = this.contactFacade.clientPhone$;
+  preferredClientPhone$ = this.contactFacade.preferredClientPhone$;
+  deactivateClientPhone$ = this.contactFacade.deactivateClientPhone$;
+  removeClientPhone$ = this.contactFacade.removeClientPhone$;
+  addClientPhoneResponse$ = this.contactFacade.addClientPhoneResponse$ 
+  lovClientPhoneDeviceType$ = this.lovFacade.lovClientPhoneDeviceType$;
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
@@ -93,14 +100,14 @@ export class Case360PageComponent implements OnInit {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
-    private readonly contactFacade : ContactFacade
+    private readonly contactFacade : ContactFacade,
+    private readonly lovFacade : LovFacade
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.clientInfoVisibleSubject.next(false);
-    this.clientHeaderVisibleSubject.next(false); 
-    this.caseSelection();
+    this.clientHeaderVisibleSubject.next(false);    
     this.loadDdlFamilyAndDependentEP();
     this.loadDdlEPEmployments();
     this.getQueryParams()  
@@ -117,16 +124,6 @@ private getQueryParams()
   }
 }
 
-  private caseSelection() {
-    this.route.paramMap.subscribe({
-      next: (params) => {
-        this.selectedCase.next(params.get('case_id'));
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
-    });
-  }
 
   private loadDdlFamilyAndDependentEP(): void {
     this.caseFacade.loadDdlFamilyAndDependentEP();
@@ -342,4 +339,36 @@ private getQueryParams()
         , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType,gridDataRefinerValue.showDeactivated);       
       
   }
+
+   addClientPhoneHandle(phoneData : any): void
+    {  
+      phoneData.clientId = this.profileClientId;
+      this.contactFacade.addClientPhone(phoneData);
+    } 
+
+
+    loadClientPhoneHandle(clientPhoneId : string): void
+    {        
+      this.contactFacade.loadClientPhone(this.profileClientId ,clientPhoneId);
+    } 
+
+    loadDeviceTypeLovHandle()
+    {
+      this.lovFacade.getClientPhoneDeviceTypeLovs()
+    }
+
+    preferredClientPhoneHandle(clientPhoneId : string): void
+    {        
+      this.contactFacade.preferredClientPhone(this.profileClientId ,clientPhoneId);
+    } 
+
+    deactivateClientPhoneHandle(clientPhoneId : string): void
+    {        
+      this.contactFacade.deactivateClientPhone(this.profileClientId ,clientPhoneId);
+    } 
+
+    removeClientPhoneHandle(clientPhoneId : string): void
+    {        
+      this.contactFacade.removeClientPhone(this.profileClientId ,clientPhoneId);
+    } 
 }

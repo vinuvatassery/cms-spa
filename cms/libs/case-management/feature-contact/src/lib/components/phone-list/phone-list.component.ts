@@ -1,29 +1,50 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 /** Facades **/
-import { ContactFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
+import { first, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-phone-list',
   templateUrl: './phone-list.component.html',
+  styleUrls: ['./phone-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneListComponent implements OnInit , OnChanges {
+export class PhoneListComponent implements  OnChanges {
 
   @Input() pageSizes : any;
   @Input() sortValue : any;
   @Input() sortType : any;
   @Input() sort : any;
   @Input() clientPhonesData$: any;
+  @Input() clientPhone$: any;
+  @Input() lovClientPhoneDeviceType$: any
+  @Input() addClientPhoneResponse$ : any
+  @Input() preferredClientPhone$: any;
+  @Input() deactivateClientPhone$: any
+  @Input() removeClientPhone$ : any
 
   @Output() loadClientPhonesListEvent = new EventEmitter<any>(); 
+  @Output() addClientPhoneEvent = new EventEmitter<any>(); 
+  @Output() loadDeviceTypeLovEvent = new EventEmitter<any>(); 
+  @Output() loadSelectedPhoneEvent = new EventEmitter<any>(); 
+  @Output() preferredClientPhoneEvent = new EventEmitter<any>(); 
+  @Output() deactivateClientPhoneEvent = new EventEmitter<any>(); 
+  @Output() removeClientPhoneEvent = new EventEmitter<any>(); 
 
   /** Public properties **/
-  phoneNumbers$ = this.contactFacade.phoneNumbers$;
   isEditPhoneNumber!: boolean;
   isPhoneNumberDetailPopup = false;
   isDeactivatePhoneNumberPopup = false;
+  deletebuttonEmitted = false;
+  editbuttonEmitted = false;
+  activateButtonEmitted = false;
+  preferredButtonEmitted = false;
+  subscriptionData! : Subscription;
+  selectedPhoneData! : any
+  editformVisibleSubject = new Subject<boolean>();
+  editformVisible$ = this.editformVisibleSubject.asObservable();
+  isOpenedPhoneEdit = false;
   public  state!: State
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -32,16 +53,24 @@ export class PhoneListComponent implements OnInit , OnChanges {
       buttonType:"btn-h-primary",
       text: "Edit Phone",
       icon: "edit",
-      click: (): void => {
-        this.onPhoneNumberDetailClicked(true);
+      click: (clientPhoneId : string): void => {                
+        if(!this.editbuttonEmitted)
+        {                 
+        this.editbuttonEmitted= true;
+        this.onPhoneNumberDetailClicked(true,clientPhoneId);
+        }
       },
     },
     {
       buttonType:"btn-h-primary",
       text: "Make Preferred",
       icon: "star",
-      click: (): void => {
-      //  this.onDeactivateEmailAddressClicked()
+      click: (clientPhoneId : string): void => {   
+        if(!this.preferredButtonEmitted)
+        {                 
+        this.preferredButtonEmitted= true;
+        this.onPreferredPhoneClicked(clientPhoneId);
+        }       
       },
     },
     {
@@ -64,15 +93,6 @@ export class PhoneListComponent implements OnInit , OnChanges {
     
  
   ];
-
-  /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade) {}
-
-  /** Lifecycle hooks **/
-  ngOnInit(): void {
-    this.loadPhoneNumbers();
-  }
-
    
   ngOnChanges(): void {     
     this.state = {
@@ -84,9 +104,6 @@ export class PhoneListComponent implements OnInit , OnChanges {
   } 
 
   /** Private methods **/
-  private loadPhoneNumbers() {
-    this.contactFacade.loadPhoneNumbers();
-  }
 
   private loadClientPhonesList(): void {   
     this.loadPhones(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType ,false)    
@@ -116,12 +133,25 @@ export class PhoneListComponent implements OnInit , OnChanges {
 
   /** Internal event methods **/
   onPhoneNumberDetailClosed() {
+    this.editbuttonEmitted= false;
     this.isPhoneNumberDetailPopup = false;
+    this.isOpenedPhoneEdit = false;
+    this.editformVisibleSubject.next(this.isOpenedPhoneEdit);
   }
 
-  onPhoneNumberDetailClicked(editValue: boolean) {
-    this.isPhoneNumberDetailPopup = true;
+  onPhoneNumberDetailClicked(editValue: boolean, clientPhoneId : string) {
+   
     this.isEditPhoneNumber = editValue;
+    if(clientPhoneId)
+    {
+    this.loadSelectedPhoneEvent.emit(clientPhoneId)
+    this.onSelectedPhoneFormLoad()
+    }
+    else
+    {
+      this.isOpenedPhoneEdit = true;
+      this.editformVisibleSubject.next(this.isOpenedPhoneEdit);
+    }
   }
 
   onDeactivatePhoneNumberClosed() {
@@ -131,4 +161,67 @@ export class PhoneListComponent implements OnInit , OnChanges {
   onDeactivatePhoneNumberClicked() {
     this.isDeactivatePhoneNumberPopup = true;
   }
+
+  addClientPhoneHandle(phoneData : any): void
+  {  
+    this.editbuttonEmitted= true;
+    this.addClientPhoneEvent.emit(phoneData);
+
+    this.addClientPhoneResponse$.pipe(first((addResponse: any ) => addResponse != null))
+    .subscribe((addResponse: any) =>
+    {  
+      if(addResponse ===true)
+      {        
+        this.loadClientPhonesList()
+        this.onPhoneNumberDetailClosed()
+      }
+      
+    })
+  } 
+
+  loadDeviceTypeLovHandle()
+  {
+    this.loadDeviceTypeLovEvent.emit()
+  }
+
+  onSelectedPhoneFormLoad()
+  {     
+   this.subscriptionData =  this.clientPhone$?.pipe(first((phoneData: any ) => phoneData?.clientPhoneId != null))
+    .subscribe((phoneData: any) =>
+    {
+      if(phoneData?.clientPhoneId)
+      {        
+         this.selectedPhoneData=
+         {           
+          clientPhoneId: phoneData?.clientPhoneId   ,
+          phoneNbr: phoneData?.phoneNbr   ,
+          detailMsgConsentFlag: phoneData?.detailMsgConsentFlag   ,
+          deviceTypeCode: phoneData?.deviceTypeCode   ,
+          smsTextConsentFlag: phoneData?.smsTextConsentFlag   ,       
+          preferredFlag: phoneData?.preferredFlag   , 
+          otherPhoneNote: phoneData?.otherPhoneNote  
+           
+         }           
+         this.isOpenedPhoneEdit = true;
+         this.editformVisibleSubject.next(this.isOpenedPhoneEdit);
+       }
+    });
+   
+  }  
+
+  onPreferredPhoneClicked(clientPhoneId : string)
+  {
+    this.preferredClientPhoneEvent.emit(clientPhoneId)
+    this.preferredClientPhone$.pipe(first((Response: any ) => Response != null))
+    .subscribe((Response: any) =>
+    {  
+      if(Response ===true)
+      {      
+        this.preferredButtonEmitted= false;  
+        this.loadClientPhonesList()      
+      }
+      
+    })
+  }
+ 
 }

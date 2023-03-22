@@ -250,6 +250,52 @@ export class ContactDataService {
     );
     
   }
+
+  loadClientPhone(clientId : number  , clientPhoneId : string) {     
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/clients/${clientId}/phones/${clientPhoneId}`
+    );
+    
+  }
   
+  savePhone(phoneData: any) {  
+      if(phoneData?.clientPhoneId)
+      {
+          return this.http.put(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+            phoneData
+          )
+      }
+      else
+      {        
+        phoneData.clientPhoneId ='00000000-0000-0000-0000-000000000000'
+          return this.http.post(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+            phoneData
+          )
+      }
+  }
+
+  updateClientPhonePreferred(clientId : number  , clientPhoneId : string) {     
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/preferred`,null
+    );
+    
+  }
+
+  deactivateClientPhone(clientId : number  , clientPhoneId : string) {     
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/deactivate`
+    );
+    
+  }
+
+  removeClientPhone(clientId : number  , clientPhoneId : string) {     
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/remove`
+    );
+    
+  }
 
 }

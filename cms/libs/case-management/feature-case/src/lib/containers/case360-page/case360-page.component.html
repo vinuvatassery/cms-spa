@@ -72,8 +72,20 @@
                       [sortValue]="sortValue"
                       [sortType]="sortType"
                       [sort]="sort"
-                      [clientPhonesData$]="clientPhones$"                                 
-                      (loadClientPhonesListEvent)="loadClientPhonesHandle($event)"          
+                      [clientPhonesData$]="clientPhones$"
+                      [clientPhone$]="clientPhone$"     
+                      [lovClientPhoneDeviceType$]="lovClientPhoneDeviceType$"   
+                      [addClientPhoneResponse$]="addClientPhoneResponse$"   
+                      [preferredClientPhone$]="preferredClientPhone$"  
+                      [deactivateClientPhone$]="deactivateClientPhone$"  
+                      [removeClientPhone$]="removeClientPhone$"                      
+                      (loadClientPhonesListEvent)="loadClientPhonesHandle($event)"
+                      (loadSelectedPhoneEvent)="loadClientPhoneHandle($event)"
+                      (addClientPhoneEvent)="addClientPhoneHandle($event)"   
+                      (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()"
+                      (preferredClientPhoneEvent)="preferredClientPhoneHandle($event)"  
+                      (deactivateClientPhoneEvent)="deactivateClientPhoneHandle($event)"  
+                      (removeClientPhoneEvent)="removeClientPhoneHandle($event)"          
                      ></case-management-phone-list>
                     </div>
                     <!-- Email Section -->

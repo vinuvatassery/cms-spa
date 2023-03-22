@@ -30,5 +30,6 @@ export enum LovType {
     Group = 'GROUP_CODE',
     Aptc='APTC',
     EthnicityNotListed = 'NOT_LISTED',
-    VerificationMethod = 'VERIFICATION_METHOD'
+    VerificationMethod = 'VERIFICATION_METHOD',
+    PhoneDeviceTypeCode = 'PHONE_DEVICE_TYPE_CODE',
   }
