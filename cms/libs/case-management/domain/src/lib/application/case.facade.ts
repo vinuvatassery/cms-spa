@@ -154,7 +154,6 @@ export class CaseFacade {
               };
           this.casesSubject.next(gridView);
          }
-         ///this.hideLoader();
          this.searchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
