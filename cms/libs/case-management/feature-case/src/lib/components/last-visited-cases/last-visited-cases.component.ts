@@ -5,8 +5,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, mergeMap, of, tap } from 'rxjs';
 import { DragEndEvent } from "@progress/kendo-angular-sortable";
 /** Internal service **/
-import { CaseFacade, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
-import { ActiveSessions } from 'libs/case-management/domain/src/lib/entities/active-sessions';
+import { ActiveSessions, CaseFacade, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Component({
