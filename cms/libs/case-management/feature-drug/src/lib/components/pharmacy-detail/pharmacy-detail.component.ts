@@ -45,7 +45,6 @@ export class PharmacyDetailComponent implements OnInit {
   }
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    console.log(this.selectedPharmacy)
     if (this.isEditPharmacy) {
       this.selectedPharmacyForEdit = this.selectedPharmacy?.vendorFullName ?? '';
       this.selectedPharmacyId = this.selectedPharmacy?.vendorId;
@@ -101,7 +100,6 @@ export class PharmacyDetailComponent implements OnInit {
   }
 
   onSearchTemplateClick(pharmacy: Pharmacy) {
-    console.log(pharmacy);
     if(pharmacy.vendorId){
       this.selectedPharmacyId = pharmacy.vendorId;
       this.showSelectPharmacyRequired = false;
