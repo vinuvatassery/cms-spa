@@ -5,7 +5,7 @@ import {
   Input,ChangeDetectorRef,
   Output, EventEmitter
 } from '@angular/core';
-import { DrugPharmacyFacade,WorkflowFacade,Pharmacy,StatusFlag,CompletionChecklist } from '@cms/case-management/domain';
+import { DrugPharmacyFacade,WorkflowFacade,Pharmacy,StatusFlag,CompletionChecklist,PriorityCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
@@ -37,6 +37,7 @@ export class PharmaciesListComponent implements OnInit {
     @Output() removePharmacyClick = new EventEmitter<string>();
   /** Public properties **/
   pharmaciesTotal:any={};
+  priority:string=PriorityCode.Primary
   pharmaciesList$ = this.drugPharmacyFacade.clientPharmacies$
   isOpenChangePriorityClicked = false;
   isOpenPharmacyClicked = false;
@@ -87,10 +88,10 @@ export class PharmaciesListComponent implements OnInit {
       text: "Remove",
       icon: "delete",
       click: (clientPharmacyId: string, vendorId: string): void => {
+     
         if (this.removeButtonEmitted === false) {
-          this.onRemovePharmacyClicked(clientPharmacyId);
-          
-          this.removeButtonEmitted = true;
+           this.onRemovePharmacyClicked(clientPharmacyId);
+            this.removeButtonEmitted = true;
         }
 
       },
@@ -200,6 +201,7 @@ export class PharmaciesListComponent implements OnInit {
     this.isRemoveClientPharmacyClicked$.next(false);
   }
   removePharmacyEvent(clientPharmacyId: string) {
+    this.removeButtonEmitted=false;
     this.removePharmacyClick.emit(clientPharmacyId);
   }
   addPharmacyEvent(pharmacyId: string) {
@@ -224,7 +226,8 @@ export class PharmaciesListComponent implements OnInit {
   }
 
   handleRemoveClientPharmacyClose() {
-    this.isRemoveClientPharmacyClicked$.next(false);
     this.removeButtonEmitted = false;
+    this.isOpenPharmacyClicked$.next(false);
+    this.isRemoveClientPharmacyClicked$.next(false);
   }
 }
