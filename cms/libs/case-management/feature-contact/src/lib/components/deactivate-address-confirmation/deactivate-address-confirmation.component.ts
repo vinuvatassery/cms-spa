@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, } from '@angular/core';
 import { ContactFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
@@ -7,7 +7,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
   templateUrl: './deactivate-address-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeactivateAddressConfirmationComponent implements OnInit {
+export class DeactivateAddressConfirmationComponent {
 
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade, private readonly cdr: ChangeDetectorRef) { }
@@ -15,9 +15,6 @@ export class DeactivateAddressConfirmationComponent implements OnInit {
   @Input() clientId!: number;
 
   @Output() deactivateModalCloseEvent= new EventEmitter<any>();
-  /** Lifecycle hooks **/
-  ngOnInit(): void {
-  }
 
   deactivateHomeAddress() {
     if (this.clientAddress) {

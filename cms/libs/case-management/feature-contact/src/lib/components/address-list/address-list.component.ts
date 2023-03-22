@@ -150,7 +150,7 @@ export class AddressListComponent implements OnInit {
   }
 
   public rowClass = (args:any) => ({
-    "table-row-disabled": !(args.dataItem.activeFlag == StatusFlag.Yes),
+    "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
   });
 
   closeDeactivateModalAndReload(event:any){
