@@ -37,6 +37,7 @@ export class Case360PageComponent implements OnInit {
   clientProfile$ = this.caseFacade.clientProfile$;
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
   ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;
+  clientProfileImpInfo$ = this.caseFacade.clientProfileImpInfo$;
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
@@ -47,10 +48,10 @@ export class Case360PageComponent implements OnInit {
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
   profileClientId = 0
-  clientCaseEligibilityId!: string;
-  clientCaseId!: any;
-  caseWorkerId!: string;
+  clientCaseEligibilityId! : string;
+  caseWorkerId! : string;
   clientHeaderTabs: any = [];
+  clientCaseId! : string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientChangeSubscription$ = new Subscription();
@@ -225,8 +226,12 @@ export class Case360PageComponent implements OnInit {
     this.isIdCardOpened = false;
   }
 
-  loadReadOnlyClientInfoEventHandler() {
+  loadClientImpInfo()
+  {
+    this.caseFacade.loadClientImportantInfo(this.clientCaseId);
+  }
 
+  loadReadOnlyClientInfoEventHandler() {
     this.caseFacade.loadClientProfile(this.profileClientId);
     this.onClientProfileLoad()
   }
@@ -259,7 +264,7 @@ export class Case360PageComponent implements OnInit {
             clientOfficialIdFullName: clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
           }
-
+          this.clientCaseId = clientHeader?.clientCaseId
           this.clientHeaderSubject.next(clientHeader);
           if (clientHeader?.clientCaseEligibilityId) {
             this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
