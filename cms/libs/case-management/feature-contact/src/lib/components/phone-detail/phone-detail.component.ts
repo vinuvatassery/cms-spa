@@ -25,6 +25,7 @@ export class PhoneDetailComponent implements OnInit {
   displayPhoneNote = false
   clientPhoneForm!: FormGroup;
   isFormSubmitted =false;
+  btnDisabled = false;
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade,
     private formBuilder: FormBuilder) {}
@@ -100,7 +101,7 @@ export class PhoneDetailComponent implements OnInit {
     this.isFormSubmitted =true;
     if(this.clientPhoneForm.valid)
        {    
-      
+        this.btnDisabled = true;
         const phoneData =
         {         
           clientPhoneId: this.clientPhoneForm?.controls["clientPhoneId"].value,

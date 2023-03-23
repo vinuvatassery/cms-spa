@@ -132,6 +132,7 @@
               kendoButton
               [primary]="true"
               aria-label="update or add phone detail"
+              [disabled]="btnDisabled"  
             >
               {{ isEditValue ? 'Update' : 'Add' }}
             </button>
