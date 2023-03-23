@@ -29,6 +29,12 @@ export class ContactFacade {
   showAddPopupSubject = new BehaviorSubject<boolean>(false);
   editAddressSubject = new BehaviorSubject<boolean>(false);
   editedAddressSubject = new Subject<any>();
+  private clientEmailsSubject =  new Subject<any>();
+  private clientEmailSubject =  new Subject<any>();
+  private addClientEmailSubject =  new Subject<any>();
+  private preferredClientEmailSubject =  new Subject<any>();
+  private deactivateClientEmailSubject =  new Subject<any>();
+  private removeClientEmailSubject =  new Subject<any>();
   
 
   /** Public properties **/
@@ -49,6 +55,12 @@ export class ContactFacade {
   editAddress$ =this.editAddressSubject.asObservable();
   editedAddress$ =this.editedAddressSubject.asObservable();
   showLoaderOnState$ = this.showLoaderOnState.asObservable();
+  clientPhones$ = this.clientEmailsSubject.asObservable();
+  clientPhone$ = this.clientEmailSubject.asObservable();
+  addClientPhoneResponse$ = this.addClientEmailSubject.asObservable();
+  preferredClientPhone$ = this.preferredClientEmailSubject.asObservable();
+  deactivateClientPhone$ = this.deactivateClientEmailSubject.asObservable();
+  removeClientPhone$ = this.removeClientEmailSubject.asObservable();
 
   /** Constructor**/
   constructor(
@@ -246,4 +258,119 @@ export class ContactFacade {
   deactivateClientAddress(clientId:any,clientAddressId:any){
     return this.contactDataService.deactivateClientAddress(clientId,clientAddressId);
   }
+
+  //#region client email//NOSONAR
+  loadClientEmails(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated : boolean): void {
+     
+    this.contactDataService.loadClientEmails(clientId , skipcount ,maxResultCount  ,sort , sortType,showDeactivated).subscribe({
+      next: (clientEmailsResponse : any) => {        
+        if(clientEmailsResponse)
+        { 
+          const gridView = {
+            data : clientEmailsResponse["items"] ,        
+            total:  clientEmailsResponse["totalCount"]      
+            };      
+        
+          this.clientEmailsSubject.next(gridView);
+        
+        }
+       
+      },
+      error: (err) => {      
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+      },
+    });
+  }
+
+  loadClientEmail(clientId : number,clientEmailId : string): void {
+ 
+    this.contactDataService.loadClientEmail(clientId , clientEmailId).subscribe({
+      next: (clientEmailReponse : any) => {        
+        if(clientEmailReponse)
+        {                  
+        
+          this.clientEmailSubject.next(clientEmailReponse);
+        }         
+      },
+      error: (err) => {     
+     
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+      },
+    });
+  }
+
+
+  
+  addClientEmail(emailData: any) {       
+      return this.contactDataService.saveEmail(emailData).subscribe({
+        next: (response) => {
+          this.addClientEmailSubject.next(response)  
+          if (response === true) { 
+            const message =  emailData?.clientEmailId ? 'Email Data Updated Successfully' :'Email Data Added Successfully'
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+          }
+      
+        },
+        error: (err) => {       
+        
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        },
+      });
+    }
+
+    preferredClientEmail(clientId : number,clientEmailId : string) {   
+     
+      return this.contactDataService.updateClientEmailPreferred(clientId ,clientEmailId ).subscribe({
+        next: (response) => {
+          this.preferredClientEmailSubject.next(response)  
+          if (response === true) { 
+            const message =   'Email Data Updated Successfully' 
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+          }
+        
+        },
+        error: (err) => {       
+        
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        },
+      });
+    }
+
+    deactivateClientEmail(clientId : number,clientEmailId : string) {   
+    
+      return this.contactDataService.deactivateClientEmail(clientId ,clientEmailId ).subscribe({
+        next: (response) => {
+          this.deactivateClientEmailSubject.next(response)  
+          if (response === true) { 
+            const message =   'Email Deactivated Successfully' 
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+          }
+      
+        },
+        error: (err) => {       
+        
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        },
+      });
+    }
+
+    removeClientEmail(clientId : number,clientEmailId : string) {   
+    
+      return this.contactDataService.removeClientEmail(clientId ,clientEmailId ).subscribe({
+        next: (response) => {
+          this.removeClientEmailSubject.next(response)  
+          if (response === true) { 
+            const message =   'Email Deleted Successfully' 
+            this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+          }
+        
+        },
+        error: (err) => {       
+        
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        },
+      });
+    }
+
+//#endregion client Email//NOSONAR
 }

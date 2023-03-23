@@ -269,10 +269,10 @@ export class ContactDataService {
   }
 
  /////email services
-  loadClientPhones(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {     
+  loadClientEmails(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {     
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/clients/${clientId}/phones?showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/clients/${clientId}/emails?showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
     
   }
@@ -280,7 +280,7 @@ export class ContactDataService {
   loadClientEmail(clientId : number  , clientPhoneId : string) {     
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/clients/${clientId}/phones/${clientPhoneId}`
+      `/case-management/clients/${clientId}/emails/${clientPhoneId}`
     );
     
   }
@@ -289,7 +289,7 @@ export class ContactDataService {
       if(phoneData?.clientPhoneId)
       {
           return this.http.put(
-            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/emails`,
             phoneData
           )
       }
@@ -297,7 +297,7 @@ export class ContactDataService {
       {        
         phoneData.clientPhoneId ='00000000-0000-0000-0000-000000000000'
           return this.http.post(
-            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/emails`,
             phoneData
           )
       }
@@ -305,21 +305,21 @@ export class ContactDataService {
 
   updateClientEmailPreferred(clientId : number  , clientPhoneId : string) {     
     return this.http.put<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/preferred`,null
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientPhoneId}/preferred`,null
     );
     
   }
 
   deactivateClientEmail(clientId : number  , clientPhoneId : string) {     
     return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/deactivate`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientPhoneId}/deactivate`
     );
     
   }
 
   removeClientEmail(clientId : number  , clientPhoneId : string) {     
     return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/remove`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientPhoneId}/remove`
     );
   }
   
