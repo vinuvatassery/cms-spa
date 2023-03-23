@@ -11,12 +11,16 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
   @Input() eligibilityPeriodsList: any = [];
+  @Input() valueField: string = "";
+  @Input() displayField: string = "";
+  @Input() selectedValue: any = {};
   @Output() onEligibilityPeriodChange = new EventEmitter<any>();
 
   ngOnInit() { }
 
   onPeriodChange(value: any) {
-    this.onEligibilityPeriodChange.emit(value);
+    this.selectedValue = value;
+    this.onEligibilityPeriodChange.emit(this.selectedValue);
   }
 
 }
