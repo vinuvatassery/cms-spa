@@ -9,7 +9,8 @@ import {
   PublicEventsService,
 } from 'angular-auth-oidc-client';
 import { filter } from 'rxjs/operators';
-import { UserProfileService } from '@cms/shared/util-core';
+import { LoaderService, UserProfileService } from '@cms/shared/util-core';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,18 +18,22 @@ export class AuthService {
   /** Private properties **/
   private user: any;
   private authenticated!: boolean;
+  private getUserProfileData = new BehaviorSubject<any>([]);
+  getProfile$ = this.getUserProfileData.asObservable();
+  userSubject!: BehaviorSubject<any>;
 
   /** Constructor **/
   constructor(
     public readonly oidcSecurityService: OidcSecurityService,
     public readonly eventService: PublicEventsService,
-    public readonly userProfileService: UserProfileService
+    public readonly userProfileService: UserProfileService,
+    private readonly loaderService: LoaderService
   ) {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated, allConfigsAuthenticated }) => {
         this.authenticated = isAuthenticated;
         if(this.authenticated){
-          this.userProfileService.getUserProfile();
+          this.getUserProfileDetails();
         }
       }
     );
@@ -55,7 +60,34 @@ export class AuthService {
       });
   }
 
+
+  
+  showLoader() {
+    this.loaderService.show();
+  }
+
+  hideLoader() {
+    this.loaderService.hide();
+  }
   /** Public methods **/
+  getUserProfileDetails()
+  {
+    this.showLoader()
+    this.userProfileService.getUserProfile().subscribe({
+      next: (response: any) => {
+        if (response) {     
+          this.getUserProfileData.next(response);          
+          this.userSubject = new BehaviorSubject<any>(response);         
+        }        
+        this.hideLoader();
+      },
+      error: (err: any) => {        
+        this.hideLoader();
+        this.logOut()
+      }
+    });
+  }
+
   get isAuthenticated() {
     return this.authenticated;
   }
