@@ -3,14 +3,19 @@
     <h5 class="title-md mb-0 text-capital">Phone Numbers</h5>
 <div>
   <span class="app-checkboxwidtext-wrapper"> 
-    <input   type="checkbox"  kendoCheckBox aria-labelledby="NumbersshowHistorical"  id="NumbersshowHistorical" />
-    <label class="k-checkbox-label" for="NumbersshowHistorical" >Show historical</label>
+    <input   type="checkbox"
+      kendoCheckBox aria-labelledby="historyCheckBox"      
+      (click)="onhistorychkBoxChanged()" 
+      id="historyCheckBox"
+      name="historyCheckBox"
+      [checked]="historychkBoxChecked"/>
+    <label class="k-checkbox-label" for="historyCheckBox" >Show historical</label>
   </span>
 </div>
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [data]="clientPhonesData$ | async"
+      <kendo-grid [data]="gridPhoneData$ | async"
       [pageSize]="state.take" 
       [pageable]="true" 
       [sortable]="true" 
@@ -56,15 +61,18 @@
             {{dataItem.SmsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
            </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="otherPhoneNote" title="Note" [width]="50">
+        <kendo-grid-column field="otherPhoneNote" title="Note" [width]="50" [sortable]="false" >
         </kendo-grid-column>
         <kendo-grid-column
           field="effectiveDate"
           title="Effective Date"
           [width]="100"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.effectiveDate}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate}}  
+         </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="50">
+        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
           <ng-template kendoGridCellTemplate let-dataItem >
             <button *ngIf="dataItem?.creatorId"
               kendoButton
@@ -89,7 +97,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column
+        <kendo-grid-column [sortable]="false" 
           field="clientPhoneId"
           title="Options"
           [width]="75"
@@ -106,8 +114,11 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
             
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(clientPhone?.clientPhoneId)">
+              <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
+                <button kendoButton  [hidden]="(clientPhone.isDeleted === true && dataItem.buttonName==='deactivate')
+                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
+                look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
+                (click)="dataItem.click(clientPhone?.clientPhoneId)">
                   <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
               </button> 
@@ -116,7 +127,7 @@
           </ng-template>
         </kendo-grid-column>
       </kendo-grid>
-      <div *ngIf="false"  class="k-i-loading"></div>
+      <div *ngIf="loader"  class="k-i-loading"></div>
     </div>
   </div>
   <div class="flex-col mt-1">
@@ -157,5 +168,20 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Deactivate phone number?"
 >
-  <case-management-deactivate-phone-confirmation></case-management-deactivate-phone-confirmation>
+  <case-management-deactivate-phone-confirmation
+  (deactivateConfimEvent)="handleAcceptPhoneDeactivate($event)"></case-management-deactivate-phone-confirmation>
+</kendo-dialog>
+
+
+<!-- Delete Modal -->
+<kendo-dialog
+  *ngIf="isOpenedDeleteConfirm"
+ 
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete phone number ? </kendo-dialog-titlebar>
+ <case-management-phone-remove-confirmation 
+ (deleteConfimEvent)="handleAcceptPhoneRemove($event)"
+ >
+ </case-management-phone-remove-confirmation>
 </kendo-dialog>

@@ -15,3 +15,4 @@ export * from './lib/components/phone-list/phone-list.component';
 export * from './lib/components/deactivate-phone-confirmation/deactivate-phone-confirmation.component';
 export * from './lib/components/deactivate-email-confirmation/deactivate-email-confirmation.component';
 export * from './lib/components/deactivate-friend-or-family-confirmation/deactivate-friend-or-family-confirmation.component';
+export * from './lib/components/remove-phone-confirmation/remove-phone-confirmation.component';

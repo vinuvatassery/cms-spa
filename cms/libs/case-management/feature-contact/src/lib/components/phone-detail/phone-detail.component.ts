@@ -24,7 +24,7 @@ export class PhoneDetailComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   displayPhoneNote = false
   clientPhoneForm!: FormGroup;
-  
+  isFormSubmitted =false;
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade,
     private formBuilder: FormBuilder) {}
@@ -66,10 +66,10 @@ export class PhoneDetailComponent implements OnInit {
       this.clientPhoneForm = this.formBuilder.group({   
         clientPhoneId: ['']   ,
         phoneNbr: ['',Validators.required]   ,
-        detailMsgConsentFlag: ['',Validators.required]   ,
+        detailMsgConsentFlag: ['']   ,
         deviceTypeCode: ['',Validators.required]   ,
-        smsTextConsentFlag: ['',Validators.required]   ,       
-        preferredFlag: ['',Validators.required]   , 
+        smsTextConsentFlag: ['']   ,       
+        preferredFlag: ['']   , 
         otherPhoneNote:['']      
       });     
 
@@ -96,9 +96,11 @@ export class PhoneDetailComponent implements OnInit {
   }
 
   onclientPhoneFormSubmit()
-  {
+  {    
+    this.isFormSubmitted =true;
     if(this.clientPhoneForm.valid)
        {    
+      
         const phoneData =
         {         
           clientPhoneId: this.clientPhoneForm?.controls["clientPhoneId"].value,

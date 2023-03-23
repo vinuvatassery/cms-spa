@@ -21,6 +21,7 @@ import { DeactivatePhoneConfirmationComponent } from './components/deactivate-ph
 import { DeactivateEmailConfirmationComponent } from './components/deactivate-email-confirmation/deactivate-email-confirmation.component';
 import { DeactivateFriendOrFamilyConfirmationComponent } from './components/deactivate-friend-or-family-confirmation/deactivate-friend-or-family-confirmation.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { RemovePhoneConfirmationComponent } from './components/remove-phone-confirmation/remove-phone-confirmation.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     DeactivatePhoneConfirmationComponent,
     DeactivateEmailConfirmationComponent,
     DeactivateFriendOrFamilyConfirmationComponent,
+    RemovePhoneConfirmationComponent
   ],
   exports: [
     AddressListComponent,
@@ -59,6 +61,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     DeactivatePhoneConfirmationComponent,
     DeactivateEmailConfirmationComponent,
     DeactivateFriendOrFamilyConfirmationComponent,
+    RemovePhoneConfirmationComponent
   ],
 })
 export class CaseManagementFeatureContactModule {}

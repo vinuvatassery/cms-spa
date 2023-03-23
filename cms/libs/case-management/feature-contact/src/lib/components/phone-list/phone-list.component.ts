@@ -43,19 +43,27 @@ export class PhoneListComponent implements  OnChanges {
   subscriptionData! : Subscription;
   selectedPhoneData! : any
   editformVisibleSubject = new Subject<boolean>();
+  gridPhoneDataSubject =  new Subject<any>();
   editformVisible$ = this.editformVisibleSubject.asObservable();
+  gridPhoneData$ = this.gridPhoneDataSubject.asObservable();
   isOpenedPhoneEdit = false;
+  isOpenedDeleteConfirm = false
+  selectedclientPhoneId! : string
   public  state!: State
+  historychkBoxChecked = false;
+  loader =false;
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public gridOption = [
     {
       buttonType:"btn-h-primary",
       text: "Edit Phone",
+      buttonName: "edit",
       icon: "edit",
       click: (clientPhoneId : string): void => {                
         if(!this.editbuttonEmitted)
-        {                 
+        {     
+        this.selectedclientPhoneId = '';            
         this.editbuttonEmitted= true;
         this.onPhoneNumberDetailClicked(true,clientPhoneId);
         }
@@ -65,9 +73,11 @@ export class PhoneListComponent implements  OnChanges {
       buttonType:"btn-h-primary",
       text: "Make Preferred",
       icon: "star",
+      buttonName: "preferred",
       click: (clientPhoneId : string): void => {   
         if(!this.preferredButtonEmitted)
         {                 
+        this.selectedclientPhoneId = '';     
         this.preferredButtonEmitted= true;
         this.onPreferredPhoneClicked(clientPhoneId);
         }       
@@ -77,16 +87,27 @@ export class PhoneListComponent implements  OnChanges {
       buttonType:"btn-h-primary",
       text: "Deactivate Phone",
       icon: "block",
-      click: (): void => {
-       this.onDeactivatePhoneNumberClicked()
+      buttonName: "deactivate",
+      click: (clientPhoneId : string): void => {
+        if(!this.activateButtonEmitted)
+        { 
+          this.selectedclientPhoneId = '';     
+          this.activateButtonEmitted= true;
+         this.onDeactivatePhoneNumberClicked(clientPhoneId)
+        }
       },
     },
     {
       buttonType:"btn-h-danger",
       text: "Delete Phone",
       icon: "delete",
-      click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
+      buttonName: "delete",
+      click: (clientPhoneId : string): void => {
+        if(!this.deletebuttonEmitted)
+        {         
+          this.deletebuttonEmitted =true;
+        this.onRemoveClick(clientPhoneId)
+        }
       },
     },
    
@@ -105,7 +126,9 @@ export class PhoneListComponent implements  OnChanges {
 
   /** Private methods **/
 
-  private loadClientPhonesList(): void {   
+  private loadClientPhonesList(): void {     
+    
+    this.gridDataHandle()
     this.loadPhones(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType ,false)    
   }
   loadPhones(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string,showDeactivated : boolean)
@@ -116,8 +139,9 @@ export class PhoneListComponent implements  OnChanges {
        pagesize : maxResultCountValue,
        sortColumn : sortValue,
        sortType : sortTypeValue,
-       showDeactivated: showDeactivated
+       showDeactivated: this.historychkBoxChecked
      }
+     this.loader =true;
      this.loadClientPhonesListEvent.next(gridDataRefinerValue)
    }
 
@@ -132,6 +156,20 @@ export class PhoneListComponent implements  OnChanges {
     }
 
   /** Internal event methods **/
+  gridDataHandle()
+  { 
+    this.clientPhonesData$
+    .subscribe((data: any) =>
+    {      
+      this.gridPhoneDataSubject.next(data)
+
+      if(data?.total)
+      {
+        this.loader =false;    
+      }
+    })
+  } 
+
   onPhoneNumberDetailClosed() {
     this.editbuttonEmitted= false;
     this.isPhoneNumberDetailPopup = false;
@@ -156,15 +194,16 @@ export class PhoneListComponent implements  OnChanges {
 
   onDeactivatePhoneNumberClosed() {
     this.isDeactivatePhoneNumberPopup = false;
+    this.activateButtonEmitted= false;
   }
 
-  onDeactivatePhoneNumberClicked() {
-    this.isDeactivatePhoneNumberPopup = true;
-  }
+ 
+ 
 
   addClientPhoneHandle(phoneData : any): void
   {  
     this.editbuttonEmitted= true;
+    this.loader =true;
     this.addClientPhoneEvent.emit(phoneData);
 
     this.addClientPhoneResponse$.pipe(first((addResponse: any ) => addResponse != null))
@@ -211,6 +250,7 @@ export class PhoneListComponent implements  OnChanges {
 
   onPreferredPhoneClicked(clientPhoneId : string)
   {
+    this.loader =true;
     this.preferredClientPhoneEvent.emit(clientPhoneId)
     this.preferredClientPhone$.pipe(first((Response: any ) => Response != null))
     .subscribe((Response: any) =>
@@ -222,6 +262,72 @@ export class PhoneListComponent implements  OnChanges {
       }
       
     })
+  }
+ 
+
+  handleAcceptPhoneRemove(isDelete :boolean)
+   {  
+      if(isDelete)
+      {
+        this.loader =true;
+        this.deletebuttonEmitted =false;
+        this.removeClientPhoneEvent.emit(this.selectedclientPhoneId);
+
+        this.removeClientPhone$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((deleteResponse: any) =>
+        {  
+          if(deleteResponse ?? false)
+          {
+            this.loadClientPhonesList()
+          }
+          
+        })
+      }      
+      this.onDeleteConfirmCloseClicked()        
+   }
+
+   onDeleteConfirmCloseClicked()
+   {
+     this.deletebuttonEmitted =false;
+     this.isOpenedDeleteConfirm = false;
+   }
+
+   onRemoveClick(clientPhoneId : string)
+   { 
+     this.isOpenedDeleteConfirm = true;
+     this.selectedclientPhoneId = clientPhoneId;      
+   }
+
+
+   handleAcceptPhoneDeactivate(isDeactivate :boolean)
+   {  
+      if(isDeactivate)
+      {
+        this.loader =true;
+        this.deletebuttonEmitted =false;
+        this.deactivateClientPhoneEvent.emit(this.selectedclientPhoneId);
+
+        this.deactivateClientPhone$.pipe(first((deactResponse: any ) => deactResponse != null))
+        .subscribe((deactResponse: any) =>
+        {  
+          if(deactResponse ?? false)
+          {
+            this.loadClientPhonesList()
+          }
+          
+        })
+      }      
+      this.onDeactivatePhoneNumberClosed()        
+   }
+   onDeactivatePhoneNumberClicked(clientPhoneId : string) {
+    this.isDeactivatePhoneNumberPopup = true;
+    this.selectedclientPhoneId = clientPhoneId;
+  }
+
+  onhistorychkBoxChanged()
+  {
+    this.historychkBoxChecked = !this.historychkBoxChecked
+    this.loadPhones(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType ,this.historychkBoxChecked)    
   }
  
 }

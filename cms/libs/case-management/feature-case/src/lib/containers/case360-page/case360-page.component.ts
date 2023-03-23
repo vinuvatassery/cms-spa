@@ -328,7 +328,7 @@ private getQueryParams()
     this.loadReadOnlyClientInfoEventHandler();
   }
 
-
+//#region client phone//NOSONAR
   loadClientPhonesHandle( gridDataRefinerValue : any ): void
   {    
       const gridDataRefiner = 
@@ -377,4 +377,5 @@ private getQueryParams()
     {        
       this.contactFacade.removeClientPhone(this.profileClientId ,clientPhoneId);
     } 
+    //#endregionclient phone//NOSONAR
 }

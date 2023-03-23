@@ -245,13 +245,13 @@ export class ContactFacade {
   }
 
 
-  //#region client profile //NOSONAR
+  //#region client phone//NOSONAR
     loadClientPhones(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated : boolean): void {
      
       this.contactDataService.loadClientPhones(clientId , skipcount ,maxResultCount  ,sort , sortType,showDeactivated).subscribe({
         next: (clientPhonesResponse : any) => {        
           if(clientPhonesResponse)
-          {      
+          { 
             const gridView = {
               data : clientPhonesResponse["items"] ,        
               total:  clientPhonesResponse["totalCount"]      
@@ -269,17 +269,17 @@ export class ContactFacade {
     }
 
     loadClientPhone(clientId : number,clientPhoneId : string): void {
-      this.showLoader();     
+   
       this.contactDataService.loadClientPhone(clientId , clientPhoneId).subscribe({
         next: (clientPhoneReponse : any) => {        
           if(clientPhoneReponse)
           {                  
-            this.hideLoader()
+          
             this.clientPhoneSubject.next(clientPhoneReponse);
           }         
         },
         error: (err) => {     
-          this.hideLoader() 
+       
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
         },
       });
@@ -288,7 +288,7 @@ export class ContactFacade {
 
     
     addClientPhone(phoneData: any) {   
-        this.loaderService.show();
+      
         return this.contactDataService.savePhone(phoneData).subscribe({
           next: (response) => {
             this.addClientPhoneSubject.next(response)  
@@ -296,17 +296,17 @@ export class ContactFacade {
               const message =  phoneData?.clientPhoneId ? 'Phone Data Updated Successfully' :'Phone Data Added Successfully'
               this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
             }
-            this.loaderService.hide();
+        
           },
           error: (err) => {       
-            this.loaderService.hide();
+          
             this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
           },
         });
       }
 
       preferredClientPhone(clientId : number,clientPhoneId : string) {   
-        this.loaderService.show();
+       
         return this.contactDataService.updateClientPhonePreferred(clientId ,clientPhoneId ).subscribe({
           next: (response) => {
             this.preferredClientPhoneSubject.next(response)  
@@ -314,17 +314,17 @@ export class ContactFacade {
               const message =   'Phone Data Updated Successfully' 
               this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
             }
-            this.loaderService.hide();
+          
           },
           error: (err) => {       
-            this.loaderService.hide();
+          
             this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
           },
         });
       }
 
       deactivateClientPhone(clientId : number,clientPhoneId : string) {   
-        this.loaderService.show();
+      
         return this.contactDataService.deactivateClientPhone(clientId ,clientPhoneId ).subscribe({
           next: (response) => {
             this.deactivateClientPhoneSubject.next(response)  
@@ -332,17 +332,17 @@ export class ContactFacade {
               const message =   'Phone Deactivated Successfully' 
               this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
             }
-            this.loaderService.hide();
+        
           },
           error: (err) => {       
-            this.loaderService.hide();
+          
             this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
           },
         });
       }
 
       removeClientPhone(clientId : number,clientPhoneId : string) {   
-        this.loaderService.show();
+      
         return this.contactDataService.removeClientPhone(clientId ,clientPhoneId ).subscribe({
           next: (response) => {
             this.removeClientPhoneSubject.next(response)  
@@ -350,14 +350,14 @@ export class ContactFacade {
               const message =   'Phone Deleted Successfully' 
               this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
             }
-            this.loaderService.hide();
+          
           },
           error: (err) => {       
-            this.loaderService.hide();
+          
             this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
           },
         });
       }
 
-  //#endregion client profile //NOSONAR
+  //#endregion client phone//NOSONAR
 }

@@ -21,16 +21,24 @@
                  [data]="lovClientPhoneDeviceType$ | async"
                  textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
               </kendo-dropdownlist>
+              <kendo-formerror *ngIf="clientPhoneForm?.hasError('required','deviceTypeCode') && isFormSubmitted">Phone type
+                is required</kendo-formerror>
             </kendo-floatinglabel>
           </div>
           <div class="flex-col">
             <kendo-floatinglabel text="Phone Number">
-              <kendo-textbox 
+              <kendo-maskedtextbox 
               formControlName ="phoneNbr"
               aria-label="phone number"  
               placeholder="phone number" 
-               [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+               [fillMode]="formUiStyle.inputFillMode"
+               [maxlength]="10"
+               [maskOnFocus]="true"               
+               mask="(999) 000-0000" 
+               formatPlaceholder="formatPattern">   </kendo-maskedtextbox>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="clientPhoneForm?.hasError('required','phoneNbr') && isFormSubmitted">Phone number
+              is required</kendo-formerror>
           </div>
           <div class="flex-col mt-2" *ngIf="displayPhoneNote">
             <kendo-floatinglabel text="Note" class="pb-0">
