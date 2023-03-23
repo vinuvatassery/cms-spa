@@ -3,6 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChan
 /** Facades **/
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
 
 @Component({
   selector: 'case-management-phone-list',
@@ -33,6 +34,7 @@ export class PhoneListComponent implements  OnChanges {
   @Output() removeClientPhoneEvent = new EventEmitter<any>(); 
 
   /** Public properties **/
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   isEditPhoneNumber!: boolean;
   isPhoneNumberDetailPopup = false;
   isDeactivatePhoneNumberPopup = false;
@@ -123,7 +125,11 @@ export class PhoneListComponent implements  OnChanges {
     };        
       this.loadClientPhonesList()
   } 
-
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadClientPhonesList()
+  }
   /** Private methods **/
 
   private loadClientPhonesList(): void {     
