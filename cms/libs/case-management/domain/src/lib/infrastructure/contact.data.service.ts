@@ -267,5 +267,60 @@ export class ContactDataService {
     }
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactivate`,clientAddress);
   }
+
+ /////email services
+  loadClientPhones(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {     
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/clients/${clientId}/phones?showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+    
+  }
+
+  loadClientEmail(clientId : number  , clientPhoneId : string) {     
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/clients/${clientId}/phones/${clientPhoneId}`
+    );
+    
+  }
+  
+  saveEmail(phoneData: any) {  
+      if(phoneData?.clientPhoneId)
+      {
+          return this.http.put(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+            phoneData
+          )
+      }
+      else
+      {        
+        phoneData.clientPhoneId ='00000000-0000-0000-0000-000000000000'
+          return this.http.post(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+            phoneData
+          )
+      }
+  }
+
+  updateClientEmailPreferred(clientId : number  , clientPhoneId : string) {     
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/preferred`,null
+    );
+    
+  }
+
+  deactivateClientEmail(clientId : number  , clientPhoneId : string) {     
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/deactivate`
+    );
+    
+  }
+
+  removeClientEmail(clientId : number  , clientPhoneId : string) {     
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/remove`
+    );
+  }
   
 }
