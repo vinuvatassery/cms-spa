@@ -255,7 +255,7 @@ private getQueryParams()
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
-
+/** Load Incomes **/
   public loadIncomes(){
     this.loadIncomeData(
       this.profileClientId.toString(),
@@ -282,7 +282,7 @@ private getQueryParams()
       gridDataRefiner.sortType
     );
   }
-
+/** Load Employments **/
   public loadEmployments(){
     this.loadEmploymentData(
       this.profileClientId.toString(),
@@ -310,6 +310,9 @@ private getQueryParams()
     );
   }
  
+  onPeriodSelectionChange(value: any) {
+
+  }
 
   onClientProfileHeaderLoad()
   {  
