@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -14,7 +14,7 @@ import { TabStripComponent } from '@progress/kendo-angular-layout';
   styleUrls: ['./case360-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Case360PageComponent implements OnInit {
+export class Case360PageComponent implements OnInit, OnDestroy {
   @ViewChild('tabStripParent') public tabStripParent!: TabStripComponent;
   @ViewChild('tabStripChild') public tabStripChild!: TabStripComponent;
 
@@ -114,6 +114,10 @@ export class Case360PageComponent implements OnInit {
   ngOnInit() {
     this.initialize();  
     this.routeChangeSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.clientChangeSubscription$.unsubscribe();
   }
 
   /** Private methods **/
