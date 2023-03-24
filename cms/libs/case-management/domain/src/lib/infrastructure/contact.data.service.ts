@@ -257,6 +257,6 @@ export class ContactDataService {
   }
 
   deleteClientAddress(clientId:any,clientAddressId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/address/${clientAddressId}`);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses/${clientAddressId}`);
   }
 }
