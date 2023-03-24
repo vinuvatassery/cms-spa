@@ -346,4 +346,12 @@ export class DrugPharmacyFacade {
       },
     });
   }
+
+  updatedMakePharmaciesPrimary(clientPharmacyId: string){    
+    this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Primary Pharmacy Updated Successfully');
+  }
+
+  reActivatePharmacies(clientPharmacyId: string){    
+    this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Pharmacy Re-Activated Successfully');
+  }
 }

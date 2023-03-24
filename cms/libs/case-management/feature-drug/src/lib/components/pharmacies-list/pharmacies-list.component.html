@@ -9,7 +9,7 @@
   <div class="flex-col mt-1">
     <div class="app-c-table">
       <kendo-grid  [pageSize]="5" [pageable]="true"  [data]="pharmaciesList$ | async">
-         <kendo-grid-column field="pharmacyName" title="pharmacy Name" [width]="180">
+        <kendo-grid-column field="pharmacyName" title="pharmacy Name" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
               <span class="preferred-phoneNo" title="Primacy Pharmacy Name" *ngIf="dataItem.priorityCode === priority ">
@@ -51,7 +51,7 @@
 
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                       <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
-                          [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(clientPharmacy.pharmacyId)">
+                          [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click(clientPharmacy)">
                           <span class="material-icons"
                               [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                           <label> {{ dataItem.text }} </label>
@@ -134,9 +134,28 @@
     >     </case-management-remove-pharmacy>
 </kendo-dialog>
 <!-- Change Pharmacy Priority Modal -->
-<kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClikced()"
+<kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
-  <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClikced()">
+  <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClicked()">
   </case-management-set-pharmacy-priority>
+</kendo-dialog>
+
+
+<!-- deactivate-pharmacy Modal -->
+<kendo-dialog *ngIf="isOpenDeactivatePharmaciesClicked" (close)="handleCloseDeactivatePharmaciesClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Deactivate Pharmacy </kendo-dialog-titlebar>
+  <case-management-deactivate-pharmacy   [clientPharmacyDetails]="selectClientPharmacyDetails"
+   (closeDeactivatePharmacies)="handleCloseDeactivatePharmaciesClicked()">
+  </case-management-deactivate-pharmacy>
+</kendo-dialog>
+
+
+<!-- Select New Primary Pharmacy -->
+<kendo-dialog *ngIf="isOpenSelectNewPrimaryPharmaciesClicked" (close)="handleCloseSelectNewPrimaryPharmaciesClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
+  <case-management-set-as-primary-pharmacy   [clientPharmacyDetails]="selectClientPharmacyDetails"
+   (closeSelectNewPrimaryPharmacies)="handleCloseSelectNewPrimaryPharmaciesClicked()">
+  </case-management-set-as-primary-pharmacy>
 </kendo-dialog>
