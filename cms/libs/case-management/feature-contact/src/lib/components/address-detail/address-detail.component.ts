@@ -33,6 +33,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   @Input() deactivateFlag!:boolean;
   @Input() deleteFlag!:boolean;
   @Input() clientAddressId!:any;
+  @Input() selectedAddress!:any;
 
 
   @Output() detailModalCloseEvent= new EventEmitter<any>();
@@ -107,7 +108,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     });
     this.stateSubscription = this.ddlStates$.subscribe(state=>{
       if(this.isEditValue){
-        this.addressForm.controls["state"].setValue(this.address?.stateCode);
+        this.addressForm.controls["state"].setValue(this.address?.state);
       }
     });
     this.countySubscription = this.  ddlCountries$.subscribe(county=>{
@@ -410,8 +411,10 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.validateForm();
     this.populateModel();
     if (this.clientAddress && this.addressForm.valid) {
+      this.selectedAddress.activeFlag=StatusFlag.No;
+      this.selectedAddress.endDate= new Date();
       this.contactFacade.showLoader();
-      this.contactFacade.deactivateClientAddress(this.clientId, this.clientAddressId).subscribe({
+      this.contactFacade.updateAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.selectedAddress).subscribe({
         next: (response: any) => {
           if(response){
             this.contactFacade.hideLoader();

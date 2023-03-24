@@ -39,6 +39,7 @@ export class CaseFacade {
   private clientProfileSubject = new Subject<any>();
   private clientProfileHeaderSubject = new Subject<any>();
   private activeSessionLoaderVisibleSubject = new BehaviorSubject<boolean>(false);
+  private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   private clientProfileImpInfoSubject  = new Subject<any>();
 
   /** Public properties **/
@@ -61,6 +62,7 @@ export class CaseFacade {
   clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable();
   clientProfileImpInfo$ = this.clientProfileImpInfoSubject.asObservable(); 
   activeSessionLoaderVisible$  = this.activeSessionLoaderVisibleSubject.asObservable();
+  searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -159,22 +161,24 @@ export class CaseFacade {
     });
   }
 
-  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string): void {
-    this.showLoader();
-    this.caseDataService.loadCases(CaseScreenType, skipcount, maxResultCount, sort, sortType).subscribe({
-      next: (casesResponse: any) => {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string , columnName : any, filter : any): void {
+    this.searchLoaderVisibilitySubject.next(true);
+    this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType, columnName,filter).subscribe({
+      next: (casesResponse  : any) => {
         this.casesSubject.next(casesResponse);
-        if (casesResponse) {
-          const gridView = {
-            data: casesResponse["items"],
-            total: casesResponse["totalCount"]
-          };
+        if(casesResponse )
+        {
+            const gridView = {
+              data : casesResponse["items"] ,
+              total:  casesResponse["totalCount"]
+              };
           this.casesSubject.next(gridView);
-        }
-        this.hideLoader();
+         }
+         this.searchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.searchLoaderVisibilitySubject.next(false);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
