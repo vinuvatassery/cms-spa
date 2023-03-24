@@ -8,15 +8,38 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class CaseEligibilityPeriodsComponent implements OnInit {
 
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  eligibilityPeriodsList: any = [];
 
-  @Input() eligibilityPeriodsList: any = [];
+  private _eligibilityPeriodsData: any = [];
+  @Input()
+  get eligibilityPeriodsData(): any {
+    return this._eligibilityPeriodsData;
+  }
+  set eligibilityPeriodsData(data: any) {
+    if (data) {
+      this._eligibilityPeriodsData = data;
+      this.setDropdownValues();
+    }
+  }
+
   @Input() valueField: string = "";
   @Input() displayField: string = "";
   @Input() selectedValue: any = {};
   @Output() onEligibilityPeriodChange = new EventEmitter<any>();
 
   ngOnInit() { }
+
+  setDropdownValues() {
+    this.eligibilityPeriodsData.forEach((x: any) => {
+      let period = {
+        id: x.clientCaseEligibilityId,
+        label: new Date(x.eilgibilityStartDate).toLocaleDateString()
+          + ' - ' + new Date(x.eligibilityEndDate).toLocaleDateString()
+      };
+      this.eligibilityPeriodsList.push(period);
+    });
+  }
 
   onPeriodChange(value: any) {
     this.selectedValue = value;

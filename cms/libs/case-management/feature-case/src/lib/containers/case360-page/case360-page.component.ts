@@ -47,12 +47,12 @@ export class Case360PageComponent implements OnInit {
   isNewSMSTextOpened = false;
   profileClientId = 0
   clientCaseEligibilityId!: string;
-  defaultClientCaseEligibilityId : string = "";
+  historyClientCaseEligibilityId : string = "";
   caseWorkerId!: string;
   clientHeaderTabs: any = [];
   selectedClientTabTitle: string = "";
-  eligibilityPeriodsList: any = [];
-  defaultSelectedPeriod: any = {};
+  eligibilityPeriodData: any = [];
+  historySelectedPeriod: any = {};
   clientCaseId!: string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -199,7 +199,7 @@ export class Case360PageComponent implements OnInit {
 
   onClientProfileTabSelected(event: SelectEvent) {
     this.selectedClientTabTitle = event.title;
-    this.clientCaseEligibilityId = this.defaultClientCaseEligibilityId;
+    this.clientCaseEligibilityId = this.historyClientCaseEligibilityId;
     switch (this.selectedClientTabTitle) {
       case ClientProfileTabTitles.INCOME: {
         this.loadIncomes();
@@ -254,74 +254,8 @@ export class Case360PageComponent implements OnInit {
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
-  /** Load Incomes **/
-  public loadIncomes() {
-    this.loadIncomeData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      this.incomeFacade.skipCount,
-      this.incomeFacade.gridPageSizes[0].value,
-      this.incomeFacade.sortValue,
-      this.incomeFacade.sortType);
-  }
-
-  loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sortColumn: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
-    this.loadIncomeData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sortColumn,
-      gridDataRefiner.sortType
-    );
-  }
-  /** Load Employments **/
-  public loadEmployments() {
-    this.loadEmploymentData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      this.employmentFacade.skipCount,
-      this.employmentFacade.gridPageSizes[0].value,
-      this.employmentFacade.sortValue,
-      this.employmentFacade.sortType);
-  }
-
-  loadEmploymentsHandle(gridDataRefinerValue: any): void {
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sort: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
-    this.loadEmploymentData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sort,
-      gridDataRefiner.sortType
-    );
-  }
-
-  onPeriodSelectionChange(value: any) {
-    this.clientCaseEligibilityId = value.id;
-    switch (this.selectedClientTabTitle) {
-      case ClientProfileTabTitles.INCOME: {
-        this.loadIncomes();
-        break;
-      }
-      case ClientProfileTabTitles.EMPLOYMENT: {
-        this.loadEmployments();
-        break;
-      }
-    }
-  }
+  
+ 
 
   onClientProfileHeaderLoad() {
     this.clientProfileHeader$?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
@@ -345,15 +279,8 @@ export class Case360PageComponent implements OnInit {
             clientOfficialIdFullName: clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
           }
-          clientHeaderData?.eligibilityPeriods.forEach((x: any) => {
-            let period = {
-              id: x.clientCaseEligibilityId,
-              label: new Date(x.eilgibilityStartDate).toLocaleDateString()
-                + ' - ' + new Date(x.eligibilityEndDate).toLocaleDateString()
-            };
-            this.eligibilityPeriodsList.push(period);
-          });
-          this.defaultSelectedPeriod = {
+          this.eligibilityPeriodData = clientHeaderData?.eligibilityPeriods;
+          this.historySelectedPeriod = {
             id: clientHeader?.clientCaseEligibilityId,
             label: new Date(clientHeaderData?.eilgibilityStartDate).toLocaleDateString()
               + ' - ' + new Date(clientHeaderData?.eligibilityEndDate).toLocaleDateString()
@@ -362,7 +289,7 @@ export class Case360PageComponent implements OnInit {
           this.clientHeaderSubject.next(clientHeader);
           if (clientHeader?.clientCaseEligibilityId) {
             this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
-            this.defaultClientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
+            this.historyClientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
           }
           if (clientHeader?.caseWorkerId) {
             this.caseWorkerId = clientHeader?.caseWorkerId;
@@ -432,5 +359,73 @@ export class Case360PageComponent implements OnInit {
   loadHeaderAndProfile() {
     this.loadClientProfileInfoEventHandler();
     this.loadReadOnlyClientInfoEventHandler();
+  }
+   /** Load Employments **/
+   public loadEmployments() {
+    this.loadEmploymentData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      this.employmentFacade.skipCount,
+      this.employmentFacade.gridPageSizes[0].value,
+      this.employmentFacade.sortValue,
+      this.employmentFacade.sortType);
+  }
+
+  loadEmploymentsHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+    this.loadEmploymentData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType
+    );
+  }
+
+  onPeriodSelectionChange(value: any) {
+    this.clientCaseEligibilityId = value.id;
+    switch (this.selectedClientTabTitle) {
+      case ClientProfileTabTitles.INCOME: {
+        this.loadIncomes();
+        break;
+      }
+      case ClientProfileTabTitles.EMPLOYMENT: {
+        this.loadEmployments();
+        break;
+      }
+    }
+  }
+  /** Load Incomes **/
+  public loadIncomes() {
+    this.loadIncomeData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      this.incomeFacade.skipCount,
+      this.incomeFacade.gridPageSizes[0].value,
+      this.incomeFacade.sortValue,
+      this.incomeFacade.sortType);
+  }
+
+  loadIncomeListHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sortColumn: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+    this.loadIncomeData(
+      this.profileClientId.toString(),
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType
+    );
   }
 }
