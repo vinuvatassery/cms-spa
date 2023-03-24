@@ -15,7 +15,7 @@ export class VerificationDataService {
         );
       }
       getHivVerification(clientId: any) {
-        return this.http.get<ClientHivVerification>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
       }
 
 }
