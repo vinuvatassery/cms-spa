@@ -147,9 +147,6 @@
       "@cms/system-config/feature-lov": [
         "libs/system-config/feature-lov/src/index.ts"
       ],
-      "@cms/system-config/feature-navigation-menu": [
-        "libs/system-config/feature-navigation-menu/src/index.ts"
-      ],
       "@cms/system-config/feature-template-management": [
         "libs/system-config/feature-template-management/src/index.ts"
       ],

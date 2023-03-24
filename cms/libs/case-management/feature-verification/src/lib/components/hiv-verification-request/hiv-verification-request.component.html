@@ -83,7 +83,7 @@
           #refresh
           aria-label="user profile"
         >
-          Sara John
+        {{hivVerificationForm.controls["requestedUserName"].value}}
         </button>
         <button
           kendoButton
@@ -102,6 +102,6 @@
 
 <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
-    <common-user-profile-card></common-user-profile-card>
+    <common-user-profile-card [userId]="userId"></common-user-profile-card>
   </ng-template>
 </kendo-popover>

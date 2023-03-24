@@ -3,11 +3,18 @@ import { Injectable } from '@angular/core';
 /** External Libraries **/
 import { Observable, Subject } from 'rxjs';
 /** Internal Libraries **/
-import { ClientHivVerification, VerificationDataService } from '@cms/case-management/domain';
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService } from '@cms/shared/util-core';
+import { ClientHivVerification } from '../entities/client-hiv-verification';
+import { VerificationDataService } from '../infrastructure/verification.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class VerificationFacade {
+
+  /** Private properties **/
+  hivVerificationSaveSubject = new Subject<boolean>();
+
+  /** Public properties **/
+  hivVerificationSave$ = this.hivVerificationSaveSubject.asObservable();
 
   constructor(private readonly verificationDataService: VerificationDataService,
     private readonly loaderService: LoaderService,

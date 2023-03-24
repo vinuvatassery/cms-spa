@@ -48,6 +48,7 @@ export * from './lib/entities/review-question-answer';
 export * from './lib/entities/client-profile-cases';
 export * from './lib/entities/client-profile';
 export * from './lib/entities/client-hiv-verification';
+export * from './lib/entities/active-sessions';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -90,6 +91,7 @@ export * from './lib/enums/eligibility-request-type.enum';
 export * from './lib/enums/verification-status-code.enum';
 export * from './lib/enums/verification-type-code.enum';
 export * from './lib/enums/provider-option.enum';
+export * from './lib/enums/address-type.enum';
 
 
 /** Data services **/

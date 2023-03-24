@@ -20,7 +20,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   hivVerificationForm!:FormGroup;
   sessionId!: string;
   clientCaseId!: string;
-  clientId!: number;
+  clientId!: number;  
+  userId!:any;
   private loadSessionSubscription!: Subscription;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -36,10 +37,14 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.buildForm();
     this.addSaveSubscription();
     this.loadSessionData();
+    this.verificationFacade.hivVerificationSave$.subscribe(data=>{
+      this.load();
+    });
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.loadSessionSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -51,7 +56,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.hivVerificationForm = this.formBuilder.group({
       providerEmailAddress: [''],
       providerOption:[''],
-      verificationStatusDate:['']
+      verificationStatusDate:[''],
+      requestedUserName:[''],
+      userId:['']
     });
 
   }
@@ -76,7 +83,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       .subscribe((session: any) => {
         if (session && session?.sessionData) {
           this.clientCaseId = JSON.parse(session.sessionData)?.ClientCaseId
-          this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;      
+          this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
           this.load();
         }
 
@@ -88,10 +95,14 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.verificationFacade.getHivVerification( this.clientId).subscribe({
       next:(data)=>{
         if(data !== null){
-          this.hivVerificationForm.controls["providerEmailAddress"].setValue(data["verificationToEmail"]);
-          this.hivVerificationForm.controls["providerOption"].setValue(data["verificationMethodCode"]);
-          this.hivVerificationForm.controls["verificationStatusDate"].setValue(data["verificationStatusDate"]);
-          this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);          
+          if(data?.hivVerification !== null){
+            this.hivVerificationForm.controls["providerEmailAddress"].setValue(data.hivVerification["verificationToEmail"]);
+            this.hivVerificationForm.controls["providerOption"].setValue(data.hivVerification["verificationMethodCode"]);
+            this.hivVerificationForm.controls["verificationStatusDate"].setValue(data.hivVerification["verificationStatusDate"]);
+            this.hivVerificationForm.controls["requestedUserName"].setValue(data["requestedUserName"]);
+            this.hivVerificationForm.controls["userId"].setValue(data.hivVerification["creatorId"]);
+            this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);              
+          }      
         }
         this.verificationFacade.hideLoader();
       },

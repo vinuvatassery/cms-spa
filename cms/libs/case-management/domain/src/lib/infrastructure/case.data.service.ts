@@ -14,6 +14,7 @@ import { ClientCase } from '../entities/client-case';
 import { ClientProfileCase } from '../entities/client-profile-cases';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 import { CaseHistory } from '../entities/case-history';
+import { ActiveSessions } from '../entities/active-sessions';
 
 @Injectable({ providedIn: 'root' })
 export class CaseDataService {
@@ -39,8 +40,15 @@ export class CaseDataService {
   }
 
   loadClientProfileHeader(clientId: number) {
-    return this.http.get<ClientProfileCase[]>(
+    return this.http.get<ClientProfileCase>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/profile-header`
+    );
+
+  }
+
+  loadClientImportantInfo(clientCaseId: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientCaseId}/info`
     );
 
   }
@@ -298,32 +306,20 @@ export class CaseDataService {
     ]);
   }
 
-  loadLastVisitedCases() {
-    return of([
-      {
-        name: 'Donna 1',
-        id: '1',
-        programId: '1',
-        isApplicationComplete: true,
-      },
-      {
-        name: 'David 2',
-        id: '2',
-        programId: '1',
-        isApplicationComplete: true,
-      },
-      {
-        name: 'Philip 3',
-        id: '3',
-        programId: '2',
-        isApplicationComplete: true,
-      },
-      { name: 'Mike Flex1', id: '4', programId: '1', isApplicationComplete: true },
-      { name: 'Mike Flex2', id: '5', programId: '2', isApplicationComplete: true },
-      { name: 'Mike Flex3', id: '6', programId: '1', isApplicationComplete: true },
-      { name: 'Mike Flex4', id: '7', programId: '2', isApplicationComplete: true },
-      { name: 'Mike Flex5', id: '8', programId: '1', isApplicationComplete: true },
-    ]);
+  loadActiveSession(): Observable<ActiveSessions[]> {
+    return this.http.get<ActiveSessions[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`);
+  }
+
+  createActiveSession(session: any) {
+    return this.http.post<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
+  }
+
+  updateActiveSessionOrder(session: any) {
+    return this.http.put<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions`, session);
+  }
+
+  deleteActiveSession(activeSessionId: any) {
+    return this.http.delete<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/users/active-sessions/${activeSessionId}`);
   }
 
   loadDdlGridColumns() {

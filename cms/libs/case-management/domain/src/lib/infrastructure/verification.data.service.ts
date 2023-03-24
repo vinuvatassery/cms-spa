@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** Internal Libraries **/
-import { ClientHivVerification } from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ClientHivVerification } from '../entities/client-hiv-verification';
 
 @Injectable({ providedIn: 'root' })
 export class VerificationDataService {
@@ -15,7 +15,7 @@ export class VerificationDataService {
         );
       }
       getHivVerification(clientId: any) {
-        return this.http.get<ClientHivVerification>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
       }
 
 }

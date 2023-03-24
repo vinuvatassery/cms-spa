@@ -33,6 +33,9 @@ export class ClientProfile {
      writtenLanguage  : string  |null=null; 
      englishProficiency  : string  |null=null;
      ethnicIdentity  : string  |null=null;
-     racialIdentities  : string  |null=null;
+     racialIdentities  : string []=[];
      primaryRacialIdentity  : string |null=null;
+     lastModificationTime : string |null=null;
+     lastModifierName : string |null=null;
+     lastModifierId : string |null=null;
 }

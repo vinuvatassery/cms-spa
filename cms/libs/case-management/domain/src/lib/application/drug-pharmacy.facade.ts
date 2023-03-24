@@ -7,7 +7,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Data services **/
 import { DrugDataService } from '../infrastructure/drug.data.service';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
+import { ClientPharmacy, Pharmacy ,DrugPharmacy,DrugPurchased} from '../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
@@ -30,6 +30,7 @@ export class DrugPharmacyFacade {
   /** Private properties **/
   private pharmaciesSubject = new BehaviorSubject<any>([]);
   private selectedPharmacySubject = new BehaviorSubject<any>([]);
+  private drugPurchaseSubject = new BehaviorSubject<any>([]);
   private clientPharmaciesSubject = new BehaviorSubject<any>([]);
   private ddlPrioritiesSubject = new BehaviorSubject<any>([]);
   private ddlStatesSubject = new BehaviorSubject<any>([]);
@@ -38,8 +39,10 @@ export class DrugPharmacyFacade {
   private addPharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private editPharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private removePharmacyResponseSubject = new BehaviorSubject<boolean>(false);
+  private removeDrugPharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  public durgPharmacyPrioritySubject = new BehaviorSubject<string>("");
   /** Public properties **/
   pharmacies$ = this.pharmaciesSubject.asObservable();
   selectedPharmacy$ = this.selectedPharmacySubject.asObservable();
@@ -51,8 +54,11 @@ export class DrugPharmacyFacade {
   addPharmacyResponse$ = this.addPharmacyResponseSubject.asObservable();
   editPharmacyResponse$ = this.editPharmacyResponseSubject.asObservable();
   removePharmacyResponse$ = this.removePharmacyResponseSubject.asObservable();
+  removeDrugPharmacyResponse$ = this.removeDrugPharmacyResponseSubject.asObservable();
   triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
   searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
+  drugPurchases$ = this.drugPurchaseSubject.asObservable();
+  drugPharnacyPriority = this.durgPharmacyPrioritySubject.asObservable();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = ' '
@@ -180,9 +186,10 @@ export class DrugPharmacyFacade {
     });
   }
 
-  addClientPharmacy(clientId: number, vendorId: string) {
+  addClientPharmacy(clientId: number, vendorId: string,) {
+  
     const model = {
-      vendorId: vendorId,      
+      vendorId: vendorId    
     };
 
     this.loaderService.show();
@@ -235,6 +242,99 @@ export class DrugPharmacyFacade {
           this.loadClientPharmacyList(clientId);
           this.removePharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Removed Successfully');
+        }
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        this.removePharmacyResponseSubject.next(false);
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+  loadDrugPharmacyList(clientId: number, isTriggerPriorityPopup:boolean = false,isShowHistoricalData:boolean) {
+    
+    this.loaderService.show();
+    this.drugDataService.loadDrugPharmacyList(clientId,isShowHistoricalData).subscribe({
+      next: (pharmacies: ClientPharmacy[]) => {
+        this.loaderService.hide();
+        this.clientPharmaciesSubject.next(pharmacies);
+        if( pharmacies?.length > 0){
+          this.triggerPriorityPopupSubject.next(true);
+        }
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+  addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string) {
+   
+    const model = {
+      vendorId: vendorId,
+      PriorityCode:priorityCode     
+    };
+
+    this.loaderService.show();
+    return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
+      next: (response) => {
+        if (response === true) {
+          this.loadDrugPharmacyList(clientId, true,false);
+          this.addPharmacyResponseSubject.next(true);
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Added Successfully');
+        }
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        this.addPharmacyResponseSubject.next(false);
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+  getDrugPharmacyById(vendorId: string) {
+    this.loaderService.show();
+    return this.drugDataService.getDrugPharmacyById(vendorId).subscribe({
+      next: (response:DrugPharmacy) => {
+        response.vendorFullName = `${response.vendorName}${response.address1} ${response.tin} ${response.mailCode} ${response.fax} ${response.phone}${response.effectiveDate}`;
+        this.selectedPharmacySubject.next(response);
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+  getDrugPurchasedList(clientId: number) {
+    this.loaderService.show();
+    return this.drugDataService.getDrugPurchasedList(clientId).subscribe({
+      next: (response:DrugPurchased) => {
+        response.drugPurchased = `${response.vendorName} #${response.prescriptionFillId} ${response.drugName} ${response.ndcNbr} ${response.brandName} ${response.qty}${response.transactionTypeCode}${response.reversalDate} #${response.paymentTypeCode} ${response.amountRequested} ${response.calculatedIngredientCost} ${response.dispensingFeeSubmitted} ${response.ramsellProcessFee}${response.pharmacyTotalPaidAmount}${response.uandc}${response.revenue} ${response.entryDate}${response.clientGroup}`;
+        this.drugPurchaseSubject.next(response);
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+  removeDrugPharmacy(clientId: number, clientPharmacyId: string) {
+    this.loaderService.show();
+    return this.drugDataService.removeDrugPharmacy(clientId, clientPharmacyId).subscribe({
+      next: (response) => {
+        if (response === true) {
+          this.loadDrugPharmacyList(clientId,false,false);
+          this.removePharmacyResponseSubject.next(false);
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Removed Successfully');
         }
         this.loaderService.hide();
       },
