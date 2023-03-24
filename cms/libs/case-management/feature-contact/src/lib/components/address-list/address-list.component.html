@@ -28,7 +28,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="city" title="City" [width]="100">
         </kendo-grid-column>
-        <kendo-grid-column field="state" title="State" [width]="100">
+        <kendo-grid-column field="stateDesc" title="State" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column field="zip" title="ZIP" [width]="100">
         </kendo-grid-column>
@@ -150,6 +150,7 @@
     [deactivateFlag]="isDeactivateFlag"
     [deleteFlag]="isDeleteFlag"
     [clientAddressId]="clientAddressId"
+    [selectedAddress]="clientAddress"
     (detailModalCloseEvent)="onAddressDetailCloseEvent($event)"
     (deactivateButtonClick)="onDeactivateButtonClick($event)"
   ></case-management-address-detail>
@@ -162,7 +163,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Deactivate home address?"
 >
-  <case-management-deactivate-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModalAndReload($event)"></case-management-deactivate-address-confirmation>
+  <case-management-deactivate-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" (deactivateModalCloseEvent)="closeDeactivateModalAndReload($event)"></case-management-deactivate-address-confirmation>
 </kendo-dialog>
 
 <!-- Delete home address Popup-->

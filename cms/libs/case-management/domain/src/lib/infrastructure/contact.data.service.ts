@@ -259,10 +259,4 @@ export class ContactDataService {
   deleteClientAddress(clientId:any,clientAddressId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/address/${clientAddressId}`);
   }
-
-  deactivateClientAddress(clientId:any,clientAddressId:any){
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses/${clientAddressId}/deactivate`,
-    null);
-  }
-  
 }
