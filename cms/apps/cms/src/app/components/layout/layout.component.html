@@ -2,8 +2,8 @@
 <common-loader-component></common-loader-component>
 
 <h1 hidden>CMS</h1>
-<section class="app-l-header" role="header">
-  <div class="header_menu-left_most_section">
+<section class="app-l-header" role="header" >
+  <div class="header_menu-left_most_section"  *ifPermission='["Layout_Logo_View_Only"]'>
     <button class="mobile-menu-icon" (click)="openMobileMenu()"> <span class="material-icons">
       menu
       </span></button>
@@ -13,10 +13,10 @@
     </div>
   </div>
 
-  <ng-content select="[search]" kendoRippleContainer></ng-content>
+  <ng-content select="[search]" kendoRippleContainer  *ifPermission='["Layout_Search_View_Only"]'></ng-content>
   <div class="header-menu">
-    <system-config-forms-and-documents></system-config-forms-and-documents>
-    <productivity-tools-notification-panel></productivity-tools-notification-panel>
+    <system-config-forms-and-documents  *ifPermission='["Layout_Documents_View_Only"]'></system-config-forms-and-documents >
+    <productivity-tools-notification-panel  *ifPermission='["Layout_Notifications_View_Only"]'></productivity-tools-notification-panel>
     <common-login-status></common-login-status>
   </div>
 </section>
@@ -28,7 +28,7 @@
     opened
     position="start"
     class="app-l-sidebar"
-    [class.menuToggled]="isSideMenuToggled"
+    [class.menuToggled]="isSideMenuToggled"  *ifPermission='["Layout_Menu_View_Only"]'
   >
     <div class="drawer-inner-container" role="menuitem">
       <div class="sidebar-hamburger">
