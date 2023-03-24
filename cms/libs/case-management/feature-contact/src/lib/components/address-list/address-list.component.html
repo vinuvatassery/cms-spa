@@ -90,7 +90,7 @@
             >
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <div *ngIf="buttondataItem.text == 'Delete Address' && dataItem.addressTypeCode =='M'; else otherButtons">
-                  <button *ifPermission='["Client_Profile_Claims_Client_ContactInfo_Client_Address_Delete_Only"]' kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                  <button *ifPermission='["Client_Profile_Claims_Client_ContactInfo_Client_Address_Create_Update"]' kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                     <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
