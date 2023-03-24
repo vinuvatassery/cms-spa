@@ -1,7 +1,12 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-/** Facades **/
-import { CaseFacade, WorkflowTypeCode } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+/** External service **/
+import { BehaviorSubject, mergeMap, of, tap } from 'rxjs';
+import { DragEndEvent } from "@progress/kendo-angular-sortable";
+/** Internal service **/
+import { ActiveSessions, CaseFacade, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
+import { NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-last-visited-cases',
@@ -12,10 +17,15 @@ import { CaseFacade, WorkflowTypeCode } from '@cms/case-management/domain';
 export class LastVisitedCasesComponent implements OnInit {
   /** Public properties **/
   lastVisitedCases$ = this.caseFacade.lastVisitedCases$;
-
+  isRefreshLoaderVisible$ = this.caseFacade.activeSessionLoaderVisible$;
+  orderUpdateLoader$ = new BehaviorSubject<boolean>(false);
+  skeletonCounts = [
+    1, 2, 3, 4, 5
+  ]
   /** Constructor**/
-  constructor(private readonly caseFacade: CaseFacade) {
-    this.loadLastVisitedCases();
+  constructor(private readonly caseFacade: CaseFacade,
+    private readonly router: Router,
+    private readonly notificationSnackbarService: NotificationSnackbarService) {
   }
 
   /** Lifecycle hooks **/
@@ -25,14 +35,58 @@ export class LastVisitedCasesComponent implements OnInit {
 
   /** Private methods **/
   private loadLastVisitedCases() {
-    this.caseFacade.loadLastVisitedCases();
+    this.caseFacade.loadActiveSession();
   }
 
   getQueryParams(caseDetail: any): object {
     return {
       type: WorkflowTypeCode.NewCase,
-      sid: caseDetail.id,
-      eid: caseDetail.programId,
+      sid: caseDetail.SessionId,
+      eid: caseDetail.EntityId,
     };
+  }
+
+  onCaseClicked(session: ActiveSessions) {
+    if (session && session?.caseStatusCode === CaseStatusCode.accept) {
+      this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);
+      return;
+    }
+
+    this.router.navigate(['case-management/case-detail'], {
+      queryParams: {
+        sid: session?.sessionId,
+        eid: session?.entityId
+      }     
+    });
+
+  }
+
+  public onDragEnd(e: DragEndEvent): void {
+    this.lastVisitedCases$
+      .pipe(
+        tap(() => this.orderUpdateLoader$.next(true)),
+        mergeMap((activeSessions: ActiveSessions[]) => {
+          if (e.index !== e.oldIndex) { return this.updateActiveSessionOrder(activeSessions); }
+          return of(false);
+        }))
+      .subscribe(() => { this.orderUpdateLoader$.next(false); });
+  }
+
+  private updateActiveSessionOrder(activeSessions: ActiveSessions[]) {
+    if (!activeSessions || activeSessions?.length <= 1) return of(false);
+    let sessionUpdate: any[] = [];
+    activeSessions.forEach((session, i) => {
+      const seq = {
+        activeSessionId: session.activeSessionId,
+        sequenceNbr: i,
+      };
+      sessionUpdate.push(seq);
+    });
+
+    return this.caseFacade.updateActiveSessionOrder(sessionUpdate);
+  }
+
+  deleteActiveSession(activeSessionId: string) {
+    return this.caseFacade.deleteActiveSession(activeSessionId);
   }
 }

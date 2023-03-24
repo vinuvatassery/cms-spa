@@ -214,7 +214,7 @@ export class DrugDataService {
   getPharmacyById(vendorId: string) {
     return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies/${vendorId}`);
   }
-
+  
   addClientPharmacy(clientId: number, pharmacy: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies`, pharmacy);
   }
@@ -231,5 +231,18 @@ export class DrugDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}` +
         `/case-management/pharmacies/priority`, pharmacyPriority
     );
+  }
+  
+  loadDrugPharmacyList(clientId: number,isShowHistoricalData:boolean) {
+    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${clientId}/pharmacies/${isShowHistoricalData}`);
+  }
+  getDrugPharmacyById(vendorId: string) {
+    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/pharmacies/${vendorId}`);
+  }
+  getDrugPurchasedList(clientId:number) {
+    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/purchased/${clientId}`);
+  }
+  removeDrugPharmacy(clientId: number, clientPharmacyId: string) {
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/clients/${clientId}/pharmacies/${clientPharmacyId}`);
   }
 }

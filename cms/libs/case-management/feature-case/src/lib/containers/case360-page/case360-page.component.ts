@@ -1,21 +1,24 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade, IncomeFacade, EmploymentFacade, ClientProfileTabTitles } from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade, IncomeFacade, EmploymentFacade, ClientProfileTabTitles } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { first, Subject } from 'rxjs';
+import { filter, first, Subject, Subscription } from 'rxjs';
+import { TabStripComponent } from '@progress/kendo-angular-layout';
 import { SelectEvent } from '@progress/kendo-angular-layout';
-
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
   styleUrls: ['./case360-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Case360PageComponent implements OnInit {
+export class Case360PageComponent implements OnInit, OnDestroy {
+  @ViewChild('tabStripParent') public tabStripParent!: TabStripComponent;
+  @ViewChild('tabStripChild') public tabStripChild!: TabStripComponent;
+
   /** Private properties **/
   private selectedCase = new BehaviorSubject<any>({});
   private clientSubject = new Subject<any>();
@@ -39,6 +42,16 @@ export class Case360PageComponent implements OnInit {
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
+  //for add pharmacy
+  clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
+  pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
+  searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
+  addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
+  editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
+  removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
+  removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
+  triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
+  selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   isTodoDetailsOpened = false;
   isNewReminderOpened = false;
   isIdCardOpened = false;
@@ -56,6 +69,8 @@ export class Case360PageComponent implements OnInit {
   clientCaseId!: string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  clientId:any;
+  clientChangeSubscription$ = new Subscription();
   public SendActions = [
     {
       buttonType: "btn-h-primary",
@@ -96,23 +111,34 @@ export class Case360PageComponent implements OnInit {
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
     private readonly incomeFacade: IncomeFacade,
-    private readonly employmentFacade: EmploymentFacade
+    private readonly employmentFacade: EmploymentFacade,
+    private drugPharmacyFacade: DrugPharmacyFacade,
+    private workflowFacade: WorkflowFacade,
+    private readonly router: Router
   ) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.initialize();  
+    this.routeChangeSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.clientChangeSubscription$.unsubscribe();
+  }
+
+  /** Private methods **/
+
+  private initialize(){
     this.clientInfoVisibleSubject.next(false);
-    this.clientHeaderVisibleSubject.next(false);
+    this.clientHeaderVisibleSubject.next(true);
     this.caseSelection();
     this.loadDdlFamilyAndDependentEP();
     this.loadDdlEPEmployments();
     this.getQueryParams();
   }
-
-  /** Private methods **/
   private getQueryParams() {
     this.profileClientId = this.route.snapshot.params['id'];
-
     if (this.profileClientId > 0) {
       this.clientHeaderVisibleSubject.next(true);
     }
@@ -142,6 +168,20 @@ export class Case360PageComponent implements OnInit {
     this.caseFacade.loadDdlEPEmployments();
   }
 
+  private routeChangeSubscription() {
+    this.clientChangeSubscription$ = this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+    ).subscribe(() => {
+      const clientId = this.route.snapshot.paramMap.get('id') ?? 0 ;
+      if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
+        this.initialize();
+        this.resetTabs();
+        this.loadClientProfileInfoEventHandler();
+        this.loadReadOnlyClientInfoEventHandler();
+      }
+    });
+  }
+
   private loadIncomeData(clientId: any, eligibilityId: any, skipCount: number,
     pageSize: number, sortBy: string, sortType: string) {
     this.incomeFacade.loadIncomes(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
@@ -150,6 +190,11 @@ export class Case360PageComponent implements OnInit {
   private loadEmploymentData(clientId: any, eligibilityId: any, skipCount: number,
     pageSize: number, sortBy: string, sortType: string) {
     this.employmentFacade.loadEmployers(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
+  }
+
+  private resetTabs(){
+    Promise.resolve(null).then(() => this.tabStripParent.selectTab(0));
+    Promise.resolve(null).then(() => this.tabStripChild.selectTab(0));
   }
 
   /** Internal event methods **/
@@ -242,28 +287,51 @@ export class Case360PageComponent implements OnInit {
   loadClientImpInfo() {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
-
+  searchPharmacy(searchText: string) {
+    this.drugPharmacyFacade.searchPharmacies(searchText);
+  }
+  addPharmacy(vendorId: string) {
+    let priorityCode :string = "";
+    this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
+     
+      priorityCode = priorityCodes;
+    })
+    this.drugPharmacyFacade.addDrugPharmacy(
+      this.profileClientId,
+      vendorId,
+      priorityCode
+    );
+  }
   loadReadOnlyClientInfoEventHandler() {
-
     this.caseFacade.loadClientProfile(this.profileClientId);
     this.onClientProfileLoad()
   }
 
   loadClientProfileInfoEventHandler() {
-
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
-  
- 
 
+  removePharmacy(clientPharmacyId: string) {
+    this.drugPharmacyFacade.removeClientPharmacy(
+      this.workflowFacade.clientId ?? 0,
+      clientPharmacyId
+    );
+  }
+  removeDrugPharmacyRsp(vendorId: any) {
+    this.drugPharmacyFacade.removeDrugPharmacy(
+      this.profileClientId ?? 0,
+      vendorId
+    );
+  }
   onClientProfileHeaderLoad() {
     this.clientProfileHeader$?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
-
+        this.clientId =clientHeaderData?.clientId;
+        this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
+        this.historyClientCaseEligibilityId = clientHeaderData?.clientCaseEligibilityId;
           const clientHeader = {
-
             clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
             clientId: clientHeaderData?.clientId,
             clientCaseId: clientHeaderData?.clientCaseId,
