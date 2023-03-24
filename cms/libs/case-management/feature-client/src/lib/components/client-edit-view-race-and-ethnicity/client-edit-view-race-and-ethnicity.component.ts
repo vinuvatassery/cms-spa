@@ -47,7 +47,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
       const raceAndEthnicityData: Array<any> = [];
       this.ethnicityData=[];
       data.forEach((el: any) => {
-        el.value.forEach((el2: any) => {
+        el.forEach((el2: any) => {
           raceAndEthnicityData.push(el2);
           if (el2.lovTypeCode === 'ETHNICITY') {
             this.ethnicityData.push(el2);
