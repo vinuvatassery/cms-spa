@@ -19,7 +19,8 @@ export * from './lib/user-profile-card/user-profile-card.component';
 export * from './lib/loader/loader.component';
 export * from './lib/loader/grid-loader.component';
 export * from './lib/optionbutton-list/optionbutton-list.component';
-export * from './lib/hiv-case-manager-card/case-manager-card.component';
+export * from './lib/side-navigation/side-navigation.component';
+export * from './lib/user-photo-icon/user-photo-icon.component';
 
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';

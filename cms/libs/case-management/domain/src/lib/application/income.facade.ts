@@ -154,11 +154,11 @@ export class IncomeFacade {
     });
   }
 
-  save(noIncomeData : any): Observable<any> {
-    return this.contactDataService.updateNoIncomeData(noIncomeData);
+  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {
+    return this.contactDataService.updateNoIncomeData(clientCaseEligibilityId, noIncomeData);
   }
 
-  saveClientIncome(clientIncome: any, proofOfIncomeFile: any) {
+  saveClientIncome(clientId : any,clientIncome: any, proofOfIncomeFile: any) {
 
     const formData: any = new FormData();
     for (let key in clientIncome) {
@@ -173,9 +173,9 @@ export class IncomeFacade {
       }
     }
     formData.append('ProofOfIncomeFile', proofOfIncomeFile);
-    return this.contactDataService.saveIncome(formData);
+    return this.contactDataService.saveIncome(clientId,formData);
   }
-  editClientIncome(clientIncome:any, proofOfIncomeFile:any){
+  editClientIncome(clientId : any, clientIncomeId : any, clientIncome:any, proofOfIncomeFile:any){
     const formData: any = new FormData();
     for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
@@ -189,13 +189,13 @@ export class IncomeFacade {
       }
     }
     formData.append('proofOfIncomeFile',proofOfIncomeFile)
-    return this.contactDataService.editIncome(formData);
+    return this.contactDataService.editIncome(clientId, clientIncomeId, formData);
   }
 
-  deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string) {
-    return this.contactDataService.deleteIncome(clientIncomeId,clientId,clientCaseEligibilityId);
-  } 
-  loadIncomeDetails(clientIncomeId : string){
-    return this.contactDataService.loadIncomeDetailsService(clientIncomeId)
+  deleteIncome(clientIncomeId : string, clientId : any) {
+    return this.contactDataService.deleteIncome(clientIncomeId,clientId);
+  }
+  loadIncomeDetails(clientId : any, clientIncomeId : string){
+    return this.contactDataService.loadIncomeDetailsService(clientId, clientIncomeId)
   }
 }

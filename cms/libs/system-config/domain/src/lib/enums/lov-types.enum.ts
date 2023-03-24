@@ -30,4 +30,7 @@ export enum LovType {
     Group = 'GROUP_CODE',
     Aptc='APTC',
     EthnicityNotListed = 'NOT_LISTED',
+    VerificationMethod = 'VERIFICATION_METHOD',
+    AddressType = 'ADDRESS_TYPE',
+    ColumnDroplist = 'COLUMN_DROPLIST_CODE'
   }

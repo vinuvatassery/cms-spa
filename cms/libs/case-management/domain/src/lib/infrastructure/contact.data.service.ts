@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ContactInfo } from '../entities/contact';
+import { ClientAddress, ContactInfo } from '../entities/contact';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -17,7 +17,7 @@ export class ContactDataService {
     private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider) { }
 
-  /** Public methods **/  
+  /** Public methods **/
 
   loadDdlIncomeTypes() {
     return of(['Work', 'Self-employment', 'Unemployment Insurance', 'Supplemental Security Income (SSI)',
@@ -55,7 +55,7 @@ export class ContactDataService {
   }
 
   loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any, sortBy:any, sortType:any) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientId}/${clientCaseEligibilityId}?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/?clientCaseEligibilityId=${clientCaseEligibilityId}&SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
   }
 
   loadDependentsProofofSchools() {
@@ -169,8 +169,8 @@ export class ContactDataService {
     ]);
   }
 
-   
-  
+
+
   loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
     return this.http.get<ContactInfo>(this.getUrl(clientId, clientCaseEligibilityId));
   }
@@ -184,6 +184,16 @@ export class ContactDataService {
 
     return this.http.post(this.getUrl(clientId, clientCaseEligibilityId)
       , fd, { reportProgress: true, });
+  }
+
+  createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+       return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+       clientAddress);
+  }
+
+  updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+    clientAddress);
   }
 
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
@@ -203,12 +213,12 @@ export class ContactDataService {
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 
-  saveIncome(clientIncome: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+  saveIncome(clientId : any, clientIncome: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income`, clientIncome);
   }
 
-  updateNoIncomeData(noIncomeData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/no-income`, noIncomeData);
+  updateNoIncomeData(clientCaseEligibilityId : any, noIncomeData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/income`, noIncomeData);
   }
 
   formDataAppendObject(fd: FormData, obj: any, key?: any) {
@@ -223,23 +233,39 @@ export class ContactDataService {
       }
       else {
         fd.append(k, obj[i]);
-       
+
       }
     }
   }
 
-  editIncome(clientIncome: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes`, clientIncome);
+  editIncome(clientId : any, clientIncomeId : any, clientIncome: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`, clientIncome);
 
   }
 
-  deleteIncome(clientIncomeId : string, clientId : any, clientCaseEligibilityId : string){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}/${clientId}/${clientCaseEligibilityId}`,);
+  deleteIncome(clientIncomeId : string, clientId : any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`,);
   }
 
-  loadIncomeDetailsService(clientIncomeId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-incomes/${clientIncomeId}`,);
+  loadIncomeDetailsService(clientId : any, clientIncomeId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`,);
 
+  }
+
+  getClientAddress(clientId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address`);
+  }
+
+  deleteClientAddress(clientId:any,clientAddressId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientAddressId=${clientAddressId}`);
+  }
+
+  deactivateClientAddress(clientId:any,clientAddressId:any){
+    let clientAddress={
+      ClientId:clientId,
+      ClientAddressId:clientAddressId
+    }
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactivate`,clientAddress);
   }
   
 }

@@ -16,7 +16,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
   @Input() appInfoForm: FormGroup;
   @Input() raceAndEthnicityPrimaryData: Array<any>;
   @Input() raceAndEthnicityPrimaryNotListed: boolean;
-  
+
   @Output() RaceAndEthnicityData = new EventEmitter<any>();
   @Output() RaceAndEthnicityChange = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -34,7 +34,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
     this.raceAndEthnicityPrimaryNotListed=false;
   }
   ngOnInit(): void {
-    this.lovFacade.getRaceLovs();
     this.loadRaceAndEthnicity();
     this.appInfoForm.addControl('RaceAndEthnicityPrimary', new FormControl({}));
     this.appInfoForm.addControl('Ethnicity', new FormControl([]));

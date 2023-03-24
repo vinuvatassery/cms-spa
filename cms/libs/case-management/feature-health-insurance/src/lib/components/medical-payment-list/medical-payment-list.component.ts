@@ -22,6 +22,8 @@ export class MedicalPaymentListComponent implements OnInit {
     {text: 'All', value: 100}
   ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  
+ 
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
 

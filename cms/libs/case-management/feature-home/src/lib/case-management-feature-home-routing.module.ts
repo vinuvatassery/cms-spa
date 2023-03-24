@@ -16,7 +16,10 @@ const routes: Routes = [
   },
   {
     path: 'case-detail',
-    component: CaseDetailPageComponent,    
+    component: CaseDetailPageComponent,   
+    data: {
+      title: '',
+    }, 
     children: [
       {
         path: 'case-summary',
@@ -32,7 +35,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureClientModule
           ),
         data: {
-          title: null,
+          title: 'New Application',
         },
       },
       {
@@ -143,7 +146,7 @@ const routes: Routes = [
         },
       },
       {
-        path: '',
+        path: 'application-review',
         loadChildren: () =>
           import('@cms/case-management/feature-client-eligibility').then(
             (m) => m.CaseManagementFeatureClientEligibilityModule

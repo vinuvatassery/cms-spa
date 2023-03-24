@@ -1,14 +1,16 @@
-<section>
+<section [formGroup]="hivVerificationForm" >
   <div  *ngIf="!isSendRequest">
-    <div class="flex-row " [ngClass]="{'sendrequest-fieldwithbtn' : data === 'Request from Healthcare Provider via email'} ">
-     <div class="flex-col flex-col-6"   *ngIf="data === 'Request from Healthcare Provider via email'">
-
-   
+    <div class="flex-row " [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
+     <div class="flex-col flex-col-6"   *ngIf="isEmailFieldVisible">   
       <kendo-floatinglabel  text="Healthcare Provider’s Email Address">
-      <kendo-textbox aria-label="healthcare providers email address"  placeholder="Healthcare Provider’s Email Address"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+      <kendo-textbox aria-label="healthcare providers email address"  placeholder="Healthcare Provider’s Email Address"
+        [fillMode]="formUiStyle.inputFillMode" formControlName="providerEmailAddress">   
+      </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value !== ''">Enter valid Email Address.</kendo-formerror>
+      <kendo-formerror *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare Provider Email Address is required.</kendo-formerror>
     </div>
-      <div *ngIf="data !== 'Upload an attachment'" class="mt-2 flex-col flex-col-5">
+      <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'" class="mt-2 flex-col flex-col-5">
         <button
           kendoButton
           [primary]="true"
@@ -23,18 +25,17 @@
     </div>
     <div class="flex-row ">
       <div class="flex-col flex-col-8"> 
-      <kendo-formhint *ngIf="data === 'Request from Case Manager'"
+      <kendo-formhint *ngIf="providerOption === 'CASE_MANAGER'"
         >Their Case Manager will receive a notification to provide HIV
         Verification. Once they submit the form, you will receive a notification
         to approve or deny it.</kendo-formhint>
       <kendo-formhint
-        *ngIf="data === 'Request from Healthcare Provider via email'"
-        >Their provider will receive an email to fill and sign an HIV
-        Verification form. Once they submit the form, you will receive a
-        notification to approve or deny it.</kendo-formhint>
+        *ngIf="isEmailFieldVisible"
+        >Their provider will receive an email to fill and sign an HIV Verification form. 
+        Once they submit the form, you will receive a notification to approve or deny it.</kendo-formhint>
     </div>
     </div>
-    <div class="flex-row" *ngIf="data === 'Upload an attachment'">
+    <div class="flex-row" *ngIf="providerOption === 'UPLOAD_ATTACHMENT'">
       <div class="flex-col flex-col-6">  
       <kendo-upload   #Uploadanattachment   id="Uploadanattachment" aria-label="upload proof" name="upload proof"
       [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false"  
@@ -54,7 +55,6 @@
 </section>
 
 <!-- Show this after send a request -->
-
 <section>
   <div *ngIf="isSendRequest || isResendRequest">
     <div class="flex-row mt-3 align-items-center">
@@ -68,13 +68,12 @@
             >info_outline</span
           >
           <span
-            >You will receive a notification once the provider submits the HIV
-            Verification</span
+            >You will receive a notification once the provider submits the HIV Verification</span
           >
         </span>
       </div>
       <div class="flex-col mt-1">
-        Sent 10-10-2021
+        Sent {{sentDate | date:'MM-dd-yyyy'}}
         <button
           kendoButton
           class="k-primary-link text-t-normal text-underline"
@@ -84,7 +83,7 @@
           #refresh
           aria-label="user profile"
         >
-          Sara John
+        {{hivVerificationForm.controls["requestedUserName"].value}}
         </button>
         <button
           kendoButton
@@ -103,6 +102,6 @@
 
 <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
-    <common-user-profile-card></common-user-profile-card>
+    <common-user-profile-card [userId]="userId"></common-user-profile-card>
   </ng-template>
 </kendo-popover>
