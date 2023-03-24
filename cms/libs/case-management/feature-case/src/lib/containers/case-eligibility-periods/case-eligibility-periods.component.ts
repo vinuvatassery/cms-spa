@@ -22,6 +22,15 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
       this.setDropdownValues();
     }
   }
+  private _caseEligibilityId: string = "";
+  @Input() 
+  get caseEligibilityId(): string {
+    return this._caseEligibilityId;
+  }
+  set caseEligibilityId(value: string) {
+    this._caseEligibilityId = value;
+    this.setDefaultSelection();
+  }
 
   @Input() valueField: string = "";
   @Input() displayField: string = "";
@@ -39,6 +48,12 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
       };
       this.eligibilityPeriodsList.push(period);
     });
+  }
+  
+  setDefaultSelection() {
+    if (!!this.caseEligibilityId && this.eligibilityPeriodsList.length > 0) {
+      this.selectedValue = this.eligibilityPeriodsList.filter((x: any)=>x.id == this.caseEligibilityId)[0];
+    }
   }
 
   onPeriodChange(value: any) {

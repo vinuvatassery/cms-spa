@@ -123,8 +123,9 @@
                       <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
                         <case-management-case-eligibility-periods [valueField]="'id'" [displayField]="'label'"
-                        [eligibilityPeriodsData]="eligibilityPeriodData" [selectedValue]="historySelectedPeriod"
-                        (onEligibilityPeriodChange)="onPeriodSelectionChange($event)"></case-management-case-eligibility-periods>
+                          [eligibilityPeriodsData]="eligibilityPeriodData" [caseEligibilityId]="historyClientCaseEligibilityId"
+                          (onEligibilityPeriodChange)="onPeriodSelectionChange($event)">
+                        </case-management-case-eligibility-periods>
                       </div>
                     </div>
                   </div>
@@ -147,7 +148,7 @@
                       <span class="text-bold" for="eemploymentep">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
                         <case-management-case-eligibility-periods [valueField]="'id'" [displayField]="'label'"
-                        [eligibilityPeriodsData]="eligibilityPeriodData" [selectedValue]="historySelectedPeriod"
+                        [eligibilityPeriodsData]="eligibilityPeriodData" [caseEligibilityId]="historyClientCaseEligibilityId"
                         (onEligibilityPeriodChange)="onPeriodSelectionChange($event)"></case-management-case-eligibility-periods>
                       </div>
                     </div>

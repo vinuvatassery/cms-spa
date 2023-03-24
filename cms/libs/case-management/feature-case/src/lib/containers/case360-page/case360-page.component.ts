@@ -65,7 +65,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   clientHeaderTabs: any = [];
   selectedClientTabTitle: string = "";
   eligibilityPeriodData: any = [];
-  historySelectedPeriod: any = {};
   clientCaseId!: string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -348,11 +347,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
             caseWorkerId: clientHeaderData?.caseWorkerId,
           }
           this.eligibilityPeriodData = clientHeaderData?.eligibilityPeriods;
-          this.historySelectedPeriod = {
-            id: clientHeader?.clientCaseEligibilityId,
-            label: new Date(clientHeaderData?.eilgibilityStartDate).toLocaleDateString()
-              + ' - ' + new Date(clientHeaderData?.eligibilityEndDate).toLocaleDateString()
-          };
           this.clientCaseId = clientHeader?.clientCaseId
           this.clientHeaderSubject.next(clientHeader);
           if (clientHeader?.clientCaseEligibilityId) {
