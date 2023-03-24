@@ -1,29 +1,29 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { ContactFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
-  selector: 'case-management-deactivate-address-confirmation',
-  templateUrl: './deactivate-address-confirmation.component.html',
+  selector: 'case-management-delete-address-confirmation',
+  templateUrl: './delete-address-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeactivateAddressConfirmationComponent {
+export class DeleteAddressConfirmationComponent {
 
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade, private readonly cdr: ChangeDetectorRef) { }
   @Input() clientAddress!: any;
   @Input() clientId!: number;
 
-  @Output() deactivateModalCloseEvent= new EventEmitter<any>();
+  @Output() deleteModalCloseEvent= new EventEmitter<any>();
 
-  deactivateHomeAddress() {
+  deleteHomeAddress() {
     if (this.clientAddress) {
       this.contactFacade.showLoader();
-      this.contactFacade.deactivateClientAddress(this.clientId, this.clientAddress.clientAddressId).subscribe({
+      this.contactFacade.deleteClientAddress(this.clientId, this.clientAddress.clientAddressId).subscribe({
         next: (response: any) => {
           if(response){
             this.contactFacade.hideLoader();
-            this.closeDeactivateModal();
+            this.closeDeleteModal();
           }
         },
         error: (error: any) => {
@@ -33,8 +33,7 @@ export class DeactivateAddressConfirmationComponent {
     }
   }
 
-  closeDeactivateModal(){
-    this.deactivateModalCloseEvent.emit(true);
+  closeDeleteModal(){
+    this.deleteModalCloseEvent.emit(true);
   }
-
 }

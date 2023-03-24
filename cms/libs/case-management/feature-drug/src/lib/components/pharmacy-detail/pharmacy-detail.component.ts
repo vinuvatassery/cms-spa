@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Facades **/
-import { Pharmacy } from '@cms/case-management/domain';
+import { Pharmacy,DrugPharmacyFacade,PriorityCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { Observable } from 'rxjs';
 @Component({
@@ -33,13 +33,16 @@ export class PharmacyDetailComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Public properties **/
   isOpenNewPharmacyClicked = false;
+  isSetAsPrimary = false;
   filteredSelectedPharmacy!: any;
   pharmacyForm!: FormGroup;
   selectedPharmacyForEdit!: string;
   selectedPharmacyId!: string | null;
   showSelectPharmacyRequired = false;
   btnDisabled = false; 
+  constructor(private drugPharmacyFacade:DrugPharmacyFacade){
 
+  }
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if (this.isEditPharmacy) {
@@ -51,6 +54,7 @@ export class PharmacyDetailComponent implements OnInit {
   /** Private methods **/
   searchPharmacies(searchText: string) {
     this.selectedPharmacyId = null;
+    this.btnDisabled = false;
     this.searchPharmacyEvent.emit(searchText);
   }
 
@@ -60,13 +64,20 @@ export class PharmacyDetailComponent implements OnInit {
 
 
   addOrEditPharmacy() {
+    if(this.isSetAsPrimary){
+      this.drugPharmacyFacade.durgPharmacyPrioritySubject.next(PriorityCode.Primary);
+    }
+    
     if (this.selectedPharmacyId) {
       this.btnDisabled = true
       if (this.isEditPharmacy) {
+
         this.editPharmacyEvent.emit(this.selectedPharmacyId ?? '');
       }
       else {
+       
         this.addPharmacyEvent.emit(this.selectedPharmacyId ?? '');
+        
       }
     }
     else{

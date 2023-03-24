@@ -561,3 +561,9 @@ table,
     font-family:  $font-family
   }
 }
+.table-row-disabled{
+  
+  td{
+    background-color: $grey-f7;
+  }
+}

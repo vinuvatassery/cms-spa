@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ContactInfo } from '../entities/contact';
+import { ClientAddress, ContactInfo } from '../entities/contact';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -186,6 +186,16 @@ export class ContactDataService {
       , fd, { reportProgress: true, });
   }
 
+  createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+       return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+       clientAddress);
+  }
+
+  updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+    clientAddress);
+  }
+
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
     const fd = new FormData();
     if (contactInfo?.homeAddressProof?.document) {
@@ -242,4 +252,20 @@ export class ContactDataService {
 
   }
 
+  getClientAddress(clientId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address`);
+  }
+
+  deleteClientAddress(clientId:any,clientAddressId:any){
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientAddressId=${clientAddressId}`);
+  }
+
+  deactivateClientAddress(clientId:any,clientAddressId:any){
+    let clientAddress={
+      ClientId:clientId,
+      ClientAddressId:clientAddressId
+    }
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactivate`,clientAddress);
+  }
+  
 }

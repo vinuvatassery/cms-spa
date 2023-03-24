@@ -1,34 +1,38 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ClientProfile, CommunicationEvents, ScreenType, CaseFacade} from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { first, Subject } from 'rxjs';
+import { filter, first, Subject, Subscription } from 'rxjs';
+import { TabStripComponent } from '@progress/kendo-angular-layout';
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
   styleUrls: ['./case360-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Case360PageComponent implements OnInit {
+export class Case360PageComponent implements OnInit, OnDestroy {
+  @ViewChild('tabStripParent') public tabStripParent!: TabStripComponent;
+  @ViewChild('tabStripChild') public tabStripChild!: TabStripComponent;
+
   /** Private properties **/
   private selectedCase = new BehaviorSubject<any>({});
   private clientSubject = new Subject<any>();
   private clientHeaderSubject = new Subject<any>();
   private clientInfoVisibleSubject = new Subject<any>();
   private clientHeaderVisibleSubject = new Subject<any>();
- 
+
   loadedClient$ = this.clientSubject.asObservable();
   loadedClientHeader$ = this.clientHeaderSubject.asObservable();
   clientInfoVisible$ = this.clientInfoVisibleSubject.asObservable();
-  clientHeaderVisible$ = this.clientHeaderVisibleSubject.asObservable(); 
-  /** Public properties **/  
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  public uiTabStripScroll : UITabStripScroll = new UITabStripScroll();
-  ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;  
+  clientHeaderVisible$ = this.clientHeaderVisibleSubject.asObservable();
+  /** Public properties **/
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
+  ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;
   ddlFamilyAndDependentEP$ = this.caseFacade.ddlFamilyAndDependentEP$;
   clientProfile$ = this.caseFacade.clientProfile$;
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
@@ -37,6 +41,16 @@ export class Case360PageComponent implements OnInit {
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
+  //for add pharmacy
+  clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
+  pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
+  searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
+  addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
+  editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
+  removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
+  removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
+  triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
+  selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   isTodoDetailsOpened = false;
   isNewReminderOpened = false;
   isIdCardOpened = false;
@@ -50,10 +64,12 @@ export class Case360PageComponent implements OnInit {
   clientCaseId! : string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  clientId:any;
+  clientChangeSubscription$ = new Subscription();
   public SendActions = [
     {
       buttonType: "btn-h-primary",
-      text: "New Letter", 
+      text: "New Letter",
       icon: "markunread_mailbox",
       click: (): void => {
         this.onSendNewLetterClicked();
@@ -64,7 +80,7 @@ export class Case360PageComponent implements OnInit {
       text: "New Email",
       icon: "mail_outline",
       click: (): void => {
-       this.onSendNewEmailClicked()
+        this.onSendNewEmailClicked()
       },
     },
     {
@@ -72,45 +88,54 @@ export class Case360PageComponent implements OnInit {
       text: "New SMS Text",
       icon: "comment",
       click: (): void => {
-       this.onNewSMSTextClicked()
+        this.onNewSMSTextClicked()
       },
     },
     {
       buttonType: "btn-h-primary",
       text: "New ID Card",
-      icon: "call_to_action", 
+      icon: "call_to_action",
       click: (): void => {
-       this.onIdCardClicked()
+        this.onIdCardClicked()
       },
     },
- 
+
   ];
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
-    private readonly route: ActivatedRoute
-  ) {}
+    private readonly route: ActivatedRoute,
+    private drugPharmacyFacade: DrugPharmacyFacade,
+    private workflowFacade: WorkflowFacade,
+    private readonly router: Router
+  ) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.clientInfoVisibleSubject.next(false);
-    this.clientHeaderVisibleSubject.next(false); 
-    this.caseSelection();
-    this.loadDdlFamilyAndDependentEP();
-    this.loadDdlEPEmployments();
-    this.getQueryParams()  
+    this.initialize();  
+    this.routeChangeSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.clientChangeSubscription$.unsubscribe();
   }
 
   /** Private methods **/
-private getQueryParams()
-{  
-  this.profileClientId = this.route.snapshot.params['id']; 
-   
-  if(this.profileClientId > 0)
-  { 
-  this.clientHeaderVisibleSubject.next(true); 
+
+  private initialize(){
+    this.clientInfoVisibleSubject.next(false);
+    this.clientHeaderVisibleSubject.next(true);
+    this.caseSelection();
+    this.loadDdlFamilyAndDependentEP();
+    this.loadDdlEPEmployments();
+    this.getQueryParams();
   }
-}
+  private getQueryParams() {
+    this.profileClientId = this.route.snapshot.params['id'];
+    if (this.profileClientId > 0) {
+      this.clientHeaderVisibleSubject.next(true);
+    }
+  }
 
   private caseSelection() {
     this.route.paramMap.subscribe({
@@ -129,6 +154,25 @@ private getQueryParams()
 
   private loadDdlEPEmployments(): void {
     this.caseFacade.loadDdlEPEmployments();
+  }
+
+  private routeChangeSubscription() {
+    this.clientChangeSubscription$ = this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+    ).subscribe(() => {
+      const clientId = this.route.snapshot.paramMap.get('id') ?? 0 ;
+      if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
+        this.initialize();
+        this.resetTabs();
+        this.loadClientProfileInfoEventHandler();
+        this.loadReadOnlyClientInfoEventHandler();
+      }
+    });
+  }
+
+  private resetTabs(){
+    Promise.resolve(null).then(() => this.tabStripParent.selectTab(0));
+    Promise.resolve(null).then(() => this.tabStripChild.selectTab(0));
   }
 
   /** Internal event methods **/
@@ -203,124 +247,137 @@ private getQueryParams()
   {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
-
-  loadReadOnlyClientInfoEventHandler()
-  {
-    
+  searchPharmacy(searchText: string) {
+    this.drugPharmacyFacade.searchPharmacies(searchText);
+  }
+  addPharmacy(vendorId: string) {
+    let priorityCode :string = "";
+    this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
+     
+      priorityCode = priorityCodes;
+    })
+    this.drugPharmacyFacade.addDrugPharmacy(
+      this.profileClientId,
+      vendorId,
+      priorityCode
+    );
+  }
+  loadReadOnlyClientInfoEventHandler() {
     this.caseFacade.loadClientProfile(this.profileClientId);
     this.onClientProfileLoad()
   }
 
-  loadClientProfileInfoEventHandler()
-  {
-    
+  loadClientProfileInfoEventHandler() {
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
- 
 
-  onClientProfileHeaderLoad()
-  {  
-    this.clientProfileHeader$?.pipe(first((clientHeaderData: any ) => clientHeaderData?.clientId > 0))
-    .subscribe((clientHeaderData: any) =>
-    {
-      if(clientHeaderData?.clientId > 0)
-      {    
-        
-         const  clientHeader = {
-             
-          clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
-          clientId: clientHeaderData?.clientId,
-          clientCaseId: clientHeaderData?.clientCaseId,
-          urn: clientHeaderData?.urn,
-          caseStatus: clientHeaderData?.caseStatus,
-          group: clientHeaderData?.group,
-          eilgibilityStartDate:clientHeaderData?.eilgibilityStartDate,
-          eligibilityEndDate: clientHeaderData?.eligibilityEndDate,
-          fpl:clientHeaderData?.fpl,
-          clientFullName: clientHeaderData?.clientFullName,       
-          pronouns:  clientHeaderData?.pronouns,
-          clientCaseIdentity : clientHeaderData?.clientCaseIdentity,
-          clientOfficialIdFullName : clientHeaderData?.clientOfficialIdFullName,
-          caseWorkerId   : clientHeaderData?.caseWorkerId ,           
-         }
-         this.clientCaseId = clientHeader?.clientCaseId
-         this.clientHeaderSubject.next(clientHeader);
-         if(clientHeader?.clientCaseEligibilityId)
-         {
-          this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;         
-         }   
-         if(clientHeader?.caseWorkerId)
-         {
-          this.caseWorkerId = clientHeader?.caseWorkerId;         
-         }        
-         if(clientHeader?.clientCaseId)
-         {
-          this.clientCaseId = clientHeader?.clientCaseId;         
-         }
-      }
-    });
+  removePharmacy(clientPharmacyId: string) {
+    this.drugPharmacyFacade.removeClientPharmacy(
+      this.workflowFacade.clientId ?? 0,
+      clientPharmacyId
+    );
   }
-  onClientProfileLoad()
-  {     
-    this.clientProfile$?.pipe(first((clientData: any ) => clientData?.clientId > 0))
-    .subscribe((clientData: ClientProfile) =>
-    {
-      if(clientData?.clientId > 0)
-      {    
-        
-         const  client = {
-             
-          clientId   : clientData?.clientId , 
-          firstName   : clientData?.firstName , 
-          middleName   : clientData?.middleName , 
-          lastName   : clientData?.lastName , 
-          caseManagerId   : clientData?.caseManagerId ,
-          caseManagerName   : clientData?.caseManagerName , 
-          caseManagerPNumber   : clientData?.caseManagerPNumber ,
-          caseManagerDomainCode   : clientData?.caseManagerDomainCode ,  
-          caseManagerAssisterGroup   : clientData?.caseManagerAssisterGroup ,  
-          caseManagerEmail   : clientData?.caseManagerEmail , 
-          caseManagerPhone   : clientData?.caseManagerPhone ,  
-          caseManagerFax   : clientData?.caseManagerFax , 
-          caseManagerAddress1   : clientData?.caseManagerAddress1 , 
-          caseManagerAddress2   : clientData?.caseManagerAddress2 ,  
-          caseManagerCity   : clientData?.caseManagerCity ,  
-          caseManagerState   : clientData?.caseManagerState , 
-          caseManagerZip   : clientData?.caseManagerZip ,
-          insuranceFirstName   : clientData?.insuranceFirstName , 
-          insuranceLastName   : clientData?.insuranceLastName , 
-          officialIdFirstName   : clientData?.officialIdFirstName , 
-          officialIdLastName   : clientData?.officialIdLastName ,  
-          dob   : clientData?.dob , 
-          pronouns   : clientData?.pronouns ,
-          genderDescription   : clientData?.genderDescription ,  
-          gender   : clientData?.gender , 
-          ssn   : clientData?.ssn , 
-          clientTransgenderCode   : clientData?.clientTransgenderCode , 
-          clientTransgenderDesc   : clientData?.clientTransgenderDesc , 
-          clientSexualIdentities   : clientData?.clientSexualIdentities ,  
-          otherSexualDesc   : clientData?.otherSexualDesc , 
-          spokenLanguage   : clientData?.spokenLanguage ,  
-          writtenLanguage   : clientData?.writtenLanguage ,  
-          englishProficiency   : clientData?.englishProficiency , 
-          ethnicIdentity   : clientData?.ethnicIdentity , 
-          racialIdentities   : clientData?.racialIdentities , 
-          primaryRacialIdentity   : clientData?.primaryRacialIdentity,
-          lastModificationTime : clientData?.lastModificationTime,
-          lastModifierName : clientData?.lastModifierName,
-          lastModifierId : clientData?.lastModifierId
-         }
-         
-         this.clientSubject.next(client);
-        
-      }
-    });
-   
+  removeDrugPharmacyRsp(vendorId: any) {
+    this.drugPharmacyFacade.removeDrugPharmacy(
+      this.profileClientId ?? 0,
+      vendorId
+    );
   }
-  
+  onClientProfileHeaderLoad() {
+    this.clientProfileHeader$?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
+      .subscribe((clientHeaderData: any) => {
+        if (clientHeaderData?.clientId > 0) {
+        this.clientId =clientHeaderData?.clientId;
+this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
+          const clientHeader = {
 
-  loadHeaderAndProfile(){
+            clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
+            clientId: clientHeaderData?.clientId,
+            clientCaseId: clientHeaderData?.clientCaseId,
+            urn: clientHeaderData?.urn,
+            caseStatus: clientHeaderData?.caseStatus,
+            group: clientHeaderData?.group,
+            eilgibilityStartDate: clientHeaderData?.eilgibilityStartDate,
+            eligibilityEndDate: clientHeaderData?.eligibilityEndDate,
+            fpl: clientHeaderData?.fpl,
+            clientFullName: clientHeaderData?.clientFullName,
+            pronouns: clientHeaderData?.pronouns,
+            clientCaseIdentity: clientHeaderData?.clientCaseIdentity,
+            clientOfficialIdFullName: clientHeaderData?.clientOfficialIdFullName,
+            caseWorkerId: clientHeaderData?.caseWorkerId,
+          }
+          this.clientCaseId = clientHeader?.clientCaseId
+          this.clientHeaderSubject.next(clientHeader);
+          if (clientHeader?.clientCaseEligibilityId) {
+            this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
+          }
+          if (clientHeader?.caseWorkerId) {
+            this.caseWorkerId = clientHeader?.caseWorkerId;
+          }
+          if (clientHeader?.clientCaseId) {
+            this.clientCaseId = clientHeader?.clientCaseId;
+          }
+        }
+      });
+  }
+  onClientProfileLoad() {
+    this.clientProfile$?.pipe(first((clientData: any) => clientData?.clientId > 0))
+      .subscribe((clientData: ClientProfile) => {
+        if (clientData?.clientId > 0) {
+
+          const client = {
+
+            clientId: clientData?.clientId,
+            firstName: clientData?.firstName,
+            middleName: clientData?.middleName,
+            lastName: clientData?.lastName,
+            caseManagerId: clientData?.caseManagerId,
+            caseManagerName: clientData?.caseManagerName,
+            caseManagerPNumber: clientData?.caseManagerPNumber,
+            caseManagerDomainCode: clientData?.caseManagerDomainCode,
+            caseManagerAssisterGroup: clientData?.caseManagerAssisterGroup,
+            caseManagerEmail: clientData?.caseManagerEmail,
+            caseManagerPhone: clientData?.caseManagerPhone,
+            caseManagerFax: clientData?.caseManagerFax,
+            caseManagerAddress1: clientData?.caseManagerAddress1,
+            caseManagerAddress2: clientData?.caseManagerAddress2,
+            caseManagerCity: clientData?.caseManagerCity,
+            caseManagerState: clientData?.caseManagerState,
+            caseManagerZip: clientData?.caseManagerZip,
+            insuranceFirstName: clientData?.insuranceFirstName,
+            insuranceLastName: clientData?.insuranceLastName,
+            officialIdFirstName: clientData?.officialIdFirstName,
+            officialIdLastName: clientData?.officialIdLastName,
+            dob: clientData?.dob,
+            pronouns: clientData?.pronouns,
+            genderDescription: clientData?.genderDescription,
+            gender: clientData?.gender,
+            ssn: clientData?.ssn,
+            clientTransgenderCode: clientData?.clientTransgenderCode,
+            clientTransgenderDesc: clientData?.clientTransgenderDesc,
+            clientSexualIdentities: clientData?.clientSexualIdentities,
+            otherSexualDesc: clientData?.otherSexualDesc,
+            spokenLanguage: clientData?.spokenLanguage,
+            writtenLanguage: clientData?.writtenLanguage,
+            englishProficiency: clientData?.englishProficiency,
+            ethnicIdentity: clientData?.ethnicIdentity,
+            racialIdentities: clientData?.racialIdentities,
+            primaryRacialIdentity: clientData?.primaryRacialIdentity,
+            lastModificationTime: clientData?.lastModificationTime,
+            lastModifierName: clientData?.lastModifierName,
+            lastModifierId: clientData?.lastModifierId
+          }
+
+          this.clientSubject.next(client);
+
+        }
+      });
+
+  }
+
+
+  loadHeaderAndProfile() {
     this.loadClientProfileInfoEventHandler();
     this.loadReadOnlyClientInfoEventHandler();
   }
