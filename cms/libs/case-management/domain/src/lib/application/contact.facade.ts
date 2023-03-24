@@ -242,8 +242,4 @@ export class ContactFacade {
   deleteClientAddress(clientId:any,clientAddressId:any){
     return this.contactDataService.deleteClientAddress(clientId,clientAddressId);
   }
-
-  deactivateClientAddress(clientId:any,clientAddressId:any){
-    return this.contactDataService.deactivateClientAddress(clientId,clientAddressId);
-  }
 }

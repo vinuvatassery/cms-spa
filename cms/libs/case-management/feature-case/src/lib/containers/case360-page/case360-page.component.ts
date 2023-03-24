@@ -289,7 +289,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
         this.clientId =clientHeaderData?.clientId;
-this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
+        this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
           const clientHeader = {
 
             clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
