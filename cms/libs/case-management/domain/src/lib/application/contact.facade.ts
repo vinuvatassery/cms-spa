@@ -8,7 +8,8 @@ import { Contact, ContactInfo,ClientAddress } from '../entities/contact';
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain'
 import { catchError, of,Subject } from 'rxjs';
-import { LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
+import { LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -35,6 +36,12 @@ export class ContactFacade {
   private preferredClientEmailSubject =  new Subject<any>();
   private deactivateClientEmailSubject =  new Subject<any>();
   private removeClientEmailSubject =  new Subject<any>();
+  private clientPhonesSubject =  new Subject<any>();
+  private clientPhoneSubject =  new Subject<any>();
+  private addClientPhoneSubject =  new Subject<any>();
+  private preferredClientPhoneSubject =  new Subject<any>();
+  private deactivateClientPhoneSubject =  new Subject<any>();
+  private removeClientPhoneSubject =  new Subject<any>();
   
 
   /** Public properties **/
@@ -55,12 +62,26 @@ export class ContactFacade {
   editAddress$ =this.editAddressSubject.asObservable();
   editedAddress$ =this.editedAddressSubject.asObservable();
   showLoaderOnState$ = this.showLoaderOnState.asObservable();
-  clientPhones$ = this.clientEmailsSubject.asObservable();
-  clientPhone$ = this.clientEmailSubject.asObservable();
-  addClientPhoneResponse$ = this.addClientEmailSubject.asObservable();
-  preferredClientPhone$ = this.preferredClientEmailSubject.asObservable();
-  deactivateClientPhone$ = this.deactivateClientEmailSubject.asObservable();
-  removeClientPhone$ = this.removeClientEmailSubject.asObservable();
+  clientEmails$ = this.clientEmailsSubject.asObservable();
+  clientEmail$ = this.clientEmailSubject.asObservable();
+  addClientEmailResponse$ = this.addClientEmailSubject.asObservable();
+  preferredClientEmail$ = this.preferredClientEmailSubject.asObservable();
+  deactivateClientEmail$ = this.deactivateClientEmailSubject.asObservable();
+  removeClientEmail$ = this.removeClientEmailSubject.asObservable();
+  clientPhones$ = this.clientPhonesSubject.asObservable();
+  clientPhone$ = this.clientPhoneSubject.asObservable();
+  addClientPhoneResponse$ = this.addClientPhoneSubject.asObservable();
+  preferredClientPhone$ = this.preferredClientPhoneSubject.asObservable();
+  deactivateClientPhone$ = this.deactivateClientPhoneSubject.asObservable();
+  removeClientPhone$ = this.removeClientPhoneSubject.asObservable();
+  public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
+  public sortValue = ' '
+  public sortType = 'asc'
+
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
 
   /** Constructor**/
   constructor(
@@ -68,7 +89,8 @@ export class ContactFacade {
     private readonly loggingService: LoggingService,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
-    private readonly zipCodeFacade: ZipCodeFacade
+    private readonly zipCodeFacade: ZipCodeFacade,
+    private configurationProvider : ConfigurationProvider 
   ) { }
 
   /** Public methods **/
@@ -260,9 +282,9 @@ export class ContactFacade {
   }
 
   //#region client email//NOSONAR
-  loadClientEmails(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated : boolean): void {
+  loadClientEmails(clientCaseEligibilityId : string,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated : boolean): void {
      
-    this.contactDataService.loadClientEmails(clientId , skipcount ,maxResultCount  ,sort , sortType,showDeactivated).subscribe({
+    this.contactDataService.loadClientEmails(clientCaseEligibilityId , skipcount ,maxResultCount  ,sort , sortType,showDeactivated).subscribe({
       next: (clientEmailsResponse : any) => {        
         if(clientEmailsResponse)
         { 
@@ -282,9 +304,9 @@ export class ContactFacade {
     });
   }
 
-  loadClientEmail(clientId : number,clientEmailId : string): void {
+  loadClientEmail(clientId : number,clientEmailId : string,clientCaseEligibilityId : string): void {
  
-    this.contactDataService.loadClientEmail(clientId , clientEmailId).subscribe({
+    this.contactDataService.loadClientEmail(clientId , clientEmailId , clientCaseEligibilityId).subscribe({
       next: (clientEmailReponse : any) => {        
         if(clientEmailReponse)
         {                  
@@ -373,4 +395,119 @@ export class ContactFacade {
     }
 
 //#endregion client Email//NOSONAR
+//#region client phone//NOSONAR
+loadClientPhones(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated : boolean): void {
+     
+  this.contactDataService.loadClientPhones(clientId , skipcount ,maxResultCount  ,sort , sortType,showDeactivated).subscribe({
+    next: (clientPhonesResponse : any) => {        
+      if(clientPhonesResponse)
+      { 
+        const gridView = {
+          data : clientPhonesResponse["items"] ,        
+          total:  clientPhonesResponse["totalCount"]      
+          };      
+      
+        this.clientPhonesSubject.next(gridView);
+      
+      }
+     
+    },
+    error: (err) => {      
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+    },
+  });
+}
+
+loadClientPhone(clientId : number,clientPhoneId : string): void {
+
+  this.contactDataService.loadClientPhone(clientId , clientPhoneId).subscribe({
+    next: (clientPhoneReponse : any) => {        
+      if(clientPhoneReponse)
+      {                  
+      
+        this.clientPhoneSubject.next(clientPhoneReponse);
+      }         
+    },
+    error: (err) => {     
+   
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+    },
+  });
+}
+
+
+
+addClientPhone(phoneData: any) {   
+  
+    return this.contactDataService.savePhone(phoneData).subscribe({
+      next: (response) => {
+        this.addClientPhoneSubject.next(response)  
+        if (response === true) { 
+          const message =  phoneData?.clientPhoneId ? 'Phone Data Updated Successfully' :'Phone Data Added Successfully'
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+        }
+    
+      },
+      error: (err) => {       
+      
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+      },
+    });
+  }
+
+  preferredClientPhone(clientId : number,clientPhoneId : string) {   
+   
+    return this.contactDataService.updateClientPhonePreferred(clientId ,clientPhoneId ).subscribe({
+      next: (response) => {
+        this.preferredClientPhoneSubject.next(response)  
+        if (response === true) { 
+          const message =   'Phone Data Updated Successfully' 
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+        }
+      
+      },
+      error: (err) => {       
+      
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+      },
+    });
+  }
+
+  deactivateClientPhone(clientId : number,clientPhoneId : string) {   
+  
+    return this.contactDataService.deactivateClientPhone(clientId ,clientPhoneId ).subscribe({
+      next: (response) => {
+        this.deactivateClientPhoneSubject.next(response)  
+        if (response === true) { 
+          const message =   'Phone Deactivated Successfully' 
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+        }
+    
+      },
+      error: (err) => {       
+      
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+      },
+    });
+  }
+
+  removeClientPhone(clientId : number,clientPhoneId : string) {   
+  
+    return this.contactDataService.removeClientPhone(clientId ,clientPhoneId ).subscribe({
+      next: (response) => {
+        this.removeClientPhoneSubject.next(response)  
+        if (response === true) { 
+          const message =   'Phone Deleted Successfully' 
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
+        }
+      
+      },
+      error: (err) => {       
+      
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+      },
+    });
+  }
+
+//#endregion client phone//NOSONAR
 }

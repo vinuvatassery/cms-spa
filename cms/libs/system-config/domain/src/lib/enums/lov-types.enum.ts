@@ -31,5 +31,6 @@ export enum LovType {
     Aptc='APTC',
     EthnicityNotListed = 'NOT_LISTED',
     VerificationMethod = 'VERIFICATION_METHOD',
-    AddressType = 'ADDRESS_TYPE'
+    AddressType = 'ADDRESS_TYPE',
+    PhoneDeviceTypeCode = 'PHONE_DEVICE_TYPE_CODE',
   }

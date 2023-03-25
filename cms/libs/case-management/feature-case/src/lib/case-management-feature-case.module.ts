@@ -86,7 +86,7 @@ import { ClientImportantInfoComponent } from './components/client-important-info
     PageCompletionStatusComponent,
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
-    ClientImportantInfoComponent 
+    ClientImportantInfoComponent    
   ],
   exports: [
     CasePageComponent,
@@ -105,7 +105,7 @@ import { ClientImportantInfoComponent } from './components/client-important-info
     StatusPeriodComponent,
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
-    ClientImportantInfoComponent
+    ClientImportantInfoComponent    
   ],
 })
 export class CaseManagementFeatureCaseModule {}

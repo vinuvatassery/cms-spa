@@ -1,91 +1,99 @@
-<section class="k-dialog-body">
-  <p class="text-muted mb-2" *ngIf="!isEditValue">
-    Adding a new email address will deactivate the email address.
-  </p>
-  <p class="text-muted mb-2" *ngIf="isEditValue">
-    Edit or deactivate the email address.
-  </p>
-  <div class="flex-row">
-    <div class="flex-col">
-      <kendo-floatinglabel text="Email Address">
-        <kendo-textbox aria-label="email address"  placeholder="Email Address" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <div class="component-list-h">
-        <span class="app-checkboxwidtext-wrapper">
-          <input
-            type="checkbox"
-            kendoCheckBox
-            aria-labelledby="messagesOk"
-            id="messagesOk"
-          />
-          <label class="k-checkbox-label" for="messagesOk">Messages OK</label>
-        </span>
-        <span class="app-checkboxwidtext-wrapper">
-          <input
-            type="checkbox"
-            kendoCheckBox
-            aria-labelledby="goPaperlessAndSendViaEmail"
-            id="goPaperless"
-          />
-          <label class="k-checkbox-label" for="goPaperless"
-            >Go paperless and send important notices via email, when
-            possible</label
-          >
-        </span>
+<form [formGroup]="clientEmailForm" (ngSubmit)="onclientEmailFormSubmit()">   
+  <input type="hidden" formControlName ="clientEmailId">
+    <section class="k-dialog-body">
+      <p class="text-muted mb-2" *ngIf="!isEditValue">
+        Adding a new email address will deactivate the email address.
+      </p>
+      <p class="text-muted mb-2" *ngIf="isEditValue">
+        Edit or deactivate the email address.
+      </p>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel text="Email Address">
+            <kendo-textbox aria-label="email address" 
+            formControlName="email"
+            placeholder="Email Address" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+          <div class="component-list-h">
+            <span class="app-checkboxwidtext-wrapper">
+              <input
+              formControlName="detailMsgFlag"
+                type="checkbox"
+                kendoCheckBox
+                aria-labelledby="messagesOk"
+                id="messagesOk"
+              />
+              <label class="k-checkbox-label" for="messagesOk">Messages OK</label>
+            </span>
+            <span class="app-checkboxwidtext-wrapper">
+              <input
+              formControlName="paperlessFlag"
+                type="checkbox"
+                kendoCheckBox
+                aria-labelledby="goPaperlessAndSendViaEmail"
+                id="goPaperless"
+              />
+              <label class="k-checkbox-label" for="goPaperless"
+                >Go paperless and send important notices via email, when
+                possible</label
+              >
+            </span>
+          </div>
+        </div>
+        <div class="flex-col mt-3 mb-3">
+          <span class="app-checkboxwidtext-wrapper">
+            <input
+            formControlName="preferredFlag"
+              type="checkbox"
+              kendoCheckBox
+              aria-labelledby="preferredContactMethod"
+              id="preferredContactMethod"
+            />
+            <label class="k-checkbox-label" for="preferredContactMethod"
+              >Preferred contact method</label
+            >
+          </span>
+        </div>
       </div>
-    </div>
-    <div class="flex-col mt-3 mb-3">
-      <span class="app-checkboxwidtext-wrapper">
-        <input
-          type="checkbox"
-          kendoCheckBox
-          aria-labelledby="preferredContactMethod"
-          id="preferredContactMethod"
-        />
-        <label class="k-checkbox-label" for="preferredContactMethod"
-          >Preferred contact method</label
-        >
-      </span>
-    </div>
-  </div>
-</section>
+    </section>
 
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div *ngIf="isEditValue === true">
-      <button
-        kendoButton
-        [primary]="true"
-        look="flat"
-        (click)="onDeactivateClicked()"
-        aria-label="deactivate email address"
-      >
-        Deactivate
-      </button>
-      <div *ngIf="isDeactivateValue">
-        <kendo-dialog
-          (close)="onDeactivateEmailAddressClosed()"
-          class="app-c-modal app-c-modal-sm app-c-modal-np"
-          title="Deactivate email address?"
-        >
-          <case-management-deactivate-email-confirmation></case-management-deactivate-email-confirmation>
-        </kendo-dialog>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div *ngIf="isEditValue === true">
+          <button
+            kendoButton
+            [primary]="true"
+            look="flat"
+            (click)="onDeactivateClicked()"
+            aria-label="deactivate email address"
+          >
+            Deactivate
+          </button>
+          <div *ngIf="isDeactivateValue">
+            <kendo-dialog
+              (close)="onDeactivateEmailAddressClosed()"
+              class="app-c-modal app-c-modal-sm app-c-modal-np"
+              title="Deactivate email address?"
+            >
+              <case-management-deactivate-email-confirmation></case-management-deactivate-email-confirmation>
+            </kendo-dialog>
+          </div>
+        </div>
+        <div class="justify-content-end">
+          <button
+            kendoButton
+            [primary]="true"
+            look="outline"
+            aria-label="cancel edit or add email"
+          >
+            Cancel
+          </button>
+          <button kendoButton [primary]="true" aria-label="add or update email">
+            {{ isEditValue ? 'Update' : 'Add' }}
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="justify-content-end">
-      <button
-        kendoButton
-        [primary]="true"
-        look="outline"
-        aria-label="cancel edit or add email"
-      >
-        Cancel
-      </button>
-      <button kendoButton [primary]="true" aria-label="add or update email">
-        {{ isEditValue ? 'Update' : 'Add' }}
-      </button>
-    </div>
-  </div>
-</kendo-dialog-actions>
+    </kendo-dialog-actions>
+</form>

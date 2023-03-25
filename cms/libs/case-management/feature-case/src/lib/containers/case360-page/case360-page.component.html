@@ -66,15 +66,14 @@
                     <!-- Address Section -->
                     <div class="flex-col">
                       <case-management-address-list [clientId]="clientId" [caseEligibilityId]="clientCaseEligibilityId"></case-management-address-list>
-                    </div>
-                    <!-- Phone Section -->
-                    <div class="flex-col">
-                      <case-management-phone-list></case-management-phone-list>
-                    </div>
-                    <!-- Email Section -->
-                    <div class="flex-col">
-                      <case-management-email-list></case-management-email-list>
-                    </div>
+                    </div>                   
+                  
+                  
+                      <case-management-profile-contact-page
+                      [profileClientId]="profileClientId"
+                      [clientCaseEligibilityId]="clientCaseEligibilityId"
+                      ></case-management-profile-contact-page>
+                   
                     <!-- Email Section -->
                     <div class="flex-col">
                       <case-management-friend-or-family-list></case-management-friend-or-family-list>

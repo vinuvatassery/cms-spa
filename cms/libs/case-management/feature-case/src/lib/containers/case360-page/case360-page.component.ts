@@ -4,10 +4,11 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade } from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade, ContactFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -51,6 +52,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
   triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
   selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
+  
   isTodoDetailsOpened = false;
   isNewReminderOpened = false;
   isIdCardOpened = false;
@@ -61,7 +63,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   clientCaseEligibilityId! : string;
   caseWorkerId! : string;
   clientHeaderTabs: any = [];
-  clientCaseId! : string
+  clientCaseId! : string 
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId:any;
@@ -107,7 +109,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private workflowFacade: WorkflowFacade,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly contactFacade : ContactFacade,
+    private readonly lovFacade : LovFacade
   ) { }
 
   /** Lifecycle hooks **/
@@ -130,7 +134,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.loadDdlEPEmployments();
     this.getQueryParams();
   }
-  private getQueryParams() {
+  private getQueryParams() {    
     this.profileClientId = this.route.snapshot.params['id'];
     if (this.profileClientId > 0) {
       this.clientHeaderVisibleSubject.next(true);
@@ -267,7 +271,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.onClientProfileLoad()
   }
 
-  loadClientProfileInfoEventHandler() {
+  loadClientProfileInfoEventHandler() {    
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
@@ -337,8 +341,8 @@ this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
             caseManagerPNumber: clientData?.caseManagerPNumber,
             caseManagerDomainCode: clientData?.caseManagerDomainCode,
             caseManagerAssisterGroup: clientData?.caseManagerAssisterGroup,
-            caseManagerEmail: clientData?.caseManagerEmail,
             caseManagerPhone: clientData?.caseManagerPhone,
+            caseManagerEmail: clientData?.caseManagerEmail,
             caseManagerFax: clientData?.caseManagerFax,
             caseManagerAddress1: clientData?.caseManagerAddress1,
             caseManagerAddress2: clientData?.caseManagerAddress2,
@@ -381,4 +385,6 @@ this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
     this.loadClientProfileInfoEventHandler();
     this.loadReadOnlyClientInfoEventHandler();
   }
+
+  
 }
