@@ -10,31 +10,31 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eligibilityPeriodsList: any = [];
+  selectedValue: any = {};
 
-  private _eligibilityPeriodsData: any = [];
+  private caseEligibilityPeriodsData: any = [];
   @Input()
   get eligibilityPeriodsData(): any {
-    return this._eligibilityPeriodsData;
+    return this.caseEligibilityPeriodsData;
   }
   set eligibilityPeriodsData(data: any) {
     if (data) {
-      this._eligibilityPeriodsData = data;
+      this.caseEligibilityPeriodsData = data;
       this.setDropdownValues();
     }
   }
-  private _caseEligibilityId: string = "";
+  private eligibilityId: string = "";
   @Input() 
   get caseEligibilityId(): string {
-    return this._caseEligibilityId;
+    return this.eligibilityId;
   }
   set caseEligibilityId(value: string) {
-    this._caseEligibilityId = value;
+    this.eligibilityId = value;
     this.setDefaultSelection();
   }
 
   @Input() valueField: string = "";
   @Input() displayField: string = "";
-  @Input() selectedValue: any = {};
   @Output() onEligibilityPeriodChange = new EventEmitter<any>();
 
   ngOnInit() { }
