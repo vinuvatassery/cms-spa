@@ -24,7 +24,6 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
   raceAndEthnicityData: Array<any> = [];
   ethnicityData: Array<any> = [];
-
   popupClassMultiSelect = 'multiSelectSearchPopup';
   constructor(
     private readonly lovFacade: LovFacade,
@@ -81,7 +80,7 @@ export class ClientEditViewRaceAndEthnicityComponent implements OnInit {
 
   getCheckedItems(currentItem: any) {
     let values = this.appInfoForm.controls['RaceAndEthnicity']?.value;
-    if (values.length > 0) {
+    if (values && values.length > 0) {
       let item = values.find((x: any) => x.lovCode == currentItem.lovCode);
       if (item) {
         return true;

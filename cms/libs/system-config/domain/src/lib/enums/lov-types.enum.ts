@@ -32,5 +32,6 @@ export enum LovType {
     EthnicityNotListed = 'NOT_LISTED',
     VerificationMethod = 'VERIFICATION_METHOD',
     AddressType = 'ADDRESS_TYPE',
+    ColumnDroplist = 'COLUMN_DROPLIST_CODE',
     PhoneDeviceTypeCode = 'PHONE_DEVICE_TYPE_CODE',
   }
