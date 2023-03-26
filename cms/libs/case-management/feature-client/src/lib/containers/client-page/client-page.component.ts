@@ -278,8 +278,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
               return of(false);
             }
             return of(false);
-          })
-
+          }),
+          tap(()=> this.caseFacade.loadActiveSession())
         );
       }
     }
