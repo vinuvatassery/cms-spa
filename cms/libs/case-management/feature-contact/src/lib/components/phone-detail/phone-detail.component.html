@@ -100,34 +100,27 @@
         <div class="justify-content-between">
           <div *ngIf="isEditValue === true">
             <button
-              kendoButton
-              [primary]="true"
+              kendoButton           
               look="flat"
               (click)="onDeactivateClicked()"
               aria-label="deactivate phone"
+              [disabled]="btnDisabled"  
             >
               Deactivate
-            </button>
-            <div *ngIf="isDeactivateValue">
-              <kendo-dialog
-                *ngIf="isDeactivatePhoneNumberPopup"
-                (close)="onDeactivatePhoneNumberClosed()"
-                class="app-c-modal app-c-modal-sm app-c-modal-np"
-                title="Deactivate phone number?"
-              >
-                <case-management-deactivate-phone-confirmation></case-management-deactivate-phone-confirmation>
-              </kendo-dialog>
-            </div>
+            </button>          
           </div>
           <div class="justify-content-end">
             <button
-              kendoButton             
+              kendoButton    
+              [primary]="false"         
               look="outline"
               aria-label="cancel adding phone detail"
+              [disabled]="btnDisabled"  
               (click)="onDeactivatePhoneNumberClosed()"
             >
               Cancel
             </button>
+            
             <button
               kendoButton
               [primary]="true"

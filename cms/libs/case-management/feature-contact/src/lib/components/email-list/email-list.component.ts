@@ -167,7 +167,7 @@ export class EmailListComponent implements OnChanges  {
       .subscribe((data: any) =>
       {      
         this.gridEmailDataSubject.next(data)        
-        if(data?.total >= 0)
+        if(data?.total >= 0 || data?.total === -1)
         {
           this.loader =false;    
         }

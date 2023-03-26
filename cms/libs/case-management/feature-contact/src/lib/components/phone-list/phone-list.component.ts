@@ -7,8 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'case-management-phone-list',
-  templateUrl: './phone-list.component.html',
-  styleUrls: ['./phone-list.component.scss'],
+  templateUrl: './phone-list.component.html',  
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneListComponent implements  OnChanges {
@@ -169,7 +168,7 @@ export class PhoneListComponent implements  OnChanges {
     {      
       this.gridPhoneDataSubject.next(data)
 
-      if(data?.total)
+      if(data?.total || data?.total === -1)
       {
         this.loader =false;    
       }

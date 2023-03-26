@@ -298,36 +298,43 @@ export class ContactFacade {
         }
        
       },
-      error: (err) => {      
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+      error: (err) => {  
+        const gridView = {
+          data : null ,        
+          total:  -1      
+          };  
+        this.clientPhonesSubject.next(gridView);     
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)       
       },
     });
   }
 
   loadClientEmail(clientId : number,clientEmailId : string,clientCaseEligibilityId : string): void {
- 
+    this.showLoader()
     this.contactDataService.loadClientEmail(clientId , clientEmailId , clientCaseEligibilityId).subscribe({
       next: (clientEmailReponse : any) => {        
         if(clientEmailReponse)
         {                  
-        
+          this.hideLoader()
           this.clientEmailSubject.next(clientEmailReponse);
         }         
       },
       error: (err) => {     
      
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
   }
 
 
   
-  addClientEmail(emailData: any) {       
+  addClientEmail(emailData: any) {   
+    this.showLoader()    
       return this.contactDataService.saveEmail(emailData).subscribe({
         next: (response) => {
           this.addClientEmailSubject.next(response)  
           if (response === true) { 
+            this.hideLoader()
             const message =  emailData?.clientEmailId ? 'Email Data Updated Successfully' :'Email Data Added Successfully'
             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
           }
@@ -335,7 +342,7 @@ export class ContactFacade {
         },
         error: (err) => {       
         
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)     
         },
       });
     }
@@ -353,7 +360,7 @@ export class ContactFacade {
         },
         error: (err) => {       
         
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
         },
       });
     }
@@ -371,7 +378,7 @@ export class ContactFacade {
         },
         error: (err) => {       
         
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
         },
       });
     }
@@ -389,7 +396,7 @@ export class ContactFacade {
         },
         error: (err) => {       
         
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
         },
       });
     }
@@ -412,19 +419,24 @@ loadClientPhones(clientId : number,skipcount : number,maxResultCount : number ,s
       }
      
     },
-    error: (err) => {      
-      this.showHideSnackBar(SnackBarNotificationType.ERROR , err);       
+    error: (err) => {     
+      const gridView = {
+        data : null ,        
+        total:  -1      
+        };  
+      this.clientPhonesSubject.next(gridView); 
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)     
     },
   });
 }
 
 loadClientPhone(clientId : number,clientPhoneId : string): void {
-
+this.showLoader()
   this.contactDataService.loadClientPhone(clientId , clientPhoneId).subscribe({
     next: (clientPhoneReponse : any) => {        
       if(clientPhoneReponse)
       {                  
-      
+        this.hideLoader()
         this.clientPhoneSubject.next(clientPhoneReponse);
       }         
     },
@@ -438,11 +450,12 @@ loadClientPhone(clientId : number,clientPhoneId : string): void {
 
 
 addClientPhone(phoneData: any) {   
-  
+  this.showLoader()
     return this.contactDataService.savePhone(phoneData).subscribe({
       next: (response) => {
         this.addClientPhoneSubject.next(response)  
         if (response === true) { 
+          this.hideLoader()
           const message =  phoneData?.clientPhoneId ? 'Phone Data Updated Successfully' :'Phone Data Added Successfully'
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, message);
         }
@@ -450,7 +463,7 @@ addClientPhone(phoneData: any) {
       },
       error: (err) => {       
       
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
       },
     });
   }
@@ -468,7 +481,7 @@ addClientPhone(phoneData: any) {
       },
       error: (err) => {       
       
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)        
       },
     });
   }
@@ -486,7 +499,7 @@ addClientPhone(phoneData: any) {
       },
       error: (err) => {       
       
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)         
       },
     });
   }
@@ -504,7 +517,7 @@ addClientPhone(phoneData: any) {
       },
       error: (err) => {       
       
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);       
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)     
       },
     });
   }

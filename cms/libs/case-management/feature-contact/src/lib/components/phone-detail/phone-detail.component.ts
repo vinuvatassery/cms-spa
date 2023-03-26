@@ -16,8 +16,10 @@ export class PhoneDetailComponent implements OnInit {
   @Input() selectedPhoneData: any
   @Output() addClientPhoneEvent = new EventEmitter<any>();
   @Output() loadDeviceTypeLovEvent = new EventEmitter<any>(); 
+  @Output() deactivateClientPhoneEvent = new EventEmitter<any>(); 
 
   /** Public properties **/
+  selectedclientPhoneId! : string
   ddlPhoneTypes$ = this.contactFacade.ddlPhoneTypes$;
   isDeactivateValue!: boolean;
   isDeactivatePhoneNumberPopup = true;
@@ -54,8 +56,7 @@ export class PhoneDetailComponent implements OnInit {
   }
   /** Internal event methods **/
   onDeactivateClicked() {
-    this.isDeactivateValue = true;
-    this.isDeactivatePhoneNumberPopup = true;
+    this.deactivateClientPhoneEvent.emit(this.selectedclientPhoneId);
   }
 
   onDeactivatePhoneNumberClosed() {
@@ -82,7 +83,7 @@ export class PhoneDetailComponent implements OnInit {
 
   onSelectedPhoneFormLoad()
   {     
-    
+    this.selectedclientPhoneId = this.selectedPhoneData?.clientPhoneId 
     this.clientPhoneForm.setValue(
             {
               clientPhoneId: this.selectedPhoneData?.clientPhoneId   ,
