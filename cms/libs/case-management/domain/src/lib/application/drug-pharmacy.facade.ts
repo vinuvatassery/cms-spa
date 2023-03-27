@@ -212,7 +212,8 @@ export class DrugPharmacyFacade {
   addClientPharmacy(clientId: number, vendorId: string,) {
   
     const model = {
-      vendorId: vendorId    
+      vendorId: vendorId ,   
+      IsUpdatePriorityCode:false  
     };
 
     this.loaderService.show();
@@ -298,7 +299,8 @@ export class DrugPharmacyFacade {
    
     const model = {
       vendorId: vendorId,
-      PriorityCode:priorityCode     
+      PriorityCode:priorityCode,   
+      IsUpdatePriorityCode:true  
     };
 
     this.loaderService.show();

@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 /** External service **/
 import { BehaviorSubject, mergeMap, of, tap } from 'rxjs';
 import { DragEndEvent } from "@progress/kendo-angular-sortable";
@@ -25,6 +25,7 @@ export class LastVisitedCasesComponent implements OnInit {
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly notificationSnackbarService: NotificationSnackbarService) {
   }
 
@@ -52,13 +53,15 @@ export class LastVisitedCasesComponent implements OnInit {
       return;
     }
 
-    this.router.navigate(['case-management/case-detail'], {
-      queryParams: {
-        sid: session?.sessionId,
-        eid: session?.entityId
-      }     
-    });
-
+    const sessionId =  this.route.snapshot.queryParams['sid'];
+    if(sessionId !== session?.sessionId){
+      this.router.navigate(['case-management/case-detail'], {
+          queryParams: {
+            sid: session?.sessionId,
+            eid: session?.entityId
+          }      
+      });
+    }
   }
 
   public onDragEnd(e: DragEndEvent): void {
