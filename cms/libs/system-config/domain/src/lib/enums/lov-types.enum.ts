@@ -33,4 +33,5 @@ export enum LovType {
     VerificationMethod = 'VERIFICATION_METHOD',
     AddressType = 'ADDRESS_TYPE',
     EligibilityStatus ='ELIGIBILITY_STATUS'
+    ColumnDroplist = 'COLUMN_DROPLIST_CODE'
   }

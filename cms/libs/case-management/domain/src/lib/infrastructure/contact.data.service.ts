@@ -187,12 +187,12 @@ export class ContactDataService {
   }
 
   createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
-       return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+       return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses?clientEligibilityId=${clientCaseEligibilityId}`,
        clientAddress);
   }
 
   updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientEligibilityId=${clientCaseEligibilityId}`,
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses?clientEligibilityId=${clientCaseEligibilityId}`,
     clientAddress);
   }
 
@@ -253,19 +253,10 @@ export class ContactDataService {
   }
 
   getClientAddress(clientId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses`);
   }
 
   deleteClientAddress(clientId:any,clientAddressId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address?clientAddressId=${clientAddressId}`);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses/${clientAddressId}`);
   }
-
-  deactivateClientAddress(clientId:any,clientAddressId:any){
-    let clientAddress={
-      ClientId:clientId,
-      ClientAddressId:clientAddressId
-    }
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactivate`,clientAddress);
-  }
-  
 }
