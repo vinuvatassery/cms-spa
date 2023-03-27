@@ -21,7 +21,7 @@ export class Case360HeaderComponent implements OnInit{
   isGroupDetailOpened = false;
 
      /** Lifecycle hooks **/
- ngOnInit(): void {
+ ngOnInit(): void {  
   this.loadClientProfileInfoEvent.emit()  
 }
 
