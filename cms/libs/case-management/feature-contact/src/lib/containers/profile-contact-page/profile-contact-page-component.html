@@ -1,0 +1,44 @@
+<div class="block-section mt-1">
+  <div class="flex-row mb-1">
+    <div class="flex-col">
+      <h2 class="title-md mb-0 text-bold">Contact Info</h2>
+
+
+      <div class="flex-col">
+        <case-management-address-list [clientId]="profileClientId"
+          [caseEligibilityId]="clientCaseEligibilityId"></case-management-address-list>
+
+      </div>
+      <div class="flex-col">
+        <case-management-phone-list [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+          [clientPhonesData$]="clientPhones$" [clientPhone$]="clientPhone$"
+          [lovClientPhoneDeviceType$]="lovClientPhoneDeviceType$" [addClientPhoneResponse$]="addClientPhoneResponse$"
+          [preferredClientPhone$]="preferredClientPhone$" [deactivateClientPhone$]="deactivateClientPhone$"
+          [removeClientPhone$]="removeClientPhone$" (loadClientPhonesListEvent)="loadClientPhonesHandle($event)"
+          (loadSelectedPhoneEvent)="loadClientPhoneHandle($event)" (addClientPhoneEvent)="addClientPhoneHandle($event)"
+          (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()"
+          (preferredClientPhoneEvent)="preferredClientPhoneHandle($event)"
+          (deactivateClientPhoneEvent)="deactivateClientPhoneHandle($event)"
+          (removeClientPhoneEvent)="removeClientPhoneHandle($event)"></case-management-phone-list>
+      </div>
+
+      <div class="flex-col">
+        <case-management-email-list [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+          [clientEmailsData$]="clientEmails$" [clientEmail$]="clientEmail$"
+          [addClientEmailResponse$]="addClientEmailResponse$" [preferredClientEmail$]="preferredClientEmail$"
+          [deactivateClientEmail$]="deactivateClientEmail$" [removeClientEmail$]="removeClientEmail$"
+          [paperless$]="paperless$" (loadClientEmailsListEvent)="loadClientEmailsHandle($event)"
+          (loadSelectedEmailEvent)="loadClientEmailHandle($event)" (addClientEmailEvent)="addClientEmailHandle($event)"
+          (preferredClientEmailEvent)="preferredClientEmailHandle($event)"
+          (deactivateClientEmailEvent)="deactivateClientEmailHandle($event)"
+          (removeClientEmailEvent)="removeClientEmailHandle($event)"
+          (loadClientPaperLessStatusEvent)="loadClientPaperLessStatusHandle()"></case-management-email-list>
+      </div>
+
+      <div class="flex-col">
+        <case-management-friend-or-family-list></case-management-friend-or-family-list>
+
+      </div>
+    </div>
+  </div>
+</div>
