@@ -84,7 +84,15 @@ export class PharmaciesListComponent implements OnInit {
       buttonType: 'btn-h-danger',
       text: 'Deactivate',
       icon: 'block',
+      type:'Deactivate',
       click: (clientPharmacy: any): void => {
+        if(clientPharmacy.pharmacyId && clientPharmacy.priorityCode != 'P'){
+          let pharmacy ={
+            ClientId:this.clientId,
+            IsActive:false
+          }
+          this.drugPharmacyFacade.reActivatePharmacies(clientPharmacy.pharmacyId,pharmacy);
+        }
         if (clientPharmacy.priorityCode === 'P') {
           this.OpenSelectNewPrimaryPharmaciesClicked(
             clientPharmacy,
@@ -99,16 +107,35 @@ export class PharmaciesListComponent implements OnInit {
       buttonType: 'btn-h-primary',
       text: 'Re-activate',
       icon: 'done',
+      type:'Reactivate',
       click: (clientPharmacy: any): void => {
-        this.reActivatePharmaciesClicked(clientPharmacy);
+        if(clientPharmacy.pharmacyId){
+          let pharmacy ={
+            ClientId:this.clientId,
+            IsActive:true
+          }
+          this.drugPharmacyFacade.reActivatePharmacies(clientPharmacy.pharmacyId,pharmacy);
+        }
+
       },
     },
     {
       buttonType: 'btn-h-warn',
       text: 'Mark Primary',
       icon: 'star',
+      type:'MarkAsPrimary',
       click: (clientPharmacy: any): void => {
-        this.makePharmaciesPrimaryClicked(clientPharmacy);
+        if(clientPharmacy.pharmacyId){
+          let pharmacyPriorityites = [{
+            ClientPharmacyId:clientPharmacy.pharmacyId,
+            ClientId:this.clientId,
+            PriorityCode:'P'
+            
+          }]
+          this.drugPharmacyFacade.updateDrugOharamcyPriority(this.clientId,pharmacyPriorityites)
+        }
+    
+        
       },
     },
     {
