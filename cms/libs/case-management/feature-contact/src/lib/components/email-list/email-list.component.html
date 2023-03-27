@@ -70,7 +70,7 @@
         <kendo-grid-column
           field="effectiveDate"
           title="Effective Date"
-          [width]="100"
+          [width]="100" [sortable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.effectiveDate}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate}}  
