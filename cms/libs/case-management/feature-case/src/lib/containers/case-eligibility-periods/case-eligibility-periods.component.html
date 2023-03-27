@@ -1,4 +1,4 @@
 <kendo-dropdownlist  aria-label="EligibilityPeriods" [fillMode]="formUiStyle.dropDownFillMode"
- [data]="eligibilityPeriodsList" [textField]="displayField" [(value)]="selectedValue"
- [valueField]="valueField" (valueChange)="onPeriodChange($event)">
+ [data]="eligibilityPeriodsList" [textField]="'label'" [(value)]="selectedValue"
+ [valueField]="'id'" (valueChange)="onPeriodChange($event)">
 </kendo-dropdownlist>

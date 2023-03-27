@@ -33,8 +33,6 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
     this.setDefaultSelection();
   }
 
-  @Input() valueField: string = "";
-  @Input() displayField: string = "";
   @Output() onEligibilityPeriodChange = new EventEmitter<any>();
 
   ngOnInit() { }
