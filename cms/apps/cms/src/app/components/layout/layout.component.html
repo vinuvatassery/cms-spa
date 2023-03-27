@@ -3,11 +3,11 @@
 
 <h1 hidden>CMS</h1>
 <section class="app-l-header" role="header" >
-  <div class="header_menu-left_most_section"  *ifPermission='["Layout_Logo_View_Only"]'>
-    <button class="mobile-menu-icon" (click)="openMobileMenu()"> <span class="material-icons">
+  <div class="header_menu-left_most_section"  >
+    <button class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
       menu
       </span></button>
-    <div class="header-logo" [routerLink]="['/']">
+    <div class="header-logo" [routerLink]="['/']" *ifPermission='["Layout_Logo_View_Only"]'>
      
       <img src="./../../../assets/images/ORCares-Logo.png"  alt="ORCares Logo"  class="branding-logo" />
     </div>
@@ -28,9 +28,9 @@
     opened
     position="start"
     class="app-l-sidebar"
-    [class.menuToggled]="isSideMenuToggled"  *ifPermission='["Layout_Menu_View_Only"]'
+    [class.menuToggled]="isSideMenuToggled"  
   >
-    <div class="drawer-inner-container" role="menuitem">
+    <div class="drawer-inner-container" role="menuitem" *ifPermission='["Layout_Menu_View_Only"]'>
       <div class="sidebar-hamburger">
         <button
           (click)="onSideMenuToggleClicked()"
