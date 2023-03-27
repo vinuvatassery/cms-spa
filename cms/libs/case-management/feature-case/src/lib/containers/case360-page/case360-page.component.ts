@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade, ContactFacade } from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, ScreenType, CaseFacade,WorkflowFacade, ContactFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';

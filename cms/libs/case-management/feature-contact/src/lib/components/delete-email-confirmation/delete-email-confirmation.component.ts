@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy,Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'case-management-delete-email-confirmation',
