@@ -53,12 +53,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
   selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
   
-  isTodoDetailsOpened = false;
-  isNewReminderOpened = false;
-  isIdCardOpened = false;
-  isSendNewLetterOpened = false;
-  isSendNewEmailOpened = false;
-  isNewSMSTextOpened = false;
+ 
+ 
   profileClientId = 0
   clientCaseEligibilityId! : string;
   caseWorkerId! : string;
@@ -68,41 +64,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId:any;
   clientChangeSubscription$ = new Subscription();
-  public SendActions = [
-    {
-      buttonType: "btn-h-primary",
-      text: "New Letter",
-      icon: "markunread_mailbox",
-      click: (): void => {
-        this.onSendNewLetterClicked();
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "New Email",
-      icon: "mail_outline",
-      click: (): void => {
-        this.onSendNewEmailClicked()
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "New SMS Text",
-      icon: "comment",
-      click: (): void => {
-        this.onNewSMSTextClicked()
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "New ID Card",
-      icon: "call_to_action",
-      click: (): void => {
-        this.onIdCardClicked()
-      },
-    },
-
-  ];
+  
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -180,37 +142,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   }
 
   /** Internal event methods **/
-  onTodoDetailsClosed() {
-    this.isTodoDetailsOpened = false;
-  }
 
-  onTodoDetailsClicked() {
-    this.isTodoDetailsOpened = true;
-  }
 
-  onNewReminderClosed() {
-    this.isNewReminderOpened = false;
-  }
-
-  onNewReminderClicked() {
-    this.isNewReminderOpened = true;
-  }
-
-  onIdCardClicked() {
-    this.isIdCardOpened = true;
-  }
-
-  onSendNewLetterClicked() {
-    this.isSendNewLetterOpened = true;
-  }
-
-  onSendNewEmailClicked() {
-    this.isSendNewEmailOpened = true;
-  }
-
-  onNewSMSTextClicked() {
-    this.isNewSMSTextOpened = true;
-  }
+ 
 
   onVerificationReviewClosed() {
     this.isVerificationReviewPopupOpened = false;
@@ -220,32 +154,10 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.isVerificationReviewPopupOpened = true;
   }
 
-  onIdCardClosed() {
-    this.isIdCardOpened = false;
-  }
+
 
   /** External event methods **/
-  handleSendNewEmailClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isSendNewEmailOpened = false;
-    }
-  }
-
-  handleNewSMSTextClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isNewSMSTextOpened = false;
-    }
-  }
-
-  handleSendNewLetterClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isSendNewLetterOpened = false;
-    }
-  }
-
-  handleIdCardClosed() {
-    this.isIdCardOpened = false;
-  }
+ 
 
   loadClientImpInfo()
   {

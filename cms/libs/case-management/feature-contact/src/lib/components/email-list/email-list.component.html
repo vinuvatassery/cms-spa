@@ -180,7 +180,10 @@
   <case-management-email-detail
     [isEditValue]="isEditEmailAddress"   
     [selectedEmailData]="selectedEmailData"
-    (addClientEmailEvent)="addClientEmailHandle($event)"       
+    [paperlessFlag]="paperlessFlag"
+    (addClientEmailEvent)="addClientEmailHandle($event)"     
+    (deactivateClientEmailEvent)="onDeactivateEmailAddressClicked($event)"  
+    (formEmailCloseEvent)="onEmailAddressDetailClosed()"
   ></case-management-email-detail>
 </kendo-dialog>
 

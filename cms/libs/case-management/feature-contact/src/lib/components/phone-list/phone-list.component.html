@@ -57,9 +57,9 @@
           {{dataItem.detailMsgConsentFlag === 'Y' ? 'Yes' : 'No'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="SmsTextConsentFlag" title="SMS Text OK?" [width]="50">
+        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="50">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.SmsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
+            {{dataItem.smsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
            </ng-template>   
         </kendo-grid-column>
         <kendo-grid-column field="otherPhoneNote" title="Note" [width]="50" [sortable]="false" >
@@ -181,6 +181,7 @@
     (addClientPhoneEvent)="addClientPhoneHandle($event)"   
     (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()" 
     (deactivateClientPhoneEvent)="onDeactivatePhoneNumberClicked($event)"
+    (formClientPhoneCloseEvent)="onPhoneNumberDetailClosed()"
   ></case-management-phone-detail>
 </kendo-dialog>
 

@@ -1,97 +1,118 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StatusFlag } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-email-detail',
   templateUrl: './email-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmailDetailComponent implements OnInit{
-/** Input properties **/
-@Input() isEditValue!: boolean;
-@Input() selectedEmailData: any
-@Output() addClientEmailEvent = new EventEmitter<any>();
+export class EmailDetailComponent implements OnInit {
+  /** Input properties **/
+  @Input() isEditValue!: boolean;
+  @Input() selectedEmailData: any;
+  @Input() paperlessFlag: any;
 
-/** Public properties **/
-isDeactivateValue!: boolean;
-isDeactivateEmailAddressPopup = true;
-public formUiStyle : UIFormStyle = new UIFormStyle();
-clientEmailForm!: FormGroup;
-isFormSubmitted =false;
-btnDisabled = false;
-/** Constructor **/
-constructor(  private formBuilder: FormBuilder) {}
+  @Output() addClientEmailEvent = new EventEmitter<any>();
+  @Output() deactivateClientEmailEvent = new EventEmitter<any>();
+  @Output() formEmailCloseEvent = new EventEmitter<any>();
 
-/** Lifecycle hooks **/
-ngOnInit(): void {
-  this.composeEmailForm()
-}
+  /** Public properties **/
+  isDeactivateValue!: boolean;
+  isDeactivateEmailAddressPopup = true;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  clientEmailForm!: FormGroup;
+  isFormSubmitted = false;
+  btnDisabled = false;
+  selectedclientEmailId!: string;
+  /** Constructor **/
+  constructor(private formBuilder: FormBuilder) {}
 
-/** Private methods **/
+  /** Lifecycle hooks **/
+  ngOnInit(): void {
+    this.composeEmailForm();
+  }
 
-/** Internal event methods **/
-onDeactivateClicked() {
-  this.isDeactivateValue = true;
-  this.isDeactivateEmailAddressPopup = true;
-}
+  /** Private methods **/
 
-onDeactivateEmailAddressClosed() {
-  this.isDeactivateEmailAddressPopup = !this.isDeactivateEmailAddressPopup;
-}
+  /** Internal event methods **/
+  onDeactivateClicked() {
+    this.deactivateClientEmailEvent.emit(this.selectedclientEmailId);
+  }
 
-composeEmailForm()
-{    
-    this.clientEmailForm = this.formBuilder.group({   
-      clientEmailId: ['']   ,
-      email: ['',Validators.required]   ,
-      detailMsgFlag: ['']   ,
-      preferredFlag: ['']   ,           
-      paperlessFlag: ['']   ,       
-    });     
+  onDeactivateEmailAddressClosed() {
+    this.isDeactivateEmailAddressPopup = !this.isDeactivateEmailAddressPopup;
+  }
 
-    if(this.isEditValue === true)
-    {
-      this.onSelectedEmailFormLoad()
+  composeEmailForm() {
+    this.clientEmailForm = this.formBuilder.group({
+      clientEmailId: [''],
+      email: ['', Validators.required],
+      detailMsgFlag: [''],
+      preferredFlag: [''],
+      paperlessFlag: [''],
+    });
+
+    if (this.isEditValue === true) {
+      this.onSelectedEmailFormLoad();
+    }   
+    else
+    {      
+      this.clientEmailForm.patchValue({     
+        paperlessFlag: this.getStatusFlag(this.paperlessFlag),
+      });
     }
-}
+  }
 
-onSelectedEmailFormLoad()
-{       
-  this.clientEmailForm.patchValue(
-          {
-            clientEmailId: this.selectedEmailData?.clientemailId   ,
-            email: this.selectedEmailData?.email   ,
-            detailMsgFlag: this.getStatusFlag(this.selectedEmailData?.detailMsgFlag)   ,   
-            preferredFlag: this.getStatusFlag(this.selectedEmailData?.preferredFlag)   , 
-            paperlessFlag: this.getStatusFlag(this.selectedEmailData?.paperlessFlag)   
-          }) 
-        }       
+  onSelectedEmailFormLoad() {
+    this.selectedclientEmailId = this.selectedEmailData?.clientemailId;
+    this.clientEmailForm.patchValue({
+      clientEmailId: this.selectedEmailData?.clientemailId,
+      email: this.selectedEmailData?.email,
+      detailMsgFlag: this.getStatusFlag(this.selectedEmailData?.detailMsgFlag),
+      preferredFlag: this.getStatusFlag(this.selectedEmailData?.preferredFlag),
+      paperlessFlag: this.getStatusFlag(this.selectedEmailData?.paperlessFlag),
+    });
+  }
 
-onclientEmailFormSubmit()
-{    
-  this.isFormSubmitted =true;
-  if(this.clientEmailForm.valid)
-     {   
+  onclientEmailFormSubmit() {
+    this.isFormSubmitted = true;
+    if (this.clientEmailForm.valid) {
       this.btnDisabled = true;
-      const emailData =
-      {         
-        clientEmailId: this.clientEmailForm?.controls["clientEmailId"].value,
-        email: this.clientEmailForm?.controls["email"].value   ,
-        detailMsgFlag: this.getFlag(this.clientEmailForm?.controls["detailMsgFlag"].value)   ,       
-        preferredFlag: this.getFlag(this.clientEmailForm?.controls["preferredFlag"].value),
-        paperlessFlag : this.getFlag(this.clientEmailForm?.controls["paperlessFlag"].value)   ,
-      }    
+      const emailData = {
+        clientEmailId: this.clientEmailForm?.controls['clientEmailId'].value,
+        email: this.clientEmailForm?.controls['email'].value,
+        detailMsgFlag: this.getFlag(
+          this.clientEmailForm?.controls['detailMsgFlag'].value
+        ),
+        preferredFlag: this.getFlag(
+          this.clientEmailForm?.controls['preferredFlag'].value
+        ),
+        paperlessFlag: this.getFlag(
+          this.clientEmailForm?.controls['paperlessFlag'].value
+        ),
+      };
       this.addClientEmailEvent.emit(emailData);
-     }   
- }
+    }
+  }
 
- private getFlag(flag?: boolean) {
-  return flag ? StatusFlag.Yes : StatusFlag.No;
-}
+  private getFlag(flag?: boolean) {
+    return flag ? StatusFlag.Yes : StatusFlag.No;
+  }
 
-private getStatusFlag(status?: StatusFlag) {
-  return status === StatusFlag.Yes ? true : false;
-}
+  private getStatusFlag(status?: StatusFlag) {
+    return status === StatusFlag.Yes ? true : false;
+  }
+
+  formEmailClose() {
+    this.formEmailCloseEvent.emit();
+  }
 }

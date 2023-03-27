@@ -17,6 +17,7 @@ export class PhoneDetailComponent implements OnInit {
   @Output() addClientPhoneEvent = new EventEmitter<any>();
   @Output() loadDeviceTypeLovEvent = new EventEmitter<any>(); 
   @Output() deactivateClientPhoneEvent = new EventEmitter<any>(); 
+  @Output() formClientPhoneCloseEvent = new EventEmitter<any>(); 
 
   /** Public properties **/
   selectedclientPhoneId! : string
@@ -60,7 +61,7 @@ export class PhoneDetailComponent implements OnInit {
   }
 
   onDeactivatePhoneNumberClosed() {
-    this.isDeactivatePhoneNumberPopup = !this.isDeactivatePhoneNumberPopup;
+    this.formClientPhoneCloseEvent.emit();
   }
 
   composePhoneForm()

@@ -284,6 +284,14 @@ export class ContactDataService {
     );
     
   }
+
+  loadClientPaperLessStatus(clientId : number, clientCaseEligibilityId : string) {     
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/clients/${clientId}/emails/${clientCaseEligibilityId}`
+    );
+    
+  }
   
   saveEmail(emailData: any) {      
       if(emailData?.clientEmailId)
@@ -305,21 +313,19 @@ export class ContactDataService {
 
   updateClientEmailPreferred(clientId : number  , clientEmailId : string) {     
     return this.http.put<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}/preferred`,null
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}`,null
     );
     
   }
 
-  deactivateClientEmail(clientId : number  , clientEmailId : string) {     
+  removeClientEmail(clientId : number  , clientEmailId : string, hardDelete : boolean) {    
+    const options = {
+      body: {
+        hardDelete: hardDelete,      
+      }
+    }   
     return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}/deactivate`
-    );
-    
-  }
-
-  removeClientEmail(clientId : number  , clientEmailId : string) {     
-    return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}/remove`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}`,options
     );
   }
   /////email services NOSONAR
@@ -360,21 +366,19 @@ export class ContactDataService {
 
   updateClientPhonePreferred(clientId : number  , clientPhoneId : string) {     
     return this.http.put<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/preferred`,null
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}`,null
     );
     
   }
 
-  deactivateClientPhone(clientId : number  , clientPhoneId : string) {     
+  removeClientPhone(clientId : number  , clientPhoneId : string , hardDelete : boolean) {   
+    const options = {
+      body: {
+        hardDelete: hardDelete,      
+      }
+    }  
     return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/deactivate`
-    );
-    
-  }
-
-  removeClientPhone(clientId : number  , clientPhoneId : string) {     
-    return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}/remove`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}`,options
     );
     
   }
