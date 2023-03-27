@@ -410,15 +410,26 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        this.checkValidations()
+        if(!this.checkValidations()){
+          this.workflowFacade.showCancelApplicationPopup(true);
+        }
+        else{
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
   }
 
   checkValidations(){
-    this.submitIncomeDetailsForm();
-    return this.noIncomeDetailsForm.valid;
+    if (this.hasNoIncome) {
+      this.submitIncomeDetailsForm();
+      return this.noIncomeDetailsForm.valid;
+    }
+    if (!this.hasNoIncome && this.incomeData.clientIncomes == null) {
+      this.incomeFacade.incomeValidSubject.next(false);
+      return false;
+    }
+    return true;
   }
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {

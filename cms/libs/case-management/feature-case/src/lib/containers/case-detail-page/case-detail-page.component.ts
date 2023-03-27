@@ -22,6 +22,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   private navigationSubscription !: Subscription;
   private loadSessionSubscription !: Subscription;
   private showSendNewsLetterSubscription !: Subscription;
+  private showCancelApplicationSubscription !: Subscription;
   private showConfirmationPopupSubscription !: Subscription; public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
@@ -53,6 +54,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   currentStatusCode: string = "";
   isSubmitted: boolean = false;
   sendLetterFlag!: any;
+  cancelApplicationFlag!: boolean;
   data: Array<any> = [
     {
       text: '',
@@ -116,6 +118,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.getCaseStatusLov();
     this.showSendNewsLetterPopup();
     this.addSessionChangeSubscription();
+    this.showCancelApplicationPopup();
   }
 
   ngOnDestroy(): void {
@@ -124,6 +127,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showConfirmationPopupSubscription.unsubscribe();
     this.workflowFacade.unloadWorkflowSession();
     this.showSendNewsLetterSubscription.unsubscribe();
+    this.showCancelApplicationSubscription.unsubscribe();
   }
 
   addSessionChangeSubscription() {
@@ -431,5 +435,24 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     })
+  }
+
+  showCancelApplicationPopup(){
+    this.showCancelApplicationSubscription = this.workflowFacade.cancelApplicationClicked$.subscribe((response: any) => {
+      if (response) {
+        this.cancelApplicationFlag=true;
+        this.cdr.detectChanges();
+      }
+    })
+  }
+
+  closeCancelApplicationPopup(){
+    this.cancelApplicationFlag=false;
+    this.cdr.detectChanges();
+  }
+
+  onContinueClick(){
+    this.closeCancelApplicationPopup();
+    this.workflowFacade.showSaveForLaterConfirmationPopup(true);
   }
 }
