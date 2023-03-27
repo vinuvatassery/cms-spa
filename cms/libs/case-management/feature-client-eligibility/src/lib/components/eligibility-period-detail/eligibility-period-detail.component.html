@@ -1,29 +1,46 @@
-<section class="k-dialog-body">
+<section class="k-dialog-body" [formGroup]="eligibilityPeriodForm">
   <p class="text-muted mb-2">
     Except for PENDING, changing the status initiates a new Status Period. The
     new Status Period may not overlap with a previous one.
   </p>
   <div class="flex-row">
     <div class="flex-col">
-      <kendo-floatinglabel text="Status">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlStatus$ | async"> </kendo-dropdownlist>
+      <kendo-floatinglabel text="Status" class="inline-search-loader">
+        <span *ngIf="showEligibilityStatusLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+        <kendo-dropdownlist   
+        [fillMode]="formUiStyle.dropDownFillMode" 
+        [data]="ddlStatus$ | async"
+        textField="lovDesc" 
+        valueField="lovCode"
+        formControlName ="eligibilityStatus"
+        (valueChange)="onEligibilityStatusChanged()"
+        [valuePrimitive]="true"> 
+      </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status Start Date">
-        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" [(ngModel)]="currentDate" [disabled]="true" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
+         format="MM-dd-yyyy" 
+        formatPlaceholder="formatPattern"
+        formControlName ="statusStartDate">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status End Date">
-        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" [(ngModel)]="currentDate" [disabled]="true" format="MM-dd-yyyy" formatPlaceholder="formatPattern">
+        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
+         format="MM-dd-yyyy" 
+        formatPlaceholder="formatPattern"
+        formControlName ="statusEndDate">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Group">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [disabled]="true" [data]="ddlGroups$ | async"> </kendo-dropdownlist>
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" 
+        [data]="ddlGroups$ | async"
+        formControlName ="group"> </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
   </div>

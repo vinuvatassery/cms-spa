@@ -56,9 +56,10 @@ export class LovFacade {
   private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
   private lovVerificationMethodSubject = new BehaviorSubject<Lov[]>([]);
   private lovApplicantInfoSubject = new BehaviorSubject<Lov[]>([]);
-
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
+  private eligibilityStatusSubject = new BehaviorSubject<Lov[]>([]);
+  private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -94,10 +95,10 @@ export class LovFacade {
   aptclov$=this.lovAptcSubject.asObservable();
   verificationMethod$ = this.lovVerificationMethodSubject.asObservable();
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
-
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
-
+  eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
+  showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
 
         /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -498,6 +499,22 @@ getApplicantInfoLovs(): void {
     },
   });
 }
+
+
+getEligibilityStatusLovs(): void {
+  this.showLoaderOnEligibilityStatusSubject.next(true);
+  this.lovDataService.getLovsbyType(LovType.EligibilityStatus).subscribe({
+    next: (lovResponse) => {
+      this.eligibilityStatusSubject.next(lovResponse);
+      this.showLoaderOnEligibilityStatusSubject.next(false);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.showLoaderOnEligibilityStatusSubject.next(false);
+    },
+  });
+}
+
 
 }
 
