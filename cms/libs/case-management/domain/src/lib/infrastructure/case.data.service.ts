@@ -53,6 +53,17 @@ export class CaseDataService {
 
   }
 
+  loadEligibilityGroups(){
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-groups`);
+  }
+
+  loadEligibilityGroup(eligibilityId : string){
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${eligibilityId}/group`);
+  }
+
+  updateEligibilityGroup(group : any){
+    return this.http.put<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${group.eligibilityId}/group`, group);
+  }
 
   loadCaseHistory(): Observable<CaseHistory[]> {
     return of([
