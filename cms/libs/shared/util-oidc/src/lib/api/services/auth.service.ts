@@ -9,7 +9,8 @@ import {
   PublicEventsService,
 } from 'angular-auth-oidc-client';
 import { filter } from 'rxjs/operators';
-import { UserProfileService } from '@cms/shared/util-core';
+import { LoaderService } from '@cms/shared/util-core';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,18 +18,19 @@ export class AuthService {
   /** Private properties **/
   private user: any;
   private authenticated!: boolean;
+  
+  userSubject!: BehaviorSubject<any>;
 
   /** Constructor **/
   constructor(
     public readonly oidcSecurityService: OidcSecurityService,
     public readonly eventService: PublicEventsService,
-    public readonly userProfileService: UserProfileService
+    private readonly loaderService: LoaderService
   ) {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated, allConfigsAuthenticated }) => {
         this.authenticated = isAuthenticated;
-        if(this.authenticated){
-          this.userProfileService.getUserProfile();
+        if(this.authenticated){        
         }
       }
     );
@@ -55,7 +57,18 @@ export class AuthService {
       });
   }
 
+
+  
+  showLoader() {
+    this.loaderService.show();
+  }
+
+  hideLoader() {
+    this.loaderService.hide();
+  }
   /** Public methods **/
+ 
+
   get isAuthenticated() {
     return this.authenticated;
   }
