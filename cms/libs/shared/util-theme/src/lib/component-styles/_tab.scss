@@ -22,7 +22,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-  
+
       &:before {
         width: 0px;
         height: 2px;
@@ -33,11 +33,12 @@
         z-index: 1;
         transition: ease-in all 0.2s;
       }
-      &.k-state-active, &.k-active {
+      &.k-state-active,
+      &.k-active {
         font-family: $font-family-medium;
         color: $app-primary;
         transition: ease-in all 0.2s;
-    
+
         &:before {
           width: 100%;
           transition: ease-in all 0.4s;
@@ -81,7 +82,7 @@
       }
     }
   }
-  .k-tabstrip-items .k-link{
+  .k-tabstrip-items .k-link {
     padding: 14px 28px;
   }
 
@@ -101,6 +102,46 @@
       max-height: calc(100vh - 285px);
       overflow: auto;
       padding: $size-xx $size-xlg $size-xxxx * 2;
+    }
+  }
+}
+
+.custom-tab-stripe-lists {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0px 4px 6px #dbdbdb;
+  border-bottom: 1px solid #dbdbdb;
+  .custom-tab-stripe-lists-items {
+    font-size: 13px;
+    color: inherit;
+    vertical-align: middle;
+    border-bottom: 3px solid transparent;
+    transition: 0.2s;
+    &:hover {
+      border-bottom: 3px solid rgba(black, 0.04);
+      color: $app-primary;
+    }
+    &.active_tab {
+      border-bottom: 3px solid $app-primary;
+      color: $app-primary;
+      a {
+        color: $app-primary;
+      }
+    }
+    a {
+      text-decoration: none;
+      color: rgba($black, 0.54);
+      font-weight: 500;
+      font-family: $font-family-medium;
+      padding: 8px 14px 8px 14px;
+      display: inline-block;
+      cursor: pointer;
+      transition: 0.2s;
+      &:hover {
+        background: rgba(black, 0.04);
+        color: $app-primary;
+      }
     }
   }
 }

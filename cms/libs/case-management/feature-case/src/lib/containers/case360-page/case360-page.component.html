@@ -8,31 +8,32 @@
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
   <case-management-case360-header-tools></case-management-case360-header-tools>
-  
+  <!-- <ul class="custom-tab-stripe-lists">
+    <li class="custom-tab-stripe-lists-items active_tab"><a>Client Info</a></li>
+    <li class="custom-tab-stripe-lists-items"><a>Contact Info</a></li>
+    <li class="custom-tab-stripe-lists-items"><a>Family & Dependents</a></li>
+    <li class="custom-tab-stripe-lists-items"><a>Income</a></li>
+    <li class="custom-tab-stripe-lists-items"><a>Employment</a></li>
+  </ul> -->
   <!-- Case Details Tab Sections -->
-  <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" (tabSelect)="onTabSelect($event)"
-    class="app-c-tab case-360-tab">
+  <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+    (tabSelect)="onTabSelect($event)" class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>
-      <ng-template kendoTabContent  (click)="onTabSelect($event)"  >
+      <ng-template kendoTabContent (click)="onTabSelect($event)">
         <kendo-tabstrip #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          class="app-c-tab app-c-sub-tab">
-
-          <kendo-tabstrip-tab title="Client Info" [selected]="true"   (click)="onTabSelect($event)"     *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>         
+          (tabSelect)="onInnerSelect($event)" class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Client Info" [selected]="true"
+            *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>
           </kendo-tabstrip-tab>
-
-          <kendo-tabstrip-tab title="Contact Info" (click)="onTabSelect($event)"  *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
-           
+          <kendo-tabstrip-tab title="Contact Info" [selected]="selectedSubTab == 1"
+            *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
           </kendo-tabstrip-tab>
-
-          <kendo-tabstrip-tab title="Family & Dependents"   (tabstripSelect)="onTabSelect($event)"      *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
-          
+          <kendo-tabstrip-tab title="Family & Dependents" (tabstripSelect)="onTabSelect($event)"
+            *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
           </kendo-tabstrip-tab>
-
           <kendo-tabstrip-tab title="Income" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
-          
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Employment" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
-          
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
@@ -43,14 +44,12 @@
           class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
             *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>
-          
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Premium Payments"
-            *ifPermission='["Client_Profile_Health_Ins_Premium_Payments__Tab_View_Only"]'>          
+            *ifPermission='["Client_Profile_Health_Ins_Premium_Payments__Tab_View_Only"]'>
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Co-Pays & Deductibles"
             *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'>
-          
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
@@ -61,15 +60,15 @@
           class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
             *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>
-          
+
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Premium Payments"
             *ifPermission='["Client_Profile_Dental_Premium_Payments__Tab_View_Only"]'>
-           
+
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Co-Pays & Deductibles"
             *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'>
-            <ng-template kendoTabContent>           
+            <ng-template kendoTabContent>
             </ng-template>
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
@@ -81,10 +80,10 @@
           class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Pharmacies" [selected]="true"
             *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>
-         
+
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Drugs Purchased" *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'>
-         
+
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
@@ -96,34 +95,36 @@
           class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Case Managers" [selected]="true"
             *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>
-         
+
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Healthcare Providers"
             *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>
-         
+
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="CD4 Count" *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>
-          
+
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Viral Load"
             *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>
-         
+
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Statuses" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'>
-   
+
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Attachments" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>     
+    <kendo-tabstrip-tab title="Attachments" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
 
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="App History" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'>
-    
+
     </kendo-tabstrip-tab>
-  </kendo-tabstrip> 
-  
-<router-outlet></router-outlet>
+  </kendo-tabstrip>
+  <div class="client-profile-outlet">
+    <router-outlet></router-outlet>
+  </div>
+
 </section>
 
 
