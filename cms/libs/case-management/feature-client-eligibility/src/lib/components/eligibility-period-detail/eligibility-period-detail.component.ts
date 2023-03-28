@@ -99,10 +99,9 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.pageLoaded =  true;
       this.eligibilityDetails = data;
       this.currentEligibility = this.eligibilityDetails[0];
-      if( this.currentEligibility.caseStatusCode === 'PENDING'){
+      if( this.currentEligibility.eligibilityStatusCode === 'PENDING'){
         this.isCurrentEligibilityPending = true;
       }
-      //this.isCurrentEligibilityPending = true;
       this.cd.detectChanges();
       this.loaderService.hide()
     });
