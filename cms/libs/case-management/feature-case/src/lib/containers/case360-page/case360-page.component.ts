@@ -4,11 +4,11 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import {DrugPharmacyFacade, ClientProfile, ScreenType, CaseFacade,WorkflowFacade, ContactFacade } from '@cms/case-management/domain';
+import {ScreenType, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
-import { LovFacade } from '@cms/system-config/domain';
+
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -21,40 +21,23 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private selectedCase = new BehaviorSubject<any>({});
-  private clientSubject = new Subject<any>();
+
   private clientHeaderSubject = new Subject<any>();
   private clientInfoVisibleSubject = new Subject<any>();
   private clientHeaderVisibleSubject = new Subject<any>();
 
-  loadedClient$ = this.clientSubject.asObservable();
+
   loadedClientHeader$ = this.clientHeaderSubject.asObservable();
   clientInfoVisible$ = this.clientInfoVisibleSubject.asObservable();
   clientHeaderVisible$ = this.clientHeaderVisibleSubject.asObservable();
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
-  ddlIncomeEP$ = this.caseFacade.ddlIncomeEP$;
-  ddlFamilyAndDependentEP$ = this.caseFacade.ddlFamilyAndDependentEP$;
-  clientProfile$ = this.caseFacade.clientProfile$;
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$;
-  ddlEmploymentEP$ = this.caseFacade.ddlEmploymentEP$;
   clientProfileImpInfo$ = this.caseFacade.clientProfileImpInfo$;
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
-  //for add pharmacy
-  clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
-  pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
-  searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
-  addPharmacyRsp$ = this.drugPharmacyFacade.addPharmacyResponse$;
-  editPharmacyRsp$ = this.drugPharmacyFacade.editPharmacyResponse$;
-  removePharmacyRsp$ = this.drugPharmacyFacade.removePharmacyResponse$;
-  removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
-  triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
-  selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
-  
- 
- 
   profileClientId = 0
   clientCaseEligibilityId! : string;
   caseWorkerId! : string;
@@ -69,11 +52,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
-    private drugPharmacyFacade: DrugPharmacyFacade,
-    private workflowFacade: WorkflowFacade,
-    private readonly router: Router,
-    private readonly contactFacade : ContactFacade,
-    private readonly lovFacade : LovFacade
+    private readonly router: Router
   ) { }
 
   /** Lifecycle hooks **/
@@ -89,11 +68,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   /** Private methods **/
 
   private initialize(){
-    this.clientInfoVisibleSubject.next(false);
     this.clientHeaderVisibleSubject.next(true);
-    this.caseSelection();
-    this.loadDdlFamilyAndDependentEP();
-    this.loadDdlEPEmployments();
+    this.caseSelection();   
     this.getQueryParams();
   }
   private getQueryParams() {    
@@ -114,14 +90,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadDdlFamilyAndDependentEP(): void {
-    this.caseFacade.loadDdlFamilyAndDependentEP();
-  }
-
-  private loadDdlEPEmployments(): void {
-    this.caseFacade.loadDdlEPEmployments();
-  }
-
   private routeChangeSubscription() {
     this.clientChangeSubscription$ = this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -130,8 +98,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
         this.initialize();
         this.resetTabs();
-        this.loadClientProfileInfoEventHandler();
-        this.loadReadOnlyClientInfoEventHandler();
+        this.loadClientProfileInfoEventHandler();      
       }
     });
   }
@@ -163,43 +130,15 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
-  searchPharmacy(searchText: string) {
-    this.drugPharmacyFacade.searchPharmacies(searchText);
-  }
-  addPharmacy(vendorId: string) {
-    let priorityCode :string = "";
-    this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
-     
-      priorityCode = priorityCodes;
-    })
-    this.drugPharmacyFacade.addDrugPharmacy(
-      this.profileClientId,
-      vendorId,
-      priorityCode
-    );
-  }
-  loadReadOnlyClientInfoEventHandler() {
-    this.caseFacade.loadClientProfile(this.profileClientId);
-    this.onClientProfileLoad()
-  }
+
+ 
 
   loadClientProfileInfoEventHandler() {    
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
 
-  removePharmacy(clientPharmacyId: string) {
-    this.drugPharmacyFacade.removeClientPharmacy(
-      this.workflowFacade.clientId ?? 0,
-      clientPharmacyId
-    );
-  }
-  removeDrugPharmacyRsp(vendorId: any) {
-    this.drugPharmacyFacade.removeDrugPharmacy(
-      this.profileClientId ?? 0,
-      vendorId
-    );
-  }
+
   onClientProfileHeaderLoad() {
     this.clientProfileHeader$?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
       .subscribe((clientHeaderData: any) => {
@@ -237,66 +176,25 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         }
       });
   }
-  onClientProfileLoad() {
-    this.clientProfile$?.pipe(first((clientData: any) => clientData?.clientId > 0))
-      .subscribe((clientData: ClientProfile) => {
-        if (clientData?.clientId > 0) {
 
-          const client = {
-
-            clientId: clientData?.clientId,
-            firstName: clientData?.firstName,
-            middleName: clientData?.middleName,
-            lastName: clientData?.lastName,
-            caseManagerId: clientData?.caseManagerId,
-            caseManagerName: clientData?.caseManagerName,
-            caseManagerPNumber: clientData?.caseManagerPNumber,
-            caseManagerDomainCode: clientData?.caseManagerDomainCode,
-            caseManagerAssisterGroup: clientData?.caseManagerAssisterGroup,
-            caseManagerPhone: clientData?.caseManagerPhone,
-            caseManagerEmail: clientData?.caseManagerEmail,
-            caseManagerFax: clientData?.caseManagerFax,
-            caseManagerAddress1: clientData?.caseManagerAddress1,
-            caseManagerAddress2: clientData?.caseManagerAddress2,
-            caseManagerCity: clientData?.caseManagerCity,
-            caseManagerState: clientData?.caseManagerState,
-            caseManagerZip: clientData?.caseManagerZip,
-            insuranceFirstName: clientData?.insuranceFirstName,
-            insuranceLastName: clientData?.insuranceLastName,
-            officialIdFirstName: clientData?.officialIdFirstName,
-            officialIdLastName: clientData?.officialIdLastName,
-            dob: clientData?.dob,
-            pronouns: clientData?.pronouns,
-            genderDescription: clientData?.genderDescription,
-            gender: clientData?.gender,
-            ssn: clientData?.ssn,
-            clientTransgenderCode: clientData?.clientTransgenderCode,
-            clientTransgenderDesc: clientData?.clientTransgenderDesc,
-            clientSexualIdentities: clientData?.clientSexualIdentities,
-            otherSexualDesc: clientData?.otherSexualDesc,
-            spokenLanguage: clientData?.spokenLanguage,
-            writtenLanguage: clientData?.writtenLanguage,
-            englishProficiency: clientData?.englishProficiency,
-            ethnicIdentity: clientData?.ethnicIdentity,
-            racialIdentities: clientData?.racialIdentities,
-            primaryRacialIdentity: clientData?.primaryRacialIdentity,
-            lastModificationTime: clientData?.lastModificationTime,
-            lastModifierName: clientData?.lastModifierName,
-            lastModifierId: clientData?.lastModifierId
-          }
-
-          this.clientSubject.next(client);
-
-        }
-      });
-
+  onTabSelect(data : any)
+  {   
+    debugger 
+    let query ={
+      queryParams: {
+        elg_id: this.clientCaseEligibilityId,      
+        tabId: 'contact-info'       
+      }
+    }
+    if(data?.index ===0)
+    {
+    this.router.navigate(['/case-management/cases/case360/1085/contact-info/profile'],
+    query)
+    }
+    else if(data?.index ===1)
+    {
+    this.router.navigate(['/case-management/cases/case360/1085/health-insurance/profile'],
+    query)
+    }
   }
-
-
-  loadHeaderAndProfile() {
-    this.loadClientProfileInfoEventHandler();
-    this.loadReadOnlyClientInfoEventHandler();
-  }
-
-  
 }

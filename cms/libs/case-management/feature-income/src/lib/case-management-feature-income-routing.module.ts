@@ -9,6 +9,10 @@ const routes: Routes = [
     path: '',
     component: IncomePageComponent,
   },
+  {
+    path: 'profile',
+    component: IncomePageComponent,
+  }
 ];
 
 @NgModule({

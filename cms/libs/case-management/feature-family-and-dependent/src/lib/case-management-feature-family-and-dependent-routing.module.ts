@@ -8,6 +8,10 @@ const routes: Routes = [
     path: '',
     component: FamilyAndDependentPageComponent,
   },
+  {
+    path: 'profile',
+    component: FamilyAndDependentPageComponent,
+  },
 ];
 
 @NgModule({

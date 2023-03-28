@@ -27,6 +27,7 @@ import { MedicalPremiumDetailClientPolicyHolderComponent } from './components/me
 import { MedicalPremiumDetailCareassistPayComponent } from './components/medical-premium-detail-careassist-pay/medical-premium-detail-careassist-pay.component';
 import { MedicalPremiumDetailOthersCoveredPlanComponent } from './components/medical-premium-detail-others-covered-plan/medical-premium-detail-others-covered-plan.component';
 import { MedicalCarrierContactInfoComponent } from './components/medical-carrier-contact-info/medical-carrier-contact-info.component';
+import { ProfileHealthInsurancePageComponent } from './containers/profile-healthe-insurance/profile-health-insurance-page.component';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { MedicalCarrierContactInfoComponent } from './components/medical-carrier
     MedicalPremiumDetailCareassistPayComponent,
     MedicalPremiumDetailOthersCoveredPlanComponent,
     MedicalCarrierContactInfoComponent,
+    ProfileHealthInsurancePageComponent
   ],
   exports: [
     MedicalInsuranceStatusListComponent,
@@ -68,6 +70,7 @@ import { MedicalCarrierContactInfoComponent } from './components/medical-carrier
     SetHealthInsurancePriorityComponent,
     CoPaysAndDeductiblesListComponent,
     CoPaysAndDeductiblesDetailComponent,
+    ProfileHealthInsurancePageComponent
   ],
 })
 export class CaseManagementFeatureHealthInsuranceModule {}

@@ -38,8 +38,6 @@ import { PageCompletionStatusComponent } from './components/page-completion-stat
 import { CaseManagementFeatureDrugModule } from '@cms/case-management/feature-drug';
 import { CaseManagementFeatureManagementModule } from '@cms/case-management/feature-management';
 import { CaseManagementFeatureDocumentModule } from '@cms/case-management/feature-document';
-import { StatusPeriodComponent } from './components/status-period/status-period.component';
-import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
 import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 import { ClientImportantInfoComponent } from './components/client-important-info/client-important-info.component';
 import { Case360HeaderToolsComponent } from './components/case360-header-tools/case360-header-tools.component';
@@ -82,13 +80,11 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CommonActionsComponent,
     SendLetterProfileComponent,
     CaseSummaryComponent,
-    CaseDetailsSummaryComponent,
-    StatusPeriodComponent,
+    CaseDetailsSummaryComponent,  
     PageCompletionStatusComponent,
-    AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
     ClientImportantInfoComponent,
-    Case360HeaderToolsComponent    
+    Case360HeaderToolsComponent     
   ],
   exports: [
     CasePageComponent,
@@ -103,12 +99,10 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CommonActionsComponent,
     SendLetterProfileComponent,
     CaseSummaryComponent,
-    CaseDetailsSummaryComponent,
-    StatusPeriodComponent,
-    AppHistoryListComponent,
+    CaseDetailsSummaryComponent,  
     Case360HeaderNotificationsComponent,
     ClientImportantInfoComponent,
-    Case360HeaderToolsComponent    
+    Case360HeaderToolsComponent 
   ],
 })
 export class CaseManagementFeatureCaseModule {}
