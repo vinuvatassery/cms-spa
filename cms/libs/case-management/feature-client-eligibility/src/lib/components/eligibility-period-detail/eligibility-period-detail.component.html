@@ -20,6 +20,7 @@
         [valuePrimitive]="true"> 
       </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid">Status is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status Start Date">
@@ -28,6 +29,7 @@
         formatPlaceholder="formatPattern"
         formControlName ="statusStartDate">
         </kendo-datepicker>
+        <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusStartDate'].valid && !eligibilityPeriodForm.controls['statusStartDate'].disabled">Start Date is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
@@ -37,6 +39,7 @@
         formatPlaceholder="formatPattern"
         formControlName ="statusEndDate">
         </kendo-datepicker>
+        <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
@@ -48,6 +51,7 @@
         textField="lovDesc" 
         valueField="lovCode"
         [valuePrimitive]="true"> </kendo-dropdownlist>
+        <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['group'].valid && !eligibilityPeriodForm.controls['group'].disabled">Group is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
   </div>
