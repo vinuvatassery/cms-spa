@@ -28,5 +28,8 @@ export class ClientEligibilityDataService {
   saveAcceptedApplication(acceptedApplication:any,caseId:any,eligibilityId:any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/eligibility-periods/${eligibilityId}`, acceptedApplication);
   }
+  saveNewStatusPeriod(newEligibilityPeriod:any,caseId:any,eligibilityId:any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/eligibility-periods/${eligibilityId}`, newEligibilityPeriod);
+  }
   
 }
