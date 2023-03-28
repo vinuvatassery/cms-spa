@@ -43,6 +43,7 @@ import { AppHistoryListComponent } from './components/application-history/applic
 import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 import { ClientImportantInfoComponent } from './components/client-important-info/client-important-info.component';
 import { CaseEligibilityPeriodsComponent } from './containers/case-eligibility-periods/case-eligibility-periods.component';
+import { Case360HeaderToolsComponent } from './components/case360-header-tools/case360-header-tools.component';
 
 @NgModule({
   imports: [
@@ -88,7 +89,8 @@ import { CaseEligibilityPeriodsComponent } from './containers/case-eligibility-p
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
     ClientImportantInfoComponent,
-    CaseEligibilityPeriodsComponent 
+    CaseEligibilityPeriodsComponent,
+    Case360HeaderToolsComponent    
   ],
   exports: [
     CasePageComponent,
@@ -107,7 +109,8 @@ import { CaseEligibilityPeriodsComponent } from './containers/case-eligibility-p
     StatusPeriodComponent,
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
-    ClientImportantInfoComponent
+    ClientImportantInfoComponent,
+    Case360HeaderToolsComponent    
   ],
 })
 export class CaseManagementFeatureCaseModule {}
