@@ -1040,8 +1040,12 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        this.checkValidations();
-        this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
+        if(!this.checkValidations()){
+          this.workFlowFacade.showCancelApplicationPopup(true);
+        }
+        else{
+          this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
   }

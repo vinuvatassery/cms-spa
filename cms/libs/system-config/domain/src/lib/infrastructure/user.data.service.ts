@@ -10,14 +10,40 @@ import { LoginUser } from '../entities/login-user';
 
 /** Providers **/
 import { ConfigurationProvider } from "@cms/shared/util-core";
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class UserDataService {
+  private getUserProfileData = new BehaviorSubject<any>([]);
+  getProfile$ = this.getUserProfileData.asObservable();
   /** Constructor **/
   constructor(private readonly http: HttpClient,
-    private configurationProvider : ConfigurationProvider) {}
+    private readonly router: Router,
+    private configurationProvider : ConfigurationProvider
+    ) {}
 
   /** Public methods **/
+  getUserProfileDetails()
+  {   
+    this.getUserProfile().subscribe({
+      next: (response: any) => {
+        if (response) {     
+          
+          this.getUserProfileData.next(response);      
+        }        
+     
+      },
+      error: (err: any) => {    
+          
+        this.router.navigate(['/forbidden']);
+      }
+    });
+  }
+  getUserProfile() {  
+    return this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`)
+   }
+   
   getUserById(userId : string) {
     return this.http.get<LoginUser[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+

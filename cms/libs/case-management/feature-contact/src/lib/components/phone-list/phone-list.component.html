@@ -3,25 +3,34 @@
     <h5 class="title-md mb-0 text-capital">Phone Numbers</h5>
 <div>
   <span class="app-checkboxwidtext-wrapper"> 
-    <input
-      type="checkbox"
-      kendoCheckBox
-      aria-labelledby="NumbersshowHistorical"
-      id="NumbersshowHistorical"
-    />
-    <label class="k-checkbox-label" for="NumbersshowHistorical"
-      >Show historical</label
-    >
+    <input   type="checkbox"
+      kendoCheckBox aria-labelledby="historyCheckBox"      
+      (click)="onhistorychkBoxChanged()" 
+      id="historyCheckBox"
+      name="historyCheckBox"
+      [checked]="historychkBoxChecked"/>
+    <label class="k-checkbox-label" for="historyCheckBox" >Show historical</label>
   </span>
 </div>
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [data]="phoneNumbers$ | async">
-        <kendo-grid-column field="type" title="Type" [width]="80">
+      <kendo-grid [data]="gridPhoneData$ | async"
+      [pageSize]="state.take" 
+      [pageable]="true" 
+      [sortable]="true" 
+      [skip]="state.skip"
+      [groupable]="false"
+      [reorderable]="true"
+      [loading]="loader"
+      [resizable]="true" 
+      [columnMenu]="{ filter: true }"
+      [sort]="state.sort"
+      (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-column field="PhoneNbr" title="Type" [width]="80">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
-              <span class="preferred-phoneNo" title="Preferred Contact">
+              <span class="preferred-phoneNo" title="Preferred Contact" *ngIf="dataItem.preferredFlag==='Y'">
                 <span
                   class="material-icons icon-size-md"
                   aria-label="preferred contact"
@@ -29,35 +38,44 @@
                   >star</span
                 >
               </span>
-              <span class="pl-3">{{ dataItem.type }}</span>
+              <span class="pl-3">{{ dataItem.deviceTypeCode }}</span>
             </div>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
-          field="phoneNumber"
+          field="phoneNbr"
           title="Phone Number"
           [width]="150"
         >
         </kendo-grid-column>
         <kendo-grid-column
-          field="detailedMessages"
+          field="detailMsgConsentFlag"
           title="Detailed Messages OK?"
           [width]="150"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.detailMsgConsentFlag === 'Y' ? 'Yes' : 'No'}}  
+         </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="smsText" title="SMS Text OK?" [width]="100">
+        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="50">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.smsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
+           </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="note" title="Note" [width]="200">
+        <kendo-grid-column field="otherPhoneNote" title="Note" [width]="50" [sortable]="false" >
         </kendo-grid-column>
-        <kendo-grid-column
+        <kendo-grid-column [sortable]="false"
           field="effectiveDate"
           title="Effective Date"
           [width]="100"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.effectiveDate}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate}}  
+         </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50">
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button
+        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
+          <ng-template kendoGridCellTemplate let-dataItem >
+            <button *ngIf="dataItem?.creatorId"
               kendoButton
               [primary]="true"
               class="avatar-sm-btn c-default"
@@ -66,9 +84,7 @@
               showOn="hover"
               aria-label="profile avatar"
             >
-              <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                <span class="profile-text-avatar">AK</span>
-              </div>
+            <common-user-photo-icon  [userId]="dataItem?.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover
               #onUserProfileDetailsHovered
@@ -76,18 +92,19 @@
               position="left"
             >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card></common-user-profile-card>
+                <common-user-profile-card  [userId]="dataItem?.creatorId"     
+                [reassign]=false  ></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column
-          field="Option"
+        <kendo-grid-column [sortable]="false" 
+          field="clientPhoneId"
           title="Options"
           [width]="75"
           class="text-center"
         >
-          <ng-template kendoGridCellTemplate let-dataItem>
+          <ng-template kendoGridCellTemplate let-clientPhone let-clientPhoneId="field">
             <kendo-dropdownbutton
               [data]="gridOption"
               icon="more-vertical"
@@ -98,15 +115,40 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
             
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+              <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
+                <button kendoButton  [hidden]="(clientPhone.isDeleted === true && dataItem.buttonName==='deactivate')
+                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
+                look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
+                (click)="dataItem.click(clientPhone?.clientPhoneId)">
                   <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
               </button> 
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
+          <ng-template kendoGridLoadingTemplate>
+            <common-grid-loader-component></common-grid-loader-component>
+           </ng-template>
         </kendo-grid-column>
+        <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+        let-currentPage="currentPage">
+        <div class="grid-custom-paginationtemplates d-flex"> 
+          <div class="d-flex align-items-center"> 
+            <label class="mr-1" for="RowsPerPage">Rows Per Page</label> 
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                  [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                  (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+            <kendo-pager-info> </kendo-pager-info>
+            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages> 
+  
+          </div>
+          <div class="d-flex"> 
+            <kendo-pager-input></kendo-pager-input> 
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons> 
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          </div> 
+        </div>
+      </ng-template> 
       </kendo-grid>
     </div>
   </div>
@@ -115,7 +157,7 @@
       kendoButton
       [primary]="true"
       icon="add"
-      (click)="onPhoneNumberDetailClicked(false)"
+      (click)="onPhoneNumberDetailClicked(false,'')"
       aria-label="add phone number"
     >
       Phone Number
@@ -125,7 +167,7 @@
 
 <!-- Address Detail Popup-->
 <kendo-dialog
-  *ngIf="isPhoneNumberDetailPopup"
+  *ngIf=" editformVisible$ | async"
   (close)="onPhoneNumberDetailClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
@@ -134,6 +176,12 @@
   }}</kendo-dialog-titlebar>
   <case-management-phone-detail
     [isEditValue]="isEditPhoneNumber"
+    [lovClientPhoneDeviceType$]="lovClientPhoneDeviceType$"
+    [selectedPhoneData]="selectedPhoneData"
+    (addClientPhoneEvent)="addClientPhoneHandle($event)"   
+    (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()" 
+    (deactivateClientPhoneEvent)="onDeactivatePhoneNumberClicked($event)"
+    (formClientPhoneCloseEvent)="onPhoneNumberDetailClosed()"
   ></case-management-phone-detail>
 </kendo-dialog>
 
@@ -144,5 +192,20 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Deactivate phone number?"
 >
-  <case-management-deactivate-phone-confirmation></case-management-deactivate-phone-confirmation>
+  <case-management-deactivate-phone-confirmation
+  (deactivateConfimEvent)="handleAcceptPhoneDeactivate($event)"></case-management-deactivate-phone-confirmation>
+</kendo-dialog>
+
+
+<!-- Delete Modal -->
+<kendo-dialog
+  *ngIf="isOpenedDeleteConfirm"
+ 
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete phone number ? </kendo-dialog-titlebar>
+ <case-management-phone-remove-confirmation 
+ (deleteConfimEvent)="handleAcceptPhoneRemove($event)"
+ >
+ </case-management-phone-remove-confirmation>
 </kendo-dialog>

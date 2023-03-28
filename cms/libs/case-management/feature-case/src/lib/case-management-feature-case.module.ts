@@ -43,6 +43,8 @@ import { AppHistoryListComponent } from './components/application-history/applic
 import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 import { ClientImportantInfoComponent } from './components/client-important-info/client-important-info.component';
 import {CaseManagementFeatureSmokingCessationModule} from '@cms/case-management/feature-smoking-cessation'
+import { Case360HeaderToolsComponent } from './components/case360-header-tools/case360-header-tools.component';
+
 @NgModule({
   imports: [
     CaseManagementFeatureCaseRoutingModule,
@@ -87,7 +89,8 @@ import {CaseManagementFeatureSmokingCessationModule} from '@cms/case-management/
     PageCompletionStatusComponent,
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
-    ClientImportantInfoComponent 
+    ClientImportantInfoComponent,
+    Case360HeaderToolsComponent    
   ],
   exports: [
     CasePageComponent,
@@ -106,7 +109,8 @@ import {CaseManagementFeatureSmokingCessationModule} from '@cms/case-management/
     StatusPeriodComponent,
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
-    ClientImportantInfoComponent
+    ClientImportantInfoComponent,
+    Case360HeaderToolsComponent    
   ],
 })
 export class CaseManagementFeatureCaseModule {}
