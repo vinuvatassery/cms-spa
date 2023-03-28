@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact, ContactInfo,ClientAddress } from '../entities/contact';
+import { Contact, ContactInfo,ClientAddress,FriendsOrFamilyContactClientProfile } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain'
@@ -29,7 +29,8 @@ export class ContactFacade {
   showAddPopupSubject = new BehaviorSubject<boolean>(false);
   editAddressSubject = new BehaviorSubject<boolean>(false);
   editedAddressSubject = new Subject<any>();
-  
+  showAddContactPopupSubject = new BehaviorSubject<boolean>(false);
+
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -49,6 +50,8 @@ export class ContactFacade {
   editAddress$ =this.editAddressSubject.asObservable();
   editedAddress$ =this.editedAddressSubject.asObservable();
   showLoaderOnState$ = this.showLoaderOnState.asObservable();
+  showAddContactPopup$ = this.showAddContactPopupSubject.asObservable();
+
 
   /** Constructor**/
   constructor(
@@ -61,21 +64,21 @@ export class ContactFacade {
 
   /** Public methods **/
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.snackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
 
   showLoader()
   {
     this.loaderService.show();
   }
-    
+
   hideLoader()
   {
     this.loaderService.hide();
@@ -178,12 +181,13 @@ export class ContactFacade {
     });
   }
 
-  loadFriendsorFamily(): void {
-    this.contactDataService.loadFriendsorFamily().subscribe({
+  loadFriendsorFamily(clientId:any): void {
+    this.contactDataService.loadFriendsorFamily(clientId).subscribe({
       next: (friendsOrFamilyResponse) => {
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);
       },
       error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.loggingService.logException(err);
       },
     });
@@ -241,5 +245,11 @@ export class ContactFacade {
 
   deleteClientAddress(clientId:any,clientAddressId:any){
     return this.contactDataService.deleteClientAddress(clientId,clientAddressId);
+  }
+  createContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+    return this.contactDataService.createContact(clientId, clientContact);
+  }
+  updateContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+    return this.contactDataService.updateContact(clientId, clientContact);
   }
 }

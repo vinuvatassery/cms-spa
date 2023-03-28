@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ClientAddress, ContactInfo } from '../entities/contact';
+import { ClientAddress, ContactInfo, FriendsOrFamilyContactClientProfile } from '../entities/contact';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -158,15 +158,8 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
 
-  loadFriendsorFamily() {
-    return of([
-      {
-        name: 'David Nainan',
-        relationship: 'Spouse',
-        phoneNumber: '(000)-000-0000',
-        effectiveDate: 'XX-XX-XXXX',
-      },
-    ]);
+  loadFriendsorFamily(clientId : any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts`);
   }
 
 
@@ -259,4 +252,11 @@ export class ContactDataService {
   deleteClientAddress(clientId:any,clientAddressId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses/${clientAddressId}`);
   }
+
+  createContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact`, clientContact);
+}
+updateContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+  return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact`, clientContact);
+}
 }
