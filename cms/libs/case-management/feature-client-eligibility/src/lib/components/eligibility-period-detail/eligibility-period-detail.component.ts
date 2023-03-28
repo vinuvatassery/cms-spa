@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Facades **/
-import { ClientEligibilityFacade, EligibilityRequestType } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, EligibilityRequestType, AcceptedApplication } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
@@ -30,9 +30,11 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   disableFields: Array<string>=[];
   eligibilityPeriodForm!:FormGroup;
   currentEligibility!:any;
+  eligibilityDetails!:any;
   isCurrentEligibilityPending:boolean=false;
   pageLoaded:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  acceptedApplication= new AcceptedApplication();
   
 
   /** Constructor **/
@@ -56,21 +58,35 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   /** Public methods **/
   onEligibilityStatusChanged(){
-    this.requiredAndEnableFieldsByStatus( this.eligibilityPeriodForm.controls['eligibilityStatus'].value);
+    this.disableFieldsByStatus( this.eligibilityPeriodForm.controls['eligibilityStatus'].value);
     this.enableAllFields();
     this.disableFormFields();
 
   }  
   startNewEligibility(){
+    this.validateForm();
     if(this.eligibilityPeriodsOverlapCheck(
       new Date(this.currentEligibility.eligibilityStartDate), 
       this.currentEligibility.eligibilityEndDate ===""?null:new Date(this.currentEligibility.eligibilityEndDate),
       this.eligibilityPeriodForm.controls['statusStartDate'].value === ""?null:  this.eligibilityPeriodForm.controls['statusStartDate'].value ,
       this.eligibilityPeriodForm.controls['statusEndDate'].value === ""? null:  this.eligibilityPeriodForm.controls['statusEndDate'].value))
       {
-      
+        
       }
-  
+      this.acceptedApplication.clientCaseId= this.clientCaseId;
+      this.acceptedApplication.clientCaseEligibilityId= this.clientCaseEligibilityId
+      this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
+      this.acceptedApplication.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
+      this.acceptedApplication.groupCode =  this.eligibilityPeriodForm.controls['group'].value
+      this.acceptedApplication.assignedCwUserId = null;
+      this.acceptedApplication.eligibilityStatusCode = this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
+      this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
+      this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId).subscribe({
+        next: (ddlCerResponse) => {
+        },
+        error: (err) => {
+        },
+      });
   }
   onModalCloseClicked() {
     this.pageLoaded = false;
@@ -79,9 +95,10 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   /** Private methods **/
   private getCurrentEligibility(){
     this.loaderService.show();
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.acceptedEligibility).subscribe(data=>{
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.eligibilityStatus).subscribe(data=>{
       this.pageLoaded =  true;
-      this.currentEligibility = data;
+      this.eligibilityDetails = data;
+      this.currentEligibility = this.eligibilityDetails[0];
       if( this.currentEligibility.caseStatusCode === 'PENDING'){
         this.isCurrentEligibilityPending = true;
       }
@@ -99,7 +116,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   {
     this.lovFacade.getGroupLovs();
   }
-  private requiredAndEnableFieldsByStatus(status:string)
+  private disableFieldsByStatus(status:string)
   {   
     switch(status.toUpperCase())
     {      
@@ -121,7 +138,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
           'statusEndDate',
           'group',
         ]; 
-        break;     
+        break;   
 
     }
   }
@@ -168,6 +185,9 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       return true;
     }
     return false;
+  }
+  private validateForm(){
+
   }
 
   

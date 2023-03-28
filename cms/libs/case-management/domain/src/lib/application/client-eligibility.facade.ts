@@ -80,5 +80,10 @@ export class ClientEligibilityFacade {
   {
     return this.clientEligibilityDataService.saveAcceptedApplication(acceptedApplication,caseId,eligibilityId);
   }
+  saveNewStatusPeriod(newEligibilityPeriods:any,caseId:any,eligibilityId:any)
+  {
+    return this.clientEligibilityDataService.saveNewStatusPeriod(newEligibilityPeriods,caseId,eligibilityId);
+  }
+  
   
 }
