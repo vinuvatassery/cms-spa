@@ -147,16 +147,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadIncomeData(clientId: any, eligibilityId: any, skipCount: number,
-    pageSize: number, sortBy: string, sortType: string) {
-    this.incomeFacade.loadIncomes(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
-  }
-
-  private loadEmploymentData(clientId: any, eligibilityId: any, skipCount: number,
-    pageSize: number, sortBy: string, sortType: string) {
-    this.employmentFacade.loadEmployers(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
-  }
-
   private resetTabs(){
     Promise.resolve(null).then(() => this.tabStripParent.selectTab(0));
     Promise.resolve(null).then(() => this.tabStripChild.selectTab(0));
@@ -180,20 +170,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   onClientProfileTabSelected(event: SelectEvent) {
     this.selectedClientTabTitle = event.title;
     this.clientCaseEligibilityId = this.historyClientCaseEligibilityId;
-    switch (this.selectedClientTabTitle) {
-      case ClientProfileTabTitles.INCOME: {
-        this.loadIncomes();
-        break;
-      }
-      case ClientProfileTabTitles.EMPLOYMENT: {
-        this.loadEmployments();
-        break;
-      }
-      default:
-        {
-          break;
-        }
-    }
   }
 
   /** External event methods **/
@@ -259,11 +235,12 @@ export class Case360PageComponent implements OnInit, OnDestroy {
             clientFullName: clientHeaderData?.clientFullName,
             pronouns: clientHeaderData?.pronouns,
             clientCaseIdentity: clientHeaderData?.clientCaseIdentity,
+            eligibilityPeriods: clientHeaderData?.eligibilityPeriods,
             clientOfficialIdFullName: clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
           }
-          this.eligibilityPeriodData = clientHeaderData?.eligibilityPeriods;
-          this.clientCaseId = clientHeader?.clientCaseId
+          this.clientCaseId = clientHeader?.clientCaseId;
+          this.eligibilityPeriodData =  clientHeaderData?.eligibilityPeriods;
           this.clientHeaderSubject.next(clientHeader);
           if (clientHeader?.clientCaseEligibilityId) {
             this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
@@ -330,82 +307,12 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
         }
       });
-
   }
 
   loadHeaderAndProfile() {
     this.loadClientProfileInfoEventHandler();
     this.loadReadOnlyClientInfoEventHandler();
   }
-   /** Load Employments **/
-   public loadEmployments() {
-    this.loadEmploymentData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      this.employmentFacade.skipCount,
-      this.employmentFacade.gridPageSizes[0].value,
-      this.employmentFacade.sortValue,
-      this.employmentFacade.sortType);
-  }
-
-  loadEmploymentsHandle(gridDataRefinerValue: any): void {
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sort: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
-    this.loadEmploymentData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sort,
-      gridDataRefiner.sortType
-    );
-  }
-
-  onPeriodSelectionChange(value: any) {
-    this.clientCaseEligibilityId = value.id;
-    switch (this.selectedClientTabTitle) {
-      case ClientProfileTabTitles.INCOME: {
-        this.loadIncomes();
-        break;
-      }
-      case ClientProfileTabTitles.EMPLOYMENT: {
-        this.loadEmployments();
-        break;
-      }
-    }
-  }
-  /** Load Incomes **/
-  public loadIncomes() {
-    this.loadIncomeData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      this.incomeFacade.skipCount,
-      this.incomeFacade.gridPageSizes[0].value,
-      this.incomeFacade.sortValue,
-      this.incomeFacade.sortType);
-  }
-
-  loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sortColumn: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
-    this.loadIncomeData(
-      this.profileClientId.toString(),
-      this.clientCaseEligibilityId,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sortColumn,
-      gridDataRefiner.sortType
-    );
-  }
-
 
   loadChangeGroupData(eligibilityId: string){
     this.caseFacade.loadEligibilityChangeGroups(eligibilityId);

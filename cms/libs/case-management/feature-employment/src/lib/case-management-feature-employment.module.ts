@@ -11,6 +11,7 @@ import { EmployerListComponent } from './components/employer-list/employer-list.
 import { EmployerDetailComponent } from './components/employer-detail/employer-detail.component';
 import { RemoveEmployerConfirmationComponent } from './components/remove-employer-confirmation/remove-employer-confirmation.component';
 import { EmploymentPageComponent } from './containers/employment-page/employment-page.component';
+import { ProfileEmploymentPageComponent } from './containers/profile-employment-page/profile-employment-page.component';
 
 @NgModule({
   imports: [
@@ -25,11 +26,13 @@ import { EmploymentPageComponent } from './containers/employment-page/employment
     EmployerDetailComponent,
     RemoveEmployerConfirmationComponent,
     EmploymentPageComponent,
+    ProfileEmploymentPageComponent,
   ],
   exports: [
     EmployerListComponent,
     EmployerDetailComponent,
     RemoveEmployerConfirmationComponent,
+    ProfileEmploymentPageComponent
   ],
 })
 export class CaseManagementFeatureEmploymentModule {}

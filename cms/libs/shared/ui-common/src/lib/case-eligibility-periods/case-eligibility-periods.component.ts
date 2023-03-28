@@ -24,7 +24,7 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
     }
   }
   private eligibilityId: string = "";
-  @Input() 
+  @Input()
   get caseEligibilityId(): string {
     return this.eligibilityId;
   }
@@ -47,10 +47,10 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
       this.eligibilityPeriodsList.push(period);
     });
   }
-  
+
   setDefaultSelection() {
     if (!!this.caseEligibilityId && this.eligibilityPeriodsList.length > 0) {
-      this.selectedValue = this.eligibilityPeriodsList.filter((x: any)=>x.id == this.caseEligibilityId)[0];
+      this.selectedValue = this.eligibilityPeriodsList.filter((x: any) => x.id == this.caseEligibilityId)[0];
     }
   }
 

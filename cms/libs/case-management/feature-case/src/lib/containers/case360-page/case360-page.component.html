@@ -69,59 +69,18 @@
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Income" [selected]="selectedClientTabTitle === clientProfileTabTitles.INCOME" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'> 
-         
+          <kendo-tabstrip-tab title="Income" [selected]="selectedClientTabTitle === clientProfileTabTitles.INCOME" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-row">
-                  <div class="flex-col flex-space-bw align-items-center mb-1">
-                    <h2 class="title-md mb-0 text-bold">
-                      Income
-                      <span class="app-c-badge badge-warn-light ml-1"><span class="material-icons"
-                          aria-label="income Information" aria-hidden="true">info</span>
-                        Viewing data from previous EP</span>
-                    </h2>
-                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
-                      <div class="fmly-epdorpdown">
-                        <case-management-case-eligibility-periods
-                          [eligibilityPeriodsData]="eligibilityPeriodData" [caseEligibilityId]="historyClientCaseEligibilityId"
-                          (onEligibilityPeriodChange)="onPeriodSelectionChange($event)">
-                        </case-management-case-eligibility-periods>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex-col">
-                    <case-management-income-list [data]="screenName" [clientId]="profileClientId"
-                    [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"
-                    (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
-                  </div>
-                </div>
-              </div>
+              <case-management-profile-income-page [clientId]="profileClientId" [clientCaseId]="clientCaseId"
+              [clientCaseEligibilityId]="clientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
+              [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-income-page>
             </ng-template>
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Employment" [selected]="selectedClientTabTitle === clientProfileTabTitles.EMPLOYMENT" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-row">
-                  <div class="flex-col flex-space-bw align-items-center mb-1">
-                    <h2 class="title-md mb-0 text-bold">Employment</h2>
-                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold" for="eemploymentep">EP:&nbsp;</span>
-                      <div class="fmly-epdorpdown">
-                        <case-management-case-eligibility-periods
-                        [eligibilityPeriodsData]="eligibilityPeriodData" [caseEligibilityId]="historyClientCaseEligibilityId"
-                        (onEligibilityPeriodChange)="onPeriodSelectionChange($event)"></case-management-case-eligibility-periods>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex-col">
-                    <case-management-employer-list [data]="screenName" [clientCaseId]="clientCaseId"
-                    [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="profileClientId"
-                    (loadEmploymentsEvent)="loadEmploymentsHandle($event)"></case-management-employer-list>
-                  </div>
-                </div>
-              </div>
+              <case-management-profile-employment-page [clientId]="profileClientId" [clientCaseId]="clientCaseId"
+              [clientCaseEligibilityId]="clientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
+              [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-employment-page>
             </ng-template>
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
