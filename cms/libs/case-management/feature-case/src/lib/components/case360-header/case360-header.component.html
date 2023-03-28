@@ -92,8 +92,11 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   kendoTooltip
 >
-  <kendo-dialog-titlebar> Start New Status Period </kendo-dialog-titlebar>
-  <case-management-eligibility-period-detail></case-management-eligibility-period-detail>
+<!-- <kendo-dialog-titlebar  > Resume Status Period </kendo-dialog-titlebar> -->
+  <case-management-eligibility-period-detail
+  [clientId]="clientId"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientCaseId]="clientCaseId"></case-management-eligibility-period-detail>
 </kendo-dialog>
 
 <!-- Eligibility Group Detail Modal -->

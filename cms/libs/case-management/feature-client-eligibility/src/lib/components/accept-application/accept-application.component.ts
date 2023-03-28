@@ -142,6 +142,7 @@ export class AcceptApplicationComponent implements OnInit {
     this.acceptedApplication.clientCaseEligibilityId = this.clientCaseEligibilityId;
     this.acceptedApplication.groupCode = this.eligibilityForm.controls['groupCode'].value;
     this.acceptedApplication.caseStatusCode = this.eligibilityForm.controls['caseStatusCode'].value;
+    this.acceptedApplication.eligibilityStatusCode = this.eligibilityForm.controls['caseStatusCode'].value;
     this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityForm.controls['eligibilityStartDate'].value,this.dateFormat));
     this.acceptedApplication.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityForm.controls['eligibilityEndDate'].value,this.dateFormat));
     this.acceptedApplication.assignedCwUserId = null;

@@ -5,6 +5,7 @@ export class AcceptedApplication{
   groupCode :string = '';
   eligibilityStartDate :Date = new Date;
   eligibilityEndDate :Date = new Date;
+  eligibilityStatusCode: string=''
   assignedCwUserId :string | null = "";
 
 }

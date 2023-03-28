@@ -32,6 +32,6 @@ export enum LovType {
     EthnicityNotListed = 'NOT_LISTED',
     VerificationMethod = 'VERIFICATION_METHOD',
     AddressType = 'ADDRESS_TYPE',
-    EligibilityStatus ='ELIGIBILITY_STATUS'
+    EligibilityStatus ='ELIGIBILITY_STATUS',
     ColumnDroplist = 'COLUMN_DROPLIST_CODE'
   }

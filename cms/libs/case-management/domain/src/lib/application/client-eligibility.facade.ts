@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject } from 'rxjs';
 /** Data services **/
 import { ClientEligibilityDataService } from '../infrastructure/client-eligibility.data.service';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -12,11 +13,13 @@ export class ClientEligibilityFacade {
   private ddlAcceptApplicationsSubject = new BehaviorSubject<any>([]);
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private ddlStatusSubject = new BehaviorSubject<any>([]);
+  eligibilityPeriodPopupCloseSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlAcceptApplications$ = this.ddlAcceptApplicationsSubject.asObservable();
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   ddlStatus$ = this.ddlStatusSubject.asObservable();
+  eligibilityPeriodPopupClose$ = this.eligibilityPeriodPopupCloseSubject.asObservable();
 
   /** Constructor**/
   constructor(
