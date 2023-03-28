@@ -259,7 +259,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     }
     return false;
   }
-  private validateForm(){
 
   private addDays(date: Date, days: number): Date {
     date.setDate(date.getDate() + days);
