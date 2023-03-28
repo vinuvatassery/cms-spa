@@ -13,13 +13,13 @@ export class ClientEligibilityFacade {
   private ddlAcceptApplicationsSubject = new BehaviorSubject<any>([]);
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private ddlStatusSubject = new BehaviorSubject<any>([]);
-  eligibilityPeriodPopupCloseSubject = new Subject<boolean>();
+  eligibilityPeriodPopupOpenSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlAcceptApplications$ = this.ddlAcceptApplicationsSubject.asObservable();
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   ddlStatus$ = this.ddlStatusSubject.asObservable();
-  eligibilityPeriodPopupClose$ = this.eligibilityPeriodPopupCloseSubject.asObservable();
+  eligibilityPeriodPopupOpen$ = this.eligibilityPeriodPopupOpenSubject.asObservable();
 
   /** Constructor**/
   constructor(

@@ -31,7 +31,7 @@ export class Case360HeaderComponent implements OnInit{
      /** Lifecycle hooks **/
  ngOnInit(): void {
   this.loadClientProfileInfoEvent.emit()  
-  this.clientEligibilityFacade.eligibilityPeriodPopupClose$.subscribe(response=>{
+  this.clientEligibilityFacade.eligibilityPeriodPopupOpen$.subscribe(response=>{
     this.isStatusPeriodDetailOpened = response;
   }) 
 }

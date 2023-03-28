@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientEligibilityFacade, EligibilityRequestType, AcceptedApplication } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
-import { LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
+import { LoaderService, ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
@@ -64,6 +64,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   }  
   startNewEligibility(){
+    this.loaderService.show();
     this.validateForm();
     if(this.eligibilityPeriodsOverlapCheck(
       new Date(this.currentEligibility.eligibilityStartDate), 
@@ -82,15 +83,24 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.acceptedApplication.eligibilityStatusCode = this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
       this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
       this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId).subscribe({
-        next: (ddlCerResponse) => {
+        next: (response) => {
+          this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"New Eligibility Periods created successfully.")
+          this.loaderService.hide();
+          this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
         },
         error: (err) => {
+          this.loaderService.hide();
+          this.clientEligibilityFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+          this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
         },
       });
   }
   onModalCloseClicked() {
     this.pageLoaded = false;
-    this.clientEligibilityFacade.eligibilityPeriodPopupCloseSubject.next(false);
+    this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
   }
   /** Private methods **/
   private getCurrentEligibility(){
@@ -108,7 +118,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   private loadDdlStatus()
   {
-    //this.clientEligibilityFacade.loadDdlStatus();
     this.lovFacade.getEligibilityStatusLovs();
   }
   private loadGroupCode()
