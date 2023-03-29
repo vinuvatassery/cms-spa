@@ -1,7 +1,8 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DrugPharmacyFacade } from '@cms/case-management/domain';
+import { filter, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-profile-drug-page',
@@ -9,7 +10,7 @@ import { DrugPharmacyFacade } from '@cms/case-management/domain';
   styleUrls: ['./profile-drug-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileDrugPageComponent  implements OnInit {
+export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
   profileClientId!: number;
   clientCaseEligibilityId!: any;
   clientCaseId!: any;
@@ -18,8 +19,12 @@ export class ProfileDrugPageComponent  implements OnInit {
   constructor(  
     private drugPharmacyFacade: DrugPharmacyFacade,
     private route: ActivatedRoute,
+    private readonly router: Router
   ) { }
 
+  tabChangeSubscription$ = new Subscription();
+  tabIdSubject = new Subject<string>();
+  tabId$ = this.tabIdSubject.asObservable();
     //for add pharmacy
     clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
     pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
@@ -32,6 +37,8 @@ export class ProfileDrugPageComponent  implements OnInit {
     selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
     
     ngOnInit(): void {
+
+      this.routeChangeSubscription();
       this. loadQueryParams()
      
     }
@@ -41,8 +48,21 @@ export class ProfileDrugPageComponent  implements OnInit {
   {
     this.profileClientId = this.route.snapshot.queryParams['id'];
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['elg_id'];
-    this.clientCaseId = this.route.snapshot.queryParams['clientCaseId'];
-    this.tabId = this.route.snapshot.queryParams['tabId'];  
+    this.tabId = this.route.snapshot.queryParams['tabId']; 
+    this.tabIdSubject.next(this.tabId)    
+  }
+
+  
+  private routeChangeSubscription() {
+    this.tabChangeSubscription$ = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {    
+          this.loadQueryParams()  
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.tabChangeSubscription$.unsubscribe();
   }
 
   removePharmacy(clientPharmacyId: string) {

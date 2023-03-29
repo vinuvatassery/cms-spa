@@ -1,4 +1,4 @@
-<div class="block-section mt-1">
+<div class="block-section mt-1" *ngIf="((tabId$ | async)==='phrm') || tabId === 'phrm'">
   <case-management-pharmacies-list [clientId]="profileClientId" [clientpharmacies$]="clientpharmacies$"
     [pharmacysearchResult$]="pharmacysearchResult$" [selectedPharmacy$]="selectedPharmacy$"
     [addPharmacyResponse$]="addPharmacyRsp$" [editPharmacyResponse$]="editPharmacyRsp$"
@@ -9,7 +9,9 @@
 </div>
 
 
-<div class="block-section mt-1">
+<div class="block-section mt-1"  *ngIf="((tabId$ | async)==='drgprc') || tabId === 'drgprc'">
   <case-management-drugs-purchased-list
     [clientId]="profileClientId"></case-management-drugs-purchased-list>
 </div>
+
+

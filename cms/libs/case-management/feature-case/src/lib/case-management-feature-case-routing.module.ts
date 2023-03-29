@@ -21,6 +21,16 @@ const routes: Routes = [
     }, 
     children:[
       {
+        path: 'client',
+        loadChildren: () =>
+          import('@cms/case-management/feature-client').then(
+            (m) => m.CaseManagementFeatureClientModule
+          ),
+        data: {
+          title: 'New Application',
+        },
+      },
+      {
         path: 'contact-info',
         loadChildren: () =>
           import('@cms/case-management/feature-contact').then(
@@ -114,7 +124,7 @@ const routes: Routes = [
         path: 'case-status-period',
         loadChildren: () =>
           import('@cms/case-management/feature-cer-tracking').then(
-            (m) => m.CerTrackingPageComponent
+            (m) => m.CaseManagementFeatureCerTrackingModule
           ),
         data: {
           title: '',

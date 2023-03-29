@@ -32,9 +32,9 @@ export class ProfileClientPageComponent implements OnInit {
   loadQueryParams()
   {
     this.profileClientId = this.route.snapshot.queryParams['id'];
-    this.clientCaseEligibilityId = this.route.snapshot.queryParams['elg_id'];
-    this.clientCaseId = this.route.snapshot.queryParams['clientCaseId'];
+    this.clientCaseEligibilityId = this.route.snapshot.queryParams['elg_id'];   
     this.tabId = this.route.snapshot.queryParams['tabId'];
+    this.clientCaseId ='D2FBB537-44DE-4150-AF4C-13B09FB72A51'    
     this.loadReadOnlyClientInfoEventHandler()
   }
 

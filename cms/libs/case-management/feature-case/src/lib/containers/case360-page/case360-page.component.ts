@@ -54,6 +54,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   clientId: any;
   clientChangeSubscription$ = new Subscription();
 
+
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -174,48 +175,12 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           }
         }
       });
-  }
-  onInnerSelect(data: any) {
-    this.selectedSubTab = data?.index;
-    let query = {
-      queryParams: {
-        elg_id: this.clientCaseEligibilityId,
-        tabId: 'contact-info',
-      },
-    };
-    if (this.selectedSubTab === 0) {
 
-    } else if (this.selectedSubTab === 1) {
-      this.router.navigate(
-        ['/case-management/cases/case360/1085/contact-info/profile'],
-        query
-      );
-    }
-    else if (this.selectedSubTab === 2) {
-      this.router.navigate(
-        ['/case-management/cases/case360/1085/contact-info/profile'],
-        query
-      );
-    }
+      this.onTabSelect('clinfo')
   }
-  onTabSelect(data: any) {
-    debugger;
-    let query = {
-      queryParams: {
-        elg_id: this.clientCaseEligibilityId,
-        tabId: 'contact-info',
-      },
-    };
-    if (data?.index === 0) {
-      this.router.navigate(
-        ['/case-management/cases/case360/1085/contact-info/profile'],
-        query
-      );
-    } else if (data?.index === 1) {
-      this.router.navigate(
-        ['/case-management/cases/case360/1085/health-insurance/profile'],
-        query
-      );
-    }
-  }
+
+ onTabSelect(tabName : string)
+ {
+  this.caseFacade.onClientProfileTabSelect(tabName , this.profileClientId  , this.clientCaseEligibilityId )
+ }
 }

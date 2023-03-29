@@ -1,21 +1,21 @@
-<div class="block-section mt-1">
+<div class="block-section mt-1" *ngIf="((tabId$ | async)==='sts') || tabId === 'sts'">
   <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
 </div>
 
-<div class="block-section mt-1">
-  <case-management-medical-payment-list></case-management-medical-payment-list>
-</div>
-
-
-<div class="block-section mt-1">
-  <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
-</div>
-
-
-<div class="block-section mt-1">
-  <case-management-medical-payment-list></case-management-medical-payment-list>
-</div>
-
-<div class="block-section mt-1">
+<div class="block-section mt-1" *ngIf="((tabId$ | async)==='ded') || tabId === 'ded'">
   <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+</div>
+
+
+<div class="block-section mt-1" *ngIf="((tabId$ | async)==='cpdc') || tabId === 'cpdc'">
+  <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+</div>
+
+
+<div class="block-section mt-1" *ngIf="((tabId$ | async)==='insst') || tabId === 'insst'">
+  <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
+</div>
+
+<div class="block-section mt-1" *ngIf="((tabId$ | async)==='prpaymnt') || tabId === 'prpaymnt'">
+  <case-management-medical-payment-list></case-management-medical-payment-list>
 </div>

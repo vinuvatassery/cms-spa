@@ -8,120 +8,210 @@
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
   <case-management-case360-header-tools></case-management-case360-header-tools>
-  <!-- <ul class="custom-tab-stripe-lists">
-    <li class="custom-tab-stripe-lists-items active_tab"><a>Client Info</a></li>
-    <li class="custom-tab-stripe-lists-items"><a>Contact Info</a></li>
-    <li class="custom-tab-stripe-lists-items"><a>Family & Dependents</a></li>
-    <li class="custom-tab-stripe-lists-items"><a>Income</a></li>
-    <li class="custom-tab-stripe-lists-items"><a>Employment</a></li>
-  </ul> -->
+
+  <div class="custom-tab-stripe-lists">
+    <div class="tabbed" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>
+      <input type="radio" id="cl_tab" (click)="onTabSelect('clinfo')" name="tabbed-tab-1" checked><label
+        for="cl_tab">Client</label>
+      <div>
+        <div class="tabbed">
+          <input type="radio" id="clinfo" name="cl_tab" (click)="onTabSelect('clinfo')" checked   *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'><label
+            for="clinfo">Client Info</label>
+         
+          <input type="radio" id="cninfo" name="cl_tab" (click)="onTabSelect('cninfo')"  *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
+          <label for="cninfo" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>Contact
+            Info</label>
+           
+          <input type="radio" id="fmd" name="cl_tab" (click)="onTabSelect('fmd')" *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
+          <label for="fmd" *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>Family &
+            Dependents</label>
+          <input type="radio" id="inc" name="cl_tab" (click)="onTabSelect('inc')" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
+          <label for="inc" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>Income</label>
+          <input type="radio" id="emp" name="cl_tab" (click)="onTabSelect('emp')"  *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
+          <label for="emp"  *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>Employment</label>
+        </div>
+        <hr>
+      </div>
+      <input type="radio" id="hi_tab" name="tabbed-tab-1" (click)="onTabSelect('sts')" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
+      <label for="hi_tab" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>Health Insur.</label>
+      <div>
+        <div class="tabbed">
+          <input type="radio" id="sts" name="hi_tab" checked (click)="onTabSelect('sts')"  *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>
+          <label for="sts"  *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>Insurance
+            Status</label>
+          <input type="radio" id="prpaymnt" name="hi_tab" (click)="onTabSelect('prpaymnt')"   *ifPermission='["Client_Profile_Health_Ins_Premium_Payments_Tab_View_Only"]'>
+          <label for="prpaymnt"   *ifPermission='["Client_Profile_Health_Ins_Premium_Payments_Tab_View_Only"]'>Premium Payments</label>
+          <input type="radio" id="ded" name="hi_tab" (click)="onTabSelect('ded')" *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'>
+          <label for="ded" *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'>Co-Pays & Deductibles</label>
+        </div>
+        <hr>
+      </div>
+      <input type="radio" id="dntl_tab" name="tabbed-tab-1" (click)="onTabSelect('insst')" *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
+      <label for="dntl_tab" *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>Dental Insur.</label>
+      <div>
+        <div class="tabbed">
+          <input type="radio" id="insst" name="dntl_tab" checked (click)="onTabSelect('insst')" *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>
+          <label for="insst" *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>Insurance Status </label>
+          
+          <input type="radio" id="dnpre" name="dntl_tab" checked (click)="onTabSelect('prpaymnt')"  *ifPermission='["Client_Profile_Dental_Premium_Payments_Tab_View_Only"]'>
+          <label for="dnpre" *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>Premium Payments </label>
+
+          <input type="radio" id="cpdc" name="dntl_tab" (click)="onTabSelect('cpdc')" *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'>
+          <label for="cpdc" *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'>Co-Pays & Deductibles</label>
+        </div>
+        <hr>
+      </div>
+
+      <input type="radio" id="drg" name="tabbed-tab-1" (click)="onTabSelect('phrm')"  *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
+      <label for="drg"  *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>Drugs</label>
+      <div>
+        <div class="tabbed">
+          <input type="radio" id="phrm" name="drg" checked (click)="onTabSelect('phrm')"  *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>
+          <label for="phrm"  *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>Pharmacies</label>
+          <input type="radio" id="drgprc" name="drg" (click)="onTabSelect('drgprc')" *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'>
+          <label for="drgprc" *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'>Drugs Purchased</label>
+        </div>
+        <hr>
+      </div>
+
+      <input type="radio" id="mgm" name="tabbed-tab-1" (click)="onTabSelect('csm')" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
+      <label for="mgm" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>Management</label>
+      <div>
+        <div class="tabbed">
+          <input type="radio" id="csm" name="mgm" checked (click)="onTabSelect('csm')"  *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>
+           <label for="csm"  *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>Case Managers</label>
+          <input type="radio" id="hpr" name="mgm" (click)="onTabSelect('hpr')"  *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>
+          <label for="hpr"  *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>Healthcare  Providers</label>
+          <input type="radio" id="cd4" name="mgm" (click)="onTabSelect('cd4')" *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>
+          <label for="cd4" *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>CD4 Count</label>
+          <input type="radio" id="vrl" name="mgm" (click)="onTabSelect('vrl')" *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>
+          <label for="vrl" *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>Viral Load</label>
+        </div>
+        <hr>
+      </div>
+
+     
+      <input type="radio" id="statuses" name="statuses" (click)="onTabSelect('statuses')"  *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'>
+      <label for="statuses"  *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'>Statuses</label>
+   
+      <input type="radio" id="atch" name="atch" (click)="onTabSelect('atch')" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
+      <label for="atch" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>Attachments</label>
+      
+      <input type="radio" id="history" name="history" (click)="onTabSelect('history')" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'>
+      <label for="history" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'>App History</label>
+      
+    </div>
+  </div>
+
   <!-- Case Details Tab Sections -->
-  <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+  <!-- <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
     (tabSelect)="onTabSelect($event)" class="app-c-tab case-360-tab">
-    <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>
-      <ng-template kendoTabContent (click)="onTabSelect($event)">
+    <kendo-tabstrip-tab title="Client" [selected]="true" >
+      <ng-template kendoTabContent>
         <kendo-tabstrip #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          (tabSelect)="onInnerSelect($event)" class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Client Info" [selected]="true"
-            *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>
+          class="app-c-tab app-c-sub-tab" (click)="onTabSelect($event)" data-name="Client_Profile">
+          <kendo-tabstrip-tab title="Client Info" [selected]="true" 
+          >
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Contact Info" [selected]="selectedSubTab == 1"
-            *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
+           >
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Family & Dependents" (tabstripSelect)="onTabSelect($event)"
-            *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Family & Dependents"
+            
+            data-name="Profile_Client_FamilyDependents">
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Income" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Income" >
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Employment" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
-          </kendo-tabstrip-tab>
-        </kendo-tabstrip>
-      </ng-template>
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Health Insur." *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
-      <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
-            *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Premium Payments"
-            *ifPermission='["Client_Profile_Health_Ins_Premium_Payments__Tab_View_Only"]'>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Co-Pays & Deductibles"
-            *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Employment">
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Dental Insur." *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="Health Insur." (tabSelect)="onTabSelect($event)"
+      >
+      <ng-template kendoTabContent>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          (tabSelect)="onTabSelect($event)" class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
+           >
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Premium Payments"
+          >
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Co-Pays & Deductibles"
+            >
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="Dental Insur." >
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
           class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
-            *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>
+            >
 
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Premium Payments"
-            *ifPermission='["Client_Profile_Dental_Premium_Payments__Tab_View_Only"]'>
+           >
 
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Co-Pays & Deductibles"
-            *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'>
+            >
             <ng-template kendoTabContent>
             </ng-template>
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Drugs" *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="Drugs">
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
           class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Pharmacies" [selected]="true"
-            *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>
+           >
 
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Drugs Purchased" *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Drugs Purchased" >
 
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
 
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Management" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="Management" >
       <ng-template kendoTabContent>
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
           class="app-c-tab app-c-sub-tab">
           <kendo-tabstrip-tab title="Case Managers" [selected]="true"
-            *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>
+           >
 
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Healthcare Providers"
-            *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>
+           >
 
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="CD4 Count" *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="CD4 Count" >
 
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Viral Load"
-            *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>
+            >
 
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Statuses" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="Statuses">
 
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Attachments" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="Attachments" >
 
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="App History" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="App History" >
 
     </kendo-tabstrip-tab>
-  </kendo-tabstrip>
-  <div class="client-profile-outlet">
+  </kendo-tabstrip> -->
+  <div class="client-profile-outlet flex-Col">
     <router-outlet></router-outlet>
   </div>
 

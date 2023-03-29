@@ -48,7 +48,8 @@ export class ProfileContactPageComponent implements OnInit{
      loadQueryParams()
      {
        this.profileClientId = this.route.snapshot.queryParams['id'];
-       this.clientCaseEligibilityId = this.route.snapshot.queryParams['elg_id'];     
+       this.clientCaseEligibilityId = this.route.snapshot.queryParams['elg_id'];   
+       debugger  
      }
 
   //#region client Email//NOSONAR
