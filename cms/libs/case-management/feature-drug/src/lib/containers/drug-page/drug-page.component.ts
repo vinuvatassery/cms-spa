@@ -350,8 +350,12 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.saveForLaterValidationSubscription =
       this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
         if (val) {
-          this.checkValidations()
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+          if(!this.checkValidations()){
+            this.workflowFacade.showCancelApplicationPopup(true);
+          }
+          else{
+            this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+          }
         }
       });
   }

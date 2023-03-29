@@ -248,9 +248,23 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
+        if(!this.checkValidations()){
+          this.workFlowFacade.showCancelApplicationPopup(true);
+        }
+        else{
           this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
+  }
+
+  checkValidations() {
+    this.providersStatus = (this.isProvidersGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
+    if (this.showProvidervalidationbox && !this.isProvidersGridDisplay) {
+      this.showProvidervalidationboxSubject.next(true)
+      return false;
+    }
+    return true;
   }
 
 }
