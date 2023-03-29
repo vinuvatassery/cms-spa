@@ -10,30 +10,20 @@
   <case-management-case360-header-tools></case-management-case360-header-tools>
 
   <div class="client-tab-bar-wrappers">
-
-    <div class="custom-client-tab-main-wrapper">
-      <kendo-scrollview [arrows]="arrowView" [width]="width" [height]="height">
-        <ng-template>
-
-          <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === 'clinfo' || client_button_grp }" (click)="onTabClick('clinfo')"
-            *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>Client</button>
-          <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === 'sts' || health_button_grp }" (click)="onTabClick('sts')" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
-            Health Insur.</button>
-          <button kendoButton  [ngClass]="{'custom-tab-main-active': selectedTabName === 'insst' || dental_button_grp }" (click)="onTabClick('insst')" *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
-            Dental Insur.</button>
-          <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === 'phrm' || drugs_button_grp}"  (click)="onTabClick('phrm')" *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
-            Drugs</button>
-          <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === 'csm' || mng_button_grp}" (click)="onTabClick('csm')" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
-            Management</button>
-          <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === 'statuses' }" (click)="onTabClick('statuses')"
-            *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> statuses</button>
-          <button kendoButton  [ngClass]="{'custom-tab-main-active': selectedTabName === 'atch' }" (click)="onTabClick('atch')" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
-            Attachments</button>
-          <button kendoButton  [ngClass]="{'custom-tab-main-active': selectedTabName === 'history'}" (click)="onTabClick('history')"
-            *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'> App History</button>
-
-        </ng-template>
-      </kendo-scrollview>
+  
+      <div class="custom-client-tab-main-wrapper"> 
+        
+ 
+        <button kendoButton class="custom-tab-main-active" (click)="onTabClick('clinfo')" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>Client</button>
+        <button kendoButton (click)="onTabClick('sts')" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'> Health Insur.</button>
+        <button kendoButton (click)="onTabClick('insst')" *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'> Dental Insur.</button>
+        <button kendoButton (click)="onTabClick('phrm')"  *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'> Drugs</button>
+        <button kendoButton (click)="onTabClick('csm')" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'> Management</button>
+        <button kendoButton (click)="onTabClick('statuses')"  *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> statuses</button>
+        <button kendoButton (click)="onTabClick('atch')"  *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'> Attachments</button>
+        <button kendoButton (click)="onTabClick('history')" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'> App History</button>
+    
+    
     </div>
     <div class="custom-client-tab-inner-wrapper">
       <kendo-buttongroup *ngIf="client_button_grp">
