@@ -62,9 +62,7 @@
               showOn="hover"
               aria-label="profile avathar"
             >
-              <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                <span class="profile-text-avatar">AK</span>
-              </div>
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover
               #onUserProfileDetailsHovered
@@ -72,7 +70,7 @@
               position="left"
             >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card></common-user-profile-card>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </ng-template>
@@ -101,7 +99,7 @@
                 </button>
                 </div>
                 <ng-template #deleteButton>
-                  <div *ngIf="dataItem.activeFlag !=='Y' && buttondataItem.text !== 'Deactivate Contact' && buttondataItem.text !== 'Edit Contact'">
+                  <div *ngIf="buttondataItem.text === 'Delete Contact'">
                     <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                       <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                       <label>   {{ buttondataItem.text }} </label>
@@ -152,7 +150,17 @@
   *ngIf="isDeactivateFriendOrFamilyOpened"
   (close)="onDeactivateFriendOrFamilyClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Deactivate and Add Contact"
+  title="Deactivate Contact"
 >
-  <case-management-deactivate-friend-or-family-confirmation></case-management-deactivate-friend-or-family-confirmation>
+  <case-management-deactivate-friend-or-family-confirmation [clientContact]="selectedContact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
+</kendo-dialog>
+
+<!-- Delete Contact Popup-->
+<kendo-dialog
+  *ngIf="isDeleteFriendOrFamilyOpened"
+  (close)="onDeleteFriendOrFamilyClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Delete Contact"
+>
+  <case-management-delete-friend-or-family-confirmation [clientContact]="selectedContact" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModal($event)"></case-management-delete-friend-or-family-confirmation>
 </kendo-dialog>

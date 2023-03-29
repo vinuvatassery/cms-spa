@@ -12,9 +12,9 @@ import {
 import { ContactFacade, FriendsOrFamilyContactClientProfile, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
-import {  FormControl, FormGroup, Validators,FormBuilder } from '@angular/forms';
-import { SnackBarNotificationType,NotificationSnackbarService, ConfigurationProvider, LoaderService, LoggingService} from '@cms/shared/util-core';
-import {  BehaviorSubject, of, Subscription } from 'rxjs';
+import { FormGroup, Validators,FormBuilder } from '@angular/forms';
+import { SnackBarNotificationType,NotificationSnackbarService, LoaderService, LoggingService} from '@cms/shared/util-core';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'case-management-friend-or-family-detail',
@@ -89,20 +89,34 @@ export class FriendOrFamilyDetailComponent implements OnInit {
     this.contactForm.controls["phoneNbr"].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
     this.contactForm.controls["phoneNbr"].updateValueAndValidity();
   }
-  populateModel()
+  populateModel(isDeactivateClicked = false)
   {
-    debugger;
-    this.clientContact = {
-      clientId: this.clientId,
-      clientCaseEligibilityId: this.caseEligibilityId,
-      relationshipSubTypeCode: this.contactForm?.controls['relationshipType']?.value,
-      firstName: this.contactForm?.controls['contactName']?.value,
-      phoneNbr: this.contactForm?.controls['phoneNbr']?.value,
-      activeFlag: StatusFlag.Yes
+    if(isDeactivateClicked)
+    {
+      this.clientContact = {
+        clientRelationshipId: this.contact.clientRelationshipId,
+        clientId: this.contact.clientId,
+        clientCaseEligibilityId: this.contact.clientCaseEligibilityId,
+        relationshipSubTypeCode: this.contact.relationshipSubTypeCode,
+        firstName: this.contact.firstName,
+        phoneNbr: this.contact.phoneNbr,
+        activeFlag: StatusFlag.No,
+        concurrencyStamp: this.contact.concurrencyStamp
+      }
+    }
+    else
+    {
+      this.clientContact = {
+        clientId: this.clientId,
+        clientCaseEligibilityId: this.caseEligibilityId,
+        relationshipSubTypeCode: this.contactForm?.controls['relationshipType']?.value,
+        firstName: this.contactForm?.controls['contactName']?.value,
+        phoneNbr: this.contactForm?.controls['phoneNbr']?.value,
+        activeFlag: StatusFlag.Yes
+      }
     }
   }
   createContact() {
-    debugger;
     this.validateForm();
     this.populateModel();
     if (this.contactForm.valid)
@@ -116,6 +130,7 @@ export class FriendOrFamilyDetailComponent implements OnInit {
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Friend Or Family Contact Saved Successfully.")
         },
         error:(error)=>{
+          this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,error)
           this.loggingService.logException(error);
            this.loaderService.hide();
         }
@@ -123,13 +138,16 @@ export class FriendOrFamilyDetailComponent implements OnInit {
     }
     else
     {
+      this.clientContact.clientRelationshipId = this.contact.clientRelationshipId;
+      this.clientContact.concurrencyStamp = this.contact.concurrencyStamp;
       return this.contactFacade.updateContact(this.clientId ?? 0, this.clientContact).subscribe({
         next:(data)=>{
           this.loaderService.hide();
           this.detailModalCloseEvent.emit(true);
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Friend Or Family Contact Saved Successfully.")
+          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Friend Or Family Contact Updated Successfully.")
         },
         error:(error)=>{
+          this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,error)
           this.loggingService.logException(error);
            this.loaderService.hide();
         }
@@ -149,5 +167,22 @@ bindDataToForm(contact:any)
   this.contactForm.controls["phoneNbr"].setValue(contact.phoneNbr);
   this.contactForm.markAllAsTouched();
   this.cdr.detectChanges();
+}
+deactivateContact()
+{
+  this.loaderService.show();
+  this.populateModel(true)
+    return this.contactFacade.updateContact(this.clientId ?? 0, this.clientContact).subscribe({
+      next:(data)=>{
+        this.loaderService.hide();
+        this.detailModalCloseEvent.emit(true);
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Friend Or Family Contact Updated Successfully.")
+      },
+      error:(error)=>{
+        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,error)
+        this.loggingService.logException(error);
+         this.loaderService.hide();
+      }
+    });
 }
 }

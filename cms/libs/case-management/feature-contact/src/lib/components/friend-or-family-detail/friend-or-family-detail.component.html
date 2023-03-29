@@ -58,6 +58,7 @@
         [primary]="true"
         look="flat"
         aria-label="deactivate friends or family contact"
+        (click)="deactivateContact()"
       >
         Deactivate
       </button>
@@ -78,7 +79,11 @@
         aria-label="add friend or family contact"
         (click)="createContact()"
       >
-        Add
+      {{
+        isEditValue
+          ? 'Update'
+          : 'Add'
+      }}
       </button>
     </div>
   </div>

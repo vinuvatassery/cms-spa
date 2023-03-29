@@ -259,4 +259,7 @@ export class ContactDataService {
 updateContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
   return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact`, clientContact);
 }
+deleteClientContact(clientId:any,clientRelationshipId:any){
+  return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact/${clientRelationshipId}`);
+}
 }

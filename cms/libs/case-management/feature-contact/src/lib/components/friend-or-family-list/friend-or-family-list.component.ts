@@ -20,6 +20,7 @@ export class FriendOrFamilyListComponent implements OnInit {
   isFriendsorFamilyEdit!: boolean;
   isFriendOrFamilyDetailOpened = false;
   isDeactivateFriendOrFamilyOpened = false;
+  isDeleteFriendOrFamilyOpened = false
   gridView:any[]=[];
   allList:any[]=[];
   showHistoricalDataFlag = false
@@ -34,7 +35,6 @@ export class FriendOrFamilyListComponent implements OnInit {
       text: "Edit Contact",
       icon: "edit",
       click: (contact:any): void => {
-        debugger;
         this.selectedContact = contact;
         this.onFriendOrFamilyDetailClicked(true);
       },
@@ -43,16 +43,24 @@ export class FriendOrFamilyListComponent implements OnInit {
       buttonType:"btn-h-primary",
       text: "Deactivate Contact",
       icon: "block",
-      click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
+      click: (contact:any): void => {
+        if(contact.clientRelationshipId)
+        {
+          this.selectedContact = contact;
+          this.onDeactivateFriendOrFamilyClicked();
+        }
       },
     },
     {
       buttonType:"btn-h-danger",
       text: "Delete Contact",
       icon: "delete",
-      click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
+      click: (contact:any): void => {
+        if(contact.clientRelationshipId)
+        {
+          this.selectedContact = contact;
+          this.onDeleteFriendOrFamilyClicked();
+        }
       },
     },
   ];
@@ -69,7 +77,6 @@ export class FriendOrFamilyListComponent implements OnInit {
   private loadFriendsOrFamily() {
     this.contactFacade.loadFriendsorFamily(this.clientId);
     this.contactFacade.friendsOrFamily$.subscribe((contacts:any)=>{
-      debugger;
       this.gridView= contacts.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
       this.allList=contacts;
       if(this.showHistoricalDataFlag){
@@ -97,8 +104,17 @@ export class FriendOrFamilyListComponent implements OnInit {
   }
 
   onDeactivateFriendOrFamilyClicked() {
+    this.isEdit = false;
     this.isDeactivateFriendOrFamilyOpened = true;
   }
+  onDeleteFriendOrFamilyClicked() {
+    this.isEdit = false;
+    this.isDeleteFriendOrFamilyOpened = true;
+  }
+  onDeleteFriendOrFamilyClosed() {
+    this.isDeleteFriendOrFamilyOpened = false;
+  }
+
   onFriendOrFamilyDetailCloseEvent(event:any){
     this.contactFacade.loadFriendsorFamily(this.clientId);
     this.onFriendOrFamilyDetailClosed();
@@ -115,4 +131,12 @@ export class FriendOrFamilyListComponent implements OnInit {
   public rowClass = (args:any) => ({
     "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
   });
+  closeDeleteModal(event:any){
+    this.contactFacade.loadFriendsorFamily(this.clientId);
+    this.isDeleteFriendOrFamilyOpened = false;
+  }
+  closeDeactivateModal(event:any){
+    this.contactFacade.loadFriendsorFamily(this.clientId);
+    this.isDeactivateFriendOrFamilyOpened = false;
+  }
 }

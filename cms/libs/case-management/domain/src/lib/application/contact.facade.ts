@@ -252,4 +252,7 @@ export class ContactFacade {
   updateContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
     return this.contactDataService.updateContact(clientId, clientContact);
   }
+  deleteClientContact(clientId:any,clientRelationshipId:any){
+    return this.contactDataService.deleteClientContact(clientId,clientRelationshipId);
+  }
 }
