@@ -99,7 +99,15 @@
                     </div>
                   </div>
                   <div class="flex-col">
-                    <!--//NOSONAR <case-management-family-and-dependent-list [data]="screenName"></case-management-family-and-dependent-list> -->
+                    <case-management-family-and-dependent-list
+                    [data]="screenName"
+                    [pageSizes]="pageSizes"
+                    [sortValue]="sortValue"
+                    [sortType]="sortType"
+                    [sort]="sort"
+                    [dependents$]="dependentList$"
+                    (loadDependentsEvent)="loadDependentsHandle($event)"
+                    ></case-management-family-and-dependent-list>
                   </div>
                 </div>
               </div>

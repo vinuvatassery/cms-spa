@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade } from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
@@ -42,6 +42,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
   //for add pharmacy
+  dependentList$ = this.familyAndDependentFacade.dependents$;
   clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
   pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
   searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
@@ -51,6 +52,10 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
   triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
   selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
+  pageSizes = this.familyAndDependentFacade.gridPageSizes;
+  sortValue  = this.familyAndDependentFacade.sortValue;
+  sortType  = this.familyAndDependentFacade.sortType;
+  sort  = this.familyAndDependentFacade.sort;
   isTodoDetailsOpened = false;
   isNewReminderOpened = false;
   isIdCardOpened = false;
@@ -107,12 +112,14 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private workflowFacade: WorkflowFacade,
-    private readonly router: Router
+    private readonly router: Router,
+    private familyAndDependentFacade: FamilyAndDependentFacade,
+
   ) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.initialize();  
+    this.initialize();
     this.routeChangeSubscription();
   }
 
@@ -253,7 +260,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   addPharmacy(vendorId: string) {
     let priorityCode :string = "";
     this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
-     
+
       priorityCode = priorityCodes;
     })
     this.drugPharmacyFacade.addDrugPharmacy(
@@ -380,5 +387,20 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   loadHeaderAndProfile() {
     this.loadClientProfileInfoEventHandler();
     this.loadReadOnlyClientInfoEventHandler();
+  }
+  loadDependentsHandle( gridDataRefinerValue : any ): void {
+    const gridDataRefiner =
+    {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount : gridDataRefinerValue.pagesize,
+      sort : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
+    }
+
+
+      this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
+    this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId
+      , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
+
   }
 }
