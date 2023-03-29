@@ -105,11 +105,11 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   /** Private methods **/
   private getCurrentEligibility(){
     this.loaderService.show();
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.eligibilityStatus).subscribe(data=>{
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.acceptedEligibility).subscribe(data=>{
       this.pageLoaded =  true;
-      this.eligibilityDetails = data;
-      this.currentEligibility = this.eligibilityDetails[0];
-      if( this.currentEligibility.eligibilityStatusCode === 'PENDING'){
+      this.currentEligibility = data;
+      this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
+      if( this.currentEligibility.currentStatusCode === 'PENDING'){
         this.isCurrentEligibilityPending = true;
       }
       this.cd.detectChanges();
