@@ -54,7 +54,11 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   clientId: any;
   clientChangeSubscription$ = new Subscription();
 
-
+  client_button_grp = true;
+  health_button_grp = false;
+  dental_button_grp = false;
+  drugs_button_grp = false;
+  mng_button_grp = false;
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -176,11 +180,73 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.onTabSelect('clinfo')
+    this.onTabClick('clinfo');
   }
 
- onTabSelect(tabName : string)
- {
-  this.caseFacade.onClientProfileTabSelect(tabName , this.profileClientId  , this.clientCaseEligibilityId )
- }
+  onTabClick(tabName: string) {
+    switch (tabName) {
+      case 'clinfo':
+        this.client_button_grp = true;
+        this.health_button_grp = false;
+        this.dental_button_grp = false;
+        this.drugs_button_grp = false;
+        this.mng_button_grp = false;
+        break;
+      case 'sts':
+        this.client_button_grp = false;
+        this.health_button_grp = true;
+        this.dental_button_grp = false;
+        this.drugs_button_grp = false;
+        this.mng_button_grp = false;
+        break;
+      case 'phrm':
+        this.client_button_grp = false;
+        this.health_button_grp = false;
+        this.dental_button_grp = true;
+        this.drugs_button_grp = false;
+        this.mng_button_grp = false;
+        break;
+      case 'csm':
+        this.client_button_grp = false;
+        this.health_button_grp = false;
+        this.dental_button_grp = false;
+        this.drugs_button_grp = false;
+        this.mng_button_grp = true;
+        break;
+      case 'statuses':
+        this.client_button_grp = false;
+        this.health_button_grp = false;
+        this.dental_button_grp = false;
+        this.drugs_button_grp = false;
+        this.mng_button_grp = false;
+        break;
+      case 'atch':
+        this.client_button_grp = false;
+        this.health_button_grp = false;
+        this.dental_button_grp = false;
+        this.drugs_button_grp = false;
+        this.mng_button_grp = false;
+        break;
+        case 'history':
+          this.client_button_grp = false;
+          this.health_button_grp = false;
+          this.dental_button_grp = false;
+          this.drugs_button_grp = false;
+          this.mng_button_grp = false;
+          break;
+    }
+    this.caseFacade.onClientProfileTabSelect(
+      tabName,
+      this.profileClientId,
+      this.clientCaseEligibilityId
+    );
+  }
+
+  onTabSelect(tabName: string) {
+    this.caseFacade.onClientProfileTabSelect(
+      tabName,
+      this.profileClientId,
+      this.clientCaseEligibilityId
+    );
+  }
 }
