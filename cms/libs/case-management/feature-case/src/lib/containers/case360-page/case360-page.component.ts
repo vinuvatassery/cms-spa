@@ -61,6 +61,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   dental_button_grp = false;
   drugs_button_grp = false;
   mng_button_grp = false;
+  selectedTabName = 'clinfo';
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -185,9 +186,10 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.onTabClick('clinfo');
   }
 
-  onTabClick(tabName: string) {
+  onTabClick(tabName: string) { 
+    this.selectedTabName = tabName;
     switch (tabName) {
-      case 'clinfo':
+      case 'clinfo':        
         this.client_button_grp = true;
         this.health_button_grp = false;
         this.dental_button_grp = false;
@@ -201,11 +203,18 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         this.drugs_button_grp = false;
         this.mng_button_grp = false;
         break;
+        case 'insst':
+          this.client_button_grp = false;
+          this.health_button_grp = false;
+          this.dental_button_grp = true;
+          this.drugs_button_grp = false;
+          this.mng_button_grp = false;
+          break;
       case 'phrm':
         this.client_button_grp = false;
         this.health_button_grp = false;
-        this.dental_button_grp = true;
-        this.drugs_button_grp = false;
+        this.dental_button_grp = false;
+        this.drugs_button_grp = true;
         this.mng_button_grp = false;
         break;
       case 'csm':
@@ -245,6 +254,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   }
 
   onTabSelect(tabName: string) {
+    this.selectedTabName = tabName;
     this.caseFacade.onClientProfileTabSelect(
       tabName,
       this.profileClientId,
