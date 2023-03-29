@@ -24,7 +24,9 @@ import { TabStripComponent } from '@progress/kendo-angular-layout';
 export class Case360PageComponent implements OnInit, OnDestroy {
   @ViewChild('tabStripParent') public tabStripParent!: TabStripComponent;
   @ViewChild('tabStripChild') public tabStripChild!: TabStripComponent;
-
+  public width = "100%";
+  public height = "33px";
+  arrowView = true;
   /** Private properties **/
   private selectedCase = new BehaviorSubject<any>({});
 
