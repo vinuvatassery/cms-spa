@@ -76,9 +76,9 @@ export class ClientEligibilityFacade {
     return this.clientEligibilityDataService.getEligibility(clientId,clientCaseId,clientCaseEligibilityId,type);
   }
 
-  saveAcceptedApplication(acceptedApplication:any,caseId:any,eligibilityId:any)
+  saveAcceptedApplication(acceptedApplication:any,caseId:any,eligibilityId:any,type:string)
   {
-    return this.clientEligibilityDataService.saveAcceptedApplication(acceptedApplication,caseId,eligibilityId);
+    return this.clientEligibilityDataService.saveAcceptedApplication(acceptedApplication,caseId,eligibilityId,type);
   }
   saveNewStatusPeriod(newEligibilityPeriods:any,caseId:any,eligibilityId:any)
   {
