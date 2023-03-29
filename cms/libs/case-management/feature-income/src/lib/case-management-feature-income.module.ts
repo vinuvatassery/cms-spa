@@ -11,7 +11,7 @@ import { IncomeListComponent } from './components/income-list/income-list.compon
 import { IncomeDetailComponent } from './components/income-detail/income-detail.component';
 import { RemoveIncomeConfirmationComponent } from './components/remove-income-confirmation/remove-income-confirmation.component';
 import { IncomePageComponent } from './containers/income-page/income-page.component';
-
+import { ProfileIncomePageComponent } from './containers/profile-income-page/profile-income-page.component';
 
 @NgModule({
   imports: [
@@ -26,11 +26,13 @@ import { IncomePageComponent } from './containers/income-page/income-page.compon
     IncomeDetailComponent,
     RemoveIncomeConfirmationComponent,
     IncomePageComponent,
+    ProfileIncomePageComponent,
   ],
   exports: [
     IncomeListComponent,
     IncomeDetailComponent,
     RemoveIncomeConfirmationComponent,
+    ProfileIncomePageComponent
   ],
 })
 export class CaseManagementFeatureIncomeModule {}

@@ -10,10 +10,10 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ScreenType, CaseFacade } from '@cms/case-management/domain';
-import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
+import { ScreenType, CaseFacade} from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
+import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -45,12 +45,17 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   selectedCase$ = this.selectedCase.asObservable();
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
-  profileClientId = 0;
-  selectedSubTab = 0;
-  clientCaseEligibilityId!: string;
-  caseWorkerId!: string;
+
+  
+ 
+  ddlGroups$ = this.caseFacade.ddlGroups$;
+  currentGroup$= this.caseFacade.currentGroup$;
+  groupUpdated$ = this.caseFacade.groupUpdated$;
+  profileClientId = 0
+  clientCaseEligibilityId! : string;
+  caseWorkerId! : string;
   clientHeaderTabs: any = [];
-  clientCaseId!: string;
+  clientCaseId! : string 
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId: any;
@@ -66,8 +71,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
-  ) {}
+    private readonly router: Router,
+  ) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -132,9 +137,13 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.isVerificationReviewPopupOpened = true;
   }
 
-  /** External event methods **/
 
-  loadClientImpInfo() {
+
+  /** External event methods **/
+ 
+
+  loadClientImpInfo()
+  {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
 
@@ -148,9 +157,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       ?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
-          this.clientId = clientHeaderData?.clientId;
-          this.clientCaseEligibilityId =
-            clientHeaderData?.clientCaseEligibilityId;
+        this.clientId =clientHeaderData?.clientId;
+        this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
           const clientHeader = {
             clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
             clientId: clientHeaderData?.clientId,
@@ -164,15 +172,13 @@ export class Case360PageComponent implements OnInit, OnDestroy {
             clientFullName: clientHeaderData?.clientFullName,
             pronouns: clientHeaderData?.pronouns,
             clientCaseIdentity: clientHeaderData?.clientCaseIdentity,
-            clientOfficialIdFullName:
-              clientHeaderData?.clientOfficialIdFullName,
+            clientOfficialIdFullName: clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
-          };
-          this.clientCaseId = clientHeader?.clientCaseId;
+          }
+          this.clientCaseId = clientHeader?.clientCaseId
           this.clientHeaderSubject.next(clientHeader);
           if (clientHeader?.clientCaseEligibilityId) {
-            this.clientCaseEligibilityId =
-              clientHeader?.clientCaseEligibilityId;
+            this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
           }
           if (clientHeader?.caseWorkerId) {
             this.caseWorkerId = clientHeader?.caseWorkerId;
@@ -184,6 +190,13 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       });
 
     this.onTabClick('clinfo');
+  }
+
+          
+
+
+  loadHeaderAndProfile() {
+    this.loadClientProfileInfoEventHandler();   
   }
 
   onTabClick(tabName: string) { 
@@ -260,5 +273,12 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       this.profileClientId,
       this.clientCaseEligibilityId
     );
+  }
+  loadChangeGroupData(eligibilityId: string){
+    this.caseFacade.loadEligibilityChangeGroups(eligibilityId);
+  }
+
+  updateChangeGroup(group: any) {
+    this.caseFacade.updateEligibilityGroup(group);
   }
 }

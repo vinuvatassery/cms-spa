@@ -2,6 +2,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
 /** External libraries **/
 import { DialItemAnimation } from '@progress/kendo-angular-buttons';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'case-management-case360-header',
@@ -9,23 +10,29 @@ import { DialItemAnimation } from '@progress/kendo-angular-buttons';
   styleUrls: ['./case360-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Case360HeaderComponent implements OnInit{
+export class Case360HeaderComponent implements OnInit {
   /** Public properties **/
-  @Input() loadedClientHeader : any
-  @Input() caseWorkerId : any
-  @Input() clientProfileImpInfo$ : any
-  @Output() loadClientProfileInfoEvent =  new EventEmitter();
-  @Output() loadClientImpInfoEvent =  new EventEmitter();
+  @Input() loadedClientHeader: any
+  @Input() caseWorkerId: any
+  @Input() clientProfileImpInfo$: any
+  @Input() currentGroup$!: Observable<any>;
+  @Input() ddlGroups$!: Observable<any>;
+  @Input() groupUpdated$!: Observable<any>;
+  @Output() loadClientProfileInfoEvent = new EventEmitter();
+  @Output() loadClientImpInfoEvent = new EventEmitter();
+  @Output() loadChangeGroupEvent = new EventEmitter<string>();
+  @Output() updateChangeGroupEvent = new EventEmitter<any>();
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
-  isGroupDetailOpened = false;
+  isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
 
-     /** Lifecycle hooks **/
+ /** Lifecycle hooks **/
  ngOnInit(): void {  
-  this.loadClientProfileInfoEvent.emit()  
-}
+    this.loadClientProfileInfoEvent.emit();
+    this.addGroupUpdatedSubscription();  
+  }
 
-  /** Internal event methods **/
+/** Internal event methods **/
   onStatusPeriodDetailClosed() {
     this.isStatusPeriodDetailOpened = false;
   }
@@ -35,16 +42,41 @@ export class Case360HeaderComponent implements OnInit{
   }
 
   onGroupDetailClosed() {
-    this.isGroupDetailOpened = false;
+    this.isGroupDetailOpened$.next(false);
   }
 
-  onGroupDetailClicked() {
-    this.isGroupDetailOpened = true;
+  onGroupDetailClicked(eligibilityId: string) {
+    if (eligibilityId) {
+      this.loadChangeGroupEvent.emit(eligibilityId);
+    }
+
+    this.isGroupDetailOpened$.next(true);
   }
 
-  loadClientImpInfo()
-  {
-    this.loadClientImpInfoEvent.emit()  
+  loadClientImpInfo() {
+    this.loadClientImpInfoEvent.emit()
   }
-  
+
+  onGroupChangeUpdateClicked(group: any) {
+    group = {
+      eligibilityId: this.loadedClientHeader.clientCaseEligibilityId,
+      groupCodeId: group.groupCodeId,
+      groupStartDate: group.groupStartDate
+    };
+    this.updateChangeGroupEvent.emit(group);
+  }
+
+  onGroupChangeCancelClicked() {
+    this.isGroupDetailOpened$.next(false);
+  }
+
+  addGroupUpdatedSubscription() {
+    this.groupUpdated$.subscribe((value: boolean) => {    
+      if(value){
+      this.isGroupDetailOpened$.next(false);
+        this.loadClientProfileInfoEvent.emit();
+      }  
+    })
+  }
+
 }

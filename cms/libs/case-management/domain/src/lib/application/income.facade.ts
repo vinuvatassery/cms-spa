@@ -12,6 +12,8 @@ export class IncomeFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortValue = 'incomeSourceCodeDesc';
+  public sortType = 'asc';
 
   /** Private properties **/
   private ddlIncomeTypesSubject = new BehaviorSubject<any>([]);
