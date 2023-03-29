@@ -70,7 +70,7 @@
       <kendo-buttongroup *ngIf="health_button_grp">
         <button kendoButton (click)="onTabClick('sts')"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === 'sts' }"
-          *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>Insurance Status</button>
+          *ifPermission='["Client_Profile_Health_Ins_Insurance_Status_Tab_View_Only"]'>Insurance Status</button>
         <button kendoButton (click)="onTabSelect('prpaymnt')"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === 'prpaymnt' }"
           *ifPermission='["Client_Profile_Health_Ins_Premium_Payments_Tab_View_Only"]'>Premium Payments</button>

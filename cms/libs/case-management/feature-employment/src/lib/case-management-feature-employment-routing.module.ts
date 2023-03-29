@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 /** Components **/
 import { EmploymentPageComponent } from './containers/employment-page/employment-page.component';
+import { ProfileEmploymentPageComponent } from './containers/profile-employment-page/profile-employment-page.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    component: EmploymentPageComponent,
+    component: ProfileEmploymentPageComponent,
   },
 ];
 
