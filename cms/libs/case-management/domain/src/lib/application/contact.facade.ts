@@ -6,9 +6,16 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Contact, ContactInfo,ClientAddress,FriendsOrFamilyContactClientProfile } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
-import { ZipCodeFacade } from '@cms/system-config/domain'
-import { catchError, of,Subject } from 'rxjs';
-import { LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
+import { ZipCodeFacade } from '@cms/system-config/domain';
+import { catchError, of, Subject } from 'rxjs';
+import {
+  LoggingService,
+  NotificationSnackbarService,
+  SnackBarNotificationType,
+  LoaderService,
+  ConfigurationProvider,
+} from '@cms/shared/util-core';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -29,9 +36,20 @@ export class ContactFacade {
   showAddPopupSubject = new BehaviorSubject<boolean>(false);
   editAddressSubject = new BehaviorSubject<boolean>(false);
   editedAddressSubject = new Subject<any>();
+  private clientEmailsSubject = new Subject<any>();
+  private clientEmailSubject = new Subject<any>();
+  private addClientEmailSubject = new Subject<any>();
+  private preferredClientEmailSubject = new Subject<any>();
+  private deactivateClientEmailSubject = new Subject<any>();
+  private removeClientEmailSubject = new Subject<any>();
+  private clientPhonesSubject = new Subject<any>();
+  private clientPhoneSubject = new Subject<any>();
+  private addClientPhoneSubject = new Subject<any>();
+  private preferredClientPhoneSubject = new Subject<any>();
+  private deactivateClientPhoneSubject = new Subject<any>();
+  private removeClientPhoneSubject = new Subject<any>();
+  private paperlessSubject = new Subject<any>();
   showAddContactPopupSubject = new BehaviorSubject<boolean>(false);
-
-
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   ddlCountries$ = this.ddlCountriesSubject.asObservable();
@@ -47,11 +65,34 @@ export class ContactFacade {
   emailAddress$ = this.emailAddressesSubject.asObservable();
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
   showAddPopup$ = this.showAddPopupSubject.asObservable();
-  editAddress$ =this.editAddressSubject.asObservable();
-  editedAddress$ =this.editedAddressSubject.asObservable();
+  editAddress$ = this.editAddressSubject.asObservable();
+  editedAddress$ = this.editedAddressSubject.asObservable();
   showLoaderOnState$ = this.showLoaderOnState.asObservable();
   showAddContactPopup$ = this.showAddContactPopupSubject.asObservable();
+  clientEmails$ = this.clientEmailsSubject.asObservable();
+  clientEmail$ = this.clientEmailSubject.asObservable();
+  addClientEmailResponse$ = this.addClientEmailSubject.asObservable();
+  preferredClientEmail$ = this.preferredClientEmailSubject.asObservable();
+  deactivateClientEmail$ = this.deactivateClientEmailSubject.asObservable();
+  removeClientEmail$ = this.removeClientEmailSubject.asObservable();
+  clientPhones$ = this.clientPhonesSubject.asObservable();
+  clientPhone$ = this.clientPhoneSubject.asObservable();
+  addClientPhoneResponse$ = this.addClientPhoneSubject.asObservable();
+  preferredClientPhone$ = this.preferredClientPhoneSubject.asObservable();
+  deactivateClientPhone$ = this.deactivateClientPhoneSubject.asObservable();
+  removeClientPhone$ = this.removeClientPhoneSubject.asObservable();
+  paperless$ = this.paperlessSubject.asObservable();
+  public gridPageSizes =
+    this.configurationProvider.appSettings.gridPageSizeValues;
+  public sortValue = ' ';
+  public sortType = 'asc';
 
+  public sort: SortDescriptor[] = [
+    {
+      field: this.sortValue,
+      dir: 'asc',
+    },
+  ];
 
   /** Constructor**/
   constructor(
@@ -59,28 +100,25 @@ export class ContactFacade {
     private readonly loggingService: LoggingService,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
-    private readonly zipCodeFacade: ZipCodeFacade
-  ) { }
+    private readonly zipCodeFacade: ZipCodeFacade,
+    private configurationProvider: ConfigurationProvider
+  ) {}
 
   /** Public methods **/
-  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {
-      if(type == SnackBarNotificationType.ERROR)
-      {
-        const err= subtitle;
-        this.loggingService.logException(err)
-      }
-        this.snackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err);
+    }
+    this.snackbarService.manageSnackBar(type, subtitle);
+    this.hideLoader();
   }
 
-  showLoader()
-  {
+  showLoader() {
     this.loaderService.show();
   }
 
-  hideLoader()
-  {
+  hideLoader() {
     this.loaderService.hide();
   }
 
@@ -194,14 +232,25 @@ export class ContactFacade {
   }
 
   loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
-    return this.contactDataService.loadContactInfo(clientId, clientCaseEligibilityId);
+    return this.contactDataService.loadContactInfo(
+      clientId,
+      clientCaseEligibilityId
+    );
   }
 
-  createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
-    return this.contactDataService.createContactInfo(clientId, clientCaseEligibilityId, contactInfo)
+  createContactInfo(
+    clientId: number,
+    clientCaseEligibilityId: string,
+    contactInfo: ContactInfo
+  ) {
+    return this.contactDataService
+      .createContactInfo(clientId, clientCaseEligibilityId, contactInfo)
       .pipe(
         catchError((err: any) => {
-          this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+          this.snackbarService.manageSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
           if (!(err?.error ?? false)) {
             this.loggingService.logException(err);
           }
@@ -210,27 +259,52 @@ export class ContactFacade {
       );
   }
 
-  createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
-    return this.contactDataService.createAddress(clientId, clientCaseEligibilityId, clientAddress);
-  }
-
-  updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
-    return this.contactDataService.updateAddress(clientId, clientCaseEligibilityId, clientAddress);
-  }
-
-  updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
-    return this.contactDataService.updateContactInfo(clientId, clientCaseEligibilityId, contactInfo).pipe(
-      catchError((err: any) => {
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        if (!(err?.error ?? false)) {
-          this.loggingService.logException(err);
-        }
-        return of(false);
-      })
+  createAddress(
+    clientId: number,
+    clientCaseEligibilityId: string,
+    clientAddress: ClientAddress
+  ) {
+    return this.contactDataService.createAddress(
+      clientId,
+      clientCaseEligibilityId,
+      clientAddress
     );
   }
 
-  getClientAddress(clientId:any){
+  updateAddress(
+    clientId: number,
+    clientCaseEligibilityId: string,
+    clientAddress: ClientAddress
+  ) {
+    return this.contactDataService.updateAddress(
+      clientId,
+      clientCaseEligibilityId,
+      clientAddress
+    );
+  }
+
+  updateContactInfo(
+    clientId: number,
+    clientCaseEligibilityId: string,
+    contactInfo: ContactInfo
+  ) {
+    return this.contactDataService
+      .updateContactInfo(clientId, clientCaseEligibilityId, contactInfo)
+      .pipe(
+        catchError((err: any) => {
+          this.snackbarService.manageSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+          if (!(err?.error ?? false)) {
+            this.loggingService.logException(err);
+          }
+          return of(false);
+        })
+      );
+  }
+
+  getClientAddress(clientId: any) {
     this.showLoader();
     return this.contactDataService.getClientAddress(clientId).subscribe({
       next: (addressesResponse) => {
@@ -238,13 +312,324 @@ export class ContactFacade {
         this.addressesSubject.next(addressesResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-      }
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
     });
   }
 
-  deleteClientAddress(clientId:any,clientAddressId:any){
-    return this.contactDataService.deleteClientAddress(clientId,clientAddressId);
+  deleteClientAddress(clientId: any, clientAddressId: any) {
+    return this.contactDataService.deleteClientAddress(
+      clientId,
+      clientAddressId
+    );
+  }
+
+  deactivateClientAddress(clientId: any, clientAddressId: any) {
+    return this.contactDataService.deactivateClientAddress(
+      clientId,
+      clientAddressId
+    );
+  }
+
+  //#region client email//NOSONAR
+  loadClientEmails(
+    clientCaseEligibilityId: string,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    showDeactivated: boolean
+  ): void {
+    this.contactDataService
+      .loadClientEmails(
+        clientCaseEligibilityId,
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+        showDeactivated
+      )
+      .subscribe({
+        next: (clientEmailsResponse: any) => {
+          if (clientEmailsResponse) {
+            const gridView = {
+              data: clientEmailsResponse['items'],
+              total: clientEmailsResponse['totalCount'],
+            };
+
+            this.clientEmailsSubject.next(gridView);
+          }
+        },
+        error: (err) => {
+          const gridView = {
+            data: null,
+            total: -1,
+          };
+          this.clientPhonesSubject.next(gridView);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadClientPaperLessStatus(
+    clientId: number,
+    clientCaseEligibilityId: string
+  ): void {
+    this.showLoader();
+    this.contactDataService
+      .loadClientPaperLessStatus(clientId, clientCaseEligibilityId)
+      .subscribe({
+        next: (clientEmailReponse: any) => {
+          if (clientEmailReponse) {
+            this.hideLoader();
+            this.paperlessSubject.next(clientEmailReponse);
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadClientEmail(
+    clientId: number,
+    clientEmailId: string,
+    clientCaseEligibilityId: string
+  ): void {
+    this.showLoader();
+    this.contactDataService
+      .loadClientEmail(clientId, clientEmailId, clientCaseEligibilityId)
+      .subscribe({
+        next: (clientEmailReponse: any) => {
+          if (clientEmailReponse) {
+            this.hideLoader();
+            this.clientEmailSubject.next(clientEmailReponse);
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  addClientEmail(emailData: any) {
+    this.showLoader();
+    return this.contactDataService.saveEmail(emailData).subscribe({
+      next: (response) => {
+        this.addClientEmailSubject.next(response);
+        if (response === true) {
+          this.hideLoader();
+          const message = emailData?.clientEmailId
+            ? 'Email Data Updated Successfully'
+            : 'Email Data Added Successfully';
+          this.snackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            message
+          );
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  preferredClientEmail(clientId: number, clientEmailId: string) {
+    return this.contactDataService
+      .updateClientEmailPreferred(clientId, clientEmailId)
+      .subscribe({
+        next: (response) => {
+          this.preferredClientEmailSubject.next(response);
+          if (response === true) {
+            const message = 'Email Data Updated Successfully';
+            this.snackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  deactivateClientEmail(clientId: number, clientEmailId: string) {
+    return this.contactDataService
+      .removeClientEmail(clientId, clientEmailId, false)
+      .subscribe({
+        next: (response) => {
+          this.deactivateClientEmailSubject.next(response);
+          if (response === true) {
+            const message = 'Email Deactivated Successfully';
+            this.snackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  removeClientEmail(clientId: number, clientEmailId: string) {
+    return this.contactDataService
+      .removeClientEmail(clientId, clientEmailId, true)
+      .subscribe({
+        next: (response) => {
+          this.removeClientEmailSubject.next(response);
+          if (response === true) {
+            const message = 'Email Deleted Successfully';
+            this.snackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  //#endregion client Email//NOSONAR
+  //#region client phone//NOSONAR
+  loadClientPhones(
+    clientId: number,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    showDeactivated: boolean
+  ): void {
+    this.contactDataService
+      .loadClientPhones(
+        clientId,
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+        showDeactivated
+      )
+      .subscribe({
+        next: (clientPhonesResponse: any) => {
+          if (clientPhonesResponse) {
+            const gridView = {
+              data: clientPhonesResponse['items'],
+              total: clientPhonesResponse['totalCount'],
+            };
+
+            this.clientPhonesSubject.next(gridView);
+          }
+        },
+        error: (err) => {
+          const gridView = {
+            data: null,
+            total: -1,
+          };
+          this.clientPhonesSubject.next(gridView);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadClientPhone(clientId: number, clientPhoneId: string): void {
+    this.showLoader();
+    this.contactDataService.loadClientPhone(clientId, clientPhoneId).subscribe({
+      next: (clientPhoneReponse: any) => {
+        if (clientPhoneReponse) {
+          this.hideLoader();
+          this.clientPhoneSubject.next(clientPhoneReponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  addClientPhone(phoneData: any) {
+    this.showLoader();
+    return this.contactDataService.savePhone(phoneData).subscribe({
+      next: (response) => {
+        this.addClientPhoneSubject.next(response);
+        if (response === true) {
+          this.hideLoader();
+          const message = phoneData?.clientPhoneId
+            ? 'Phone Data Updated Successfully'
+            : 'Phone Data Added Successfully';
+          this.snackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            message
+          );
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  preferredClientPhone(clientId: number, clientPhoneId: string) {
+    return this.contactDataService
+      .updateClientPhonePreferred(clientId, clientPhoneId)
+      .subscribe({
+        next: (response) => {
+          this.preferredClientPhoneSubject.next(response);
+          if (response === true) {
+            const message = 'Phone Data Updated Successfully';
+            this.snackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  deactivateClientPhone(clientId: number, clientPhoneId: string) {
+    return this.contactDataService
+      .removeClientPhone(clientId, clientPhoneId, false)
+      .subscribe({
+        next: (response) => {
+          this.deactivateClientPhoneSubject.next(response);
+          if (response === true) {
+            const message = 'Phone Deactivated Successfully';
+            this.snackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  removeClientPhone(clientId: number, clientPhoneId: string) {
+    return this.contactDataService
+      .removeClientPhone(clientId, clientPhoneId, true)
+      .subscribe({
+        next: (response) => {
+          this.removeClientPhoneSubject.next(response);
+          if (response === true) {
+            const message = 'Phone Deleted Successfully';
+            this.snackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
   }
   createContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
     return this.contactDataService.createContact(clientId, clientContact);
@@ -255,4 +640,6 @@ export class ContactFacade {
   deleteClientContact(clientId:any,clientRelationshipId:any){
     return this.contactDataService.deleteClientContact(clientId,clientRelationshipId);
   }
+
+  //#endregion client phone//NOSONAR
 }

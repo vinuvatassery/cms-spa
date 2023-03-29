@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
-import { catchError, of, Subject } from 'rxjs';
+import { catchError, forkJoin, mergeMap, of, Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -41,6 +41,9 @@ export class CaseFacade {
   private activeSessionLoaderVisibleSubject = new BehaviorSubject<boolean>(false);
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   private clientProfileImpInfoSubject  = new Subject<any>();
+  private ddlGroupsSubject = new BehaviorSubject<any>([]);
+  private currentGroupSubject = new BehaviorSubject<any>(null);
+  private groupUpdatedSubject = new BehaviorSubject<any>(false);
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -63,6 +66,9 @@ export class CaseFacade {
   clientProfileImpInfo$ = this.clientProfileImpInfoSubject.asObservable(); 
   activeSessionLoaderVisible$  = this.activeSessionLoaderVisibleSubject.asObservable();
   searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
+  ddlGroups$ = this.ddlGroupsSubject.asObservable();
+  currentGroup$ =  this.currentGroupSubject.asObservable();
+  groupUpdated$ = this.groupUpdatedSubject.asObservable();
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -114,6 +120,39 @@ export class CaseFacade {
     });
   }
 
+  loadEligibilityChangeGroups(eligibilityId:string){
+    this.showLoader();
+    this.caseDataService.loadEligibilityGroup(eligibilityId).pipe(
+      mergeMap((currentGroup:any) => forkJoin([of(currentGroup), this.caseDataService.loadEligibilityGroups()]))
+    )
+    .subscribe({
+      next:([currentEligibilityGroup, ddlGroups]:[any,any])=>{      
+        this.ddlGroupsSubject.next(ddlGroups);
+        this.currentGroupSubject.next(currentEligibilityGroup);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
+  updateEligibilityGroup(group: any){
+    this.showLoader();
+    return this.caseDataService.updateEligibilityGroup(group).pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    ).subscribe((response: boolean) => {
+      if (response) {
+        this.hideLoader();
+        this.groupUpdatedSubject.next(true);
+        this.currentGroupSubject.next(null);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group updated successfully');
+      }
+    });
+  }
 
   loadClientProfile(profileClientId: number): void {
     this.showLoader();

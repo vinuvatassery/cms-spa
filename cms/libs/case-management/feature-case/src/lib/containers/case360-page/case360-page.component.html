@@ -1,90 +1,55 @@
 <common-bread-crumb></common-bread-crumb>
 <case-management-case360-header
-[caseWorkerId]="caseWorkerId"
-[loadedClientHeader]="loadedClientHeader$ | async"
-[clientProfileImpInfo$]="clientProfileImpInfo$"
-(loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
-(loadClientImpInfoEvent)="loadClientImpInfo()"
+  [caseWorkerId]="caseWorkerId"
+  [loadedClientHeader]="loadedClientHeader$ | async"
+  [clientProfileImpInfo$]="clientProfileImpInfo$"
+  [currentGroup$]="currentGroup$"
+  [ddlGroups$]="ddlGroups$"
+  [groupUpdated$]="groupUpdated$"
+  (loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
+  (loadClientImpInfoEvent)="loadClientImpInfo()"
+  (loadChangeGroupEvent)="loadChangeGroupData($event)"
+  (updateChangeGroupEvent)="updateChangeGroup($event)"
 ></case-management-case360-header>
 <case-management-common-actions></case-management-common-actions>
 
 <!-- Case 360 details section -->
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
-  <div class="tab-over-icon-btn">
-    <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item">
-      <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"
-        (click)="onTodoDetailsClicked()">playlist_add</span>
-    </button>
-    <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder">
-      <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true"
-        (click)="onNewReminderClicked()">add_alarm</span>
-    </button>
-    <kendo-dropdownbutton [data]="SendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
-      buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-      Send
-      <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
-      <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
+  <case-management-case360-header-tools></case-management-case360-header-tools>
 
-        <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-          aria-hidden="false" (click)="dataItem.click">
-          <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-          <label> {{ dataItem.text }} </label>
-        </button>
-      </ng-template>
-    </kendo-dropdownbutton>
-  </div>
   <!-- Case Details Tab Sections -->
-  <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
+  <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+    class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>
       <ng-template kendoTabContent>
-        <kendo-tabstrip  #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
+        <kendo-tabstrip #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          class="app-c-tab app-c-sub-tab">
 
-          <kendo-tabstrip-tab title="Client Info" [selected]="true" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Client Info" [selected]="true"
+            *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-client-read-only-view
-                [clientProfile]="loadedClient$ | async"
-                [clientId]="profileClientId"
-                [clientCaseEligibilityId]="clientCaseEligibilityId"
-                [clientCaseId]="clientCaseId"
-                (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"
-                (onUpdateApplicantInfo)="loadHeaderAndProfile()"
-                ></case-management-client-read-only-view>
+                <case-management-client-read-only-view [clientProfile]="loadedClient$ | async"
+                  [clientId]="profileClientId" [clientCaseEligibilityId]="clientCaseEligibilityId"
+                  [clientCaseId]="clientCaseId" (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"
+                  (onUpdateApplicantInfo)="loadHeaderAndProfile()"></case-management-client-read-only-view>
                 <case-management-special-handling></case-management-special-handling>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-         <kendo-tabstrip-tab title="Contact Info" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
-              <ng-template kendoTabContent>
-                <div class="block-section mt-1">
-                  <div class="flex-row mb-1">
-                    <div class="flex-col">
-                      <h2 class="title-md mb-0 text-bold">Contact Info</h2>
-                    </div>
-                    <!-- Address Section -->
-                    <div class="flex-col">
-                      <case-management-address-list [clientId]="clientId" [caseEligibilityId]="clientCaseEligibilityId"></case-management-address-list>
-                    </div>
-                    <!-- Phone Section -->
-                    <div class="flex-col">
-                      <case-management-phone-list></case-management-phone-list>
-                    </div>
-                    <!-- Email Section -->
-                    <div class="flex-col">
-                      <case-management-email-list></case-management-email-list>
-                    </div>
-                    <!-- Email Section -->
-                    <div class="flex-col">
-                      <case-management-friend-or-family-list [clientId]="clientId" [caseEligibilityId]="clientCaseEligibilityId" ></case-management-friend-or-family-list>
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
-        </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Contact Info" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
+            <ng-template kendoTabContent>
+              <case-management-profile-contact-page [profileClientId]="profileClientId"
+                [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-profile-contact-page>
+            </ng-template>
 
-          <kendo-tabstrip-tab title="Family & Dependents" *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
+
+          </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="Family & Dependents"
+            *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-row">
@@ -93,7 +58,8 @@
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold" for="FamilyAndDependentEP">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist  aria-label="FamilyAndDependentEP" [fillMode]="formUiStyle.dropDownFillMode" #FamilyAndDependentEP [data]="ddlFamilyAndDependentEP$ | async">
+                        <kendo-dropdownlist aria-label="FamilyAndDependentEP" [fillMode]="formUiStyle.dropDownFillMode"
+                          #FamilyAndDependentEP [data]="ddlFamilyAndDependentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -114,7 +80,7 @@
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Income"  *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Income" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-row">
@@ -128,7 +94,8 @@
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist  aria-label="incomeEP" #incomeEP [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlIncomeEP$ | async">
+                        <kendo-dropdownlist aria-label="incomeEP" #incomeEP [fillMode]="formUiStyle.dropDownFillMode"
+                          [data]="ddlIncomeEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -149,7 +116,8 @@
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold" for="eemploymentep">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist #eemploymentep  aria-label="Eemploymentep" [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
+                        <kendo-dropdownlist #eemploymentep aria-label="Eemploymentep"
+                          [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
                         </kendo-dropdownlist>
                       </div>
                     </div>
@@ -164,24 +132,28 @@
         </kendo-tabstrip>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Health Insur."  *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="Health Insur." *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
       <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Insurance Status" [selected]="true"  *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
+            *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Premium Payments"  *ifPermission='["Client_Profile_Health_Ins_Premium_Payments__Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Premium Payments"
+            *ifPermission='["Client_Profile_Health_Ins_Premium_Payments__Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-medical-payment-list></case-management-medical-payment-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Co-Pays & Deductibles"  *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Co-Pays & Deductibles"
+            *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
@@ -193,22 +165,26 @@
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Dental Insur." *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
       <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Insurance Status" [selected]="true" *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
+            *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Premium Payments" *ifPermission='["Client_Profile_Dental_Premium_Payments__Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Premium Payments"
+            *ifPermission='["Client_Profile_Dental_Premium_Payments__Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-medical-payment-list></case-management-medical-payment-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Co-Pays & Deductibles" *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Co-Pays & Deductibles"
+            *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
@@ -223,31 +199,27 @@
     <kendo-tabstrip-tab title="Drugs" *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
 
       <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Pharmacies" [selected]="true" *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Pharmacies" [selected]="true"
+            *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-pharmacies-list [clientId]="profileClientId"
-                [clientpharmacies$]="clientpharmacies$"
-                [pharmacysearchResult$]="pharmacysearchResult$"
-                [selectedPharmacy$]="selectedPharmacy$"
-                [addPharmacyResponse$]="addPharmacyRsp$"
-                [editPharmacyResponse$]="editPharmacyRsp$"
-                [removePharmacyResponse$]="removePharmacyRsp$"
-                [removeDrugPharmacyResponse$]="removeDrugPharmacyRsp$"
-                [triggerPriorityPopup$]="triggerPriorityPopup$"
-                [searchLoaderVisibility$]="searchLoaderVisibility$"
-                (removePharmacyClick)="removeDrugPharmacyRsp($event)"
-                (searchPharmacy)="searchPharmacy($event)"
-                (addPharmacyClick)="addPharmacy($event)"
-                ></case-management-pharmacies-list>
+                <case-management-pharmacies-list [clientId]="profileClientId" [clientpharmacies$]="clientpharmacies$"
+                  [pharmacysearchResult$]="pharmacysearchResult$" [selectedPharmacy$]="selectedPharmacy$"
+                  [addPharmacyResponse$]="addPharmacyRsp$" [editPharmacyResponse$]="editPharmacyRsp$"
+                  [removePharmacyResponse$]="removePharmacyRsp$" [removeDrugPharmacyResponse$]="removeDrugPharmacyRsp$"
+                  [triggerPriorityPopup$]="triggerPriorityPopup$" [searchLoaderVisibility$]="searchLoaderVisibility$"
+                  (removePharmacyClick)="removeDrugPharmacyRsp($event)" (searchPharmacy)="searchPharmacy($event)"
+                  (addPharmacyClick)="addPharmacy($event)"></case-management-pharmacies-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
           <kendo-tabstrip-tab title="Drugs Purchased" *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
-                <case-management-drugs-purchased-list [clientId]="profileClientId" ></case-management-drugs-purchased-list>
+                <case-management-drugs-purchased-list
+                  [clientId]="profileClientId"></case-management-drugs-purchased-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -260,12 +232,14 @@
 
       <ng-template kendoTabContent>
 
-        <kendo-tabstrip  [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Case Managers" [selected]="true"  *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          class="app-c-tab app-c-sub-tab">
+          <kendo-tabstrip-tab title="Case Managers" [selected]="true"
+            *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section  mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
-                 <h2 class="title-md mb-0 text-bold">Case Manager</h2>
+                  <h2 class="title-md mb-0 text-bold">Case Manager</h2>
                   <div>
 
                   </div>
@@ -275,7 +249,8 @@
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Healthcare Providers"  *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Healthcare Providers"
+            *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
@@ -289,7 +264,7 @@
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="CD4 Count"  *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="CD4 Count" *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section  mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
@@ -303,7 +278,8 @@
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Viral Load"  *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Viral Load"
+            *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section  mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
@@ -374,38 +350,6 @@
     </kendo-tabstrip-tab>
 
   </kendo-tabstrip>
-
-  <!-- Create New To Do Modal Html-->
-  <kendo-dialog *ngIf="isTodoDetailsOpened" (close)="onTodoDetailsClosed()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np" title="Create To Do Item for Donna" kendoTooltip>
-    <productivity-tools-todo-detail></productivity-tools-todo-detail>
-  </kendo-dialog>
-
-  <!-- Create New Reminder Popup -->
-  <kendo-dialog kendoRippleContainer *ngIf="isNewReminderOpened" (close)="onNewReminderClosed()"
-    class="app-c-modal app-c-modal-md app-c-modal-np" title="Create New Reminder for Donna" kendoTooltip>
-    <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
-  </kendo-dialog>
-
-  <!-- Send New Letter Modal -->
-
-  <case-management-send-letter *ngIf="isSendNewLetterOpened" [data]="screenName"
-    (closeSendLetterEvent)="handleSendNewLetterClosed($event)" kendoTooltip></case-management-send-letter>
-
-  <!-- Send New Email Modal -->
-  <case-management-send-email *ngIf="isSendNewEmailOpened" [data]="screenName"
-    (closeSendEmailEvent)="handleSendNewEmailClosed($event)" kendoTooltip></case-management-send-email>
-
-  <!-- New ID Card Modal Html-->
-  <kendo-dialog *ngIf="isIdCardOpened" (close)="onIdCardClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np"
-    title="Send New ID Card" kendoTooltip>
-    <case-management-send-id-card (closeSendIdEvent)="handleIdCardClosed()"></case-management-send-id-card>
-  </kendo-dialog>
-
-  <!-- New SMS Text Modal Html-->
-
-  <case-management-send-text-message *ngIf="isNewSMSTextOpened" [data]="screenName"
-    (closeSendMessageEvent)="handleNewSMSTextClosed($event)" kendoTooltip></case-management-send-text-message>
 </section>
 
 <!-- Review HIV Verification Html-->
