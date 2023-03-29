@@ -1,6 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { NotificationSnackbarService,SnackBarNotificationType,LoggingService  } from '@cms/shared/util-core';
+import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -61,6 +62,7 @@ export class LovFacade {
 
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
+  private lovClientPhoneDeviceTypeSubject = new Subject<Lov[]>();
   private eligibilityStatusSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
 
@@ -101,7 +103,7 @@ export class LovFacade {
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
-  eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
+  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
 
         /** Public methods **/
@@ -112,6 +114,17 @@ export class LovFacade {
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
 
+  }
+
+  getClientPhoneDeviceTypeLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.PhoneDeviceTypeCode).subscribe({
+      next: (relationsResponse) => {
+        this.lovClientPhoneDeviceTypeSubject.next(relationsResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
   }
 
  getLovsbyParent(lovType : string,parentCode : string): void {

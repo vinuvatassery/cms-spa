@@ -254,8 +254,22 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
+        if(!this.checkValidations()){
+          this.workflowFacade.showCancelApplicationPopup(true);
+        }
+        else{
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
+  }
+
+  checkValidations(){
+    this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No
+    if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)){
+      this.familyAndDependentFacade.dependentValidSubject.next(false);
+      return false;
+    }
+    return true;
   }
 }

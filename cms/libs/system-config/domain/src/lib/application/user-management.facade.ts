@@ -1,5 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subject } from 'rxjs';
 /** External libraries **/
@@ -30,6 +31,7 @@ export class UserManagementFacade {
   private clientProfileRacialOrEthnicIdentitySubject = new BehaviorSubject<any>([]);
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
+
  
   private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
   private clientProfileIncomeInclusionsExlusionsSubject = new BehaviorSubject<any>([]);
@@ -68,12 +70,14 @@ export class UserManagementFacade {
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
+ 
   
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService ) {}
+    private readonly loaderService: LoaderService 
+    ) {}
 
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -98,6 +102,7 @@ export class UserManagementFacade {
     }
 
   /** Public methods **/
+
 
   ///for case manager hover popup //NOSONAR 
   getUserById(userId : string): void {
@@ -135,18 +140,6 @@ export class UserManagementFacade {
     });
   }
 
-
-
-  loadUsers(): void {
-    this.userDataService.loadUsers().subscribe({
-      next: (userResponse) => {
-        this.userSubject.next(userResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
-      },
-    });
-  }
  
 
   loadUsersData(): void {

@@ -57,7 +57,7 @@
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Change Group"
-        (click)="onGroupDetailClicked()"
+        (click)="onGroupDetailClicked(loadedClientHeader?.clientCaseEligibilityId)"
         >GROUP {{loadedClientHeader?.group}}</span
       >
       <span
@@ -101,11 +101,16 @@
 
 <!-- Eligibility Group Detail Modal -->
 <kendo-dialog
-  *ngIf="isGroupDetailOpened"
+  *ngIf="isGroupDetailOpened$ | async "
   (close)="onGroupDetailClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   kendoTooltip
 >
   <kendo-dialog-titlebar> Change Group </kendo-dialog-titlebar>
-  <case-management-group-detail></case-management-group-detail>
+  <case-management-group-detail 
+    [currentGroup$]="currentGroup$" 
+    [ddlGroups$] ="ddlGroups$"
+    (updateGroup)="onGroupChangeUpdateClicked($event)"
+    (cancelGroupChange)="onGroupChangeCancelClicked()"
+    ></case-management-group-detail>
 </kendo-dialog>

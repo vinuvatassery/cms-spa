@@ -22,7 +22,7 @@ export class UserManagementPageComponent implements OnInit {
 
   /** Public methods **/
   loadUsers(): void {
-    this.userManagementFacade.loadUsers();
+   // this.userManagementFacade.loadUsers();
   }
   openInnerLeftMenu(){
     this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
