@@ -26,7 +26,6 @@ export class ProfileEmploymentPageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.loadEmployments();
   }
 
   private loadEmploymentData(clientId: any, eligibilityId: any, skipCount: number,

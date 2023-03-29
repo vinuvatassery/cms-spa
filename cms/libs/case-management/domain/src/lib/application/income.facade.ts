@@ -43,7 +43,7 @@ export class IncomeFacade {
     private readonly loaderService: LoaderService,
     private readonly configurationProvider: ConfigurationProvider) { }
 
-    ShowHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+    showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
       if(type == SnackBarNotificationType.ERROR)
       {
@@ -51,7 +51,7 @@ export class IncomeFacade {
          this.loggingService.logException(err)
       }
       this.notificationSnackbarService.manageSnackBar(type,subtitle)
-      this.HideLoader();
+      this.hideLoader();
     }
 
     errorShowHideSnackBar( subtitle : any)
@@ -59,12 +59,12 @@ export class IncomeFacade {
       this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
     }
 
-    ShowLoader()
+    showLoader()
     {
       this.loaderService.show();
     }
 
-    HideLoader()
+    hideLoader()
     {
       this.loaderService.hide();
     }
@@ -76,7 +76,7 @@ export class IncomeFacade {
         this.ddlIncomeTypesSubject.next(ddlIncomesTypesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -87,7 +87,7 @@ export class IncomeFacade {
         this.ddlIncomeSourcesSubject.next(ddlIncomeSourcesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -98,7 +98,7 @@ export class IncomeFacade {
         this.ddlFrequenciesSubject.next(ddlFrequenciesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -109,13 +109,13 @@ export class IncomeFacade {
         this.ddlProofOfIncomeTypesSubject.next(ddlProofOfIncomeTypesResponse);
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
   loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any, sortBy:any, sortType:any): void {
-    this.ShowLoader();
+    this.showLoader();
     this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize, sortBy, sortType).subscribe({
       next: (incomesResponse: any) => {
         if(incomesResponse.clientIncomes!=null){
@@ -134,11 +134,11 @@ export class IncomeFacade {
         }
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependents);
         this.incomesResponseSubject.next(incomesResponse);
-         this.HideLoader();
+         this.hideLoader();
       },
       error: (err) => {
-        this.HideLoader();
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -151,7 +151,7 @@ export class IncomeFacade {
         );
       },
       error: (err) => {
-        this.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
