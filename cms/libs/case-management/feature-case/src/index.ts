@@ -21,3 +21,4 @@ export * from './lib/containers/case-summary/case-summary.component';
 export * from './lib/components/application-history/application-history-list.component';
 export * from './lib/components/case360-header-notifications/case360-header-notifications.component';
 export * from './lib/components/client-important-info/client-important-info.component';
+export * from './lib/components/case360-header-tools/case360-header-tools.component';

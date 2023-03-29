@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, } from '@angular/core';
-import { ContactFacade } from '@cms/case-management/domain';
+import { ContactFacade, StatusFlag } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-deactivate-address-confirmation',
@@ -13,13 +13,16 @@ export class DeactivateAddressConfirmationComponent {
   constructor(private readonly contactFacade: ContactFacade, private readonly cdr: ChangeDetectorRef) { }
   @Input() clientAddress!: any;
   @Input() clientId!: number;
+  @Input() caseEligibilityId!: string;
 
   @Output() deactivateModalCloseEvent= new EventEmitter<any>();
 
   deactivateHomeAddress() {
     if (this.clientAddress) {
+      this.clientAddress.activeFlag=StatusFlag.No;
+      this.clientAddress.endDate= new Date();
       this.contactFacade.showLoader();
-      this.contactFacade.deactivateClientAddress(this.clientId, this.clientAddress.clientAddressId).subscribe({
+      this.contactFacade.updateAddress(this.clientId ?? 0, this.caseEligibilityId ?? '', this.clientAddress).subscribe({
         next: (response: any) => {
           if(response){
             this.contactFacade.hideLoader();

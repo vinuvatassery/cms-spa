@@ -24,10 +24,10 @@ export class CaseDataService {
 
 
   /** Public methods **/
-  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string, columnName : any, filter : any) {
     return this.http.get<ClientProfileCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&ColumnName=${columnName}&Filter=${filter}`
     );
 
   }
@@ -53,6 +53,17 @@ export class CaseDataService {
 
   }
 
+  loadEligibilityGroups(){
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/eligibility-groups`);
+  }
+
+  loadEligibilityGroup(eligibilityId : string){
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${eligibilityId}/groups`);
+  }
+
+  updateEligibilityGroup(group : any){
+    return this.http.put<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${group.eligibilityId}/groups`, group);
+  }
 
   loadCaseHistory(): Observable<CaseHistory[]> {
     return of([

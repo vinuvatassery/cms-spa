@@ -1,6 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { NotificationSnackbarService,SnackBarNotificationType,LoggingService  } from '@cms/shared/util-core';
+import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -56,9 +57,12 @@ export class LovFacade {
   private lovAptcSubject = new BehaviorSubject<Lov[]>([]);
   private lovVerificationMethodSubject = new BehaviorSubject<Lov[]>([]);
   private lovApplicantInfoSubject = new BehaviorSubject<Lov[]>([]);
+  private lovColumnDroplistSubject = new BehaviorSubject<Lov[]>([]);
+
 
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
+  private lovClientPhoneDeviceTypeSubject = new Subject<Lov[]>();
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -93,11 +97,12 @@ export class LovFacade {
   otherEthnicitylov$=this.lovOtherEthnicitySubject.asObservable();
   aptclov$=this.lovAptcSubject.asObservable();
   verificationMethod$ = this.lovVerificationMethodSubject.asObservable();
+  ColumnDroplistlov$ = this.lovColumnDroplistSubject.asObservable();
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
 
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
-
+  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
 
         /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -107,6 +112,17 @@ export class LovFacade {
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
 
+  }
+
+  getClientPhoneDeviceTypeLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.PhoneDeviceTypeCode).subscribe({
+      next: (relationsResponse) => {
+        this.lovClientPhoneDeviceTypeSubject.next(relationsResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
   }
 
  getLovsbyParent(lovType : string,parentCode : string): void {
@@ -422,6 +438,16 @@ getVerificationMethodLovs(): void {
   this.lovDataService.getLovsbyType(LovType.VerificationMethod).subscribe({
     next: (lovResponse) => {
       this.lovVerificationMethodSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getColumnDroplistLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.ColumnDroplist).subscribe({
+    next: (lovResponse) => {
+      this.lovColumnDroplistSubject.next(lovResponse);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)

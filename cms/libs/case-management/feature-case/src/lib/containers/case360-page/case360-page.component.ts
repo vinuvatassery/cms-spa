@@ -3,11 +3,12 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Internal libraries **/
-import {DrugPharmacyFacade, ClientProfile, CommunicationEvents, ScreenType, CaseFacade,WorkflowFacade } from '@cms/case-management/domain';
-import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
+/** Internal libraries **/
+import {DrugPharmacyFacade, ClientProfile, ScreenType, CaseFacade,WorkflowFacade, ContactFacade } from '@cms/case-management/domain';
+import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -51,63 +52,28 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
   triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
   selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
-  isTodoDetailsOpened = false;
-  isNewReminderOpened = false;
-  isIdCardOpened = false;
-  isSendNewLetterOpened = false;
-  isSendNewEmailOpened = false;
-  isNewSMSTextOpened = false;
+  ddlGroups$ = this.caseFacade.ddlGroups$;
+  currentGroup$= this.caseFacade.currentGroup$;
+  groupUpdated$ = this.caseFacade.groupUpdated$;
   profileClientId = 0
   clientCaseEligibilityId! : string;
   caseWorkerId! : string;
   clientHeaderTabs: any = [];
-  clientCaseId! : string
+  clientCaseId! : string 
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId:any;
   clientChangeSubscription$ = new Subscription();
-  public SendActions = [
-    {
-      buttonType: "btn-h-primary",
-      text: "New Letter",
-      icon: "markunread_mailbox",
-      click: (): void => {
-        this.onSendNewLetterClicked();
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "New Email",
-      icon: "mail_outline",
-      click: (): void => {
-        this.onSendNewEmailClicked()
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "New SMS Text",
-      icon: "comment",
-      click: (): void => {
-        this.onNewSMSTextClicked()
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "New ID Card",
-      icon: "call_to_action",
-      click: (): void => {
-        this.onIdCardClicked()
-      },
-    },
-
-  ];
+  
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private workflowFacade: WorkflowFacade,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly contactFacade : ContactFacade,
+    private readonly lovFacade : LovFacade
   ) { }
 
   /** Lifecycle hooks **/
@@ -130,7 +96,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.loadDdlEPEmployments();
     this.getQueryParams();
   }
-  private getQueryParams() {
+  private getQueryParams() {    
     this.profileClientId = this.route.snapshot.params['id'];
     if (this.profileClientId > 0) {
       this.clientHeaderVisibleSubject.next(true);
@@ -176,37 +142,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   }
 
   /** Internal event methods **/
-  onTodoDetailsClosed() {
-    this.isTodoDetailsOpened = false;
-  }
 
-  onTodoDetailsClicked() {
-    this.isTodoDetailsOpened = true;
-  }
 
-  onNewReminderClosed() {
-    this.isNewReminderOpened = false;
-  }
-
-  onNewReminderClicked() {
-    this.isNewReminderOpened = true;
-  }
-
-  onIdCardClicked() {
-    this.isIdCardOpened = true;
-  }
-
-  onSendNewLetterClicked() {
-    this.isSendNewLetterOpened = true;
-  }
-
-  onSendNewEmailClicked() {
-    this.isSendNewEmailOpened = true;
-  }
-
-  onNewSMSTextClicked() {
-    this.isNewSMSTextOpened = true;
-  }
+ 
 
   onVerificationReviewClosed() {
     this.isVerificationReviewPopupOpened = false;
@@ -216,32 +154,10 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.isVerificationReviewPopupOpened = true;
   }
 
-  onIdCardClosed() {
-    this.isIdCardOpened = false;
-  }
+
 
   /** External event methods **/
-  handleSendNewEmailClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isSendNewEmailOpened = false;
-    }
-  }
-
-  handleNewSMSTextClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isNewSMSTextOpened = false;
-    }
-  }
-
-  handleSendNewLetterClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isSendNewLetterOpened = false;
-    }
-  }
-
-  handleIdCardClosed() {
-    this.isIdCardOpened = false;
-  }
+ 
 
   loadClientImpInfo()
   {
@@ -267,7 +183,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.onClientProfileLoad()
   }
 
-  loadClientProfileInfoEventHandler() {
+  loadClientProfileInfoEventHandler() {    
     this.caseFacade.loadClientProfileHeader(this.profileClientId);
     this.onClientProfileHeaderLoad()
   }
@@ -289,7 +205,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
         this.clientId =clientHeaderData?.clientId;
-this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
+        this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
           const clientHeader = {
 
             clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
@@ -337,8 +253,8 @@ this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
             caseManagerPNumber: clientData?.caseManagerPNumber,
             caseManagerDomainCode: clientData?.caseManagerDomainCode,
             caseManagerAssisterGroup: clientData?.caseManagerAssisterGroup,
-            caseManagerEmail: clientData?.caseManagerEmail,
             caseManagerPhone: clientData?.caseManagerPhone,
+            caseManagerEmail: clientData?.caseManagerEmail,
             caseManagerFax: clientData?.caseManagerFax,
             caseManagerAddress1: clientData?.caseManagerAddress1,
             caseManagerAddress2: clientData?.caseManagerAddress2,
@@ -376,9 +292,18 @@ this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
 
   }
 
-
   loadHeaderAndProfile() {
     this.loadClientProfileInfoEventHandler();
     this.loadReadOnlyClientInfoEventHandler();
   }
+
+  loadChangeGroupData(eligibilityId: string){
+    this.caseFacade.loadEligibilityChangeGroups(eligibilityId);
+  }
+
+  updateChangeGroup(group:any){
+    this.caseFacade.updateEligibilityGroup(group);
+  }
+
+  
 }
