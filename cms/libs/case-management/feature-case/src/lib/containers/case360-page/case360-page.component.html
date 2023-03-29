@@ -12,8 +12,7 @@
   <div class="client-tab-bar-wrappers">
   
       <div class="custom-client-tab-main-wrapper"> 
-        <kendo-scrollview  [arrows]="arrowView" [width]="width"  [height]="height" >
-      <ng-template>
+ 
  
         <button kendoButton class="custom-tab-main-active" (click)="onTabClick('clinfo')" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>Client</button>
         <button kendoButton (click)="onTabClick('sts')" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'> Health Insur.</button>
@@ -23,9 +22,7 @@
         <button kendoButton (click)="onTabClick('statuses')"  *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> statuses</button>
         <button kendoButton (click)="onTabClick('atch')"  *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'> Attachments</button>
         <button kendoButton (click)="onTabClick('history')" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'> App History</button>
-    
-      </ng-template>
-      </kendo-scrollview>
+ 
     </div>
     <div class="custom-client-tab-inner-wrapper"> 
       <kendo-buttongroup  *ngIf="client_button_grp">
