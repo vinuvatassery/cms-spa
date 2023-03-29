@@ -79,6 +79,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
       this.acceptedApplication.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
       this.acceptedApplication.groupCode =  this.eligibilityPeriodForm.controls['group'].value
+      this.acceptedApplication.groupCodeId = null;
       this.acceptedApplication.assignedCwUserId = null;
       this.acceptedApplication.eligibilityStatusCode = this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
       this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
