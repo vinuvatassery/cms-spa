@@ -17,7 +17,7 @@ const routes: Routes = [
     path: 'case360/:id',
     component: Case360PageComponent,
     data: {
-      title: null,
+      title: 'Client-Profile',
     }, 
   },
   {
