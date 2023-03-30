@@ -1,6 +1,5 @@
-<kendo-dialog-titlebar *ngIf="!isCurrentEligibilityPending && pageLoaded" (close)="onModalCloseClicked()"> Start New Status Period </kendo-dialog-titlebar>
-<kendo-dialog-titlebar *ngIf="isCurrentEligibilityPending && pageLoaded" (close) ="onModalCloseClicked()"> Resume Status Period </kendo-dialog-titlebar>
-<div *ngIf="!isCurrentEligibilityPending && pageLoaded">  
+<kendo-dialog-titlebar  (close)="onModalCloseClicked()"> Start New Status Period </kendo-dialog-titlebar>
+<div >  
 <section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
   <p class="text-muted mb-2">
     Except for PENDING, changing the status initiates a new Status Period. The
@@ -74,55 +73,4 @@
   </div>
 </kendo-dialog-actions>
 </div>
-
-<div *ngIf="isCurrentEligibilityPending && pageLoaded">
-  
-<section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
-  <p class="text-muted mb-2">
-    The PENDING status paused the client's eligibility. Would you like to resume the paused status period, or start a brand new one.
-  </p>
-  <div class="flex-row">
-    <div class="flex-col">
-      <b> CURRENT STATUS</b>
-    </div>
-    <div class="flex-col">
-      <b>Status:</b>
-    </div>
-    <div class="flex-col">
-     <b>Status Start Date:</b>
-    </div>
-  <br><br><br>
-    <div class="flex-col">
-      <b>PAUSED STATUS</b>
-    </div>
-    <div class="flex-col">
-      <b>Status:</b>
-    </div>
-    <div class="flex-col">
-     <b>Status Start Date:</b>
-    </div>
-    <div class="flex-col">
-      <b>Group:</b>
-     </div> 
-  </div>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div class="justify-content-end">
-      <button
-        kendoButton
-        aria-label="start new status"
-        [primary]="true"
-        look="outline"
-      >
-        START NEW STATUS
-      </button>
-      <button kendoButton aria-label="start new status period" [primary]="true">
-        RESUME STATUS
-      </button>
-    </div>
-  </div>
-</kendo-dialog-actions>
-</div>
-
 

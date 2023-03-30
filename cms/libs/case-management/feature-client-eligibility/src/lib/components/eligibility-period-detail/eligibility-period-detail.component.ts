@@ -31,8 +31,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   eligibilityPeriodForm!:FormGroup;
   currentEligibility!:any;
   eligibilityDetails!:any;
-  isCurrentEligibilityPending:boolean=false;
-  pageLoaded:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   acceptedApplication= new AcceptedApplication();
   
@@ -100,21 +98,14 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       });
   }
   onModalCloseClicked() {
-    this.pageLoaded = false;
     this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
   }
   /** Private methods **/
   private getCurrentEligibility(){
-    this.loaderService.show();
     this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.acceptedEligibility).subscribe(data=>{
-      this.pageLoaded =  true;
       this.currentEligibility = data;
-      this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
-      if( this.currentEligibility.currentStatusCode === 'PENDING'){
-        this.isCurrentEligibilityPending = true;
-      }
+      this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;     
       this.cd.detectChanges();
-      this.loaderService.hide()
     });
   }
   private loadDdlStatus()
