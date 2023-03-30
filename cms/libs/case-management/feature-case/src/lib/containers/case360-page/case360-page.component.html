@@ -92,6 +92,21 @@
               [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-employment-page>
             </ng-template>
           </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="Smoking Cessation" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'> 
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-row">
+             
+                  <div class="flex-col">
+                   
+                    <case-management-smoking-cessation-list [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"></case-management-smoking-cessation-list>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          
         </kendo-tabstrip>
       </ng-template>
     </kendo-tabstrip-tab>

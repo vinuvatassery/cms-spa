@@ -1,7 +1,8 @@
 export interface SmokingCessation {
     clientCaseEligibilityId:string
     clientCaseId:string
+    clientId:number
     smokingCessationReferralFlag : string 
-    smokingCessationNoteApplicableFlag:string 
-    smokingCessationNote : string
+    smokingCessationNotApplicableFlag:string 
+    note : string
 }
