@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
 /** External libraries **/
 import { DialItemAnimation } from '@progress/kendo-angular-buttons';
-import { ClientEligibilityFacade } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, CaseFacade } from '@cms/case-management/domain';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
@@ -29,9 +29,11 @@ export class Case360HeaderComponent implements OnInit {
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
+  isEditEligibilityFlag!:boolean;
 
-  constructor(private readonly clientEligibilityFacade: ClientEligibilityFacade){
-
+  constructor(
+    private readonly clientEligibilityFacade: ClientEligibilityFacade,
+    private readonly caseFacade: CaseFacade) {
   }
 
      /** Lifecycle hooks **/
@@ -50,6 +52,12 @@ export class Case360HeaderComponent implements OnInit {
   }
 
   onStatusPeriodDetailClicked() {
+    this.isEditEligibilityFlag=false;
+    this.isStatusPeriodDetailOpened = true;
+  }
+
+  onStatusPeriodEditClicked() {
+    this.isEditEligibilityFlag=true;
     this.isStatusPeriodDetailOpened = true;
   }
 
@@ -89,6 +97,13 @@ export class Case360HeaderComponent implements OnInit {
         this.loadClientProfileInfoEvent.emit();
       }  
     })
+  }
+
+  onModalSaveAndClose(result:any){
+    if(result){
+      this.isStatusPeriodDetailOpened=false;
+      this.loadClientProfileInfoEvent.emit() 
+    }
   }
 
 }

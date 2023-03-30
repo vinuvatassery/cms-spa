@@ -1,12 +1,17 @@
-<kendo-dialog-titlebar  (close)="onModalCloseClicked()"> Start New Status Period </kendo-dialog-titlebar>
+<kendo-dialog-titlebar  (close)="onModalCloseClicked()">{{ isEdit ? 'Edit Status Period Dates' : 'Start New Status Period' }}</kendo-dialog-titlebar>
 <div >  
 <section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
-  <p class="text-muted mb-2">
+  <p *ngIf="!isEdit" class="text-muted mb-2">
     Except for PENDING, changing the status initiates a new Status Period. The
     new Status Period may not overlap with a previous one.
   </p>
+  <p *ngIf="isEdit" class="text-muted mb-2">
+    Specify the new start and end dates for this Status Period. 
+    The new dates 1) may not overlap with another period, and 2) may not exclude a payment already associated with this period.
+    If needed, contact your administrator for assistance.
+  </p>
   <div class="flex-row">
-    <div class="flex-col">
+    <div class="flex-col" *ngIf="!isEdit">
       <kendo-floatinglabel text="Status" class="inline-search-loader">
         <span *ngIf="showEligibilityStatusLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
         <kendo-dropdownlist   
@@ -41,7 +46,7 @@
         <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col">
+    <div class="flex-col" *ngIf="!isEdit">
       <kendo-floatinglabel text="Group">
         <kendo-dropdownlist 
         [fillMode]="formUiStyle.dropDownFillMode" 
@@ -63,11 +68,15 @@
         aria-label="cancel new status period"
         [primary]="true"
         look="outline"
+        (click)="onModalCloseClicked()"
       >
-        Cancel
+        CANCEL
       </button>
-      <button kendoButton aria-label="start new status period" [primary]="true"(click)="startNewEligibility()">
-        Start
+      <button *ngIf="!isEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="startNewEligibility()">
+        START
+      </button>
+      <button *ngIf="isEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="updateCurrentEligibility()">
+        UPDATE
       </button>
     </div>
   </div>

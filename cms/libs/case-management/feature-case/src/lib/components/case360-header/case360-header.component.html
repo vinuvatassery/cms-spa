@@ -63,7 +63,7 @@
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Edit Status Period Dates"
-        (click)="onStatusPeriodDetailClicked()"
+        (click)="onStatusPeriodEditClicked()"
         >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eligibilityEndDate}}</span
       >
       <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}%</span>
@@ -96,7 +96,9 @@
   <case-management-eligibility-period-detail
   [clientId]="clientId"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [clientCaseId]="clientCaseId"></case-management-eligibility-period-detail>
+  [clientCaseId]="clientCaseId"
+  [isEdit]="isEditEligibilityFlag"
+  (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
 </kendo-dialog>
 
 <!-- Eligibility Group Detail Modal -->
