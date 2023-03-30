@@ -97,7 +97,6 @@ export * from './lib/enums/address-type.enum';
 export * from './lib/enums/client-note-type-code.enum';
 
 
-
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
 export * from './lib/infrastructure/case.data.service';

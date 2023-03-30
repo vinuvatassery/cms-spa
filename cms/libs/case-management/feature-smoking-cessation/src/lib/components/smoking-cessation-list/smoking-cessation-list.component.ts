@@ -58,7 +58,7 @@ export class SmokingCessationListComponent implements OnInit {
     this.isAddReferralSmokingCessationOpen = true;
   }
 
-  CloseAddReferralSmokingCessationClicked(){
+  closeAddReferralSmokingCessationClicked(){
     this.isAddReferralSmokingCessationOpen = false;
   }
 
@@ -74,7 +74,7 @@ export class SmokingCessationListComponent implements OnInit {
       next: (x:any) =>{
         
         this.smokingCessationFacade.hideLoader();
-        this.CloseAddReferralSmokingCessationClicked();
+        this.closeAddReferralSmokingCessationClicked();
         this.loadGridData();
 
       },
