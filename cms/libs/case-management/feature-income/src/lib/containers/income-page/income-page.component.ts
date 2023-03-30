@@ -129,7 +129,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated')
+        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated')
         this.workflowFacade.navigate(navigationType);
       } else {
         this.workflowFacade.enableSaveButton();
@@ -160,7 +160,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loaderService.show();
         return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
         catchError((err: any) => {
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
           return  of(false);
         })
         )
@@ -410,15 +410,26 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        this.checkValidations()
+        if(!this.checkValidations()){
+          this.workflowFacade.showCancelApplicationPopup(true);
+        }
+        else{
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
   }
 
   checkValidations(){
-    this.submitIncomeDetailsForm();
-    return this.noIncomeDetailsForm.valid;
+    if (this.hasNoIncome) {
+      this.submitIncomeDetailsForm();
+      return this.noIncomeDetailsForm.valid;
+    }
+    if (!this.hasNoIncome && this.incomeData.clientIncomes == null) {
+      this.incomeFacade.incomeValidSubject.next(false);
+      return false;
+    }
+    return true;
   }
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {

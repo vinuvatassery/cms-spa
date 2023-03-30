@@ -1,40 +1,46 @@
-<section class="k-dialog-body">
-  <p class="text-muted mb-2">
-    Changing the group may affect the client’s benefits. Select a future start
-    date to schedule the change.
-  </p>
-  <div class="flex-row">
-    <div class="flex-col">
-      <kendo-floatinglabel text="New Group">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlGroups$ | async"> </kendo-dropdownlist>
-      </kendo-floatinglabel>
+  <section class="k-dialog-body">
+    <p class="text-muted mb-2">
+      Changing the group may affect the client’s benefits. Select a future start
+      date to schedule the change.
+    </p>
+    <div class="flex-row" [formGroup]="groupForm" *ngIf="currentGroup$ | async">
+      <div class="flex-col">
+        <kendo-formfield>
+          <kendo-floatinglabel text="New Group">
+            <kendo-dropdownlist aria-label="New Group" [fillMode]="formUiStyle.dropDownFillMode"
+              formControlName="groupCodeId" [data]="ddlGroups$ | async" textField="groupCodeDesc"
+              valueField="groupCodeId" [valuePrimitive]="true" placeholder="New Group"></kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror>
+            New Group is required
+          </kendo-formerror>
+        </kendo-formfield>
+      </div>
+      <div class="flex-col">
+        <kendo-formfield>
+          <kendo-floatinglabel text="New Group Start Date">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" [min]="currentDate" format="MM-dd-yyyy"
+              aria-label="New Group Start Date" formControlName="groupStartDate" formatPlaceholder="formatPattern"
+              placeholder="New Group Start Date">
+            </kendo-datepicker>
+          </kendo-floatinglabel>
+          <kendo-formerror>
+            New Group Start Date is required
+          </kendo-formerror>
+        </kendo-formfield>
+      </div>
     </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="New Group Start Date">
-        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" [(ngModel)]="currentDate" formatPlaceholder="formatPattern">
-        </kendo-datepicker>
-      </kendo-floatinglabel>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="cancel client’s benefits" [primary]="true" look="outline"
+          (click)="onCancelGroupChange()">
+          Cancel
+        </button>
+        <button kendoButton aria-label="change client’s benefits" [primary]="true" (click)="onUpdateGroup()">
+          Change
+        </button>
+      </div>
     </div>
-  </div>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div class="justify-content-end">
-      <button
-        kendoButton
-        aria-label="cancel client’s benefits"
-        [primary]="true"
-        look="outline"
-      >
-        Cancel
-      </button>
-      <button
-        kendoButton
-        aria-label="change client’s benefits"
-        [primary]="true"
-      >
-        Change
-      </button>
-    </div>
-  </div>
-</kendo-dialog-actions>
+  </kendo-dialog-actions>

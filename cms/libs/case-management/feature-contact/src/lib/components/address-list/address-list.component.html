@@ -20,7 +20,7 @@
   <div class="flex-col mt-1">
     <div class="app-c-table">
       <kendo-grid [kendoGridBinding]="addressGridView" [rowClass]="rowClass">
-        <kendo-grid-column field="addressType" title="Type" [width]="80">
+        <kendo-grid-column field="addressTypeDesc" title="Type" [width]="80">
         </kendo-grid-column>
         <kendo-grid-column field="address1" title="Address1" [width]="150">
         </kendo-grid-column>
@@ -28,7 +28,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="city" title="City" [width]="100">
         </kendo-grid-column>
-        <kendo-grid-column field="state" title="State" [width]="100">
+        <kendo-grid-column field="stateDesc" title="State" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column field="zip" title="ZIP" [width]="100">
         </kendo-grid-column>
@@ -90,7 +90,7 @@
             >
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <div *ngIf="buttondataItem.text == 'Delete Address' && dataItem.addressTypeCode =='M'; else otherButtons">
-                  <button *ifPermission='["Client_Profile_Claims_Client_ContactInfo_Client_Address_Delete_Only"]' kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                  <button *ifPermission='["Client_Profile_Claims_Client_ContactInfo_Client_Address_Create_Update"]' kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                     <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
@@ -150,6 +150,7 @@
     [deactivateFlag]="isDeactivateFlag"
     [deleteFlag]="isDeleteFlag"
     [clientAddressId]="clientAddressId"
+    [selectedAddress]="clientAddress"
     (detailModalCloseEvent)="onAddressDetailCloseEvent($event)"
     (deactivateButtonClick)="onDeactivateButtonClick($event)"
   ></case-management-address-detail>
@@ -162,7 +163,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Deactivate home address?"
 >
-  <case-management-deactivate-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModalAndReload($event)"></case-management-deactivate-address-confirmation>
+  <case-management-deactivate-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" (deactivateModalCloseEvent)="closeDeactivateModalAndReload($event)"></case-management-deactivate-address-confirmation>
 </kendo-dialog>
 
 <!-- Delete home address Popup-->

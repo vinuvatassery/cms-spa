@@ -18,14 +18,14 @@ const routes: Routes = [
     path: 'case-detail',
     component: CaseDetailPageComponent,   
     data: {
-      title: '',
+      title: 'New Application',
     }, 
     children: [
       {
         path: 'case-summary',
         component:CaseSummaryComponent,
           data: {
-            title: null,
+            title: '',
           }, 
       },
       {
@@ -35,7 +35,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureClientModule
           ),
         data: {
-          title: 'New Application',
+          title: '',
         },
       },
       {
@@ -45,7 +45,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureContactModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -55,7 +55,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureFamilyAndDependentModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -65,7 +65,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureIncomeModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -75,7 +75,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureEmploymentModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -84,6 +84,9 @@ const routes: Routes = [
           import('@cms/case-management/feature-smoking-cessation').then(
             (m) => m.CaseManagementFeatureSmokingCessationModule
           ),
+          data: {
+            title: '',
+          },
       },
       {
         path: 'health-insurance',
@@ -92,7 +95,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureHealthInsuranceModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -102,7 +105,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureDrugModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -112,7 +115,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureHealthcareProviderModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -122,7 +125,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureManagementModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -132,7 +135,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureVerificationModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -142,7 +145,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureAuthorizationModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -152,7 +155,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureClientEligibilityModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
@@ -162,7 +165,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureCommunicationModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       // {

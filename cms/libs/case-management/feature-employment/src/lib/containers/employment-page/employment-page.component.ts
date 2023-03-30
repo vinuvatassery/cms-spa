@@ -192,9 +192,25 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
+        if(!this.checkValidations()){
+          this.workflowFacade.showCancelApplicationPopup(true);
+        }
+        else{
           this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
+  }
+
+  
+  checkValidations(){
+    this.isEmployedFlag = (this.isEmployedGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No;
+    this.employmentFacade.showLoader();
+    if(this.isEmployedGridDisplay === false && this.employerListCount <= 0){
+      this.employmentFacade.employmentValidSubject.next(false);
+      return false;
+    }
+    return true;
   }
 
   private addDiscardChangesSubscription(): void {
