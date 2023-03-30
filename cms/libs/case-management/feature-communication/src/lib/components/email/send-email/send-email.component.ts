@@ -41,6 +41,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isShowToEmailLoader$ = new BehaviorSubject<boolean>(false);
   emailSubscription$ = new Subscription();
   formUiStyle: UIFormStyle = new UIFormStyle();
+  isClearEmails=false;
 
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) { }
@@ -59,7 +60,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Private methods **/
   private addEmailSubscription() {
     this.emailSubscription$ = this.ddlEmails$.subscribe(() => {
-      this.isShowToEmailLoader$.next(false);
+      if(!this.isClearEmails){
+        this.isShowToEmailLoader$.next(false);
+      }
+      this.isClearEmails =false;
     });
   }
 
@@ -134,6 +138,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** External event methods **/
   handleDdlEmailValueChange() {
+    this.isClearEmails =true;
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
     this.loadInitialData.emit();

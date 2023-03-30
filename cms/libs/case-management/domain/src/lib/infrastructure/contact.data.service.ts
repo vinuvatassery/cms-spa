@@ -228,10 +228,10 @@ export class ContactDataService {
   }
 
  /////email services NOSONAR
-  loadClientEmails(clientCaseEligibilityId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {
+  loadClientEmails(clientId : number,clientCaseEligibilityId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/${clientCaseEligibilityId}/emails?showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/clients/${clientId}/emails?clientCaseEligibilityId=${clientCaseEligibilityId}&showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
 
   }
@@ -353,17 +353,17 @@ deleteClientContact(clientId:any,clientRelationshipId:any){
   return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts/${clientRelationshipId}`);
 }
   loadMailingAddress(clientId: number) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses/${AddressTypeCode.Mail}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/communications/addresses/${AddressTypeCode.Mail}`);
 
   }
 
   loadPhoneNumbers(clientId: number) {
     const type = 'ALL';
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phone-numbers/${type}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/communications/phone-numbers/${type}`);
   }
 
   loadEmailAddress(clientId: number) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/email`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/communications/emails`);
   }
 
 }

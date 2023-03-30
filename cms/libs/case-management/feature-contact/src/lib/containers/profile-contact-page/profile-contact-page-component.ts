@@ -53,6 +53,7 @@ export class ProfileContactPageComponent {
 
     this.pageSizes = this.contactFacade.gridPageSizes;
     this.contactFacade.loadClientEmails(
+      this.profileClientId,
       this.clientCaseEligibilityId,
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,

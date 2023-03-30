@@ -16,6 +16,8 @@ import {
   ConfigurationProvider,
 } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { AddressTypeCode } from '../enums/address-type-code.enum';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -312,44 +314,82 @@ export class ContactFacade {
   }
 
   loadMailingAddress(clientId: number){
-    this.contactDataService.loadMailingAddress(clientId).subscribe({
-      next: (response: any) => {
-        if (response) {
-          this.mailingAddressSubject.next(response);
-          this.hideLoader();
-        }
+    this.mailingAddressSubject.next(null);
+    return this.contactDataService.getClientAddress(clientId).subscribe({
+      next: (addressesResponse: any) => {
+        const mailingAddress = addressesResponse.find((ads: any) => 
+          ads.addressTypeCode === AddressTypeCode.Mail
+          && ads.activeFlag === StatusFlag.Yes
+        );
+        this.mailingAddressSubject.next(mailingAddress);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+    // this.contactDataService.loadMailingAddress(clientId).subscribe({
+    //   next: (response: any) => {
+    //     if (response) {
+    //       this.mailingAddressSubject.next(response);
+    //       this.hideLoader();
+    //     }
+    //   },
+    //   error: (err) => {
+    //     this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    //   },
+    // });
   }
 
   loadPhoneNumbers(clientId: number): void {
-    this.contactDataService.loadPhoneNumbers(clientId).subscribe({
-      next: (phoneNumbersResponse) => {
-        this.phoneNumbersSubject.next(phoneNumbersResponse);
+    this.phoneNumbersSubject.next([]);
+    this.contactDataService
+    .loadClientPhones(clientId, 0, 1000, '', '', false)
+    .subscribe({
+      next: (clientPhonesResponse: any) => {       
+        const phoneNumbers =  clientPhonesResponse ? clientPhonesResponse['items']:[];
+        this.phoneNumbersSubject.next(phoneNumbers);
       },
       error: (err) => {
-        this.loggingService.logException(err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+    // this.contactDataService.loadPhoneNumbers(clientId).subscribe({
+    //   next: (phoneNumbersResponse) => {
+    //     this.phoneNumbersSubject.next(phoneNumbersResponse);
+    //   },
+    //   error: (err) => {
+    //     this.loggingService.logException(err);
+    //   },
+    // });
   }
 
   //#region client email//NOSONAR
 
   loadEmailAddress(clientId: number): void {
-    this.contactDataService.loadEmailAddress(clientId).subscribe({
-      next: (emailAddressesResponse) => {
-        this.emailAddressesSubject.next(emailAddressesResponse);
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
+    this.emailAddressesSubject.next([]);
+    this.contactDataService
+      .loadClientEmails(clientId, '', 0, 1000, '', '', false)        
+      .subscribe({
+        next: (clientEmailsResponse: any) => {
+          const emails =  clientEmailsResponse ? clientEmailsResponse['items']:[];
+          this.emailAddressesSubject.next(emails);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+    // this.contactDataService.loadEmailAddress(clientId).subscribe({
+    //   next: (emailAddressesResponse) => {
+    //     this.emailAddressesSubject.next(emailAddressesResponse);
+    //   },
+    //   error: (err) => {
+    //     this.loggingService.logException(err);
+    //   },
+    // });
   }
   
   loadClientEmails(
+    clientId: number,
     clientCaseEligibilityId: string,
     skipcount: number,
     maxResultCount: number,
@@ -359,6 +399,7 @@ export class ContactFacade {
   ): void {
     this.contactDataService
       .loadClientEmails(
+        clientId,
         clientCaseEligibilityId,
         skipcount,
         maxResultCount,

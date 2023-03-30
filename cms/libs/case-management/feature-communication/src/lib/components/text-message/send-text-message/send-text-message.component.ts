@@ -36,6 +36,7 @@ export class SendTextMessageComponent implements OnInit {
   isShowToPhoneNumbersLoader$ = new BehaviorSubject<boolean>(false);
   phoneNumbersSubscription$ = new Subscription();
   phoneNumbers!:any[];
+  isClearPhoneNumbers = false;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 
@@ -43,21 +44,26 @@ export class SendTextMessageComponent implements OnInit {
   ngOnInit(): void {
     this.updateSendMessageFlag();
     this.loadDdlLetterTemplates();
-    this.addEmailSubscription();
+    this.addPhoneNumbersSubscription();
   }
   ngOnDestroy(): void {
     this.phoneNumbersSubscription$.unsubscribe();
   }
 
   /** Private methods **/
-  private addEmailSubscription() {
+  private addPhoneNumbersSubscription() {
     this.phoneNumbersSubscription$ = this.ddlMessageRecipients$
-    .pipe(
+    .pipe(      
       map((ph) => ph.map((p:any) => ({...p, formattedPhoneNbr: this.formatPhoneNumber(p.phoneNbr)})))
     )
     .subscribe((phoneResp: any) => {
+      if(this.isClearPhoneNumbers){
+        this.phoneNumbers =[];
+      }else{
       this.phoneNumbers = phoneResp;
       this.isShowToPhoneNumbersLoader$.next(false);
+      }
+      this.isClearPhoneNumbers = false;
     });
   }
 
@@ -129,7 +135,8 @@ export class SendTextMessageComponent implements OnInit {
 
   /** External event methods **/
   handleDdlTextMessageValueChange() {
-    this.isOpenMessageTemplate = true;
+    this.isOpenMessageTemplate = true;  
+    this.isClearPhoneNumbers = true;  
     this.isShowToPhoneNumbersLoader$.next(true);
     this.loadInitialData.emit();
   }

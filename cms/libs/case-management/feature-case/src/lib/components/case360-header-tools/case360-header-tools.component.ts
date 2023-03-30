@@ -20,7 +20,6 @@ export class Case360HeaderToolsComponent {
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  clientId!:number;
   mailingAddress$ = this.contactFacade.mailingAddress$;
   emailAddress$ = this.contactFacade.emailAddress$;
   phoneNumbers$ = this.contactFacade.phoneNumbers$;
@@ -61,7 +60,6 @@ export class Case360HeaderToolsComponent {
 
   /* constructor */
   constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute) {
-    this.clientId = this.route.snapshot.params['id'];
   }
 
   /* Internal Methods */
@@ -122,14 +120,21 @@ export class Case360HeaderToolsComponent {
   }
 
   loadMailingAddress() {
-    this.contactFacade.loadMailingAddress(this.clientId);
+    const clientId = this.getClientId();
+    this.contactFacade.loadMailingAddress(clientId);
   }
 
   loadPhoneNumbers() {
-    this.contactFacade.loadPhoneNumbers(this.clientId);
+    const clientId = this.getClientId();
+    this.contactFacade.loadPhoneNumbers(clientId);
   }
 
   loadEmailAddress() {
-    this.contactFacade.loadEmailAddress(this.clientId);
+    const clientId = this.getClientId();
+    this.contactFacade.loadEmailAddress(clientId);
+  }
+
+  private getClientId(): number {
+    return this.route.snapshot.params['id'];
   }
 }
