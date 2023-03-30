@@ -20,13 +20,13 @@ export class SmokingCessationDataService{
         return this.http.get<SmokingCessation>(
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/smoking-cessations?ClientCaseId=${clientCaseId}&ClientCaseEligibilityId=${clientCaseEligibilityId}`);
       }
-      loadSmokingCessationNotes(clientId:any,clientCaseEligibilityId:any){
+      loadSmokingCessationNotes(clientId:any,clientCaseEligibilityId:any,type:any){
         return this.http.get<SmokingCessation>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/smoking-cessations/notes?clientCaseEligibilityId=${clientCaseEligibilityId}`);
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes?clientCaseEligibilityId=${clientCaseEligibilityId}&type=${type}`);
       }
       createSmokingCessationNote(clientNote: ClientNote) {  
         return this.http.post<ClientNote>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientNote.clientId}/smoking-cessations/notes`,
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientNote.clientId}/notes`,
           clientNote,
 
         )}

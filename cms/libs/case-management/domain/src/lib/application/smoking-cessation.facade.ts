@@ -47,8 +47,8 @@ export class SmokingCessationFacade {
     loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any,clientId:any) {
         return this.smokingCessationDataService.loadSmokingCessation(clientCaseEligibilityId,clientCaseId,clientId);
       }
-      loadSmokingCessationNotes(clientId:any,clientCaseEligibilityId:any) {
-        return this.smokingCessationDataService.loadSmokingCessationNotes(clientId,clientCaseEligibilityId);
+      loadSmokingCessationNotes(clientId:any,clientCaseEligibilityId:any,type:any) {
+        return this.smokingCessationDataService.loadSmokingCessationNotes(clientId,clientCaseEligibilityId,type);
       }
       createSmokingCessationNote(clientNote: ClientNote) {
         return this.smokingCessationDataService.createSmokingCessationNote(clientNote);
