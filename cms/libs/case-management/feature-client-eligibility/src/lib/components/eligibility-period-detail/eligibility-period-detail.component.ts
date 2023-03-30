@@ -29,11 +29,13 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   showEligibilityStatusLoader = this.lovFacade.showLoaderOnEligibilityStatus$;
   ddlGroups$ =  this.caseFacade.ddlGroups$ ;
   disableFields: Array<string>=[];
+  requiredFields: Array<string>=[];
   eligibilityPeriodForm!:FormGroup;
   currentEligibility!:any;
   eligibilityDetails!:any;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   acceptedApplication= new AcceptedApplication();
+  eligibleStatuses:Array<string>=[];
   
 
   /** Constructor **/
@@ -63,32 +65,33 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.disableFormFields();
 
   }  
-  startNewEligibility(){
-    this.loaderService.show();
+  startNewEligibility(){    
     this.validateForm();
-    if(this.eligibilityPeriodsOverlapCheck(
-      new Date(this.currentEligibility.eligibilityStartDate), 
-      this.currentEligibility.eligibilityEndDate ===""?null:new Date(this.currentEligibility.eligibilityEndDate),
-      this.eligibilityPeriodForm.controls['statusStartDate'].value === ""?null:  this.eligibilityPeriodForm.controls['statusStartDate'].value ,
-      this.eligibilityPeriodForm.controls['statusEndDate'].value === ""? null:  this.eligibilityPeriodForm.controls['statusEndDate'].value))
-      {
-         this.clientEligibilityFacade.showHideSnackBar(
+    this.eligibilityPeriodForm.markAllAsTouched();
+    if (this.eligibilityPeriodForm.valid) {
+      this.loaderService.show();
+      if (this.eligibilityPeriodsOverlapCheck(
+        new Date(this.currentEligibility.eligibilityStartDate),
+        this.currentEligibility.eligibilityEndDate === "" ? null : new Date(this.currentEligibility.eligibilityEndDate),
+        this.eligibilityPeriodForm.controls['statusStartDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusStartDate'].value,
+        this.eligibilityPeriodForm.controls['statusEndDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusEndDate'].value)) {
+        this.clientEligibilityFacade.showHideSnackBar(
           SnackBarNotificationType.WARNING,
           'There cannot be two eligibility periods with overlapping date ranges.'
         );
       }
-      this.acceptedApplication.clientCaseId= this.clientCaseId;
-      this.acceptedApplication.clientCaseEligibilityId= this.clientCaseEligibilityId
+      this.acceptedApplication.clientCaseId = this.clientCaseId;
+      this.acceptedApplication.clientCaseEligibilityId = this.clientCaseEligibilityId
       this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
       this.acceptedApplication.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
-      this.acceptedApplication.groupCode =  this.eligibilityPeriodForm.controls['group'].value
+      this.acceptedApplication.groupCode = this.eligibilityPeriodForm.controls['group'].value
       this.acceptedApplication.groupCodeId = null;
       this.acceptedApplication.assignedCwUserId = null;
       this.acceptedApplication.eligibilityStatusCode = this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
       this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
-      this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId).subscribe({
+      this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
         next: (response) => {
-          this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"New Eligibility Periods created successfully.")
+          this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "New Eligibility Periods created successfully.")
           this.loaderService.hide();
           this.isModalSavedClicked.emit(true);
         },
@@ -101,6 +104,50 @@ export class EligibilityPeriodDetailComponent implements OnInit {
           this.onModalCloseClicked();
         },
       });
+    }
+  }
+  updateCurrentEligibility() {
+    this.setUpdateEligibilityValidations();
+    if (this.eligibilityPeriodForm.valid) {
+      if (this.eligibilityPeriodsOverlapCheck(
+        new Date(this.currentEligibility.eligibilityStartDate),
+        this.currentEligibility.eligibilityEndDate === "" ? null : new Date(this.currentEligibility.eligibilityEndDate),
+        this.eligibilityPeriodForm.controls['statusStartDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusStartDate'].value,
+        this.eligibilityPeriodForm.controls['statusEndDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusEndDate'].value)) {
+        this.clientEligibilityFacade.showHideSnackBar(
+          SnackBarNotificationType.WARNING,
+          'There cannot be two eligibility periods with overlapping date ranges.'
+        );
+      }
+      else {
+        this.loaderService.show();
+        let editEligibilityData = this.currentEligibility;
+        editEligibilityData.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
+        editEligibilityData.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
+        this.clientEligibilityFacade.saveAcceptedApplication(editEligibilityData,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.eligibilityStatus).subscribe({
+          next: (data) => {
+            this.clientEligibilityFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Eligibility period updated!'
+            );
+            this.isModalSavedClicked.emit(true);
+            this.loaderService.hide();
+          },
+          error: (err) => {
+            if (err){
+              this.loaderService.hide();
+              this.clientEligibilityFacade.showHideSnackBar(
+                SnackBarNotificationType.ERROR,
+                err
+              );
+              this.onModalCloseClicked();
+            }
+          },
+        });
+      
+      }
+    }
+
   }
   onModalCloseClicked() {
     this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
@@ -253,62 +300,39 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.eligibilityPeriodForm.controls['eligibilityStatus'].setValidators([Validators.required]);
     this.eligibilityPeriodForm.controls['eligibilityStatus'].updateValueAndValidity();
     let eligibilityStatusValue=this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
-    if(eligibilityStatusValue){
-      switch(eligibilityStatusValue.toUpperCase())
-      {      
-        case 'ACCEPT' :
-          this.setAllFieldsEligibilityValidations();
-          break;
-        case 'INCOMPLETE':
-          this.setStartEndValidations();
-          break;
-        case 'REJECT':
-          this.setStartEndValidations();
-          break;
-        case 'RESTRICTED':
-          this.setAllFieldsEligibilityValidations();
-        break;
-        case 'DISENROLLED':
-          this.setStartEndValidations();
-          break;
-        case 'WAITLIST':
-          this.setStartDateEligibilityValidations();
-          break;     
-      }
+    if(eligibilityStatusValue === null || eligibilityStatusValue ===''){ 
+      eligibilityStatusValue ='NEW';
     }
+      if(eligibilityStatusValue === 'NEW' || eligibilityStatusValue === 'ACCEPT'||
+      eligibilityStatusValue === 'RESTRICTED'){
+        this.requiredFields = [
+          'statusStartDate',
+          'statusEndDate',
+          'group',
+        ]; 
+      }
+      else if(eligibilityStatusValue === 'INCOMPLETE' || eligibilityStatusValue === 'REJECT'
+      || eligibilityStatusValue === 'DISENROLLED'|| eligibilityStatusValue === 'WAITLIST'){
+        this.requiredFields = [
+          'statusStartDate',
+          'statusEndDate',
+        ]; 
+      }    
+    
     else{
       this.removeValidation();
     }
+    this.validate();
   }
 
-  setAllFieldsEligibilityValidations(){
-    this.eligibilityPeriodForm.controls['statusStartDate'].setValidators([Validators.required]);
-    this.eligibilityPeriodForm.controls['statusEndDate'].setValidators([Validators.required]);
-    this.eligibilityPeriodForm.controls['group'].setValidators([Validators.required]);
-    this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
-    this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
-    this.eligibilityPeriodForm.controls['group'].updateValueAndValidity();
+  private validate(){   
+    this.requiredFields.forEach((key: string) => {
+      this.eligibilityPeriodForm.controls[key].setValidators([Validators.required]);
+      this.eligibilityPeriodForm.controls[key].updateValueAndValidity();
+    });
   }
 
-  setStartEndValidations(){
-    this.eligibilityPeriodForm.controls['statusStartDate'].setValidators([Validators.required]);
-    this.eligibilityPeriodForm.controls['statusEndDate'].setValidators([Validators.required]);
-    this.eligibilityPeriodForm.controls['group'].removeValidators(Validators.required);
-    this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
-    this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
-    this.eligibilityPeriodForm.controls['group'].updateValueAndValidity();
-  }
-  
-  setStartDateEligibilityValidations(){
-    this.eligibilityPeriodForm.controls['statusStartDate'].setValidators([Validators.required]);
-    this.eligibilityPeriodForm.controls['statusEndDate'].removeValidators(Validators.required);
-    this.eligibilityPeriodForm.controls['group'].removeValidators(Validators.required);
-    this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
-    this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
-    this.eligibilityPeriodForm.controls['group'].updateValueAndValidity();
-  }
-
-  removeValidation(){
+  private removeValidation(){
     this.eligibilityPeriodForm.controls['statusStartDate'].removeValidators([Validators.required]);
     this.eligibilityPeriodForm.controls['statusEndDate'].removeValidators(Validators.required);
     this.eligibilityPeriodForm.controls['group'].removeValidators(Validators.required);
@@ -317,51 +341,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.eligibilityPeriodForm.controls['group'].updateValueAndValidity();
   }
 
-  updateCurrentEligibility() {
-    this.setUpdateEligibilityValidations();
-    if (this.eligibilityPeriodForm.valid) {
-      if (this.eligibilityPeriodsOverlapCheck(
-        new Date(this.currentEligibility.eligibilityStartDate),
-        this.currentEligibility.eligibilityEndDate === "" ? null : new Date(this.currentEligibility.eligibilityEndDate),
-        this.eligibilityPeriodForm.controls['statusStartDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusStartDate'].value,
-        this.eligibilityPeriodForm.controls['statusEndDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusEndDate'].value)) {
-        this.clientEligibilityFacade.showHideSnackBar(
-          SnackBarNotificationType.WARNING,
-          'There cannot be two eligibility periods with overlapping date ranges.'
-        );
-      }
-      else {
-        this.loaderService.show();
-        let editEligibilityData = this.currentEligibility;
-        editEligibilityData.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
-        editEligibilityData.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
-        this.clientEligibilityFacade.saveAcceptedApplication(editEligibilityData,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.eligibilityStatus).subscribe({
-          next: (data) => {
-            this.clientEligibilityFacade.showHideSnackBar(
-              SnackBarNotificationType.SUCCESS,
-              'Eligibility period updated!'
-            );
-            this.isModalSavedClicked.emit(true);
-            this.loaderService.hide();
-          },
-          error: (err) => {
-            if (err){
-              this.loaderService.hide();
-              this.clientEligibilityFacade.showHideSnackBar(
-                SnackBarNotificationType.ERROR,
-                err
-              );
-              this.onModalCloseClicked();
-            }
-          },
-        });
-      
-      }
-    }
-
-  }
-
-  bindEligibilityToForm(currentEligibility:any){
+  private bindEligibilityToForm(currentEligibility:any){
     if(currentEligibility.eligibilityStartDate){
       this.eligibilityPeriodForm.controls['statusStartDate'].setValue(new Date(currentEligibility.eligibilityStartDate));
       this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
@@ -372,7 +352,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     }
   }
 
-  setUpdateEligibilityValidations() {
+  private setUpdateEligibilityValidations() {
     this.eligibilityPeriodForm.controls['statusStartDate'].setValidators([Validators.required]);
     this.eligibilityPeriodForm.controls['statusEndDate'].setValidators([Validators.required]);
     this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
