@@ -327,17 +327,6 @@ export class ContactFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-    // this.contactDataService.loadMailingAddress(clientId).subscribe({
-    //   next: (response: any) => {
-    //     if (response) {
-    //       this.mailingAddressSubject.next(response);
-    //       this.hideLoader();
-    //     }
-    //   },
-    //   error: (err) => {
-    //     this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-    //   },
-    // });
   }
 
   loadPhoneNumbers(clientId: number): void {
@@ -353,14 +342,6 @@ export class ContactFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-    // this.contactDataService.loadPhoneNumbers(clientId).subscribe({
-    //   next: (phoneNumbersResponse) => {
-    //     this.phoneNumbersSubject.next(phoneNumbersResponse);
-    //   },
-    //   error: (err) => {
-    //     this.loggingService.logException(err);
-    //   },
-    // });
   }
 
   //#region client email//NOSONAR
@@ -378,14 +359,6 @@ export class ContactFacade {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
-    // this.contactDataService.loadEmailAddress(clientId).subscribe({
-    //   next: (emailAddressesResponse) => {
-    //     this.emailAddressesSubject.next(emailAddressesResponse);
-    //   },
-    //   error: (err) => {
-    //     this.loggingService.logException(err);
-    //   },
-    // });
   }
   
   loadClientEmails(
