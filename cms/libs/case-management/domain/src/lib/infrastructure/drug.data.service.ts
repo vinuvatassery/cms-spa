@@ -246,6 +246,6 @@ export class DrugDataService {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/clients/${clientId}/pharmacies/${clientPharmacyId}`);
   }
   activeDrugPharmacy(clientPharmacyId: string, pharmacy: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/pharmacy/${clientPharmacyId}`, pharmacy);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/pharmacies/${clientPharmacyId}`, pharmacy);
   }
 }
