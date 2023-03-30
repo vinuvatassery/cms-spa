@@ -29,6 +29,7 @@ export class ContactFacade {
   private friendsOrFamilySubject = new BehaviorSubject<any>([]);
   private contactsSubject = new BehaviorSubject<Contact[]>([]);
   private addressesSubject = new BehaviorSubject<any>([]);
+  private mailingAddressSubject = new Subject<any>();
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
@@ -61,6 +62,7 @@ export class ContactFacade {
   friendsOrFamily$ = this.friendsOrFamilySubject.asObservable();
   contacts$ = this.contactsSubject.asObservable();
   address$ = this.addressesSubject.asObservable();
+  mailingAddress$ = this.mailingAddressSubject.asObservable();
   phoneNumbers$ = this.phoneNumbersSubject.asObservable();
   emailAddress$ = this.emailAddressesSubject.asObservable();
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
@@ -172,32 +174,10 @@ export class ContactFacade {
     });
   }
 
-  loadPhoneNumbers(): void {
-    this.contactDataService.loadPhoneNumbers().subscribe({
-      next: (phoneNumbersResponse) => {
-        this.phoneNumbersSubject.next(phoneNumbersResponse);
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
-
   loadDdlPhoneType(): void {
     this.contactDataService.loadDdlPhoneTypes().subscribe({
       next: (ddlPhoneTypesResponse) => {
         this.ddlPhoneTypesSubject.next(ddlPhoneTypesResponse);
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
-
-  loadEmailAddress(): void {
-    this.contactDataService.loadEmailAddresses().subscribe({
-      next: (emailAddressesResponse) => {
-        this.emailAddressesSubject.next(emailAddressesResponse);
       },
       error: (err) => {
         this.loggingService.logException(err);
@@ -329,7 +309,44 @@ export class ContactFacade {
     );
   }
 
+  loadMailingAddress(clientId: number){
+    this.contactDataService.loadMailingAddress(clientId).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.mailingAddressSubject.next(response);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  loadPhoneNumbers(clientId: number): void {
+    this.contactDataService.loadPhoneNumbers(clientId).subscribe({
+      next: (phoneNumbersResponse) => {
+        this.phoneNumbersSubject.next(phoneNumbersResponse);
+      },
+      error: (err) => {
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
   //#region client email//NOSONAR
+
+  loadEmailAddress(clientId: number): void {
+    this.contactDataService.loadEmailAddress(clientId).subscribe({
+      next: (emailAddressesResponse) => {
+        this.emailAddressesSubject.next(emailAddressesResponse);
+      },
+      error: (err) => {
+        this.loggingService.logException(err);
+      },
+    });
+  }
+  
   loadClientEmails(
     clientCaseEligibilityId: string,
     skipcount: number,
@@ -629,6 +646,5 @@ export class ContactFacade {
         },
       });
   }
-
   //#endregion client phone//NOSONAR
 }

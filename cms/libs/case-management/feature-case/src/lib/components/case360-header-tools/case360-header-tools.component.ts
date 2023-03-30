@@ -1,6 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
+import { ActivatedRoute } from '@angular/router';
+import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-case360-header-tools',
@@ -9,6 +10,8 @@ import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Case360HeaderToolsComponent {
+
+  /* Public properties */
   isTodoDetailsOpened = false;
   screenName = ScreenType.Case360Page;
   isNewReminderOpened = false;
@@ -17,6 +20,10 @@ export class Case360HeaderToolsComponent {
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  clientId!:number;
+  mailingAddress$ = this.contactFacade.mailingAddress$;
+  emailAddress$ = this.contactFacade.emailAddress$;
+  phoneNumbers$ = this.contactFacade.phoneNumbers$;
   public SendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -52,6 +59,12 @@ export class Case360HeaderToolsComponent {
     },
   ];
 
+  /* constructor */
+  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute) {
+    this.clientId = this.route.snapshot.params['id'];
+  }
+
+  /* Internal Methods */
   onSendNewLetterClicked() {
     this.isSendNewLetterOpened = true;
   }
@@ -106,5 +119,17 @@ export class Case360HeaderToolsComponent {
 
   onTodoDetailsClicked() {
     this.isTodoDetailsOpened = true;
+  }
+
+  loadMailingAddress() {
+    this.contactFacade.loadMailingAddress(this.clientId);
+  }
+
+  loadPhoneNumbers() {
+    this.contactFacade.loadPhoneNumbers(this.clientId);
+  }
+
+  loadEmailAddress() {
+    this.contactFacade.loadEmailAddress(this.clientId);
   }
 }

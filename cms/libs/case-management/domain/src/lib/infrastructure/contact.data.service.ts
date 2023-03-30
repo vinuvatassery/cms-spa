@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientAddress, ContactInfo } from '../entities/contact';
+import { AddressTypeCode } from '../enums/address-type-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -54,7 +55,7 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any, sortBy:any, sortType:any) {
+  loadIncomes(clientId: string, clientCaseEligibilityId: string, skip: any, pageSize: any, sortBy: any, sortType: any) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/?clientCaseEligibilityId=${clientCaseEligibilityId}&SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
   }
 
@@ -115,43 +116,8 @@ export class ContactDataService {
     return of(['Home', 'UnHoused']);
   }
 
-  loadPhoneNumbers(): Observable<any[]> {
-    return of([
-      {
-        id: 1,
-        type: 'Home',
-        phoneNumber: '(000)-000-0000',
-        detailedMessages: 'Yes',
-        smsText: 'Yes',
-        note: 'Lorem ipsum note for the phone',
-        effectiveDate: 'XX-XX-XXXX',
-      },
-      {
-        id: 2,
-        type: 'Office',
-        phoneNumber: '(000)-000-0000',
-        detailedMessages: 'No',
-        smsText: 'No',
-        note: 'Lorem ipsum note for the phone',
-        effectiveDate: 'XX-XX-XXXX',
-      },
-    ]);
-  }
-
   loadDdlPhoneTypes() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
-  }
-
-  loadEmailAddresses(): Observable<any[]> {
-    return of([
-      {
-        id: 1,
-        emailAddress: 'example@email.com',
-        detailedMessages: 'Yes',
-        goPaperless: 'Yes',
-        effectiveDate: 'XX-XX-XXXX',
-      },
-    ]);
   }
 
   loadDdlRelationshipToClient() {
@@ -187,13 +153,13 @@ export class ContactDataService {
   }
 
   createAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
-       return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses?clientEligibilityId=${clientCaseEligibilityId}`,
-       clientAddress);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses?clientEligibilityId=${clientCaseEligibilityId}`,
+      clientAddress);
   }
 
   updateAddress(clientId: number, clientCaseEligibilityId: string, clientAddress: ClientAddress) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses?clientEligibilityId=${clientCaseEligibilityId}`,
-    clientAddress);
+      clientAddress);
   }
 
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
@@ -213,11 +179,11 @@ export class ContactDataService {
     return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact-info?clientElgbltyId=${clientCaseEligibilityId}`
   }
 
-  saveIncome(clientId : any, clientIncome: any) {
+  saveIncome(clientId: any, clientIncome: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income`, clientIncome);
   }
 
-  updateNoIncomeData(clientCaseEligibilityId : any, noIncomeData: any) {
+  updateNoIncomeData(clientCaseEligibilityId: any, noIncomeData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/income`, noIncomeData);
   }
 
@@ -238,149 +204,159 @@ export class ContactDataService {
     }
   }
 
-  editIncome(clientId : any, clientIncomeId : any, clientIncome: any) {
+  editIncome(clientId: any, clientIncomeId: any, clientIncome: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`, clientIncome);
 
   }
 
-  deleteIncome(clientIncomeId : string, clientId : any){
+  deleteIncome(clientIncomeId: string, clientId: any) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`,);
   }
 
-  loadIncomeDetailsService(clientId : any, clientIncomeId:any){
+  loadIncomeDetailsService(clientId: any, clientIncomeId: any) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/${clientIncomeId}`,);
 
   }
 
-  getClientAddress(clientId:any){
+  getClientAddress(clientId: any) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses`);
   }
 
-  deleteClientAddress(clientId:any,clientAddressId:any){
+  deleteClientAddress(clientId: any, clientAddressId: any) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses/${clientAddressId}`);
   }
 
-  deactivateClientAddress(clientId:any,clientAddressId:any){
-    let clientAddress={
-      ClientId:clientId,
-      ClientAddressId:clientAddressId
+  deactivateClientAddress(clientId: any, clientAddressId: any) {
+    let clientAddress = {
+      ClientId: clientId,
+      ClientAddressId: clientAddressId
     }
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactivate`,clientAddress);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/client-address/deactivate`, clientAddress);
   }
 
- /////email services NOSONAR
-  loadClientEmails(clientCaseEligibilityId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {     
+  /////email services NOSONAR
+  loadClientEmails(clientCaseEligibilityId: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, showDeactivated: boolean) {
     return this.http.get<any[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/${clientCaseEligibilityId}/emails?showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
-    
+
   }
 
-  loadClientEmail(clientId : number  , clientEmailId : string , clientCaseEligibilityId : string) {     
+  loadClientEmail(clientId: number, clientEmailId: string, clientCaseEligibilityId: string) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/${clientId}/emails/${clientEmailId}/${clientCaseEligibilityId}`
     );
-    
+
   }
 
-  loadClientPaperLessStatus(clientId : number, clientCaseEligibilityId : string) {     
+  loadClientPaperLessStatus(clientId: number, clientCaseEligibilityId: string) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/${clientId}/emails/${clientCaseEligibilityId}`
     );
-    
-  }
-  
-  saveEmail(emailData: any) {      
-      if(emailData?.clientEmailId)
-      {
-          return this.http.put(
-            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${emailData?.clientId}/emails`,
-            emailData
-          )
-      }
-      else
-      {        
-        emailData.clientEmailId ='00000000-0000-0000-0000-000000000000'
-          return this.http.post(
-            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${emailData?.clientId}/emails`,
-            emailData
-          )
-      }
+
   }
 
-  updateClientEmailPreferred(clientId : number  , clientEmailId : string) {     
+  saveEmail(emailData: any) {
+    if (emailData?.clientEmailId) {
+      return this.http.put(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${emailData?.clientId}/emails`,
+        emailData
+      )
+    }
+    else {
+      emailData.clientEmailId = '00000000-0000-0000-0000-000000000000'
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${emailData?.clientId}/emails`,
+        emailData
+      )
+    }
+  }
+
+  updateClientEmailPreferred(clientId: number, clientEmailId: string) {
     return this.http.put<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}`,null
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}`, null
     );
-    
+
   }
 
-  removeClientEmail(clientId : number  , clientEmailId : string, hardDelete : boolean) {    
+  removeClientEmail(clientId: number, clientEmailId: string, hardDelete: boolean) {
     const options = {
       body: {
-        hardDelete: hardDelete,      
+        hardDelete: hardDelete,
       }
-    }   
+    }
     return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}`,options
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/emails/${clientEmailId}`, options
     );
   }
   /////email services NOSONAR
 
-  loadClientPhones(clientId : number  , skipcount : number,maxResultCount : number ,sort : string, sortType : string,showDeactivated : boolean) {     
+  loadClientPhones(clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string, showDeactivated: boolean) {
     return this.http.get<any[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/${clientId}/phones?showDeactivated=${showDeactivated}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
-    
+
   }
 
-  loadClientPhone(clientId : number  , clientPhoneId : string) {     
+  loadClientPhone(clientId: number, clientPhoneId: string) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/${clientId}/phones/${clientPhoneId}`
     );
-    
-  }
-  
-  savePhone(phoneData: any) {  
-      if(phoneData?.clientPhoneId)
-      {
-          return this.http.put(
-            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
-            phoneData
-          )
-      }
-      else
-      {        
-        phoneData.clientPhoneId ='00000000-0000-0000-0000-000000000000'
-          return this.http.post(
-            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
-            phoneData
-          )
-      }
+
   }
 
-  updateClientPhonePreferred(clientId : number  , clientPhoneId : string) {     
+  savePhone(phoneData: any) {
+    if (phoneData?.clientPhoneId) {
+      return this.http.put(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+        phoneData
+      )
+    }
+    else {
+      phoneData.clientPhoneId = '00000000-0000-0000-0000-000000000000'
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones`,
+        phoneData
+      )
+    }
+  }
+
+  updateClientPhonePreferred(clientId: number, clientPhoneId: string) {
     return this.http.put<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}`,null
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}`, null
     );
-    
+
   }
 
-  removeClientPhone(clientId : number  , clientPhoneId : string , hardDelete : boolean) {   
+  removeClientPhone(clientId: number, clientPhoneId: string, hardDelete: boolean) {
     const options = {
       body: {
-        hardDelete: hardDelete,      
+        hardDelete: hardDelete,
       }
-    }  
+    }
     return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}`,options
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phones/${clientPhoneId}`, options
     );
-    
+
+  }
+
+  loadMailingAddress(clientId: number) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/addresses/${AddressTypeCode.Mail}`);
+
+  }
+
+  loadPhoneNumbers(clientId: number) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phone/ALL`);
+
+  }
+
+  loadEmailAddress(clientId: number) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/email`);
   }
 
 }
