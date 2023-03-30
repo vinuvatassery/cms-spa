@@ -9,6 +9,10 @@ const routes: Routes = [
     path: '',
     component: SmokingCessationPageComponent,
   },
+  {
+    path: 'profile',
+    component: SmokingCessationPageComponent,
+  },
 ];
 
 @NgModule({

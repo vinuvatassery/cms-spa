@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, EmploymentFacade, ScreenType } from '@cms/case-management/domain';
-import { filter, first, Subject, Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'case-management-profile-employment-page',
@@ -9,26 +10,37 @@ import { filter, first, Subject, Subscription } from 'rxjs';
 })
 export class ProfileEmploymentPageComponent implements OnInit {
 
-  screenName = ScreenType.Case360Page;
-  
-  @Input() clientId = 0;
-  @Input() clientCaseEligibilityId!: string;
-  @Input() historyClientCaseEligibilityId: string = "";
-  @Input() clientCaseId!: string;
-  @Input() eligibilityPeriodData: any = [];
-
+  screenName = ScreenType.Case360Page; 
+  eligibilityPeriodData$ = this.caseFacade.ddlEligPeriods$
+  historyClientCaseEligibilityId!: string;
+  clientCaseId!: string;
+  clientId!: number;
+  clientCaseEligibilityId!: any; 
+  tabId! : any
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly employmentFacade: EmploymentFacade,
+    private route: ActivatedRoute
   ) {
   }
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.loadEmployments();
+   
+    this.loadQueryParams()
   }
 
+  loadQueryParams()
+  {
+    this.clientId = this.route.snapshot.queryParams['id'];
+    this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];    
+    this.tabId = this.route.snapshot.queryParams['tid'];  
+    this.clientCaseId = this.route.snapshot.queryParams['cid'];  
+    this.historyClientCaseEligibilityId = this.clientCaseEligibilityId 
+    this.caseFacade.loadEligibilityPeriods(this.clientCaseId)   
+  }
+  
   private loadEmploymentData(clientId: any, eligibilityId: any, skipCount: number,
     pageSize: number, sortBy: string, sortType: string) {
     this.employmentFacade.loadEmployers(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);

@@ -51,6 +51,16 @@ const routes: Routes = [
         },
       },
       {
+        path: 'smoking-cessation',
+        loadChildren: () =>
+          import('@cms/case-management/feature-smoking-cessation').then(
+            (m) => m.CaseManagementFeatureSmokingCessationModule
+          ),
+          data: {
+            title: '',
+          },
+      },
+      {
         path: 'health-insurance',
         loadChildren: () =>
           import('@cms/case-management/feature-health-insurance').then(

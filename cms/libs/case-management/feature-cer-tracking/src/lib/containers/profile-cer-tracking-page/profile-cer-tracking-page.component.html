@@ -1,4 +1,4 @@
-<div class="block-section mt-1"  *ngIf="((tabId$ | async)==='statuses') || tabId === 'statuses'">
+<div class="block-section mt-1"  *ngIf="((tabId$ | async)===clientProfileTabs.STATUS_PERIOD) || tabId === clientProfileTabs.STATUS_PERIOD">
   <div class="flex-col flex-space-bw align-items-center mb-1">
     <h2 class="title-md mb-0 text-bold">Status Periods</h2>
     <div>
@@ -10,7 +10,7 @@
 </div>
 
 
-<div class="block-section mt-1"  *ngIf="((tabId$ | async)==='history') || tabId === 'history'">
+<div class="block-section mt-1"  *ngIf="((tabId$ | async)=== clientProfileTabs.APP_HISTORY) || tabId === clientProfileTabs.APP_HISTORY">
   <div class="flex-col flex-space-bw align-items-center mb-1">
     <h2 class="title-md mb-0 text-bold">Application History</h2>
     <div>

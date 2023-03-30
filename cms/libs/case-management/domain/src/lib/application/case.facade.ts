@@ -22,6 +22,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 import { ActiveSessions } from '../entities/active-sessions';
 import { Router } from '@angular/router';
+import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -51,6 +52,7 @@ export class CaseFacade {
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private currentGroupSubject = new BehaviorSubject<any>(null);
   private groupUpdatedSubject = new BehaviorSubject<any>(false);
+  private ddlEligPeriodsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -77,6 +79,7 @@ export class CaseFacade {
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   currentGroup$ =  this.currentGroupSubject.asObservable();
   groupUpdated$ = this.groupUpdatedSubject.asObservable();
+  ddlEligPeriods$ = this.ddlEligPeriodsSubject.asObservable();
 
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
@@ -122,79 +125,97 @@ export class CaseFacade {
   onClientProfileTabSelect(
     tabName: string,
     profileClientId: number,
-    clientCaseEligibilityId: string
+    clientCaseEligibilityId: string,
+    clientCaseId : string
   ) {
     const redirectUrl = '/case-management/cases/case360/' + profileClientId;
     const query = {
       queryParams: {
-        elg_id: clientCaseEligibilityId,
-        tabId: tabName,
+        e_id: clientCaseEligibilityId,
+        tid: tabName,
         id: profileClientId,
+        cid : clientCaseId
       },
     };
     switch (tabName) {
-      case 'clinfo':
+      case ClientProfileTabs.CLIENT_INFO:
         this.router.navigate([redirectUrl + '/client/profile'], query);
         break;
 
-      case 'cninfo':
+      case ClientProfileTabs.CLIENT_CONTACT_INFO:
         this.router.navigate([redirectUrl + '/contact-info/profile'], query);
         break;
-      case 'fmd':
+      case ClientProfileTabs.CLIENT_FAMILY_DEPENDENTS:
         this.router.navigate(
           [redirectUrl + '/family-dependents/profile'],
           query
         );
         break;
-      case 'inc':
+        
+      case ClientProfileTabs.CLIENT_INCOME:
         this.router.navigate([redirectUrl + '/income/profile'], query);
         break;
+        case ClientProfileTabs.CLIENT_SMOKING_CESS:
+          this.router.navigate([redirectUrl + '/smoking-cessation/profile'], query);
+          break;
 
-      case 'emp':
+      case ClientProfileTabs.CLIENT_EMPLOYMENT:
         this.router.navigate([redirectUrl + '/employment/profile'], query);
         break;
-      case 'sts':
-      case 'ded':
-      case 'insst':
-      case 'cpdc':
-      case 'prpaymnt':
+      case ClientProfileTabs.HEALTH_INSURANCE_STATUS:
+      case ClientProfileTabs.HEALTH_INSURANCE_COPAY:
+      case ClientProfileTabs.DENTAL_INSURANCE_STATUS:
+      case ClientProfileTabs.DENTAL_INSURANCE_COPAY:
+      case ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS:
         this.router.navigate(
           [redirectUrl + '/health-insurance/profile'],
           query
         );
         break;
-      case 'phrm':
-      case 'drgprc':
+      case ClientProfileTabs.DRUGS_PHARMACIES:
+      case ClientProfileTabs.DRUGS_PURCHASED:
         this.router.navigate(
           [redirectUrl + '/prescription-drugs/profile'],
           query
         );
         break;
-      case 'csm':
-      case 'cd4':
-      case 'vrl':
+      case ClientProfileTabs.MANAGEMENT_MANAGER:
+      case ClientProfileTabs.MANAGEMENT_CD4:
+      case ClientProfileTabs.MANAGEMENT_VRL:
         this.router.navigate([redirectUrl + '/case-manager/profile'], query);
         break;
 
-      case 'hpr':
+      case  ClientProfileTabs.MANAGEMENT_PROVIDER:
         this.router.navigate(
           [redirectUrl + '/healthcare-provider/profile'],
           query
         );
         break;
-      case 'statuses':
-      case 'history':
+      case ClientProfileTabs.STATUS_PERIOD:
+      case ClientProfileTabs.APP_HISTORY:
         this.router.navigate(
           [redirectUrl + '/case-status-period/profile'],
           query
         );
         break;
-        case 'atch':
+        case ClientProfileTabs.ATTACHMENTS:
           this.router.navigate([redirectUrl + '/case-document/profile'], query);
           break;
       default:
         break;
     }
+  }
+
+  loadEligibilityPeriods(clientCaseId: string): void {
+    this.caseDataService.loadEligibilityPeriods(clientCaseId).subscribe({
+      next: (response) => {
+        this.ddlEligPeriodsSubject.next(response);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
   }
 
   loadClientImportantInfo(clientCaseId: string): void {

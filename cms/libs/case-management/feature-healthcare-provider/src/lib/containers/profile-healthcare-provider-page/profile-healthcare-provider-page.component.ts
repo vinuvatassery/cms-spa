@@ -27,7 +27,7 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
   loadQueryParams()
   {
     this.profileClientId = this.route.snapshot.queryParams['id'];
-    this.clientCaseEligibilityId = this.route.snapshot.queryParams['elg_id'];    
-    this.tabId = this.route.snapshot.queryParams['tabId'];  
+    this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];    
+    this.tabId = this.route.snapshot.queryParams['tid'];  
   }
 }

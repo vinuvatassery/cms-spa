@@ -93,6 +93,7 @@ export * from './lib/enums/verification-type-code.enum';
 export * from './lib/enums/provider-option.enum';
 export * from './lib/enums/client-profile-tab-titles.enum';
 export * from './lib/enums/address-type.enum';
+export * from './lib/enums/client-profile-tabs.enum';
 
 
 /** Data services **/

@@ -10,7 +10,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ScreenType, CaseFacade} from '@cms/case-management/domain';
+import { ScreenType, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
@@ -22,10 +22,8 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Case360PageComponent implements OnInit, OnDestroy {
-  @ViewChild('tabStripParent') public tabStripParent!: TabStripComponent;
-  @ViewChild('tabStripChild') public tabStripChild!: TabStripComponent;
-  public width = "100%";
-  public height = "33px";
+  public width = '100%';
+  public height = '33px';
   arrowView = true;
   /** Private properties **/
   private selectedCase = new BehaviorSubject<any>({});
@@ -46,16 +44,14 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   screenName = ScreenType.Case360Page;
   isVerificationReviewPopupOpened = false;
 
-  
- 
   ddlGroups$ = this.caseFacade.ddlGroups$;
-  currentGroup$= this.caseFacade.currentGroup$;
+  currentGroup$ = this.caseFacade.currentGroup$;
   groupUpdated$ = this.caseFacade.groupUpdated$;
-  profileClientId = 0
-  clientCaseEligibilityId! : string;
-  caseWorkerId! : string;
+  profileClientId = 0;
+  clientCaseEligibilityId!: string;
+  caseWorkerId!: string;
   clientHeaderTabs: any = [];
-  clientCaseId! : string 
+  clientCaseId!: string;
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId: any;
@@ -71,8 +67,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
-    private readonly router: Router,
-  ) { }
+    private readonly router: Router
+  ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -83,7 +79,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.clientChangeSubscription$.unsubscribe();
   }
-
+  
   /** Private methods **/
 
   private initialize() {
@@ -98,6 +94,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     }
   }
 
+    get clientProfileTabs(): typeof ClientProfileTabs {
+      return ClientProfileTabs;
+    }
   private caseSelection() {
     this.route.paramMap.subscribe({
       next: (params) => {
@@ -116,17 +115,11 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         const clientId = this.route.snapshot.paramMap.get('id') ?? 0;
         if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
           this.initialize();
-          this.resetTabs();
+        
           this.loadClientProfileInfoEventHandler();
         }
       });
   }
-
-  private resetTabs() {
-    Promise.resolve(null).then(() => this.tabStripParent.selectTab(0));
-    Promise.resolve(null).then(() => this.tabStripChild.selectTab(0));
-  }
-
   /** Internal event methods **/
 
   onVerificationReviewClosed() {
@@ -137,13 +130,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.isVerificationReviewPopupOpened = true;
   }
 
-
-
   /** External event methods **/
- 
 
-  loadClientImpInfo()
-  {
+  loadClientImpInfo() {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
 
@@ -157,8 +146,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       ?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
-        this.clientId =clientHeaderData?.clientId;
-        this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
+          this.clientId = clientHeaderData?.clientId;
+          this.clientCaseEligibilityId =
+            clientHeaderData?.clientCaseEligibilityId;
           const clientHeader = {
             clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
             clientId: clientHeaderData?.clientId,
@@ -172,13 +162,15 @@ export class Case360PageComponent implements OnInit, OnDestroy {
             clientFullName: clientHeaderData?.clientFullName,
             pronouns: clientHeaderData?.pronouns,
             clientCaseIdentity: clientHeaderData?.clientCaseIdentity,
-            clientOfficialIdFullName: clientHeaderData?.clientOfficialIdFullName,
+            clientOfficialIdFullName:
+              clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
-          }
-          this.clientCaseId = clientHeader?.clientCaseId
+          };
+          this.clientCaseId = clientHeader?.clientCaseId;
           this.clientHeaderSubject.next(clientHeader);
           if (clientHeader?.clientCaseEligibilityId) {
-            this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
+            this.clientCaseEligibilityId =
+              clientHeader?.clientCaseEligibilityId;
           }
           if (clientHeader?.caseWorkerId) {
             this.caseWorkerId = clientHeader?.caseWorkerId;
@@ -186,83 +178,68 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           if (clientHeader?.clientCaseId) {
             this.clientCaseId = clientHeader?.clientCaseId;
           }
+          this.onTabClick(ClientProfileTabs.CLIENT_INFO);
         }
       });
-
-    this.onTabClick('clinfo');
   }
-
-          
-
 
   loadHeaderAndProfile() {
-    this.loadClientProfileInfoEventHandler();   
+    this.loadClientProfileInfoEventHandler();
   }
 
-  onTabClick(tabName: string) { 
+  onTabClick(tabName: string) {
     this.selectedTabName = tabName;
     switch (tabName) {
-      case 'clinfo':        
+      case ClientProfileTabs.CLIENT_INFO:
         this.client_button_grp = true;
         this.health_button_grp = false;
         this.dental_button_grp = false;
         this.drugs_button_grp = false;
         this.mng_button_grp = false;
         break;
-      case 'sts':
+      case ClientProfileTabs.HEALTH_INSURANCE_STATUS:
         this.client_button_grp = false;
         this.health_button_grp = true;
         this.dental_button_grp = false;
         this.drugs_button_grp = false;
         this.mng_button_grp = false;
         break;
-        case 'insst':
-          this.client_button_grp = false;
-          this.health_button_grp = false;
-          this.dental_button_grp = true;
-          this.drugs_button_grp = false;
-          this.mng_button_grp = false;
-          break;
-      case 'phrm':
+      case ClientProfileTabs.DENTAL_INSURANCE_STATUS:
+        this.client_button_grp = false;
+        this.health_button_grp = false;
+        this.dental_button_grp = true;
+        this.drugs_button_grp = false;
+        this.mng_button_grp = false;
+        break;
+      case ClientProfileTabs.DRUGS_PHARMACIES:
         this.client_button_grp = false;
         this.health_button_grp = false;
         this.dental_button_grp = false;
         this.drugs_button_grp = true;
         this.mng_button_grp = false;
         break;
-      case 'csm':
+      case ClientProfileTabs.MANAGEMENT_MANAGER:
         this.client_button_grp = false;
         this.health_button_grp = false;
         this.dental_button_grp = false;
         this.drugs_button_grp = false;
         this.mng_button_grp = true;
         break;
-      case 'statuses':
+      case ClientProfileTabs.STATUS_PERIOD:
+      case ClientProfileTabs.APP_HISTORY:
+      case ClientProfileTabs.ATTACHMENTS:
         this.client_button_grp = false;
         this.health_button_grp = false;
         this.dental_button_grp = false;
         this.drugs_button_grp = false;
         this.mng_button_grp = false;
         break;
-      case 'atch':
-        this.client_button_grp = false;
-        this.health_button_grp = false;
-        this.dental_button_grp = false;
-        this.drugs_button_grp = false;
-        this.mng_button_grp = false;
-        break;
-        case 'history':
-          this.client_button_grp = false;
-          this.health_button_grp = false;
-          this.dental_button_grp = false;
-          this.drugs_button_grp = false;
-          this.mng_button_grp = false;
-          break;
     }
     this.caseFacade.onClientProfileTabSelect(
       tabName,
       this.profileClientId,
-      this.clientCaseEligibilityId
+      this.clientCaseEligibilityId,
+      this.clientCaseId
     );
   }
 
@@ -272,9 +249,11 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       tabName,
       this.profileClientId,
       this.clientCaseEligibilityId
+      ,
+      this.clientCaseId
     );
   }
-  loadChangeGroupData(eligibilityId: string){
+  loadChangeGroupData(eligibilityId: string) {
     this.caseFacade.loadEligibilityChangeGroups(eligibilityId);
   }
 

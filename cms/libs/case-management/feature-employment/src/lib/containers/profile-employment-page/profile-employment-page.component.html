@@ -5,7 +5,7 @@
             <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                 <span class="text-bold" for="eemploymentep">EP:&nbsp;</span>
                 <div class="fmly-epdorpdown">
-                    <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData"
+                    <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData$ | async"
                         [caseEligibilityId]="historyClientCaseEligibilityId"
                         (onEligibilityPeriodChange)="onPeriodSelectionChange($event)"></case-management-case-eligibility-periods>
                 </div>
