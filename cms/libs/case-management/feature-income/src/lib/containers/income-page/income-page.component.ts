@@ -129,7 +129,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated')
+        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated')
         this.workflowFacade.navigate(navigationType);
       } else {
         this.workflowFacade.enableSaveButton();
@@ -160,7 +160,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loaderService.show();
         return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
         catchError((err: any) => {
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
           return  of(false);
         })
         )

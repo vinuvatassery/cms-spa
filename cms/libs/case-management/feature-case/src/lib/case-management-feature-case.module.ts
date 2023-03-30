@@ -90,7 +90,7 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
     ClientImportantInfoComponent,
-    Case360HeaderToolsComponent    
+    Case360HeaderToolsComponent 
   ],
   exports: [
     CasePageComponent,

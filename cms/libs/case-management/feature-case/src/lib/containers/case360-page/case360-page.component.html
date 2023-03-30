@@ -23,11 +23,10 @@
     class="app-c-tab case-360-tab">
     <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>
       <ng-template kendoTabContent>
-        <kendo-tabstrip #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          class="app-c-tab app-c-sub-tab">
-
-          <kendo-tabstrip-tab title="Client Info" [selected]="true"
-            *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>
+        <kendo-tabstrip  #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+         class="app-c-tab app-c-sub-tab" (tabSelect)="onClientProfileTabSelected($event)">
+          
+          <kendo-tabstrip-tab title="Client Info" [selected]="selectedClientTabTitle === clientProfileTabTitles.CLIENT_INFO" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>  
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-client-read-only-view [clientProfile]="loadedClient$ | async"
@@ -39,16 +38,14 @@
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Contact Info" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Contact Info" [selected]="selectedClientTabTitle === clientProfileTabTitles.CONTACT_INFO" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <case-management-profile-contact-page [profileClientId]="profileClientId"
                 [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-profile-contact-page>
             </ng-template>
-
-
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Family & Dependents"
+          <kendo-tabstrip-tab title="Family & Dependents" [selected]="selectedClientTabTitle === clientProfileTabTitles.FAMILY_DEPENDENTS"
             *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
@@ -72,53 +69,18 @@
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Income" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Income" [selected]="selectedClientTabTitle === clientProfileTabTitles.INCOME" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-row">
-                  <div class="flex-col flex-space-bw align-items-center mb-1">
-                    <h2 class="title-md mb-0 text-bold">
-                      Income
-                      <span class="app-c-badge badge-warn-light ml-1"><span class="material-icons"
-                          aria-label="income Information" aria-hidden="true">info</span>
-                        Viewing data from previous EP</span>
-                    </h2>
-                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
-                      <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist aria-label="incomeEP" #incomeEP [fillMode]="formUiStyle.dropDownFillMode"
-                          [data]="ddlIncomeEP$ | async">
-                        </kendo-dropdownlist>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex-col">
-                    <case-management-income-list [data]="screenName"></case-management-income-list>
-                  </div>
-                </div>
-              </div>
+              <case-management-profile-income-page [clientId]="profileClientId" [clientCaseId]="clientCaseId"
+              [clientCaseEligibilityId]="clientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
+              [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-income-page>
             </ng-template>
           </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Employment" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
+          <kendo-tabstrip-tab title="Employment" [selected]="selectedClientTabTitle === clientProfileTabTitles.EMPLOYMENT" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-row">
-                  <div class="flex-col flex-space-bw align-items-center mb-1">
-                    <h2 class="title-md mb-0 text-bold">Employment</h2>
-                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold" for="eemploymentep">EP:&nbsp;</span>
-                      <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist #eemploymentep aria-label="Eemploymentep"
-                          [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEmploymentEP$ | async">
-                        </kendo-dropdownlist>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex-col">
-                    <case-management-employer-list [data]="screenName"></case-management-employer-list>
-                  </div>
-                </div>
-              </div>
+              <case-management-profile-employment-page [clientId]="profileClientId" [clientCaseId]="clientCaseId"
+              [clientCaseEligibilityId]="clientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
+              [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-employment-page>
             </ng-template>
           </kendo-tabstrip-tab>
 
