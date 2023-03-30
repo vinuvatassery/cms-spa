@@ -1,6 +1,6 @@
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    It will still be viewable in the client's profile. You can add a new contact at any time
+    They will be permanently deleted from the client's profile.
   </p>
 </section>
 
@@ -11,13 +11,13 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel deactivation of friend or family confirmation"
-        (click)="closeDeactivateModal()"
+        aria-label="cancel deactivation of confirmation"
+        (click)="closeDeleteModal()"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="deactivate and add" (click)="deactivateContact()">
-        Deactivate
+      <button kendoButton [primary]="true" aria-label="deactivate" (click)="deleteContact()">
+        Delete
       </button>
     </div>
   </div>
