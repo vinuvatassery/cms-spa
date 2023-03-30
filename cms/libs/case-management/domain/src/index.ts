@@ -49,6 +49,7 @@ export * from './lib/entities/client-profile-cases';
 export * from './lib/entities/client-profile';
 export * from './lib/entities/client-hiv-verification';
 export * from './lib/entities/active-sessions';
+export * from './lib/entities/client-note';
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';

@@ -18,21 +18,24 @@
     </div>
     <div class="flex-col mt-1">
       <div class="app-c-table">
-        <kendo-grid >
+        <kendo-grid  [data]="gridSmokingData">
           <kendo-grid-column
-            field="DidClientRequestReferralForSmokingCessation?
-            "
-            title="Did client request referral for smoking cessation?
-            "
+            field="smokingCessationNote"
+            title="Did client request referral for smoking cessation?"
             [width]="250"
           >
-
+          <ng-template kendoGridCellTemplate let-dataItem>
+            Yes
+          </ng-template>
           </kendo-grid-column>
           <kendo-grid-column
-            field="referralDate"
+            field="noteCreationDate"
             title="Referral Date"
             [width]="100"
           >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.noteCreationDate | date:'MM/dd/yyyy'}}
+          </ng-template>
           </kendo-grid-column>
           <kendo-grid-column
             field="note"
@@ -51,9 +54,7 @@
                 showOn="hover"
                 aria-label="profile avatar"
               >
-                <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                  <span class="profile-text-avatar">AK</span>
-                </div>
+              <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
               </button>
               <kendo-popover
                 #onUserProfileDetailsHovered
@@ -61,7 +62,7 @@
                 position="left"
               >
                 <ng-template kendoPopoverBodyTemplate>
-                  <common-user-profile-card></common-user-profile-card>
+                  <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
                 </ng-template>
               </kendo-popover>
             </ng-template>
@@ -91,7 +92,7 @@
     <p class="text-muted mb-2" >  Add a note or indicate how referral was sent to client </p>
 
  
-        <div class="form-group"> 
+        <div class="form-group"  [formGroup]="smokingForm"> 
      
         <kendo-floatinglabel text="Smoking Cessation Note" >
           <kendo-textarea
@@ -118,7 +119,7 @@
       
           <div class="justify-content-end">
             <button  kendoButton  (click)="CloseAddReferralSmokingCessationClicked()" [primary]="true"  look="outline"  aria-label="cancel " > CANCEL </button>
-            <button  aria-label="add" kendoButton [primary]="true" > ADD </button>
+            <button  aria-label="add" (click)="saveSmokingCessation()" kendoButton [primary]="true" > ADD </button>
          
           </div>
         </div>
