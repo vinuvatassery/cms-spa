@@ -37,6 +37,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   acceptedApplication= new AcceptedApplication();
   eligibleStatuses:Array<string>=[];
+  statusEndDateIsGreaterThanStartDate:boolean = true;
   
 
   /** Constructor **/
@@ -61,7 +62,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   /** Public methods **/
   onEligibilityStatusChanged(){
-
+    this.statusEndDateIsGreaterThanStartDate = true;
     this.disableFieldsByStatus( this.eligibilityPeriodForm.controls['eligibilityStatus'].value);
     this.enableAllFields();
     this.disableFormFields();
@@ -150,6 +151,46 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       }
     }
 
+  }
+  endDateValueChange(date: Date) {
+    this.statusEndDateIsGreaterThanStartDate = false;
+
+  }
+  startDateOnChange() {
+    if (this.eligibilityPeriodForm.controls['statusEndDate'].value !== null) {
+      this.endDateOnChange();
+    }
+  }
+  endDateOnChange() {
+    this.statusEndDateIsGreaterThanStartDate = true;
+    if (this.eligibilityPeriodForm.controls['statusStartDate'].value === null) {
+      this.eligibilityPeriodForm.controls['statusStartDate'].markAllAsTouched();
+      this.eligibilityPeriodForm.controls['statusStartDate'].setValidators([Validators.required]);
+      this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
+      
+      this.statusEndDateIsGreaterThanStartDate = false;
+    }
+    else if (this.eligibilityPeriodForm.controls['statusEndDate'].value !== null) {
+      const startDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.eligibilityPeriodForm.controls['statusStartDate'].value
+        )
+      );
+      const endDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.eligibilityPeriodForm.controls['statusEndDate'].value
+        )
+      );
+
+      if (startDate > endDate) {
+        this.eligibilityPeriodForm.controls['statusEndDate'].setErrors({ 'incorrect': true });
+        this.statusEndDateIsGreaterThanStartDate = false;
+      }
+      else {
+        this.statusEndDateIsGreaterThanStartDate = true;
+        this.eligibilityPeriodForm.controls['statusEndDate'].setErrors(null);
+      }
+    }
   }
   onModalCloseClicked() {
     this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);

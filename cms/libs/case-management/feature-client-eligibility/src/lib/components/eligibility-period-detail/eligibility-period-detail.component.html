@@ -31,9 +31,11 @@
         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
          format="MM-dd-yyyy" 
         formatPlaceholder="formatPattern"
-        formControlName ="statusStartDate">
+        formControlName ="statusStartDate"
+        (valueChange)="startDateOnChange()">
         </kendo-datepicker>
-        <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusStartDate'].valid && !eligibilityPeriodForm.controls['statusStartDate'].disabled">Start Date is required.</kendo-formerror>
+         <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusStartDate'].valid && !eligibilityPeriodForm.controls['statusStartDate'].disabled"> Start Date is
+          required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
@@ -41,9 +43,17 @@
         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
          format="MM-dd-yyyy" 
         formatPlaceholder="formatPattern"
-        formControlName ="statusEndDate">
+        formControlName ="statusEndDate"
+        (blur)="endDateOnChange()"
+        (valueChange)="endDateValueChange($event)"
+        >
         </kendo-datepicker>
-        <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date is required.</kendo-formerror>
+        <kendo-formerror
+        *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">
+        End Date is required.</kendo-formerror>
+      <kendo-formerror
+        *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date must be after Start Date.</kendo-formerror>
+
       </kendo-floatinglabel>
     </div>
     <div class="flex-col" *ngIf="!isEdit">
