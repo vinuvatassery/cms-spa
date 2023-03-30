@@ -120,6 +120,17 @@ export class CaseFacade {
     });
   }
 
+  loadGroupCode(){
+    this.caseDataService.loadEligibilityGroups().pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    ).subscribe((response: any) => {
+      this.ddlGroupsSubject.next(response);
+    });
+  }
+
   loadEligibilityChangeGroups(eligibilityId:string){
     this.showLoader();
     this.caseDataService.loadEligibilityGroup(eligibilityId).pipe(

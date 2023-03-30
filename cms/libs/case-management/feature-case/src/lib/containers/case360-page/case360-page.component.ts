@@ -6,9 +6,10 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
 /** Internal libraries **/
-import {DrugPharmacyFacade, ClientProfile, ScreenType, CaseFacade,WorkflowFacade, ContactFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
+import {DrugPharmacyFacade, ClientProfile, ScreenType, CaseFacade,WorkflowFacade, ContactFacade, IncomeFacade, EmploymentFacade, ClientProfileTabTitles,FamilyAndDependentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
+import { SelectEvent } from '@progress/kendo-angular-layout';
 @Component({
   selector: 'case-management-case360-page',
   templateUrl: './case360-page.component.html',
@@ -60,11 +61,15 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   ddlGroups$ = this.caseFacade.ddlGroups$;
   currentGroup$= this.caseFacade.currentGroup$;
   groupUpdated$ = this.caseFacade.groupUpdated$;
+  familyAndDependentEligibilityId!: string;
   profileClientId = 0
-  clientCaseEligibilityId! : string;
-  caseWorkerId! : string;
+  clientCaseEligibilityId!: string;
+  historyClientCaseEligibilityId : string = "";
+  caseWorkerId!: string;
   clientHeaderTabs: any = [];
-  clientCaseId! : string
+  selectedClientTabTitle: string = "";
+  eligibilityPeriodData: any = [];
+  clientCaseId!: string
   actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId:any;
@@ -74,6 +79,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
+    private readonly incomeFacade: IncomeFacade,
+    private readonly employmentFacade: EmploymentFacade,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private workflowFacade: WorkflowFacade,
     private readonly router: Router,
@@ -108,6 +115,11 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     if (this.profileClientId > 0) {
       this.clientHeaderVisibleSubject.next(true);
     }
+  }
+
+  /** Getters **/
+  get clientProfileTabTitles(): typeof ClientProfileTabTitles {
+    return ClientProfileTabTitles;
   }
 
   private caseSelection() {
@@ -163,11 +175,15 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
 
 
+  onClientProfileTabSelected(event: SelectEvent) {
+    this.selectedClientTabTitle = event.title;
+    this.clientCaseEligibilityId = this.historyClientCaseEligibilityId;
+  }
+
   /** External event methods **/
 
 
-  loadClientImpInfo()
-  {
+  loadClientImpInfo() {
     this.caseFacade.loadClientImportantInfo(this.clientCaseId);
   }
   searchPharmacy(searchText: string) {
@@ -213,8 +229,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         if (clientHeaderData?.clientId > 0) {
         this.clientId =clientHeaderData?.clientId;
         this.clientCaseEligibilityId=  clientHeaderData?.clientCaseEligibilityId;
+        this.familyAndDependentEligibilityId = this.clientCaseEligibilityId;
+        this.historyClientCaseEligibilityId = clientHeaderData?.clientCaseEligibilityId;
           const clientHeader = {
-
             clientCaseEligibilityId: clientHeaderData?.clientCaseEligibilityId,
             clientId: clientHeaderData?.clientId,
             clientCaseId: clientHeaderData?.clientCaseId,
@@ -227,13 +244,16 @@ export class Case360PageComponent implements OnInit, OnDestroy {
             clientFullName: clientHeaderData?.clientFullName,
             pronouns: clientHeaderData?.pronouns,
             clientCaseIdentity: clientHeaderData?.clientCaseIdentity,
+            eligibilityPeriods: clientHeaderData?.eligibilityPeriods,
             clientOfficialIdFullName: clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
           }
-          this.clientCaseId = clientHeader?.clientCaseId
+          this.clientCaseId = clientHeader?.clientCaseId;
+          this.eligibilityPeriodData =  clientHeaderData?.eligibilityPeriods;
           this.clientHeaderSubject.next(clientHeader);
           if (clientHeader?.clientCaseEligibilityId) {
             this.clientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
+            this.historyClientCaseEligibilityId = clientHeader?.clientCaseEligibilityId;
           }
           if (clientHeader?.caseWorkerId) {
             this.caseWorkerId = clientHeader?.caseWorkerId;
@@ -296,7 +316,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
         }
       });
-
   }
 
   loadHeaderAndProfile() {
@@ -308,10 +327,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.caseFacade.loadEligibilityChangeGroups(eligibilityId);
   }
 
-  updateChangeGroup(group:any){
+  updateChangeGroup(group: any) {
     this.caseFacade.updateEligibilityGroup(group);
   }
-
 
   loadDependentsHandle( gridDataRefinerValue : any ): void {
     const gridDataRefiner =
@@ -321,11 +339,16 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       sort : gridDataRefinerValue.sortColumn,
       sortType : gridDataRefinerValue.sortType,
     }
-
-
-      this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
-    this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId
-      , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
-
+    this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
+    this.loadDependentsData(this.familyAndDependentEligibilityId, this.clientId, gridDataRefiner.skipcount
+    ,gridDataRefiner.maxResultCount,gridDataRefiner.sort,gridDataRefiner.sortType)
+  }
+  loadDependentsData(eligibilityId: any,clientId: any,skipCount: any,pageSize: number, sortBy: string, sortType: string )
+  {
+    this.familyAndDependentFacade.loadDependents(eligibilityId, this.clientId, skipCount?? 0 ,pageSize ,sortBy , sortType);
+  }
+  onDependentPeriodSelectionChange(value: any) {
+    this.familyAndDependentEligibilityId = value.id;
+    this.loadDependentsData(this.familyAndDependentEligibilityId, this.clientId, null, this.pageSizes, this.sortValue, this.sortType );
   }
 }
