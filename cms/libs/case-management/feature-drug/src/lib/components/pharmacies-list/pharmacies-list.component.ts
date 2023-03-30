@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   Output,
   EventEmitter,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   DrugPharmacyFacade,
@@ -23,7 +24,9 @@ import { LoggingService } from '@cms/shared/util-core';
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class PharmaciesListComponent implements OnInit {
   /** Input properties **/
   @Input() clientId: any;
@@ -70,6 +73,10 @@ export class PharmaciesListComponent implements OnInit {
   selectedPharmacyForEdit!: any;
   removeButtonEmitted = false;
   editButtonEmitted = false;
+  pharmacies:any[] = [];
+  changePharmacyObj:any;
+  pharmacyId:any;
+  vendorId:any;
   public sortValue = this.drugPharmacyFacade.sortValue;
   public sortType = this.drugPharmacyFacade.sortType;
   public pageSizes = this.drugPharmacyFacade.gridPageSizes;
@@ -86,21 +93,30 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'block',
       type:'Deactivate',
       click: (clientPharmacy: any): void => {
-        if(clientPharmacy.pharmacyId && clientPharmacy.priorityCode != 'P'){
-          let pharmacy ={
+        if(clientPharmacy.pharmacyId){
+          let pharmacyObj ={
             ClientId:this.clientId,
-            IsActive:false
+            IsActive:false,
           }
-          this.drugPharmacyFacade.reActivatePharmacies(clientPharmacy.pharmacyId,pharmacy);
+          this.pharmacyId = clientPharmacy.pharmacyId;
+          this.vendorId =clientPharmacy.vendorId
+          this.changePharmacyObj = pharmacyObj;
+          if (clientPharmacy.priorityCode === PriorityCode.Primary) {
+            this.OpenSelectNewPrimaryPharmaciesClicked(
+              clientPharmacy,
+              'deactivate'
+            );
+          } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
+            if(clientPharmacy.pharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
+              let pharmacy ={
+                ClientId:this.clientId,
+                IsActive:false
+              }
+              this.drugPharmacyFacade.deactivePharmacies(clientPharmacy.pharmacyId,pharmacy);
+            }
+          }
         }
-        if (clientPharmacy.priorityCode === 'P') {
-          this.OpenSelectNewPrimaryPharmaciesClicked(
-            clientPharmacy,
-            'deactivate'
-          );
-        } else if (clientPharmacy.priorityCode === ' ') {
-          this.OpenDeactivatePharmaciesClicked(clientPharmacy);
-        }
+        
       },
     },
     {
@@ -132,7 +148,7 @@ export class PharmaciesListComponent implements OnInit {
             PriorityCode:'P'
             
           }]
-          this.drugPharmacyFacade.updateDrugOharamcyPriority(this.clientId,pharmacyPriorityites)
+          this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,pharmacyPriorityites)
         }
     
         
@@ -142,15 +158,20 @@ export class PharmaciesListComponent implements OnInit {
       buttonType: 'btn-h-danger',
       text: 'Remove',
       icon: 'delete',
-      click: (clientPharmacy: any, vendorId: string): void => {
-        if (clientPharmacy.priorityCode === 'P') {
-          this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
-        } else if (clientPharmacy.priorityCode === ' ') {
-          if (this.removeButtonEmitted === false) {
-            this.onRemovePharmacyClicked(clientPharmacy.pharmacyId);
-            this.removeButtonEmitted = true;
+      click: (clientPharmacy: any, vendorId: string,clientPharmacyId: string): void => {
+        if(clientPharmacy.pharmacyId){
+          this.pharmacyId = clientPharmacy.pharmacyId;
+          this.vendorId =clientPharmacy.vendorId
+          if (clientPharmacy.priorityCode === PriorityCode.Primary) {
+            this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
+          } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
+            if (this.removeButtonEmitted === false) {
+              this.onRemovePharmacyClicked(clientPharmacy.pharmacyId);
+              this.removeButtonEmitted = true;
+            }
           }
         }
+        
       },
     },
   ];
@@ -223,12 +244,55 @@ export class PharmaciesListComponent implements OnInit {
       false,
       this.isShowHistoricalData
     );
-    this.drugPharmacyFacade.clientPharmacies$.subscribe((pharmacies) => {
-      this.handleClosePharmacyClicked();
-    });
+    // this.drugPharmacyFacade.clientPharmacies$.subscribe((pharmacies) => {
+    //   this.pharmacies = pharmacies;
+    //   this.handleClosePharmacyClicked();
+    //   this.handleCloseSelectNewPrimaryPharmaciesClicked();
+    // });
   }
 
   /** Internal event methods **/
+  updateAndDeactivatePharmacy(data:any){
+   
+    this.drugPharmacyFacade.deactivePharmacies(this.pharmacyId,this.changePharmacyObj);
+    this.drugPharmacyFacade.deActivePharmacyObs.subscribe(updated =>{
+      if(updated){
+        if(data.isNewAdded){
+      
+          this.drugPharmacyFacade.addDrugPharmacy(
+            this.clientId,
+            data.newPharmacy.vendorId,
+            "P"
+          );
+        }else {
+          this.setUpdatedPharmacy(data.newPharmacy.pharmacyId);
+        }
+      }
+    })
+      
+  }
+  setUpdatedPharmacy(pharmacyId:any){
+
+    let updatedPharmacy =[ {
+      ClientPharmacyId:pharmacyId,
+      ClientId:this.clientId,
+      PriorityCode:"P"
+    }]
+    this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,updatedPharmacy)
+  }
+  onRemovePharmacy(pharmacy:any){
+    this.drugPharmacyFacade.removeDrugPharmacy(
+      this.clientId ?? 0,
+      this.pharmacyId
+    );
+    this.drugPharmacyFacade.removePharmacyResponse$.subscribe(isRemoved =>{
+     
+      if(isRemoved){
+        this.setUpdatedPharmacy(pharmacy.pharmacyId);
+      }
+    })
+    this.removeButtonEmitted = true;
+  }
   onOpenPharmacyClicked() {
     this.isOpenPharmacyClicked = true;
   }

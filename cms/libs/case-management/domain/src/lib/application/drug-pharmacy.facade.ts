@@ -43,6 +43,7 @@ export class DrugPharmacyFacade {
   private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   public durgPharmacyPrioritySubject = new BehaviorSubject<string>("");
+  private deActivePharmacySubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
   pharmacies$ = this.pharmaciesSubject.asObservable();
   selectedPharmacy$ = this.selectedPharmacySubject.asObservable();
@@ -59,6 +60,7 @@ export class DrugPharmacyFacade {
   searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
   drugPurchases$ = this.drugPurchaseSubject.asObservable();
   drugPharnacyPriority = this.durgPharmacyPrioritySubject.asObservable();
+  deActivePharmacyObs = this.deActivePharmacySubject.asObservable();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = ' '
@@ -143,7 +145,9 @@ export class DrugPharmacyFacade {
         this.drugsPurchasedSubject.next(drugsPurchased);
       },
       error: (err) => {
-        console.error('err', err);
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -152,12 +156,11 @@ export class DrugPharmacyFacade {
        
     return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
   }
-  updateDrugOharamcyPriority(clientId :any,pharmacyPriority: any){
+  updateDrugPharamcyPriority(clientId :any,pharmacyPriority: any){
     
     this.loaderService.show();
      this.drugDataService.savePharmacyPriorityService(pharmacyPriority).subscribe({
       next: (response:any) => {
-        //this.loadDrugPharmacyList(clientId,false,false);
         this.loaderService.hide();
         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy updated Successfully');
         this.loadDrugPharmacyList(clientId,false,false);
@@ -167,12 +170,7 @@ export class DrugPharmacyFacade {
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       },
-    });
-      
-     
-    
-   // return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
-     
+    }); 
   }
 
   searchPharmacies(searchText: string) {
@@ -358,7 +356,7 @@ export class DrugPharmacyFacade {
       next: (response) => {
         if (response === true) {
           this.loadDrugPharmacyList(clientId,false,false);
-          this.removePharmacyResponseSubject.next(false);
+          this.removePharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Removed Successfully');
         }
         this.loaderService.hide();
@@ -375,18 +373,28 @@ export class DrugPharmacyFacade {
   updatedMakePharmaciesPrimary(clientPharmacyId: string){    
     this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Primary Pharmacy Updated Successfully');
   }
-
-  // reActivatePharmacies(clientPharmacyId: string){    
-  //   this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Pharmacy Re-Activated Successfully');
-  // }
   reActivatePharmacies(clientPharmacyId: string,pharmacy: any){
-    debugger;
     this.loaderService.show();
      this.drugDataService.activeDrugPharmacy(clientPharmacyId,pharmacy).subscribe({
       next: (response:any) => {
-        //this.loadDrugPharmacyList(clientId,false,false);
         this.loaderService.hide();
         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Re-Activated Successfully');
+        this.loadDrugPharmacyList(pharmacy.ClientId,false,true);
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+  deactivePharmacies(clientPharmacyId: string,pharmacy: any){
+    this.loaderService.show();
+     this.drugDataService.activeDrugPharmacy(clientPharmacyId,pharmacy).subscribe({
+      next: (response:any) => {
+        this.loaderService.hide();
+        this.deActivePharmacySubject.next(true);
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy De-Activated Successfully');
         this.loadDrugPharmacyList(pharmacy.ClientId,false,false);
       },
       error: (err) => {
@@ -395,10 +403,5 @@ export class DrugPharmacyFacade {
         this.loggingService.logException(err);
       },
     });
-      
-     
-    
-   // return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
-     
   }
 }

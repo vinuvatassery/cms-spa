@@ -9,7 +9,7 @@
     <div class="flex-row mb-2">
         <div class="flex-col">
             <kendo-floatinglabel text="Primary Pharmacy">
-                <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"> </kendo-dropdownlist>
+                <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  [valuePrimitive]="true" (valueChange)="onChangePharmacy($event)" textField="pharmacyName" valueField="vendorId" [(ngModel)]="selectedVendorId"   [data]="pharmacies"> </kendo-dropdownlist>
             </kendo-floatinglabel>
         </div>
     </div>
@@ -19,17 +19,25 @@
                 <div class="global-search">
                     <span class="material-icons global-search-icon" aria-label="search pharmacy"
                         aria-hidden="true">search</span>
-                    <span class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                    <span *ngIf="searchLoaderVisibility$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                     <kendo-formfield>
                         <kendo-label text="Search Pharmacy Name/Number">
-                            <kendo-autocomplete autofocusfield [fillMode]="formUiStyle.dropDownFillMode"
-                                [filterable]="true" placeholder="Search Pharmacy Name/Number"
+                            <kendo-autocomplete autofocusfield [fillMode]="formUiStyle.dropDownFillMode" 
+                            autofocusfield
+                            [fillMode]="formUiStyle.dropDownFillMode" 
+                            [data]="pharmacysearchResult$ | async"     
+                           
+                            [value]="selectedPharmacyForEdit" 
+                            valueField ="vendorFullName"    
+                            [filterable]="true"
+                            (filterChange)="searchPharmacies($event)"
+                                placeholder="Search Pharmacy Name/Number"
                                 [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
-                                <ng-template kendoAutoCompleteItemTemplate let-dataItem>
-                                    <span class="pr-1">vendorFullName</span>
-                                </ng-template>
+                                <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+                                    <span class="pr-1" (click)="onSearchTemplateClick(dataItem)" >{{ dataItem.vendorFullName}}</span>          
+                                  </ng-template>
                             </kendo-autocomplete>
-                            <kendo-formerror>Pharmacy selection required.</kendo-formerror>
+                            <kendo-formerror *ngIf="!IsDeactivateSelectPrimaryPharmacies">Pharmacy selection required.</kendo-formerror>
                         </kendo-label>
                     </kendo-formfield>
                 </div>
@@ -46,8 +54,8 @@
         <div class="justify-content-end">
             <button kendoButton [primary]="true" look="outline" aria-label="cancel updating priority"
                 (click)="onCloseSelectNewPrimaryPharmaciesClicked()"> Cancel </button>
-            <button kendoButton [primary]="true" aria-label="update priority" *ngIf="clientPharmacyDetails.actionType ==='deactivate'"> DEACTIVATE & UPDATE</button>
-            <button kendoButton [primary]="true" aria-label="update priority" *ngIf="clientPharmacyDetails.actionType ==='remove'"> REMOVE & UPDATE </button>
+            <button kendoButton [primary]="true" aria-label="update priority"    *ngIf="clientPharmacyDetails.actionType ==='deactivate'" (click)="onAddNewPharmacy()"> DEACTIVATE & UPDATE</button>
+            <button kendoButton [primary]="true" aria-label="update priority" *ngIf="clientPharmacyDetails.actionType ==='remove'" (click)="onRemovePharmacy()"> REMOVE & UPDATE </button>
         </div>
     </div>
 </kendo-dialog-actions>
