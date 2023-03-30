@@ -139,7 +139,6 @@ export class IncomeListComponent implements OnInit {
       }
     });
 
-    this.incomeFacade.HideLoader();
     this.incomes$.subscribe({
       next:(income:any) => {
         this.updateWorkFlowStatus(income?.total > 0);
@@ -161,9 +160,9 @@ onIncomeActionClicked(
   }
 }
   private loadDependentsProofofSchools() {
-    this.incomeFacade.ShowLoader();
+    this.incomeFacade.showLoader();
     this.incomeFacade.loadDependentsProofofSchools();
-    this.incomeFacade.HideLoader();
+    this.incomeFacade.hideLoader();
   }
 
   private includeAddIncomeButtonAndFooterNote() {
@@ -302,7 +301,7 @@ onIncomeActionClicked(
       }, 
       error: (error) => {
         this.loaderService.hide();
-        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
       }
     });
   }
@@ -318,20 +317,18 @@ onIncomeActionClicked(
 
  removeDependentsProofofSchoool(documentid: string){
     if (documentid) {
-      this.incomeFacade.ShowLoader();
+      this.incomeFacade.showLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => {
           this.loadIncomeData();
           this.loadDependentsProofofSchools();
-          this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
           this.sendDetailToIncomeList.next(true);
-
-
         },
         error: (err: any) => {
-          this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );

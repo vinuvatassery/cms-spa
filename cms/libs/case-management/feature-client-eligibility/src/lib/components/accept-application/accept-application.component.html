@@ -28,8 +28,8 @@
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
         [data]="groupList$ | async"
         formControlName ="groupCode"
-        textField ="lovDesc"
-        valueField ="lovCode"
+        textField ="groupCodeDesc"
+        valueField ="groupCodeId"
         [valuePrimitive]="true"
         (valueChange)="startDateOnChange($event)">
         </kendo-dropdownlist>

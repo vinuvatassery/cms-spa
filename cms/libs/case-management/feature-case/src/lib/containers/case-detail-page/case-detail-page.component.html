@@ -150,3 +150,20 @@
     <!-- Send New Email Modal -->
 <case-management-send-email *ngIf="isShowSendNewLetterPopup" [data]="ScreenName"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
+
+<!-- Cancel Application Modal -->
+<kendo-dialog *ngIf="cancelApplicationFlag" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="closeCancelApplicationPopup()">
+  <kendo-dialog-titlebar> Cancel Application</kendo-dialog-titlebar>
+  <section class="k-dialog-body">
+    <p class="text-muted mb-2"> All required fields are not completed, Your Information will not be saved. Do you
+      want to continue? </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel" (click)="closeCancelApplicationPopup()"> CANCEL </button>
+        <button aria-label="add" kendoButton [primary]="true" (click)="onContinueClick()"> CONTINUE </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
