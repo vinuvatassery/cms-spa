@@ -378,12 +378,12 @@ export class ContactDataService {
 
 
   createContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact`, clientContact);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts`, clientContact);
 }
 updateContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
-  return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact`, clientContact);
+  return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts`, clientContact);
 }
 deleteClientContact(clientId:any,clientRelationshipId:any){
-  return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contact/${clientRelationshipId}`);
+  return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts/${clientRelationshipId}`);
 }
 }
