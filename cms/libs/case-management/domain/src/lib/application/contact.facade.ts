@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact, ContactInfo, ClientAddress } from '../entities/contact';
+import { Contact, ContactInfo,ClientAddress,FriendsOrFamilyContactClientProfile } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain';
@@ -49,7 +49,7 @@ export class ContactFacade {
   private deactivateClientPhoneSubject = new Subject<any>();
   private removeClientPhoneSubject = new Subject<any>();
   private paperlessSubject = new Subject<any>();
-
+  showAddContactPopupSubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   ddlCountries$ = this.ddlCountriesSubject.asObservable();
@@ -68,6 +68,7 @@ export class ContactFacade {
   editAddress$ = this.editAddressSubject.asObservable();
   editedAddress$ = this.editedAddressSubject.asObservable();
   showLoaderOnState$ = this.showLoaderOnState.asObservable();
+  showAddContactPopup$ = this.showAddContactPopupSubject.asObservable();
   clientEmails$ = this.clientEmailsSubject.asObservable();
   clientEmail$ = this.clientEmailSubject.asObservable();
   addClientEmailResponse$ = this.addClientEmailSubject.asObservable();
@@ -218,12 +219,13 @@ export class ContactFacade {
     });
   }
 
-  loadFriendsorFamily(): void {
-    this.contactDataService.loadFriendsorFamily().subscribe({
+  loadFriendsorFamily(clientId:any): void {
+    this.contactDataService.loadFriendsorFamily(clientId).subscribe({
       next: (friendsOrFamilyResponse) => {
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);
       },
       error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.loggingService.logException(err);
       },
     });
@@ -370,7 +372,7 @@ export class ContactFacade {
   }
 
   loadClientPaperLessStatus(
-    clientId: number,    
+    clientId: number,
     clientCaseEligibilityId: string
   ): void {
     this.showLoader();
@@ -628,6 +630,15 @@ export class ContactFacade {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
+  }
+  createContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+    return this.contactDataService.createContact(clientId, clientContact);
+  }
+  updateContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+    return this.contactDataService.updateContact(clientId, clientContact);
+  }
+  deleteClientContact(clientId:any,clientRelationshipId:any){
+    return this.contactDataService.deleteClientContact(clientId,clientRelationshipId);
   }
 
   //#endregion client phone//NOSONAR
