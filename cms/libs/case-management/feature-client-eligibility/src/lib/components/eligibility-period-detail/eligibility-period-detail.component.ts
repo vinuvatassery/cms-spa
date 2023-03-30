@@ -70,7 +70,10 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.eligibilityPeriodForm.controls['statusStartDate'].value === ""?null:  this.eligibilityPeriodForm.controls['statusStartDate'].value ,
       this.eligibilityPeriodForm.controls['statusEndDate'].value === ""? null:  this.eligibilityPeriodForm.controls['statusEndDate'].value))
       {
-        
+         this.clientEligibilityFacade.showHideSnackBar(
+          SnackBarNotificationType.WARNING,
+          'There cannot be two eligibility periods with overlapping date ranges.'
+        );
       }
       this.acceptedApplication.clientCaseId= this.clientCaseId;
       this.acceptedApplication.clientCaseEligibilityId= this.clientCaseEligibilityId
