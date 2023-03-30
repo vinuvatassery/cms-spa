@@ -351,8 +351,8 @@ export class ContactDataService {
   }
 
   loadPhoneNumbers(clientId: number) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phone/ALL`);
-
+    const type = 'ALL';
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/phone-numbers/${type}`);
   }
 
   loadEmailAddress(clientId: number) {
