@@ -2,11 +2,12 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries**/
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries**/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { GroupCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-group-detail',
@@ -24,21 +25,26 @@ export class GroupDetailComponent implements OnInit {
   currentDate = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate());
   formUiStyle: UIFormStyle = new UIFormStyle();
   groupForm!: FormGroup;
-
+  groupCodes!: any[];
+  groupCodesSubscription = new Subscription();
   /** Constructor **/
-  constructor(private readonly intl: IntlService, private readonly configProvider: ConfigurationProvider,) { }
+  constructor(private readonly intl: IntlService, 
+    private readonly configProvider: ConfigurationProvider, 
+    private readonly notifySnackbarService: NotificationSnackbarService  ) { }
 
   /* Lifecycle events */
   ngOnInit(): void {
     this.buildForm();
     this.addCurrentGroupSubscription();
+    this.setGroupCodes();
   }
 
   /* Private methods */
   private buildForm() {
+    //this.currentDate = new Date();
     this.groupForm = new FormGroup({
       groupCodeId: new FormControl('', Validators.required),
-      groupStartDate: new FormControl(null, Validators.required)
+      groupStartDate: new FormControl(this.currentDate, Validators.required)
     });
   }
 
@@ -47,9 +53,15 @@ export class GroupDetailComponent implements OnInit {
       if (group) {
         this.groupForm.patchValue({
           groupCodeId: group.groupCodeId,
-          groupStartDate: new Date(group.groupStartDate)
+          //groupStartDate: new Date(group.groupStartDate)
         });
       }
+    });
+  }
+
+  private setGroupCodes() {
+    this.groupCodesSubscription = this.ddlGroups$.subscribe((groups: any) => {
+      this.groupCodes = groups;
     });
   }
 
@@ -60,7 +72,13 @@ export class GroupDetailComponent implements OnInit {
 
   onUpdateGroup() {
     this.groupForm.markAllAsTouched();
+    const bridgeGroupCodeId = this.groupCodes.find(i => i.groupCode === GroupCode.BRIDGE)?.groupCodeId;
+    const isBridge = this.groupForm.controls['groupCodeId'].value === bridgeGroupCodeId;
     if (this.groupForm.valid) {
+      if(isBridge){
+        this.notifySnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,'Bridge cannot be selected.', NotificationSource.UI);
+        return;
+      }
       const groupChanged = {
         groupCodeId: this.groupForm.controls['groupCodeId'].value,
         groupStartDate: this.intl.formatDate(this.groupForm.controls['groupStartDate'].value, this.configProvider.appSettings.dateFormat)
