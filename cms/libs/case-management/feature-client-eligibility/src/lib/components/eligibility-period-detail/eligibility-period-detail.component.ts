@@ -147,27 +147,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
           this.eligibilityPeriodForm.controls['statusEndDate'].setValue(this.addDays(today,45));
         }
         break;
-      case 'INELIGIBLE':
-        this.disableFields = [
-          'group',
-        ];
-        if(currentEligibilityEndDate){
-          this.eligibilityPeriodForm.controls['statusStartDate'].setValue(this.addDays(currentEligibilityEndDate,1));
-          this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(currentEligibilityEndDate.getFullYear(), currentEligibilityEndDate.getMonth()+7, 0));
-        }
-        else{
-          this.eligibilityPeriodForm.controls['statusStartDate'].setValue(today);
-          this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(today.getFullYear(), today.getMonth()+7, 0));
-        }
-        break; 
-      case 'PENDING':
-        this.disableFields = [
-          'statusEndDate',
-          'group',
-        ]; 
-        this.eligibilityPeriodForm.controls['statusStartDate'].setValue(today);
-        this.eligibilityPeriodForm.controls['statusEndDate'].setValue(null);
-        break;
       case 'REJECT':
         this.disableFields = [
           'group',
@@ -269,12 +248,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
           break;
         case 'INCOMPLETE':
           this.setStartEndValidations();
-          break;
-        case 'INELIGIBLE':
-          this.setStartEndValidations();
-          break; 
-        case 'PENDING':
-          this.setStartDateEligibilityValidations();
           break;
         case 'REJECT':
           this.setStartEndValidations();
