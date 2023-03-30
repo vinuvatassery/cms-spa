@@ -31,18 +31,18 @@ export class RemoveIncomeConfirmationComponent {
   removeIncome() {
     if (this.selectedIncome) {
       this.btnDisabled = true;
-      this.incomeFacade.ShowLoader();
+      this.incomeFacade.showLoader();
       this.incomeFacade.deleteIncome(this.selectedIncome.clientIncomeId,this.clientId).subscribe({
         next: (response: any) => {
           this.onRemoveIncomeConfirmationClosed();
-          this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully')
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income removed successfully')
           this.sendDetailToIncomeList.next(true);
         },
         error: (err: any) => {
           this.btnDisabled = false;
-          this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );
