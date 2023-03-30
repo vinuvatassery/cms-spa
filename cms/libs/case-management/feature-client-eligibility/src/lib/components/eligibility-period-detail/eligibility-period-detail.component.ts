@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Facades **/
-import { ClientEligibilityFacade, EligibilityRequestType, AcceptedApplication } from '@cms/case-management/domain';
+import { ClientEligibilityFacade, EligibilityRequestType, AcceptedApplication, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService, ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -26,7 +26,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   //ddlGroups$ = this.clientEligibilityFacade.ddlGroups$;
   ddlStatus$ = this.lovFacade.eligibilityStatus$;
   showEligibilityStatusLoader = this.lovFacade.showLoaderOnEligibilityStatus$;
-  ddlGroups$ =  this.lovFacade.groupLov$ ;
+  ddlGroups$ =  this.caseFacade.ddlGroups$ ;
   disableFields: Array<string>=[];
   eligibilityPeriodForm!:FormGroup;
   currentEligibility!:any;
@@ -39,6 +39,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade, 
     private readonly lovFacade: LovFacade,
+    private readonly caseFacade: CaseFacade,
     private formBuilder: FormBuilder,
     private readonly cd: ChangeDetectorRef,
     private loaderService: LoaderService,
@@ -117,11 +118,14 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   private loadGroupCode()
   {
-    this.lovFacade.getGroupLovs();
+    this.caseFacade.loadGroupCode();
   }
   private disableFieldsByStatus(status:string)
   {   
     let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);
+    this.eligibilityPeriodForm.controls['statusStartDate'].reset();
+    this.eligibilityPeriodForm.controls['statusEndDate'].reset();
+    this.eligibilityPeriodForm.controls['group'].reset();
     let today = new Date(); 
     switch(status.toUpperCase())
     {      

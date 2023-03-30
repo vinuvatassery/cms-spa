@@ -47,8 +47,8 @@
         [fillMode]="formUiStyle.dropDownFillMode" 
         [data]="ddlGroups$ | async"
         formControlName ="group"
-        textField="lovDesc" 
-        valueField="lovCode"
+        textField="groupCodeDesc" 
+        valueField="groupCode"
         [valuePrimitive]="true"> </kendo-dropdownlist>
         <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['group'].valid && !eligibilityPeriodForm.controls['group'].disabled">Group is required.</kendo-formerror>
       </kendo-floatinglabel>
