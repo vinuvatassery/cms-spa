@@ -97,7 +97,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
       this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
         next: (response) => {
-          this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "New Eligibility Periods created successfully.")
+          this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
           this.loaderService.hide();
           this.isModalSavedClicked.emit(true);
         },
