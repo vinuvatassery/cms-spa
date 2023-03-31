@@ -1,8 +1,8 @@
 <common-bread-crumb></common-bread-crumb>
-<case-management-case360-header 
-  [caseWorkerId]="caseWorkerId" 
+<case-management-case360-header
+  [caseWorkerId]="caseWorkerId"
   [loadedClientHeader]="loadedClientHeader$ | async"
-  [clientProfileImpInfo$]="clientProfileImpInfo$" 
+  [clientProfileImpInfo$]="clientProfileImpInfo$"
   [currentGroup$]="currentGroup$"
   [ddlGroups$]="ddlGroups$"
   [groupUpdated$]="groupUpdated$"
@@ -17,7 +17,7 @@
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
   <case-management-case360-header-tools></case-management-case360-header-tools>
-  
+
   <!-- Case Details Tab Sections -->
   <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
     class="app-c-tab case-360-tab">
@@ -25,8 +25,8 @@
       <ng-template kendoTabContent>
         <kendo-tabstrip  #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
          class="app-c-tab app-c-sub-tab" (tabSelect)="onClientProfileTabSelected($event)">
-          
-          <kendo-tabstrip-tab title="Client Info" [selected]="selectedClientTabTitle === clientProfileTabTitles.CLIENT_INFO" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>  
+
+          <kendo-tabstrip-tab title="Client Info" [selected]="selectedClientTabTitle === clientProfileTabTitles.CLIENT_INFO" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <case-management-client-read-only-view [clientProfile]="loadedClient$ | async"
@@ -55,14 +55,23 @@
                     <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
                       <span class="text-bold" for="FamilyAndDependentEP">EP:&nbsp;</span>
                       <div class="fmly-epdorpdown">
-                        <kendo-dropdownlist aria-label="FamilyAndDependentEP" [fillMode]="formUiStyle.dropDownFillMode"
-                          #FamilyAndDependentEP [data]="ddlFamilyAndDependentEP$ | async">
-                        </kendo-dropdownlist>
+                        <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData"
+                        [caseEligibilityId]="historyClientCaseEligibilityId"
+                        (onEligibilityPeriodChange)="onDependentPeriodSelectionChange($event)">
+                        </case-management-case-eligibility-periods>
                       </div>
                     </div>
                   </div>
                   <div class="flex-col">
-                    <!--//NOSONAR <case-management-family-and-dependent-list [data]="screenName"></case-management-family-and-dependent-list> -->
+                    <case-management-family-and-dependent-list
+                    [data]="screenName"
+                    [pageSizes]="pageSizes"
+                    [sortValue]="sortValue"
+                    [sortType]="sortType"
+                    [sort]="sort"
+                    [dependents$]="dependentList$"
+                    (loadDependentsEvent)="loadDependentsHandle($event)"
+                    ></case-management-family-and-dependent-list>
                   </div>
                 </div>
               </div>
@@ -83,6 +92,21 @@
               [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-employment-page>
             </ng-template>
           </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="Smoking Cessation" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'> 
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-row">
+             
+                  <div class="flex-col">
+                   
+                    <case-management-smoking-cessation-list [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"></case-management-smoking-cessation-list>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          
         </kendo-tabstrip>
       </ng-template>
     </kendo-tabstrip-tab>
@@ -303,7 +327,7 @@
 
     </kendo-tabstrip-tab>
 
-  </kendo-tabstrip> 
+  </kendo-tabstrip>
 </section>
 
 <!-- Review HIV Verification Html-->

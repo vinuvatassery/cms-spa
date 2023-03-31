@@ -1,13 +1,15 @@
 <div class="flex-row mt-2">
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Friend or Family Contact</h5>
-    <div>  
-    <span class="app-checkboxwidtext-wrapper"> 
+    <div>
+    <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
         aria-labelledby="ContactshowHistorical"
         id="ContactshowHistorical"
+        [(ngModel)]="showHistoricalDataFlag"
+        (change)="showHistoricalDataClick()"
       />
       <label class="k-checkbox-label" for="ContactshowHistorical"
         >Show historical</label
@@ -17,26 +19,37 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [data]="friendsOrFamily$ | async">
-        <kendo-grid-column field="name" title="Name" [width]="250">
+      <kendo-grid [kendoGridBinding]="gridView" [rowClass]="rowClass">
+        <kendo-grid-column field="firstName" title="Name" [width]="250">
         </kendo-grid-column>
         <kendo-grid-column
-          field="relationship"
+          field="relationshipSubTypeDesc"
           title="Relationship to client"
           [width]="150"
         >
         </kendo-grid-column>
         <kendo-grid-column
-          field="phoneNumber"
+          field="phoneNbr"
           title="Phone Number"
           [width]="150"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.phoneNbr | phone }}
+        </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
-          field="effectiveDate"
+          field="startDate"
           title="Effective Date"
           [width]="100"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
+            {{dataItem.startDate | date:'MM/dd/yyyy'}}
+          </span>
+          <ng-template #endDateBlock>
+            {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
+          </ng-template>
+        </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="50">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -47,11 +60,9 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              aria-label="profile avatar"
             >
-              <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                <span class="profile-text-avatar">AK</span>
-              </div>
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover
               #onUserProfileDetailsHovered
@@ -59,7 +70,7 @@
               position="left"
             >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card></common-user-profile-card>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </ng-template>
@@ -80,11 +91,21 @@
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-                  <label>   {{ dataItem.text }} </label>
-              </button>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                <div *ngIf="dataItem.activeFlag ==='Y' ; else deleteButton">
+                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <label>   {{ buttondataItem.text }} </label>
+                </button>
+                </div>
+                <ng-template #deleteButton>
+                  <div *ngIf="buttondataItem.text === 'Delete Contact'">
+                    <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                      <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                      <label>   {{ buttondataItem.text }} </label>
+                  </button>
+                  </div>
+                </ng-template>
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
@@ -107,7 +128,7 @@
 
 <!-- Email Detail Popup-->
 <kendo-dialog
-  *ngIf="isFriendOrFamilyDetailOpened"
+  *ngIf="( showAddContactPopup$ |async)"
   (close)="onFriendOrFamilyDetailClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
@@ -115,7 +136,12 @@
     isFriendsorFamilyEdit ? 'Edit Friend or family' : 'Add Friend or family'
   }}</kendo-dialog-titlebar>
   <case-management-friend-or-family-detail
-    [isFriendsorFamilyEditValue]="isFriendsorFamilyEdit"
+  [selectedContact]="selectedContact"
+  [isEditValue]="isEdit"
+  [clientId]="clientId"
+  [caseEligibilityId]="caseEligibilityId"
+  (detailModalCloseEvent)="onFriendOrFamilyDetailCloseEvent($event)"
+  [isFriendsorFamilyEditValue]="isFriendsorFamilyEdit"
   ></case-management-friend-or-family-detail>
 </kendo-dialog>
 
@@ -124,7 +150,17 @@
   *ngIf="isDeactivateFriendOrFamilyOpened"
   (close)="onDeactivateFriendOrFamilyClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Deactivate and Add Contact"
+  title="Deactivate Contact"
 >
-  <case-management-deactivate-friend-or-family-confirmation></case-management-deactivate-friend-or-family-confirmation>
+  <case-management-deactivate-friend-or-family-confirmation [clientContact]="selectedContact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
+</kendo-dialog>
+
+<!-- Delete Contact Popup-->
+<kendo-dialog
+  *ngIf="isDeleteFriendOrFamilyOpened"
+  (close)="onDeleteFriendOrFamilyClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Delete Contact"
+>
+  <case-management-delete-friend-or-family-confirmation [clientContact]="selectedContact" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModal($event)"></case-management-delete-friend-or-family-confirmation>
 </kendo-dialog>
