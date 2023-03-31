@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject } from 'rxjs';
 /** Data services **/
 import { ClientEligibilityDataService } from '../infrastructure/client-eligibility.data.service';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -12,11 +13,13 @@ export class ClientEligibilityFacade {
   private ddlAcceptApplicationsSubject = new BehaviorSubject<any>([]);
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private ddlStatusSubject = new BehaviorSubject<any>([]);
+  eligibilityPeriodPopupOpenSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlAcceptApplications$ = this.ddlAcceptApplicationsSubject.asObservable();
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   ddlStatus$ = this.ddlStatusSubject.asObservable();
+  eligibilityPeriodPopupOpen$ = this.eligibilityPeriodPopupOpenSubject.asObservable();
 
   /** Constructor**/
   constructor(
@@ -73,9 +76,14 @@ export class ClientEligibilityFacade {
     return this.clientEligibilityDataService.getEligibility(clientId,clientCaseId,clientCaseEligibilityId,type);
   }
 
-  saveAcceptedApplication(acceptedApplication:any,caseId:any,eligibilityId:any)
+  saveAcceptedApplication(acceptedApplication:any,caseId:any,eligibilityId:any,type:string)
   {
-    return this.clientEligibilityDataService.saveAcceptedApplication(acceptedApplication,caseId,eligibilityId);
+    return this.clientEligibilityDataService.saveAcceptedApplication(acceptedApplication,caseId,eligibilityId,type);
   }
+  saveNewStatusPeriod(newEligibilityPeriods:any,caseId:any,eligibilityId:any)
+  {
+    return this.clientEligibilityDataService.saveNewStatusPeriod(newEligibilityPeriods,caseId,eligibilityId);
+  }
+  
   
 }

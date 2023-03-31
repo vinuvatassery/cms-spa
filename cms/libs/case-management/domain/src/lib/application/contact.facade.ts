@@ -53,6 +53,8 @@ export class ContactFacade {
   private removeClientPhoneSubject = new Subject<any>();
   private paperlessSubject = new Subject<any>();
   showAddContactPopupSubject = new BehaviorSubject<boolean>(false);
+  private contactGridLoaderSubject = new BehaviorSubject<boolean>(false);
+
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
   ddlCountries$ = this.ddlCountriesSubject.asObservable();
@@ -73,6 +75,7 @@ export class ContactFacade {
   editedAddress$ = this.editedAddressSubject.asObservable();
   showLoaderOnState$ = this.showLoaderOnState.asObservable();
   showAddContactPopup$ = this.showAddContactPopupSubject.asObservable();
+  contactGridLoader$ = this.contactGridLoaderSubject.asObservable();
   clientEmails$ = this.clientEmailsSubject.asObservable();
   clientEmail$ = this.clientEmailSubject.asObservable();
   addClientEmailResponse$ = this.addClientEmailSubject.asObservable();
@@ -202,11 +205,14 @@ export class ContactFacade {
   }
 
   loadFriendsorFamily(clientId:any): void {
+    this.contactGridLoaderSubject.next(true);
     this.contactDataService.loadFriendsorFamily(clientId).subscribe({
       next: (friendsOrFamilyResponse) => {
+        this.contactGridLoaderSubject.next(false);
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);
       },
       error: (err) => {
+        this.contactGridLoaderSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.loggingService.logException(err);
       },
@@ -317,7 +323,7 @@ export class ContactFacade {
     this.mailingAddressSubject.next(null);
     return this.contactDataService.getClientAddress(clientId).subscribe({
       next: (addressesResponse: any) => {
-        const mailingAddress = addressesResponse.find((ads: any) => 
+        const mailingAddress = addressesResponse.find((ads: any) =>
           ads.addressTypeCode === AddressTypeCode.Mail
           && ads.activeFlag === StatusFlag.Yes
         );
@@ -334,7 +340,7 @@ export class ContactFacade {
     this.contactDataService
     .loadClientPhones(clientId, 0, 1000, '', '', false)
     .subscribe({
-      next: (clientPhonesResponse: any) => {       
+      next: (clientPhonesResponse: any) => {
         const phoneNumbers =  clientPhonesResponse ? clientPhonesResponse['items']:[];
         this.phoneNumbersSubject.next(phoneNumbers);
       },
@@ -349,7 +355,7 @@ export class ContactFacade {
   loadEmailAddress(clientId: number): void {
     this.emailAddressesSubject.next([]);
     this.contactDataService
-      .loadClientEmails(clientId, '', 0, 1000, '', '', false)        
+      .loadClientEmails(clientId, '', 0, 1000, '', '', false)
       .subscribe({
         next: (clientEmailsResponse: any) => {
           const emails =  clientEmailsResponse ? clientEmailsResponse['items']:[];
@@ -360,7 +366,7 @@ export class ContactFacade {
         },
       });
   }
-  
+
   loadClientEmails(
     clientId: number,
     clientCaseEligibilityId: string,

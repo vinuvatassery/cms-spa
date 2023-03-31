@@ -15,6 +15,8 @@ export class FriendOrFamilyListComponent implements OnInit {
   @Input() caseEligibilityId!: string;
   /** Public properties **/
   isEdit!: boolean;
+  isGridLoaderShow = true;
+  contactGridLoader$ = this.contactFacade.contactGridLoader$;
   showAddContactPopup$ = this.contactFacade.showAddContactPopup$;
   friendsOrFamily$ = this.contactFacade.friendsOrFamily$;
   isFriendsorFamilyEdit!: boolean;
@@ -84,6 +86,9 @@ export class FriendOrFamilyListComponent implements OnInit {
       }
       this.cdr.detectChanges();
     })
+    this.contactGridLoader$.subscribe((data : any) => {
+      this.isGridLoaderShow = data;
+    });
   }
 
   /** Internal event methods **/
