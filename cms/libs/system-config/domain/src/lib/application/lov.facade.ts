@@ -63,6 +63,7 @@ export class LovFacade {
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
   private lovClientPhoneDeviceTypeSubject = new Subject<Lov[]>();
+  private showLoaderOnRelationType = new BehaviorSubject<boolean>(false);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -103,6 +104,9 @@ export class LovFacade {
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
   lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
+  showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
+
+
 
         /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -222,12 +226,15 @@ getSexulaIdentityLovs(): void {
   });
 }
 getContactRelationShipsLovs(): void {
+  this.showLoaderOnRelationType.next(true);
   this.lovDataService.getLovsbyType(LovType.ContactRelationshipCode).subscribe({
     next: (relationsResponse) => {
       this.lovCntRelationshipCodeSubject.next(relationsResponse);
+      this.showLoaderOnRelationType.next(false);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.showLoaderOnRelationType.next(false);
     },
   });
 }

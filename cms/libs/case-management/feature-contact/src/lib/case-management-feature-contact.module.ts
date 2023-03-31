@@ -25,6 +25,8 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { ProfileContactPageComponent } from './containers/profile-contact-page/profile-contact-page-component';
 import { DeleteEmailConfirmationComponent } from './components/delete-email-confirmation/delete-email-confirmation.component';
 import { RemovePhoneConfirmationComponent } from './components/remove-phone-confirmation/remove-phone-confirmation.component';
+import { DeleteFriendOrFamilyConfirmationComponent } from './components/delete-friend-or-family-confirmation/delete-friend-or-family-confirmation.component';
+
 
 @NgModule({
   imports: [
@@ -52,7 +54,8 @@ import { RemovePhoneConfirmationComponent } from './components/remove-phone-conf
     DeleteAddressConfirmationComponent,
     ProfileContactPageComponent,
     DeleteEmailConfirmationComponent,
-    RemovePhoneConfirmationComponent
+    RemovePhoneConfirmationComponent,
+    DeleteFriendOrFamilyConfirmationComponent
   ],
   exports: [
     AddressListComponent,
@@ -70,7 +73,8 @@ import { RemovePhoneConfirmationComponent } from './components/remove-phone-conf
     DeleteAddressConfirmationComponent,
     ProfileContactPageComponent,
     DeleteEmailConfirmationComponent,
-    RemovePhoneConfirmationComponent
+    RemovePhoneConfirmationComponent,
+    DeleteFriendOrFamilyConfirmationComponent
   ],
 })
 export class CaseManagementFeatureContactModule {}
