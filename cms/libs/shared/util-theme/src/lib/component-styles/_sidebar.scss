@@ -339,6 +339,24 @@ cms-sidenav {
             max-height: calc(100% - $header-height);
             overflow: auto;
             border-left: 1px solid material-color($hive-primary-palette, 100);
+            .menu-active-session-list{
+              &:hover{
+                visibility: visible;
+                overflow-y: hidden !important;
+                &::-webkit-scrollbar-thumb,
+                &::-webkit-scrollbar-track{
+                   visibility: visible !important;
+                   overflow-y: hidden !important;
+                 
+                 }
+              }
+           &::-webkit-scrollbar-thumb,
+           &::-webkit-scrollbar-track{
+              visibility: hidden !important;
+              overflow-y: hidden !important;
+            
+            }
+          }
           }
         }
       }

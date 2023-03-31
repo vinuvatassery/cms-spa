@@ -5,6 +5,9 @@ $pagination-height : 48px;
   overflow-y: hidden;
   max-width: 100%;
   width: 100%;
+  .k-loading-mask{
+    z-index: 5;
+  }
   &.table-overflow-visible {
     td,
     .k-grid-content,
@@ -565,5 +568,11 @@ table,
   
   td{
     background-color: $grey-f7;
+  }
+}
+
+.k-grid-norecords{
+  .k-table-td{
+    padding: 1.5rem !important;
   }
 }
