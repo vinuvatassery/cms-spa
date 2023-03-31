@@ -93,12 +93,12 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'block',
       type:'Deactivate',
       click: (clientPharmacy: any): void => {
-        if(clientPharmacy.pharmacyId){
+        if(clientPharmacy.clientPharmacyId){
           let pharmacyObj ={
             ClientId:this.clientId,
             IsActive:false,
           }
-          this.pharmacyId = clientPharmacy.pharmacyId;
+          this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId =clientPharmacy.vendorId
           this.changePharmacyObj = pharmacyObj;
           if (clientPharmacy.priorityCode === PriorityCode.Primary) {
@@ -107,12 +107,12 @@ export class PharmaciesListComponent implements OnInit {
               'deactivate'
             );
           } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
-            if(clientPharmacy.pharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
+            if(clientPharmacy.clientPharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
               let pharmacy ={
                 ClientId:this.clientId,
                 IsActive:false
               }
-              this.drugPharmacyFacade.deactivePharmacies(clientPharmacy.pharmacyId,pharmacy);
+              this.drugPharmacyFacade.deactivePharmacies(clientPharmacy.clientPharmacyId,pharmacy);
             }
           }
         }
@@ -125,12 +125,12 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'done',
       type:'Reactivate',
       click: (clientPharmacy: any): void => {
-        if(clientPharmacy.pharmacyId){
+        if(clientPharmacy.vendorId){
           let pharmacy ={
             ClientId:this.clientId,
             IsActive:true
           }
-          this.drugPharmacyFacade.reActivatePharmacies(clientPharmacy.pharmacyId,pharmacy);
+          this.drugPharmacyFacade.reActivatePharmacies(clientPharmacy.vendorId,pharmacy);
         }
 
       },
@@ -141,9 +141,9 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'star',
       type:'MarkAsPrimary',
       click: (clientPharmacy: any): void => {
-        if(clientPharmacy.pharmacyId){
+        if(clientPharmacy.clientPharmacyId){
           let pharmacyPriorityites = [{
-            ClientPharmacyId:clientPharmacy.pharmacyId,
+            ClientPharmacyId:clientPharmacy.clientPharmacyId,
             ClientId:this.clientId,
             PriorityCode:'P'
             
@@ -159,14 +159,14 @@ export class PharmaciesListComponent implements OnInit {
       text: 'Remove',
       icon: 'delete',
       click: (clientPharmacy: any, vendorId: string,clientPharmacyId: string): void => {
-        if(clientPharmacy.pharmacyId){
-          this.pharmacyId = clientPharmacy.pharmacyId;
-          this.vendorId =clientPharmacy.vendorId
+        if(clientPharmacy.clientPharmacyId){
+          this.pharmacyId = clientPharmacy.clientPharmacyId;
+          this.vendorId =clientPharmacy.clientPharmacyId
           if (clientPharmacy.priorityCode === PriorityCode.Primary) {
             this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
           } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
             if (this.removeButtonEmitted === false) {
-              this.onRemovePharmacyClicked(clientPharmacy.pharmacyId);
+              this.onRemovePharmacyClicked(clientPharmacy.clientPharmacyId);
               this.removeButtonEmitted = true;
             }
           }
@@ -239,7 +239,7 @@ export class PharmaciesListComponent implements OnInit {
     this.loadPharmacieslist();
   }
   private loadPharmacieslist() {
-    this.drugPharmacyFacade.loadDrugPharmacyList(
+    this.drugPharmacyFacade.loadClientPharmacyList(
       this.clientId,
       false,
       this.isShowHistoricalData
@@ -281,7 +281,7 @@ export class PharmaciesListComponent implements OnInit {
     this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,updatedPharmacy)
   }
   onRemovePharmacy(pharmacy:any){
-    this.drugPharmacyFacade.removeDrugPharmacy(
+    this.drugPharmacyFacade.removeClientPharmacy(
       this.clientId ?? 0,
       this.pharmacyId
     );
