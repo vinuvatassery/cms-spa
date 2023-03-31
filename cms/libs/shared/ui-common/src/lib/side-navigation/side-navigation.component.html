@@ -3,8 +3,7 @@
     [routerLinkActive]="menu.subMenus?.length === 0 ? ['active-item'] :['']" [routerLinkActiveOptions]="{exact: true}"
     attr.aria-label="sidebar menu item {{ menu.name }}"
     [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus?.length !== 0 }">
-    <span class="sub-menu-item" (click)="onSubMenuClicked(i)"
-      [routerLink]="menu.subMenus?.length === 0 ? [menu.url]:[]">
+    <span class="sub-menu-item" *ngIf="menu.target!=='_blank'" (click)="onSubMenuClicked(i)" [routerLink]="menu.subMenus?.length === 0 ? [menu.url]:[]">
       <span class="material-icons sidebar-menu_icon" attr.aria-label="{{ menu.name }}" aria-hidden="true">
         {{menu.icon}}
       </span>
@@ -12,6 +11,14 @@
         {{ menu.name }} <span *ngIf="menu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
       </span>
     </span>
+    <a class="sub-menu-item" *ngIf="menu.target==='_blank'" (click)="onSubMenuClicked(i)" [href]="[menu.url]" target="_blank">
+      <span class="material-icons sidebar-menu_icon" attr.aria-label="{{ menu.name }}" aria-hidden="true">
+        {{menu.icon}}
+      </span>
+      <span class="sidebar-menu_label" attr.aria-label="{{ menu.name }}" aria-hidden="true">
+        {{ menu.name }} <span *ngIf="menu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
+      </span>
+    </a>
     <ul class="sidebar-sub-menu" *ngIf="menu.subMenus?.length !== 0 && subMenuExpandStatus[i] === true"
       attr.aria-label="sidebar sub menu item {{ menu.name }}">
       <li *ngFor="let subMenu of menu.subMenus" attr.aria-label="sub menu item {{ subMenu.name }}"
