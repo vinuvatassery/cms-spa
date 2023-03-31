@@ -13,6 +13,7 @@ import { CerListComponent } from './components/cer-list/cer-list.component';
 import { SendCerComponent } from './components/send-cer/send-cer.component';
 import { SendCerReminderComponent } from './components/send-cer-reminder/send-cer-reminder.component';
 import { SendCerRestrictedNoticeComponent } from './components/send-cer-restricted-notice/send-cer-restricted-notice.component';
+import { CerCountsComponent } from './components/cer-counts/cer-counts.component';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { SendCerRestrictedNoticeComponent } from './components/send-cer-restrict
     SendCerComponent,
     SendCerReminderComponent,
     SendCerRestrictedNoticeComponent,
+    CerCountsComponent,
   ],
   exports: [
     CerTrackingPageComponent,
@@ -36,6 +38,7 @@ import { SendCerRestrictedNoticeComponent } from './components/send-cer-restrict
     SendCerComponent,
     SendCerReminderComponent,
     SendCerRestrictedNoticeComponent,
+    CerCountsComponent,
   ],
 })
 export class CaseManagementFeatureCerTrackingModule {}

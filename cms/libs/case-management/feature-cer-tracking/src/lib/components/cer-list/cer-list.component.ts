@@ -1,80 +1,84 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+  Input,
+  OnChanges,
+} from '@angular/core';
 /** Facades **/
-import { CerTrackingFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
+import { Subject, first } from 'rxjs';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
   styleUrls: ['./cer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CerListComponent implements OnInit {
+export class CerListComponent implements OnInit, OnChanges {
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() cerTrackingData$: any;
+  @Input() cerTrackingDates$ : any
+ // @Input() cerTrackingDatesList$: any;
+  //@Input() selectedDate: any;
+  @Output() loadCerTrackingListEvent = new EventEmitter<any>();
+  @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
+
   /** Public properties **/
-  cerGrid$ = this.cerTrackingFacade.cerGrid$;
-  ddlCer$ = this.cerTrackingFacade.ddlCer$;
   isOpenSendCER = false;
-  todayDate= new Date();
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  todayDate = new Date();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   public isGridLoaderShow = false;
-public sortValue = this.cerTrackingFacade.sortValue;
-public sortType = this.cerTrackingFacade.sortType;
-public pageSizes = this.cerTrackingFacade.gridPageSizes;
-public gridSkipCount = this.cerTrackingFacade.skipCount;
-public sort = this.cerTrackingFacade.sort;
-public state!: State;
+  selectedDate! : any;
+
+  datesSubject = new Subject<any>();
+  cerTrackingDatesList$ = this.datesSubject.asObservable();
+
+  loadDefSelectedateSubject = new Subject<any>();
+  loadDefSelectedate$ = this.loadDefSelectedateSubject.asObservable();
+  public state!: State;
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
-      buttonType: "btn-h-primary",
-      text: "Send CER Reminders",
+      buttonType: 'btn-h-primary',
+      text: 'Send CER Reminders',
       // icon: "done",
-      click: (): void => {
-      },
+      click: (): void => {},
     },
     {
-      buttonType: "btn-h-primary",
-      text: "Send Restricted Notices",
+      buttonType: 'btn-h-primary',
+      text: 'Send Restricted Notices',
       // icon: "edit",
-      click: (): void => {
-      },
+      click: (): void => {},
     },
-   
-    
- 
   ];
 
   /** Constructor**/
-  constructor(private readonly cerTrackingFacade: CerTrackingFacade) {}
+  constructor() {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCerGrid();
-    this.loadDdlcer();
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
- 
+    this.loadcerTrackingDates();
+    
   }
   ngOnChanges(): void {
     this.state = {
-      skip: this.gridSkipCount,
+      skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
- 
   }
   /** Private methods **/
-  private loadCerGrid() {
-    this.cerTrackingFacade.loadCerGrid();
-  }
-
-  private loadDdlcer() {
-    this.cerTrackingFacade.loadDdlCer();
+  private loadcerTrackingDates() {
+    this.loadCerTrackingDateListEvent.emit();
+    this.loadCerTrackingDateListHandle()
   }
 
   /** Internal event methods **/
@@ -84,5 +88,65 @@ public state!: State;
 
   onOpenSendCERClicked() {
     this.isOpenSendCER = true;
+  }
+
+  // updating the pagination infor based on dropdown selection
+  epDateOnChange(date: any) {
+    this.selectedDate = date;
+    this.loadCerTrackingList();
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.loadCerTrackingList();
+  }
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadCerTrackingList();
+  }
+
+  private loadCerTrackingList(): void {
+    this.loaCerData(
+      this.state.skip ?? 0,
+      this.state.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+
+  loaCerData(
+    skipcountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    const gridDataRefinerValue = {
+      trackingDate: this.selectedDate,
+      skipCount: skipcountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+    };
+    this.loadCerTrackingListEvent.next(gridDataRefinerValue);
+  }
+
+  loadCerTrackingDateListHandle() {
+
+    this.cerTrackingDates$
+      ?.pipe(
+        first((trackingDateList: any) => trackingDateList?.seletedDate != null)
+      )
+      .subscribe((trackingDateList: any) => {        
+        if (trackingDateList?.seletedDate) {
+          this.loadDefSelectedateSubject.next(trackingDateList?.seletedDate);
+          this.datesSubject.next(trackingDateList?.datesList);
+          this.selectedDate = trackingDateList?.seletedDate;
+          this.epDateOnChange(this.selectedDate);
+        }
+      });
   }
 }

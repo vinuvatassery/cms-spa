@@ -1,16 +1,19 @@
 <!-- Table Top Filter, Search and Export -->
 <section class="mat-form-no-b-space table-filter-section cer-table-filter">
   <div class="filter-col-select">
-    <span><strong>SP End Date</strong></span>
-    <kendo-floatinglabel text="Date" >
-      <kendo-datepicker  [fillMode]="formUiStyle.dropDownFillMode" [(value)]="todayDate"></kendo-datepicker>
-    </kendo-floatinglabel>
+    <span><strong>SP End Date</strong></span> 
+    <span class="filter-section_items filter--select">
+      <kendo-floatinglabel>
+        <kendo-dropdownlist aria-label="All Columns"  [fillMode]="formUiStyle.dropDownFillMode" [data]="cerTrackingDatesList$ | async"
+        textField="eligibilityEndDate" valueField="eligibilityEndDate"  [value]="loadDefSelectedate$ | async"  [valuePrimitive]="true"
+        (valueChange)="epDateOnChange($event)"
+        (filterChange)="epDateOnChange($event)"> 
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </span>
   </div>
-  <div class="table-sorted-info filter-col-sort-info">
-    <span class="sort-items">33 clients due for CER</span>
-    <span class="sort-items">0 Completed</span>
-    <span class="sort-items">7 Restricted</span>
-  </div>
+  <case-management-cer-counts></case-management-cer-counts>
+ 
   <button
     kendoButton
     [primary]="true"
@@ -49,8 +52,18 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid [data]="cerGrid$ | async" [pageSize]="5" [pageable]="true"  [loading]="isGridLoaderShow" [sortable]="true" [groupable]="false" [reorderable]="true"
-  [resizable]="true" [columnMenu]="{ filter: true }" >
+  <kendo-grid 
+  [data]="cerTrackingData$ | async"
+      [pageSize]="state.take" 
+      [pageable]="true" 
+      [sortable]="true" 
+      [skip]="state.skip"
+      [groupable]="false"
+      [reorderable]="true"
+      [resizable]="true" 
+      [columnMenu]="{ filter: true }"
+      [sort]="state.sort"
+      (dataStateChange)="dataStateChange($event)" >
 
   <ng-template kendoGridColumnMenuTemplate let-service="service">
     <span class="k-icon k-i-x" (click)="service.close()"
@@ -158,15 +171,14 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-
-
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
     let-currentPage="currentPage">
     <div class="grid-custom-paginationtemplates d-flex"> 
-      <div class="d-flex align-items-center"> 
+      <div class="d-flex align-items-center">    
         <label class="mr-1">Rows Per Page</label> 
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-              [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"></kendo-dropdownlist>
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
+          [valuePrimitive]="true" [(value)]="state.take"
+          (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
         <kendo-pager-info> </kendo-pager-info>
         <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
 
@@ -178,18 +190,6 @@
       </div> 
     </div>
   </ng-template>
-
-   <ng-template kendoGridLoadingTemplate>
-     <common-grid-loader-component></common-grid-loader-component>
-    </ng-template>
-
-
-    <ng-template kendoGridNoRecordsTemplate>
-      <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
-      </div>
-      <p>There is no data to display.</p>
-    </ng-template>
-
   </kendo-grid>
 </div>
 
