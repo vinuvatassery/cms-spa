@@ -45,16 +45,11 @@ export class TemplateManagementFacade {
     this.snackbarService.manageSnackBar(type, subtitle);
   }
 
-  //NOSONAR TODO: Call the GET API and update the subject with values
-  getTemplates(templateId?: string) {
-    //NOSONAR this.templateDataService.getTemplates(templateId).subscribe({
-    //   next: (templateResponse) => {
-    //     this.templatesListSubject.next(templateResponse);
-    //   },
-    //   error: (err) => {
-    //     console.error('err', err);
-    //   },
-    // });
+  getDirectoryContent(filepath?: string):any {
+    return this.templateDataService.getDirectoryContent(filepath);
   }
 
+  getFormsandDocumentsViewDownload(filename: string) {
+    return this.templateDataService.getFormsandDocumentsViewDownload(filename);
+  }
 }
