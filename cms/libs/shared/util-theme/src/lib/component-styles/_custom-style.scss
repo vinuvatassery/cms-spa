@@ -556,6 +556,9 @@
     position: relative;
     min-height: 37px;
   }
+  .k-numerictextbox.k-input .k-button.k-icon-button{
+    min-height: auto;
+  }
 }
 
 .auto-complete-with-template {
