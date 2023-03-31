@@ -291,16 +291,16 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addPreferredContact(contact: any){ 
     const preferredContact: string[] = [];
       if (contact?.isValidHomePhone) {
-        preferredContact.push(this.formatPhoneNumber(contact?.homePhone?.value ?? ''));
+        this.addPreferredList(preferredContact, contact?.homePhone?.value);
       }
       if (contact?.isValidCellPhone) {
-        preferredContact.push(this.formatPhoneNumber(contact?.cellPhone?.value ?? ''));
+        this.addPreferredList(preferredContact, contact?.cellPhone?.value);
       }
       if (contact?.isValidWorkPhone) {
-        preferredContact.push(this.formatPhoneNumber(contact?.workPhone?.value));
+        this.addPreferredList(preferredContact, contact?.workPhone?.value);
       }
       if (contact?.isValidOtherPhone) {
-        preferredContact.push(this.formatPhoneNumber(contact?.otherPhone?.value ?? ''));
+        this.addPreferredList(preferredContact, contact?.otherPhone?.value);
       }
       if (contact?.isValidEmail) {
         const match = contact?.email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/);
@@ -310,6 +310,13 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       this.preferredContactMethods = preferredContact;
       this.resetPreferredContact(preferredContact);
+  }
+
+  private addPreferredList(preferredContact: string[], phone: any){
+    const formattedPhone = this.formatPhoneNumber(phone ?? '');
+      if(formattedPhone){
+        preferredContact.push(formattedPhone);
+      }
   }
 
   private resetPreferredContact(preferredContact : string []){
@@ -1648,6 +1655,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if(this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.hasValidator){
     this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.setValidators(null);
     this.contactInfoForm?.get(`${phoneType}.phoneNbr`)?.updateValueAndValidity();
+    return;
+    }
+    if(phoneType === 'contactPhoneNbr'){
+      this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.setValidators(null);
+      this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.updateValueAndValidity(); 
     }
   }
 }
