@@ -1,9 +1,10 @@
 <ul class="sidebar-menu" aria-label="sidebar menu">
-  <li *ngFor="let menu of menus$ | async as menus; let i = index" [routerLinkActive]="['active-item']"
-    [routerLink]="menu.subMenus?.length === 0 ? [menu.url]:[]" attr.aria-label="sidebar menu item {{ menu.name }}"
-    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus?.length !== 0 }"
-    >
-    <span class="sub-menu-item" (click)="onSubMenuClicked(i)">
+  <li *ngFor="let menu of menus$ | async as menus; let i = index"
+    [routerLinkActive]="menu.subMenus?.length === 0 ? ['active-item'] :['']" [routerLinkActiveOptions]="{exact: true}"
+    attr.aria-label="sidebar menu item {{ menu.name }}"
+    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus?.length !== 0 }">
+    <span class="sub-menu-item" (click)="onSubMenuClicked(i)"
+      [routerLink]="menu.subMenus?.length === 0 ? [menu.url]:[]">
       <span class="material-icons sidebar-menu_icon" attr.aria-label="{{ menu.name }}" aria-hidden="true">
         {{menu.icon}}
       </span>
