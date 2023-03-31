@@ -24,13 +24,14 @@
       <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
         <kendo-floatinglabel
           text="Send Messages to"
-          aria-label="send messages to"
+          aria-label="send messages to" class="inline-search-loader"
         >
+        <span *ngIf="isShowToPhoneNumbersLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlMessageRecipients$ | async"
-            textField="value"
-            valueField="key"
+            [data]="phoneNumbers"
+            textField="formattedPhoneNbr"
+            valueField="phoneNbr"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>

@@ -63,6 +63,7 @@ export class LovFacade {
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
   private lovClientPhoneDeviceTypeSubject = new Subject<Lov[]>();
+  private showLoaderOnRelationType = new BehaviorSubject<boolean>(false);
   private eligibilityStatusSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
 
@@ -105,6 +106,9 @@ export class LovFacade {
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
   lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
+  showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
+
+
 
         /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -224,12 +228,15 @@ getSexulaIdentityLovs(): void {
   });
 }
 getContactRelationShipsLovs(): void {
+  this.showLoaderOnRelationType.next(true);
   this.lovDataService.getLovsbyType(LovType.ContactRelationshipCode).subscribe({
     next: (relationsResponse) => {
       this.lovCntRelationshipCodeSubject.next(relationsResponse);
+      this.showLoaderOnRelationType.next(false);
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.showLoaderOnRelationType.next(false);
     },
   });
 }

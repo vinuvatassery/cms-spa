@@ -164,8 +164,8 @@ export class IncomeDetailComponent implements OnInit {
           }
         },
         error: (err) => {
-          this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
   }
@@ -216,7 +216,7 @@ export class IncomeDetailComponent implements OnInit {
       this.btnDisabled =true;
       if (!this.isEditValue) {
 
-        this.incomeFacade.ShowLoader();
+        this.incomeFacade.showLoader();
         this.incomeFacade
           .saveClientIncome(
             this.clientId,
@@ -226,8 +226,8 @@ export class IncomeDetailComponent implements OnInit {
           .subscribe({
             next: (incomeResponse) => {
               this.incomeFacade.incomeValidSubject.next(true);
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Income created successfully.'
               );
@@ -236,14 +236,14 @@ export class IncomeDetailComponent implements OnInit {
             },
             error: (err) => {
               this.btnDisabled =false;
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
           });
       }
 
       if (this.isEditValue) {
-        this.incomeFacade.ShowLoader();
+        this.incomeFacade.showLoader();
         incomeData['clientIncomeId'] = this.selectedIncome.clientIncomeId;
         incomeData['concurrencyStamp'] = this.selectedIncome.concurrencyStamp;
         incomeData['monthlyIncome'] = this.selectedIncome.monthlyIncome;
@@ -265,8 +265,8 @@ export class IncomeDetailComponent implements OnInit {
           .subscribe({
             next: (incomeResponse) => {
               this.closeIncomeDetailPoup();
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Income updated successfully.'
               );
@@ -275,8 +275,8 @@ export class IncomeDetailComponent implements OnInit {
             },
             error: (err) => {
               this.btnDisabled = false;
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
           });
       }

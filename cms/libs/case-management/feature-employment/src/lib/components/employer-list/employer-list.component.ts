@@ -71,7 +71,6 @@ export class EmployerListComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.addEmployerButtonDisplay();
-    this.loadEmployments();
     this.employmentValid$.subscribe(response=>{
       this.isEmployerAvailable = response;
       this.cdr.detectChanges();

@@ -42,6 +42,7 @@ import { StatusPeriodComponent } from './components/status-period/status-period.
 import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
 import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 import { ClientImportantInfoComponent } from './components/client-important-info/client-important-info.component';
+import {CaseManagementFeatureSmokingCessationModule} from '@cms/case-management/feature-smoking-cessation'
 import { Case360HeaderToolsComponent } from './components/case360-header-tools/case360-header-tools.component';
 
 @NgModule({
@@ -67,7 +68,8 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseManagementFeatureHealthInsuranceModule,
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
-    CaseManagementFeatureDocumentModule    
+    CaseManagementFeatureDocumentModule,
+    CaseManagementFeatureSmokingCessationModule   
   ],
   declarations: [
     LastVisitedCasesComponent,
@@ -88,7 +90,7 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     AppHistoryListComponent,
     Case360HeaderNotificationsComponent,
     ClientImportantInfoComponent,
-    Case360HeaderToolsComponent    
+    Case360HeaderToolsComponent 
   ],
   exports: [
     CasePageComponent,
