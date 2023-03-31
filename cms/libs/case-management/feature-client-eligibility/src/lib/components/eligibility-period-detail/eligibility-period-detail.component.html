@@ -24,7 +24,8 @@
         [valuePrimitive]="true"> 
       </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid">Status is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid && eligibilityStatusAllowed">Status is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid && !eligibilityStatusAllowed">Status not allowed.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status Start Date">
