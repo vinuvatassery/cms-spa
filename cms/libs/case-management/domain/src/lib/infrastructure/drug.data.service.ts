@@ -236,9 +236,6 @@ export class DrugDataService {
   loadDrugPharmacyList(clientId: number,isShowHistoricalData:boolean) {
     return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${clientId}/pharmacies/${isShowHistoricalData}`);
   }
-  // getDrugPharmacyById(vendorId: string) {
-  //   return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/pharmacies/${vendorId}`);
-  // }
   getDrugPurchasedList(clientId:number) {
     return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/purchased/${clientId}`);
   }

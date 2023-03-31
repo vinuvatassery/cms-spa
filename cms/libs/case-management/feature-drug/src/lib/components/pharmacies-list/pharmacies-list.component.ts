@@ -244,11 +244,6 @@ export class PharmaciesListComponent implements OnInit {
       false,
       this.isShowHistoricalData
     );
-    // this.drugPharmacyFacade.clientPharmacies$.subscribe((pharmacies) => {
-    //   this.pharmacies = pharmacies;
-    //   this.handleClosePharmacyClicked();
-    //   this.handleCloseSelectNewPrimaryPharmaciesClicked();
-    // });
   }
 
   /** Internal event methods **/

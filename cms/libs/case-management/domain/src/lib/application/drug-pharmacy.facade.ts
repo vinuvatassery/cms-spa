@@ -275,24 +275,7 @@ export class DrugPharmacyFacade {
       },
     });
   }
-  // loadDrugPharmacyList(clientId: number, isTriggerPriorityPopup:boolean = false,isShowHistoricalData:boolean) {
-    
-  //   this.loaderService.show();
-  //   this.drugDataService.loadDrugPharmacyList(clientId,isShowHistoricalData).subscribe({
-  //     next: (pharmacies: ClientPharmacy[]) => {
-  //       this.loaderService.hide();
-  //       this.clientPharmaciesSubject.next(pharmacies);
-  //       if( pharmacies?.length > 0){
-  //         this.triggerPriorityPopupSubject.next(true);
-  //       }
-  //     },
-  //     error: (err) => {
-  //       this.loaderService.hide();
-  //       this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-  //       this.loggingService.logException(err);
-  //     },
-  //   });
-  // }
+ 
   addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string) {
    
     const model = {
@@ -320,21 +303,7 @@ export class DrugPharmacyFacade {
     });
   }
 
-  // getDrugPharmacyById(vendorId: string) {
-  //   this.loaderService.show();
-  //   return this.drugDataService.getDrugPharmacyById(vendorId).subscribe({
-  //     next: (response:DrugPharmacy) => {
-  //       response.vendorFullName = `${response.vendorName}${response.address1} ${response.tin} ${response.mailCode} ${response.fax} ${response.phone}${response.effectiveDate}`;
-  //       this.selectedPharmacySubject.next(response);
-  //       this.loaderService.hide();
-  //     },
-  //     error: (err) => {
-  //       this.loaderService.hide();
-  //       this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-  //       this.loggingService.logException(err);
-  //     },
-  //   });
-  // }
+ 
   getDrugPurchasedList(clientId: number) {
     this.loaderService.show();
     return this.drugDataService.getDrugPurchasedList(clientId).subscribe({
@@ -350,25 +319,7 @@ export class DrugPharmacyFacade {
       },
     });
   }
-  // removeDrugPharmacy(clientId: number, clientPharmacyId: string) {
-  //   this.loaderService.show();
-  //   return this.drugDataService.removeDrugPharmacy(clientId, clientPharmacyId).subscribe({
-  //     next: (response) => {
-  //       if (response === true) {
-  //         this.loadDrugPharmacyList(clientId,false,false);
-  //         this.removePharmacyResponseSubject.next(true);
-  //         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Removed Successfully');
-  //       }
-  //       this.loaderService.hide();
-  //     },
-  //     error: (err) => {
-  //       this.removePharmacyResponseSubject.next(false);
-  //       this.loaderService.hide();
-  //       this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-  //       this.loggingService.logException(err);
-  //     },
-  //   });
-  // }
+ 
 
   updatedMakePharmaciesPrimary(clientPharmacyId: string){    
     this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Primary Pharmacy Updated Successfully');
