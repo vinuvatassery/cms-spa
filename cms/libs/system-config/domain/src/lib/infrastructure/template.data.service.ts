@@ -6,6 +6,8 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { Template } from '../entities/template';
+import { ConfigurationProvider} from '@cms/shared/util-core';
+
 
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
