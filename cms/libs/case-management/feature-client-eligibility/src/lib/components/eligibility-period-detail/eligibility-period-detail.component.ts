@@ -212,7 +212,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     });
   }
   private checkEligibilityStatusAllowed(){
-    debugger;
     this.eligibilityPeriodForm.controls['eligibilityStatus'].markAllAsTouched();
     if(this.currentEligibility.eligibilityStatusCode.toUpperCase() === EligibilityStatus.New.toUpperCase()
      || this.currentEligibility.eligibilityStatusCode.toUpperCase() === EligibilityStatus.Accept.toUpperCase()){
