@@ -10,6 +10,7 @@ import {
 /** Internal Libraries **/
 import { CommunicationEvents, ScreenType, CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-send-text-message',
   templateUrl: './send-text-message.component.html',
@@ -18,30 +19,64 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class SendTextMessageComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
+  @Input() ddlMessageRecipients$!: Observable<any>;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
-
+  @Output() loadInitialData = new EventEmitter();
   /** Public properties **/
-  ddlMessageRecipients$ = this.communicationFacade.ddlMessageRecipients$;
+  //ddlMessageRecipients$ = this.communicationFacade.ddlMessageRecipients$;
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
   isOpenSendMessageClicked!: boolean;
   isOpenMessageTemplate = false;
   isShowSendMessageConfirmPopupClicked = false;
   isShowSaveForLaterPopupClicked = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  formUiStyle : UIFormStyle = new UIFormStyle();
+  isShowToPhoneNumbersLoader$ = new BehaviorSubject<boolean>(false);
+  phoneNumbersSubscription$ = new Subscription();
+  phoneNumbers!:any[];
+  isClearPhoneNumbers = false;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.updateSendMessageFlag();
-    this.loadDdlMessageRecipients();
     this.loadDdlLetterTemplates();
+    this.addPhoneNumbersSubscription();
+  }
+  ngOnDestroy(): void {
+    this.phoneNumbersSubscription$.unsubscribe();
   }
 
   /** Private methods **/
+  private addPhoneNumbersSubscription() {
+    this.phoneNumbersSubscription$ = this.ddlMessageRecipients$
+    .pipe(      
+      map((ph) => ph.map((p:any) => ({...p, formattedPhoneNbr: this.formatPhoneNumber(p.phoneNbr)})))
+    )
+    .subscribe((phoneResp: any) => {
+      if(this.isClearPhoneNumbers){
+        this.phoneNumbers =[];
+      }else{
+      this.phoneNumbers = phoneResp;
+      this.isShowToPhoneNumbersLoader$.next(false);
+      }
+      this.isClearPhoneNumbers = false;
+    });
+  }
+
+  private formatPhoneNumber(phoneNumberString: string) {
+    const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    const match = cleaned?.match(/^(1)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      const intlCode = (match[1] ? '+1 ' : '');
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return '';
+  }
+
   private loadDdlLetterTemplates() {
     this.communicationFacade.loadDdlLetterTemplates();
     this.ddlLetterTemplates$.subscribe({
@@ -54,10 +89,6 @@ export class SendTextMessageComponent implements OnInit {
         console.log(err);
       },
     });
-  }
-
-  private loadDdlMessageRecipients() {
-    this.communicationFacade.loadDdlMessageRecipients();
   }
 
   private updateSendMessageFlag() {
@@ -104,6 +135,9 @@ export class SendTextMessageComponent implements OnInit {
 
   /** External event methods **/
   handleDdlTextMessageValueChange() {
-    this.isOpenMessageTemplate = true;
+    this.isOpenMessageTemplate = true;  
+    this.isClearPhoneNumbers = true;  
+    this.isShowToPhoneNumbersLoader$.next(true);
+    this.loadInitialData.emit();
   }
 }

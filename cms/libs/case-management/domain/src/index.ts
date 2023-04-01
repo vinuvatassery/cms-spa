@@ -51,6 +51,7 @@ export * from './lib/entities/client-hiv-verification';
 export * from './lib/entities/active-sessions';
 export * from './lib/entities/client-note';
 
+
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
 export * from './lib/enums/screen-type.enum';
@@ -96,6 +97,7 @@ export * from './lib/enums/client-profile-tab-titles.enum';
 export * from './lib/enums/address-type.enum';
 export * from './lib/enums/client-profile-tabs.enum';
 export * from './lib/enums/client-note-type-code.enum';
+export * from './lib/enums/eligibility-status.enum';
 
 
 /** Data services **/

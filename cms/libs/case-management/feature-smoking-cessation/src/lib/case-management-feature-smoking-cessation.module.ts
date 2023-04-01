@@ -17,7 +17,7 @@ import { SmokingCessationListComponent } from './components/smoking-cessation-li
     CaseManagementDomainModule,
     CaseManagementFeatureSmokingCessationRoutingModule,
     SharedUiTpaModule,
-    SharedUiCommonModule 
+    SharedUiCommonModule,
   ],
   declarations: [SmokingCessationPageComponent, 
     ProfileSmokingCessationPageComponent,

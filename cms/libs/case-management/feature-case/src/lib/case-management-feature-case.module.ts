@@ -40,6 +40,7 @@ import { CaseManagementFeatureManagementModule } from '@cms/case-management/feat
 import { CaseManagementFeatureDocumentModule } from '@cms/case-management/feature-document';
 import { Case360HeaderNotificationsComponent } from './components/case360-header-notifications/case360-header-notifications.component';
 import { ClientImportantInfoComponent } from './components/client-important-info/client-important-info.component';
+import {CaseManagementFeatureSmokingCessationModule} from '@cms/case-management/feature-smoking-cessation'
 import { Case360HeaderToolsComponent } from './components/case360-header-tools/case360-header-tools.component';
 
 @NgModule({
@@ -65,7 +66,8 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseManagementFeatureHealthInsuranceModule,
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
-    CaseManagementFeatureDocumentModule    
+    CaseManagementFeatureDocumentModule,
+    CaseManagementFeatureSmokingCessationModule   
   ],
   declarations: [
     LastVisitedCasesComponent,

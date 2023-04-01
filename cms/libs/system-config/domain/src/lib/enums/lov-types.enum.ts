@@ -34,4 +34,5 @@ export enum LovType {
     AddressType = 'ADDRESS_TYPE',
     ColumnDroplist = 'COLUMN_DROPLIST_CODE',
     PhoneDeviceTypeCode = 'PHONE_DEVICE_TYPE_CODE',
+    EligibilityStatus ='ELIGIBILITY_STATUS',
   }

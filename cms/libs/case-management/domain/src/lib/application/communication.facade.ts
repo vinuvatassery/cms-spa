@@ -13,14 +13,12 @@ export class CommunicationFacade {
   private emailsSubject = new BehaviorSubject<Email[]>([]);
   private clientVariablesSubject = new BehaviorSubject<any>([]);
   private ddlEditorVariablesSubject = new BehaviorSubject<any>([]);
-  private ddlMessageRecipientsSubject = new BehaviorSubject<any>([]);
   private ddlLetterTemplatesSubject = new BehaviorSubject<any>([]);
   private ddlEmailsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   clientVariables$ = this.clientVariablesSubject.asObservable();
   emails$ = this.emailsSubject.asObservable();
-  ddlMessageRecipients$ = this.ddlMessageRecipientsSubject.asObservable();
   ddlEditorVariables$ = this.ddlEditorVariablesSubject.asObservable();
   ddlLetterTemplates$ = this.ddlLetterTemplatesSubject.asObservable();
   ddlEmails$ = this.ddlEmailsSubject.asObservable();
@@ -77,17 +75,6 @@ export class CommunicationFacade {
     this.emailDataService.loadDdlEditorVariables().subscribe({
       next: (ddlEditorVariablesResponse) => {
         this.ddlEditorVariablesSubject.next(ddlEditorVariablesResponse);
-      },
-      error: (err: any) => {
-        console.error('err', err);
-      },
-    });
-  }
-
-  loadDdlMessageRecipients() {
-    this.emailDataService.loadDdlMessageRecipients().subscribe({
-      next: (ddlMessageRecipientsResponse) => {
-        this.ddlMessageRecipientsSubject.next(ddlMessageRecipientsResponse);
       },
       error: (err: any) => {
         console.error('err', err);

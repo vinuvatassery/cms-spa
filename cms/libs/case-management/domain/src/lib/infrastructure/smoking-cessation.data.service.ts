@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ConfigurationProvider } from "@cms/shared/util-core";
+import { ClientNote } from "../entities/client-note";
 import { SmokingCessation } from "../entities/smoking-cessation";
 import { ClientNote } from "../entities/client-note";
 

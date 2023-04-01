@@ -1,8 +1,11 @@
 <common-bread-crumb></common-bread-crumb>
-<case-management-case360-header 
-  [caseWorkerId]="caseWorkerId" 
+<case-management-case360-header
+  [caseWorkerId]="caseWorkerId"
   [loadedClientHeader]="loadedClientHeader$ | async"
-  [clientProfileImpInfo$]="clientProfileImpInfo$" 
+  [clientProfileImpInfo$]="clientProfileImpInfo$"
+[clientId] = "clientId"
+[clientCaseId]="clientCaseId"
+[clientCaseEligibilityId]="clientCaseEligibilityId"
   [currentGroup$]="currentGroup$"
   [ddlGroups$]="ddlGroups$"
   [groupUpdated$]="groupUpdated$"

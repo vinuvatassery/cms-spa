@@ -5,6 +5,7 @@ import { SmokingCessation } from '../entities/smoking-cessation';
 import { SmokingCessationDataService } from '../infrastructure/smoking-cessation.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
 import { LoaderService ,NotificationSnackbarService, SnackBarNotificationType,LoggingService} from '@cms/shared/util-core';
+
 import { ClientNote } from '../entities/client-note';
 @Injectable({ providedIn: 'root' })
 export class SmokingCessationFacade {
@@ -54,4 +55,4 @@ export class SmokingCessationFacade {
         return this.smokingCessationDataService.createSmokingCessationNote(clientNote);
       }
 
-    }
+}
