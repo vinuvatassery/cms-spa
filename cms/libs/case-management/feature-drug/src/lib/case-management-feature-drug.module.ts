@@ -18,6 +18,7 @@ import { SetPharmacyPriorityComponent } from './components/set-pharmacy-priority
 import { PharmaciesListComponent } from './components/pharmacies-list/pharmacies-list.component';
 import { DrugsPurchasedListComponent } from './components/drugs-purchased-list/drugs-purchased-list.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { ProfileDrugPageComponent } from './containers/profile-drug-page/profile-drug-page.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     SetPharmacyPriorityComponent, 
     PharmaciesListComponent, 
     DrugsPurchasedListComponent,
+    ProfileDrugPageComponent
   ],
   exports: [
     DrugPageComponent,
@@ -52,6 +54,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     SetPharmacyPriorityComponent,
     PharmaciesListComponent,       
     DrugsPurchasedListComponent,
+    ProfileDrugPageComponent
   ],
 })
 export class CaseManagementFeatureDrugModule {}

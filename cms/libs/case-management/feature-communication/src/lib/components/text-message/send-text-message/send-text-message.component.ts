@@ -24,8 +24,7 @@ export class SendTextMessageComponent implements OnInit {
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
   @Output() loadInitialData = new EventEmitter();
-  /** Public properties **/
-  //ddlMessageRecipients$ = this.communicationFacade.ddlMessageRecipients$;
+  /** Public properties **/ 
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
   isOpenSendMessageClicked!: boolean;

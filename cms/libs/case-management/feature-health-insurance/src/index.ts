@@ -3,6 +3,7 @@ export * from './lib/case-management-feature-health-insurance.module';
 
 /** Components **/
 export * from './lib/containers/health-insurance-page/health-insurance-page.component';
+export * from './lib/containers/profile-healthe-insurance/profile-health-insurance-page.component';
 export * from './lib/components/medical-insurance-status-detail/medical-insurance-status-detail.component';
 export * from './lib/components/medical-insurance-status-list/medical-insurance-status-list.component';
 export * from './lib/components/medical-payment-detail/medical-payment-detail.component';

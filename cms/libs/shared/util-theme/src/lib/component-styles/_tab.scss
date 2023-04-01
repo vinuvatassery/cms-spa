@@ -22,7 +22,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-  
+
       &:before {
         width: 0px;
         height: 2px;
@@ -33,11 +33,12 @@
         z-index: 1;
         transition: ease-in all 0.2s;
       }
-      &.k-state-active, &.k-active {
+      &.k-state-active,
+      &.k-active {
         font-family: $font-family-medium;
         color: $app-primary;
         transition: ease-in all 0.2s;
-    
+
         &:before {
           width: 100%;
           transition: ease-in all 0.4s;
@@ -81,7 +82,7 @@
       }
     }
   }
-  .k-tabstrip-items .k-link{
+  .k-tabstrip-items .k-link {
     padding: 14px 28px;
   }
 
