@@ -74,7 +74,7 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
     );
   }
   removeDrugPharmacyRsp(vendorId: any) {
-    this.drugPharmacyFacade.removeDrugPharmacy(
+    this.drugPharmacyFacade.removeClientPharmacy(
       this.profileClientId ?? 0,
       vendorId
     );
