@@ -187,7 +187,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.loadClientProfileInfoEventHandler();
   }
 
-  onTabClick(tabName: string) {
+  onTabClick(tabName: string) {    
     this.selectedTabName = tabName;
     switch (tabName) {
       case ClientProfileTabs.CLIENT_INFO:

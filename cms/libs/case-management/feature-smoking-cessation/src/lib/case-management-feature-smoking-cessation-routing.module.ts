@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 /** Components **/
 import { SmokingCessationPageComponent } from './containers/smoking-cessation-page/smoking-cessation-page.component';
+import { ProfileSmokingCessationPageComponent } from './containers/profile-smoking-cessation-page/profile-smoking-cessation-page.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    component: SmokingCessationPageComponent,
+    component: ProfileSmokingCessationPageComponent,
   },
 ];
 
