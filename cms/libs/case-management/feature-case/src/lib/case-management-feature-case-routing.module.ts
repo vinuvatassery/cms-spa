@@ -27,7 +27,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureClientModule
           ),
         data: {
-          title: 'New Application',
+          title: '',
         },
       },
       {
@@ -47,7 +47,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureFamilyAndDependentModule
           ),
         data: {
-          title: null,
+          title: '',
         },
       },
       {
