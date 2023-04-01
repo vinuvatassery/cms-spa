@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, EmploymentFacade, ScreenType } from '@cms/case-management/domain';
 
@@ -6,7 +6,7 @@ import { CaseFacade, EmploymentFacade, ScreenType } from '@cms/case-management/d
 @Component({
   selector: 'case-management-profile-employment-page',
   templateUrl: './profile-employment-page.component.html',
-  styleUrls: ['./profile-employment-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileEmploymentPageComponent implements OnInit {
 

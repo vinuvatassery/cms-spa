@@ -1,5 +1,5 @@
 /** Angular **/
-import { AfterViewInit, OnInit, OnDestroy, Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { OnInit, Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, ClientProfile } from '@cms/case-management/domain';
 import { first, Subject } from 'rxjs';

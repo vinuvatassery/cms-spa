@@ -81,8 +81,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
 
   private loadLovs()
   {
-    this.lovFacade.getCaseStatusLovs();
-    //this.lovFacade.getGroupLovs();
+    this.lovFacade.getCaseStatusLovs();   
     this.caseFacade.loadGroupCode();
     this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
   }

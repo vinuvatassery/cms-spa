@@ -7,7 +7,6 @@ import { filter, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-profile-drug-page',
   templateUrl: './profile-drug-page.component.html',
-  styleUrls: ['./profile-drug-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileDrugPageComponent  implements OnInit , OnDestroy {

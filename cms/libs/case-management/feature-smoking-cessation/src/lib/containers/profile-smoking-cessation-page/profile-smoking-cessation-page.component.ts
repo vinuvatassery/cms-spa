@@ -7,7 +7,6 @@ import { ScreenType } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-profile-smoking-cessation-page',
   templateUrl: './profile-smoking-cessation-page.component.html',
-  styleUrls: ['./profile-smoking-cessation-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileSmokingCessationPageComponent implements OnInit {

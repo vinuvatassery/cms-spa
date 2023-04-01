@@ -6,7 +6,6 @@ import { DocumentFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-profile-document-page',
   templateUrl: './profile-document-page.component.html',
-  styleUrls: ['./profile-document-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileDocumentPageComponent implements OnInit {

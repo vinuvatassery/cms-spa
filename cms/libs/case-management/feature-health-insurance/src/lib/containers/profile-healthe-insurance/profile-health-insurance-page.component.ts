@@ -8,7 +8,6 @@ import { filter, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-profile-health-insurance-page',
   templateUrl: './profile-health-insurance-page.component.html',
-  styleUrls: ['./profile-health-insurance-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {

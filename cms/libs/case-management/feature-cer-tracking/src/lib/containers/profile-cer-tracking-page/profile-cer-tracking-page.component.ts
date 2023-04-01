@@ -8,7 +8,6 @@ import { filter, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-profile-cer-tracking-page',
   templateUrl: './profile-cer-tracking-page.component.html',
-  styleUrls: ['./profile-cer-tracking-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {

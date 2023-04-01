@@ -1,12 +1,11 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CaseFacade, EmploymentFacade, FamilyAndDependentFacade, ScreenType } from '@cms/case-management/domain';
+import { CaseFacade, FamilyAndDependentFacade, ScreenType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-profile-family-and-dependent-page',
-  templateUrl: './profile-family-and-dependent-page.component.html',
-  styleUrls: ['./profile-family-and-dependent-page.component.scss'],
+  templateUrl: './profile-family-and-dependent-page.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileFamilyAndDependentPageComponent implements OnInit{

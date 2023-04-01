@@ -3,16 +3,18 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ViewChild,
   OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
-import { ScreenType, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
+import {
+  ScreenType,
+  CaseFacade,
+  ClientProfileTabs
+} from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
-import { TabStripComponent } from '@progress/kendo-angular-layout';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -79,7 +81,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.clientChangeSubscription$.unsubscribe();
   }
-  
+
   /** Private methods **/
 
   private initialize() {
@@ -94,9 +96,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     }
   }
 
-    get clientProfileTabs(): typeof ClientProfileTabs {
-      return ClientProfileTabs;
-    }
+  get clientProfileTabs(): typeof ClientProfileTabs {
+    return ClientProfileTabs;
+  }
   private caseSelection() {
     this.route.paramMap.subscribe({
       next: (params) => {
@@ -115,7 +117,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         const clientId = this.route.snapshot.paramMap.get('id') ?? 0;
         if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
           this.initialize();
-        
+
           this.loadClientProfileInfoEventHandler();
         }
       });
@@ -187,7 +189,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.loadClientProfileInfoEventHandler();
   }
 
-  onTabClick(tabName: string) {    
+  onTabClick(tabName: string) {
     this.selectedTabName = tabName;
     switch (tabName) {
       case ClientProfileTabs.CLIENT_INFO:
@@ -248,8 +250,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.caseFacade.onClientProfileTabSelect(
       tabName,
       this.profileClientId,
-      this.clientCaseEligibilityId
-      ,
+      this.clientCaseEligibilityId,
       this.clientCaseId
     );
   }

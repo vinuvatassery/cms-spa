@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute} from '@angular/router';
 
@@ -11,6 +11,7 @@ import { LovFacade } from '@cms/system-config/domain';
   selector: 'case-management-profile-contact-page',
   templateUrl: './profile-contact-page-component.html',
   styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileContactPageComponent implements OnInit{
   profileClientId!: number;

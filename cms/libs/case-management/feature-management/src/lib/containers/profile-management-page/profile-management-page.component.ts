@@ -13,7 +13,6 @@ import { filter, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-profile-management-page',
   templateUrl: './profile-management-page.component.html',
-  styleUrls: ['./profile-management-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileManagementPageComponent implements OnInit, OnDestroy {
