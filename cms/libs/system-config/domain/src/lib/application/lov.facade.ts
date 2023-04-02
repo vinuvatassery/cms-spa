@@ -63,7 +63,7 @@ export class LovFacade {
   private lovAddressTypeSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnAddressType = new BehaviorSubject<boolean>(false);
   private lovClientPhoneDeviceTypeSubject = new Subject<Lov[]>();
-
+  private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -103,7 +103,7 @@ export class LovFacade {
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
   lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
-
+  attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
         /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -524,7 +524,17 @@ getApplicantInfoLovs(): void {
     },
   });
 }
+getAttachmentTypesLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.AttachmentsTypes).subscribe({
+    next: (lovResponse) => {
+      this.lovAttachmentsDroplistSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
 
+}
 }
 
 

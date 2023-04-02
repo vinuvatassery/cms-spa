@@ -307,7 +307,7 @@
       </ng-template>
 
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Attachments" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
+    <kendo-tabstrip-tab title="Attachments">
 
       <ng-template kendoTabContent>
         <div class="block-section mt-1">
@@ -318,7 +318,9 @@
             </div>
 
           </div>
-          <case-management-document-list></case-management-document-list>
+          <case-management-document-list 
+          [clientId]="clientId" 
+          [caseEligibilityId]="clientCaseEligibilityId" [clientCaseId]="clientCaseId"></case-management-document-list>
         </div>
       </ng-template>
 
