@@ -106,7 +106,7 @@ export class UploadProofDocumentComponent implements OnInit {
     const document : Document  = {
       clientId: this.clientId,
       clientCaseId: this.clientCaseId,
-      clientCaseEligibilityId : '5E49713D-3E7E-44FD-8197-023E200951B9',// this.caseEligibilityId,
+      clientCaseEligibilityId : this.caseEligibilityId,// '5E49713D-3E7E-44FD-8197-023E200951B9',
       document: this.copyOfUploadedFiles[0].document.rawFile,
       documentName: this.copyOfUploadedFiles[0].name,       
       documentSize: this.copyOfUploadedFiles[0].size,
@@ -148,7 +148,7 @@ export class UploadProofDocumentComponent implements OnInit {
       clientDocumentId : this.clientDocumentId,
       clientId: this.clientId,
       clientCaseId: this.clientCaseId,
-      clientCaseEligibilityId : '5E49713D-3E7E-44FD-8197-023E200951B9',// this.caseEligibilityId,
+      clientCaseEligibilityId : this.caseEligibilityId, // '5E49713D-3E7E-44FD-8197-023E200951B9',
       attachmentType: this.attachmentType,
       otherAttachmentType: this.uploadform.controls['otherAttachmentType'].value,
       attachmentNote: this.uploadform.controls['attachmentNote'].value,

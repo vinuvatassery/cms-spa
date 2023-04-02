@@ -78,7 +78,7 @@ export class DocumentListComponent implements OnInit {
     /** Private methods **/
     private loadDocuments(): void {      
       this.loaderService.show();
-      this.documentFacade.getDocumentsByClientCaseEligibilityId('5E49713D-3E7E-44FD-8197-023E200951B9'); 
+      this.documentFacade.getDocumentsByClientCaseEligibilityId(this.caseEligibilityId);//'5E49713D-3E7E-44FD-8197-023E200951B9'); 
       this.loaderService.hide();
       this.isGridLoaderShow = false;
     }
