@@ -1,6 +1,6 @@
 import { Input, OnInit, Directive, ViewContainerRef, TemplateRef, OnDestroy } from "@angular/core";
 import { AuthService } from "@cms/shared/util-oidc";
-import { UserDataService, UserManagementFacade } from "@cms/system-config/domain";
+import { UserDataService } from "@cms/system-config/domain";
 import {  first, Subscription } from "rxjs";
 
 @Directive({

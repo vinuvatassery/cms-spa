@@ -1,19 +1,18 @@
 /** Angular **/
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Output, Input,
+  Output,
+  Input,
   EventEmitter,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
-import {
-  FormGroup
-} from '@angular/forms'
 
-import {DrugPharmacyFacade,WorkflowFacade } from '@cms/case-management/domain';
- 
- 
+import {
+  DrugPharmacyFacade,
+  WorkflowFacade,
+} from '@cms/case-management/domain';
+
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -22,58 +21,61 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetAsPrimaryPharmacyComponent {
-
   @Output() closeSelectNewPrimaryPharmacies = new EventEmitter();
   @Input() clientPharmacyDetails!: any;
-  @Input() pharmacies:any[] = [];
+  @Input() pharmacies: any[] = [];
   @Output() addNewPharmacyClick = new EventEmitter<any>();
   @Output() removePharmacyClick = new EventEmitter<any>();
   IsDeactivateSelectPrimaryPharmacies = false;
-  selectedPharmacy:any;
-  selectedVendorId:string = "";
-  selectedSearchedPharmacy:any;
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  selectedPharmacy: any;
+  selectedVendorId: string = '';
+  selectedSearchedPharmacy: any;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
   searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
   selectedPharmacyForEdit!: string;
   constructor(
- 
     private readonly ref: ChangeDetectorRef,
     private drugPharmacyFacade: DrugPharmacyFacade,
-    private workflowFacade: WorkflowFacade,
-   
-  ) { }
-  onCloseSelectNewPrimaryPharmaciesClicked(){
+    private workflowFacade: WorkflowFacade
+  ) {}
+  onCloseSelectNewPrimaryPharmaciesClicked() {
     this.closeSelectNewPrimaryPharmacies.emit();
   }
-  searchPharmacies(searchText:string){
+  searchPharmacies(searchText: string) {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
-  onChangePharmacy(selectedPharmacy:any){
+  onChangePharmacy(selectedPharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
-  this.selectedPharmacy = this.pharmacies.find(x =>x.vendorId == selectedPharmacy);
-  this.selectedSearchedPharmacy = null;
-  this.selectedPharmacyForEdit = "";
-  this.ref.detectChanges();
+    this.selectedPharmacy = this.pharmacies.find(
+      (x) => x.vendorId == selectedPharmacy
+    );
+    this.selectedSearchedPharmacy = null;
+    this.selectedPharmacyForEdit = '';
+    this.ref.detectChanges();
   }
   onSearchTemplateClick(pharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
-    if(pharmacy.vendorId){
+    if (pharmacy.vendorId) {
       this.selectedSearchedPharmacy = pharmacy;
       this.selectedPharmacy = null;
-      this.selectedVendorId = "";
+      this.selectedVendorId = '';
       this.ref.detectChanges();
     }
   }
-  onAddNewPharmacy(){
-    if(this.IsDeactivateSelectPrimaryPharmacies){
+  onAddNewPharmacy() {
+    if (this.IsDeactivateSelectPrimaryPharmacies) {
       let isNewAdded = this.selectedSearchedPharmacy ? true : false;
-      let newPharmacy = this.selectedSearchedPharmacy ? this.selectedSearchedPharmacy : this.selectedPharmacy;
-      this.addNewPharmacyClick.emit({isNewAdded:isNewAdded,newPharmacy:newPharmacy});
+      let newPharmacy = this.selectedSearchedPharmacy
+        ? this.selectedSearchedPharmacy
+        : this.selectedPharmacy;
+      this.addNewPharmacyClick.emit({
+        isNewAdded: isNewAdded,
+        newPharmacy: newPharmacy,
+      });
     }
   }
-  onRemovePharmacy(){
-    this.removePharmacyClick.emit(this.selectedPharmacy)
+  onRemovePharmacy() {
+    this.removePharmacyClick.emit(this.selectedPharmacy);
   }
-  
 }

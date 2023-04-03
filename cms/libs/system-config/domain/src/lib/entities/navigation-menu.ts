@@ -7,5 +7,6 @@ export interface NavigationMenu {
     icon: string;
     hasBadge: boolean;
     sequenceNbr: number;
+    target:string;
     subMenus: NavigationMenu[];
 }

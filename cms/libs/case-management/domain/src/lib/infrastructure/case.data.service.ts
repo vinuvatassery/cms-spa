@@ -398,4 +398,8 @@ export class CaseDataService {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/SessionSearch`);
   }
+
+  loadEligibilityPeriods(clientCaseId: string){
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}/eligibility-periods`);
+  }
 }

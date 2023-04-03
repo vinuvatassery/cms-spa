@@ -7,7 +7,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Data services **/
 import { DrugDataService } from '../infrastructure/drug.data.service';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ClientPharmacy, Pharmacy ,DrugPharmacy,DrugPurchased} from '../entities/client-pharmacy';
+import { ClientPharmacy, Pharmacy,DrugPurchased} from '../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
