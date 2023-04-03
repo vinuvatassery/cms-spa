@@ -225,7 +225,6 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.addressForm.controls["effectiveDate"].disable();
   }
   private bindModelToForm(address:any){
-    debugger;
     this.editAddressTypeText =address?.addressTypeDesc.toLowerCase()
     this.address = address;    
     this.addressForm.controls["addressType"].setValue(address.addressTypeCode);
