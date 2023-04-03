@@ -1,7 +1,7 @@
 <!-- Table Top Filter, Search and Export -->
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
-    <kendo-floatinglabel >
+    <kendo-floatinglabel text="Column lists">
       <kendo-dropdownlist aria-label="All Columns"  [fillMode]="formUiStyle.dropDownFillMode" [data]="columnDroplist$ | async"
       textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
       </kendo-dropdownlist>
