@@ -3,6 +3,7 @@ export * from './lib/case-management-feature-drug.module';
 
 /** Components **/
 export * from './lib/containers/drug-page/drug-page.component';
+export * from './lib/containers/profile-drug-page/profile-drug-page.component';
 export * from './lib/components/deactivate-pharmacy/deactivate-pharmacy.component';
 export * from './lib/components/new-pharmacy-approval-request/new-pharmacy-approval-request.component';
 export * from './lib/components/pharmacy-claim-list/pharmacy-claim-list.component';

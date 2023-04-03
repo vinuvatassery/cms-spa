@@ -1,0 +1,17 @@
+<div class="block-section mt-1" *ngIf="((tabId$ | async)===clientProfileTabs.DRUGS_PHARMACIES) || tabId === clientProfileTabs.DRUGS_PHARMACIES">
+  <case-management-pharmacies-list [clientId]="profileClientId" [clientpharmacies$]="clientpharmacies$"
+    [pharmacysearchResult$]="pharmacysearchResult$" [selectedPharmacy$]="selectedPharmacy$"
+    [addPharmacyResponse$]="addPharmacyRsp$" [editPharmacyResponse$]="editPharmacyRsp$"
+    [removePharmacyResponse$]="removePharmacyRsp$" [removeDrugPharmacyResponse$]="removeDrugPharmacyRsp$"
+    [triggerPriorityPopup$]="triggerPriorityPopup$" [searchLoaderVisibility$]="searchLoaderVisibility$"
+    (removePharmacyClick)="removeDrugPharmacyRsp($event)" (searchPharmacy)="searchPharmacy($event)"
+    (addPharmacyClick)="addPharmacy($event)"></case-management-pharmacies-list>
+</div>
+
+
+<div class="block-section mt-1"  *ngIf="((tabId$ | async)===clientProfileTabs.DRUGS_PURCHASED) || tabId === clientProfileTabs.DRUGS_PURCHASED">
+  <case-management-drugs-purchased-list
+    [clientId]="profileClientId"></case-management-drugs-purchased-list>
+</div>
+
+

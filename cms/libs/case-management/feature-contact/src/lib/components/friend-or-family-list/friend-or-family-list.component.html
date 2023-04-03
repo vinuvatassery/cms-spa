@@ -19,7 +19,7 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [kendoGridBinding]="gridView" [rowClass]="rowClass">
+      <kendo-grid [kendoGridBinding]="gridView" [rowClass]="rowClass" [loading]="isGridLoaderShow">
         <kendo-grid-column field="firstName" title="Name" [width]="250">
         </kendo-grid-column>
         <kendo-grid-column
@@ -60,7 +60,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              aria-label="profile avatar"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>

@@ -19,3 +19,54 @@
   padding: 1rem;
   padding-bottom: 2rem;
 }
+
+
+
+.tabbed {
+  display: flex;
+  flex-wrap: wrap;
+}
+.tabbed > input {
+  display: none;
+}
+.tabbed > input:checked + label {
+  background-color: silver;
+}
+.tabbed > input:checked + label + div {
+  display: block;
+}
+.tabbed > label {
+  order: 1;
+  flex-grow: 1;
+  padding: 10px;
+}
+.tabbed > div {
+  order: 2;
+  flex-basis: 100%;
+  display: none;
+  padding: 10px;
+}
+
+/* For presentation only */
+.container {
+  width: 600px;
+  margin: 0 auto;
+  background-color: gold;
+}
+
+.tabbed {
+  border: 1px solid;
+}
+
+hr {
+  background-color: white;
+  height: 5px;
+  border: 0;
+  margin: 10px 0 0;
+}
+hr + * {
+  margin-top: 10px;
+}
+hr + hr {
+  margin: 0 0;
+}

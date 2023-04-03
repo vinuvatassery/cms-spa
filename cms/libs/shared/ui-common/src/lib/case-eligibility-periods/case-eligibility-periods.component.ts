@@ -1,12 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-case-eligibility-periods',
-  templateUrl: './case-eligibility-periods.component.html',
-  styleUrls: ['./case-eligibility-periods.component.scss']
+  templateUrl: './case-eligibility-periods.component.html'
 })
-export class CaseEligibilityPeriodsComponent implements OnInit {
+export class CaseEligibilityPeriodsComponent {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eligibilityPeriodsList: any = [];
@@ -34,8 +33,7 @@ export class CaseEligibilityPeriodsComponent implements OnInit {
   }
 
   @Output() onEligibilityPeriodChange = new EventEmitter<any>();
-
-  ngOnInit() { }
+ 
 
   setDropdownValues() {
     this.eligibilityPeriodsData.forEach((x: any) => {

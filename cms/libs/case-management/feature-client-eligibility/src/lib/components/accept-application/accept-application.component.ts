@@ -81,8 +81,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
 
   private loadLovs()
   {
-    this.lovFacade.getCaseStatusLovs();
-    //this.lovFacade.getGroupLovs();
+    this.lovFacade.getCaseStatusLovs();   
     this.caseFacade.loadGroupCode();
     this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
   }
@@ -106,7 +105,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
       this.populateEligibility();
       this.loaderService.show();
       this.btnDisabled = true
-    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId).subscribe({
+    this.clientEligibilityFacade.saveAcceptedApplication(this.acceptedApplication,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.acceptedEligibility).subscribe({
       next: (data) => {
         if(!this.isEdit)
         {
@@ -160,6 +159,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
     this.acceptedApplication.groupCode = this.eligibilityForm.controls['groupCode'].value;
     this.acceptedApplication.groupCodeId = this.eligibilityForm.controls['groupCode'].value;
     this.acceptedApplication.caseStatusCode = this.eligibilityForm.controls['caseStatusCode'].value;
+    this.acceptedApplication.eligibilityStatusCode = this.eligibilityForm.controls['caseStatusCode'].value;
     this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityForm.controls['eligibilityStartDate'].value,this.dateFormat));
     this.acceptedApplication.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityForm.controls['eligibilityEndDate'].value,this.dateFormat));
     this.acceptedApplication.assignedCwUserId = null;

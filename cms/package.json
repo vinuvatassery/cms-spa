@@ -50,6 +50,7 @@
     "@progress/kendo-angular-popup": "^11.4.0",
     "@progress/kendo-angular-progressbar": "^11.4.0",
     "@progress/kendo-angular-ripple": "^11.4.0",
+    "@progress/kendo-angular-scrollview": "^11.4.0",
     "@progress/kendo-angular-sortable": "^11.4.0",
     "@progress/kendo-angular-toolbar": "^11.4.0",
     "@progress/kendo-angular-tooltip": "^11.4.0",
