@@ -7,8 +7,10 @@
         <input
           type="checkbox"
           kendoCheckBox
+          [(ngModel)]="isShowHistorical"
           aria-labelledby="EmailAddressesshowHistorical"
           id="EmailAddressesshowHistorical"
+          (change)="onIsShowHistoricalChange()"
         />
         <label class="k-checkbox-label" for="EmailAddressesshowHistorical"
           >Show historical</label

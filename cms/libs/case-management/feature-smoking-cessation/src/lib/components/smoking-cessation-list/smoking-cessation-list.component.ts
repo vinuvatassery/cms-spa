@@ -18,6 +18,7 @@ export class SmokingCessationListComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   gridSmokingData:any=[];
   smokingForm: FormGroup;
+  isShowHistorical: boolean=false;
    /** Constructor**/
    constructor(
     private readonly smokingCessationFacade : SmokingCessationFacade,
@@ -34,7 +35,7 @@ export class SmokingCessationListComponent implements OnInit {
 
   loadGridData(){
     this.smokingCessationFacade.showLoader();
-    this.smokingCessationFacade.loadSmokingCessationNotes(this.clientId,this.clientCaseEligibilityId,ClientNoteTypeCode.smokingCessationReferral)
+    this.smokingCessationFacade.loadSmokingCessationNotes(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,ClientNoteTypeCode.smokingCessationReferral,this.isShowHistorical)
     .subscribe({
       next: (data:any) =>{
         this.gridSmokingData=data;
@@ -45,6 +46,9 @@ export class SmokingCessationListComponent implements OnInit {
         this.smokingCessationFacade.hideLoader();
       }
     });
+  }
+  onIsShowHistoricalChange(){
+    this.loadGridData();
   }
 
   onTareaCessationValueChange(event: any): void {
@@ -68,6 +72,9 @@ export class SmokingCessationListComponent implements OnInit {
       note: this.smokingForm.controls["smokingCessationNote"].value,
       NoteTypeCode:ClientNoteTypeCode.smokingCessationReferral
     };
+    if(clientNote.note===null || clientNote.note===''){
+      this.closeAddReferralSmokingCessationClicked();
+    }
     this.smokingCessationFacade.showLoader();
     this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
       next: (x:any) =>{
