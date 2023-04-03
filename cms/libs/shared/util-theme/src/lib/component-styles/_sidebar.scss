@@ -207,7 +207,7 @@ cms-sidenav {
   }
   .menu-active-session-list{
     padding: $size-xlg1 $size-xlg1 0 $size-xlg1;
-    max-height: calc(100vh - 378px);
+    max-height: calc(100vh - 420px);
     overflow-y: auto;
   }
   &.menuToggled {
@@ -338,15 +338,15 @@ cms-sidenav {
             height: 100%;
             max-height: calc(100% - $header-height);
             overflow: auto;
-            border-left: 1px solid material-color($hive-primary-palette, 100);
+            border-left: 1px solid material-color($hive-primary-palette, 600);
             .menu-active-session-list{
               &:hover{
                 visibility: visible;
-                overflow-y: hidden !important;
+          
                 &::-webkit-scrollbar-thumb,
                 &::-webkit-scrollbar-track{
                    visibility: visible !important;
-                   overflow-y: hidden !important;
+   
                  
                  }
               }
@@ -364,8 +364,8 @@ cms-sidenav {
 
     .menu-active-session-list{
       padding: $size-xlg1 $size-xlg1 0 $size-xlg1;
-      max-height: 100%;
-      overflow-y: auto;
+      max-height: fit-content;
+      overflow-y: hidden;
     }
   }
 }
@@ -388,3 +388,10 @@ cms-sidenav {
   touch-action: none;
   opacity: 0.7;
  }
+
+ .secession-empty-state{
+  text-align: center;
+  padding: 1rem;
+  background: #00000021;
+  border-radius: 6px;
+}
