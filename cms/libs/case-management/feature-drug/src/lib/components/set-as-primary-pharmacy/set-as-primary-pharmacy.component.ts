@@ -46,6 +46,7 @@ export class SetAsPrimaryPharmacyComponent {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
   onChangePharmacy(selectedPharmacy: any) {
+    debugger;
     this.IsDeactivateSelectPrimaryPharmacies = true;
     this.selectedPharmacy = this.pharmacies.find(
       (x) => x.vendorId == selectedPharmacy
@@ -76,8 +77,11 @@ export class SetAsPrimaryPharmacyComponent {
     }
   }
   onRemovePharmacy() {
+   
     let isNewAdded = this.selectedSearchedPharmacy ? true : false;
     let newPharmacy = this.selectedSearchedPharmacy
+    ? this.selectedSearchedPharmacy
+    : this.selectedPharmacy;
     this.removePharmacyClick.emit({
       isNewAdded: isNewAdded,
       newPharmacy: newPharmacy,

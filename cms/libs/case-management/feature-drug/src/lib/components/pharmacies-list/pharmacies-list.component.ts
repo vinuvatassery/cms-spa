@@ -269,7 +269,7 @@ export class PharmaciesListComponent implements OnInit {
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,
-            "P"
+            PriorityCode.Primary
           );
         }else {
 
@@ -284,7 +284,7 @@ export class PharmaciesListComponent implements OnInit {
     let updatedPharmacy =[ {
       ClientPharmacyId:pharmacyId,
       ClientId:this.clientId,
-      PriorityCode:"P"
+      PriorityCode:PriorityCode.Primary
     }]
     this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,updatedPharmacy)
   }
