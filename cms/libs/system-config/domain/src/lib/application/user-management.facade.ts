@@ -1,6 +1,5 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subject } from 'rxjs';
 /** External libraries **/

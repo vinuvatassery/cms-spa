@@ -41,7 +41,6 @@ export class GroupDetailComponent implements OnInit {
 
   /* Private methods */
   private buildForm() {
-    //this.currentDate = new Date();
     this.groupForm = new FormGroup({
       groupCodeId: new FormControl('', Validators.required),
       groupStartDate: new FormControl(this.currentDate, Validators.required)

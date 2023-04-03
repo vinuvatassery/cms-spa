@@ -30,8 +30,7 @@ export class AuthService {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated, allConfigsAuthenticated }) => {
         this.authenticated = isAuthenticated;
-        if(this.authenticated){        
-        }
+        
       }
     );
 

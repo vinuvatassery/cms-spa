@@ -21,6 +21,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { HivCaseManagerCardComponent } from './components/hiv-case-manager-card/hiv-case-manager-card.component';
 import { RemoveCaseManagerConfirmationComponent } from './components/remove-case-manager-confirmation/remove-case-manager-confirmation.component';
 import { CaseManagerSearchComponent } from './components/case-manager-search/case-manager-search.component';
+import { ProfileManagementPageComponent } from './containers/profile-management-page/profile-management-page.component';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { CaseManagerSearchComponent } from './components/case-manager-search/cas
     ManagementPageComponent,
     HivCaseManagerCardComponent,
     RemoveCaseManagerConfirmationComponent,
-    CaseManagerSearchComponent
+    CaseManagerSearchComponent,
+    ProfileManagementPageComponent
   ],
   exports: [
     CaseManagerListComponent,
@@ -59,7 +61,8 @@ import { CaseManagerSearchComponent } from './components/case-manager-search/cas
     AssignCaseManagerComponent,
     HivCaseManagerCardComponent,
     RemoveCaseManagerConfirmationComponent,
-    CaseManagerSearchComponent
+    CaseManagerSearchComponent,
+    ProfileManagementPageComponent
   ],
 })
 export class CaseManagementFeatureManagementModule {}

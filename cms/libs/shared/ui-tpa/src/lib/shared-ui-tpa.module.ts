@@ -26,6 +26,7 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
 import {UIFormStyle} from './kendo-uiform-style-config';
 import {UploadFileRistrictionOptions, CurrencyFormat,IntlDateService, DataQuery} from './kendo-form-element-config';
 import { SortableModule } from "@progress/kendo-angular-sortable";
+import { ScrollViewModule } from "@progress/kendo-angular-scrollview";
  
 const MODULES = [
   InputsModule,
@@ -49,6 +50,7 @@ const MODULES = [
   NotificationModule,
   IndicatorsModule,
   SortableModule, 
+  ScrollViewModule,
 ];
 
 @NgModule({

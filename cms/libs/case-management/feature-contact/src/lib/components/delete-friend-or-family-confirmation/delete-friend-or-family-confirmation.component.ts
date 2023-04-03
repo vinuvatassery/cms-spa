@@ -5,8 +5,7 @@ import { SnackBarNotificationType,NotificationSnackbarService, LoggingService} f
 
 @Component({
   selector: 'case-management-delete-friend-or-family-confirmation',
-  templateUrl: './delete-friend-or-family-confirmation.component.html',
-  styleUrls: ['./delete-friend-or-family-confirmation.component.css']
+  templateUrl: './delete-friend-or-family-confirmation.component.html'
 })
 export class DeleteFriendOrFamilyConfirmationComponent{
 

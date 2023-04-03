@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientAddress, ContactInfo, FriendsOrFamilyContactClientProfile } from '../entities/contact';
-import { AddressTypeCode } from '../enums/address-type-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
