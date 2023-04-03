@@ -21,6 +21,7 @@ import { ClientEditViewTransgenderComponent } from './components/client-edit-vie
 import { ClientEditViewSexAtBirthComponent } from './components/client-edit-view-sex-at-birth/client-edit-view-sex-at-birth.component';
 import { ClientEditViewSexualIdentityComponent } from './components/client-edit-view-sexual-identity/client-edit-view-sexual-identity.component';
 import { ClientEditViewRaceAndEthnicityComponent } from './components/client-edit-view-race-and-ethnicity/client-edit-view-race-and-ethnicity.component';
+import { ProfileClientPageComponent } from './containers/profile-client-page/profile-client-page.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { ClientEditViewRaceAndEthnicityComponent } from './components/client-edi
     ClientEditViewSexAtBirthComponent,
     ClientEditViewSexualIdentityComponent,
     ClientEditViewRaceAndEthnicityComponent,
+    ProfileClientPageComponent
   ],
   exports: [
     ClientPageComponent,
@@ -53,6 +55,7 @@ import { ClientEditViewRaceAndEthnicityComponent } from './components/client-edi
     SpecialHandlingComponent,
     DuplicateClientFoundComponent,
     SpecialHandlingDetailComponent,
+    ProfileClientPageComponent
   ],
 })
 export class CaseManagementFeatureClientModule {}

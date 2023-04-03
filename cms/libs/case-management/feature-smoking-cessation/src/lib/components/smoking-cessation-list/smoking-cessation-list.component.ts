@@ -1,11 +1,10 @@
 import { Component,Input,OnInit,ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {ClientNote, ClientNoteTypeCode, SmokingCessationFacade} from '@cms/case-management/domain';
+import {ClientNoteTypeCode, SmokingCessationFacade} from '@cms/case-management/domain';
 import { FormBuilder, FormGroup } from '@angular/forms';
 @Component({
   selector: 'case-management-smoking-cessation-list',
-  templateUrl: './smoking-cessation-list.component.html',
-  styleUrls: ['./smoking-cessation-list.component.scss'],
+  templateUrl: './smoking-cessation-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SmokingCessationListComponent implements OnInit {

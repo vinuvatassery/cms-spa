@@ -1,1 +1,16 @@
-<p>deactivate-pharmacy works!</p>
+
+    <section class="k-dialog-body">
+        <p class="text-muted mb-2">It will still be viewable in the client profile. You can add a new pharmacy at any
+            time.</p>    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between">
+            <div class="justify-content-end">
+                <button kendoButton [primary]="true" look="outline" aria-label="cancel updating priority"
+                    (click)="onCloseDeactivatePharmaciesClicked()"> Cancel </button>
+                <button kendoButton [primary]="true" aria-label="update priority"> DEACTIVATE </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
+
+    
+ 

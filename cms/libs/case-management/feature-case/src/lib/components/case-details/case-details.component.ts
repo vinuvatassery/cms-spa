@@ -14,7 +14,7 @@ import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { ProgramCode, CaseOriginCode } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
-import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
+import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-case-detailed-summary',

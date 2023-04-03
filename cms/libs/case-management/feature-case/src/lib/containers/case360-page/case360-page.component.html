@@ -3,6 +3,9 @@
   [caseWorkerId]="caseWorkerId"
   [loadedClientHeader]="loadedClientHeader$ | async"
   [clientProfileImpInfo$]="clientProfileImpInfo$"
+[clientId] = "clientId"
+[clientCaseId]="clientCaseId"
+[clientCaseEligibilityId]="clientCaseEligibilityId"
   [currentGroup$]="currentGroup$"
   [ddlGroups$]="ddlGroups$"
   [groupUpdated$]="groupUpdated$"
@@ -18,317 +21,115 @@
   <!-- Case Details right Menus -->
   <case-management-case360-header-tools></case-management-case360-header-tools>
 
-  <!-- Case Details Tab Sections -->
-  <kendo-tabstrip #tabStripParent [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-    class="app-c-tab case-360-tab">
-    <kendo-tabstrip-tab title="Client" [selected]="true" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>
-      <ng-template kendoTabContent>
-        <kendo-tabstrip  #tabStripChild [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-         class="app-c-tab app-c-sub-tab" (tabSelect)="onClientProfileTabSelected($event)">
+  <div class="client-tab-bar-wrappers">
 
-          <kendo-tabstrip-tab title="Client Info" [selected]="selectedClientTabTitle === clientProfileTabTitles.CLIENT_INFO" *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-client-read-only-view [clientProfile]="loadedClient$ | async"
-                  [clientId]="profileClientId" [clientCaseEligibilityId]="clientCaseEligibilityId"
-                  [clientCaseId]="clientCaseId" (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"
-                  (onUpdateApplicantInfo)="loadHeaderAndProfile()"></case-management-client-read-only-view>
-                <case-management-special-handling></case-management-special-handling>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-
-          <kendo-tabstrip-tab title="Contact Info" [selected]="selectedClientTabTitle === clientProfileTabTitles.CONTACT_INFO" *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <case-management-profile-contact-page [profileClientId]="profileClientId"
-                [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-profile-contact-page>
-            </ng-template>
-          </kendo-tabstrip-tab>
-
-          <kendo-tabstrip-tab title="Family & Dependents" [selected]="selectedClientTabTitle === clientProfileTabTitles.FAMILY_DEPENDENTS"
-            *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-row">
-                  <div class="flex-col flex-space-bw align-items-center mb-1">
-                    <h2 class="title-md mb-0 text-bold">Family & Dependents</h2>
-                    <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
-                      <span class="text-bold" for="FamilyAndDependentEP">EP:&nbsp;</span>
-                      <div class="fmly-epdorpdown">
-                        <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData"
-                        [caseEligibilityId]="historyClientCaseEligibilityId"
-                        (onEligibilityPeriodChange)="onDependentPeriodSelectionChange($event)">
-                        </case-management-case-eligibility-periods>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex-col">
-                    <case-management-family-and-dependent-list
-                    [data]="screenName"
-                    [pageSizes]="pageSizes"
-                    [sortValue]="sortValue"
-                    [sortType]="sortType"
-                    [sort]="sort"
-                    [dependents$]="dependentList$"
-                    (loadDependentsEvent)="loadDependentsHandle($event)"
-                    ></case-management-family-and-dependent-list>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-
-          <kendo-tabstrip-tab title="Income" [selected]="selectedClientTabTitle === clientProfileTabTitles.INCOME" *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <case-management-profile-income-page [clientId]="profileClientId" [clientCaseId]="clientCaseId"
-              [clientCaseEligibilityId]="clientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
-              [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-income-page>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Employment" [selected]="selectedClientTabTitle === clientProfileTabTitles.EMPLOYMENT" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <case-management-profile-employment-page [clientId]="profileClientId" [clientCaseId]="clientCaseId"
-              [clientCaseEligibilityId]="clientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
-              [eligibilityPeriodData]="eligibilityPeriodData"></case-management-profile-employment-page>
-            </ng-template>
-          </kendo-tabstrip-tab>
-
-          <kendo-tabstrip-tab title="Smoking Cessation" *ifPermission='["Client_Profile_Client_Employment_Tab_View_Only"]'> 
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-row">
-             
-                  <div class="flex-col">
-                   
-                    <case-management-smoking-cessation-list [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"></case-management-smoking-cessation-list>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          
-        </kendo-tabstrip>
-      </ng-template>
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Health Insur." *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
-      <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
-            *ifPermission='["Client_Profile_Health_Ins_Insurance_ Status_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Premium Payments"
-            *ifPermission='["Client_Profile_Health_Ins_Premium_Payments__Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-medical-payment-list></case-management-medical-payment-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Co-Pays & Deductibles"
-            *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-        </kendo-tabstrip>
-      </ng-template>
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Dental Insur." *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
-      <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Insurance Status" [selected]="true"
-            *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Premium Payments"
-            *ifPermission='["Client_Profile_Dental_Premium_Payments__Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-medical-payment-list></case-management-medical-payment-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Co-Pays & Deductibles"
-            *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-        </kendo-tabstrip>
-      </ng-template>
+    <div class="custom-client-tab-main-wrapper">
 
 
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Drugs" *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
-
-      <ng-template kendoTabContent>
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Pharmacies" [selected]="true"
-            *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-pharmacies-list [clientId]="profileClientId" [clientpharmacies$]="clientpharmacies$"
-                  [pharmacysearchResult$]="pharmacysearchResult$" [selectedPharmacy$]="selectedPharmacy$"
-                  [addPharmacyResponse$]="addPharmacyRsp$" [editPharmacyResponse$]="editPharmacyRsp$"
-                  [removePharmacyResponse$]="removePharmacyRsp$" [removeDrugPharmacyResponse$]="removeDrugPharmacyRsp$"
-                  [triggerPriorityPopup$]="triggerPriorityPopup$" [searchLoaderVisibility$]="searchLoaderVisibility$"
-                  (removePharmacyClick)="removeDrugPharmacyRsp($event)" (searchPharmacy)="searchPharmacy($event)"
-                  (addPharmacyClick)="addPharmacy($event)"></case-management-pharmacies-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Drugs Purchased" *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <case-management-drugs-purchased-list
-                  [clientId]="profileClientId"></case-management-drugs-purchased-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-
-        </kendo-tabstrip>
-      </ng-template>
-
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Management" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
-
-      <ng-template kendoTabContent>
-
-        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-          class="app-c-tab app-c-sub-tab">
-          <kendo-tabstrip-tab title="Case Managers" [selected]="true"
-            *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section  mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                  <h2 class="title-md mb-0 text-bold">Case Manager</h2>
-                  <div>
-
-                  </div>
-
-                </div>
-                <case-management-case-manager-list></case-management-case-manager-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Healthcare Providers"
-            *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                  <h2 class="title-md mb-0 text-bold">HIV Healthcare Providers</h2>
-                  <div>
-
-                  </div>
-
-                </div>
-                <case-management-health-care-provider-list></case-management-health-care-provider-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="CD4 Count" *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section  mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                  <h2 class="title-md mb-0 text-bold">CD4 Count</h2>
-                  <div>
-
-                  </div>
-
-                </div>
-                <case-management-cd4-count-list> </case-management-cd4-count-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-          <kendo-tabstrip-tab title="Viral Load"
-            *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>
-            <ng-template kendoTabContent>
-              <div class="block-section  mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                  <h2 class="title-md mb-0 text-bold">Viral Load</h2>
-                  <div>
-
-                  </div>
-
-                </div>
-                <case-management-viral-load> </case-management-viral-load>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
-        </kendo-tabstrip>
-      </ng-template>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.CLIENT_INFO || client_button_grp }"
+        (click)="onTabClick(clientProfileTabs.CLIENT_INFO)" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>Client</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_STATUS || health_button_grp }"
+        (click)="onTabClick(clientProfileTabs.HEALTH_INSURANCE_STATUS)" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
+        Health Insur.</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS || dental_button_grp }"
+        (click)="onTabClick(clientProfileTabs.DENTAL_INSURANCE_STATUS)" *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
+        Dental Insur.</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DRUGS_PHARMACIES || drugs_button_grp}"
+        (click)="onTabClick(clientProfileTabs.DRUGS_PHARMACIES)" *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
+        Drugs</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER || mng_button_grp}"
+        (click)="onTabClick(clientProfileTabs.MANAGEMENT_MANAGER)" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
+        Management</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.STATUS_PERIOD }"
+        (click)="onTabClick(clientProfileTabs.STATUS_PERIOD)" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> statuses</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.ATTACHMENTS }"
+        (click)="onTabClick(clientProfileTabs.ATTACHMENTS)" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
+        Attachments</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName ===clientProfileTabs.APP_HISTORY}"
+        (click)="onTabClick(clientProfileTabs.APP_HISTORY)" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'> App
+        History</button>
 
 
+    </div>
+    <div class="custom-client-tab-inner-wrapper">
+      <kendo-buttongroup *ngIf="client_button_grp">
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_INFO)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_INFO }"
+          *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>Client Info</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_CONTACT_INFO)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_CONTACT_INFO }"
+          *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'> Contact Info</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_FAMILY_DEPENDENTS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_FAMILY_DEPENDENTS }"
+          *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'> Family & Dependents</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_INCOME)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_INCOME }"
+          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
+          Income</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_EMPLOYMENT)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_EMPLOYMENT }"
+          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'> Employment</button>
 
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Statuses" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'>
+          <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_SMOKING_CESS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_SMOKING_CESS }"
+          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'> Smoking Cessation</button>
+      </kendo-buttongroup>
+      <kendo-buttongroup *ngIf="health_button_grp">
+        <button kendoButton (click)="onTabClick(clientProfileTabs.HEALTH_INSURANCE_STATUS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_STATUS }"
+          *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>Insurance Status</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS }"
+          *ifPermission='["Client_Profile_Health_Ins_Premium_Payments_Tab_View_Only"]'>Premium Payments</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.HEALTH_INSURANCE_COPAY)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_COPAY}"
+          *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'> Co-Pays & Deductibles</button>
+      </kendo-buttongroup>
 
-      <ng-template kendoTabContent>
-        <div class="block-section mt-1">
-          <div class="flex-col flex-space-bw align-items-center mb-1">
-            <h2 class="title-md mb-0 text-bold">Status Periods</h2>
-            <div>
+      <kendo-buttongroup *ngIf="dental_button_grp">
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_STATUS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS }"
+          *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>Insurance Status</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS }"
+          *ifPermission='["Client_Profile_Dental_Premium_Payments_Tab_View_Only"]'>Premium Payments</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_COPAY)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_COPAY }"
+          *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'> Co-Pays & Deductibles</button>
+      </kendo-buttongroup>
 
-            </div>
+      <kendo-buttongroup *ngIf="drugs_button_grp">
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.DRUGS_PHARMACIES)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DRUGS_PHARMACIES }"
+          *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>Pharmacies</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.DRUGS_PURCHASED)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DRUGS_PURCHASED }"
+          *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'> Drugs Purchased</button>
+      </kendo-buttongroup>
 
-          </div>
-          <case-management-status-period> </case-management-status-period>
-        </div>
-      </ng-template>
+      <kendo-buttongroup *ngIf="mng_button_grp">
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_MANAGER)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER }"
+          *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>Case Managers</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_PROVIDER)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_PROVIDER }"
+          *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>Healthcare Providers</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_CD4)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_CD4 }"
+          *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>CD4 Count</button>
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_VRL)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_VRL }"
+          *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>Viral Load</button>
+      </kendo-buttongroup>
+    </div>
 
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Attachments" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
+  </div>
+  <div class="client-profile-outlet">
+    <router-outlet></router-outlet>
+  </div>
 
-      <ng-template kendoTabContent>
-        <div class="block-section mt-1">
-          <div class="flex-col flex-space-bw align-items-center mb-1">
-            <h2 class="title-md mb-0 text-bold">Attachments</h2>
-            <div>
-
-            </div>
-
-          </div>
-          <case-management-document-list></case-management-document-list>
-        </div>
-      </ng-template>
-
-    </kendo-tabstrip-tab>
-
-    <kendo-tabstrip-tab title="App History" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'>
-
-      <ng-template kendoTabContent>
-        <div class="block-section mt-1">
-          <div class="flex-col flex-space-bw align-items-center mb-1">
-            <h2 class="title-md mb-0 text-bold">Application History</h2>
-            <div>
-
-            </div>
-
-          </div>
-          <case-management-app-history-list></case-management-app-history-list>
-        </div>
-      </ng-template>
-
-    </kendo-tabstrip-tab>
-
-  </kendo-tabstrip>
 </section>
+
 
 <!-- Review HIV Verification Html-->
 <kendo-dialog *ngIf="isVerificationReviewPopupOpened" (close)="onVerificationReviewClosed()"
