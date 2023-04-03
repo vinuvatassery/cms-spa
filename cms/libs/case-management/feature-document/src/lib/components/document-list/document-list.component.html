@@ -6,11 +6,10 @@
             [pageable]="true" 
             [data]="documents$ | async"
             [resizable]="true"
-            [loading]="isGridLoaderShow"
-            >
+            [loading]="isGridLoaderShow">
 
                 <kendo-grid-column field="documentName" title="File Name" [width]="120"></kendo-grid-column>
-                <kendo-grid-column field="documentSize" title="File Size" [width]="40"></kendo-grid-column>
+                <kendo-grid-column field="documentSizeInMB" title="File Size" [width]="40"></kendo-grid-column>
                 <kendo-grid-column field="attachmentType" title="Attachment Type" [width]="80"></kendo-grid-column>
                 <kendo-grid-column field="creationDate" title="Uploaded On" [width]="60"></kendo-grid-column>
                 <kendo-grid-column field="attachmentNote" title="Attachment Note" [width]="120"></kendo-grid-column>
