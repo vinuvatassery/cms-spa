@@ -36,6 +36,7 @@ export class CaseEligibilityPeriodsComponent {
  
 
   setDropdownValues() {
+    this.eligibilityPeriodsList = [];
     this.eligibilityPeriodsData.forEach((x: any) => {
       let period = {
         id: x.clientCaseEligibilityId,

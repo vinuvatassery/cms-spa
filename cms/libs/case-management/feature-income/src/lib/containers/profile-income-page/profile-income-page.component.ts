@@ -38,7 +38,8 @@ export class ProfileIncomePageComponent implements OnInit {
     this.tabId = this.route.snapshot.queryParams['tid'];  
     this.clientCaseId = this.route.snapshot.queryParams['cid'];  
     this.historyClientCaseEligibilityId = this.clientCaseEligibilityId     
-    this.caseFacade.loadEligibilityPeriods(this.clientCaseId)
+    this.caseFacade.loadEligibilityPeriods(this.clientCaseId);
+    this.loadIncomes();
   }
   private loadIncomeData(clientId: any, eligibilityId: any, skipCount: number,
     pageSize: number, sortBy: string, sortType: string) {
