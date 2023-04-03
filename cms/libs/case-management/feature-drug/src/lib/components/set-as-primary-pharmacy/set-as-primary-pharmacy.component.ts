@@ -46,7 +46,6 @@ export class SetAsPrimaryPharmacyComponent {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
   onChangePharmacy(selectedPharmacy: any) {
-    debugger;
     this.IsDeactivateSelectPrimaryPharmacies = true;
     this.selectedPharmacy = this.pharmacies.find(
       (x) => x.vendorId == selectedPharmacy
