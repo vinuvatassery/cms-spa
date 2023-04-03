@@ -55,6 +55,7 @@ export class PharmaciesListComponent implements OnInit {
   pharmaciesList$ = this.drugPharmacyFacade.clientPharmacies$;
   isOpenChangePriorityClicked = false;
   isOpenDeactivatePharmaciesClicked = false;
+  isOpenReactivatePharmaciesClicked = false;
   isOpenPharmacyClicked = false;
   removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
   isEditPharmacyListClicked = false;
@@ -112,7 +113,7 @@ export class PharmaciesListComponent implements OnInit {
                 ClientId:this.clientId,
                 IsActive:false
               }
-              this.drugPharmacyFacade.deactivePharmacies(clientPharmacy.clientPharmacyId,pharmacy);
+            this.OpenDeactivatePharmaciesClicked(clientPharmacy)
             }
           }
         }
@@ -125,12 +126,14 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'done',
       type:'Reactivate',
       click: (clientPharmacy: any): void => {
+     
         if(clientPharmacy.vendorId){
           let pharmacy ={
             ClientId:this.clientId,
-            IsActive:true
+            IsActive:true,
+            clientPharmacyId:clientPharmacy.clientPharmacyId
           }
-          this.drugPharmacyFacade.reActivatePharmacies(clientPharmacy.vendorId,pharmacy);
+          this.OpenReactivatePharmaciesClicked(pharmacy);
         }
 
       },
@@ -222,6 +225,15 @@ export class PharmaciesListComponent implements OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+    this.drugPharmacyFacade.clientPharmacies$.subscribe(list =>{
+      if(list && list.length > 0){
+        this.pharmacies = list;
+        this.handleClosePharmacyClicked();
+        this.handleCloseSelectNewPrimaryPharmaciesClicked();
+        this.handleCloseReactivatePharmaciesClicked();
+        this.isOpenDeactivatePharmaciesClicked = false;
+      }
+    })
   }
 
   /** Private methods **/
@@ -260,7 +272,8 @@ export class PharmaciesListComponent implements OnInit {
             "P"
           );
         }else {
-          this.setUpdatedPharmacy(data.newPharmacy.pharmacyId);
+
+          this.setUpdatedPharmacy(data.newPharmacy.clientPharmacyId);
         }
       }
     })
@@ -275,15 +288,24 @@ export class PharmaciesListComponent implements OnInit {
     }]
     this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,updatedPharmacy)
   }
-  onRemovePharmacy(pharmacy:any){
+  onRemovePharmacy(data:any){
     this.drugPharmacyFacade.removeClientPharmacy(
       this.clientId ?? 0,
       this.pharmacyId
     );
     this.drugPharmacyFacade.removePharmacyResponse$.subscribe(isRemoved =>{
-     
+  
       if(isRemoved){
-        this.setUpdatedPharmacy(pharmacy.pharmacyId);
+        if(data.isNewAdded){
+      
+          this.drugPharmacyFacade.addDrugPharmacy(
+            this.clientId,
+            data.newPharmacy.vendorId,
+            "P"
+          );
+        }else {
+          this.setUpdatedPharmacy(data.newPharmacy.clientPharmacyId);
+        }
       }
     })
     this.removeButtonEmitted = true;
@@ -357,10 +379,22 @@ export class PharmaciesListComponent implements OnInit {
   /** Deactivate Pharmacies **/
   OpenDeactivatePharmaciesClicked(clientPharmacyDetails: string) {
     this.selectClientPharmacyDetails = clientPharmacyDetails;
+    this.selectClientPharmacyDetails.clientId = this.clientId;
     this.isOpenDeactivatePharmaciesClicked = true;
   }
   handleCloseDeactivatePharmaciesClicked() {
     this.isOpenDeactivatePharmaciesClicked = false;
+  }
+
+
+   /** Reactivate Pharmacies **/
+   OpenReactivatePharmaciesClicked(clientPharmacyDetails: any) {
+    this.selectClientPharmacyDetails = clientPharmacyDetails;
+    this.selectClientPharmacyDetails.clientId = this.clientId;
+    this.isOpenReactivatePharmaciesClicked = true;
+  }
+  handleCloseReactivatePharmaciesClicked() {
+    this.isOpenReactivatePharmaciesClicked = false;
   }
   /**  Select New Primary Pharmacies **/
   OpenSelectNewPrimaryPharmaciesClicked(

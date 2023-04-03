@@ -76,6 +76,11 @@ export class SetAsPrimaryPharmacyComponent {
     }
   }
   onRemovePharmacy() {
-    this.removePharmacyClick.emit(this.selectedPharmacy);
+    let isNewAdded = this.selectedSearchedPharmacy ? true : false;
+    let newPharmacy = this.selectedSearchedPharmacy
+    this.removePharmacyClick.emit({
+      isNewAdded: isNewAdded,
+      newPharmacy: newPharmacy,
+    });
   }
 }

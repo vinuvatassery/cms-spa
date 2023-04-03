@@ -14,3 +14,4 @@ export * from './lib/components/set-as-primary-pharmacy/set-as-primary-pharmacy.
 export * from './lib/components/set-pharmacy-priority/set-pharmacy-priority.component';
 export * from './lib/components/pharmacies-list/pharmacies-list.component';
 export * from './lib/components/drugs-purchased-list/drugs-purchased-list.component';
+export * from './lib/components/reactivate-pharmacies/reactivate-pharmacies.component';
