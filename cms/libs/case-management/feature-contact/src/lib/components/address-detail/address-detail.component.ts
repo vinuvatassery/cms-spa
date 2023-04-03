@@ -70,6 +70,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   addressSuggested: MailAddress | undefined;
   clientAddress!: ClientAddress ;
   addressType!:string;
+  editAddressTypeText:string='';
 
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade,
@@ -157,7 +158,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
   private validateForm(){
     this.resetValidators();
     this.addressForm.markAllAsTouched();
-    this.addressForm.updateValueAndValidity();
+    this.addressForm.updateValueAndValidity();   
     this.addressForm.controls["addressType"].setValidators([Validators.required]);
     this.addressForm.controls["addressType"].updateValueAndValidity();
     let addressType = this.addressForm.controls["addressType"].value;
@@ -172,8 +173,10 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
    if(addressType === AddressType.Home || addressType === AddressType.Mailing || addressType === AddressType.UnHoused){
       this.addressForm.controls["city"].setValidators([Validators.required]);
       this.addressForm.controls["city"].updateValueAndValidity();
-      this.addressForm.controls["effectiveDate"].setValidators([Validators.required]);
-      this.addressForm.controls["effectiveDate"].updateValueAndValidity();
+      if(!this.isEditValue){
+        this.addressForm.controls["effectiveDate"].setValidators([Validators.required]);
+        this.addressForm.controls["effectiveDate"].updateValueAndValidity();
+      }    
    }  
    if((addressType === AddressType.Home || addressType === AddressType.UnHoused) && !this.isEditValue){
       this.addressForm.controls["county"].setValidators([Validators.required]);
@@ -222,6 +225,8 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     this.addressForm.controls["effectiveDate"].disable();
   }
   private bindModelToForm(address:any){
+    debugger;
+    this.editAddressTypeText =address?.addressTypeDesc.toLowerCase()
     this.address = address;    
     this.addressForm.controls["addressType"].setValue(address.addressTypeCode);
     this.addressForm.controls["address1"].setValue(address.address1);
@@ -359,7 +364,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     }
     this.cd.detectChanges();
   }
-  createAddress() {   
+  createAddress() {  
     this.validateForm();
     this.populateModel();
     let editAddress = false;
