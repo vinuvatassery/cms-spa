@@ -2,10 +2,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { TemplateManagementFacade } from '@cms/system-config/domain';
-import { shareReplay } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { Subject } from 'rxjs';
-
+import { ExpandEvent } from "@progress/kendo-angular-treelist";
 @Component({
   selector: 'system-config-forms-and-documents',
   templateUrl: './forms-and-documents.component.html',
@@ -86,7 +83,7 @@ export class FormsAndDocumentsComponent {
     })
   }
 
-  onFolderNameClicked(template: any, issubfolder: boolean) {
+  onFolderNameClicked(template: any) {
 
     this.selectedfolder = template.filePath;
     this.templateManagementFacade.getDirectoryContent(template == null ? '' : template.filePath).subscribe((templates: any) => {
@@ -94,25 +91,19 @@ export class FormsAndDocumentsComponent {
         this.foldersList = templates;
         if (this.foldersTree.length == 0)
           this.foldersTree = this.foldersList;
-
         this.foldersTree.forEach((item: any) => {
 
-          if (issubfolder) {
-            if (item.files != null) {
-              item.files.forEach((element: any) => {
+if (item.filePath == this.selectedfolder) {
+  item.files = this.foldersList;
+}
 
-                if (element.filePath == this.selectedfolder)
-                  element.files = this.foldersList;
-              });
-            }
-          }
-          else {
-            if (item.filePath == this.selectedfolder) {
-              item.files = this.foldersList;
-            }
-          }
         });
       }
     })
+  }
+
+  public onExpand(args: ExpandEvent): void {
+    debugger;
+    this.onFolderNameClicked(args.dataItem);
   }
 }
