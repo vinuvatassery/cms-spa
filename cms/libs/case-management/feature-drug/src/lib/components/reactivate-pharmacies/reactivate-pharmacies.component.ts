@@ -13,7 +13,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-reactivate-pharmacies',
   templateUrl: './reactivate-pharmacies.component.html',
-  styleUrls: ['./reactivate-pharmacies.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReactivatePharmaciesComponent {
 
