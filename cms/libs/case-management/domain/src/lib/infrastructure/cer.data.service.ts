@@ -101,4 +101,10 @@ export class CerDataService {
       `/case-management/clients-cer-tracking/dates`
     );
   }
+  getCerTrackingDateCounts(trackingDate : Date) {     
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/case-management/clients-cer-tracking/counts?trackingDate=${trackingDate}`
+    );
+  }
 }

@@ -25,8 +25,7 @@ export class CerListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() cerTrackingData$: any;
   @Input() cerTrackingDates$ : any
- // @Input() cerTrackingDatesList$: any;
-  //@Input() selectedDate: any;
+  @Input() cerTrackingCount$ : any;
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
 
@@ -36,13 +35,15 @@ export class CerListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public isGridLoaderShow = false;
   selectedDate! : any;
-
+  loader= false;
   datesSubject = new Subject<any>();
   cerTrackingDatesList$ = this.datesSubject.asObservable();
-
   loadDefSelectedateSubject = new Subject<any>();
   loadDefSelectedate$ = this.loadDefSelectedateSubject.asObservable();
+  gridCERDataSubject = new Subject<any>();
+  gridCERData$ = this.gridCERDataSubject.asObservable();
   public state!: State;
+  dateDropdownDisabled= false
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -65,6 +66,8 @@ export class CerListComponent implements OnInit, OnChanges {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.dateDropdownDisabled = true
+    this.loader = true;
     this.loadcerTrackingDates();
     
   }
@@ -92,16 +95,18 @@ export class CerListComponent implements OnInit, OnChanges {
 
   // updating the pagination infor based on dropdown selection
   epDateOnChange(date: any) {
+    this.loader = true;
     this.selectedDate = date;
     this.loadCerTrackingList();
   }
 
   public dataStateChange(stateData: any): void {
+    this.loader = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.loadCerTrackingList();
+    this.loadCerTrackingList();    
   }
   pageselectionchange(data: any) {
     this.state.take = data.value;
@@ -110,12 +115,14 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   private loadCerTrackingList(): void {
+    this.dateDropdownDisabled = true
     this.loaCerData(
       this.state.skip ?? 0,
       this.state.take ?? 0,
       this.sortValue,
       this.sortType
     );
+   
   }
 
   loaCerData(
@@ -132,6 +139,7 @@ export class CerListComponent implements OnInit, OnChanges {
       sortType: sortTypeValue,
     };
     this.loadCerTrackingListEvent.next(gridDataRefinerValue);
+    this.gridDataHandle()
   }
 
   loadCerTrackingDateListHandle() {
@@ -148,5 +156,15 @@ export class CerListComponent implements OnInit, OnChanges {
           this.epDateOnChange(this.selectedDate);
         }
       });
+  }
+
+  gridDataHandle() {
+    this.cerTrackingData$.subscribe((data: any) => {
+      this.gridCERDataSubject.next(data);
+      if (data?.total >= 0 || data?.total === -1) {
+        this.loader = false;
+        this.dateDropdownDisabled = false
+      }
+    });
   }
 }

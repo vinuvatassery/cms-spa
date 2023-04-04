@@ -2,7 +2,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 /** Facades **/
 import { CerTrackingFacade } from '@cms/case-management/domain';
-import { Subject, first } from 'rxjs';
 
 @Component({
   selector: 'case-management-cer-tracking-page',
@@ -19,12 +18,8 @@ export class CerTrackingPageComponent implements OnInit {
   sort = this.cerTrackingFacade.sort;
   cerTrackingData$ = this.cerTrackingFacade.cerTrackingList$;
   cerTrackingDates$ = this.cerTrackingFacade.cerTrackingDates$;
+  cerTrackingCount$ = this.cerTrackingFacade.cerTrackingCount$;
 
-  // datesSubject = new Subject<any>();
-  // cerTrackingDatesList$ = this.datesSubject.asObservable();
-
-  // loadDefSelectedateSubject = new Subject<any>();
-  // loadDefSelectedate$ = this.loadDefSelectedateSubject.asObservable();
   /** Constructor**/
   constructor(private readonly cerTrackingFacade: CerTrackingFacade) {}
 
@@ -40,19 +35,6 @@ export class CerTrackingPageComponent implements OnInit {
 
   loadCerTrackingDateListHandle() {
     this.cerTrackingFacade.getCerTrackingDatesList();
-
-    // this.cerTrackingDates$
-    //   ?.pipe(
-    //     first(
-    //       (trackingDateList: any) => trackingDateList?.seletedDate != null
-    //     )
-    //   )
-    //   .subscribe((trackingDateList: any) => {
-    //     if (trackingDateList?.seletedDate) {
-    //       this.loadDefSelectedateSubject.next(trackingDateList?.seletedDate);
-    //       this.datesSubject.next(trackingDateList?.datesList);
-    //     }
-    //   });
   }
 
   loadCerTrackingDataHandle(gridDataRefinerValue: any): void {
@@ -72,5 +54,7 @@ export class CerTrackingPageComponent implements OnInit {
       gridDataRefiner.sort,
       gridDataRefiner.sortType
     );
+
+    this.cerTrackingFacade.getCerTrackingDateCounts(gridDataRefiner.trackingDate);
   }
 }

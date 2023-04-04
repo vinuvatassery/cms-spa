@@ -26,6 +26,7 @@ export class CerTrackingFacade {
   private ddlCerSubject = new BehaviorSubject<any>([]);
   private cerTrackingListSubject = new Subject<any>();
   private cerTrackingDatesListSubject = new Subject<any>();
+  private cerTrackingCountSubject = new Subject<any>();
 
   /** Public properties **/
   cer$ = this.cerSubject.asObservable();
@@ -33,6 +34,7 @@ export class CerTrackingFacade {
   ddlCer$ = this.ddlCerSubject.asObservable();
   cerTrackingList$ = this.cerTrackingListSubject.asObservable();
   cerTrackingDates$ = this.cerTrackingDatesListSubject.asObservable();
+  cerTrackingCount$ = this.cerTrackingCountSubject.asObservable();
 
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
@@ -80,8 +82,7 @@ export class CerTrackingFacade {
     maxResultCount: number,
     sort: string,
     sortType: string
-  ): void {
-    this.showLoader();
+  ): void {  
     this.cerDataService
       .getCerTrackingList(
         trackingDate,
@@ -92,7 +93,7 @@ export class CerTrackingFacade {
       )
       .subscribe({
         next: (cerTrackingResponse: any) => {
-          if (cerTrackingResponse) {
+          if (cerTrackingResponse) {            
             const gridView = {
               data: cerTrackingResponse['items'],
               total: cerTrackingResponse['totalCount'],
@@ -107,11 +108,25 @@ export class CerTrackingFacade {
       });
   }
 
-  getCerTrackingDatesList(): void {
+
+  getCerTrackingDatesList(): void {   
     this.cerDataService.getCerTrackingDatesList().subscribe({
       next: (cerTrackingDatesResponse: any) => {
         if (cerTrackingDatesResponse) {
           this.cerTrackingDatesListSubject.next(cerTrackingDatesResponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  } 
+
+  getCerTrackingDateCounts(trackingDate : Date): void {
+    this.cerDataService.getCerTrackingDateCounts(trackingDate).subscribe({
+      next: (cerTrackingCountResponse: any) => {
+        if (cerTrackingCountResponse) {
+          this.cerTrackingCountSubject.next(cerTrackingCountResponse);
         }
       },
       error: (err) => {
