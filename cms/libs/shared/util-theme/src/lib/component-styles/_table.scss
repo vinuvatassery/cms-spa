@@ -486,7 +486,8 @@ table,
         width: 100%;
         max-width: 30px; 
         border-bottom: 0px;
-        background: transparent;
+        background: transparent !important;
+        border: 0px !important;
     }
     &.k-input-solid{
       &:focus-within{
@@ -496,6 +497,15 @@ table,
         }
     }
   }
+  
+&.k-input-solid:disabled, &.k-input-solid[disabled], &.k-input-solid.k-disabled{
+  .k-pager-nav{
+    font-size: 15px !important;
+    transition: none;
+
+  }
+
+}
     .k-pager-nav{
       height: auto;
       min-width: 0px;
@@ -503,6 +513,7 @@ table,
       padding: 0px;
       position: relative;
     top: -1px;
+ 
     }
   }
   .k-pager-nav{
