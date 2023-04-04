@@ -71,7 +71,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   }  
 
-  startNewEligibility(){    
+  startNewEligibility() {
     this.validateForm();
     this.eligibilityPeriodForm.markAllAsTouched();
     if (this.eligibilityPeriodForm.valid) {
@@ -86,30 +86,32 @@ export class EligibilityPeriodDetailComponent implements OnInit {
           'There cannot be two eligibility periods with overlapping date ranges.'
         );
       }
-      this.acceptedApplication.clientCaseId = this.clientCaseId;
-      this.acceptedApplication.clientCaseEligibilityId = this.clientCaseEligibilityId
-      this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
-      this.acceptedApplication.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
-      this.acceptedApplication.groupCode = this.eligibilityPeriodForm.controls['group'].value
-      this.acceptedApplication.groupCodeId = null;
-      this.acceptedApplication.assignedCwUserId = null;
-      this.acceptedApplication.eligibilityStatusCode = this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
-      this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
-      this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
-        next: (response) => {
-          this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
-          this.loaderService.hide();
-          this.isModalSavedClicked.emit(true);
-        },
-        error: (err) => {
-          this.loaderService.hide();
-          this.clientEligibilityFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            err
-          );
-          this.onModalCloseClicked();
-        },
-      });
+      else {
+        this.acceptedApplication.clientCaseId = this.clientCaseId;
+        this.acceptedApplication.clientCaseEligibilityId = this.clientCaseEligibilityId
+        this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
+        this.acceptedApplication.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
+        this.acceptedApplication.groupCode = this.eligibilityPeriodForm.controls['group'].value
+        this.acceptedApplication.groupCodeId = null;
+        this.acceptedApplication.assignedCwUserId = null;
+        this.acceptedApplication.eligibilityStatusCode = this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
+        this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
+        this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
+          next: (response) => {
+            this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
+            this.loaderService.hide();
+            this.isModalSavedClicked.emit(true);
+          },
+          error: (err) => {
+            this.loaderService.hide();
+            this.clientEligibilityFacade.showHideSnackBar(
+              SnackBarNotificationType.ERROR,
+              err
+            );
+            this.onModalCloseClicked();
+          },
+        });
+      }
     }
   }
   updateCurrentEligibility() {
