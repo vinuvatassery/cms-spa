@@ -3,8 +3,8 @@
   <div class="filter-col-select">
     <span><strong>SP End Date</strong></span>
     <span class="filter-section_items filter--select">
-      <kendo-floatinglabel>
-        <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
+      <kendo-floatinglabel aria-label="date">
+        <kendo-dropdownlist aria-label="date" [fillMode]="formUiStyle.dropDownFillMode"
           [data]="cerTrackingDatesList$ | async" textField="eligibilityEndDate" valueField="eligibilityEndDate"
           [value]="loadDefSelectedate$ | async" [valuePrimitive]="true" (valueChange)="epDateOnChange($event)"
           (filterChange)="epDateOnChange($event)"
@@ -13,8 +13,10 @@
       </kendo-floatinglabel>
     </span>
   </div>
+  <div class="table-sorted-info filter-col-sort-info">
   <case-management-cer-counts
   [cerTrackingCount]="cerTrackingCount$ | async"></case-management-cer-counts>
+  </div>
 
   <button kendoButton [primary]="true" (click)="onOpenSendCERClicked()" appendTo="body" aria-label="send cers">
     Send CERS
