@@ -140,7 +140,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isEditAddress ? 'Edit Address' : isDeactivateFlag ? 'Deactivate and Add Mailing Address' : isDeleteFlag ? 'Delete and Add Mailing Address' : 'Add Address'
+    isEditAddress ? editAddressTypeText  : isDeactivateFlag ? 'Deactivate and Add Mailing Address' : isDeleteFlag ? 'Delete and Add Mailing Address' : 'Add Address'
   }}</kendo-dialog-titlebar>
   <case-management-address-detail
     [isEditValue]="isEditAddress"
