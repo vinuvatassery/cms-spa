@@ -12,6 +12,13 @@ import { CerTrackingFacade } from '@cms/case-management/domain';
 export class CerTrackingPageComponent implements OnInit {
   /** Public properties **/
   cer$ = this.cerTrackingFacade.cer$;
+  pageSizes = this.cerTrackingFacade.gridPageSizes;
+  sortValue = this.cerTrackingFacade.sortValue;
+  sortType = this.cerTrackingFacade.sortType;
+  sort = this.cerTrackingFacade.sort;
+  cerTrackingData$ = this.cerTrackingFacade.cerTrackingList$;
+  cerTrackingDates$ = this.cerTrackingFacade.cerTrackingDates$;
+  cerTrackingCount$ = this.cerTrackingFacade.cerTrackingCount$;
 
   /** Constructor**/
   constructor(private readonly cerTrackingFacade: CerTrackingFacade) {}
@@ -24,5 +31,30 @@ export class CerTrackingPageComponent implements OnInit {
   /** Private methods **/
   private loadCer(): void {
     this.cerTrackingFacade.loadCer();
+  }
+
+  loadCerTrackingDateListHandle() {
+    this.cerTrackingFacade.getCerTrackingDatesList();
+  }
+
+  loadCerTrackingDataHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      trackingDate: gridDataRefinerValue.trackingDate,
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+
+    this.pageSizes = this.cerTrackingFacade.gridPageSizes;
+    this.cerTrackingFacade.getCerTrackingList(
+      gridDataRefiner.trackingDate,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType
+    );
+
+    this.cerTrackingFacade.getCerTrackingDateCounts(gridDataRefiner.trackingDate);
   }
 }
