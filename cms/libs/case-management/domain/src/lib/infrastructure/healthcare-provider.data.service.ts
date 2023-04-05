@@ -17,12 +17,24 @@ export class HealthcareProviderDataService {
   /** Public methods **/
 
   ///1
-  removeHealthCareProvider(clientId : number ,ProviderId : string)
+  removeHealthCareProvider(clientId : number ,ProviderId : string, hardDelete : boolean)
   {
+    const options = {
+      body: {
+        hardDelete: hardDelete,
+      }
+    }
     return this.http.delete(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/healthcare-providers/${clientId}/providers`+
-      `/${ProviderId}`
+      `/${ProviderId}`, options
+    );
+  }
+
+  reActivateHealthCareProvider(clientId : number ,ProviderId : string)
+  {   
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/providers/${ProviderId}`,null
     );
   }
 

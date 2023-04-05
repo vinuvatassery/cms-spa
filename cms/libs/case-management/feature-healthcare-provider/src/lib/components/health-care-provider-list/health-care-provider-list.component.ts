@@ -12,6 +12,7 @@ import { first, Subject, Subscription } from 'rxjs';
 })
 export class HealthCareProviderListComponent implements  OnChanges {
   /** Input properties **/
+  @Input() managementTab =  false;
   @Input() hasNoProvider!: boolean;
   @Input() healthCareProvidersData$! : any;
   @Input() pageSizes : any;
@@ -23,8 +24,11 @@ export class HealthCareProviderListComponent implements  OnChanges {
   @Input() addExistingProvider$: any;
   @Input() loadExistingProvider$: any;
   @Input() searchProviderLoaded$: any;
+  @Input() healthCareProvideReactivate$: any;
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
+  @Output() deactivateConfimEvent =  new EventEmitter<string>();
+  @Output() reactivateConfimEvent =  new EventEmitter<string>();
   @Output() loadProvidersListEvent = new EventEmitter<any>(); 
   @Output() searchTextEvent = new EventEmitter<string>(); 
   @Output() addExistingProviderEvent = new EventEmitter<any>(); 
@@ -39,6 +43,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
   isEditHealthProvider!: boolean;
   isOpenedProvider = false;
   isOpenedDeleteConfirm = false;
+  isOpenedDeactivateConfirm = false;
+  isOpenedReactivateConfirm = false;
   prvSelectedId! : string; 
   isEditSearchHealthProvider!: boolean;
   isOpenedProviderSearch = false;
@@ -49,6 +55,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
   gridHoverDataItem! : any
   existingProviderData! : any
   selectedCustomProviderName! : string
+  deactivateButtonEmitted =false;
+  reactivateButtonEmitted =false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -76,6 +84,30 @@ export class HealthCareProviderListComponent implements  OnChanges {
         }
       },
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Deactivate Email',
+      icon: 'block',
+      buttonName: 'deactivate',
+      click: (providerId: string): void => {
+        if (!this.deactivateButtonEmitted) {         
+          this.deactivateButtonEmitted = true;
+          this.onDeactivateClick(providerId);
+        }
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate Email',
+      icon: 'block',
+      buttonName: 'reactivate',
+      click: (providerId: string): void => {
+        if (!this.reactivateButtonEmitted) {         
+          this.reactivateButtonEmitted = true;
+          this.onReactivateClick(providerId);
+        }
+      },
+    }
   ];
 
   
@@ -145,9 +177,33 @@ pageselectionchange(data: any) {
     this.isOpenedDeleteConfirm = false;
   }
 
+  onDeactConfirmCloseClicked()
+  {
+    this.deletebuttonEmitted =false;
+    this.isOpenedDeactivateConfirm = false;
+  }
+
+  onReactConfirmCloseClicked()
+  {
+    this.deletebuttonEmitted =false;
+    this.isOpenedReactivateConfirm = false;
+  }
+
   onRemoveClick(prvId : string)
   { 
     this.isOpenedDeleteConfirm = true;
+    this.prvSelectedId = prvId;      
+  }
+
+  onDeactivateClick(prvId : string)
+  { 
+    this.isOpenedDeactivateConfirm = true;
+    this.prvSelectedId = prvId;      
+  }
+
+  onReactivateClick(prvId : string)
+  { 
+    this.isOpenedReactivateConfirm = true;
     this.prvSelectedId = prvId;      
   }
  /** child component event methods **/
@@ -182,6 +238,47 @@ pageselectionchange(data: any) {
         })
       }      
       this.onDeleteConfirmCloseClicked()        
+   }
+
+   handleAcceptPrvDeact(isDeactivate:any)
+   {  
+      if(isDeactivate)
+      {
+        this.deactivateButtonEmitted =false;
+        this.deactivateConfimEvent.emit(this.prvSelectedId);
+
+        this.removeHealthProvider$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((deleteResponse: any) =>
+        {  
+          if(deleteResponse ?? false)
+          {
+            this.loadHealthCareProvidersList()
+          }
+          
+        })
+      }      
+      this.onDeactConfirmCloseClicked()        
+   }
+
+   
+   handleAcceptPrvReact(isReactivate:any)
+   {  
+      if(isReactivate)
+      {
+        this.reactivateButtonEmitted =false;
+        this.reactivateConfimEvent.emit(this.prvSelectedId);
+
+        this.healthCareProvideReactivate$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((deleteResponse: any) =>
+        {  
+          if(deleteResponse ?? false)
+          {
+            this.loadHealthCareProvidersList()
+          }
+          
+        })
+      }      
+      this.onReactConfirmCloseClicked()        
    }
      /** grid event methods **/
  

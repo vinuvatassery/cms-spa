@@ -1,0 +1,30 @@
+
+  <section class="k-dialog-body mb-2">
+    <p>
+     This provider will no longer be associated with this client
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel adding health provider"
+          (click)="onReactivateConfirm(false)"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="delete health provider"
+          (click)="onReactivateConfirm(true)"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

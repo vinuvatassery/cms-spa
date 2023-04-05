@@ -120,7 +120,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
     }
 
   private removeHealthCareProvider(ProviderId : string){
-     this.healthProvider.removeHealthCareProviders(this.clientId, ProviderId);      
+     this.healthProvider.removeHealthCareProviders(this.clientId, ProviderId, true);      
   }
 
   /** Private Methods **/

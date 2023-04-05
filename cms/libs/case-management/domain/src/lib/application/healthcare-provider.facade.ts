@@ -25,6 +25,7 @@ export class HealthcareProviderFacade {
   private loadExistingProviderSubject = new Subject<any>();
   private searchProviderLoadedSubject = new Subject<boolean>();
   private showProvidervalidationSubject = new Subject<boolean>();
+  private healthCareProvideReactivateSubject = new Subject<any>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -37,6 +38,7 @@ export class HealthcareProviderFacade {
   loadExistingProvider$ = this.loadExistingProviderSubject.asObservable();
   searchProviderLoaded$ = this.searchProviderLoadedSubject.asObservable();
   showProvidervalidation$ = this.showProvidervalidationSubject.asObservable();
+  healthCareProvideReactivate$ = this.healthCareProvideReactivateSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
@@ -76,16 +78,35 @@ export class HealthcareProviderFacade {
   }
 
   /** Public methods **/
-  removeHealthCareProviders(clientId : number,  ProviderId : string): void {    
-    this.showLoader();
-    this.healthcareProviderDataService.removeHealthCareProvider(clientId,ProviderId)
+  removeHealthCareProviders(clientId : number,  ProviderId : string, hardDelete : boolean): void {    
+   
+    this.healthcareProviderDataService.removeHealthCareProvider(clientId,ProviderId,hardDelete)
     .subscribe({
       next: (removeResponse) => {        
         if(removeResponse ?? false)
         {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic Removed Successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , hardDelete ? 'Provider or Clinic Removed Successfully' : 'Provider or Clinic Deactivated Successfully')  
+        
         } 
         this.healthCareProvideRemoveSubject.next(removeResponse);       
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
+      },
+    });
+  }
+
+  reActivateHealthCareProvider(clientId : number,  ProviderId : string): void {    
+    this.showLoader();
+    this.healthcareProviderDataService.reActivateHealthCareProvider(clientId,ProviderId)
+    .subscribe({
+      next: (removeResponse) => {        
+        if(removeResponse ?? false)
+        {     
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic Re-Activated Successfully')  
+        
+        } 
+        this.healthCareProvideReactivateSubject.next(removeResponse);       
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
