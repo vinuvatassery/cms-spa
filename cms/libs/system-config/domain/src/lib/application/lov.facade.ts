@@ -66,6 +66,7 @@ export class LovFacade {
   private showLoaderOnRelationType = new BehaviorSubject<boolean>(false);
   private eligibilityStatusSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
+  private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -107,7 +108,7 @@ export class LovFacade {
   lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
   showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
-
+  attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
 
 
         /** Public methods **/
@@ -549,7 +550,17 @@ getEligibilityStatusLovs(): void {
   });
 }
 
+getAttachmentTypesLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.AttachmentsTypes).subscribe({
+    next: (lovResponse) => {
+      this.lovAttachmentsDroplistSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
 
+}
 }
 
 
