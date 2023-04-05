@@ -21,6 +21,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
     {text: '20', value: 20},
     {text: 'All', value: 100}
   ];
+  isCoPaymentDetailsOpened = false;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
@@ -33,5 +34,11 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   /** Private methods **/
   private loadCoPaysAndDeductibles() {
     this.insurancePolicyFacade.loadCoPaysAndDeductibles();
+  }
+  openCoPaymentDetailsOpened(){
+    this.isCoPaymentDetailsOpened = true;
+  }
+  closeCoPaymentDetailsOpened(){
+    this.isCoPaymentDetailsOpened = false;
   }
 }
