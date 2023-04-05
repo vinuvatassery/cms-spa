@@ -23,6 +23,7 @@ export class IncomeListComponent implements OnInit {
   @Input() clientCaseEligibilityId: string="";
   @Input() clientId: any;
   @Input() clientCaseId: any;
+  @Input() isClientProfile: boolean = false;
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() loadIncomeListEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();

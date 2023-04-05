@@ -101,7 +101,7 @@
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column
+        <kendo-grid-column *ngIf="!isClientProfile"
           field="Option"
           title="Options"
           [width]="75"
@@ -187,7 +187,7 @@
       <kendo-grid [data]="dependentsProofofSchools$">
         <kendo-grid-column field="name" title="Name" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column field="age" title="Age" [width]="130">
+        <kendo-grid-column *ngIf="!isClientProfile" field="age" title="Age" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column
           field="relationship"

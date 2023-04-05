@@ -19,7 +19,7 @@
         </div>
         <div class="flex-col">
             <case-management-income-list [data]="screenName" [clientId]="clientId" [clientCaseId]="clientCaseId"
-                [clientCaseEligibilityId]="clientCaseEligibilityId"
+                [clientCaseEligibilityId]="clientCaseEligibilityId" [isClientProfile]="true"
                 (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
         </div>
     </div>

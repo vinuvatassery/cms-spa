@@ -45,6 +45,7 @@ export class CaseEligibilityPeriodsComponent {
       };
       this.eligibilityPeriodsList.push(period);
     });
+    this.setDefaultSelection();
   }
 
   setDefaultSelection() {
