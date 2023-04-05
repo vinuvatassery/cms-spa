@@ -39,8 +39,9 @@
 textField="fileName"
 kendoTreeViewExpandable
 kendoTreeViewHierarchyBinding
-childrenField="files"
 
+[hasChildren]="hasChildren"
+[children]="fetchChildren"
 >
 <ng-template kendoTreeViewNodeTemplate let-dataItem>
    

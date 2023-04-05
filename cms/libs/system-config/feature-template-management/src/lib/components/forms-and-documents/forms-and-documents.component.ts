@@ -3,6 +3,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { TemplateManagementFacade } from '@cms/system-config/domain';
 import { ExpandEvent } from "@progress/kendo-angular-treelist";
+import { TreeItem } from '@progress/kendo-angular-treeview';
+import { Observable, of } from 'rxjs';
 @Component({
   selector: 'system-config-forms-and-documents',
   templateUrl: './forms-and-documents.component.html',
@@ -83,11 +85,13 @@ export class FormsAndDocumentsComponent {
     })
   }
 
-  onFolderNameClicked(template: any) {
-
+  onFolderNameClicked(template: any): any {
+debugger;
     this.selectedfolder = template.filePath;
-    this.templateManagementFacade.getDirectoryContent(template == null ? '' : template.filePath).subscribe((templates: any) => {
-      if (!!templates) {
+return    this.templateManagementFacade.getDirectoryContent(template == null ? '' : template.filePath).subscribe((templates: any) => {
+     debugger;
+     return templates;
+     /*  if (!!templates) {
         this.foldersList = templates;
         if (this.foldersTree.length == 0)
           this.foldersTree = this.foldersList;
@@ -98,12 +102,26 @@ if (item.filePath == this.selectedfolder) {
 }
 
         });
-      }
+        debugger;
+        console.log(this.foldersTree);
+      } */
     })
   }
 
-  public onExpand(args: ExpandEvent): void {
+  public onExpand(event: TreeItem): void {
+    
+    this.onFolderNameClicked(event.dataItem);
     debugger;
-    this.onFolderNameClicked(args.dataItem);
   }
+
+  public fetchChildren(node: any): Observable<any[]> {
+    //Return the items collection of the parent node as children.
+    debugger;
+   var res= this.onFolderNameClicked(node);
+   debugger;
+    return of(node.items);
+}
+
+  public hasChildren = (item: any) => "fileName" in item;
+
 }
