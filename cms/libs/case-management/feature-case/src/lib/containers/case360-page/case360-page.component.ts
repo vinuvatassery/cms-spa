@@ -110,15 +110,19 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private routeChangeSubscription() {
+  private routeChangeSubscription() {    
     this.clientChangeSubscription$ = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
+      .subscribe(() => {                
         const clientId = this.route.snapshot.paramMap.get('id') ?? 0;
         if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
           this.initialize();
 
           this.loadClientProfileInfoEventHandler();
+        }
+        else
+        {
+          this.onTabClick(ClientProfileTabs.CLIENT_INFO); 
         }
       });
   }
