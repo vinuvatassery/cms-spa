@@ -29,6 +29,8 @@ export class PhoneDetailComponent implements OnInit {
   clientPhoneForm!: FormGroup;
   isFormSubmitted =false;
   btnDisabled = false;
+  isDeleted = false;
+  otherNoteError =false
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade,
     private formBuilder: FormBuilder) {}
@@ -85,6 +87,7 @@ export class PhoneDetailComponent implements OnInit {
   onSelectedPhoneFormLoad()
   {     
     this.selectedclientPhoneId = this.selectedPhoneData?.clientPhoneId 
+    this.isDeleted = this.selectedPhoneData?.isDeleted 
     this.clientPhoneForm.setValue(
             {
               clientPhoneId: this.selectedPhoneData?.clientPhoneId   ,
@@ -101,7 +104,16 @@ export class PhoneDetailComponent implements OnInit {
   onclientPhoneFormSubmit()
   {    
     this.isFormSubmitted =true;
-    if(this.clientPhoneForm.valid)
+    if(this.displayPhoneNote && !this.clientPhoneForm?.controls["otherPhoneNote"].value)
+    {
+      this.otherNoteError = true;
+    }
+    else
+    {
+      this.otherNoteError = false;
+    }
+
+    if(this.clientPhoneForm.valid && !this.otherNoteError)
        {    
         this.btnDisabled = true;
         const phoneData =

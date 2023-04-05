@@ -7,13 +7,13 @@
       phone.
     </p>
     <p class="text-muted mb-2" *ngIf="isEditValue">
-      Edit or deactivate client's phone number
+      Edit or deactivate the client's phone number
     </p>
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel text="Choose Phone Type">
+        <kendo-floatinglabel text="Phone Type">
           <kendo-dropdownlist formControlName="deviceTypeCode" (selectionChange)="deviceTypeSelectionChange($event)"
-            aria-label="Choose Phone Type" [fillMode]="formUiStyle.dropDownFillMode"
+            aria-label="Phone Type" [fillMode]="formUiStyle.dropDownFillMode"
             [data]="lovClientPhoneDeviceType$ | async" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
           </kendo-dropdownlist>
           <kendo-formerror *ngIf="clientPhoneForm?.hasError('required','deviceTypeCode') && isFormSubmitted">Phone type
@@ -38,6 +38,8 @@
 
             </kendo-textarea-suffix>
           </kendo-textarea>
+          <kendo-formerror *ngIf="otherNoteError && isFormSubmitted">Phone type
+            is required</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
@@ -66,7 +68,7 @@
 
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div *ngIf="isEditValue === true">
+      <div *ngIf="isEditValue === true && isDeleted === false">
         <button kendoButton look="flat" (click)="onDeactivateClicked()" aria-label="deactivate phone"
           [disabled]="btnDisabled" type='button'>
           Deactivate

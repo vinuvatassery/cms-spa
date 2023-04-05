@@ -432,7 +432,7 @@ export class CaseFacade {
     );
   }
 
-  deleteActiveSession(activeSessionId: string) {
+  deleteActiveSession(activeSessionId: string, isProfileOpened: boolean) {
     this.activeSessionLoaderVisibleSubject.next(true);
     return this.caseDataService
       .deleteActiveSession(activeSessionId)
@@ -450,6 +450,10 @@ export class CaseFacade {
             SnackBarNotificationType.SUCCESS,
             'Session Removed Successfully'
           );
+
+          if(isProfileOpened){
+            this.router.navigate(['/case-management/cases']);
+          }
         }
       });
   }
