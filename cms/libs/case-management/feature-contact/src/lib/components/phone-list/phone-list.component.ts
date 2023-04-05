@@ -64,7 +64,7 @@ export class PhoneListComponent implements OnChanges {
   public gridOption = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Phone',
+      text: 'Edit Phone Number',
       buttonName: 'edit',
       icon: 'edit',
       click: (clientPhoneId: string): void => {
@@ -234,6 +234,7 @@ export class PhoneListComponent implements OnChanges {
             smsTextConsentFlag: phoneData?.smsTextConsentFlag,
             preferredFlag: phoneData?.preferredFlag,
             otherPhoneNote: phoneData?.otherPhoneNote,
+            isDeleted : phoneData?.isDeleted
           };
           this.isOpenedPhoneEdit = true;
           this.editformVisibleSubject.next(this.isOpenedPhoneEdit);

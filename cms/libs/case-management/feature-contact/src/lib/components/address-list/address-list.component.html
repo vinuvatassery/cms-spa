@@ -89,7 +89,7 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-                <div *ngIf="buttondataItem.text == 'Delete Address' && dataItem.addressTypeCode =='M'; else otherButtons">
+                <div *ngIf="buttondataItem.text == 'Delete Address'; else otherButtons">
                   <button *ifPermission='["Client_Profile_Claims_Client_ContactInfo_Client_Address_Create_Update"]' kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                     <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
@@ -102,16 +102,15 @@
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
                 </div>
-                <ng-template #editButton>
-                  <div *ngIf="buttondataItem.text != 'Deactivate Address'">
-                    <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                      <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
-                      <label>   {{ buttondataItem.text }} </label>
-                  </button>
-                  </div>
-                 
-                </ng-template>
-               
+              </ng-template>
+
+              <ng-template #editButton>
+                <div *ngIf="buttondataItem.text === 'Edit Address' && dataItem.activeFlag ==='Y'">
+                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <label>   {{ buttondataItem.text }} </label>
+                </button>
+                </div>
               </ng-template>
                 
               </ng-template>
@@ -141,7 +140,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isEditAddress ? 'Edit Address' : isDeactivateFlag ? 'Deactivate and Add Mailing Address' : isDeleteFlag ? 'Delete and Add Mailing Address' : 'Add Address'
+    isEditAddress ? editAddressTypeText  : isDeactivateFlag ? 'Deactivate and Add Mailing Address' : isDeleteFlag ? 'Delete and Add Mailing Address' : 'Add Address'
   }}</kendo-dialog-titlebar>
   <case-management-address-detail
     [isEditValue]="isEditAddress"
@@ -171,7 +170,7 @@
   *ngIf="isDeleteAddressPopup"
   (close)="onDeleteAddressClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Delete home address"
+  title="Delete home address?"
 >
   <case-management-delete-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModalAndReload($event)"></case-management-delete-address-confirmation>
 </kendo-dialog>
