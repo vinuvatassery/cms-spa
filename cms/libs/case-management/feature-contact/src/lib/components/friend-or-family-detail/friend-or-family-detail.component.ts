@@ -29,6 +29,7 @@ export class FriendOrFamilyDetailComponent implements OnInit {
   @Input() caseEligibilityId!: string;
   @Input() selectedContact!:any;
   @Output() detailModalCloseEvent= new EventEmitter<any>();
+  @Output() deactivateModalOpenEvent= new EventEmitter<any>();
   /** Public properties **/
   ddlRelationshipToClient$ = this.lovFacade.lovCntRelationship$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -89,31 +90,15 @@ export class FriendOrFamilyDetailComponent implements OnInit {
     this.contactForm.controls["phoneNbr"].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
     this.contactForm.controls["phoneNbr"].updateValueAndValidity();
   }
-  populateModel(isDeactivateClicked = false)
+  populateModel()
   {
-    if(isDeactivateClicked)
-    {
-      this.clientContact = {
-        clientRelationshipId: this.contact.clientRelationshipId,
-        clientId: this.contact.clientId,
-        clientCaseEligibilityId: this.contact.clientCaseEligibilityId,
-        relationshipSubTypeCode: this.contact.relationshipSubTypeCode,
-        firstName: this.contact.firstName,
-        phoneNbr: this.contact.phoneNbr,
-        activeFlag: StatusFlag.No,
-        concurrencyStamp: this.contact.concurrencyStamp
-      }
-    }
-    else
-    {
-      this.clientContact = {
-        clientId: this.clientId,
-        clientCaseEligibilityId: this.caseEligibilityId,
-        relationshipSubTypeCode: this.contactForm?.controls['relationshipType']?.value,
-        firstName: this.contactForm?.controls['contactName']?.value,
-        phoneNbr: this.contactForm?.controls['phoneNbr']?.value,
-        activeFlag: StatusFlag.Yes
-      }
+    this.clientContact = {
+      clientId: this.clientId,
+      clientCaseEligibilityId: this.caseEligibilityId,
+      relationshipSubTypeCode: this.contactForm?.controls['relationshipType']?.value,
+      firstName: this.contactForm?.controls['contactName']?.value,
+      phoneNbr: this.contactForm?.controls['phoneNbr']?.value,
+      activeFlag: StatusFlag.Yes
     }
   }
   createContact() {
@@ -170,19 +155,6 @@ bindDataToForm(contact:any)
 }
 deactivateContact()
 {
-  this.loaderService.show();
-  this.populateModel(true)
-    return this.contactFacade.updateContact(this.clientId ?? 0, this.clientContact).subscribe({
-      next:(data)=>{
-        this.loaderService.hide();
-        this.detailModalCloseEvent.emit(true);
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Friend Or Family Contact Updated Successfully.")
-      },
-      error:(error)=>{
-        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,error)
-        this.loggingService.logException(error);
-         this.loaderService.hide();
-      }
-    });
+  this.deactivateModalOpenEvent.emit();
 }
 }

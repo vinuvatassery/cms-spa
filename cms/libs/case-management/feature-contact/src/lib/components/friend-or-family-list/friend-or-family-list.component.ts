@@ -109,7 +109,6 @@ export class FriendOrFamilyListComponent implements OnInit {
   }
 
   onDeactivateFriendOrFamilyClicked() {
-    this.isEdit = false;
     this.isDeactivateFriendOrFamilyOpened = true;
   }
   onDeleteFriendOrFamilyClicked() {
@@ -143,5 +142,9 @@ export class FriendOrFamilyListComponent implements OnInit {
   closeDeactivateModal(event:any){
     this.contactFacade.loadFriendsorFamily(this.clientId);
     this.isDeactivateFriendOrFamilyOpened = false;
+    if (event)
+    {
+      this.onFriendOrFamilyDetailClosed();
+    }
   }
 }
