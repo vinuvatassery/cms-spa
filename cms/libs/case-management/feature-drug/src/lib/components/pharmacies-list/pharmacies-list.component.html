@@ -44,17 +44,21 @@
         </kendo-grid-column>
         <kendo-grid-column field="Option" title="Options" [width]="50" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-pharmacyId="field">
-              <kendo-dropdownbutton [data]="pharmacyOptions" icon="more-vertical"
+              <kendo-dropdownbutton 
+              [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)"
+              icon="more-vertical"
               title="More Options"
-                  class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
-                  aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+              class="TableActionPopup app-dropdown-action"
+              buttonClass="k-icon-button"
+              aria-label="more actions"
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                       <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                           [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(clientPharmacy)">
                           <span class="material-icons"
                               [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                          <label> {{ buttondataItem.text }} </label>
+                          <label> {{clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'Deactivate' ? 'Deactivate and Select New Primary Pharmacy' : clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'delete' ? 'Remove and Select New Primary Pharmacy' : buttondataItem.text }} </label>
                       </button>
                   </ng-template>
               </kendo-dropdownbutton>
