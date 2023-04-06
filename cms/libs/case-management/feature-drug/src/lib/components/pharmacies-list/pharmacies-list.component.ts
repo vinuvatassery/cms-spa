@@ -19,6 +19,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
+import { first, take } from 'rxjs/operators';
 import { LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-pharmacies-list',
@@ -161,6 +162,7 @@ export class PharmaciesListComponent implements OnInit {
       buttonType: 'btn-h-danger',
       text: 'Remove',
       icon: 'delete',
+      type:'delete',
       click: (clientPharmacy: any, vendorId: string,clientPharmacyId: string): void => {
         if(clientPharmacy.clientPharmacyId){
           this.pharmacyId = clientPharmacy.clientPharmacyId;
@@ -237,6 +239,29 @@ export class PharmaciesListComponent implements OnInit {
   }
 
   /** Private methods **/
+  filterActionButtonOptions(options:any[],actionType:any):any[]{
+    let filteredOptions:any[] = [];
+    if(actionType.priorityCode != 'P' && actionType.activeFlag === 'Y'){
+      filteredOptions = options.filter(option =>option.type != 'Reactivate');
+    } else if(actionType.priorityCode != 'P' && actionType.activeFlag === 'N')
+    {
+      filteredOptions = options.filter(option =>option.type != 'Deactivate');
+    }
+    else if(actionType.priorityCode === 'P' && actionType.activeFlag === 'Y')
+    {
+      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Reactivate');
+    } 
+    else if(actionType.priorityCode === 'P' && actionType.activeFlag === 'N')
+    {
+      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Deactivate');
+    }
+    else {
+      filteredOptions = options;
+    }
+
+    return filteredOptions;
+
+  }
   private updateWorkFlowStatus(isCompleted: boolean) {
     const workFlowdata: CompletionChecklist[] = [
       {
@@ -260,24 +285,22 @@ export class PharmaciesListComponent implements OnInit {
 
   /** Internal event methods **/
   updateAndDeactivatePharmacy(data:any){
-   
-    this.drugPharmacyFacade.deactivePharmacies(this.pharmacyId,this.changePharmacyObj);
-    this.drugPharmacyFacade.deActivePharmacyObs.subscribe(updated =>{
-      if(updated){
-        if(data.isNewAdded){
-      
+
+    this.drugPharmacyFacade.deactivePharmacies(this.pharmacyId,this.changePharmacyObj).then((isSucceed) =>{
+      if(isSucceed){
+        if(data && data.isNewAdded){
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,
             PriorityCode.Primary
           );
-        }else {
+        }
+        else if(data && !data.isNewAdded) {
 
           this.setUpdatedPharmacy(data.newPharmacy.clientPharmacyId);
         }
       }
     })
-      
   }
   setUpdatedPharmacy(pharmacyId:any){
 
@@ -292,23 +315,21 @@ export class PharmaciesListComponent implements OnInit {
     this.drugPharmacyFacade.removeClientPharmacy(
       this.clientId ?? 0,
       this.pharmacyId
-    );
-    this.drugPharmacyFacade.removePharmacyResponse$.subscribe(isRemoved =>{
-  
+    ).then((isRemoved) =>{
       if(isRemoved){
-        if(data.isNewAdded){
+        this.removeButtonEmitted = true;
+        if(data && data.isNewAdded){
       
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,
             "P"
           );
-        }else {
+        }else if(data && !data.isNewAdded){
           this.setUpdatedPharmacy(data.newPharmacy.clientPharmacyId);
         }
       }
     })
-    this.removeButtonEmitted = true;
   }
   onOpenPharmacyClicked() {
     this.isOpenPharmacyClicked = true;
