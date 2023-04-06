@@ -61,12 +61,7 @@ export class DocumentFacade {
       this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
-    this.hideLoader();
 
-  }
-
-  hideLoader() {
-    this.loaderService.hide();
   }
 
   getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
@@ -87,12 +82,12 @@ export class DocumentFacade {
     return this.documentDataService.getClientDocumentsViewDownload(clientDocumentId);
   }
 
-  viewOrDownloadFile(eventType: string, DocumentId: string, documentName: string) {
-    if (DocumentId === undefined || DocumentId === '') {
+  viewOrDownloadFile(eventType: string, documentId: string, documentName: string) {
+    if (documentId === undefined || documentId === '') {
       return;
     }
     this.loaderService.show()
-    this.getClientDocumentsViewDownload(DocumentId).subscribe({
+    this.getClientDocumentsViewDownload(documentId).subscribe({
       next: (data: any) => {
 
         const fileUrl = window.URL.createObjectURL(data);
@@ -113,7 +108,7 @@ export class DocumentFacade {
     })
   }
 
-  getDocumentByDocumentId(DocumentId: string) {
-    return this.documentDataService.getDocumentByDocumentId(DocumentId);
+  getDocumentByDocumentId(documentId: string) {
+    return this.documentDataService.getDocumentByDocumentId(documentId);
   }
 }

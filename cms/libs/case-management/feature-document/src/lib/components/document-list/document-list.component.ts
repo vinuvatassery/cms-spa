@@ -1,13 +1,12 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import {  Subject } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 /** Facades **/
 import { DocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { SnackBarNotificationType, ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
+import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-document-list',
@@ -66,8 +65,8 @@ export class DocumentListComponent implements OnInit {
     documentId:string='';    
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
     tabIdSubject = new Subject<string>();
-     tabId$ = this.tabIdSubject.asObservable();
-     tabId!: any;
+    tabId$ = this.tabIdSubject.asObservable();
+    tabId!: any;
     
     /** Constructor **/
     constructor(private documentFacade: DocumentFacade,

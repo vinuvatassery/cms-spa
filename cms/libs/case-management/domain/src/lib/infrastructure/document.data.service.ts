@@ -45,70 +45,70 @@ export class DocumentDataService {
       },
     ]);
   }
+
   uploadDocument(doc: any) {
     let documentFormData = new FormData();
-    documentFormData.append("clientId", `${doc?.clientId}`);
-    documentFormData.append("clientCaseId", doc?.clientCaseId ?? '');
-    documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
-    documentFormData.append("entityId", doc?.entityId ?? '');
-    documentFormData.append("document", doc?.document ?? '');
-    documentFormData.append("documentName", doc?.documentName ?? '');
-    documentFormData.append("documentSize", doc?.documentSize ?? '');
-    documentFormData.append("clientDocumentId", doc?.clientDocumentId ?? '');
-    documentFormData.append("entityId", doc?.entityId ?? '');
-    documentFormData.append("entityTypeCode", doc?.entityTypeCode ?? '');
-    documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
-    documentFormData.append("documentTemplateId", doc?.documentTemplateId ?? '');
-    documentFormData.append("documentPath", doc?.documentPath ?? '');
-    documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
-    documentFormData.append("attachmentType", doc?.attachmentType ?? '');
-    documentFormData.append("otherAttachmentType", doc?.otherAttachmentType ?? '');
+    documentFormData = this.bindFormData(doc,'SAVE');
     return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
   }
+
   updateDocument(doc: any) {
     let documentFormData = new FormData();
-    documentFormData.append("clientId", `${doc?.clientId}`);
-    documentFormData.append("clientCaseId", doc?.clientCaseId ?? '');
-    documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
-    documentFormData.append("entityId", doc?.entityId ?? '');
-    documentFormData.append("document", doc?.document ?? '');
-    documentFormData.append("documentName", doc?.documentName ?? '');
-    documentFormData.append("documentSize", doc?.documentSize ?? '');
-    documentFormData.append("clientDocumentId", doc?.clientDocumentId ?? '');
-    documentFormData.append("entityId", doc?.entityId ?? '');
-    documentFormData.append("entityTypeCode", doc?.entityTypeCode ?? '');
-    documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
-    documentFormData.append("documentTemplateId", doc?.documentTemplateId ?? '');
-    documentFormData.append("documentPath", doc?.documentPath ?? '');
-    documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
-    documentFormData.append("attachmentType", doc?.attachmentType ?? '');
-    documentFormData.append("otherAttachmentType", doc?.otherAttachmentType ?? '');
+    documentFormData = this.bindFormData(doc,'EDIT');
     return this.http.put(this.getUrl(), doc, { reportProgress: true });
   }
-  /** private methods**/
-  private getUrl() {
-    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/uploadAttachment`
-  }
+  
   getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
     return this.http.get<Document[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/client-document/attachments/clientCaseEligibilityId?clientCaseEligibilityId=${clientCaseEligibilityId}`
     );
   }
-  getClientDocumentsViewDownload(DocumentId: string) {
+
+  getClientDocumentsViewDownload(documentId: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${DocumentId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${documentId}`
       , {
         responseType: 'blob'
       });
   }
-  getDocumentByDocumentId(DocumentId: string) {
+
+  getDocumentByDocumentId(documentId: string) {
     return this.http.get<Document>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/client-document/attachments/id?ClientDocumentId=${DocumentId}`      
-    ); 
+      `/case-management/client-document/attachments/id?ClientDocumentId=${documentId}`
+    );
   }
-  
 
+  /** private methods**/
+  private getUrl() {
+    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/uploadAttachment`
+  }
 
+  private bindFormData(doc: any, event: any): FormData {
+    let documentFormData = new FormData();
+    if (event == "SAVE") {
+      documentFormData.append("clientId", `${doc?.clientId}`);
+      documentFormData.append("clientCaseId", doc?.clientCaseId ?? '');
+      documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
+      documentFormData.append("document", doc?.document ?? '');
+      documentFormData.append("documentName", doc?.documentName ?? '');
+      documentFormData.append("documentSize", doc?.documentSize ?? '');
+      documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
+      documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
+      documentFormData.append("attachmentType", doc?.attachmentType ?? '');
+      documentFormData.append("otherAttachmentType", doc?.otherAttachmentType ?? '');
+    }
+    else {
+      documentFormData.append("clientDocumentId", doc?.clientDocumentId ?? '');
+      documentFormData.append("clientId", `${doc?.clientId}`);
+      documentFormData.append("clientCaseId", doc?.clientCaseId ?? '');
+      documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
+      documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
+      documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
+      documentFormData.append("attachmentType", doc?.attachmentType ?? '');
+      documentFormData.append("otherAttachmentType", doc?.otherAttachmentType ?? '');
+    }
+    return documentFormData;
+  }
 }

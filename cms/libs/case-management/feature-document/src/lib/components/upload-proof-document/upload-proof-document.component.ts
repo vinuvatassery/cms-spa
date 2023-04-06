@@ -109,20 +109,7 @@ export class UploadProofDocumentComponent implements OnInit {
 
   saveDocument(){
     this.clientDocumentId = '';
-    const document : Document  = {
-      clientId: this.clientId,
-      clientCaseId: this.clientCaseId,
-      clientCaseEligibilityId : this.caseEligibilityId,// '5E49713D-3E7E-44FD-8197-023E200951B9',
-      document: this.copyOfUploadedFiles[0].document.rawFile,
-      documentName: this.copyOfUploadedFiles[0].name,       
-      documentSize: this.copyOfUploadedFiles[0].size,
-      attachmentType: this.attachmentType,
-      otherAttachmentType: this.uploadform.controls['otherAttachmentType'].value,
-      attachmentNote: this.uploadform.controls['attachmentNote'].value,
-      documentTypeCode: this.uploadform.controls['attachmentType'].value,
-      entityTypeCode : this.uploadform.controls['attachmentType'].value,
-      entityId : '5E49713D-3E7E-44FD-8197-023E200951B9',// this.caseEligibilityId,        
-    };
+    const document = this.populateModel();
     this.loaderService.show();
     this.documentFacade
     .uploadDocument(document)
@@ -150,17 +137,7 @@ export class UploadProofDocumentComponent implements OnInit {
   }
 
   updateDocument(){
-    const document : Document  = {
-      clientDocumentId : this.clientDocumentId,
-      clientId: this.clientId,
-      clientCaseId: this.clientCaseId,
-      clientCaseEligibilityId : this.caseEligibilityId, // '5E49713D-3E7E-44FD-8197-023E200951B9',
-      attachmentType: this.attachmentType,
-      otherAttachmentType: this.uploadform.controls['otherAttachmentType'].value,
-      attachmentNote: this.uploadform.controls['attachmentNote'].value,
-      documentTypeCode: this.uploadform.controls['attachmentType'].value,
-      entityTypeCode : this.uploadform.controls['attachmentType'].value
-    };
+    const document = this.populateModel();
     this.loaderService.show();
     this.documentFacade
     .updateDocument(document)
@@ -280,5 +257,36 @@ export class UploadProofDocumentComponent implements OnInit {
   loadAttachmentTypesDroplist() {
     this.lovFacade.getAttachmentTypesLovs();
   }
-  
+
+  populateModel(){
+    if(!this.isEdit){
+      let saveDocument : Document  = {
+        clientId: this.clientId,
+        clientCaseId: this.clientCaseId,
+        clientCaseEligibilityId : this.caseEligibilityId,
+        document: this.copyOfUploadedFiles[0].document.rawFile,
+        documentName: this.copyOfUploadedFiles[0].name,       
+        documentSize: this.copyOfUploadedFiles[0].size ,
+        attachmentType: this.attachmentType,
+        otherAttachmentType: this.uploadform.controls['otherAttachmentType'].value,
+        attachmentNote: this.uploadform.controls['attachmentNote'].value,
+        documentTypeCode: this.uploadform.controls['attachmentType'].value        
+      };
+      return saveDocument;
+    }
+    else{
+      let updateDocument : Document  = {
+        clientDocumentId :this.clientDocumentId,
+        clientId: this.clientId,
+        clientCaseId: this.clientCaseId,
+        clientCaseEligibilityId : this.caseEligibilityId,
+        attachmentType: this.attachmentType,
+        otherAttachmentType: this.uploadform.controls['otherAttachmentType'].value,
+        attachmentNote: this.uploadform.controls['attachmentNote'].value,
+        documentTypeCode: this.uploadform.controls['attachmentType'].value        
+      };
+      return updateDocument;
+    }
+    
+  }  
 }
