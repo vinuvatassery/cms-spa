@@ -5,8 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'case-management-profile-healthcare-provider-page',
-  templateUrl: './profile-healthcare-provider-page.component.html',
-  styleUrls: ['./profile-healthcare-provider-page.component.scss'],
+  templateUrl: './profile-healthcare-provider-page.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileHealthcareProviderPageComponent implements OnInit {
