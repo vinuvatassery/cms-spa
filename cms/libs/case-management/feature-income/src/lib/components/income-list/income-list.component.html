@@ -22,7 +22,7 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="incomeAmt"
-          title="Gross Amount"
+          [title]="isClientProfileTab ? 'Amount' : 'Gross Amount'"
           [width]="130"          
         >
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -32,11 +32,11 @@
         <kendo-grid-column
           field="incomeFrequencyCodeDesc"
           title="Frequency"
-          [width]="110"
+          [width]="120"
         ></kendo-grid-column>
         <kendo-grid-column
           field="incomeStartDate"
-          title="Date of Hire"
+          [title]="isClientProfileTab ? 'Income Start' : 'Date of Hire'"
           [width]="110"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -70,7 +70,7 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="incomeNote"
-          title="Financial Justification or Income note"
+          title="Financial Justification or Income Note"
           [width]="150"
           [sticky]="true"
           [sortable]="false"
@@ -101,7 +101,31 @@
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="!isClientProfile"
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="60">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="profile avathar"
+            >
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
+            </button>
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              position="left"
+            >
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column *ngIf="!isClientProfileTab"
           field="Option"
           title="Options"
           [width]="75"
@@ -193,7 +217,7 @@
       <kendo-grid [data]="dependentsProofofSchools$">
         <kendo-grid-column field="name" title="Name" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="!isClientProfile" field="age" title="Age" [width]="130">
+        <kendo-grid-column *ngIf="!isClientProfileTab" field="age" title="Age" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column
           field="relationship"
@@ -240,6 +264,30 @@
           </kendo-upload>
         </div>
         </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="profile avathar"
+            >
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
+            </button>
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              position="left"
+            >
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
+          </ng-template>
         </kendo-grid-column>
          <!-- grid Loader Template -->  
     <ng-template kendoGridLoadingTemplate>

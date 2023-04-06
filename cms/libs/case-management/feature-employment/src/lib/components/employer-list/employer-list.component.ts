@@ -28,7 +28,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   @Input() clientCaseEligibilityId: any;
   @Input() clientId: any;
   @Input() clientCaseId: any;
-  @Input() isClientProfile: boolean = false;
+  @Input() isClientProfileTab: boolean = false;
   @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/
