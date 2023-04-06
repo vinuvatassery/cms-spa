@@ -10,6 +10,7 @@ import { DocumentPageComponent } from './containers/document-page/document-page.
 import { DocumentListComponent } from './components/document-list/document-list.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { ProfileDocumentPageComponent } from './containers/profile-document-page/profile-document-page.component';
 
 
 @NgModule({
@@ -24,11 +25,13 @@ import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
     UploadProofDocumentComponent,
     DocumentPageComponent,
     DocumentListComponent,
+    ProfileDocumentPageComponent
   ],
   exports: [
     UploadProofDocumentComponent,
     DocumentPageComponent,
     DocumentListComponent,
+    ProfileDocumentPageComponent
   ],
 })
 export class CaseManagementFeatureDocumentModule {}

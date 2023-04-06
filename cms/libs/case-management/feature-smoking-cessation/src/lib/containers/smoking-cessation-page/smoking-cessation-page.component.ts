@@ -36,9 +36,10 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   smokingCessation: SmokingCessation = {
     clientCaseEligibilityId: '',
     clientCaseId: '',
+    clientId: 0,
     smokingCessationReferralFlag: '',
-    smokingCessationNoteApplicableFlag: '',
-    smokingCessationNote: ''
+    smokingCessationNotApplicableFlag: '',
+    note: ''
   };
   isDisabled = true;
 
@@ -110,12 +111,12 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
       this.clientCaseId,this.clientId).subscribe({
         next: response => {
           this.smokingCessationForm.reset();
-          this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.smokingCessationNote)
-          if (response.smokingCessationReferralFlag == StatusFlag.Yes) {
+          this.smokingCessationForm.controls["smokingCessationNote"].setValue(response.note)
+          if (response.smokingCessationNotApplicableFlag == StatusFlag.Yes) {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.Yes)
             this.isDisabled = false;
           }
-          else if (response.smokingCessationReferralFlag == StatusFlag.No) {
+          else if (response.smokingCessationNotApplicableFlag == StatusFlag.No) {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
             this.isDisabled = true;
           }
@@ -127,6 +128,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
           this.smokingCessationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
 
           this.loggingService.logException({ name: SnackBarNotificationType.ERROR, message: error });
+          this.loaderService.hide();
           this.changeDetector.detectChanges();
         }
 
@@ -170,6 +172,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
       this.loaderService.show();
       this.smokingCessation.clientCaseEligibilityId = this.clientCaseEligibilityId;
       this.smokingCessation.clientCaseId = this.clientCaseId;
+      this.smokingCessation.clientId = this.clientId;
       return this.smokingCessationFacade.updateSmokingCessation(this.smokingCessation,this.clientId);
 
     }
@@ -181,14 +184,14 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]);
     this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity();
     if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.Yes) {
-      this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.Yes;
+      this.smokingCessation.smokingCessationNotApplicableFlag = StatusFlag.Yes;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.Yes;
-      this.smokingCessation.smokingCessationNote = this.smokingCessationForm.value.smokingCessationNote;
+      this.smokingCessation.note = this.smokingCessationForm.value.smokingCessationNote;
     }
     else if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.No) {
-      this.smokingCessation.smokingCessationNoteApplicableFlag = StatusFlag.No;
+      this.smokingCessation.smokingCessationNotApplicableFlag = StatusFlag.No;
       this.smokingCessation.smokingCessationReferralFlag = StatusFlag.No;
-      this.smokingCessation.smokingCessationNote = '';
+      this.smokingCessation.note = '';
     }
   }
   private updateFormCompleteCount(prev: any, curr: any) {
@@ -253,8 +256,12 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        this.checkValidations()
-        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        if(!this.checkValidations()){
+          this.workflowFacade.showCancelApplicationPopup(true);
+        }
+        else{
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        }
       }
     });
   }

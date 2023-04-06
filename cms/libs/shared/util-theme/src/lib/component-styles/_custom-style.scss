@@ -556,6 +556,9 @@
     position: relative;
     min-height: 37px;
   }
+  .k-numerictextbox.k-input .k-button.k-icon-button{
+    min-height: auto;
+  }
 }
 
 .auto-complete-with-template {
@@ -589,4 +592,74 @@
   span{
     font-size: $font-size-xxx;
   }
+}
+
+
+.client-tab-bar-wrappers{
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14);
+}
+.client-profile-outlet{
+  padding: 16px;
+}
+.custom-client-tab-main-wrapper {
+  max-width: calc(100% - 150px);
+  word-wrap: normal;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  .k-scrollview{
+    border-top: 0px !important;
+  }
+  .k-button{
+    font-family: $font-family-medium;
+    letter-spacing: 0.18px;
+    color: rgba(51, 51, 51, 0.74);
+    opacity: 1;
+    text-transform: capitalize;
+    padding: 6px 20px 6px 20px;
+    border-radius: 0px;
+    box-shadow: 0px -2px 0px 0px inset transparent;
+    &:hover{
+      color: $app-primary;
+      box-shadow: 0px -2px 0px 0px inset transparent;
+    }
+    &.custom-tab-main-active{
+      box-shadow: 0px -2px 0px 0px inset $app-primary;
+      color: $app-primary;
+    }
+ 
+  }
+}
+
+.custom-client-tab-inner-wrapper{
+  padding: 0px 16px;
+  .k-scrollview{
+    border: 0px !important;
+  }
+  .k-button{
+    font-family: $font-family-medium;
+    letter-spacing: 0.18px;
+    font-size: 12px;
+    color: rgba(112, 112, 112, 1);
+    opacity: 1;
+    text-transform: capitalize;
+    padding: 6px 8px 6px 8px;
+    border-radius: 0px;
+    box-shadow: 0px -2px 0px 0px inset transparent;
+    margin-right: 8px;
+    &:hover{
+      color: $app-primary;
+      box-shadow: 0px -2px 0px 0px inset transparent;
+    }
+    &.custom-inner-tab-active{
+      box-shadow: 0px -2px 0px 0px inset $app-primary;
+      color: $app-primary;
+    }
+ 
+  }
+}
+
+.epdropdown{
+  min-width: 120px;
 }

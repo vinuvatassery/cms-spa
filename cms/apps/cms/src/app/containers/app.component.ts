@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { NotificationSnackbarService } from '@cms/shared/util-core';
-import { AuthService } from '@cms/shared/util-oidc';
+import { AuthService, OidcSecurityService } from '@cms/shared/util-oidc';
+import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-root',
@@ -10,9 +11,22 @@ import { AuthService } from '@cms/shared/util-oidc';
 export class AppComponent {
   title = 'cms';
 
+  private authenticated!: boolean;
   commonSnackbar$   = this.notificationSnackbarService.snackbar$
-  constructor(private authService: AuthService,
-    private readonly notificationSnackbarService : NotificationSnackbarService) {}
+  constructor(public readonly oidcSecurityService: OidcSecurityService,private authService: AuthService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly userDataService: UserDataService
+    ) 
+    {
+      this.oidcSecurityService.isAuthenticated$.subscribe(
+        ({ isAuthenticated, allConfigsAuthenticated }) => {
+          this.authenticated = isAuthenticated;
+          if(this.authenticated){           
+            this.userDataService.getUserProfileDetails();
+          }
+        }
+      );
+    }
 
   user() {
     return this.authService.getUser();

@@ -11,6 +11,7 @@ import { FamilyAndDependentListComponent } from './components/family-and-depende
 import { FamilyAndDependentDetailComponent } from './components/family-and-dependent-detail/family-and-dependent-detail.component';
 import { RemoveFamilyAndDependentConfirmationComponent } from './components/remove-family-and-dependent-confirmation/remove-family-and-dependent-confirmation.component';
 import { FamilyAndDependentPageComponent } from './container/family-and-dependent-page/family-and-dependent-page.component';
+import { ProfileFamilyAndDependentPageComponent } from './container/profile-family-and -dependent-page/profile-family-and-dependent-page.component';
 
 @NgModule({
   imports: [
@@ -25,11 +26,13 @@ import { FamilyAndDependentPageComponent } from './container/family-and-dependen
     FamilyAndDependentDetailComponent,
     RemoveFamilyAndDependentConfirmationComponent,
     FamilyAndDependentPageComponent,
+    ProfileFamilyAndDependentPageComponent
   ],
   exports: [
     FamilyAndDependentListComponent,
     FamilyAndDependentDetailComponent,
     RemoveFamilyAndDependentConfirmationComponent,
+    ProfileFamilyAndDependentPageComponent
   ],
 })
 export class CaseManagementFeatureFamilyAndDependentModule {}

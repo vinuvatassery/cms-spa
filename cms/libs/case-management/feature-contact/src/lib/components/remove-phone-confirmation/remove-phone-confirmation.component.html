@@ -1,0 +1,30 @@
+
+<section class="k-dialog-body mb-2">
+    <p>
+     It will be permanently deleted from the client's profile
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel removing phone"
+          (click)="onDeleteConfirm(false)"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="delete phone"
+          (click)="onDeleteConfirm(true)"
+        >
+        DELETE
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

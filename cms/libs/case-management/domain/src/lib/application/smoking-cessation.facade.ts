@@ -5,6 +5,8 @@ import { SmokingCessation } from '../entities/smoking-cessation';
 import { SmokingCessationDataService } from '../infrastructure/smoking-cessation.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
 import { LoaderService ,NotificationSnackbarService, SnackBarNotificationType,LoggingService} from '@cms/shared/util-core';
+
+import { ClientNote } from '../entities/client-note';
 @Injectable({ providedIn: 'root' })
 export class SmokingCessationFacade {
    
@@ -46,4 +48,11 @@ export class SmokingCessationFacade {
     loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any,clientId:any) {
         return this.smokingCessationDataService.loadSmokingCessation(clientCaseEligibilityId,clientCaseId,clientId);
       }
+      loadSmokingCessationNotes(clientId:any,clientCaseId:any,clientCaseEligibilityId:any,type:any,isShowHistoricalData:boolean=false){
+        return this.smokingCessationDataService.loadSmokingCessationNotes(clientId,clientCaseId,clientCaseEligibilityId,type,isShowHistoricalData);
+      }
+      createSmokingCessationNote(clientNote: ClientNote) {
+        return this.smokingCessationDataService.createSmokingCessationNote(clientNote);
+      }
+
 }

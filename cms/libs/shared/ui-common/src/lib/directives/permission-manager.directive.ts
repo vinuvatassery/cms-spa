@@ -1,5 +1,6 @@
 import { Input, OnInit, Directive, ViewContainerRef, TemplateRef, OnDestroy } from "@angular/core";
-import { UserProfileService } from "@cms/shared/util-core";
+import { AuthService } from "@cms/shared/util-oidc";
+import { UserDataService } from "@cms/system-config/domain";
 import {  first, Subscription } from "rxjs";
 
 @Directive({
@@ -18,13 +19,14 @@ export class PermissionManagerDirective implements OnInit, OnDestroy {
   constructor(
     private viewContainerRef: ViewContainerRef,
     private templateRef: TemplateRef<any>,
-    private userProfileService: UserProfileService
+    private authService: AuthService,
+    private readonly userDataService: UserDataService
   ) {}
 
   public ngOnInit(): void {
     this.subscription.push(
 
-      this.userProfileService.getProfile$
+      this.userDataService.getProfile$
       .pipe(first(profile => profile[0]?.permissions != null))
       .subscribe((profile:any)=>{       
             

@@ -65,6 +65,7 @@ public state!: State;
     assignedCw:"Assigned to"
   }
   columnDroplist : any = {
+    ALL: "ALL",
     SSN:"ssn",
     HA:"homeAddress",
     P:"phone",
