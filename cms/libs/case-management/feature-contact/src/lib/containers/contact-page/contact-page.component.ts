@@ -1327,6 +1327,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       homeAddressGroup?.controls['state']?.disable();
       homeAddressGroup?.controls['zip']?.disable();
       this.isHomeAddressStateOregon$.next(address?.state === StatesInUSA.Oregon);
+      this.setHomeAddressCountSameAsMail();
     }
     else {
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
@@ -1340,6 +1341,16 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isHomeAddressStateOregon$.next(true);
     }
     this.isNoMailAddressValidationRequired = false;
+  }
+
+  private setHomeAddressCountSameAsMail(){
+    let completedDataPoints: CompletionChecklist[] = [];
+    const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
+    completedDataPoints.push({ dataPointName: 'homeAddress.address1', status: homeAddressGroup?.controls['address1']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress.address2', status: homeAddressGroup?.controls['address2']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress.city', status: homeAddressGroup?.controls['city']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress.state', status: homeAddressGroup?.controls['state']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress.zip', status: homeAddressGroup?.controls['zip']?.value ? StatusFlag.Yes : StatusFlag.No });
   }
 
   private setHomeAddress(address: ClientAddress) {
