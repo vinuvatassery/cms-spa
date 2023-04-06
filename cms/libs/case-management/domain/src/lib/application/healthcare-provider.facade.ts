@@ -138,9 +138,9 @@ export class HealthcareProviderFacade {
     return this.healthcareProviderDataService.updateHealthCareProvidersFlag(clientId,nohealthCareProviderFlag)
   }
 
-  loadHealthCareProviders(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string): void {
+  loadHealthCareProviders(clientId : number,skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated = false): void {
     this.showLoader();
-    this.healthcareProviderDataService.loadHealthCareProviders(clientId , skipcount ,maxResultCount  ,sort , sortType).subscribe({
+    this.healthcareProviderDataService.loadHealthCareProviders(clientId , skipcount ,maxResultCount  ,sort , sortType, showDeactivated).subscribe({
       next: (healthCareProvidersResponse : any) => {        
         if(healthCareProvidersResponse)
         {      

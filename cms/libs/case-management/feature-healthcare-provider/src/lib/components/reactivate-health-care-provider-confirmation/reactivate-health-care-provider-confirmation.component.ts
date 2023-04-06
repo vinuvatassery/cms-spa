@@ -12,7 +12,7 @@ import {
   templateUrl: './reactivate-health-care-provider-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DectiveHealthCareProviderConfirmationComponent {
+export class RectiveHealthCareProviderConfirmationComponent {
   /** Input properties **/
   @Input() prvId!: string;
 

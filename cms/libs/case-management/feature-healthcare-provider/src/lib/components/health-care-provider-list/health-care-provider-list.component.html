@@ -162,18 +162,18 @@
 
 <!-- Deactivate Modal -->
 <kendo-dialog *ngIf="isOpenedDeactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Remove healthcare provider? </kendo-dialog-titlebar>
-  <case-management-health-care-provider-remove-confirmation [prvId]="prvSelectedId"
+  <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Deactivate healthcare provider? </kendo-dialog-titlebar>
+  <case-management-health-care-provider-deactivate-confirmation [prvId]="prvSelectedId"
     (deactivateConfimEvent)="handleAcceptPrvDeact($event)">
-  </case-management-health-care-provider-remove-confirmation>
+  </case-management-health-care-provider-deactivate-confirmation>
 </kendo-dialog>
 
 <!-- Reactivate Modal -->
 <kendo-dialog *ngIf="isOpenedReactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Remove healthcare provider? </kendo-dialog-titlebar>
-  <case-management-health-care-provider-remove-confirmation [prvId]="prvSelectedId"
+  <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Re-activate healthcare provider? </kendo-dialog-titlebar>
+  <case-management-health-care-provider-reactivate-confirmation [prvId]="prvSelectedId"
     (reactivateConfimEvent)="handleAcceptPrvReact($event)">
-  </case-management-health-care-provider-remove-confirmation>
+  </case-management-health-care-provider-reactivate-confirmation>
 </kendo-dialog>
 
 

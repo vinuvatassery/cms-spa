@@ -99,7 +99,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     {
       buttonType: 'btn-h-primary',
       text: 'Reactivate Email',
-      icon: 'block',
+      icon: 'done',
       buttonName: 'reactivate',
       click: (providerId: string): void => {
         if (!this.reactivateButtonEmitted) {         

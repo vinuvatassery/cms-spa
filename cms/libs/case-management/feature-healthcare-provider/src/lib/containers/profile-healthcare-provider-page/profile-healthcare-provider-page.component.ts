@@ -41,6 +41,7 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
   sessionId!: string;
   providersStatus!: StatusFlag;
   showProvidervalidationbox!: boolean;
+  historychkBoxChecked = false
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private checkBoxSubscription!: Subscription;
@@ -86,9 +87,21 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sort,
-      gridDataRefiner.sortType
+      gridDataRefiner.sortType,
+      this.historychkBoxChecked
+    );   
+  }
+
+  onhistorychkBoxChanged() {    
+    this.historychkBoxChecked = !this.historychkBoxChecked;
+    this.healthProvider.loadHealthCareProviders(
+      this.clientId,
+       0,
+      5,
+      this.sortValue,
+      this.sortType,
+      this.historychkBoxChecked
     );
-    this.showHideValidation();
   }
 
   private removeHealthCareProvider(ProviderId: string) {
@@ -97,19 +110,11 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
 
   /** Private Methods **/
 
-  showHideValidation() {
-    this.showProvidervalidation$
-      .pipe(filter((x) => typeof x === 'boolean'))
-      .subscribe((x: boolean) => {
-        this.showProvidervalidationbox = x;
-      });
-  }
-
   /** events from child components**/
   handlePrvRemove(prvSelectedId: string) {
     this.removeHealthCareProvider(prvSelectedId);
   }
-  handlePrvDeacivate(prvSelectedId: string) {
+  handlePrvDeacivate(prvSelectedId: string) {    
     this.healthProvider.removeHealthCareProviders(this.clientId, prvSelectedId, false);
   }
 
