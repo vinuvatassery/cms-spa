@@ -16,3 +16,13 @@ label{
     vertical-align: middle;
     margin-right: 6px;
 }
+
+
+.proof_income-more{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .TableActionPopup{
+        margin: 0 5px;
+    }
+}
