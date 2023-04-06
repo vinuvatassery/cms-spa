@@ -45,8 +45,7 @@ export class TemplateManagementFacade {
     this.snackbarService.manageSnackBar(type, subtitle);
   }
 
-  getDirectoryContent(filepath?: string):any {
-    debugger;
+  getDirectoryContent(filepath?: string):any { 
     return this.templateDataService.getDirectoryContent(filepath);
   }
 
