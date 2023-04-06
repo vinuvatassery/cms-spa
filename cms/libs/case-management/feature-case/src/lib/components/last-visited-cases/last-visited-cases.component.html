@@ -18,8 +18,8 @@
         <kendo-sortable [kendoSortableBinding]="lastVisitedCases$ | async" [animation]="true"
           (dragEnd)="onDragEnd($event)" [emptyItemClass]="'secession-empty-state'" [emptyText]="'There are no active sessions'">
           <ng-template let-item="item">
-            <div class="last-visited-case" (click)="onCaseClicked(item)">
-              <button aria-label="remove last visited case" (click)="deleteActiveSession(item.activeSessionId)"
+            <div class="last-visited-case">
+              <button aria-label="remove last visited case" (click)="deleteActiveSession(item)"
                 kendoButton icon="close" look="flat" class="last-visited-case-close"></button>
               <p class="last-visited-case-heading" (click)="onCaseClicked(item)"><strong>{{ item.clientName }}</strong>
               </p>

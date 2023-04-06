@@ -29,6 +29,7 @@ export class AddressListComponent implements OnInit {
   isDeleteFlag:boolean = false;
   showFormFieldsFlag:boolean = false;
   clientAddressId!:any;
+  editAddressTypeText:string='';
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -37,7 +38,8 @@ export class AddressListComponent implements OnInit {
       click: (address:any): void => {
         if(address.clientAddressId !== undefined){
           this.clientAddress = address;
-        }       
+          this.editAddressTypeText ='Edit ' + address?.addressTypeDesc + ' Address';
+        } 
           this.contactFacade.editedAddressSubject.next(this.clientAddress);
           this.onAddressDetailClicked(true);
           this.contactFacade.editAddressSubject.next(false);

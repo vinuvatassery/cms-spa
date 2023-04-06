@@ -47,19 +47,20 @@ export class LastVisitedCasesComponent implements OnInit {
     };
   }
 
-  onCaseClicked(session: ActiveSessions) {
-    if (session && session?.caseStatusCode === CaseStatusCode.accept) {
+  onCaseClicked(session: ActiveSessions) {   
+    const clientId = this.route.snapshot.queryParams['id'] ?? 0;
+    if (session && session?.caseStatusCode === CaseStatusCode.accept && clientId != session?.clientId) {
       this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);
       return;
     }
 
-    const sessionId =  this.route.snapshot.queryParams['sid'];
-    if(sessionId !== session?.sessionId){
+    const sessionId = this.route.snapshot.queryParams['sid'];
+    if (sessionId !== session?.sessionId && session?.caseStatusCode !== CaseStatusCode.accept) {
       this.router.navigate(['case-management/case-detail'], {
-          queryParams: {
-            sid: session?.sessionId,
-            eid: session?.entityId
-          }      
+        queryParams: {
+          sid: session?.sessionId,
+          eid: session?.entityId
+        }
       });
     }
   }
@@ -89,7 +90,16 @@ export class LastVisitedCasesComponent implements OnInit {
     return this.caseFacade.updateActiveSessionOrder(sessionUpdate);
   }
 
-  deleteActiveSession(activeSessionId: string) {
-    return this.caseFacade.deleteActiveSession(activeSessionId);
+  deleteActiveSession(activeSession: any) {
+    let isProfileOpened = false;
+    if(activeSession?.caseStatusCode === CaseStatusCode.accept){
+      const clientId = parseInt(this.route.snapshot.queryParams['id'] ?? 0);
+      isProfileOpened = clientId === activeSession.clientId;
+    }else{
+      const sessionId = this.route.snapshot.queryParams['sid'];
+      isProfileOpened = sessionId === activeSession?.sessionId;
+    }
+
+    return this.caseFacade.deleteActiveSession(activeSession.activeSessionId, isProfileOpened);
   }
 }

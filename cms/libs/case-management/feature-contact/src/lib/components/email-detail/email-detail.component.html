@@ -41,7 +41,7 @@
 
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div *ngIf="isEditValue === true">
+      <div *ngIf="isEditValue === true && isDeleted === false">
         <button kendoButton [primary]="false" look="flat" (click)="onDeactivateClicked()"
           aria-label="deactivate email address" type='button'>
           Deactivate

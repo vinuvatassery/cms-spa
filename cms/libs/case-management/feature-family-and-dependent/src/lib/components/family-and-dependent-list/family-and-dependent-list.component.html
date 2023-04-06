@@ -20,7 +20,7 @@
     </kendo-grid-columnmenu-lock>
   </ng-template>
 
-    <kendo-grid-column  [width]="100"
+    <kendo-grid-column  [width]="180"
     field="fullName"     title="Full Legal Name">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button aria-label="client name" kendoButton look="flat"   class="card-link-button"
@@ -33,36 +33,34 @@
        {{ dataItem.firstName + ' '+  dataItem.lastName }}</div>
     </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column  [width]="100"
+    <kendo-grid-column  [width]="130"
      field="relationshipDescription"
       title="Relationship to Client">
 
     </kendo-grid-column>
-    <kendo-grid-column [width]="100"
+    <kendo-grid-column [width]="110"
       field="dependentTypeCode"
       title="CAREAssist client?"
-      [width]="45"
+  
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.dependentTypeCode === CAClient ? 'YES' : 'NO'}}
     </ng-template>
   </kendo-grid-column>
-    <kendo-grid-column  [width]="100"
+    <kendo-grid-column [width]="80"
       field="dob"
       title="Date of Birth"
       [sortable]="true"
       [columnMenu]="false"
-       [width]="70"
+      
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.dob | date: 'MM/dd/yyyy' }}  (Age {{dataItem.age}})
     </ng-template>
   </kendo-grid-column>
-    <kendo-grid-column [width]="100"
+    <kendo-grid-column [width]="160"
       field="enrolledInInsuranceFlag"
       title="Currently on client’s health insurance plan?"
-      [width]="100"
-
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.enrolledInInsuranceFlag === 'Y' ? 'YES' : 'NO'}}
@@ -96,7 +94,7 @@
     *ngIf="isAddOrEditFamilyDependentDisplay"
       field="ClientDependentId"
       title="Options"
-      [width]="30"
+      [width]="70"
       class="text-center"
       [sortable]="false"
       [columnMenu]="false"

@@ -33,6 +33,7 @@ export class EmailDetailComponent implements OnInit {
   isFormSubmitted = false;
   btnDisabled = false;
   selectedclientEmailId!: string;
+  isDeleted = false;
   /** Constructor **/
   constructor(private formBuilder: FormBuilder) {}
 
@@ -74,6 +75,7 @@ export class EmailDetailComponent implements OnInit {
 
   onSelectedEmailFormLoad() {
     this.selectedclientEmailId = this.selectedEmailData?.clientemailId;
+    this.isDeleted = this.selectedEmailData?.isDeleted
     this.clientEmailForm.patchValue({
       clientEmailId: this.selectedEmailData?.clientemailId,
       email: this.selectedEmailData?.email,

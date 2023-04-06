@@ -31,7 +31,7 @@
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
         <kendo-grid-column
-          field="emailAddress"
+          field="email"
           title="Email Address"
           [width]="250"
         >
@@ -119,7 +119,7 @@
           >
           
             <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientEmailId="clientEmailId">
-              <button kendoButton  [hidden]="(clientEmail.isDeleted === true && dataItem.buttonName==='deactivate')
+              <button kendoButton  [hidden]="(clientEmail.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
               ||(clientEmail.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
               look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
               (click)="dataItem.click(clientEmail?.clientEmailId)">

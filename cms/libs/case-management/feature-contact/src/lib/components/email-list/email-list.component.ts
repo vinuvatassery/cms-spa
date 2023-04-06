@@ -249,6 +249,7 @@ export class EmailListComponent implements OnChanges {
             detailMsgFlag: emailData?.detailMsgFlag,
             preferredFlag: emailData?.preferredFlag,
             paperlessFlag: emailData?.paperlessFlag,
+            isDeleted : emailData?.isDeleted
           };
           this.isOpenedEmailEdit = true;
           this.editformVisibleSubject.next(this.isOpenedEmailEdit);
