@@ -119,11 +119,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           this.initialize();
 
           this.loadClientProfileInfoEventHandler();
-        }
-        else
-        {
-          this.onTabClick(ClientProfileTabs.CLIENT_INFO); 
-        }
+        }       
       });
   }
   /** Internal event methods **/
