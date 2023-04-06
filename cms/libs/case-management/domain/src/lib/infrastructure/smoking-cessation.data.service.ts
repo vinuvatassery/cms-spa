@@ -21,9 +21,9 @@ export class SmokingCessationDataService{
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/smoking-cessations?ClientCaseId=${clientCaseId}&ClientCaseEligibilityId=${clientCaseEligibilityId}`);
       }
 
-      loadSmokingCessationNotes(clientId:any,clientCaseEligibilityId:any,type:any){
+      loadSmokingCessationNotes(clientId:any,clientCaseId:any,clientCaseEligibilityId:any,type:any,isShowHistoricalData:boolean=false){
         return this.http.get<SmokingCessation>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes?clientCaseEligibilityId=${clientCaseEligibilityId}&type=${type}`);
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes?clientCaseId=${clientCaseId}&clientCaseEligibilityId=${clientCaseEligibilityId}&type=${type}&isShowHistoricalData=${isShowHistoricalData}`);
       }
       createSmokingCessationNote(clientNote: ClientNote) {  
         return this.http.post<ClientNote>(

@@ -11,14 +11,13 @@ import { DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
-  selector: 'case-management-deactivate-pharmacy',
-  templateUrl: './deactivate-pharmacy.component.html',
+  selector: 'case-management-reactivate-pharmacies',
+  templateUrl: './reactivate-pharmacies.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class ReactivatePharmaciesComponent {
 
-export class DeactivatePharmacyComponent {
-  @Input() clientId: any;
-  @Output() closeDeactivatePharmacies = new EventEmitter();
+  @Output() closeReactivatePharmacies = new EventEmitter();
   @Input() clientPharmacyDetails: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
  /** Constructor **/
@@ -26,15 +25,16 @@ export class DeactivatePharmacyComponent {
   private readonly drugPharmacyFacade: DrugPharmacyFacade
 ) {
 }
-  onCloseDeactivatePharmaciesClicked() {
-    this.closeDeactivatePharmacies.emit();
+  onCloseReactivatePharmaciesClicked() {
+    this.closeReactivatePharmacies.emit();
   }
-  onDeactivateClick()
+  onReactivateClick()
   {
     let pharmacy ={
       ClientId:this.clientPharmacyDetails.clientId,
-      IsActive:false
+      IsActive:true
     }
-    this.drugPharmacyFacade.deactivePharmacies(this.clientPharmacyDetails.clientPharmacyId,pharmacy);
+    
+    this.drugPharmacyFacade.reActivatePharmacies(this.clientPharmacyDetails.clientPharmacyId,pharmacy);
   }
 }

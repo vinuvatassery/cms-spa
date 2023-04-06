@@ -152,6 +152,17 @@
 </kendo-dialog>
 
 
+
+<!-- Reactivate-pharmacy Modal -->
+<kendo-dialog *ngIf="isOpenReactivatePharmaciesClicked" (close)="handleCloseReactivatePharmaciesClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Reactivate Pharmacy </kendo-dialog-titlebar>
+  <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails"
+   (closeReactivatePharmacies)="handleCloseReactivatePharmaciesClicked()">
+  </case-management-reactivate-pharmacies>
+</kendo-dialog>
+
+
 <!-- Select New Primary Pharmacy -->
 <kendo-dialog *ngIf="isOpenSelectNewPrimaryPharmaciesClicked" (close)="handleCloseSelectNewPrimaryPharmaciesClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">

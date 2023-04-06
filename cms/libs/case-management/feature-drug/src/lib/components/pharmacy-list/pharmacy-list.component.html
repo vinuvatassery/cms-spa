@@ -81,6 +81,7 @@
           <p>There is no data to display.</p>
         </ng-template>  
       </kendo-grid>
+      <kendo-formerror *ngIf="showPharmacyRequiredValidation$ | async">Pharmacies Required.</kendo-formerror>
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
