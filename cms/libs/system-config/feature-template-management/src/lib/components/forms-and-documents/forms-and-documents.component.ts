@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import {TemplateManagementFacade } from '@cms/system-config/domain';
+import { TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
 
 @Component({
@@ -15,7 +15,7 @@ export class FormsAndDocumentsComponent {
   foldersList: any = [];
   foldersTree: any = [];
   selectedfolder: string = "";
-  isShowLoader:boolean=true;
+  isShowLoader: boolean = true;
   public constructor(
     private readonly templateManagementFacade: TemplateManagementFacade,
     private readonly loaderService: LoaderService,
@@ -25,28 +25,36 @@ export class FormsAndDocumentsComponent {
   }
 
   ngOnInit() {
-    this.templateManagementFacade.getDirectoryContent("").subscribe((templates: any) => {
-      
-      this.isShowLoader=false;
+    this.templateManagementFacade.getDirectoryContent("").subscribe((documentlist: any) => {
+      this.isShowLoader = false;
       this.loaderService.hide();
-      if (!!templates && this.foldersTree.length == 0) {
-          this.foldersTree = templates;
+      if (!!documentlist && this.foldersTree.length == 0) {
+        this.foldersTree = documentlist;
       }
     })
   }
   /** Internal event methods **/
   onCloseAttachmentClicked() {
-    
+
     this.isOpenAttachment = false;
   }
   onOpenAttachmentClicked() {
     this.isOpenAttachment = true;
-    if(this.isShowLoader)
-    this.loaderService.show();
+    if (this.isShowLoader)
+      this.loaderService.show();
     else
-    this.loaderService.hide();
+      this.loaderService.hide();
   }
 
+  fetchSubfolders = (node: any) =>
+    this.templateManagementFacade.getDirectoryContent(node.filePath).pipe(map((response: any[]) => {
+      return node.files = response;
+    }));
+
+  hasFiles = function (data: any) {
+
+    return data.isDirectory;
+  }
   /** Public methods **/
   showSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -56,13 +64,13 @@ export class FormsAndDocumentsComponent {
     this.snackbarService.manageSnackBar(type, subtitle);
   }
 
-  onDownloadViewTemplateClick(viewType: string, name: string) {
+  onDownloadViewFileClick(viewType: string, documentname: string) {
 
-    if (name === undefined || name === '') {
+    if (documentname === undefined || documentname === '') {
       return;
     }
     this.loaderService.show()
-    this.templateManagementFacade.getFormsandDocumentsViewDownload(name).subscribe({
+    this.templateManagementFacade.getFormsandDocumentsViewDownload(documentname).subscribe({
       next: (data: any) => {
 
         const fileUrl = window.URL.createObjectURL(data);
@@ -71,7 +79,7 @@ export class FormsAndDocumentsComponent {
         } else {
           const downloadLink = document.createElement('a');
           downloadLink.href = fileUrl;
-          var filename = name.split("\\");
+          var filename = documentname.split("\\");
           downloadLink.download = filename[filename.length - 1];
           downloadLink.click();
         }
@@ -83,17 +91,4 @@ export class FormsAndDocumentsComponent {
       }
     })
   }
-
-
- public fetchChildren=(node: any) =>
- this.templateManagementFacade.getDirectoryContent(node.filePath).pipe( map((response: any[]) => 
- {
-  return  node.files=response;
-}) );
-
- hasChildren= function (data:any) {
-   
-   return data.isDirectory;
-}
-  
 }

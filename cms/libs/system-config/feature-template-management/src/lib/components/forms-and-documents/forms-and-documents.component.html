@@ -8,55 +8,32 @@
     <span class="title-icons k-icon k-i-attachment mr-1" aria-label="forms and attachments" aria-hidden="true"></span>
     Forms and Attachments
   </kendo-dialog-titlebar>
-  <!--  <kendo-treelist
-  kendoTreeListExpandable
-  [kendoTreeListHierarchyBinding]="foldersTree"
-  childrenField="files" 
-  [height]="400"
-  (expand)="onExpand($event)"
->
-  <kendo-treelist-column
-    [expandable]="true"
-    field="fileName"
-   
-    [width]="300"
-  >
-    <ng-template kendoTreeListCellTemplate let-dataItem>
-      <span
-        class="k-icon k-i-{{
-          dataItem.isDirectory == true ? 'folder' : 'file'
-        }}"
-      ></span>
-      {{ dataItem.fileName }}  ({{dataItem.fileSize}}MB)
-    </ng-template>
-  </kendo-treelist-column>
-  <kendo-treelist-column field="lastModificationTime" [width]="100">
-  </kendo-treelist-column>
- 
-</kendo-treelist> -->
+
   <section class="k-dialog-body mb-2 pd-2">
-    <kendo-treeview [nodes]="foldersTree" textField="fileName" TreeViewSize="large" kendoTreeViewExpandable [hasChildren]="hasChildren"
-      [children]="fetchChildren"   childrenField="items" >
+    <kendo-treeview [nodes]="foldersTree" textField="fileName" TreeViewSize="large" kendoTreeViewExpandable
+      [hasChildren]="hasFiles" [children]="fetchSubfolders" childrenField="items">
       <ng-template kendoTreeViewNodeTemplate let-dataItem>
         <div class="attachments-lists-wrap" [ngClass]="dataItem.isDirectory===false ? 'file_list' : 'directory_list'">
-        <span class="material-icons" *ngIf="dataItem.isDirectory===true">folder</span>
-        <div class="file-section-inner">
+          <span class="material-icons" *ngIf="dataItem.isDirectory===true">folder</span>
+          <div class="file-section-inner">
 
-      
-        <span class="attachments-buttons-wrap"  *ngIf="dataItem.isDirectory===false">
-          <button kendoButton look="flat" aria-label="download attachment" *ngIf="dataItem.isDirectory===false"
-            (click)="onDownloadViewTemplateClick('download',dataItem.filePath)">
-            <span class="material-icons" aria-label="download" aria-hidden="true">file_download</span>
-          </button>
-          <button kendoButton look="flat" aria-label="open in new tab" *ngIf="dataItem.isDirectory===false"
-            (click)="onDownloadViewTemplateClick('view',dataItem.filePath)">
-            <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
-          </button> 
-        </span>
-        <label>{{dataItem.fileName}}  <label *ngIf="dataItem.isDirectory===false">({{dataItem.fileSize}})MB</label></label>
-      </div>
-        <span class="attachments-date" *ngIf="dataItem.isDirectory===false">Last Updated {{dataItem.lastModificationTime
-          | date: 'MM/dd/YYYY'}}</span>
+
+            <span class="attachments-buttons-wrap" *ngIf="dataItem.isDirectory===false">
+              <button kendoButton look="flat" aria-label="download attachment" *ngIf="dataItem.isDirectory===false"
+                (click)="onDownloadViewFileClick('download',dataItem.filePath)">
+                <span class="material-icons" aria-label="download" aria-hidden="true">file_download</span>
+              </button>
+              <button kendoButton look="flat" aria-label="open in new tab" *ngIf="dataItem.isDirectory===false"
+                (click)="onDownloadViewFileClick('view',dataItem.filePath)">
+                <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
+              </button>
+            </span>
+            <label>{{dataItem.fileName}} <label
+                *ngIf="dataItem.isDirectory===false">({{dataItem.fileSize}})MB</label></label>
+          </div>
+          <span class="attachments-date" *ngIf="dataItem.isDirectory===false">Last Updated
+            {{dataItem.lastModificationTime
+            | date: 'MM/dd/YYYY'}}</span>
         </div>
       </ng-template>
     </kendo-treeview>

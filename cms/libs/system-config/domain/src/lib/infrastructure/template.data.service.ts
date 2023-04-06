@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { Template } from '../entities/template';
-import { ConfigurationProvider} from '@cms/shared/util-core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { map } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +14,7 @@ export class TemplateDataService {
   /** Constructor **/
   constructor(private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
-   ) { }
+  ) { }
 
   /** Public methods **/
   loadTemplates(): Observable<Template[]> {
@@ -34,10 +34,10 @@ export class TemplateDataService {
   }
 
   getDirectoryContent(filepath?: string) {
-    let url = `/case-management/browse?filepath=`  + (!!filepath ? `${filepath}` : '""');
+    let url = `/case-management/browse?filepath=` + (!!filepath ? `${filepath}` : '""');
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}` + url
-      );
+    );
   }
 
   getFormsandDocumentsViewDownload(filepath: string) {
@@ -45,7 +45,8 @@ export class TemplateDataService {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}` + url
       , {
-        responseType: 'blob'});
-}
+        responseType: 'blob'
+      });
+  }
 
 }
