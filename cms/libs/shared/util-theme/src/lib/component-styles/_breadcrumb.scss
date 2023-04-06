@@ -44,6 +44,7 @@
 
     &.k-state-disabled, &.k-disabled {
       color: $black-3 !important;
+      opacity: 1;
     }
     &:hover,
     &:focus {
@@ -119,5 +120,12 @@
       font-family: $font-family;
       margin-right: $size-xxx;
     }
+  }
+}
+
+.breadcrumb-left{
+  .k-i-line::before{
+    content: "/";
+    color: #333333;
   }
 }
