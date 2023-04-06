@@ -7,7 +7,7 @@ import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { Template } from '../entities/template';
 import { ConfigurationProvider} from '@cms/shared/util-core';
-
+import { map } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
@@ -39,7 +39,6 @@ export class TemplateDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}` + url
       );
   }
-
 
   getFormsandDocumentsViewDownload(filepath: string) {
     let url = `/case-management/document/path?filepath=` + `${filepath}`;

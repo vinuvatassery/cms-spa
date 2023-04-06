@@ -1,10 +1,9 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { TemplateManagementFacade } from '@cms/system-config/domain';
-import { ExpandEvent } from "@progress/kendo-angular-treelist";
-import { TreeItem } from '@progress/kendo-angular-treeview';
-import { Observable, of } from 'rxjs';
+import {TemplateManagementFacade } from '@cms/system-config/domain';
+import { map } from "rxjs/operators";
+
 @Component({
   selector: 'system-config-forms-and-documents',
   templateUrl: './forms-and-documents.component.html',
@@ -16,36 +15,36 @@ export class FormsAndDocumentsComponent {
   foldersList: any = [];
   foldersTree: any = [];
   selectedfolder: string = "";
+  isShowLoader:boolean=true;
   public constructor(
     private readonly templateManagementFacade: TemplateManagementFacade,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
-    private readonly loggingService: LoggingService
+    private readonly loggingService: LoggingService,
   ) {
   }
 
   ngOnInit() {
     this.templateManagementFacade.getDirectoryContent("").subscribe((templates: any) => {
-      debugger;
-      if (!!templates) {
-        this.foldersList = templates;
-        if (this.foldersTree.length == 0) {
-          this.foldersTree = this.foldersList;
-        }
-        this.foldersTree.map((item: any) => {
-          if (item.fileName == this.selectedfolder) {
-            item.files = this.foldersList;
-          }
-        });
+      
+      this.isShowLoader=false;
+      this.loaderService.hide();
+      if (!!templates && this.foldersTree.length == 0) {
+          this.foldersTree = templates;
       }
     })
   }
   /** Internal event methods **/
   onCloseAttachmentClicked() {
+    
     this.isOpenAttachment = false;
   }
   onOpenAttachmentClicked() {
     this.isOpenAttachment = true;
+    if(this.isShowLoader)
+    this.loaderService.show();
+    else
+    this.loaderService.hide();
   }
 
   /** Public methods **/
@@ -85,43 +84,16 @@ export class FormsAndDocumentsComponent {
     })
   }
 
-  onFolderNameClicked(template: any): any {
-debugger;
-    this.selectedfolder = template.filePath;
-return    this.templateManagementFacade.getDirectoryContent(template == null ? '' : template.filePath).subscribe((templates: any) => {
-     debugger;
-     return templates;
-     /*  if (!!templates) {
-        this.foldersList = templates;
-        if (this.foldersTree.length == 0)
-          this.foldersTree = this.foldersList;
-        this.foldersTree.forEach((item: any) => {
 
-if (item.filePath == this.selectedfolder) {
-  item.files = this.foldersList;
+ public fetchChildren=(node: any) =>
+ this.templateManagementFacade.getDirectoryContent(node.filePath).pipe( map((response: any[]) => 
+ {
+  return  node.files=response;
+}) );
+
+ hasChildren= function (data:any) {
+   
+   return data.isDirectory;
 }
-
-        });
-        debugger;
-        console.log(this.foldersTree);
-      } */
-    })
-  }
-
-  public onExpand(event: TreeItem): void {
-    
-    this.onFolderNameClicked(event.dataItem);
-    debugger;
-  }
-
-  public fetchChildren(node: any): Observable<any[]> {
-    //Return the items collection of the parent node as children.
-    debugger;
-   var res= this.onFolderNameClicked(node);
-   debugger;
-    return of(node.items);
-}
-
-  public hasChildren = (item: any) => "fileName" in item;
-
+  
 }

@@ -46,10 +46,12 @@ export class TemplateManagementFacade {
   }
 
   getDirectoryContent(filepath?: string):any {
+    debugger;
     return this.templateDataService.getDirectoryContent(filepath);
   }
 
   getFormsandDocumentsViewDownload(filename: string) {
     return this.templateDataService.getFormsandDocumentsViewDownload(filename);
   }
+
 }
