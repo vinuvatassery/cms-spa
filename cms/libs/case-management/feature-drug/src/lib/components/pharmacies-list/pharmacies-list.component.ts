@@ -15,6 +15,7 @@ import {
   StatusFlag,
   CompletionChecklist,
   PriorityCode,
+  YesNoFlag,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -241,17 +242,17 @@ export class PharmaciesListComponent implements OnInit {
   /** Private methods **/
   filterActionButtonOptions(options:any[],actionType:any):any[]{
     let filteredOptions:any[] = [];
-    if(actionType.priorityCode != 'P' && actionType.activeFlag === 'Y'){
+    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === YesNoFlag.Yes){
       filteredOptions = options.filter(option =>option.type != 'Reactivate');
-    } else if(actionType.priorityCode != 'P' && actionType.activeFlag === 'N')
+    } else if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === YesNoFlag.No)
     {
       filteredOptions = options.filter(option =>option.type != 'Deactivate');
     }
-    else if(actionType.priorityCode === 'P' && actionType.activeFlag === 'Y')
+    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.Yes)
     {
       filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Reactivate');
     } 
-    else if(actionType.priorityCode === 'P' && actionType.activeFlag === 'N')
+    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.No)
     {
       filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Deactivate');
     }
