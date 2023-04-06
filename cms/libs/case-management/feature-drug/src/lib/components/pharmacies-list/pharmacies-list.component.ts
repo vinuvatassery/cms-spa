@@ -109,15 +109,11 @@ export class PharmaciesListComponent implements OnInit {
             );
           } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
             if(clientPharmacy.clientPharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
-              let pharmacy ={
-                ClientId:this.clientId,
-                IsActive:false
-              }
             this.OpenDeactivatePharmaciesClicked(clientPharmacy)
             }
           }
         }
-        
+
       },
     },
     {
@@ -126,7 +122,7 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'done',
       type:'Reactivate',
       click: (clientPharmacy: any): void => {
-     
+
         if(clientPharmacy.vendorId){
           let pharmacy ={
             ClientId:this.clientId,
@@ -149,12 +145,12 @@ export class PharmaciesListComponent implements OnInit {
             ClientPharmacyId:clientPharmacy.clientPharmacyId,
             ClientId:this.clientId,
             PriorityCode:'P'
-            
+
           }]
           this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,pharmacyPriorityites)
         }
-    
-        
+
+
       },
     },
     {
@@ -174,7 +170,7 @@ export class PharmaciesListComponent implements OnInit {
             }
           }
         }
-        
+
       },
     },
   ];
@@ -260,12 +256,12 @@ export class PharmaciesListComponent implements OnInit {
 
   /** Internal event methods **/
   updateAndDeactivatePharmacy(data:any){
-   
+
     this.drugPharmacyFacade.deactivePharmacies(this.pharmacyId,this.changePharmacyObj);
     this.drugPharmacyFacade.deActivePharmacyObs.subscribe(updated =>{
       if(updated){
         if(data.isNewAdded){
-      
+
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,
@@ -277,7 +273,7 @@ export class PharmaciesListComponent implements OnInit {
         }
       }
     })
-      
+
   }
   setUpdatedPharmacy(pharmacyId:any){
 
@@ -294,10 +290,10 @@ export class PharmaciesListComponent implements OnInit {
       this.pharmacyId
     );
     this.drugPharmacyFacade.removePharmacyResponse$.subscribe(isRemoved =>{
-  
+
       if(isRemoved){
         if(data.isNewAdded){
-      
+
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,

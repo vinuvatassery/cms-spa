@@ -61,15 +61,13 @@ export class CerListComponent implements OnInit, OnChanges {
     },
   ];
 
-  /** Constructor**/
-  constructor() {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.dateDropdownDisabled = true
     this.loader = true;
     this.loadcerTrackingDates();
-    
+
   }
   ngOnChanges(): void {
     this.state = {
@@ -106,7 +104,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.sortValue = stateData.sort[0]?.field;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.loadCerTrackingList();    
+    this.loadCerTrackingList();
   }
   pageselectionchange(data: any) {
     this.state.take = data.value;
@@ -122,7 +120,7 @@ export class CerListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType
     );
-   
+
   }
 
   loaCerData(
@@ -148,7 +146,7 @@ export class CerListComponent implements OnInit, OnChanges {
       ?.pipe(
         first((trackingDateList: any) => trackingDateList?.seletedDate != null)
       )
-      .subscribe((trackingDateList: any) => {        
+      .subscribe((trackingDateList: any) => {
         if (trackingDateList?.seletedDate) {
           this.loadDefSelectedateSubject.next(trackingDateList?.seletedDate);
           this.datesSubject.next(trackingDateList?.datesList);

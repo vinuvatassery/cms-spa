@@ -157,7 +157,7 @@ export class FriendOrFamilyDetailComponent implements OnInit {
    return of(false);
  }
  get fAfContact() {
-  return (this.contactForm as FormGroup).controls as any;
+  return this.contactForm.controls as any;
 }
 bindDataToForm(contact:any)
 {
