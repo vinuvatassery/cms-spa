@@ -184,11 +184,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  loadHeaderAndProfile() {
-    this.loadClientProfileInfoEventHandler();
-  }
-
+  
   onTabClick(tabName: string) {
     this.selectedTabName = tabName;
     switch (tabName) {
