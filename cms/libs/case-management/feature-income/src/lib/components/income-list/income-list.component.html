@@ -166,7 +166,8 @@
       class="block-section mt-1 text-right"
       *ngIf="!isAddIncomeButtonAndFooterNoteDisplay"
     >
-      FPL changed from 155% to 150% on 03/01/2020
+      FPL changed from {{incomesTotal?.previousFplPercentage}} to {{incomesTotal?.newFplPercentage}}
+       on {{incomesTotal?.fplLastUpdatedDate | date: 'MM/dd/yyyy'}}
     </div>
     <div class="flex-row" *ngIf="!hasNoIncome">
       <div class="flex-col mt-1">
