@@ -32,6 +32,7 @@
 <div class="app-c-table">
   <kendo-grid
   (columnReorder)="onColumnReorder($event)"
+  (columnVisibilityChange)="columnChange($event)"
   [filter]="gridFilter"
   [pageSize]="state.take"
   [pageable]="true"
