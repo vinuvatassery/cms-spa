@@ -130,6 +130,16 @@
       </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
+       <!-- grid Loader Template -->  
+       <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
+       <!-- grid No data Template -->  
+       <ng-template kendoGridNoRecordsTemplate>
+         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+         </div>
+         <p>There is no data to display.</p>
+       </ng-template> 
   </kendo-grid>
 </div>
 <div class="mt-2 block-section">
