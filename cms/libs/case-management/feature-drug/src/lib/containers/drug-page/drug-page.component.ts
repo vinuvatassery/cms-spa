@@ -1,17 +1,16 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectorRef, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, OnInit, OnDestroy, ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoin, mergeMap, of, Subscription, tap, BehaviorSubject } from 'rxjs';
 /** Facades **/
 import {
-  DrugPharmacyFacade, WorkflowFacade, IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug,
+  DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
   StatusFlag, CompletionChecklist, NavigationType, YesNoFlag
 } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from '@microsoft/signalr';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'case-management-drug-page',

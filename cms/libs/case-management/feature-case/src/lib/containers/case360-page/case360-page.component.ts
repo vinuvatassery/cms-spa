@@ -116,12 +116,13 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       .subscribe(() => {                
         const clientId = this.route.snapshot.paramMap.get('id') ?? 0;
         if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
+          this.clientCaseEligibilityId = '';
           this.initialize();
-
           this.loadClientProfileInfoEventHandler();
         }       
       });
   }
+
   /** Internal event methods **/
 
   onVerificationReviewClosed() {
@@ -184,11 +185,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  loadHeaderAndProfile() {
-    this.loadClientProfileInfoEventHandler();
-  }
-
+  
   onTabClick(tabName: string) {
     this.selectedTabName = tabName;
     switch (tabName) {
