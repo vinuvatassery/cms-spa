@@ -1,4 +1,4 @@
-<div class="block-section mt-1">
+<div class="block-section">
   <case-management-client-read-only-view [clientProfile]="loadedClient$ | async"
     [clientId]="profileClientId" [clientCaseEligibilityId]="clientCaseEligibilityId"
     [clientCaseId]="clientCaseId" (loadReadOnlyClientInfoEvent)="loadReadOnlyClientInfoEventHandler()"

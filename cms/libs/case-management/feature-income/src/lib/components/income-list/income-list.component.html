@@ -149,10 +149,16 @@
            </div>
          </div>
        </ng-template>
-       <!-- grid loader template -->
-       <ng-template kendoGridLoadingTemplate>
-         <common-grid-loader-component></common-grid-loader-component>
-       </ng-template>
+ <!-- grid Loader Template -->  
+ <ng-template kendoGridLoadingTemplate>
+  <common-grid-loader-component></common-grid-loader-component>
+ </ng-template>
+ <!-- grid No data Template -->  
+ <ng-template kendoGridNoRecordsTemplate>
+   <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+   </div>
+   <p>There is no data to display.</p>
+ </ng-template> 
       </kendo-grid>
     </div>
     <kendo-formerror *ngIf="!isIncomeAvailable"> A Response is required.</kendo-formerror>
@@ -202,7 +208,7 @@
           [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <div class="d-flex">
+          <div class="proof_income-more">
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
            </span>
@@ -235,6 +241,16 @@
         </div>
         </ng-template>
         </kendo-grid-column>
+         <!-- grid Loader Template -->  
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+     </ng-template>
+     <!-- grid No data Template -->  
+     <ng-template kendoGridNoRecordsTemplate>
+       <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+       </div>
+       <p>There is no data to display.</p>
+     </ng-template> 
       </kendo-grid>
     </div>
   </div>
