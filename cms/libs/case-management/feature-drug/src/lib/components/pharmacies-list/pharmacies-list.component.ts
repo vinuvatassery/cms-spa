@@ -15,6 +15,7 @@ import {
   StatusFlag,
   CompletionChecklist,
   PriorityCode,
+  YesNoFlag,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';

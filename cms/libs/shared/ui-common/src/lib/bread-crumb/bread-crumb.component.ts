@@ -72,24 +72,27 @@ export class BreadCrumbComponent {
       }
 
       const label = child.snapshot.data['title'];
-      const routePath = label !== ''?  child?.snapshot?.url[0]?.path : '';
+      const routePath = label !== '' ? child?.snapshot?.url[0]?.path : '';
       let isInValidRoutePath = routePath === null || routePath === undefined || routePath === '';
       if (isInValidRoutePath) {
         return this.createBreadcrumbs(child, url, breadcrumbs);
       }
 
-      let isValidTitleExist = label !== null && label !== undefined && label !== '';
-      if ((isValidTitleExist) || !isInValidRoutePath) {
-
-        breadcrumbs.push({
-          text: isValidTitleExist ? label : this.formatText(routePath),
-          title: url.replace('#', ''),
-        });
-      }
-
+      this.addBreadcrumb(breadcrumbs, label, isInValidRoutePath, routePath, url);
       return this.createBreadcrumbs(child, url, breadcrumbs);
     }
 
     return breadcrumbs;
+  }
+
+  private addBreadcrumb(breadcrumbs: BreadCrumbItem[], label: string, isInValidRoutePath: boolean, routePath: string, url: string) {
+    let isValidTitleExist = label !== null && label !== undefined && label !== '';
+    if ((isValidTitleExist) || !isInValidRoutePath) {
+
+      breadcrumbs.push({
+        text: isValidTitleExist ? label : this.formatText(routePath),
+        title: url.replace('#', ''),
+      });
+    }
   }
 }
