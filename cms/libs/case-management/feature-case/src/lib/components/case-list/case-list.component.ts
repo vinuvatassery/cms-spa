@@ -90,6 +90,7 @@ public state!: State;
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
   caseStatusTypes:any=[];
+  caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
@@ -118,6 +119,10 @@ public state!: State;
     this.caseStatusType$
     .subscribe({
       next: (data: any) => {
+        data=data.filter((item:any) => !this.caseStatusCodes.includes(item.lovCode));
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
         this.caseStatusTypes=data;
       }
     });
