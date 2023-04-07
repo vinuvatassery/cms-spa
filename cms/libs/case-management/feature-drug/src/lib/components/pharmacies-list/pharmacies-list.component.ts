@@ -109,7 +109,7 @@ export class PharmaciesListComponent implements OnInit {
               clientPharmacy,
               'deactivate'
             );
-          } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
+          } else{
             if(clientPharmacy.clientPharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
             this.OpenDeactivatePharmaciesClicked(clientPharmacy)
             }
@@ -137,25 +137,6 @@ export class PharmaciesListComponent implements OnInit {
       },
     },
     {
-      buttonType: 'btn-h-warn',
-      text: 'Mark Primary',
-      icon: 'star',
-      type:'MarkAsPrimary',
-      click: (clientPharmacy: any): void => {
-        if(clientPharmacy.clientPharmacyId){
-          let pharmacyPriorityites = [{
-            ClientPharmacyId:clientPharmacy.clientPharmacyId,
-            ClientId:this.clientId,
-            PriorityCode:'P'
-
-          }]
-          this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,pharmacyPriorityites)
-        }
-
-
-      },
-    },
-    {
       buttonType: 'btn-h-danger',
       text: 'Remove',
       icon: 'delete',
@@ -166,7 +147,7 @@ export class PharmaciesListComponent implements OnInit {
           this.vendorId =clientPharmacy.clientPharmacyId
           if (clientPharmacy.priorityCode === PriorityCode.Primary) {
             this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
-          } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
+          } else  {
             if (this.removeButtonEmitted === false) {
               this.onRemovePharmacyClicked(clientPharmacy.clientPharmacyId);
               this.removeButtonEmitted = true;
@@ -238,19 +219,19 @@ export class PharmaciesListComponent implements OnInit {
   /** Private methods **/
   filterActionButtonOptions(options:any[],actionType:any):any[]{
     let filteredOptions:any[] = [];
-    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === YesNoFlag.Yes){
+    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes){
       filteredOptions = options.filter(option =>option.type != 'Reactivate');
-    } else if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === YesNoFlag.No)
+    } else if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.No)
     {
       filteredOptions = options.filter(option =>option.type != 'Deactivate');
     }
-    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.Yes)
+    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes)
     {
-      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Reactivate');
-    }
-    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.No)
+      filteredOptions = options.filter(option =>option.type !='Reactivate');
+    } 
+    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === StatusFlag.No)
     {
-      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Deactivate');
+      filteredOptions = options.filter(option =>option.type  !='Deactivate');
     }
     else {
       filteredOptions = options;
