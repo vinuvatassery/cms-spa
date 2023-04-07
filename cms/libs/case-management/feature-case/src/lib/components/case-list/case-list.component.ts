@@ -171,7 +171,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   public dataStateChange(stateData: any): void {
     if(stateData.filter?.filters.length > 0)
     {
-      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      let stateFilter = stateData.filter?.filters[0];
       this.columnName = stateFilter.field;
       if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate')
       {

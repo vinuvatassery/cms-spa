@@ -1,0 +1,13 @@
+<kendo-daterange>
+    <!-- <kendo-datepicker
+    [(ngModel)]="start"
+    (valueChange)="filterRange(start, $event)"></kendo-datepicker> -->
+    <kendo-dateinput class="range-filter" kendoDateRangeStartInput [value]="start"
+        (valueChange)="filterRange($event, end)" style="width:120px">
+    </kendo-dateinput>
+    -
+    <kendo-dateinput class="range-filter" kendoDateRangeEndInput [value]="end"
+        (valueChange)="filterRange(start, $event)" style="width:120px">
+    </kendo-dateinput>
+</kendo-daterange>
+<button *ngIf="hasFilter" kendoButton icon="clear" title="Clear" (click)="clearFilter()"></button>
