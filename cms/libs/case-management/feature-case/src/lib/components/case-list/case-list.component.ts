@@ -7,13 +7,14 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab } from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
-import { FilterService } from '@progress/kendo-angular-grid';
+import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
@@ -94,8 +95,7 @@ public state!: State;
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider,
-
+    private readonly configurationProvider: ConfigurationProvider, private cdr :ChangeDetectorRef
     ) {}
 
   /** Lifecycle hooks **/
@@ -263,5 +263,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   onColumnReorder(event:any)
   {
     this.columnsReordered = true;
+  }
+
+  public columnChange(e: ColumnVisibilityChangeEvent) {
+    this.cdr.detectChanges()
   }
 }
