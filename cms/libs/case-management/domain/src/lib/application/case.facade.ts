@@ -1,7 +1,13 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import {
+  ConfigurationProvider,
+  LoaderService,
+  LoggingService,
+  NotificationSnackbarService,
+  SnackBarNotificationType,
+} from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 import { catchError, forkJoin, mergeMap, of, Subject } from 'rxjs';
@@ -15,8 +21,8 @@ import { CaseDataService } from '../infrastructure/case.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 import { ActiveSessions } from '../entities/active-sessions';
-
-
+import { Router } from '@angular/router';
+import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -38,12 +44,15 @@ export class CaseFacade {
   private casesSubject = new Subject<any>();
   private clientProfileSubject = new Subject<any>();
   private clientProfileHeaderSubject = new Subject<any>();
-  private activeSessionLoaderVisibleSubject = new BehaviorSubject<boolean>(false);
+  private activeSessionLoaderVisibleSubject = new BehaviorSubject<boolean>(
+    false
+  );
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   private clientProfileImpInfoSubject  = new Subject<any>();
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private currentGroupSubject = new BehaviorSubject<any>(null);
   private groupUpdatedSubject = new BehaviorSubject<any>(false);
+  private ddlEligPeriodsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -63,22 +72,27 @@ export class CaseFacade {
   getCaseHistory$ = this.getCaseHistorySubject.asObservable();
   clientProfile$ = this.clientProfileSubject.asObservable();
   clientProfileHeader$ = this.clientProfileHeaderSubject.asObservable();
-  clientProfileImpInfo$ = this.clientProfileImpInfoSubject.asObservable(); 
-  activeSessionLoaderVisible$  = this.activeSessionLoaderVisibleSubject.asObservable();
+  clientProfileImpInfo$ = this.clientProfileImpInfoSubject.asObservable();
+  activeSessionLoaderVisible$ =
+    this.activeSessionLoaderVisibleSubject.asObservable();
   searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   currentGroup$ =  this.currentGroupSubject.asObservable();
   groupUpdated$ = this.groupUpdatedSubject.asObservable();
+  ddlEligPeriods$ = this.ddlEligPeriodsSubject.asObservable();
 
-  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public gridPageSizes =
+    this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   public sortValue = 'clientFullName';
   public sortType = 'asc';
-  public sort: SortDescriptor[] = [{
-    field: this.sortValue,
-    dir: 'asc'
-  }];
+  public sort: SortDescriptor[] = [
+    {
+      field: this.sortValue,
+      dir: 'asc',
+    },
+  ];
   activeSession!: ActiveSessions[];
   constructor(
     private readonly caseDataService: CaseDataService,
@@ -87,8 +101,8 @@ export class CaseFacade {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-
-  ) { }
+    private readonly router: Router
+  ) {}
 
   showLoader() {
     this.loaderService.show();
@@ -101,22 +115,129 @@ export class CaseFacade {
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
-      this.loggingService.logException(err)
+      this.loggingService.logException(err);
     }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle);
     this.hideLoader();
   }
 
   /** Public methods **/
-  loadClientImportantInfo(clientCaseId: string): void {    
+  onClientProfileTabSelect(
+    tabName: string,
+    profileClientId: number,
+    clientCaseEligibilityId: string,
+    clientCaseId : string
+  ) {
+    const redirectUrl = '/case-management/cases/case360/' + profileClientId;
+    const query = {
+      queryParams: {
+        e_id: clientCaseEligibilityId,
+        tid: tabName,
+        id: profileClientId,
+        cid : clientCaseId
+      },
+    };
+    switch (tabName) {
+      case ClientProfileTabs.CLIENT_INFO:
+        this.router.navigate([redirectUrl + '/client/profile'], query);
+        break;
+
+      case ClientProfileTabs.CLIENT_CONTACT_INFO:
+        this.router.navigate([redirectUrl + '/contact-info/profile'], query);
+        break;
+      case ClientProfileTabs.CLIENT_FAMILY_DEPENDENTS:
+        this.router.navigate(
+          [redirectUrl + '/family-dependents/profile'],
+          query
+        );
+        break;
+        
+      case ClientProfileTabs.CLIENT_INCOME:
+        this.router.navigate([redirectUrl + '/income/profile'], query);
+        break;
+        case ClientProfileTabs.CLIENT_SMOKING_CESS:
+          this.router.navigate([redirectUrl + '/smoking-cessation/profile'], query);
+          break;
+
+      case ClientProfileTabs.CLIENT_EMPLOYMENT:
+        this.router.navigate([redirectUrl + '/employment/profile'], query);
+        break;
+      case ClientProfileTabs.HEALTH_INSURANCE_STATUS:
+      case ClientProfileTabs.HEALTH_INSURANCE_COPAY:
+      case ClientProfileTabs.DENTAL_INSURANCE_STATUS:
+      case ClientProfileTabs.DENTAL_INSURANCE_COPAY:
+      case ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS:
+        this.router.navigate(
+          [redirectUrl + '/health-insurance/profile'],
+          query
+        );
+        break;
+      case ClientProfileTabs.DRUGS_PHARMACIES:
+      case ClientProfileTabs.DRUGS_PURCHASED:
+        this.router.navigate(
+          [redirectUrl + '/prescription-drugs/profile'],
+          query
+        );
+        break;
+      case ClientProfileTabs.MANAGEMENT_MANAGER:
+      case ClientProfileTabs.MANAGEMENT_CD4:
+      case ClientProfileTabs.MANAGEMENT_VRL:
+        this.router.navigate([redirectUrl + '/case-manager/profile'], query);
+        break;
+
+      case  ClientProfileTabs.MANAGEMENT_PROVIDER:
+        this.router.navigate(
+          [redirectUrl + '/healthcare-provider/profile'],
+          query
+        );
+        break;
+      case ClientProfileTabs.STATUS_PERIOD:
+      case ClientProfileTabs.APP_HISTORY:
+        this.router.navigate(
+          [redirectUrl + '/case-status-period/profile'],
+          query
+        );
+        break;
+        case ClientProfileTabs.ATTACHMENTS:
+          this.router.navigate([redirectUrl + '/case-document/profile'], query);
+          break;
+      default:
+        break;
+    }
+  }
+
+  loadEligibilityPeriods(clientCaseId: string): void {
+    this.caseDataService.loadEligibilityPeriods(clientCaseId).subscribe({
+      next: (response) => {
+        this.ddlEligPeriodsSubject.next(response);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  loadClientImportantInfo(clientCaseId: string): void {
     this.caseDataService.loadClientImportantInfo(clientCaseId).subscribe({
       next: (clientImportantInfoResponse) => {
         this.clientProfileImpInfoSubject.next(clientImportantInfoResponse);
-        this.hideLoader();   
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
+    });
+  }
+
+  loadGroupCode(){
+    this.caseDataService.loadEligibilityGroups().pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    ).subscribe((response: any) => {
+      this.ddlGroupsSubject.next(response);
     });
   }
 
@@ -162,7 +283,7 @@ export class CaseFacade {
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -176,50 +297,65 @@ export class CaseFacade {
         if (clientProfileResponse) {
           const activeSession = {
             clientCaseId: clientProfileResponse?.clientCaseId,
-            clientId: clientProfileResponse?.clientId
+            clientId: clientProfileResponse?.clientId,
           };
           this.createActiveSession(activeSession);
         }
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-
 
   loadCaseHistory(): void {
     this.caseDataService.loadCaseHistory().subscribe({
       next: (casesHistoryResponse) => {
-
         this.getCaseHistorySubject.next(casesHistoryResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
 
-  loadCases(CaseScreenType: CaseScreenTab, skipcount : number,maxResultCount : number ,sort : string, sortType : string , columnName : any, filter : any): void {
+  loadCases(
+    CaseScreenType: CaseScreenTab,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    columnName: any,
+    filter: any
+  ): void {
     this.searchLoaderVisibilitySubject.next(true);
-    this.caseDataService.loadCases(CaseScreenType, skipcount ,maxResultCount  ,sort , sortType, columnName,filter).subscribe({
-      next: (casesResponse  : any) => {
-        this.casesSubject.next(casesResponse);
-        if(casesResponse )
-        {
+    this.caseDataService
+      .loadCases(
+        CaseScreenType,
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+        columnName,
+        filter
+      )
+      .subscribe({
+        next: (casesResponse: any) => {
+          this.casesSubject.next(casesResponse);
+          if (casesResponse) {
             const gridView = {
-              data : casesResponse["items"] ,
-              total:  casesResponse["totalCount"]
-              };
-          this.casesSubject.next(gridView);
-         }
-         this.searchLoaderVisibilitySubject.next(false);
-      },
-      error: (err) => {
-        this.searchLoaderVisibilitySubject.next(false);
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
+              data: casesResponse['items'],
+              total: casesResponse['totalCount'],
+            };
+            this.casesSubject.next(gridView);
+          }
+          this.searchLoaderVisibilitySubject.next(false);
+        },
+        error: (err) => {
+          this.searchLoaderVisibilitySubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
   }
 
   loadCaseBySearchText(text: string): void {
@@ -228,7 +364,7 @@ export class CaseFacade {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -239,7 +375,7 @@ export class CaseFacade {
         this.myCasesSubject.next(result);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -250,7 +386,7 @@ export class CaseFacade {
         this.recentCaseSubject.next(result);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -264,49 +400,62 @@ export class CaseFacade {
         this.activeSessionLoaderVisibleSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
 
   createActiveSession(session: any) {
     this.activeSessionLoaderVisibleSubject.next(true);
-    return this.caseDataService.createActiveSession(session).pipe(
-      catchError((err: any) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-        return of(false);
-      })
-    ).subscribe((response: boolean) => {
-      if (response) {
-        this.activeSessionLoaderVisibleSubject.next(false);
-        this.loadActiveSession();
-      }
-    });
+    return this.caseDataService
+      .createActiveSession(session)
+      .pipe(
+        catchError((err: any) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          return of(false);
+        })
+      )
+      .subscribe((response: boolean) => {
+        if (response) {
+          this.activeSessionLoaderVisibleSubject.next(false);
+          this.loadActiveSession();
+        }
+      });
   }
 
   updateActiveSessionOrder(session: any[]) {
     return this.caseDataService.updateActiveSessionOrder(session).pipe(
       catchError((err: any) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         return of(false);
       })
     );
   }
 
-  deleteActiveSession(activeSessionId: string) {
+  deleteActiveSession(activeSessionId: string, isProfileOpened: boolean) {
     this.activeSessionLoaderVisibleSubject.next(true);
-    return this.caseDataService.deleteActiveSession(activeSessionId).pipe(
-      catchError((err: any) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-        return of(false);
-      })
-    ).subscribe((response) => {
-      this.activeSessionLoaderVisibleSubject.next(false);
-      if (response) {
-        this.loadActiveSession();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Session Removed Successfully')
-      }
-    });
+    return this.caseDataService
+      .deleteActiveSession(activeSessionId)
+      .pipe(
+        catchError((err: any) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          return of(false);
+        })
+      )
+      .subscribe((response) => {
+        this.activeSessionLoaderVisibleSubject.next(false);
+        if (response) {
+          this.loadActiveSession();
+          this.showHideSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            'Session Removed Successfully'
+          );
+
+          if(isProfileOpened){
+            this.router.navigate(['/case-management/cases']);
+          }
+        }
+      });
   }
 
   loadDdlGridColumns(): void {
@@ -315,7 +464,7 @@ export class CaseFacade {
         this.ddlGridColumnsSubject.next(ddlGridColumnsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -326,7 +475,7 @@ export class CaseFacade {
         this.ddlCommonActionsSubject.next(ddlCommonActionsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -338,7 +487,7 @@ export class CaseFacade {
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -348,7 +497,7 @@ export class CaseFacade {
         this.ddlSendLettersSubject.next(ddlSendLettersResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -359,11 +508,10 @@ export class CaseFacade {
         this.ddlProgramsSubject.next(ddlProgramsResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-
 
   loadDdlFamilyAndDependentEP(): void {
     this.caseDataService.loadDdlFamilyAndDependentEP().subscribe({
@@ -373,7 +521,7 @@ export class CaseFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -384,7 +532,7 @@ export class CaseFacade {
         this.ddlEmploymentEPSubject.next(ddlEmploymentEPResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -395,38 +543,39 @@ export class CaseFacade {
         this.ddlEmploymentEPSubject.next(data);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-
 
   UpdateCase(existingCaseFormData: FormGroup, clientCaseId: string) {
     this.showLoader();
     const caseData = {
       clientCaseId: clientCaseId,
-      assignedCwUserId: existingCaseFormData?.controls["caseOwnerId"].value,
-      caseOriginCode: existingCaseFormData?.controls["caseOriginCode"].value,
-      caseStartDate: existingCaseFormData?.controls["applicationDate"].value,
-      concurrencyStamp: existingCaseFormData?.controls["concurrencyStamp"].value
-    }
-    caseData.caseStartDate = this.intl.formatDate(caseData.caseStartDate, this.dateFormat)
-    return this.caseDataService.UpdateCase(caseData)
-
+      assignedCwUserId: existingCaseFormData?.controls['caseOwnerId'].value,
+      caseOriginCode: existingCaseFormData?.controls['caseOriginCode'].value,
+      caseStartDate: existingCaseFormData?.controls['applicationDate'].value,
+      concurrencyStamp:
+        existingCaseFormData?.controls['concurrencyStamp'].value,
+    };
+    caseData.caseStartDate = this.intl.formatDate(
+      caseData.caseStartDate,
+      this.dateFormat
+    );
+    return this.caseDataService.UpdateCase(caseData);
   }
 
   getSessionInfoByCaseId(clientCaseId: any) {
-    return this.caseDataService.getSessionInfoByCaseId(clientCaseId)
+    return this.caseDataService.getSessionInfoByCaseId(clientCaseId);
   }
   updateCaseStatus(clientCaseId: any, caseStatusCode: any) {
     const caseData = {
-      caseStatusCode: caseStatusCode
-    }
-    return this.caseDataService.updateCaseStatus(caseData, clientCaseId)
+      caseStatusCode: caseStatusCode,
+    };
+    return this.caseDataService.updateCaseStatus(caseData, clientCaseId);
   }
 
   getCaseStatusById(clientCaseId: string) {
-    return this.caseDataService.loadCasesStatusById(clientCaseId)
+    return this.caseDataService.loadCasesStatusById(clientCaseId);
   }
-
 }

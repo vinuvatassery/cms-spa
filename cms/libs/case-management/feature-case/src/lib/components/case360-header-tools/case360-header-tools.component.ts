@@ -1,6 +1,8 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-case360-header-tools',
@@ -8,7 +10,11 @@ import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Case360HeaderToolsComponent {
+export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
+  /* Input properties */
+  @Input() clientCaseEligibilityId: any
+  @Input() clientId: any
+  /* Public properties */
   isTodoDetailsOpened = false;
   screenName = ScreenType.Case360Page;
   isNewReminderOpened = false;
@@ -17,11 +23,20 @@ export class Case360HeaderToolsComponent {
   isSendNewEmailOpened = false;
   isNewSMSTextOpened = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public SendActions = [
+  mailingAddress$ = this.contactFacade.mailingAddress$;
+  emailAddress$ = this.contactFacade.emailAddress$;
+  phoneNumbers$ = this.contactFacade.phoneNumbers$;
+  emailSubscription$ = new Subscription();
+  phoneNumbersSubscription$ = new Subscription();
+  reloadSubscription$ = new Subscription();
+  buttonList!: any[];
+  isFirstLoad = false;
+  public sendActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'New Letter',
       icon: 'markunread_mailbox',
+      isVisible: true,
       click: (): void => {
         this.onSendNewLetterClicked();
       },
@@ -30,6 +45,7 @@ export class Case360HeaderToolsComponent {
       buttonType: 'btn-h-primary',
       text: 'New Email',
       icon: 'mail_outline',
+      isVisible: false,
       click: (): void => {
         this.onSendNewEmailClicked();
       },
@@ -38,6 +54,7 @@ export class Case360HeaderToolsComponent {
       buttonType: 'btn-h-primary',
       text: 'New SMS Text',
       icon: 'comment',
+      isVisible: false,
       click: (): void => {
         this.onNewSMSTextClicked();
       },
@@ -46,12 +63,54 @@ export class Case360HeaderToolsComponent {
       buttonType: 'btn-h-primary',
       text: 'New ID Card',
       icon: 'call_to_action',
+      isVisible: true,
       click: (): void => {
         this.onIdCardClicked();
       },
     },
   ];
 
+  /* constructor */
+  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute) {
+  }
+  ngOnDestroy(): void {
+    this.emailSubscription$.unsubscribe();
+    this.phoneNumbersSubscription$.unsubscribe();
+  }
+
+  /* Internal Methods */
+  ngOnInit(): void {    
+    this.initialize();
+  }
+
+  private initialize() {
+    this.loadPhoneNumbers();
+    this.loadEmailAddress();
+    this.addEmailSubscription();
+    this.addPhoneNumbersSubscription();
+    this.refreshButtonList();
+  }
+
+  private addEmailSubscription() {
+    this.emailSubscription$ = this.emailAddress$.subscribe((email: any) => {
+      this.sendActions[1].isVisible = email?.length > 0;
+      this.refreshButtonList();
+    });
+  }
+
+  private addPhoneNumbersSubscription() {
+    this.phoneNumbersSubscription$ = this.phoneNumbers$
+      .subscribe((phone: any) => {
+        this.sendActions[2].isVisible = phone?.length > 0;
+        this.refreshButtonList();
+      });
+  }
+
+  private refreshButtonList() {
+    this.buttonList = this.sendActions?.filter((action: any) => action.isVisible === true);
+  }
+
+  /* Internal Methods */
   onSendNewLetterClicked() {
     this.isSendNewLetterOpened = true;
   }
@@ -106,5 +165,17 @@ export class Case360HeaderToolsComponent {
 
   onTodoDetailsClicked() {
     this.isTodoDetailsOpened = true;
+  }
+
+  loadMailingAddress() {
+    this.contactFacade.loadMailingAddress(this.clientId);
+  }
+
+  loadPhoneNumbers() {
+    this.contactFacade.loadPhoneNumbers(this.clientId);
+  }
+
+  loadEmailAddress() {
+    this.contactFacade.loadEmailAddress(this.clientId, this.clientCaseEligibilityId);
   }
 }

@@ -1,7 +1,7 @@
 /** Angular **/
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 
 /** Internal Libraries **/
 import { ContactFacade } from '@cms/case-management/domain';
@@ -11,16 +11,17 @@ import { LovFacade } from '@cms/system-config/domain';
   selector: 'case-management-profile-contact-page',
   templateUrl: './profile-contact-page-component.html',
   styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileContactPageComponent {
-  @Input() profileClientId!: number;
-  @Input() clientCaseEligibilityId: any;
+export class ProfileContactPageComponent implements OnInit{
+  profileClientId!: number;
+  clientCaseEligibilityId!: any;
 
   /** Constructor**/
-  constructor(
-    private readonly router: Router,
+  constructor( 
     private readonly contactFacade: ContactFacade,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private route: ActivatedRoute,
   ) {}
   pageSizes = this.contactFacade.gridPageSizes;
   sortValue = this.contactFacade.sortValue;
@@ -41,6 +42,17 @@ export class ProfileContactPageComponent {
   lovClientPhoneDeviceType$ = this.lovFacade.lovClientPhoneDeviceType$;
   paperless$ = this.contactFacade.paperless$;
 
+  ngOnInit(): void {
+    this. loadQueryParams()   
+  }
+     /** Private properties **/
+     loadQueryParams()
+     {
+       this.profileClientId = this.route.snapshot.queryParams['id'];
+       this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];  
+         
+     }
+
   //#region client Email//NOSONAR
   loadClientEmailsHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
@@ -53,6 +65,7 @@ export class ProfileContactPageComponent {
 
     this.pageSizes = this.contactFacade.gridPageSizes;
     this.contactFacade.loadClientEmails(
+      this.profileClientId,
       this.clientCaseEligibilityId,
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,

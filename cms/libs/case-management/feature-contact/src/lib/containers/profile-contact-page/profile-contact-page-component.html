@@ -1,8 +1,8 @@
-<div class="block-section mt-1">
+<div class="block-section">
   <div class="flex-row mb-1">
     <div class="flex-col">
       <h2 class="title-md mb-0 text-bold">Contact Info</h2>
-
+      </div>
 
       <div class="flex-col">
         <case-management-address-list [clientId]="profileClientId"
@@ -36,9 +36,8 @@
       </div>
 
       <div class="flex-col">
-        <case-management-friend-or-family-list></case-management-friend-or-family-list>
-
+        <case-management-friend-or-family-list [clientId]="profileClientId" [caseEligibilityId]="clientCaseEligibilityId" ></case-management-friend-or-family-list>
       </div>
-    </div>
+ 
   </div>
 </div>

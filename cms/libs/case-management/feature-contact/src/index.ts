@@ -19,4 +19,5 @@ export * from './lib/components/delete-address-confirmation/delete-address-confi
 export * from './lib/containers/profile-contact-page/profile-contact-page-component';
 export * from './lib/components/delete-email-confirmation/delete-email-confirmation.component';
 export * from './lib/components/remove-phone-confirmation/remove-phone-confirmation.component';
+export * from './lib/components/delete-friend-or-family-confirmation/delete-friend-or-family-confirmation.component';
 

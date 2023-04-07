@@ -3,10 +3,17 @@
     Send new ID card to the mailing address below? This action cannot be undone.
   </p>
   <div class="flex-row">
-    <div class="flex-col">
-      <p>1700 Boulevard Blvd</p>
-      <p>Box 703 Portland, OR 97205</p>
-      <p>Portland, OR 97205</p>
+    <div style="width:60%" *ngIf="!(mailingAddress$ | async)">
+      <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+      <p></p>
+      <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+      <p></p>
+      <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+    </div>
+    <div class="flex-col break" *ngIf="mailingAddress$ | async as mailingAddress">
+      <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
+      <p *ngIf="mailingAddress?.address2 || mailingAddress?.city">{{ mailingAddress?.address2 }}</p>
+      <p> {{ mailingAddress?.city }} {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
     </div>
   </div>
 </section>
@@ -22,11 +29,12 @@
       >
         Cancel
       </button>
-      <button
+      <button 
         kendoButton
         [primary]="true"
         (click)="onCloseSendIdClicked()"
         aria-label="send id"
+        [disabled]="!(mailingAddress$ | async)"
       >
         Send
       </button>

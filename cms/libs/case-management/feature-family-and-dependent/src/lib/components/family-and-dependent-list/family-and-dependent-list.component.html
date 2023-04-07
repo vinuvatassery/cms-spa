@@ -1,12 +1,12 @@
 <div class="app-c-table">
   <kendo-grid [data]="dependents$ | async"  #dependentsGrid
-  [pageSize]="state.take" 
-  [pageable]="true" 
-  [sortable]="true" 
+  [pageSize]="state.take"
+  [pageable]="true"
+  [sortable]="true"
   [skip]="state.skip"
   [groupable]="false"
   [reorderable]="true"
-  [resizable]="true" 
+  [resizable]="true"
   [columnMenu]="{ filter: true }"
   [sort]="state.sort"
   (dataStateChange)="dataStateChange($event)">
@@ -15,65 +15,96 @@
       style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
     <kendo-grid-columnmenu-sort [service]="service">
     </kendo-grid-columnmenu-sort>
-    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>   
+    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>
     <kendo-grid-columnmenu-lock [service]="service">
     </kendo-grid-columnmenu-lock>
   </ng-template>
 
-    <kendo-grid-column  [width]="100"
-    field="fullName"     title="Full Legal Name">
+    <kendo-grid-column  [width]="180"
+    field="fullName"     title="{{
+      isAddOrEditFamilyDependentDisplay ? 'Full Legal Name' : 'Name'
+    }}">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <button aria-label="client name" kendoButton look="flat"   class="card-link-button" 
+      <button aria-label="client name" kendoButton look="flat"   class="card-link-button"
       *ngIf="dataItem.dependentClientId > 0"
-      routerLink="../../cases/case360/{{ dataItem.dependentClientId }}"     
+      routerLink="../../cases/case360/{{ dataItem.dependentClientId }}"
       >
         {{ dataItem.firstName + ' '+  dataItem.lastName}}
       </button>
-    <div *ngIf="dataItem.dependentClientId === 0"> 
+    <div *ngIf="dataItem.dependentClientId === 0">
        {{ dataItem.firstName + ' '+  dataItem.lastName }}</div>
-    </ng-template>   
+    </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column  [width]="100"    
-     field="relationshipDescription"    
-      title="Relationship to Client">
-      
+    <kendo-grid-column  [width]="130"
+     field="relationshipDescription"
+      title="{{
+        isAddOrEditFamilyDependentDisplay ? 'Relationship to Client' : 'Relationship'
+      }}">
+
     </kendo-grid-column>
-    <kendo-grid-column [width]="100"
+    <kendo-grid-column [width]="110"
       field="dependentTypeCode"
       title="CAREAssist client?"
-      [width]="45"
+
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.dependentTypeCode === CAClient ? 'YES' : 'NO'}}
-    </ng-template>   
+    </ng-template>
   </kendo-grid-column>
-    <kendo-grid-column  [width]="100"
+    <kendo-grid-column [width]="80"
       field="dob"
-      title="Date of Birth"
-      [sortable]="true"    
-      [columnMenu]="false" 
-       [width]="70"
+      title="{{
+        isAddOrEditFamilyDependentDisplay ? 'Date of Birth' : 'DOB(Age)'
+      }}"
+      [sortable]="true"
+      [columnMenu]="false"
+
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.dob | date: 'MM/dd/yyyy' }}  (Age {{dataItem.age}})
-    </ng-template>   
+    </ng-template>
   </kendo-grid-column>
-    <kendo-grid-column [width]="100"
+    <kendo-grid-column [width]="160"
       field="enrolledInInsuranceFlag"
-      title="Currently on client’s health insurance plan?"
-      [width]="100"
-     
+      title="{{
+        isAddOrEditFamilyDependentDisplay ? 'Currently on client\'s health insurance plan?' : 'On clients insurance?'
+      }}"
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.enrolledInInsuranceFlag === 'Y' ? 'YES' : 'NO'}}
-    </ng-template>   
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column  *ngIf="!isAddOrEditFamilyDependentDisplay" field="by" title="By" [width]="50">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          [primary]="true"
+          class="avatar-sm-btn c-default"
+          kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          aria-label="profile avathar"
+        >
+        <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
+        </button>
+        <kendo-popover
+          #onUserProfileDetailsHovered
+          width="330"
+          position="left"
+        >
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
+    *ngIf="isAddOrEditFamilyDependentDisplay"
       field="ClientDependentId"
       title="Options"
-      [width]="30"
+      [width]="70"
       class="text-center"
-      [sortable]="false" 
+      [sortable]="false"
       [columnMenu]="false"
     >
       <ng-template kendoGridCellTemplate let-dependent let-ClientDependentId="field">
@@ -81,20 +112,20 @@
           [data]=  "actions"
           icon="more-vertical"
           class="TableActionPopup app-dropdown-action"
-          buttonClass="k-icon-button"   
-          title="More option"       
+          buttonClass="k-icon-button"
+          title="More option"
           aria-label="more actions"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }"
         >
-         
+
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-ClientDependentId="ClientDependentId">
-          <button kendoButton  look="flat" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" [class]="dataItem.buttonType" aria-hidden="false" 
+          <button kendoButton  look="flat" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" [class]="dataItem.buttonType" aria-hidden="false"
           (click)="dataItem.click(dependent.clientDependentId,dependent.dependentTypeCode)">
             <span class="material-icons" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
             <label>   {{ dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText  }} </label>
-        </button>        
+        </button>
           </ng-template>
-        </kendo-dropdownbutton>      
+        </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
   <!-- grid Pagination template -->
@@ -116,6 +147,16 @@
     </div>
   </div>
 </ng-template>
+    <!-- grid Loader Template -->  
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+     </ng-template>
+     <!-- grid No data Template -->  
+     <ng-template kendoGridNoRecordsTemplate>
+       <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+       </div>
+       <p>There is no data to display.</p>
+     </ng-template> 
   </kendo-grid>
 </div>
 <kendo-formerror *ngIf="!isDependentAvailable"> A Response is required.</kendo-formerror>
@@ -137,11 +178,11 @@
 <!-- Add Family Member Modal -->
 <kendo-dialog
   *ngIf="isOpenedFamilyMember || isOpenedEditFamilyMember"
-  (close)="onExistFamilyMemberClosed()" 
+  (close)="onExistFamilyMemberClosed()"
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
 
-  <case-management-family-and-dependent-detail  
+  <case-management-family-and-dependent-detail
     [timeFormat]="timeFormat"
     [dependentSearch$]="dependentSearch$"
     [ddlRelationships$]="ddlRelationships$"
@@ -158,16 +199,16 @@
 
 <!-- Delete Modal -->
 <kendo-dialog
-  *ngIf="openDeleteConfirmation"  
+  *ngIf="openDeleteConfirmation"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
     <case-management-remove-family-and-dependent-confirmation
-      (deleteConfimEvent)="handleDeleteConfirmationClicked($event)"     
-      [deleteRqclientDependentId]="deleteRqclientDependentId"    
-      [deleteRqdependentTypeCode]="deleteRqdependentTypeCode"   
+      (deleteConfimEvent)="handleDeleteConfirmationClicked($event)"
+      [deleteRqclientDependentId]="deleteRqclientDependentId"
+      [deleteRqdependentTypeCode]="deleteRqdependentTypeCode"
       (formDeleteclickEvent)="onFormDeleteclickEvent($event)"
     ></case-management-remove-family-and-dependent-confirmation>
- 
+
 </kendo-dialog>
 
 

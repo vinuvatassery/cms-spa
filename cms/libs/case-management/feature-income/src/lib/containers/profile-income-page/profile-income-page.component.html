@@ -1,0 +1,26 @@
+<div class="block-section">
+    <div class="flex-row">
+        <div class="flex-col flex-space-bw align-items-center mb-1">
+            <h2 class="title-md mb-0 text-bold">
+                Income
+                <span class="app-c-badge badge-warn-light ml-1"><span class="material-icons"
+                        aria-label="income Information" aria-hidden="true">info</span>
+                    Viewing data from previous EP</span>
+            </h2>
+            <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">
+                <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
+                <div class="fmly-epdorpdown">
+                    <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData$ | async"
+                        [caseEligibilityId]="historyClientCaseEligibilityId"
+                        (onEligibilityPeriodChange)="onPeriodSelectionChange($event)">
+                    </case-management-case-eligibility-periods>
+                </div>
+            </div>
+        </div>
+        <div class="flex-col">
+            <case-management-income-list [data]="screenName" [clientId]="clientId" [clientCaseId]="clientCaseId"
+                [clientCaseEligibilityId]="clientCaseEligibilityId"
+                (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
+        </div>
+    </div>
+</div>

@@ -26,11 +26,11 @@ export class UserProfileCardComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {  
-   this.loadprofilePhoto();
-   this.loadprofileData();     
+   this.loadProfilePhoto();
+   this.loadProfileData();     
  }
  
-    loadprofilePhoto()
+    loadProfilePhoto()
     {   
       if(this.userId)
       {
@@ -38,7 +38,7 @@ export class UserProfileCardComponent implements OnInit {
       }
     }
 
-    loadprofileData()
+    loadProfileData()
     { 
       if(this.userId)
       {

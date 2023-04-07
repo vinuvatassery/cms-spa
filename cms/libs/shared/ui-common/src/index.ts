@@ -21,7 +21,7 @@ export * from './lib/loader/grid-loader.component';
 export * from './lib/optionbutton-list/optionbutton-list.component';
 export * from './lib/side-navigation/side-navigation.component';
 export * from './lib/user-photo-icon/user-photo-icon.component';
-
+export * from './lib/case-eligibility-periods/case-eligibility-periods.component';
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';
@@ -31,6 +31,7 @@ export * from './lib/pipes/phone.pipe';
 export * from './lib/directives/kendo-componentsforaccessanility.directive';
 export * from './lib/directives/kendo-file-upload-accessibility.directive';
 export * from './lib/directives/permission-manager.directive';
+export * from './lib/directives/after-value-changed.directive';
 
 /** Enums **/
 export * from './lib/enums/yes-no-flag-enum';

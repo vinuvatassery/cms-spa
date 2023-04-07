@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
-import { Contact, ContactInfo, ClientAddress } from '../entities/contact';
+import { Contact, ContactInfo,ClientAddress,FriendsOrFamilyContactClientProfile } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { ZipCodeFacade } from '@cms/system-config/domain';
@@ -16,6 +16,8 @@ import {
   ConfigurationProvider,
 } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { AddressTypeCode } from '../enums/address-type-code.enum';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {
@@ -29,6 +31,7 @@ export class ContactFacade {
   private friendsOrFamilySubject = new BehaviorSubject<any>([]);
   private contactsSubject = new BehaviorSubject<Contact[]>([]);
   private addressesSubject = new BehaviorSubject<any>([]);
+  private mailingAddressSubject = new Subject<any>();
   private phoneNumbersSubject = new BehaviorSubject<any>([]);
   private emailAddressesSubject = new BehaviorSubject<any>([]);
   private showloaderOnCounty = new BehaviorSubject<boolean>(false);
@@ -49,6 +52,8 @@ export class ContactFacade {
   private deactivateClientPhoneSubject = new Subject<any>();
   private removeClientPhoneSubject = new Subject<any>();
   private paperlessSubject = new Subject<any>();
+  showAddContactPopupSubject = new BehaviorSubject<boolean>(false);
+  private contactGridLoaderSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -61,6 +66,7 @@ export class ContactFacade {
   friendsOrFamily$ = this.friendsOrFamilySubject.asObservable();
   contacts$ = this.contactsSubject.asObservable();
   address$ = this.addressesSubject.asObservable();
+  mailingAddress$ = this.mailingAddressSubject.asObservable();
   phoneNumbers$ = this.phoneNumbersSubject.asObservable();
   emailAddress$ = this.emailAddressesSubject.asObservable();
   showloaderOnCounty$ = this.showloaderOnCounty.asObservable();
@@ -68,6 +74,8 @@ export class ContactFacade {
   editAddress$ = this.editAddressSubject.asObservable();
   editedAddress$ = this.editedAddressSubject.asObservable();
   showLoaderOnState$ = this.showLoaderOnState.asObservable();
+  showAddContactPopup$ = this.showAddContactPopupSubject.asObservable();
+  contactGridLoader$ = this.contactGridLoaderSubject.asObservable();
   clientEmails$ = this.clientEmailsSubject.asObservable();
   clientEmail$ = this.clientEmailSubject.asObservable();
   addClientEmailResponse$ = this.addClientEmailSubject.asObservable();
@@ -172,32 +180,10 @@ export class ContactFacade {
     });
   }
 
-  loadPhoneNumbers(): void {
-    this.contactDataService.loadPhoneNumbers().subscribe({
-      next: (phoneNumbersResponse) => {
-        this.phoneNumbersSubject.next(phoneNumbersResponse);
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
-
   loadDdlPhoneType(): void {
     this.contactDataService.loadDdlPhoneTypes().subscribe({
       next: (ddlPhoneTypesResponse) => {
         this.ddlPhoneTypesSubject.next(ddlPhoneTypesResponse);
-      },
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
-
-  loadEmailAddress(): void {
-    this.contactDataService.loadEmailAddresses().subscribe({
-      next: (emailAddressesResponse) => {
-        this.emailAddressesSubject.next(emailAddressesResponse);
       },
       error: (err) => {
         this.loggingService.logException(err);
@@ -218,12 +204,16 @@ export class ContactFacade {
     });
   }
 
-  loadFriendsorFamily(): void {
-    this.contactDataService.loadFriendsorFamily().subscribe({
+  loadFriendsorFamily(clientId:any): void {
+    this.contactGridLoaderSubject.next(true);
+    this.contactDataService.loadFriendsorFamily(clientId).subscribe({
       next: (friendsOrFamilyResponse) => {
+        this.contactGridLoaderSubject.next(false);
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);
       },
       error: (err) => {
+        this.contactGridLoaderSubject.next(false);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.loggingService.logException(err);
       },
     });
@@ -329,8 +319,56 @@ export class ContactFacade {
     );
   }
 
+  loadMailingAddress(clientId: number){
+    this.mailingAddressSubject.next(null);
+    return this.contactDataService.getClientAddress(clientId).subscribe({
+      next: (addressesResponse: any) => {
+        const mailingAddress = addressesResponse.find((ads: any) =>
+          ads.addressTypeCode === AddressTypeCode.Mail
+          && ads.activeFlag === StatusFlag.Yes
+        );
+        this.mailingAddressSubject.next(mailingAddress);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  loadPhoneNumbers(clientId: number): void {
+    this.phoneNumbersSubject.next([]);
+    this.contactDataService
+    .loadClientPhones(clientId, 0, 1000, '', '', false)
+    .subscribe({
+      next: (clientPhonesResponse: any) => {
+        const phoneNumbers =  clientPhonesResponse ? clientPhonesResponse['items']:[];
+        this.phoneNumbersSubject.next(phoneNumbers);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
   //#region client email//NOSONAR
+
+  loadEmailAddress(clientId: number, clientCaseEligibilityId: string): void {
+    this.emailAddressesSubject.next([]);
+    this.contactDataService
+      .loadClientEmails(clientId, clientCaseEligibilityId, 0, 1000, '', '', false)
+      .subscribe({
+        next: (clientEmailsResponse: any) => {
+          const emails =  clientEmailsResponse ? clientEmailsResponse['items']:[];
+          this.emailAddressesSubject.next(emails);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
   loadClientEmails(
+    clientId: number,
     clientCaseEligibilityId: string,
     skipcount: number,
     maxResultCount: number,
@@ -340,6 +378,7 @@ export class ContactFacade {
   ): void {
     this.contactDataService
       .loadClientEmails(
+        clientId,
         clientCaseEligibilityId,
         skipcount,
         maxResultCount,
@@ -356,6 +395,7 @@ export class ContactFacade {
             };
 
             this.clientEmailsSubject.next(gridView);
+            this.emailAddressesSubject.next(clientEmailsResponse['items'])
           }
         },
         error: (err) => {
@@ -370,7 +410,7 @@ export class ContactFacade {
   }
 
   loadClientPaperLessStatus(
-    clientId: number,    
+    clientId: number,
     clientCaseEligibilityId: string
   ): void {
     this.showLoader();
@@ -520,6 +560,7 @@ export class ContactFacade {
             };
 
             this.clientPhonesSubject.next(gridView);
+            this.phoneNumbersSubject.next(clientPhonesResponse['items']);
           }
         },
         error: (err) => {
@@ -629,6 +670,14 @@ export class ContactFacade {
         },
       });
   }
-
+  createContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+    return this.contactDataService.createContact(clientId, clientContact);
+  }
+  updateContact(clientId: number, clientContact: FriendsOrFamilyContactClientProfile) {
+    return this.contactDataService.updateContact(clientId, clientContact);
+  }
+  deleteClientContact(clientId:any,clientRelationshipId:any){
+    return this.contactDataService.deleteClientContact(clientId,clientRelationshipId);
+  }
   //#endregion client phone//NOSONAR
 }

@@ -5,7 +5,7 @@
     address.
   </p>
   <p class="text-muted mb-2" *ngIf="isEditValue">
-    Edit or deactivate the client's home address.
+    Edit or Deactivate the client's {{editAddressTypeText}} addresses
   </p>
   <p class="text-muted mb-2" *ngIf="deactivateFlag">
     To deactivate the current mailing address, you must add a new one
@@ -200,7 +200,7 @@
 
 <!-- Address Validation Modal -->
 <kendo-dialog *ngIf="addressValidationPopupVisibility$ | async" (close)="onAddressValidationCloseClicked(true)"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="Mailing Address Validation">
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Address Validation">
   <section class="k-dialog-body mb-2">
     <div *ngIf="!addressIsValid">
       <p >

@@ -82,7 +82,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              aria-label="profile avatar"
             >
             <common-user-photo-icon  [userId]="dataItem?.creatorId"></common-user-photo-icon>
             </button>
@@ -116,7 +116,7 @@
             >
             
               <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
-                <button kendoButton  [hidden]="(clientPhone.isDeleted === true && dataItem.buttonName==='deactivate')
+                <button kendoButton  [hidden]="(clientPhone.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
                 ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
                 (click)="dataItem.click(clientPhone?.clientPhoneId)">
@@ -126,9 +126,7 @@
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
-          <ng-template kendoGridLoadingTemplate>
-            <common-grid-loader-component></common-grid-loader-component>
-           </ng-template>
+        
         </kendo-grid-column>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
@@ -149,6 +147,16 @@
           </div> 
         </div>
       </ng-template> 
+       <!-- grid Loader Template -->  
+       <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
+       <!-- grid No data Template -->  
+       <ng-template kendoGridNoRecordsTemplate>
+         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+         </div>
+         <p>There is no data to display.</p>
+       </ng-template> 
       </kendo-grid>
     </div>
   </div>
@@ -203,7 +211,7 @@
  
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
-<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete phone number ? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete phone number? </kendo-dialog-titlebar>
  <case-management-phone-remove-confirmation 
  (deleteConfimEvent)="handleAcceptPhoneRemove($event)"
  >

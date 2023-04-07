@@ -16,6 +16,7 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
 import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
+
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
@@ -23,8 +24,10 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
 import {KendoFileSelectDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
 
 import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessibility.directive';
+import { AfterValueChangedDirective } from './directives/after-value-changed.directive';
 import { PermissionManagerDirective } from './directives/permission-manager.directive';
 import { UserPhotoIconComponent} from './user-photo-icon/user-photo-icon.component';
+import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case-eligibility-periods.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -46,11 +49,13 @@ import { UserPhotoIconComponent} from './user-photo-icon/user-photo-icon.compone
     FileSizePipe,
     KendoFileSelectDirective,
     KendoFileUploadDirective,
-    FormFieldAutoFocus, 
+    AfterValueChangedDirective,
+    FormFieldAutoFocus,
     TextFieldFormFieldAutoFocus,
-    DropDownFieldFormFieldAutoFocus,   
+    DropDownFieldFormFieldAutoFocus,
     PermissionManagerDirective,
-    UserPhotoIconComponent
+    UserPhotoIconComponent,
+    CaseEligibilityPeriodsComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -70,11 +75,13 @@ import { UserPhotoIconComponent} from './user-photo-icon/user-photo-icon.compone
     FileSizePipe,
     KendoFileSelectDirective,
     KendoFileUploadDirective,
-    FormFieldAutoFocus, 
+    AfterValueChangedDirective,
+    FormFieldAutoFocus,
     TextFieldFormFieldAutoFocus,
-    DropDownFieldFormFieldAutoFocus,   
+    DropDownFieldFormFieldAutoFocus,
     PermissionManagerDirective,
-    UserPhotoIconComponent
+    UserPhotoIconComponent,
+    CaseEligibilityPeriodsComponent
   ],
 })
 export class SharedUiCommonModule {}

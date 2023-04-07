@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { NotificationSnackbarService } from '@cms/shared/util-core';
 import { AuthService, OidcSecurityService } from '@cms/shared/util-oidc';
-import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
+import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-root',

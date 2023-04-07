@@ -88,3 +88,14 @@ export interface PreferredContactLov{
   lovCode:string,
   lovDesc:string,
 }
+
+export interface FriendsOrFamilyContactClientProfile {
+  clientRelationshipId?: string;
+  clientId?: number;
+  clientCaseEligibilityId?: string;
+  relationshipSubTypeCode?: string;
+  firstName?: string;
+  phoneNbr?: string;
+  activeFlag?: string;
+  concurrencyStamp?: string;
+}

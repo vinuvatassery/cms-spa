@@ -1,25 +1,29 @@
-<kendo-dialog
-  *ngIf="isNewLetterClicked"
-  class="app-c-modal app-c-modal-lg app-c-modal-np"
-  title="Send New Letter"
-  (close)="onCloseNewLetterClicked()"
->
+<kendo-dialog *ngIf="isNewLetterClicked" class="app-c-modal app-c-modal-lg app-c-modal-np" title="Send New Letter"
+  (close)="onCloseNewLetterClicked()">
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       Select an existing template or draft a custom letter.
     </p>
     <div class="flex-row pb-2">
       <div class="flex-col">
-        <case-management-template-picker
-          [data]="data"
-          (openDdlLetterEvent)="handleOpenTemplateClicked()"
-        ></case-management-template-picker>
+        <case-management-template-picker [data]="data"
+          (openDdlLetterEvent)="handleOpenTemplateClicked()"></case-management-template-picker>
       </div>
       <div *ngIf="isOpenLetterTemplate" class="mt-2">
         <div class="flex-col mb-2">
           <p class="text-capital text-bold">Mailing Address</p>
-          <p>170 NORTH DR APT 23</p>
-          <p>BAVIERA CA 98760-8797</p>
+          <span *ngIf="mailingAddress$ | async as mailingAddress">
+            <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
+            <p *ngIf="mailingAddress?.address2 || mailingAddress?.city">{{ mailingAddress?.address2 }} </p>
+            <p>{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
+          </span>
+          <div style="width:60%" *ngIf="!(mailingAddress$ | async)">
+            <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+            <p></p>
+            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+            <p></p>
+            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+          </div>
         </div>
         <div class="flex-col">
           <p>
@@ -29,10 +33,8 @@
           </p>
         </div>
         <div class="flex-col">
-          <case-management-letter-editor
-            [dataEvent]="letterEditorValueEvent"
-            (editorValue)="handleLetterEditor($event)"
-          ></case-management-letter-editor>
+          <case-management-letter-editor [dataEvent]="letterEditorValueEvent"
+            (editorValue)="handleLetterEditor($event)"></case-management-letter-editor>
         </div>
       </div>
     </div>
@@ -41,41 +43,19 @@
   <kendo-dialog-actions *ngIf="isOpenLetterTemplate">
     <div class="justify-content-between bigbtn-wrapper">
       <div class="w100">
-        <button
-          kendoButton
-          [primary]="true"
-          look="flat"
-          (click)="onSaveForLaterClicked()"
-          aria-label="save for later"
-        >
+        <button kendoButton [primary]="true" look="flat" (click)="onSaveForLaterClicked()" aria-label="save for later">
           Save for Later
         </button>
-        <button
-          kendoButton
-          [primary]="true"
-          look="flat"
-          (click)="onPreviewLetterClicked()"
-          aria-label="preview letter"
-        >
+        <button kendoButton [primary]="true" look="flat" (click)="onPreviewLetterClicked()" aria-label="preview letter">
           Preview Letter
         </button>
       </div>
       <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          (click)="onCloseNewLetterClicked()"
-          aria-label="cancel letter"
-        >
+        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()"
+          aria-label="cancel letter">
           Cancel
         </button>
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onSendLetterToPrintClicked()"
-          aria-label="send to print"
-        >
+        <button kendoButton [primary]="true" (click)="onSendLetterToPrintClicked()" aria-label="send to print">
           Send To Print
         </button>
       </div>
@@ -84,12 +64,8 @@
 </kendo-dialog>
 
 <!-- Save for Latter (Letter Draft) Modal -->
-<kendo-dialog
-  *ngIf="isShowSaveForLaterPopupClicked"
-  (close)="onCloseSaveForLaterClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Letter Draft Saved"
->
+<kendo-dialog *ngIf="isShowSaveForLaterPopupClicked" (close)="onCloseSaveForLaterClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Letter Draft Saved">
   <section class="k-dialog-body">
     <p>
       To pick up where you left off, click “New Letter” from the client’s
@@ -99,12 +75,8 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onCloseSaveForLaterClicked()"
-          aria-label="confirmation for save for later"
-        >
+        <button kendoButton [primary]="true" (click)="onCloseSaveForLaterClicked()"
+          aria-label="confirmation for save for later">
           OK
         </button>
       </div>
@@ -113,35 +85,19 @@
 </kendo-dialog>
 
 <!-- Letter Preview Modal -->
-<kendo-dialog
-  *ngIf="isShowPreviewLetterPopupClicked"
-  class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
-  title="Preview Letter"
->
-  <case-management-preview-letter
-    [letterContent]="letterContentValue"
-  ></case-management-preview-letter>
+<kendo-dialog *ngIf="isShowPreviewLetterPopupClicked" class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
+  title="Preview Letter">
+  <case-management-preview-letter [letterContent]="letterContentValue"></case-management-preview-letter>
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper ">
       <div class="w100">
-        <button
-          kendoButton
-          [primary]="true"
-          look="flat"
-          (click)="onSendNewLetterClicked()"
-          aria-label="edit letter"
-        >
+        <button kendoButton [primary]="true" look="flat" (click)="onSendNewLetterClicked()" aria-label="edit letter">
           Edit Letter
         </button>
       </div>
       <div class="justify-content-end align-items-center">
         <span class="pr-2">3 attachment(s) to be pinned</span>
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onSendLetterToPrintClicked()"
-          aria-label="send to print"
-        >
+        <button kendoButton [primary]="true" (click)="onSendLetterToPrintClicked()" aria-label="send to print">
           Send To Print
         </button>
       </div>
@@ -150,35 +106,21 @@
 </kendo-dialog>
 
 <!--Send Letter to print Modal -->
-<kendo-dialog
-  *ngIf="isShowSendLetterToPrintPopupClicked"
-  (close)="onSendLetterToPrintDialogClicked('Close')"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Send letter to print?"
->
+<kendo-dialog *ngIf="isShowSendLetterToPrintPopupClicked" (close)="onSendLetterToPrintDialogClicked('Close')"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Send letter to print?">
   <section class="k-dialog-body">
     <p class="text-muted mb-2">The action cannot be undone</p>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between  ">
       <div class="w100">
-        <button
-          kendoButton
-          [primary]="true"
-          look="flat"
-          (click)="onSendNewLetterClicked()"
-          aria-label="edit letter"
-        >
+        <button kendoButton [primary]="true" look="flat" (click)="onSendNewLetterClicked()" aria-label="edit letter">
           Edit Letter
         </button>
       </div>
       <div class="justify-content-end align-items-center">
-        <button
-          kendoButton
-          [primary]="true"
-          (click)="onSendLetterToPrintDialogClicked('Print')"
-          aria-label="print letter"
-        >
+        <button kendoButton [primary]="true" (click)="onSendLetterToPrintDialogClicked('Print')"
+          aria-label="print letter">
           Print
         </button>
       </div>

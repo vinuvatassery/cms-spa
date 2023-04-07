@@ -1,0 +1,35 @@
+<div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.MANAGEMENT_MANAGER) || tabId === clientProfileTabs.MANAGEMENT_MANAGER">
+<div class="flex-col flex-space-bw align-items-center mb-1">
+  <h2 class="title-md mb-0 text-bold">Case Manager</h2>
+  <div>
+
+  </div>
+
+</div>
+<case-management-case-manager-list></case-management-case-manager-list>
+</div>
+
+
+<div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.MANAGEMENT_CD4) || tabId === clientProfileTabs.MANAGEMENT_CD4">
+<div class="flex-col flex-space-bw align-items-center mb-1">
+  <h2 class="title-md mb-0 text-bold">CD4 Count</h2>
+  <div>
+
+  </div>
+
+</div>
+<case-management-cd4-count-list> </case-management-cd4-count-list>
+</div>
+
+
+
+<div class="block-section" *ngIf="((tabId$ | async)=== clientProfileTabs.MANAGEMENT_VRL) || tabId === clientProfileTabs.MANAGEMENT_VRL">
+<div class="flex-col flex-space-bw align-items-center mb-1">
+  <h2 class="title-md mb-0 text-bold">Viral Load</h2>
+  <div>
+
+  </div>
+
+</div>
+<case-management-viral-load> </case-management-viral-load>
+</div>
