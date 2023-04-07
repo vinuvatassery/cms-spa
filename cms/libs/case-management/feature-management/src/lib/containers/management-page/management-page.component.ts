@@ -320,7 +320,11 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
      if(response){
-     this.getCaseManagerStatus();
+       this.hasManager = '';
+       this.needManager = '';
+       this.gridVisibleSubject.next(false);
+       this.cdr.detectChanges();
+       this.getCaseManagerStatus();
      }
     });
   }

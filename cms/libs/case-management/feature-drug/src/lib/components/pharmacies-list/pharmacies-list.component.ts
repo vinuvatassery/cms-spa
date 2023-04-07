@@ -111,15 +111,11 @@ export class PharmaciesListComponent implements OnInit {
             );
           } else{
             if(clientPharmacy.clientPharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
-              let pharmacy ={
-                ClientId:this.clientId,
-                IsActive:false
-              }
             this.OpenDeactivatePharmaciesClicked(clientPharmacy)
             }
           }
         }
-        
+
       },
     },
     {
@@ -128,7 +124,7 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'done',
       type:'Reactivate',
       click: (clientPharmacy: any): void => {
-     
+
         if(clientPharmacy.vendorId){
           let pharmacy ={
             ClientId:this.clientId,
@@ -158,7 +154,7 @@ export class PharmaciesListComponent implements OnInit {
             }
           }
         }
-        
+
       },
     },
   ];
@@ -301,7 +297,7 @@ export class PharmaciesListComponent implements OnInit {
       if(isRemoved){
         this.removeButtonEmitted = true;
         if(data && data.isNewAdded){
-      
+
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,
