@@ -1,4 +1,4 @@
-<div class="block-section mt-1" *ngIf="((tabId$ | async)===clientProfileTabs.DRUGS_PHARMACIES) || tabId === clientProfileTabs.DRUGS_PHARMACIES">
+<div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.DRUGS_PHARMACIES) || tabId === clientProfileTabs.DRUGS_PHARMACIES">
   <case-management-pharmacies-list [clientId]="profileClientId" [clientpharmacies$]="clientpharmacies$"
     [pharmacysearchResult$]="pharmacysearchResult$" [selectedPharmacy$]="selectedPharmacy$"
     [addPharmacyResponse$]="addPharmacyRsp$" [editPharmacyResponse$]="editPharmacyRsp$"

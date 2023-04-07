@@ -212,26 +212,44 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
-    Object.keys(this.contactInfoForm.controls).forEach(groupkey => {
-      const isFormChanged = prev && curr && prev[groupkey] !== curr[groupkey];
+    Object.keys(this.contactInfoForm.controls).forEach(groupKey => {
+      const isFormChanged = prev && curr && prev[groupKey] !== curr[groupKey];
       if (isFormChanged) {
-        Object.keys((this.contactInfoForm?.get(`${groupkey}`) as FormGroup)?.controls).forEach(key => {
-          const isValueChanged = prev[groupkey][key] !== curr[groupkey][key];
-          const dataPointName = `${groupkey}_${key}`;
-          if (isValueChanged) {
-            let item: CompletionChecklist = {
-              dataPointName: dataPointName,
-              status: curr[groupkey][key] ? StatusFlag.Yes : StatusFlag.No
-            };
-            completedDataPoints.push(item);
-          }
-        });
+        if (groupKey === 'homeAddress' && (this.contactInfoForm.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false)) {
+          this.getHomeAddressChanges(completedDataPoints);
+        }
+        else {
+          this.getFieldChanges(completedDataPoints, groupKey, prev, curr);
+        }
       }
     });
 
     if (completedDataPoints.length > 0) {
       this.workflowFacade.updateChecklist(completedDataPoints);
     }
+  }
+
+  private getHomeAddressChanges(completedDataPoints: CompletionChecklist[]) {
+    const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
+    completedDataPoints.push({ dataPointName: 'homeAddress_address1', status: homeAddressGroup?.controls['address1']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_address2', status: homeAddressGroup?.controls['address2']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_city', status: homeAddressGroup?.controls['city']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_state', status: homeAddressGroup?.controls['state']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_zip', status: homeAddressGroup?.controls['zip']?.value ? StatusFlag.Yes : StatusFlag.No });
+  }
+
+  private getFieldChanges(completedDataPoints: CompletionChecklist[], groupKey: string, prev: any, curr: any){
+    Object.keys((this.contactInfoForm?.get(`${groupKey}`) as FormGroup)?.controls).forEach(key => {
+      const isValueChanged = prev[groupKey][key] !== curr[groupKey][key];
+      const dataPointName = `${groupKey}_${key}`;
+      if (isValueChanged) {
+        let item: CompletionChecklist = {
+          dataPointName: dataPointName,
+          status: curr[groupKey][key] ? StatusFlag.Yes : StatusFlag.No
+        };
+        completedDataPoints.push(item);
+      }
+    });
   }
 
   private updateWorkflowChecklist(updateOnWorkflow: boolean) {
@@ -726,8 +744,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-  private saveContactInfo() {
-    const contactInfoData: ContactInfo = {};
+  private getHomeAddress() {
     const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
     const homeAddress: ClientAddress = {
       city: homeAddressGroup?.controls['city']?.value,
@@ -743,15 +760,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       homeAddress.zip = homeAddressGroup?.controls['zip']?.value;
     }
 
-    const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
-    const mailingAddress: ClientAddress = {
-      address1: mailingAddressGroup?.controls['address1']?.value,
-      address2: mailingAddressGroup?.controls['address2']?.value,
-      city: mailingAddressGroup?.controls['city']?.value,
-      state: mailingAddressGroup?.controls['state']?.value,
-      zip: mailingAddressGroup?.controls['zip']?.value,
-      addressTypeCode: AddressTypeCode.Mail,
-    }
+    return homeAddress;
+  }
+
+  private getPhoneAndEmail() {
     const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
     const homePhone: ClientPhone = {
       deviceTypeCode: deviceTypeCode.HomePhone,
@@ -811,88 +823,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       email.detailMsgFlag = this.getFlag(emailGroup.controls['detailMsgFlag']?.value);
     }
 
-    const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
-    const friendsOrFamilyContact: FriendsOrFamilyContact = {
-      noFriendOrFamilyContactFlag: this.getFlag(ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value),
-    }
-
-    if (friendsOrFamilyContact.noFriendOrFamilyContactFlag !== StatusFlag.Yes) {
-      friendsOrFamilyContact.contactName = ffContactGroup.controls['contactName']?.value;
-      friendsOrFamilyContact.contactPhoneNbr = ffContactGroup.controls['contactPhoneNbr']?.value;
-      friendsOrFamilyContact.contactRelationshipCode = ffContactGroup.controls['contactRelationshipCode']?.value;
-      friendsOrFamilyContact.otherDesc = ffContactGroup.controls['otherDesc']?.value;
-    }
-
-    const clientCaseEligibility: ClientCaseElgblty = {
-      homelessFlag: homelessFlag,
-      housingStabilityCode: homeAddressGroup?.get('housingStabilityCode')?.value,
-      paperlessFlag: this.getFlag(emailGroup?.get('paperlessFlag')?.value),
-      homeAddressProofFlag: this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value),
-      elgbtyFlagConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyFlagConcurrencyStamp,
-      elgbtyConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyConcurrencyStamp,
-    };
-
-    let addressProofDoc: HomeAddressProof | undefined = undefined;
-    if (this.uploadedHomeAddressProof != null && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
-      addressProofDoc = {
-        clientCaseId: this.workflowFacade.clientCaseId,
-        documentName: this.uploadedHomeAddressProof.name,
-        document: this.uploadedHomeAddressProof,
-        documentSize: this.uploadedHomeAddressProof.size
-      };
-    }
-
-
-
-    if (this.isEdit) {
-      const homeAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
-      const mailingAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
-      const homePhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
-      const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
-      const workPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
-      const otherPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
-      mailingAddress.clientAddressId = mailingAddress1?.clientAddressId;
-      mailingAddress.concurrencyStamp = mailingAddress1?.concurrencyStamp;
-      homeAddress.clientAddressId = homeAddress1?.clientAddressId;
-      homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
-
-      homeAddress.clientAddressId = homeAddress1?.clientAddressId;
-      homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
-
-      homePhone.clientPhoneId = homePhone1?.clientPhoneId;
-      homePhone.concurrencyStamp = homePhone1?.concurrencyStamp;
-
-      cellPhone.clientPhoneId = cellPhone1?.clientPhoneId;
-      cellPhone.concurrencyStamp = cellPhone1?.concurrencyStamp;
-
-      workPhone.clientPhoneId = workPhone1?.clientPhoneId;
-      workPhone.concurrencyStamp = workPhone1?.concurrencyStamp;
-
-      otherPhone.clientPhoneId = otherPhone1?.clientPhoneId;
-      otherPhone.concurrencyStamp = otherPhone1?.concurrencyStamp;
-
-      email.clientEmailId = this.contactInfo?.email?.clientEmailId;
-      email.concurrencyStamp = this.contactInfo?.email?.concurrencyStamp;
-
-      friendsOrFamilyContact.clientDependentId = this.contactInfo?.friendsOrFamilyContact?.clientDependentId;
-      friendsOrFamilyContact.concurrencyStamp = this.contactInfo?.friendsOrFamilyContact?.concurrencyStamp;
-
-      if (addressProofDoc && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
-        addressProofDoc.concurrencyStamp = this.contactInfo?.homeAddressProof?.concurrencyStamp ?? '';
-        addressProofDoc.documentId = this.contactInfo?.homeAddressProof?.documentId ?? '';
-      }
-
-    }
-
-    contactInfoData.address = [mailingAddress, homeAddress];
-    contactInfoData.phone = [homePhone, cellPhone, workPhone, otherPhone];
-    contactInfoData.email = email;
-    contactInfoData.friendsOrFamilyContact = friendsOrFamilyContact;
-    contactInfoData.clientCaseEligibility = clientCaseEligibility;
-    if (addressProofDoc) {
-      contactInfoData.homeAddressProof = addressProofDoc;
-    }
-
     let preferredContactCode = emailGroup.controls['preferredContactMethod']?.value;
     preferredContactCode = preferredContactCode?.replace(/[- )(]/g, '');
     if (preferredContactCode === homePhone?.phoneNbr) {
@@ -909,6 +839,111 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     else if (preferredContactCode === email?.email) {
       email.preferredFlag = StatusFlag.Yes;
+    }
+
+    return {
+      homePhone: homePhone,
+      cellPhone: cellPhone,
+      workPhone: workPhone,
+      otherPhone: otherPhone,
+      email: email
+    };
+  }
+
+  private saveContactInfo() {
+    const contactInfoData: ContactInfo = {};
+    const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
+    const homelessFlag = this.getFlag(homeAddressGroup?.get('homelessFlag')?.value);
+    const homeAddress = this.getHomeAddress();
+    const phoneAndEmail = this.getPhoneAndEmail();
+
+    const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
+    const mailingAddress: ClientAddress = {
+      address1: mailingAddressGroup?.controls['address1']?.value,
+      address2: mailingAddressGroup?.controls['address2']?.value,
+      city: mailingAddressGroup?.controls['city']?.value,
+      state: mailingAddressGroup?.controls['state']?.value,
+      zip: mailingAddressGroup?.controls['zip']?.value,
+      addressTypeCode: AddressTypeCode.Mail,
+    }
+
+    const ffContactGroup = this.contactInfoForm.get('familyAndFriendsContact') as FormGroup;
+    const friendsOrFamilyContact: FriendsOrFamilyContact = {
+      noFriendOrFamilyContactFlag: this.getFlag(ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value),
+    }
+
+    if (friendsOrFamilyContact.noFriendOrFamilyContactFlag !== StatusFlag.Yes) {
+      friendsOrFamilyContact.contactName = ffContactGroup.controls['contactName']?.value;
+      friendsOrFamilyContact.contactPhoneNbr = ffContactGroup.controls['contactPhoneNbr']?.value;
+      friendsOrFamilyContact.contactRelationshipCode = ffContactGroup.controls['contactRelationshipCode']?.value;
+      friendsOrFamilyContact.otherDesc = ffContactGroup.controls['otherDesc']?.value;
+    }
+
+    const clientCaseEligibility: ClientCaseElgblty = {
+      homelessFlag: homelessFlag,
+      housingStabilityCode: homeAddressGroup?.get('housingStabilityCode')?.value,
+      paperlessFlag: this.getFlag(this.contactInfoForm?.get('email.paperlessFlag')?.value),
+      homeAddressProofFlag: this.getFlag(homeAddressGroup?.get('noHomeAddressProofFlag')?.value),
+      elgbtyFlagConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyFlagConcurrencyStamp,
+      elgbtyConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyConcurrencyStamp,
+    };
+
+    let addressProofDoc: HomeAddressProof | undefined = undefined;
+    if (this.uploadedHomeAddressProof != null && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
+      addressProofDoc = {
+        clientCaseId: this.workflowFacade.clientCaseId,
+        documentName: this.uploadedHomeAddressProof.name,
+        document: this.uploadedHomeAddressProof,
+        documentSize: this.uploadedHomeAddressProof.size
+      };
+    }
+
+    if (this.isEdit) {
+      const homeAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
+      const mailingAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
+      const homePhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
+      const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
+      const workPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
+      const otherPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+      mailingAddress.clientAddressId = mailingAddress1?.clientAddressId;
+      mailingAddress.concurrencyStamp = mailingAddress1?.concurrencyStamp;
+      homeAddress.clientAddressId = homeAddress1?.clientAddressId;
+      homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
+
+      homeAddress.clientAddressId = homeAddress1?.clientAddressId;
+      homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
+
+      phoneAndEmail.homePhone.clientPhoneId = homePhone1?.clientPhoneId;
+      phoneAndEmail.homePhone.concurrencyStamp = homePhone1?.concurrencyStamp;
+
+      phoneAndEmail.cellPhone.clientPhoneId = cellPhone1?.clientPhoneId;
+      phoneAndEmail.cellPhone.concurrencyStamp = cellPhone1?.concurrencyStamp;
+
+      phoneAndEmail.workPhone.clientPhoneId = workPhone1?.clientPhoneId;
+      phoneAndEmail.workPhone.concurrencyStamp = workPhone1?.concurrencyStamp;
+
+      phoneAndEmail.otherPhone.clientPhoneId = otherPhone1?.clientPhoneId;
+      phoneAndEmail.otherPhone.concurrencyStamp = otherPhone1?.concurrencyStamp;
+
+      phoneAndEmail.email.clientEmailId = this.contactInfo?.email?.clientEmailId;
+      phoneAndEmail.email.concurrencyStamp = this.contactInfo?.email?.concurrencyStamp;
+
+      friendsOrFamilyContact.clientDependentId = this.contactInfo?.friendsOrFamilyContact?.clientDependentId;
+      friendsOrFamilyContact.concurrencyStamp = this.contactInfo?.friendsOrFamilyContact?.concurrencyStamp;
+
+      if (addressProofDoc && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
+        addressProofDoc.concurrencyStamp = this.contactInfo?.homeAddressProof?.concurrencyStamp ?? '';
+        addressProofDoc.documentId = this.contactInfo?.homeAddressProof?.documentId ?? '';
+      }
+    }
+
+    contactInfoData.address = [mailingAddress, homeAddress];
+    contactInfoData.phone = [phoneAndEmail.homePhone, phoneAndEmail.cellPhone, phoneAndEmail.workPhone, phoneAndEmail.otherPhone];
+    contactInfoData.email = phoneAndEmail.email;
+    contactInfoData.friendsOrFamilyContact = friendsOrFamilyContact;
+    contactInfoData.clientCaseEligibility = clientCaseEligibility;
+    if (addressProofDoc) {
+      contactInfoData.homeAddressProof = addressProofDoc;
     }
 
     return this.saveContact(this.workflowFacade.clientId, this.workflowFacade.clientCaseEligibilityId, contactInfoData);
@@ -1209,6 +1244,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('homeAddress.address1')?.disable();
       this.contactInfoForm?.get('homeAddress.address2')?.disable();
       this.contactInfoForm?.get('homeAddress.zip')?.disable();
+      this.contactInfoForm?.get('homeAddress.address1')?.reset();
+      this.contactInfoForm?.get('homeAddress.address2')?.reset();
+      this.contactInfoForm?.get('homeAddress.zip')?.reset();
     }
     else {
       this.contactInfoForm?.get('homeAddress.address1')?.enable();
