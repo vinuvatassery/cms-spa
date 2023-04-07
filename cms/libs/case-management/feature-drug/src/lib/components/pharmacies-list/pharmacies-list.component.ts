@@ -111,15 +111,11 @@ export class PharmaciesListComponent implements OnInit {
             );
           } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
             if(clientPharmacy.clientPharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
-              let pharmacy ={
-                ClientId:this.clientId,
-                IsActive:false
-              }
             this.OpenDeactivatePharmaciesClicked(clientPharmacy)
             }
           }
         }
-        
+
       },
     },
     {
@@ -128,7 +124,7 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'done',
       type:'Reactivate',
       click: (clientPharmacy: any): void => {
-     
+
         if(clientPharmacy.vendorId){
           let pharmacy ={
             ClientId:this.clientId,
@@ -151,12 +147,12 @@ export class PharmaciesListComponent implements OnInit {
             ClientPharmacyId:clientPharmacy.clientPharmacyId,
             ClientId:this.clientId,
             PriorityCode:'P'
-            
+
           }]
           this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,pharmacyPriorityites)
         }
-    
-        
+
+
       },
     },
     {
@@ -177,7 +173,7 @@ export class PharmaciesListComponent implements OnInit {
             }
           }
         }
-        
+
       },
     },
   ];
@@ -251,7 +247,7 @@ export class PharmaciesListComponent implements OnInit {
     else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.Yes)
     {
       filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Reactivate');
-    } 
+    }
     else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.No)
     {
       filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Deactivate');
@@ -320,7 +316,7 @@ export class PharmaciesListComponent implements OnInit {
       if(isRemoved){
         this.removeButtonEmitted = true;
         if(data && data.isNewAdded){
-      
+
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,
