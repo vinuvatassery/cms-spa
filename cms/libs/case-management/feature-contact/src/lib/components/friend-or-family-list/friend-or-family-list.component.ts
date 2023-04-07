@@ -142,9 +142,5 @@ export class FriendOrFamilyListComponent implements OnInit {
   closeDeactivateModal(event:any){
     this.contactFacade.loadFriendsorFamily(this.clientId);
     this.isDeactivateFriendOrFamilyOpened = false;
-    if (event)
-    {
-      this.onFriendOrFamilyDetailClosed();
-    }
   }
 }

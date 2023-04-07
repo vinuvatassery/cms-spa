@@ -29,7 +29,7 @@ export class FriendOrFamilyDetailComponent implements OnInit {
   @Input() caseEligibilityId!: string;
   @Input() selectedContact!:any;
   @Output() detailModalCloseEvent= new EventEmitter<any>();
-  @Output() deactivateModalOpenEvent= new EventEmitter<any>();
+  @Output() deactivateModalCloseEvent= new EventEmitter<any>();
   /** Public properties **/
   ddlRelationshipToClient$ = this.lovFacade.lovCntRelationship$;
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -37,6 +37,8 @@ export class FriendOrFamilyDetailComponent implements OnInit {
   contactForm!:FormGroup;
   showLoaderOnRelationType$ = this.lovFacade.showLoaderOnRelationType$;
   contact!:any;
+  isDeactivateFriendOrFamilyOpened = false;
+  deactivatedContact!:any;
 
 
 
@@ -155,6 +157,16 @@ bindDataToForm(contact:any)
 }
 deactivateContact()
 {
-  this.deactivateModalOpenEvent.emit();
+  this.isDeactivateFriendOrFamilyOpened = true;
+}
+onDeactivateFriendOrFamilyClosed() {
+  this.isDeactivateFriendOrFamilyOpened = false;
+}
+closeDeactivateModal(event:any){
+  this.isDeactivateFriendOrFamilyOpened = false;
+  if(event)
+  {
+    this.detailModalCloseEvent.emit(true);
+  }
 }
 }
