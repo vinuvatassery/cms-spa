@@ -3,24 +3,43 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class ProviderDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider
+  ) {}
 
   /** Public methods **/
+
+  loadLabResults(
+    labResultTypeCode: string,
+    clientId: number,
+    clientCaseEligibilityId: string,
+    skip: any,
+    pageSize: any,
+    sortBy: any,
+    sortType: any,
+    historychkBoxChecked : boolean
+  ) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/lab-results/${clientCaseEligibilityId}/?labResultTypeCode=${labResultTypeCode}&yearlyFilter=${historychkBoxChecked}&SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`
+    );
+  }
+
   loadManagers() {
     return of([
       {
         CaseManagerName: 'John Ade',
-        CaseManagerPhoneNumber: '(415) 555-2671', 
+        CaseManagerPhoneNumber: '(415) 555-2671',
         Domain: 'Deschutes County Human Services',
         AssisterGroup: 'EOCIL (EOCIL)',
         EffectiveDate: '12-2-2022',
         AssigningCaseManager: 'FName LName',
         by: 'FName LName',
-      
       },
       {
         CaseManagerName: 'David Miller',
@@ -101,30 +120,27 @@ export class ProviderDataService {
       {
         id: 1,
         Result: 'John Ade',
-        DateofTest: 'Beaverton Provider', 
+        DateofTest: 'Beaverton Provider',
         EntryDate: '12-27-2022',
-        
       },
       {
         id: 2,
         Result: 'John Ade',
-        DateofTest: 'Beaverton Provider', 
+        DateofTest: 'Beaverton Provider',
         EntryDate: '12-27-2022',
       },
       {
         id: 3,
         Result: 'John Ade',
-        DateofTest: 'Beaverton Provider', 
+        DateofTest: 'Beaverton Provider',
         EntryDate: '12-27-2022',
       },
       {
         id: 4,
         Result: 'John Ade',
-        DateofTest: 'Beaverton Provider', 
+        DateofTest: 'Beaverton Provider',
         EntryDate: '12-27-2022',
       },
- 
     ]);
   }
 }
- 
