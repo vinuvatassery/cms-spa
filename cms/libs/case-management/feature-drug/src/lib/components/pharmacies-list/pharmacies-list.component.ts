@@ -20,7 +20,6 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
-import { first, take } from 'rxjs/operators';
 import { LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-pharmacies-list',

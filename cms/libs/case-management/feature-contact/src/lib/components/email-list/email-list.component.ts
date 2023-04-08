@@ -30,7 +30,7 @@ export class EmailListComponent implements OnChanges {
   @Input() deactivateClientEmail$: any;
   @Input() removeClientEmail$: any;
   @Input() paperless$: any;
-
+ 
   @Output() loadClientEmailsListEvent = new EventEmitter<any>();
   @Output() addClientEmailEvent = new EventEmitter<any>();
   @Output() loadDeviceTypeLovEvent = new EventEmitter<any>();
@@ -39,6 +39,7 @@ export class EmailListComponent implements OnChanges {
   @Output() deactivateClientEmailEvent = new EventEmitter<any>();
   @Output() removeClientEmailEvent = new EventEmitter<any>();
   @Output() loadClientPaperLessStatusEvent = new EventEmitter<any>();
+  @Output() reloadPhonesEvent = new EventEmitter();
 
   /** Public properties   **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -234,6 +235,7 @@ export class EmailListComponent implements OnChanges {
         if (addResponse === true) {
           this.loadClientEmailsList();
           this.onEmailAddressDetailClosed();
+          this.reloadPhones()
         }
       });
   }
@@ -257,6 +259,11 @@ export class EmailListComponent implements OnChanges {
       });
   }
 
+  reloadPhones()
+  {
+     this.reloadPhonesEvent.emit()
+  } 
+
   onPreferredEmailClicked(clientEmailId: string) {
     this.loader = true;
     this.preferredClientEmailEvent.emit(clientEmailId);
@@ -266,6 +273,7 @@ export class EmailListComponent implements OnChanges {
         if (Response === true) {
           this.preferredButtonEmitted = false;
           this.loadClientEmailsList();
+          this.reloadPhones()
         }
       });
   }
