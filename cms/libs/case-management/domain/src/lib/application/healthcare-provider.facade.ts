@@ -79,7 +79,7 @@ export class HealthcareProviderFacade {
 
   /** Public methods **/
   removeHealthCareProviders(clientId : number,  ProviderId : string, hardDelete : boolean): void {    
-   
+    this.showLoader();
     this.healthcareProviderDataService.removeHealthCareProvider(clientId,ProviderId,hardDelete)
     .subscribe({
       next: (removeResponse) => {        

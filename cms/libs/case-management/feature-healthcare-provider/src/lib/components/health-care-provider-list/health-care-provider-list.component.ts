@@ -86,7 +86,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Email',
+      text: 'Deactivate Provider',
       icon: 'block',
       buttonName: 'deactivate',
       click: (providerId: string): void => {
@@ -98,7 +98,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Reactivate Email',
+      text: 'Reactivate Provider',
       icon: 'done',
       buttonName: 'reactivate',
       click: (providerId: string): void => {

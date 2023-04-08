@@ -56,7 +56,7 @@
         <kendo-grid-column *ngIf="managementTab" field="startDate" title="Effective Date" [width]="100"
           [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.startDate}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate}}
+            {{dataItem.startDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" *ngIf="managementTab">
@@ -81,8 +81,8 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
                 let-providerId="providerId">
                 <button kendoButton
-                [hidden]="(!managementTab || (provider.isDeleted === true && dataItem.buttonName==='deactivate'))
-                || (!managementTab ||  (!provider.isDeleted === true && dataItem.buttonName==='reactivate'))" 
+                [hidden]="((!managementTab && dataItem.buttonName==='deactivate') || (provider.isDeleted === true && dataItem.buttonName==='deactivate'))
+                || ((!managementTab&& dataItem.buttonName==='reactivate') ||  (!provider.isDeleted === true && dataItem.buttonName==='reactivate'))" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
                   aria-hidden="false" (click)="dataItem.click(provider.providerId);">
                   <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
