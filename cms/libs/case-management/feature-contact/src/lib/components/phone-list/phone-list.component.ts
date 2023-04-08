@@ -219,7 +219,10 @@ this.reloadEmailsEvent.emit();
         if (addResponse === true) {
           this.loadClientPhonesList();
           this.onPhoneNumberDetailClosed();
+          if(phoneData?.preferredFlag === 'Y')
+          {
           this.reloadEmails()
+          }
         }
       });
   }

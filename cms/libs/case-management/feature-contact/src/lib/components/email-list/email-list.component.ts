@@ -235,7 +235,10 @@ export class EmailListComponent implements OnChanges {
         if (addResponse === true) {
           this.loadClientEmailsList();
           this.onEmailAddressDetailClosed();
+          if(emailData?.preferredFlag === 'Y')
+          {
           this.reloadPhones()
+          }
         }
       });
   }
