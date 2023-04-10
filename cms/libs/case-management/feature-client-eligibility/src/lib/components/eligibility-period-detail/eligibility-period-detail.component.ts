@@ -275,6 +275,8 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   private setStartDateEndDateByStatus(status:string)
   {   
     let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);    
+    let additionalMonth = 0;
+    let dayFromDate = this.getDay(this.addDays(currentEligibilityEndDate, 1), 'en-US', this.dayOptions);
     this.eligibilityPeriodForm.controls['statusStartDate'].reset();
     this.eligibilityPeriodForm.controls['statusEndDate'].reset();
     this.eligibilityPeriodForm.controls['group'].reset();
@@ -282,8 +284,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     switch (status.toUpperCase()) {
       case EligibilityStatus.Accept.toUpperCase():
         this.disableFields = [];
-        let additionalMonth = 0;
-        const dayFromDate = this.getDay(this.addDays(currentEligibilityEndDate, 1), 'en-US', this.dayOptions);
+      
         if(dayFromDate === '1'){
           additionalMonth = 6;
         }
@@ -324,11 +325,18 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         }
         break;
       case EligibilityStatus.Restricted.toUpperCase():
-        this.disableFields = [];
+        this.disableFields = [];       
+        if(dayFromDate === '1'){
+          additionalMonth = 3;
+        }
+        else{
+           additionalMonth = 4;
+        }
+        
         if (currentEligibilityEndDate) {
           this.eligibilityPeriodForm.controls['statusStartDate'].setValue(this.addDays(currentEligibilityEndDate, 1));
           let startDateValue = this.eligibilityPeriodForm.controls['statusStartDate'].value;
-          this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(startDateValue.getFullYear(), startDateValue.getMonth() + 4, 0));
+          this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(startDateValue.getFullYear(), startDateValue.getMonth() + additionalMonth, 0));
         }
         else {
           this.eligibilityPeriodForm.controls['statusStartDate'].setValue(today);
