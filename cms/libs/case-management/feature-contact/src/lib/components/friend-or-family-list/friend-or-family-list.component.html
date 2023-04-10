@@ -24,7 +24,7 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="relationshipSubTypeDesc"
-          title="Relationship to client"
+          title="Relationship to Client"
           [width]="150"
         >
         </kendo-grid-column>
@@ -110,6 +110,16 @@
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
+             <!-- grid Loader Template -->  
+             <ng-template kendoGridLoadingTemplate>
+              <common-grid-loader-component></common-grid-loader-component>
+             </ng-template>
+             <!-- grid No data Template -->  
+             <ng-template kendoGridNoRecordsTemplate>
+               <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+               </div>
+               <p>There is no data to display.</p>
+             </ng-template> 
       </kendo-grid>
     </div>
   </div>
@@ -121,7 +131,7 @@
       (click)="onFriendOrFamilyDetailClicked(false)"
       aria-label="add friend or family"
     >
-      Friend or family
+    CONTACT
     </button>
   </div>
 </div>
@@ -133,7 +143,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isFriendsorFamilyEdit ? 'Edit Friend or family' : 'Add Friend or family'
+    isFriendsorFamilyEdit ? 'Edit Friend or family Contact' : 'Add Friend or Family Contact'
   }}</kendo-dialog-titlebar>
   <case-management-friend-or-family-detail
   [selectedContact]="selectedContact"
@@ -150,9 +160,9 @@
   *ngIf="isDeactivateFriendOrFamilyOpened"
   (close)="onDeactivateFriendOrFamilyClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Deactivate Contact"
+  title="Deactivate Family Contact?"
 >
-  <case-management-deactivate-friend-or-family-confirmation [clientContact]="selectedContact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
+  <case-management-deactivate-friend-or-family-confirmation [isEdit]="isEdit" [clientContact]="selectedContact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
 </kendo-dialog>
 
 <!-- Delete Contact Popup-->
@@ -160,7 +170,7 @@
   *ngIf="isDeleteFriendOrFamilyOpened"
   (close)="onDeleteFriendOrFamilyClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Delete Contact"
+  title="Delete Contact?"
 >
   <case-management-delete-friend-or-family-confirmation [clientContact]="selectedContact" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModal($event)"></case-management-delete-friend-or-family-confirmation>
 </kendo-dialog>

@@ -12,6 +12,7 @@ export class ProfileEmploymentPageComponent implements OnInit {
 
   screenName = ScreenType.Case360Page; 
   eligibilityPeriodData$ = this.caseFacade.ddlEligPeriods$
+  employmentList$ = this.employmentFacade.employers$;
   historyClientCaseEligibilityId!: string;
   clientCaseId!: string;
   clientId!: number;

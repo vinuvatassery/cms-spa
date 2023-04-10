@@ -37,6 +37,7 @@ export class PhoneListComponent implements OnChanges {
   @Output() preferredClientPhoneEvent = new EventEmitter<any>();
   @Output() deactivateClientPhoneEvent = new EventEmitter<any>();
   @Output() removeClientPhoneEvent = new EventEmitter<any>();
+  @Output() reloadEmailsEvent = new EventEmitter();
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -169,6 +170,11 @@ export class PhoneListComponent implements OnChanges {
   }
 
   /** Internal event methods **/
+reloadEmails()
+{
+this.reloadEmailsEvent.emit();  
+}
+
   gridDataHandle() {
     this.clientPhonesData$.subscribe((data: any) => {
       this.gridPhoneDataSubject.next(data);
@@ -213,6 +219,10 @@ export class PhoneListComponent implements OnChanges {
         if (addResponse === true) {
           this.loadClientPhonesList();
           this.onPhoneNumberDetailClosed();
+          if(phoneData?.preferredFlag === 'Y')
+          {
+          this.reloadEmails()
+          }
         }
       });
   }
@@ -251,6 +261,7 @@ export class PhoneListComponent implements OnChanges {
         if (Response === true) {
           this.preferredButtonEmitted = false;
           this.loadClientPhonesList();
+          this.reloadEmails()
         }
       });
   }

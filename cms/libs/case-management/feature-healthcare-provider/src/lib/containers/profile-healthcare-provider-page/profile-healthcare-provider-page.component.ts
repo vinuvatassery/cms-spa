@@ -12,7 +12,6 @@ import { Subject, Subscription, filter } from 'rxjs';
 @Component({
   selector: 'case-management-profile-healthcare-provider-page',
   templateUrl: './profile-healthcare-provider-page.component.html',
-  styleUrls: ['./profile-healthcare-provider-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileHealthcareProviderPageComponent implements OnInit {

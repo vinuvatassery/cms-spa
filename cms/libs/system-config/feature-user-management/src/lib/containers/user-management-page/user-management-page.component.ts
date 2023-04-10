@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { UserManagementFacade } from '@cms/system-config/domain';
 
@@ -13,7 +13,7 @@ export class UserManagementPageComponent {
   users$ = this.userManagementFacade.users$;
   isInnerLeftMenuOpen = false;
   /** Constructor **/
-  constructor(private readonly userManagementFacade: UserManagementFacade) { } 
+  constructor(private readonly userManagementFacade: UserManagementFacade) { }
 
 
   openInnerLeftMenu(){

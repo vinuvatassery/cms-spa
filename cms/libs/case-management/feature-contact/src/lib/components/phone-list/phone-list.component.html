@@ -70,7 +70,7 @@
           [width]="100"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.effectiveDate}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate}}  
+          {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
          </ng-template>   
         </kendo-grid-column>
         <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
@@ -126,9 +126,7 @@
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
-          <ng-template kendoGridLoadingTemplate>
-            <common-grid-loader-component></common-grid-loader-component>
-           </ng-template>
+        
         </kendo-grid-column>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
@@ -149,6 +147,16 @@
           </div> 
         </div>
       </ng-template> 
+       <!-- grid Loader Template -->  
+       <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
+       <!-- grid No data Template -->  
+       <ng-template kendoGridNoRecordsTemplate>
+         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+         </div>
+         <p>There is no data to display.</p>
+       </ng-template> 
       </kendo-grid>
     </div>
   </div>

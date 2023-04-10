@@ -109,7 +109,6 @@ export class FriendOrFamilyListComponent implements OnInit {
   }
 
   onDeactivateFriendOrFamilyClicked() {
-    this.isEdit = false;
     this.isDeactivateFriendOrFamilyOpened = true;
   }
   onDeleteFriendOrFamilyClicked() {

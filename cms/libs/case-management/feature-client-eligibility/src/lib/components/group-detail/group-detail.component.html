@@ -8,7 +8,7 @@
         <kendo-formfield>
           <kendo-floatinglabel text="New Group">
             <kendo-dropdownlist aria-label="New Group" [fillMode]="formUiStyle.dropDownFillMode"
-              formControlName="groupCodeId" [data]="ddlGroups$ | async" textField="groupCodeDesc"
+              formControlName="groupCodeId" [data]="groupCodes" textField="groupCodeDesc"
               valueField="groupCodeId" [valuePrimitive]="true" placeholder="New Group"></kendo-dropdownlist>
           </kendo-floatinglabel>
           <kendo-formerror>
