@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries**/
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, filter } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries**/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -28,9 +28,9 @@ export class GroupDetailComponent implements OnInit {
   groupCodes!: any[];
   groupCodesSubscription = new Subscription();
   /** Constructor **/
-  constructor(private readonly intl: IntlService, 
-    private readonly configProvider: ConfigurationProvider, 
-    private readonly notifySnackbarService: NotificationSnackbarService  ) { }
+  constructor(private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly notifySnackbarService: NotificationSnackbarService) { }
 
   /* Lifecycle events */
   ngOnInit(): void {
@@ -59,9 +59,10 @@ export class GroupDetailComponent implements OnInit {
   }
 
   private setGroupCodes() {
-    this.groupCodesSubscription = this.ddlGroups$.subscribe((groups: any) => {
-      this.groupCodes = groups;
-    });
+    this.groupCodesSubscription = this.ddlGroups$
+      .subscribe((groups: any) => {
+        this.groupCodes = groups.filter((i: any) => i.groupCode !== GroupCode.BRIDGE);
+      });
   }
 
   /* Internal events */
@@ -74,8 +75,8 @@ export class GroupDetailComponent implements OnInit {
     const bridgeGroupCodeId = this.groupCodes.find(i => i.groupCode === GroupCode.BRIDGE)?.groupCodeId;
     const isBridge = this.groupForm.controls['groupCodeId'].value === bridgeGroupCodeId;
     if (this.groupForm.valid) {
-      if(isBridge){
-        this.notifySnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,'Bridge cannot be selected.', NotificationSource.UI);
+      if (isBridge) {
+        this.notifySnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Bridge cannot be selected.', NotificationSource.UI);
         return;
       }
       const groupChanged = {

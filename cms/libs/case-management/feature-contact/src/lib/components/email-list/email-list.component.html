@@ -73,7 +73,7 @@
           [width]="100" [sortable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.effectiveDate}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate}}  
+          {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
          </ng-template>   
         </kendo-grid-column>
         <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
