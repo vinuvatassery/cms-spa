@@ -39,6 +39,9 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   eligibleStatuses:Array<string>=[];
   statusEndDateIsGreaterThanStartDate:boolean = true;
   eligibilityStatusAllowed:boolean =true;
+  dayOptions: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+  };
   
 
   /** Constructor **/
@@ -265,9 +268,13 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   {
     this.caseFacade.loadGroupCode();
   }
+  private getDay(date: Date, locale: string, options?: Intl.DateTimeFormatOptions): string {
+    const formatter = new Intl.DateTimeFormat(locale, options);
+    return formatter.format(date);
+  }
   private setStartDateEndDateByStatus(status:string)
   {   
-    let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);
+    let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);    
     this.eligibilityPeriodForm.controls['statusStartDate'].reset();
     this.eligibilityPeriodForm.controls['statusEndDate'].reset();
     this.eligibilityPeriodForm.controls['group'].reset();
@@ -275,9 +282,18 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     switch (status.toUpperCase()) {
       case EligibilityStatus.Accept.toUpperCase():
         this.disableFields = [];
+        let additionalMonth = 0;
+        const dayFromDate = this.getDay(this.addDays(currentEligibilityEndDate, 1), 'en-US', this.dayOptions);
+        if(dayFromDate === '1'){
+          additionalMonth = 6;
+        }
+        else{
+           additionalMonth = 7;
+        }
+        
         if (currentEligibilityEndDate) {
           this.eligibilityPeriodForm.controls['statusStartDate'].setValue(this.addDays(currentEligibilityEndDate, 1));
-          this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(currentEligibilityEndDate.getFullYear(), currentEligibilityEndDate.getMonth() + 7, 0));
+          this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(currentEligibilityEndDate.getFullYear(), currentEligibilityEndDate.getMonth() + additionalMonth, 0));
         }
         else {
           this.eligibilityPeriodForm.controls['statusStartDate'].setValue(today);
