@@ -88,3 +88,13 @@
     </div>
   </div>
 </kendo-dialog-actions>
+
+<!-- Deactivate Popup-->
+<kendo-dialog
+  *ngIf="isDeactivateFriendOrFamilyOpened"
+  (close)="onDeactivateFriendOrFamilyClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Deactivate Family Contact?"
+>
+  <case-management-deactivate-friend-or-family-confirmation [isEdit]="isEditValue" [clientContact]="contact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
+</kendo-dialog>
