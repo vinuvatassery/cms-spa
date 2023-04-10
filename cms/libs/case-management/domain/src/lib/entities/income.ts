@@ -14,4 +14,5 @@ export interface Income {
     incomeNote: string;
     concurrencyStamp: string;
     activeFlag: string;
+    creatorId: string;
 }
