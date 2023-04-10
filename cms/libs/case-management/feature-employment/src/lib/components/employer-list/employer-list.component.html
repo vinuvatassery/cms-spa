@@ -22,8 +22,37 @@
             {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
+        <kendo-grid-column field="effectiveDate" title="Effective Date">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}} - {{dataItem.endDate | date: 'MM/dd/yyyy'}}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="80">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="profile avathar"
+            >
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
+            </button>
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              position="left"
+            >
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
+          </ng-template>
+        </kendo-grid-column>
          <!-- grid more ation column template -->
-        <kendo-grid-column field="Option" title="Options" [width]="75" class="text-center" [filterable]="filterable" [columnMenu]="filterable" [sortable]="filterable">
+        <kendo-grid-column * ngIf="!isClientProfileTab" field="Option" title="Options" [width]="75" class="text-center" [filterable]="filterable" [columnMenu]="filterable" [sortable]="filterable">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More Options" class="TableActionPopup app-dropdown-action"
               aria-label="more actions" buttonClass="k-icon-button"

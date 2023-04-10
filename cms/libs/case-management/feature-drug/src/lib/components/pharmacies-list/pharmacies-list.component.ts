@@ -20,7 +20,6 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
-import { first, take } from 'rxjs/operators';
 import { LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-pharmacies-list',
@@ -109,17 +108,13 @@ export class PharmaciesListComponent implements OnInit {
               clientPharmacy,
               'deactivate'
             );
-          } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
+          } else{
             if(clientPharmacy.clientPharmacyId && clientPharmacy.priorityCode != PriorityCode.Primary){
-              let pharmacy ={
-                ClientId:this.clientId,
-                IsActive:false
-              }
             this.OpenDeactivatePharmaciesClicked(clientPharmacy)
             }
           }
         }
-        
+
       },
     },
     {
@@ -128,7 +123,7 @@ export class PharmaciesListComponent implements OnInit {
       icon: 'done',
       type:'Reactivate',
       click: (clientPharmacy: any): void => {
-     
+
         if(clientPharmacy.vendorId){
           let pharmacy ={
             ClientId:this.clientId,
@@ -138,25 +133,6 @@ export class PharmaciesListComponent implements OnInit {
           this.OpenReactivatePharmaciesClicked(pharmacy);
         }
 
-      },
-    },
-    {
-      buttonType: 'btn-h-warn',
-      text: 'Mark Primary',
-      icon: 'star',
-      type:'MarkAsPrimary',
-      click: (clientPharmacy: any): void => {
-        if(clientPharmacy.clientPharmacyId){
-          let pharmacyPriorityites = [{
-            ClientPharmacyId:clientPharmacy.clientPharmacyId,
-            ClientId:this.clientId,
-            PriorityCode:'P'
-            
-          }]
-          this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,pharmacyPriorityites)
-        }
-    
-        
       },
     },
     {
@@ -170,14 +146,14 @@ export class PharmaciesListComponent implements OnInit {
           this.vendorId =clientPharmacy.clientPharmacyId
           if (clientPharmacy.priorityCode === PriorityCode.Primary) {
             this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
-          } else if (clientPharmacy.priorityCode === PriorityCode.Tertiary || clientPharmacy.priorityCode === " " ) {
+          } else  {
             if (this.removeButtonEmitted === false) {
               this.onRemovePharmacyClicked(clientPharmacy.clientPharmacyId);
               this.removeButtonEmitted = true;
             }
           }
         }
-        
+
       },
     },
   ];
@@ -242,19 +218,19 @@ export class PharmaciesListComponent implements OnInit {
   /** Private methods **/
   filterActionButtonOptions(options:any[],actionType:any):any[]{
     let filteredOptions:any[] = [];
-    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === YesNoFlag.Yes){
+    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes){
       filteredOptions = options.filter(option =>option.type != 'Reactivate');
-    } else if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === YesNoFlag.No)
+    } else if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.No)
     {
       filteredOptions = options.filter(option =>option.type != 'Deactivate');
     }
-    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.Yes)
+    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes)
     {
-      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Reactivate');
+      filteredOptions = options.filter(option =>option.type !='Reactivate');
     } 
-    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === YesNoFlag.No)
+    else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === StatusFlag.No)
     {
-      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Deactivate');
+      filteredOptions = options.filter(option =>option.type  !='Deactivate');
     }
     else {
       filteredOptions = options;
@@ -320,7 +296,7 @@ export class PharmaciesListComponent implements OnInit {
       if(isRemoved){
         this.removeButtonEmitted = true;
         if(data && data.isNewAdded){
-      
+
           this.drugPharmacyFacade.addDrugPharmacy(
             this.clientId,
             data.newPharmacy.vendorId,

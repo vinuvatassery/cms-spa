@@ -9,12 +9,15 @@ const routes: Routes = [
     path: 'eligibility',
     component: ClientEligibilityPageComponent,
     data: {
-      title: '',
+      title: 'New Application',
     },
   },
   {
     path: 'send-letter',
     component: SendLetterPageComponent,
+    data: {
+      title: 'Send Letter',
+    },
   },
   {
     path: '',
