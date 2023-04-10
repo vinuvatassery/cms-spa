@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries**/
-import { Observable, Subscription, filter } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries**/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
