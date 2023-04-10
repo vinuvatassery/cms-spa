@@ -44,7 +44,7 @@ export class GridCellDateRangeFilterComponent extends BaseFilterCellComponent {
   }
 
   public filterRange(start: Date, end: Date): void {
-    this.filter = this.removeFilter(this.field);
+   // this.filter = this.removeFilter(this.field);
 
     const filters = [];
 
@@ -73,7 +73,7 @@ export class GridCellDateRangeFilterComponent extends BaseFilterCellComponent {
       root.filters.push(...filters);
     }
 
-    ///this.filterService.filter(root);
+    //this.filterService.filter(root);
   }
 
   private findByOperator(op: string): FilterDescriptor {
