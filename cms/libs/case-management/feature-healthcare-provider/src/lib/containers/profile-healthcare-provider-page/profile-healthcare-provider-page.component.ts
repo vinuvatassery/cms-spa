@@ -71,7 +71,7 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
 
   /** Private methods **/
 
-  loadProvidersHandle(gridDataRefinerValue: any): void {
+  loadProvidersEvent(gridDataRefinerValue: any): void {
     this.showProvidervalidationboxSubject.next(false);
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
@@ -91,7 +91,7 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
     );   
   }
 
-  onhistorychkBoxChanged() {    
+  onHistoryChkBoxChanged() {    
     this.historychkBoxChecked = !this.historychkBoxChecked;
     this.healthProvider.loadHealthCareProviders(
       this.clientId,

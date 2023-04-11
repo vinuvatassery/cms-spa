@@ -84,7 +84,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
    private loadProviderStatus() : void 
    {    
-        this.healthProvider.loadProviderStatusStatus(this.clientId);
+        this.healthProvider.loadProviderStatus(this.clientId);
         this.checkBoxSubscription= 
         this.healthCareProvideGetFlag$.pipe(
           filter(x=> typeof x === 'boolean')

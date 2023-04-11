@@ -26,7 +26,7 @@ export class HealthcareProviderDataService {
     }
     return this.http.delete(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${clientId}/providers`+
+      `/case-management/healthcare-providers/${clientId}`+
       `/${ProviderId}`, options
     );
   }
@@ -34,13 +34,13 @@ export class HealthcareProviderDataService {
   reActivateHealthCareProvider(clientId : number ,ProviderId : string)
   {   
     return this.http.patch(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/providers/${ProviderId}`,null
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/${ProviderId}`,null
     );
   }
 
 
   ///2
-  loadProviderStatusStatus(clientId : number) {     
+  loadProviderStatus(clientId : number) {     
     return this.http.get<HealthcareProvider[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
       `/case-management/healthcare-providers/${clientId}/provider-status`
@@ -72,7 +72,7 @@ export class HealthcareProviderDataService {
       
     return this.http.get<HealthcareProvider[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${clientId}/providers/${providerId}`
+      `/case-management/healthcare-providers/${clientId}/${providerId}`
     );
     
   }
@@ -83,14 +83,14 @@ export class HealthcareProviderDataService {
     {
       return this.http.post(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/healthcare-providers/${existProviderData?.clientId}/providers/${existProviderData?.providerId}/${existProviderData?.selectedProviderId}`,null
+        `/case-management/healthcare-providers/${existProviderData?.clientId}/${existProviderData?.providerId}/${existProviderData?.selectedProviderId}`,null
       );
     }
   
       //search for autocomplete
       searchProviders(text :  string , clientId : number) {
         return this.http.get<HealthcareProvider[]>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/providers/search/${text}`  
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/search/${text}`  
         );
       }  
  

@@ -14,7 +14,7 @@ import { RemoveHealthCareProviderConfirmationComponent } from './components/remo
 import { HealthCareProviderSearchComponent } from './components/health-care-provider-search/health-care-provider-search.component';
 import { HealthCareProviderCardComponent } from './components/health-care-provider-card/health-care-provider-card.component';
 import { ProfileHealthcareProviderPageComponent } from './containers/profile-healthcare-provider-page/profile-healthcare-provider-page.component';
-import { RectiveHealthCareProviderConfirmationComponent } from './components/reactivate-health-care-provider-confirmation/reactivate-health-care-provider-confirmation.component';
+import { ReactivateHealthCareProviderConfirmationComponent } from './components/reactivate-health-care-provider-confirmation/reactivate-health-care-provider-confirmation.component';
 import { DectiveHealthCareProviderConfirmationComponent } from './components/deactivate-health-care-provider-confirmation/deactivate-health-care-provider-confirmation.component';
 
 @NgModule({
@@ -33,7 +33,7 @@ import { DectiveHealthCareProviderConfirmationComponent } from './components/dea
     HealthCareProviderSearchComponent,
     HealthCareProviderCardComponent,
     ProfileHealthcareProviderPageComponent,
-    RectiveHealthCareProviderConfirmationComponent,
+    ReactivateHealthCareProviderConfirmationComponent,
     DectiveHealthCareProviderConfirmationComponent
   ],
   exports: [
@@ -44,7 +44,7 @@ import { DectiveHealthCareProviderConfirmationComponent } from './components/dea
     HealthCareProviderSearchComponent,
     HealthCareProviderCardComponent,
     ProfileHealthcareProviderPageComponent,
-    RectiveHealthCareProviderConfirmationComponent,
+    ReactivateHealthCareProviderConfirmationComponent,
     DectiveHealthCareProviderConfirmationComponent
   ],
 })

@@ -166,7 +166,7 @@
 <kendo-dialog *ngIf="isOpenedDeleteConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Remove healthcare provider? </kendo-dialog-titlebar>
   <case-management-health-care-provider-remove-confirmation [prvId]="prvSelectedId"
-    (deleteConfimEvent)="handleAcceptPrvRemove($event)">
+    (deleteConfimEvent)="handleAcceptProviderRemove($event)">
   </case-management-health-care-provider-remove-confirmation>
 </kendo-dialog>
 
@@ -174,7 +174,7 @@
 <kendo-dialog *ngIf="isOpenedDeactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Deactivate healthcare provider? </kendo-dialog-titlebar>
   <case-management-health-care-provider-deactivate-confirmation [prvId]="prvSelectedId"
-    (deactivateConfimEvent)="handleAcceptPrvDeact($event)">
+    (deactivateConfimEvent)="handleAcceptProviderDeact($event)">
   </case-management-health-care-provider-deactivate-confirmation>
 </kendo-dialog>
 

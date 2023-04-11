@@ -220,7 +220,7 @@ pageselectionchange(data: any) {
     this.onDeleteConfirmCloseClicked()
   }
 
-  handleAcceptPrvRemove(isDelete :boolean)
+  handleAcceptProviderRemove(isDelete :boolean)
    {  
       if(isDelete)
       {
@@ -240,7 +240,7 @@ pageselectionchange(data: any) {
       this.onDeleteConfirmCloseClicked()        
    }
 
-   handleAcceptPrvDeact(isDeactivate:any)
+   handleAcceptProviderDeact(isDeactivate:any)
    {  
       if(isDeactivate)
       {

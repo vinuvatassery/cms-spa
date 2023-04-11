@@ -7,7 +7,7 @@
       <span class="app-checkboxwidtext-wrapper"> 
         <input type="checkbox"
         kendoCheckBox aria-labelledby="historyCheckBox"      
-        (click)="onhistorychkBoxChanged()" 
+        (click)="onHistoryChkBoxChanged()" 
         id="historyCheckBox"
         name="historyCheckBox"
         [checked]="historychkBoxChecked"
@@ -40,7 +40,7 @@
               (deleteConfimedEvent)="handlePrvRemove($event)"    
               (deactivateConfimEvent)="handlePrvDeacivate($event)"    
               (reactivateConfimEvent)="handlePrvReactivate($event)"    
-              (loadProvidersListEvent)="loadProvidersHandle($event)"          
+              (loadProvidersListEvent)="loadProvidersEvent($event)"          
               (searchTextEvent)="searchTextEventHandleer($event)"
               (addExistingProviderEvent)="addExistingProviderEventHandler($event)"
               (getExistingProviderEvent)="getExistingProviderEventHandler($event)"

@@ -85,7 +85,7 @@ export class HealthcareProviderFacade {
       next: (removeResponse) => {        
         if(removeResponse ?? false)
         {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , hardDelete ? 'Provider or Clinic Removed Successfully' : 'Provider or Clinic Deactivated Successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , hardDelete ? 'provider or clinic removed successfully' : 'provider or clinic deactivated successfully')  
         
         } 
         this.healthCareProvideRemoveSubject.next(removeResponse);       
@@ -103,7 +103,7 @@ export class HealthcareProviderFacade {
       next: (removeResponse) => {        
         if(removeResponse ?? false)
         {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic Re-Activated Successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'provider or clinic re-activated successfully')  
         
         } 
         this.healthCareProvideReactivateSubject.next(removeResponse);       
@@ -114,9 +114,9 @@ export class HealthcareProviderFacade {
     });
   }
 
-  loadProviderStatusStatus(clientId : number,) : void {
+  loadProviderStatus(clientId : number,) : void {
     this.showLoader();
-    this.healthcareProviderDataService.loadProviderStatusStatus(clientId).subscribe({
+    this.healthcareProviderDataService.loadProviderStatus(clientId).subscribe({
       next: (providerStatusGetResponse) => {
         this.hideLoader();
         this.healthCareProvideGetFlagSubject.next(providerStatusGetResponse);
@@ -192,7 +192,7 @@ export class HealthcareProviderFacade {
     this.healthcareProviderDataService.addExistingHealthCareProvider(existProviderData).subscribe({
       next: (addExistingProviderGetResponse) => {
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added Successfully')   
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Added successfully')   
         this.addExistingProviderSubject.next(addExistingProviderGetResponse);
       },
       error: (err) => {        
