@@ -6,7 +6,20 @@
   </div>
 
 </div>
-<case-management-case-manager-list></case-management-case-manager-list>
+<case-management-case-manager-list
+[userImage$]="userImage$"
+[selectedCaseManagerDetails$]="selectedCaseManagerDetails$"
+[getManagerUsers$]="getManagerUsers$"
+[getCaseManagers$]="getCaseManagers$"
+[assignCaseManagerStatus$]="assignCaseManagerStatus$"
+[removeCaseManager$]="removeCaseManager$"
+(loadCasemanagersGridEvent)="loadCaseManagers()"
+(deleteCasemanagersGridEvent)="removecaseManagerHandler($event)"
+(searchTextEvent)="searchTextEventHandler($event)"
+(getExistingCaseManagerEvent)="getExistingCaseManagerEventHandler($event)"
+(addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
+(loadprofilePhotoEvent)="getCaseManagerImage($event)"
+></case-management-case-manager-list>
 </div>
 
 
