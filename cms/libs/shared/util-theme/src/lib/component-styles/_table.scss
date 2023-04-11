@@ -378,6 +378,14 @@ table,
       }
     }
   }
+  &.bulk-dropdown{
+    .k-button {
+  
+      &.k-flat-button { 
+        padding-right: $size-xl;
+      }
+    }
+  }
   .k-button {
     &.k-icon-button {
       width: $size-xxxl;
