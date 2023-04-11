@@ -14,8 +14,7 @@ import {
   Pharmacy,
   StatusFlag,
   CompletionChecklist,
-  PriorityCode,
-  YesNoFlag,
+  PriorityCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
