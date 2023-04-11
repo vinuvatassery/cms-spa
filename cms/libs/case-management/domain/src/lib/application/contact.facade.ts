@@ -352,10 +352,10 @@ export class ContactFacade {
 
   //#region client email//NOSONAR
 
-  loadEmailAddress(clientId: number): void {
+  loadEmailAddress(clientId: number, clientCaseEligibilityId: string): void {
     this.emailAddressesSubject.next([]);
     this.contactDataService
-      .loadClientEmails(clientId, '', 0, 1000, '', '', false)
+      .loadClientEmails(clientId, clientCaseEligibilityId, 0, 1000, '', '', false)
       .subscribe({
         next: (clientEmailsResponse: any) => {
           const emails =  clientEmailsResponse ? clientEmailsResponse['items']:[];
@@ -395,6 +395,7 @@ export class ContactFacade {
             };
 
             this.clientEmailsSubject.next(gridView);
+            this.emailAddressesSubject.next(clientEmailsResponse['items'])
           }
         },
         error: (err) => {
@@ -559,6 +560,7 @@ export class ContactFacade {
             };
 
             this.clientPhonesSubject.next(gridView);
+            this.phoneNumbersSubject.next(clientPhonesResponse['items']);
           }
         },
         error: (err) => {

@@ -31,6 +31,7 @@ export * from './lib/pipes/phone.pipe';
 export * from './lib/directives/kendo-componentsforaccessanility.directive';
 export * from './lib/directives/kendo-file-upload-accessibility.directive';
 export * from './lib/directives/permission-manager.directive';
+export * from './lib/directives/after-value-changed.directive';
 
 /** Enums **/
 export * from './lib/enums/yes-no-flag-enum';
