@@ -12,9 +12,7 @@ export interface Document {
   clientCaseEligibilityId?: string;
   documentTemplateId?: string;
   documentName?: string;
-  attachmentType?: string;
   documentSize?: number;
-  otherAttachmentType?: string;
   attachmentNote?: string;
   documentPath?: string;
   documentSizeInMB?: string;

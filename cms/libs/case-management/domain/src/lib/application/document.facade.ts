@@ -13,11 +13,12 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 @Injectable({ providedIn: 'root' })
 export class DocumentFacade {
   /** Private properties **/
-  private documentsSubject = new BehaviorSubject<Document[]>([]);
+  private documentsSubject = new BehaviorSubject<Document[]>([]);  
   private documentGridLoaderSubject = new BehaviorSubject<boolean>(false);
   private documentSubject = new Subject<any>();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  private documentsListSubject  = new Subject<any>();
   public sortValue = ' '
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
@@ -26,6 +27,7 @@ export class DocumentFacade {
   }];
   /** Public properties **/
   documents$ = this.documentsSubject.asObservable();
+  documentsList$ = this.documentsListSubject.asObservable();
   document$ = this.documentSubject.asObservable();
   documentGridLoader$ = this.documentGridLoaderSubject.asObservable();
   /** Constructor**/
@@ -64,20 +66,62 @@ export class DocumentFacade {
 
   }
 
-  getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
-    this.documentGridLoaderSubject.next(true);
-    this.documentDataService.getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId).subscribe({
-      next: (documentsResponse) => {
-        this.documentGridLoaderSubject.next(false);
-        this.documentsSubject.next(documentsResponse);
-      },
-      error: (err) => {
-        this.documentGridLoaderSubject.next(false);
-        console.error('err', err);
-      },
-    });
-  }
+  // getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
+  //   this.documentGridLoaderSubject.next(true);
+  //   this.documentDataService.getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId).subscribe({
+  //     next: (documentsResponse) => {
+  //       this.documentGridLoaderSubject.next(false);
+  //       this.documentsSubject.next(documentsResponse);
+  //     },
+  //     error: (err) => {
+  //       this.documentGridLoaderSubject.next(false);
+  //       console.error('err', err);
+  //     },
+  //   });
+  // }
 
+  getDocumentsByClientCaseEligibilityId(
+    clientCaseEligibilityId: string, 
+    skipcount: number, 
+    maxResultCount: number, 
+    sort: string, 
+    sortType: string,
+    filter: any,
+    columnName: any
+  ): void {
+    this.documentGridLoaderSubject.next(true);
+    this.documentDataService
+      .getDocumentsByClientCaseEligibilityId(
+        clientCaseEligibilityId,
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+        filter,
+        columnName
+      )
+      .subscribe({
+        next: (documentsResponse: any) => {
+          if (documentsResponse) {
+            const gridView = {
+              data: documentsResponse['items'],
+              total: documentsResponse['totalCount'],
+            };
+            this.documentGridLoaderSubject.next(false);
+            this.documentsListSubject.next(gridView);
+          }
+        },
+        error: (err) => {
+          const gridView = {
+            data: null,
+            total: -1,
+          };
+          this.documentGridLoaderSubject.next(false);
+          this.documentsListSubject.next(gridView);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.documentDataService.getClientDocumentsViewDownload(clientDocumentId);
   }

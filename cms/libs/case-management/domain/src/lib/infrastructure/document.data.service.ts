@@ -11,57 +11,64 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 export class DocumentDataService {
   /** Constructor**/
   constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider) {}
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadDocuments(): Observable<Document[]> {
     return of([
-      { id: 1, 
-        name: 'Lorem ipsum', 
-        description: 'Lorem ipsum dolor sit amet' ,
-        filesize: '12 MB' ,
-        attachmenttType: 'Proof of Income' , 
-        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem' ,
-        by: 'James' ,
+      {
+        id: 1,
+        name: 'Lorem ipsum',
+        description: 'Lorem ipsum dolor sit amet',
+        filesize: '12 MB',
+        attachmenttType: 'Proof of Income',
+        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem',
+        by: 'James',
       },
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {
         id: 2,
         name: 'At vero eos',
         description: 'At vero eos et accusam et justo duo dolores',
-        filesize: '12 MB' ,
-        attachmenttType: 'Proof of Income' , 
-        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem' ,
-        by: 'James' ,
+        filesize: '12 MB',
+        attachmenttType: 'Proof of Income',
+        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem',
+        by: 'James',
       },
       {
         id: 3,
         name: 'Duis autem',
         description: 'Duis autem vel eum iriure dolor in hendrerit',
-        filesize: '12 MB' ,
-        attachmenttType: 'Proof of Income' , 
-        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem' ,
-        by: 'James' ,
+        filesize: '12 MB',
+        attachmenttType: 'Proof of Income',
+        attachmentnote: 'Lorem ipsum dolor sit amet, consectetur adipiscing eli. Sed dignissim nec lorem',
+        by: 'James',
       },
     ]);
   }
 
   uploadDocument(doc: any) {
     let documentFormData = new FormData();
-    documentFormData = this.bindFormData(doc,'SAVE');
+    documentFormData = this.bindFormData(doc, 'SAVE');
     return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
   }
 
   updateDocument(doc: any) {
     let documentFormData = new FormData();
-    documentFormData = this.bindFormData(doc,'EDIT');
-    return this.http.put(this.getUrl(), doc, { reportProgress: true });
+    documentFormData = this.bindFormData(doc, 'EDIT');
+    return this.http.put(this.getUrl(), documentFormData, { reportProgress: true });
   }
-  
-  getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
-    return this.http.get<Document[]>(
+
+  // getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
+  //   return this.http.get<Document[]>(
+  //     `${this.configurationProvider.appSettings.caseApiUrl}` +
+  //     `/case-management/client-document/attachments/clientCaseEligibilityId?clientCaseEligibilityId=${clientCaseEligibilityId}`
+  //   );
+  // }
+  getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: any, columnName: any) {
+    return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/client-document/attachments/clientCaseEligibilityId?clientCaseEligibilityId=${clientCaseEligibilityId}`
+      `/case-management/client-document/attachments?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}&ColumnName=${columnName}`
     );
   }
 
@@ -96,8 +103,6 @@ export class DocumentDataService {
       documentFormData.append("documentSize", doc?.documentSize ?? '');
       documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
       documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
-      documentFormData.append("attachmentType", doc?.attachmentType ?? '');
-      documentFormData.append("otherAttachmentType", doc?.otherAttachmentType ?? '');
     }
     else {
       documentFormData.append("clientDocumentId", doc?.clientDocumentId ?? '');
@@ -106,8 +111,9 @@ export class DocumentDataService {
       documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
       documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
       documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
-      documentFormData.append("attachmentType", doc?.attachmentType ?? '');
-      documentFormData.append("otherAttachmentType", doc?.otherAttachmentType ?? '');
+      documentFormData.append("document", doc?.document ?? '');
+      documentFormData.append("documentName", doc?.documentName ?? '');
+      documentFormData.append("documentSize", doc?.documentSize ?? '');
     }
     return documentFormData;
   }
