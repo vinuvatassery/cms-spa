@@ -114,6 +114,7 @@ export class IncomeListComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadIncomes();
+    this.incomeFacade.loadDependentsProofofSchools();
     this.loadDependents();
     this.includeAddIncomeButtonAndFooterNote();
     this.incomeValid$.subscribe(response=>{
