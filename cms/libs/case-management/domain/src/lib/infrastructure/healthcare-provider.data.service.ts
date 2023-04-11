@@ -17,7 +17,7 @@ export class HealthcareProviderDataService {
   /** Public methods **/
 
   ///1
-  removeHealthCareProvider(clientId : number ,ProviderId : string, hardDelete : boolean)
+  removeHealthCareProvider(clientProviderId : string, hardDelete : boolean)
   {
     const options = {
       body: {
@@ -25,16 +25,14 @@ export class HealthcareProviderDataService {
       }
     }
     return this.http.delete(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${clientId}`+
-      `/${ProviderId}`, options
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientProviderId}`, options
     );
   }
 
-  reActivateHealthCareProvider(clientId : number ,ProviderId : string)
+  reActivateHealthCareProvider(clientProviderId : string)
   {   
     return this.http.patch(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/${ProviderId}`,null
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientProviderId}`,null
     );
   }
 
@@ -68,11 +66,10 @@ export class HealthcareProviderDataService {
     
   }
 
-  loadExistingHealthCareProvider(clientId : number  ,providerId :string) {   
+  loadExistingHealthCareProvider(clientProviderId :string) {   
       
     return this.http.get<HealthcareProvider[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/case-management/healthcare-providers/${clientId}/${providerId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientProviderId}`
     );
     
   }
@@ -83,14 +80,14 @@ export class HealthcareProviderDataService {
     {
       return this.http.post(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/healthcare-providers/${existProviderData?.clientId}/${existProviderData?.providerId}/${existProviderData?.selectedProviderId}`,null
+        `/case-management/healthcare-providers/?clientId=${existProviderData?.clientId}&providerId=${existProviderData?.providerId}&selectedProviderId=${existProviderData?.selectedProviderId}`,null
       );
     }
   
       //search for autocomplete
       searchProviders(text :  string , clientId : number) {
         return this.http.get<HealthcareProvider[]>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientId}/search/${text}`  
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/search/?clientId=${clientId}&providerName=${text}`  
         );
       }  
  

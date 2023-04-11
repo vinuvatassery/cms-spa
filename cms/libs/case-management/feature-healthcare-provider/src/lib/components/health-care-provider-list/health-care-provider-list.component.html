@@ -72,19 +72,19 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="providerId" title="Options" [width]="50" class="text-center" [sticky]="true"
+        <kendo-grid-column field="clientProviderId" title="Options" [width]="50" class="text-center" [sticky]="true"
           [sortable]="false" [columnMenu]="false">
-          <ng-template kendoGridCellTemplate let-provider let-providerId="field">
+          <ng-template kendoGridCellTemplate let-provider let-clientProviderId="field">
             <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More option"
               class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
-                let-providerId="providerId">
+                let-providerId="clientProviderId">
                 <button kendoButton
                 [hidden]="((!managementTab && dataItem.buttonName==='deactivate') || (provider.isDeleted === true && dataItem.buttonName==='deactivate'))
                 || ((!managementTab&& dataItem.buttonName==='reactivate') ||  (!provider.isDeleted === true && dataItem.buttonName==='reactivate'))" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                  aria-hidden="false" (click)="dataItem.click(provider.providerId);">
+                  aria-hidden="false" (click)="dataItem.click(provider.clientProviderId);">
                   <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
@@ -152,7 +152,7 @@
   </kendo-dialog-titlebar>
   <case-management-health-care-provider-search [searchProviderLoaded$]="searchProviderLoaded$"
     [existingProviderData]="existingProviderData" [selectedCustomProviderName]="selectedCustomProviderName"
-    [prvId]="prvSelectedId" [healthCareProviderSearchList$]="healthCareProviderSearchList$"
+    [prvId]="clientProviderId" [healthCareProviderSearchList$]="healthCareProviderSearchList$"
     [addExistingProvider$]="addExistingProvider$" [loadExistingProvider$]="loadExistingProvider$"
     (deleteProviderEvent)="handlePrvRemove($event)" [isEditSearchHealthProviderValue]="isEditSearchHealthProvider"
     (closeProviderSearchEvent)="onCloseProviderSearchClicked()" (businessLogicEvent)="onOpenBusinessLogicClicked()"
@@ -165,7 +165,7 @@
 <!-- Delete Modal -->
 <kendo-dialog *ngIf="isOpenedDeleteConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Remove healthcare provider? </kendo-dialog-titlebar>
-  <case-management-health-care-provider-remove-confirmation [prvId]="prvSelectedId"
+  <case-management-health-care-provider-remove-confirmation [prvId]="clientProviderId"
     (deleteConfimEvent)="handleAcceptProviderRemove($event)">
   </case-management-health-care-provider-remove-confirmation>
 </kendo-dialog>
@@ -173,7 +173,7 @@
 <!-- Deactivate Modal -->
 <kendo-dialog *ngIf="isOpenedDeactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Deactivate healthcare provider? </kendo-dialog-titlebar>
-  <case-management-health-care-provider-deactivate-confirmation [prvId]="prvSelectedId"
+  <case-management-health-care-provider-deactivate-confirmation [prvId]="clientProviderId"
     (deactivateConfimEvent)="handleAcceptProviderDeact($event)">
   </case-management-health-care-provider-deactivate-confirmation>
 </kendo-dialog>
@@ -181,7 +181,7 @@
 <!-- Reactivate Modal -->
 <kendo-dialog *ngIf="isOpenedReactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Re-activate healthcare provider? </kendo-dialog-titlebar>
-  <case-management-health-care-provider-reactivate-confirmation [prvId]="prvSelectedId"
+  <case-management-health-care-provider-reactivate-confirmation [prvId]="clientProviderId"
     (reactivateConfimEvent)="handleAcceptPrvReact($event)">
   </case-management-health-care-provider-reactivate-confirmation>
 </kendo-dialog>

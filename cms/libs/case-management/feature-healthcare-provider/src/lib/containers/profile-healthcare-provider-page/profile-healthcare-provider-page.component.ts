@@ -103,22 +103,22 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
     );
   }
 
-  private removeHealthCareProvider(ProviderId: string) {
-    this.healthProvider.removeHealthCareProviders(this.clientId, ProviderId, true);
+  private removeHealthCareProvider(clientProviderId: string) {
+    this.healthProvider.removeHealthCareProviders(clientProviderId, true);
   }
 
   /** Private Methods **/
 
   /** events from child components**/
-  handlePrvRemove(prvSelectedId: string) {
-    this.removeHealthCareProvider(prvSelectedId);
+  handlePrvRemove(clientProviderId: string) {
+    this.removeHealthCareProvider(clientProviderId);
   }
-  handlePrvDeacivate(prvSelectedId: string) {    
-    this.healthProvider.removeHealthCareProviders(this.clientId, prvSelectedId, false);
+  handlePrvDeacivate(clientProviderId: string) {    
+    this.healthProvider.removeHealthCareProviders(clientProviderId, false);
   }
 
-  handlePrvReactivate(prvSelectedId: string) {
-    this.healthProvider.reActivateHealthCareProvider(this.clientId, prvSelectedId);
+  handlePrvReactivate(clientProviderId: string) {
+    this.healthProvider.reActivateHealthCareProvider(clientProviderId);
   }
 
   searchTextEventHandleer(text: string) {
@@ -130,11 +130,10 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
     this.healthProvider.addExistingHealthCareProvider(existProviderData);
   }
 
-  getExistingProviderEventHandler(prvSelectedId: string) {
-    if (prvSelectedId) {
+  getExistingProviderEventHandler(clientProviderId: string) {
+    if (clientProviderId) {
       this.healthProvider.loadExistingHealthCareProvider(
-        this.clientId,
-        prvSelectedId
+        clientProviderId
       );
     }
   }

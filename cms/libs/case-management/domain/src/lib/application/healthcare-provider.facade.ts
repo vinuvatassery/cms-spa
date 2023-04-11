@@ -78,9 +78,9 @@ export class HealthcareProviderFacade {
   }
 
   /** Public methods **/
-  removeHealthCareProviders(clientId : number,  ProviderId : string, hardDelete : boolean): void {    
+  removeHealthCareProviders(clientProviderId : string, hardDelete : boolean): void {    
     this.showLoader();
-    this.healthcareProviderDataService.removeHealthCareProvider(clientId,ProviderId,hardDelete)
+    this.healthcareProviderDataService.removeHealthCareProvider(clientProviderId,hardDelete)
     .subscribe({
       next: (removeResponse) => {        
         if(removeResponse ?? false)
@@ -96,9 +96,9 @@ export class HealthcareProviderFacade {
     });
   }
 
-  reActivateHealthCareProvider(clientId : number,  ProviderId : string): void {    
+  reActivateHealthCareProvider(clientProviderId : string): void {    
     this.showLoader();
-    this.healthcareProviderDataService.reActivateHealthCareProvider(clientId,ProviderId)
+    this.healthcareProviderDataService.reActivateHealthCareProvider(clientProviderId)
     .subscribe({
       next: (removeResponse) => {        
         if(removeResponse ?? false)
@@ -202,9 +202,9 @@ export class HealthcareProviderFacade {
   }
 
 
-  loadExistingHealthCareProvider(clientId : number,providerId :string) : void {
+  loadExistingHealthCareProvider(clientProviderId :string) : void {
     this.showLoader();
-    this.healthcareProviderDataService.loadExistingHealthCareProvider(clientId ,providerId ).subscribe({
+    this.healthcareProviderDataService.loadExistingHealthCareProvider(clientProviderId ).subscribe({
       next: (loadExistingProviderResponse) => {
         this.hideLoader();
         this.loadExistingProviderSubject.next(loadExistingProviderResponse);

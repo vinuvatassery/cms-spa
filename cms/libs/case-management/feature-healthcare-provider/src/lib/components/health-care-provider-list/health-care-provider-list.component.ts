@@ -57,17 +57,18 @@ export class HealthCareProviderListComponent implements  OnChanges {
   selectedCustomProviderName! : string
   deactivateButtonEmitted =false;
   reactivateButtonEmitted =false;
+  clientProviderId! :any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
       buttonType:"btn-h-primary",
       text: "Edit Provider",
       icon: "edit",
-      click: (providerId : string): void => {     
+      click: (clientProviderId : string): void => {     
         if(!this.editbuttonEmitted)
         {                 
         this.editbuttonEmitted= true;
-        this.onOpenProviderSearchClicked(providerId ,true);
+        this.onOpenProviderSearchClicked(clientProviderId ,true);
         }
       },
     },
@@ -76,11 +77,11 @@ export class HealthCareProviderListComponent implements  OnChanges {
       buttonType:"btn-h-danger",
       text: "Remove Provider",
       icon: "delete",
-      click: (providerId : string): void => {    
+      click: (clientProviderId : string): void => {    
         if(!this.deletebuttonEmitted)
         {         
           this.deletebuttonEmitted =true;
-        this.onRemoveClick(providerId)
+        this.onRemoveClick(clientProviderId)
         }
       },
     },
@@ -89,10 +90,10 @@ export class HealthCareProviderListComponent implements  OnChanges {
       text: 'Deactivate Provider',
       icon: 'block',
       buttonName: 'deactivate',
-      click: (providerId: string): void => {
+      click: (clientProviderId: string): void => {
         if (!this.deactivateButtonEmitted) {         
           this.deactivateButtonEmitted = true;
-          this.onDeactivateClick(providerId);
+          this.onDeactivateClick(clientProviderId);
         }
       },
     },
@@ -101,10 +102,10 @@ export class HealthCareProviderListComponent implements  OnChanges {
       text: 'Reactivate Provider',
       icon: 'done',
       buttonName: 'reactivate',
-      click: (providerId: string): void => {
+      click: (clientProviderId: string): void => {
         if (!this.reactivateButtonEmitted) {         
           this.reactivateButtonEmitted = true;
-          this.onReactivateClick(providerId);
+          this.onReactivateClick(clientProviderId);
         }
       },
     }
@@ -140,14 +141,14 @@ pageselectionchange(data: any) {
     this.isEditHealthProvider = isEditHealthProviderValue;
   }
 
-  onOpenProviderSearchClicked(providerId : string,isEdit : boolean) {
+  onOpenProviderSearchClicked(clientProviderId : string,isEdit : boolean) {
     this.selectedCustomProviderName="";
    
     this.isEditSearchHealthProvider = isEdit;
-    this.prvSelectedId = providerId;
+    this.clientProviderId = clientProviderId;
     if(isEdit === true)
     {
-    this.getExistingProviderEvent.emit(this.prvSelectedId)
+    this.getExistingProviderEvent.emit(this.clientProviderId)
     this.onExistProviderFormLoad();
     }
     else
@@ -189,30 +190,30 @@ pageselectionchange(data: any) {
     this.isOpenedReactivateConfirm = false;
   }
 
-  onRemoveClick(prvId : string)
+  onRemoveClick(clientProviderId : string)
   { 
     this.isOpenedDeleteConfirm = true;
-    this.prvSelectedId = prvId;      
+    this.clientProviderId = clientProviderId;      
   }
 
-  onDeactivateClick(prvId : string)
+  onDeactivateClick(clientProviderId : string)
   { 
     this.isOpenedDeactivateConfirm = true;
-    this.prvSelectedId = prvId;      
+    this.clientProviderId = clientProviderId;      
   }
 
-  onReactivateClick(prvId : string)
+  onReactivateClick(clientProviderId : string)
   { 
     this.isOpenedReactivateConfirm = true;
-    this.prvSelectedId = prvId;      
+    this.clientProviderId = clientProviderId;      
   }
  /** child component event methods **/
 
  /**from search component */
- handlePrvRemove(prvId : any)
+ handlePrvRemove(clientProviderId : any)
  {
   this.onCloseProviderSearchClicked()
-  this.onRemoveClick(prvId)
+  this.onRemoveClick(clientProviderId)
  }
 
       /** External event methods **/
@@ -225,7 +226,7 @@ pageselectionchange(data: any) {
       if(isDelete)
       {
         this.deletebuttonEmitted =false;
-        this.deleteConfimedEvent.emit(this.prvSelectedId);
+        this.deleteConfimedEvent.emit(this.clientProviderId);
 
         this.removeHealthProvider$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((deleteResponse: any) =>
@@ -245,7 +246,7 @@ pageselectionchange(data: any) {
       if(isDeactivate)
       {
         this.deactivateButtonEmitted =false;
-        this.deactivateConfimEvent.emit(this.prvSelectedId);
+        this.deactivateConfimEvent.emit(this.clientProviderId);
 
         this.removeHealthProvider$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((deleteResponse: any) =>
@@ -266,7 +267,7 @@ pageselectionchange(data: any) {
       if(isReactivate)
       {
         this.reactivateButtonEmitted =false;
-        this.reactivateConfimEvent.emit(this.prvSelectedId);
+        this.reactivateConfimEvent.emit(this.clientProviderId);
 
         this.healthCareProvideReactivate$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((deleteResponse: any) =>
