@@ -85,7 +85,7 @@ export class HealthcareProviderFacade {
       next: (removeResponse) => {        
         if(removeResponse ?? false)
         {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , hardDelete ? 'provider or clinic removed successfully' : 'provider or clinic deactivated successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , hardDelete ? 'Provider or Clinic removed successfully' : 'Provider or Clinic deactivated successfully')  
         
         } 
         this.healthCareProvideRemoveSubject.next(removeResponse);       
@@ -103,7 +103,7 @@ export class HealthcareProviderFacade {
       next: (removeResponse) => {        
         if(removeResponse ?? false)
         {     
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'provider or clinic re-activated successfully')  
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider or Clinic re-activated successfully')  
         
         } 
         this.healthCareProvideReactivateSubject.next(removeResponse);       
