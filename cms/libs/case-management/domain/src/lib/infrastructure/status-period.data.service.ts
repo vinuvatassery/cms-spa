@@ -58,8 +58,7 @@ export class StatusPeriodDataService {
             RecordCreatedBy: "Jan",
           },
         ],
-        
-        FlipHistory:[
+        FlipHiwebwestory:[
           {
             id: 1,
             Flp : '253%',
