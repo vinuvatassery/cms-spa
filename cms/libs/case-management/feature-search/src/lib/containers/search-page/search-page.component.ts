@@ -41,9 +41,9 @@ export class SearchPageComponent implements OnInit {
       this.searchFacade.loadCaseBySearchText(selectedValue);     
  
   }
-  onSelectChange(selectedValue:any){ 
+  onSelectChange(selectedValue:any){
     if(selectedValue !== undefined){
-      this.router.navigateByUrl(`case-management/cases/case360/${selectedValue.clientCaseId}`); 
+      this.router.navigateByUrl(`case-management/cases/case360/${selectedValue.clientId}`); 
     }
   }
 
