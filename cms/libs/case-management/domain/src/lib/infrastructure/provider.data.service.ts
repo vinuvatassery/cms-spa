@@ -26,7 +26,7 @@ export class ProviderDataService {
     historychkBoxChecked : boolean
   ) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/lab-results/${clientCaseEligibilityId}/?labResultTypeCode=${labResultTypeCode}&yearlyFilter=${historychkBoxChecked}&SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/clients/${clientId}/lab-results/${clientCaseEligibilityId}/?labResultTypeCode=${labResultTypeCode}&yearlyFilter=${historychkBoxChecked}&SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`
     );
   }
 

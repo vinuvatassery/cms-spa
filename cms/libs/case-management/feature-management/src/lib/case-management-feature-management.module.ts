@@ -11,7 +11,6 @@ import { CaseManagerDetailComponent } from './components/case-manager-detail/cas
 import { HealthCareProviderListComponent } from './components/health-care-provider-list/health-care-provider-list.component';
 import { HealthCareProviderDetailComponent } from './components/health-care-provider-detail/health-care-provider-detail.component';
 import { ReAssignCaseManagerComponent } from './components/re-assign-case-manager/re-assign-case-manager.component';
-import { Cd4CountComponent } from './components/cd4-count/cd4-count.component';
 import { UnAssignCaseManagerComponent } from './components/un-assign-case-manager/un-assign-case-manager.component';
 import { CaseManagerReferralRequestComponent } from './components/case-manager-referral-request/case-manager-referral-request.component';
 import { AssignCaseManagerComponent } from './components/assign-case-manager/assign-case-manager.component';
@@ -36,8 +35,7 @@ import { ViralLoadCD4CountComponent } from './components/viral-load-cd4-count/vi
     CaseManagerDetailComponent,
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
-    ReAssignCaseManagerComponent,
-    Cd4CountComponent,
+    ReAssignCaseManagerComponent,  
     ViralLoadCD4CountComponent,
     UnAssignCaseManagerComponent,
     CaseManagerReferralRequestComponent,
@@ -54,7 +52,6 @@ import { ViralLoadCD4CountComponent } from './components/viral-load-cd4-count/vi
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
     ReAssignCaseManagerComponent,
-    Cd4CountComponent,
     ViralLoadCD4CountComponent,
     UnAssignCaseManagerComponent,
     CaseManagerReferralRequestComponent,
