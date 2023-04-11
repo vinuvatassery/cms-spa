@@ -19,11 +19,13 @@
           (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()"
           (preferredClientPhoneEvent)="preferredClientPhoneHandle($event)"
           (deactivateClientPhoneEvent)="deactivateClientPhoneHandle($event)"
-          (removeClientPhoneEvent)="removeClientPhoneHandle($event)"></case-management-phone-list>
+          (removeClientPhoneEvent)="removeClientPhoneHandle($event)"
+          (reloadEmailsEvent)="reloadEmailsEventHandle()"></case-management-phone-list>
       </div>
 
       <div class="flex-col">
-        <case-management-email-list [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+        <case-management-email-list
+          [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
           [clientEmailsData$]="clientEmails$" [clientEmail$]="clientEmail$"
           [addClientEmailResponse$]="addClientEmailResponse$" [preferredClientEmail$]="preferredClientEmail$"
           [deactivateClientEmail$]="deactivateClientEmail$" [removeClientEmail$]="removeClientEmail$"
@@ -32,7 +34,8 @@
           (preferredClientEmailEvent)="preferredClientEmailHandle($event)"
           (deactivateClientEmailEvent)="deactivateClientEmailHandle($event)"
           (removeClientEmailEvent)="removeClientEmailHandle($event)"
-          (loadClientPaperLessStatusEvent)="loadClientPaperLessStatusHandle()"></case-management-email-list>
+          (loadClientPaperLessStatusEvent)="loadClientPaperLessStatusHandle()"
+          (reloadPhonesEvent)="reloadPhonesEventHandle()"></case-management-email-list>
       </div>
 
       <div class="flex-col">
