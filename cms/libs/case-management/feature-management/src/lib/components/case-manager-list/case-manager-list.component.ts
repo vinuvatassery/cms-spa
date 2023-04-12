@@ -27,6 +27,7 @@ export class CaseManagerListComponent implements OnInit {
   @Input() assignCaseManagerStatus$ : any
   @Input() removeCaseManager$: any
   @Input() userImage$: any
+  @Input() managementTab: any
 
   /** Public properties **/
   public formUiStyle : UIFormStyle = new UIFormStyle(); 

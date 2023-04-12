@@ -21,7 +21,32 @@
             showOn="hover">{{dataItem.caseManagerName}}</button>
           </ng-template> 
         </kendo-grid-column>     
-        <kendo-grid-column    field="phone"  title="Phone"  [width]="100" ></kendo-grid-column>  
+        <kendo-grid-column    field="pNumber"  title="PNUmber"  [width]="100" *ngIf="managementTab" ></kendo-grid-column>  
+        <kendo-grid-column    field="domainCode"  title="Domain"  [width]="100" *ngIf="managementTab" ></kendo-grid-column>  
+        <kendo-grid-column    field="assisterGroup"  title="Assister Group"  [width]="100" *ngIf="managementTab" ></kendo-grid-column>  
+        <kendo-grid-column *ngIf="managementTab" field="assignmentStartDate" title="Effective Date" [width]="100"
+        [sortable]="false">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.assignmentStartDate | date: 'MM/dd/yyyy'}} {{dataItem.assignmentEndDate ? '-' : ''}} {{dataItem.assignmentEndDate | date: 'MM/dd/yyyy'}}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column    field="city"  title="City"  [width]="100" *ngIf="managementTab" ></kendo-grid-column>  
+      <kendo-grid-column    field="county"  title="County"  [width]="100" *ngIf="managementTab" ></kendo-grid-column>  
+      <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" *ngIf="managementTab">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button *ngIf="dataItem?.creatorId" kendoButton [primary]="true" class="avatar-sm-btn c-default"
+            kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+            <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
+          </button>
+          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card [userId]="dataItem?.creatorId" [reassign]=false></common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column     title="Assigning Case Manager"  [width]="100" *ngIf="managementTab" ></kendo-grid-column>  
+        <kendo-grid-column  *ngIf="!managementTab"   field="phone"  title="Phone"  [width]="100" ></kendo-grid-column>  
         <kendo-grid-column          field="clientCaseId"          title="Options"    [width]="25" class="text-center"   [sticky]="true"  >
           <ng-template kendoGridCellTemplate let-manager let-clientCaseId="field">
             <kendo-dropdownbutton
@@ -58,7 +83,7 @@
     <div class="flex-row" 
     
     >
-      <div class="flex-col mt-1" *ngIf="showAddNewManagerButton$ | async">
+      <div class="flex-col mt-1" *ngIf="(showAddNewManagerButton$ | async) || managementTab">
         <button
           kendoButton
           [primary]="true"

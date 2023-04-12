@@ -1,15 +1,14 @@
 /** Angular **/
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ChangeDetectionStrategy, 
   Component,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { CaseManagerFacade, ClientProfileTabs, StatusFlag, ManagementFacade } from '@cms/case-management/domain';
-import { UserManagementFacade } from '@cms/system-config/domain';
-import { LabResultLovType } from '@cms/system-config/domain';
+import { CaseManagerFacade, ClientProfileTabs,  ManagementFacade } from '@cms/case-management/domain';
+import { UserManagementFacade, LabResultLovType} from '@cms/system-config/domain';
+
 /** External libraries **/
 import { filter, Subject, Subscription } from 'rxjs';
 
@@ -49,6 +48,8 @@ assignCaseManagerStatus$ = this.caseManagerFacade.assignCaseManagerStatus$;
 removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
 userImage$ = this.userManagementFacade.userImage$;
 
+showAddNewManagerButtonSubject = new Subject<boolean>();
+showAddNewManagerButton$ = this.showAddNewManagerButtonSubject.asObservable();
 /** Private properties **/
   tabChangeSubscription$ = new Subscription();
   tabIdSubject = new Subject<string>();
@@ -78,7 +79,8 @@ userImage$ = this.userManagementFacade.userImage$;
       this.labResultType = LabResultLovType.VRL_LOAD
     }
 
-    this.tabIdSubject.next(this.tabId);
+    this.tabIdSubject.next(this.tabId);    
+    
   }
   get clientProfileTabs(): typeof ClientProfileTabs {
     return ClientProfileTabs;
@@ -129,6 +131,7 @@ userImage$ = this.userManagementFacade.userImage$;
    loadCaseManagers()
    {
      this.caseManagerFacade.loadCaseManagers(this.clientCaseId);
+     this.showAddNewManagerButtonSubject.next(true)
    } 
     
  
