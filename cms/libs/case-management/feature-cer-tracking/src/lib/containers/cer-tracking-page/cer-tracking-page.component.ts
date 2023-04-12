@@ -19,6 +19,9 @@ export class CerTrackingPageComponent implements OnInit {
   cerTrackingData$ = this.cerTrackingFacade.cerTrackingList$;
   cerTrackingDates$ = this.cerTrackingFacade.cerTrackingDates$;
   cerTrackingCount$ = this.cerTrackingFacade.cerTrackingCount$;
+  sendCerCount$ = this.cerTrackingFacade.sendCerCount$;
+  reminderCerCount$ = this.cerTrackingFacade.reminderCerCount$;
+  sendCerResultCount$ = this.cerTrackingFacade.sendCerResultCount$;
 
   /** Constructor**/
   constructor(private readonly cerTrackingFacade: CerTrackingFacade) {}
@@ -56,5 +59,13 @@ export class CerTrackingPageComponent implements OnInit {
     );
 
     this.cerTrackingFacade.getCerTrackingDateCounts(gridDataRefiner.trackingDate);
+  }
+
+  loadSendCerCount(spEndDate: any){
+    this.cerTrackingFacade.loadSendCerCount(spEndDate);
+  }
+
+  sendCerCount(spEndDate: any){
+    this.cerTrackingFacade.sendCerCount(spEndDate);
   }
 }
