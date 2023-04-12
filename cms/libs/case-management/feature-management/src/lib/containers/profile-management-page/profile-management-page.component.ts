@@ -7,9 +7,9 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { CaseManagerFacade, ClientProfileTabs, StatusFlag } from '@cms/case-management/domain';
-import { LoaderService } from '@cms/shared/util-core';
+import { CaseManagerFacade, ClientProfileTabs, StatusFlag, ManagementFacade } from '@cms/case-management/domain';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { LabResultLovType } from '@cms/system-config/domain';
 /** External libraries **/
 import { filter, Subject, Subscription } from 'rxjs';
 
@@ -19,7 +19,22 @@ import { filter, Subject, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileManagementPageComponent implements OnInit, OnDestroy {
-/** Public properties **/
+ 
+  pageSizes = this.managementFacade.gridPageSizes;
+  sortValue = this.managementFacade.sortValue;
+  sortType = this.managementFacade.sortType;
+  sort = this.managementFacade.sort;
+  clientLabResults$ = this.managementFacade.clientLabResults$;
+
+       /** Constructor **/
+   constructor(
+    private caseManagerFacade: CaseManagerFacade,
+    private route: ActivatedRoute,
+    private userManagementFacade : UserManagementFacade,
+    private router : Router,
+    private managementFacade : ManagementFacade) { }
+
+  /** Public properties **/
 isVisible: any;
 isSelected = true;
 clientCaseId! : string;
@@ -41,6 +56,8 @@ userImage$ = this.userManagementFacade.userImage$;
   profileClientId!: number;
  
   tabId!: any;
+  labResultType! : string;
+ 
   ngOnInit(): void {
     this.loadQueryParams();
     this.routeChangeSubscription()
@@ -52,6 +69,15 @@ userImage$ = this.userManagementFacade.userImage$;
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
     this.tabId = this.route.snapshot.queryParams['tid'];
     this.clientCaseId = this.route.snapshot.queryParams['cid'];
+    if(this.tabId === ClientProfileTabs.MANAGEMENT_CD4)
+    {
+      this.labResultType = LabResultLovType.CD4_COUNT
+    }
+    else if(this.tabId === ClientProfileTabs.MANAGEMENT_VRL)
+    {
+      this.labResultType = LabResultLovType.VRL_LOAD
+    }
+
     this.tabIdSubject.next(this.tabId);
   }
   get clientProfileTabs(): typeof ClientProfileTabs {
@@ -65,17 +91,36 @@ userImage$ = this.userManagementFacade.userImage$;
       });
   }
 
+  loadClientLabResultsHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType ,
+      historychkBoxChecked :   gridDataRefinerValue.historychkBoxChecked
+    };
+
+    this.pageSizes = this.managementFacade.gridPageSizes;
+    this.managementFacade.loadLabResults(
+      this.labResultType,
+      this.profileClientId,
+      this.clientCaseEligibilityId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+      gridDataRefiner.historychkBoxChecked   
+    );
+  }
+
+ 
+
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
   }
 
    
-   /** Constructor **/
-   constructor(
-     private caseManagerFacade: CaseManagerFacade,
-     private route: ActivatedRoute,
-     private userManagementFacade : UserManagementFacade,
-     private router : Router) { }
+
 
  
    /** Private Methods **/

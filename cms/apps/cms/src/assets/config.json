@@ -3,6 +3,7 @@
   "version": "v0.1",
   "caseApiUrl": "https://localhost:44362/api",
   "sysConfigApiUrl": "https://localhost:44352/api",
+  "sysInterfaceApiUrl": "https://localhost:44372/api",
   "signalrHubUrl": "https://localhost:5200/notification",
   "gridSkipCount":0,
   "snackbarHideAfter":"2000",
@@ -30,6 +31,6 @@
     "autoUserInfo": false,
     "useRefreshToken": true,
     "logLevel": "",
-    "secureRoutes": ["https://localhost:44362/api","https://localhost:44352/api"]
+    "secureRoutes": ["https://localhost:44362/api","https://localhost:44352/api","https://localhost:44372/api"]
   }
 }
