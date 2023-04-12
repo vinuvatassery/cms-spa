@@ -35,4 +35,5 @@ export enum LovType {
     ColumnDroplist = 'COLUMN_DROPLIST_CODE',
     PhoneDeviceTypeCode = 'PHONE_DEVICE_TYPE_CODE',
     EligibilityStatus ='ELIGIBILITY_STATUS',
+    LabResultType ='LAB_RESULT_TYPE_CODE'
   }

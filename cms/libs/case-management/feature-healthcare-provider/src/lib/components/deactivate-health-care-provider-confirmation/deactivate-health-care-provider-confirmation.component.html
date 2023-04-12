@@ -1,0 +1,31 @@
+
+  <section class="k-dialog-body mb-2">
+    <p>
+    They will still be viewable in the client's profile. You 
+    can add a new healthcare provider at any time.
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel adding health provider"
+          (click)="onDeactivateConfirm(false)"
+        >
+          CANCEL
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="delete health provider"
+          (click)="onDeactivateConfirm(true)"
+        >
+          DEACTIVATE
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

@@ -29,7 +29,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   ddlStatus$ = this.lovFacade.eligibilityStatus$;
   showEligibilityStatusLoader = this.lovFacade.showLoaderOnEligibilityStatus$;
   ddlGroups$ =  this.caseFacade.ddlGroups$ ;
-  disableFields: Array<string>=[];
+  disableFields: Array<string>=[ 'statusEndDate','group','statusStartDate'];
   requiredFields: Array<string>=[];
   eligibilityPeriodForm!:FormGroup;
   currentEligibility!:any;
@@ -42,6 +42,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   dayOptions: Intl.DateTimeFormatOptions = {
     day: 'numeric',
   };
+ 
   
 
   /** Constructor **/
@@ -60,6 +61,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   ngOnInit(): void {
     this.loadDdlStatus();
     this.buildEligibilityPeriodForm();
+    this.disableFormFields();
     this.getCurrentEligibility();
     this.loadGroupCode();
   }
