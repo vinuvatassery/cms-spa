@@ -12,6 +12,7 @@ import { first, Subject, Subscription } from 'rxjs';
 })
 export class HealthCareProviderListComponent implements  OnChanges {
   /** Input properties **/
+  @Input() managementTab =  false;
   @Input() hasNoProvider!: boolean;
   @Input() healthCareProvidersData$! : any;
   @Input() pageSizes : any;
@@ -23,8 +24,11 @@ export class HealthCareProviderListComponent implements  OnChanges {
   @Input() addExistingProvider$: any;
   @Input() loadExistingProvider$: any;
   @Input() searchProviderLoaded$: any;
+  @Input() healthCareProvideReactivate$: any;
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
+  @Output() deactivateConfimEvent =  new EventEmitter<string>();
+  @Output() reactivateConfimEvent =  new EventEmitter<string>();
   @Output() loadProvidersListEvent = new EventEmitter<any>(); 
   @Output() searchTextEvent = new EventEmitter<string>(); 
   @Output() addExistingProviderEvent = new EventEmitter<any>(); 
@@ -39,6 +43,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
   isEditHealthProvider!: boolean;
   isOpenedProvider = false;
   isOpenedDeleteConfirm = false;
+  isOpenedDeactivateConfirm = false;
+  isOpenedReactivateConfirm = false;
   prvSelectedId! : string; 
   isEditSearchHealthProvider!: boolean;
   isOpenedProviderSearch = false;
@@ -49,17 +55,20 @@ export class HealthCareProviderListComponent implements  OnChanges {
   gridHoverDataItem! : any
   existingProviderData! : any
   selectedCustomProviderName! : string
+  deactivateButtonEmitted =false;
+  reactivateButtonEmitted =false;
+  clientProviderId! :any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
       buttonType:"btn-h-primary",
       text: "Edit Provider",
       icon: "edit",
-      click: (providerId : string): void => {     
+      click: (clientProviderId : string): void => {     
         if(!this.editbuttonEmitted)
         {                 
         this.editbuttonEmitted= true;
-        this.onOpenProviderSearchClicked(providerId ,true);
+        this.onOpenProviderSearchClicked(clientProviderId ,true);
         }
       },
     },
@@ -68,14 +77,38 @@ export class HealthCareProviderListComponent implements  OnChanges {
       buttonType:"btn-h-danger",
       text: "Remove Provider",
       icon: "delete",
-      click: (providerId : string): void => {    
+      click: (clientProviderId : string): void => {    
         if(!this.deletebuttonEmitted)
         {         
           this.deletebuttonEmitted =true;
-        this.onRemoveClick(providerId)
+        this.onRemoveClick(clientProviderId)
         }
       },
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Deactivate Provider',
+      icon: 'block',
+      buttonName: 'deactivate',
+      click: (clientProviderId: string): void => {
+        if (!this.deactivateButtonEmitted) {         
+          this.deactivateButtonEmitted = true;
+          this.onDeactivateClick(clientProviderId);
+        }
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Reactivate Provider',
+      icon: 'done',
+      buttonName: 'reactivate',
+      click: (clientProviderId: string): void => {
+        if (!this.reactivateButtonEmitted) {         
+          this.reactivateButtonEmitted = true;
+          this.onReactivateClick(clientProviderId);
+        }
+      },
+    }
   ];
 
   
@@ -108,14 +141,14 @@ pageselectionchange(data: any) {
     this.isEditHealthProvider = isEditHealthProviderValue;
   }
 
-  onOpenProviderSearchClicked(providerId : string,isEdit : boolean) {
+  onOpenProviderSearchClicked(clientProviderId : string,isEdit : boolean) {
     this.selectedCustomProviderName="";
    
     this.isEditSearchHealthProvider = isEdit;
-    this.prvSelectedId = providerId;
+    this.clientProviderId = clientProviderId;
     if(isEdit === true)
     {
-    this.getExistingProviderEvent.emit(this.prvSelectedId)
+    this.getExistingProviderEvent.emit(this.clientProviderId)
     this.onExistProviderFormLoad();
     }
     else
@@ -145,18 +178,42 @@ pageselectionchange(data: any) {
     this.isOpenedDeleteConfirm = false;
   }
 
-  onRemoveClick(prvId : string)
+  onDeactConfirmCloseClicked()
+  {
+    this.deletebuttonEmitted =false;
+    this.isOpenedDeactivateConfirm = false;
+  }
+
+  onReactConfirmCloseClicked()
+  {
+    this.deletebuttonEmitted =false;
+    this.isOpenedReactivateConfirm = false;
+  }
+
+  onRemoveClick(clientProviderId : string)
   { 
     this.isOpenedDeleteConfirm = true;
-    this.prvSelectedId = prvId;      
+    this.clientProviderId = clientProviderId;      
+  }
+
+  onDeactivateClick(clientProviderId : string)
+  { 
+    this.isOpenedDeactivateConfirm = true;
+    this.clientProviderId = clientProviderId;      
+  }
+
+  onReactivateClick(clientProviderId : string)
+  { 
+    this.isOpenedReactivateConfirm = true;
+    this.clientProviderId = clientProviderId;      
   }
  /** child component event methods **/
 
  /**from search component */
- handlePrvRemove(prvId : any)
+ handlePrvRemove(clientProviderId : any)
  {
   this.onCloseProviderSearchClicked()
-  this.onRemoveClick(prvId)
+  this.onRemoveClick(clientProviderId)
  }
 
       /** External event methods **/
@@ -164,12 +221,12 @@ pageselectionchange(data: any) {
     this.onDeleteConfirmCloseClicked()
   }
 
-  handleAcceptPrvRemove(isDelete :boolean)
+  handleAcceptProviderRemove(isDelete :boolean)
    {  
       if(isDelete)
       {
         this.deletebuttonEmitted =false;
-        this.deleteConfimedEvent.emit(this.prvSelectedId);
+        this.deleteConfimedEvent.emit(this.clientProviderId);
 
         this.removeHealthProvider$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((deleteResponse: any) =>
@@ -182,6 +239,47 @@ pageselectionchange(data: any) {
         })
       }      
       this.onDeleteConfirmCloseClicked()        
+   }
+
+   handleAcceptProviderDeact(isDeactivate:any)
+   {  
+      if(isDeactivate)
+      {
+        this.deactivateButtonEmitted =false;
+        this.deactivateConfimEvent.emit(this.clientProviderId);
+
+        this.removeHealthProvider$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((deleteResponse: any) =>
+        {  
+          if(deleteResponse ?? false)
+          {
+            this.loadHealthCareProvidersList()
+          }
+          
+        })
+      }      
+      this.onDeactConfirmCloseClicked()        
+   }
+
+   
+   handleAcceptPrvReact(isReactivate:any)
+   {  
+      if(isReactivate)
+      {
+        this.reactivateButtonEmitted =false;
+        this.reactivateConfimEvent.emit(this.clientProviderId);
+
+        this.healthCareProvideReactivate$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((deleteResponse: any) =>
+        {  
+          if(deleteResponse ?? false)
+          {
+            this.loadHealthCareProvidersList()
+          }
+          
+        })
+      }      
+      this.onReactConfirmCloseClicked()        
    }
      /** grid event methods **/
  

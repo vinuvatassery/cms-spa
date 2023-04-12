@@ -84,7 +84,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
    private loadProviderStatus() : void 
    {    
-        this.healthProvider.loadProviderStatusStatus(this.clientId);
+        this.healthProvider.loadProviderStatus(this.clientId);
         this.checkBoxSubscription= 
         this.healthCareProvideGetFlag$.pipe(
           filter(x=> typeof x === 'boolean')
@@ -119,8 +119,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-  private removeHealthCareProvider(ProviderId : string){
-     this.healthProvider.removeHealthCareProviders(this.clientId, ProviderId);      
+  private removeHealthCareProvider(clientProviderId : string){
+     this.healthProvider.removeHealthCareProviders(clientProviderId, true);      
   }
 
   /** Private Methods **/
@@ -199,9 +199,9 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   }
 
 /** events from child components**/
-   handlePrvRemove(prvSelectedId : string)
+   handlePrvRemove(clientProviderId : string)
    {        
-      this.removeHealthCareProvider(prvSelectedId);                  
+      this.removeHealthCareProvider(clientProviderId);                  
    }
 
    searchTextEventHandleer(text : string)
@@ -216,11 +216,11 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
       
    }
   
-   getExistingProviderEventHandler(prvSelectedId : string)
+   getExistingProviderEventHandler(clientProviderId : string)
    {        
-    if(prvSelectedId)
+    if(clientProviderId)
     {
-    this.healthProvider.loadExistingHealthCareProvider(this.clientId,prvSelectedId)
+    this.healthProvider.loadExistingHealthCareProvider(clientProviderId)
     }
    }
 

@@ -22,6 +22,6 @@ export class HealthCareProviderDetailComponent implements OnInit {
 
   /** Private methods **/
   private loadDdlStates() {
-    this.providerFacade.loadDdlStates();
+    //this.providerFacade.loadDdlStates();
   }
 }

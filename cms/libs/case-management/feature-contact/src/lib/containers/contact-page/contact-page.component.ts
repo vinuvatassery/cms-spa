@@ -236,6 +236,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     completedDataPoints.push({ dataPointName: 'homeAddress_city', status: homeAddressGroup?.controls['city']?.value ? StatusFlag.Yes : StatusFlag.No });
     completedDataPoints.push({ dataPointName: 'homeAddress_state', status: homeAddressGroup?.controls['state']?.value ? StatusFlag.Yes : StatusFlag.No });
     completedDataPoints.push({ dataPointName: 'homeAddress_zip', status: homeAddressGroup?.controls['zip']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_county', status: homeAddressGroup?.controls['county']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_housingStabilityCode', status: homeAddressGroup?.controls['housingStabilityCode']?.value ? StatusFlag.Yes : StatusFlag.No });
   }
 
   private getFieldChanges(completedDataPoints: CompletionChecklist[], groupKey: string, prev: any, curr: any){
@@ -767,10 +769,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
     const homePhone: ClientPhone = {
       deviceTypeCode: deviceTypeCode.HomePhone,
-      applicableFlag: this.getFlag(homePhoneGroup.controls['applicableFlag']?.value),
+      applicableFlag: this.getFlag(!(homePhoneGroup.controls['applicableFlag']?.value ?? false)),
     }
 
-    if (homePhone.applicableFlag !== StatusFlag.Yes) {
+    if (homePhone.applicableFlag !== StatusFlag.No) {
       homePhone.phoneNbr = homePhoneGroup.controls['phoneNbr']?.value;
       homePhone.detailMsgConsentFlag = this.getFlag(homePhoneGroup.controls['detailMsgConsentFlag']?.value);
       homePhone.smsTextConsentFlag = this.getFlag(homePhoneGroup.controls['smsTextConsentFlag']?.value);
@@ -779,10 +781,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
     const cellPhone: ClientPhone = {
       deviceTypeCode: deviceTypeCode.CellPhone,
-      applicableFlag: this.getFlag(cellPhoneGroup.controls['applicableFlag']?.value),
+      applicableFlag: this.getFlag(!(cellPhoneGroup.controls['applicableFlag']?.value ?? false)),
     }
 
-    if (cellPhone.applicableFlag !== StatusFlag.Yes) {
+    if (cellPhone.applicableFlag !== StatusFlag.No) {
       cellPhone.phoneNbr = cellPhoneGroup.controls['phoneNbr']?.value;
       cellPhone.detailMsgConsentFlag = this.getFlag(cellPhoneGroup.controls['detailMsgConsentFlag']?.value);
       cellPhone.smsTextConsentFlag = this.getFlag(cellPhoneGroup.controls['smsTextConsentFlag']?.value);
@@ -791,10 +793,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
     const workPhone: ClientPhone = {
       deviceTypeCode: deviceTypeCode.WorkPhone,
-      applicableFlag: this.getFlag(workPhoneGroup.controls['applicableFlag']?.value),
+      applicableFlag: this.getFlag(!(workPhoneGroup.controls['applicableFlag']?.value ?? false)),
     }
 
-    if (workPhone.applicableFlag !== StatusFlag.Yes) {
+    if (workPhone.applicableFlag !== StatusFlag.No) {
       workPhone.phoneNbr = workPhoneGroup.controls['phoneNbr']?.value;
       workPhone.detailMsgConsentFlag = this.getFlag(workPhoneGroup.controls['detailMsgConsentFlag']?.value);
       workPhone.smsTextConsentFlag = this.getFlag(workPhoneGroup.controls['smsTextConsentFlag']?.value);
@@ -803,10 +805,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
     const otherPhone: ClientPhone = {
       deviceTypeCode: deviceTypeCode.OtherPhone,
-      applicableFlag: this.getFlag(otherPhoneGroup.controls['applicableFlag']?.value),
+      applicableFlag: this.getFlag(!(otherPhoneGroup.controls['applicableFlag']?.value ?? false)),
     }
 
-    if (otherPhone.applicableFlag !== StatusFlag.Yes) {
+    if (otherPhone.applicableFlag !== StatusFlag.No) {
       otherPhone.phoneNbr = otherPhoneGroup.controls['phoneNbr']?.value;
       otherPhone.detailMsgConsentFlag = this.getFlag(otherPhoneGroup.controls['detailMsgConsentFlag']?.value);
       otherPhone.smsTextConsentFlag = this.getFlag(otherPhoneGroup.controls['smsTextConsentFlag']?.value);
@@ -815,10 +817,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const emailGroup = this.contactInfoForm.get('email') as FormGroup;
     const email: ClientEmail = {
-      applicableFlag: this.getFlag(emailGroup.controls['applicableFlag']?.value),
+      applicableFlag: this.getFlag(!(emailGroup.controls['applicableFlag']?.value ?? false)),
     }
 
-    if (email.applicableFlag !== StatusFlag.Yes) {
+    if (email.applicableFlag !== StatusFlag.No) {
       email.email = emailGroup.controls['email']?.value;
       email.detailMsgFlag = this.getFlag(emailGroup.controls['detailMsgFlag']?.value);
     }
@@ -1060,21 +1062,21 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const otherPhone = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
     if (homePhone) {
       this.contactInfoForm.get('homePhone.phoneNbr')?.patchValue(homePhone?.phoneNbr);
-      this.contactInfoForm?.get('homePhone.applicableFlag')?.patchValue(homePhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('homePhone.applicableFlag')?.patchValue(homePhone?.applicableFlag === StatusFlag.No);
       this.contactInfoForm?.get('homePhone.detailMsgConsentFlag')?.patchValue(homePhone?.detailMsgConsentFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('homePhone.smsTextConsentFlag')?.patchValue(homePhone?.smsTextConsentFlag === StatusFlag.Yes);
     }
 
     if (cellPhone) {
       this.contactInfoForm.get('cellPhone.phoneNbr')?.patchValue(cellPhone?.phoneNbr);
-      this.contactInfoForm?.get('cellPhone.applicableFlag')?.patchValue(cellPhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('cellPhone.applicableFlag')?.patchValue(cellPhone?.applicableFlag === StatusFlag.No);
       this.contactInfoForm?.get('cellPhone.detailMsgConsentFlag')?.patchValue(cellPhone?.detailMsgConsentFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('cellPhone.smsTextConsentFlag')?.patchValue(cellPhone?.smsTextConsentFlag === StatusFlag.Yes);
     }
 
     if (workPhone) {
       this.contactInfoForm.get('workPhone.phoneNbr')?.patchValue(workPhone?.phoneNbr);
-      this.contactInfoForm?.get('workPhone.applicableFlag')?.patchValue(workPhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('workPhone.applicableFlag')?.patchValue(workPhone?.applicableFlag === StatusFlag.No);
       this.contactInfoForm?.get('workPhone.detailMsgConsentFlag')?.patchValue(workPhone?.detailMsgConsentFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('workPhone.smsTextConsentFlag')?.patchValue(workPhone?.smsTextConsentFlag === StatusFlag.Yes);
     }
@@ -1085,14 +1087,14 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (otherPhone?.phoneNbr) {
         this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
       }
-      this.contactInfoForm?.get('otherPhone.applicableFlag')?.patchValue(otherPhone?.applicableFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('otherPhone.applicableFlag')?.patchValue(otherPhone?.applicableFlag === StatusFlag.No);
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.patchValue(otherPhone?.detailMsgConsentFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.patchValue(otherPhone?.smsTextConsentFlag === StatusFlag.Yes);
     }
 
 
     this.contactInfoForm.get('email.email')?.patchValue(this.contactInfo?.email?.email);
-    this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.Yes);
+    this.contactInfoForm?.get('email.applicableFlag')?.patchValue(this.contactInfo?.email?.applicableFlag === StatusFlag.No);
     this.contactInfoForm?.get('email.detailMsgFlag')?.patchValue(this.contactInfo?.email?.detailMsgFlag === StatusFlag.Yes);
     this.contactInfoForm?.get('email.paperlessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes);
     this.setPreferredContact(this.contactInfoForm.get('email.preferredContactMethod'),
