@@ -171,20 +171,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   public dataStateChange(stateData: any): void {
     if(stateData.filter?.filters.length > 0)
     {
-      // let stateFilter = stateData.filter?.filters[0];
-      // this.columnName = stateFilter.field;
-      // if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate')
-      // {
-      //   let date = this.intl.formatDate(stateFilter.value, this.dateFormat);
-      //   this.filter = date;
-      // }
-      // else
-      // {
-      //   this.filter = stateFilter.value;
-      // }
-      // this.filteredBy = this.columns[this.columnName];
-      // this.isFiltered = true;
-      this.filter=JSON.stringify(stateData.filter) ;
+      this.filter=JSON.stringify(stateData.filter);
     }
     else
     {

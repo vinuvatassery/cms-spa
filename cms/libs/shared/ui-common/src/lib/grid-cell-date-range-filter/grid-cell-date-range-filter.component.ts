@@ -1,84 +1,126 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import {
   BaseFilterCellComponent,
   FilterService,
+  PopupCloseEvent,
+  SinglePopupService,
 } from "@progress/kendo-angular-grid";
 import { CompositeFilterDescriptor, FilterDescriptor } from "@progress/kendo-data-query";
+import { PopupSettings } from "@progress/kendo-angular-dateinputs";
+import { addDays } from "@progress/kendo-date-math";
+import { Subscription } from "rxjs";
 
+const closest = (
+  node: HTMLElement,
+  predicate: (node: HTMLElement) => boolean
+): HTMLElement => {
+  while (node && !predicate(node)) {
+    node = node.parentNode as HTMLElement;
+  }
+
+  return node;
+};
 @Component({
   selector: 'common-grid-cell-date-range-filter',
   templateUrl: './grid-cell-date-range-filter.component.html',
   styleUrls: ['./grid-cell-date-range-filter.component.scss'],
 })
 
-export class GridCellDateRangeFilterComponent extends BaseFilterCellComponent {
+export class GridCellDateRangeFilterComponent implements OnInit, OnDestroy {
 
-  //@Input() public filter: CompositeFilterDescriptor;
+  @Input() public filter!: CompositeFilterDescriptor;
+  @Input() public filterService!: FilterService;
+  @Input() public field!: string;
 
-  @Input()
-  public field!: string;
+  public start!: Date;
+  public end!: Date;
 
-  constructor(filterService: FilterService) {
-    super(filterService);
-    //this.filter={logic:'and',filters:[]};
-  }
-  //public start:any;
-
-  public get start(): Date {
-    const first = this.findByOperator("gte");
-
-    return (first || <FilterDescriptor>{}).value;
+  public get min(): any {
+    return this.start ? addDays(this.start, 1) : null;
   }
 
-  public get end(): Date {
-    const end = this.findByOperator("lte");
-    return (end || <FilterDescriptor>{}).value;
+  public get max(): any {
+    return this.end ? addDays(this.end, -1) : null;
   }
 
-  public get hasFilter(): boolean {
-    return this.filtersByField(this.field).length > 0;
+  public popupSettings: PopupSettings = {
+    popupClass: "date-range-filter",
+  };
+
+  private popupSubscription: Subscription;
+
+  constructor(
+    private element: ElementRef,
+    private popupService: SinglePopupService
+  ) {
+    // Handle the service onClose event and prevent the menu from closing when the datepickers are still active.
+    this.popupSubscription = popupService.onClose.subscribe(
+      (e: PopupCloseEvent) => {
+        if (
+          document.activeElement &&
+          closest(
+            document.activeElement as HTMLElement,
+            (node) =>
+              node === this.element.nativeElement ||
+              String(node.className).indexOf("date-range-filter") >= 0
+          )
+        ) {
+          e.preventDefault();
+        }
+      }
+    );
   }
 
-  public clearFilter(): void {
-    this.filterService.filter(this.removeFilter(this.field));
+  public ngOnInit(): void {
+    this.start = this.findValue("gte");
+    this.end = this.findValue("lte");
   }
 
-  public filterRange(start: Date, end: Date): void {
-   // this.filter = this.removeFilter(this.field);
+  public ngOnDestroy(): void {
+    this.popupSubscription.unsubscribe();
+  }
 
+  public onStartChange(value: Date): void {
+    this.filterRange(value, this.end);
+  }
+
+  public onEndChange(value: Date): void {
+    this.filterRange(this.start, value);
+  }
+
+  private findValue(operator:any) {
+    const filter = this.filter.filters.filter(
+      (x) =>
+        (x as FilterDescriptor).field === this.field &&
+        (x as FilterDescriptor).operator === operator
+    )[0];
+    return filter ? (filter as FilterDescriptor).value : null;
+  }
+
+  private filterRange(start:any, end:any) {
     const filters = [];
 
-    if (start) {
+    if (start && (!end || start < end)) {
       filters.push({
         field: this.field,
         operator: "gte",
         value: start,
       });
+      this.start = start;
     }
 
-    if (end) {
+    if (end && (!start || start < end)) {
       filters.push({
         field: this.field,
         operator: "lte",
         value: end,
       });
+      this.end = end;
     }
 
-    const root = this.filter || {
+    this.filterService.filter({
       logic: "and",
-      filters: [],
-    };
-
-    if (filters.length) {
-      root.filters.push(...filters);
-    }
-
-    //this.filterService.filter(root);
-  }
-
-  private findByOperator(op: string): FilterDescriptor {
-    return this.filtersByField(this.field).filter(
-      ({ operator }) => operator === op
-    )[0];
+      filters: filters,
+    });
   }
 }

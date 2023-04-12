@@ -95,36 +95,26 @@
    </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="160"
-      [format]="{ date: 'MM-dd-yyyy' }" filter="date">
-
+      [format]="{ date: 'MM-dd-yyyy' }" filter="date" >
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <common-grid-cell-date-range-filter
-            class="date-range-filter"
-            
-            field="eilgibilityStartDate"
-          >
-          </common-grid-cell-date-range-filter>
-        
-        <!-- <kendo-grid-date-filter-menu
-            [column]="column"
+            [field]="'eilgibilityStartDate'"
             [filter]="filter"
             [filterService]="filterService"
-            operator="eq" >
-                <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        </kendo-grid-date-filter-menu> -->
+          >
+          </common-grid-cell-date-range-filter>
     </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-date-filter-menu
-            [column]="column"
-            [filter]="filter"
-            [filterService]="filterService"
-            operator="eq" >
-                <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        </kendo-grid-date-filter-menu>
-    </ng-template>
+        <common-grid-cell-date-range-filter
+          [field]="'eligibilityEndDate'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+  </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="email" title="Email" [width]="120">
     </kendo-grid-column>
