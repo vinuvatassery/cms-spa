@@ -1,0 +1,31 @@
+
+  <section class="k-dialog-body mb-2">
+    <p>
+   They wiill be added to the client's profile as a new record and will not
+   affect the existing record for this provider.
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel adding health provider"
+          (click)="onReactivateConfirm(false)"
+        >
+        CANCEL
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="delete health provider"
+          (click)="onReactivateConfirm(true)"
+        >
+          ACTIVATE
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

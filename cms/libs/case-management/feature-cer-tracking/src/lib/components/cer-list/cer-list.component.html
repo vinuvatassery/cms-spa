@@ -25,8 +25,10 @@
   <!-- Bulk dropdown -->
   <kendo-dropdownbutton [data]="bulkActions" icon="expand_more" class="TableActionPopup app-dropdown-action" *ngIf="(cerActionButtonType$ | async) === 'BULK'"
     buttonClass="k-flat-button" aria-label="more actions"
-    [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-    Bulk
+    [popupSettings]="{ popupClass: popupClassAction, animate: true }" hidden>
+    Bulk  <span class="material-icons">
+      arrow_drop_down
+      </span>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
         aria-hidden="false" (click)="dataItem.click">
