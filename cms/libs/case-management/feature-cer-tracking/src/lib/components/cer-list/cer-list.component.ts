@@ -7,11 +7,13 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Subject, first } from 'rxjs';
+import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -61,6 +63,8 @@ export class CerListComponent implements OnInit, OnChanges {
     },
   ];
 
+  constructor(private cdr:ChangeDetectorRef){
+  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -164,5 +168,9 @@ export class CerListComponent implements OnInit, OnChanges {
         this.dateDropdownDisabled = false
       }
     });
+  }
+
+  public columnChange(e: ColumnVisibilityChangeEvent) {
+    this.cdr.detectChanges()
   }
 }
