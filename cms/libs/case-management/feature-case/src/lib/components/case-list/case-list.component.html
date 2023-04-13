@@ -137,8 +137,6 @@
           {{ dataItem.ssn | ssn }}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120" [hidden]="true">
-    </kendo-grid-column>
     <kendo-grid-column *ngIf="selectedTab === 1 || selectedTab === 2" field="assignedCw" title="Assigned to" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
