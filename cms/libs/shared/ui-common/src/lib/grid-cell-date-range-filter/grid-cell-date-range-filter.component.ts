@@ -53,7 +53,6 @@ export class GridCellDateRangeFilterComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private popupService: SinglePopupService
   ) {
-    // Handle the service onClose event and prevent the menu from closing when the datepickers are still active.
     this.popupSubscription = popupService.onClose.subscribe(
       (e: PopupCloseEvent) => {
         if (
