@@ -59,11 +59,12 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.buildEligibilityPeriodForm();
     this.disableFormFields();
     this.getCurrentEligibility();
     this.loadLovs();
+   
   }
 
   /** Public methods **/
@@ -353,6 +354,9 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
 
   private disableFormFields() {
+    if(this.isEdit){
+      this.disableFields =[];
+    }
     this.disableFields.forEach((key: string) => {
       this.eligibilityPeriodForm.controls[key].disable();
     });
