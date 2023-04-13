@@ -76,7 +76,16 @@ public state!: State;
     CN:"clientFullName",
     IPI:"insurancePolicyId",
     NOOI:"officialIdFullName",
-    CI:"clientId"
+    CI:"clientId",
+    DOB: "dateOfBirth",
+    AT: "assignedCw",
+    GE: "genders",
+    EED: "eligibilityEndDate",
+    ESD: "eilgibilityStartDate",
+    GR: "group",
+    ST: "caseStatus",
+    PN: "pronouns"
+
   }
   columnName!: any;
 
@@ -239,7 +248,15 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   onChange(event :any)
   {
+    debugger;
     this.columnName = this.columnDroplist[this.selectedColumn];
+    // if (this.columnName === 'dateOfBirth')
+    // {
+    //   let newDate = new Date (event);
+    //   console.log(newDate);
+    //   let date = this.intl.formatDate(newDate, this.dateFormat);
+    //   console.log(date);
+    // }
     this.filter = event;
     this.loadProfileCasesList();
   }
