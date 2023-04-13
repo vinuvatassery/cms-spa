@@ -128,11 +128,17 @@ public state!: State;
     });
   }
   ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort
-      };
+    this.state= JSON.parse(localStorage.getItem('gridState' ) || '{}');
+      if (Object.keys(this.state).length === 0) {
+        this.state = {
+          skip: 0,
+          take: this.pageSizes[0]?.value,
+          sort: this.sort,
+          filter:{logic:'and',filters:[]}
+          };
+      }
+   
+    
       this.sortColumn = this.columns[this.sort[0]?.field];
       this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
       this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
@@ -174,6 +180,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.loadProfileCasesList()
   }
   public dataStateChange(stateData: any): void {
+    this.state=stateData;
+    localStorage.setItem('gridState',JSON.stringify(this.state) );
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -258,6 +266,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.searchValue = "";
     this.isFiltered = false;
     this.columnsReordered = false;
+    localStorage.setItem('gridState',JSON.stringify(this.state) );
     this.loadProfileCasesList();
   }
   onColumnReorder(event:any)
