@@ -23,10 +23,12 @@
   </button>
 
   <!-- Bulk dropdown -->
-  <kendo-dropdownbutton [data]="actions" icon="expand_more" class="TableActionPopup app-dropdown-action"
+  <kendo-dropdownbutton [data]="actions"  class="TableActionPopup app-dropdown-action bulk-dropdown"
     buttonClass="k-flat-button" aria-label="more actions"
-    [popupSettings]="{ popupClass: popupClassAction, animate: true }" hidden>
-    Bulk
+    [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+    Bulk  <span class="material-icons">
+      arrow_drop_down
+      </span>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
         aria-hidden="false" (click)="dataItem.click">
