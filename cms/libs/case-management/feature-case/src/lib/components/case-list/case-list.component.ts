@@ -239,6 +239,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   onChange(event :any)
   {
+    this.state.skip = 0;
+    this.state.take = this.pageSizes[0]?.value;
     this.columnName = this.columnDroplist[this.selectedColumn];
     this.filter = event;
     this.loadProfileCasesList();
