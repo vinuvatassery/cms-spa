@@ -91,7 +91,8 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         this.acceptedApplication.assignedCwUserId = null;
         this.acceptedApplication.eligibilityStatusCode = this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
         this.acceptedApplication.caseStatusCode = this.currentEligibility.caseStatusCode;
-        this.acceptedApplication.reasonCode = this.eligibilityPeriodForm.controls['reasonCode'].value
+        this.acceptedApplication.reasonCode = this.eligibilityPeriodForm.controls['reasonCode'].value;
+        this.acceptedApplication.otherReasonDesc = this.eligibilityPeriodForm.controls['otherReasonDesc'].value
         this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
           next: (response) => {
             this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
