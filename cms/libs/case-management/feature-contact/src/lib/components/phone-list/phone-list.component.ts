@@ -161,10 +161,10 @@ export class PhoneListComponent implements OnChanges {
 
   /** grid event methods **/
 
-  public dataStateChange(stateData: any): void {
+  public dataStateChange(stateData: any): void {    
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortValue = stateData?.sort[0]?.field ?? 'deviceTypeCode';
+    this.sortType = stateData?.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.loadClientPhonesList();
   }

@@ -27,7 +27,7 @@
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column field="PhoneNbr" title="Type" [width]="80">
+        <kendo-grid-column field="deviceTypeCode" title="Type"  [sortable]="true"  [width]="80">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
               <span class="preferred-phoneNo" title="Preferred Contact" *ngIf="dataItem.preferredFlag==='Y'">
