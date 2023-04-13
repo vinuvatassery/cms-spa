@@ -123,7 +123,7 @@ public state!: State;
         data.forEach((item: any) => {
           item.lovDesc = item.lovDesc.toUpperCase();
         });
-        this.caseStatusTypes=data;
+        this.caseStatusTypes=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
       }
     });
   }
