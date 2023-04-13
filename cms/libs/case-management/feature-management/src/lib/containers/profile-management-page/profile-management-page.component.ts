@@ -47,9 +47,9 @@ selectedCaseManagerDetails$= this.caseManagerFacade.selectedCaseManagerDetails$;
 assignCaseManagerStatus$ = this.caseManagerFacade.assignCaseManagerStatus$;
 removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
 userImage$ = this.userManagementFacade.userImage$;
+showAddNewManagerButton$ = this.caseManagerFacade.showAddNewManagerButton$;
+historychkBoxChecked = false
 
-showAddNewManagerButtonSubject = new Subject<boolean>();
-showAddNewManagerButton$ = this.showAddNewManagerButtonSubject.asObservable();
 /** Private properties **/
   tabChangeSubscription$ = new Subscription();
   tabIdSubject = new Subject<string>();
@@ -119,25 +119,45 @@ showAddNewManagerButton$ = this.showAddNewManagerButtonSubject.asObservable();
 
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
-  }
-
-   
-
-
+  } 
  
    /** Private Methods **/
- 
+   onHistoryChkBoxChanged() {    
+    this.historychkBoxChecked = !this.historychkBoxChecked;
+    this.caseManagerFacade.loadCaseManagers(
+      this.clientCaseId,
+       0,
+      5,
+      this.sortValue,
+      this.sortType,
+      this.historychkBoxChecked
+    );
+  }
 
-   loadCaseManagers()
-   {
-     this.caseManagerFacade.loadCaseManagers(this.clientCaseId);
-     this.showAddNewManagerButtonSubject.next(true)
-   } 
+   loadCaseManagers(gridDataRefinerValue: any): void {   
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+
+    this.pageSizes = this.caseManagerFacade.gridPageSizes;
+    this.caseManagerFacade.loadCaseManagers(
+      this.clientCaseId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+      this.historychkBoxChecked
+    );   
+  }
+ 
     
  
-  removecaseManagerHandler(deleteCaseManagerCaseId : string)
+  removecaseManagerHandler(data : any)
    {    
-     this.caseManagerFacade.removeCaseManager(deleteCaseManagerCaseId)
+     this.caseManagerFacade.removeCaseManager(this.clientCaseId, data?.endDate, data?.assignedcaseManagerId)
    }
  
    searchTextEventHandler(text : string)
