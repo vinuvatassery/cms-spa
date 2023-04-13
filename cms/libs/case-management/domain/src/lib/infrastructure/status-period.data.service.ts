@@ -2,11 +2,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class StatusPeriodDataService {
+
+  private baseUrl = "/case-management";
+
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
   loadStatusPeriod() {
@@ -151,5 +156,19 @@ export class StatusPeriodDataService {
         ],
       },
     ]);
+  }
+
+  loadStatusGroupHistory(eligibilityId: string) {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${eligibilityId}/group-history`
+    );
+  }
+
+  loadStatusFplHistory(eligibilityId: string) {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${eligibilityId}/fpl-history`
+    );
   }
 }

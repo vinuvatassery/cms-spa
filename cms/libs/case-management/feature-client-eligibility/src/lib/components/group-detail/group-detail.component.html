@@ -1,7 +1,10 @@
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
+    <p class="text-muted mb-2" *ngIf="!showDeleteOption">
       Changing the group may affect the client’s benefits. Select a future start
       date to schedule the change.
+    </p>
+    <p  class="text-muted mb-2" *ngIf="showDeleteOption">
+      The new Group scheduled for the start date below. You may edit or delete this change.
     </p>
     <div class="flex-row" [formGroup]="groupForm" *ngIf="currentGroup$ | async">
       <div class="flex-col">

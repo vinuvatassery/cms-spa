@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { StatusPeriodFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { RowArgs } from '@progress/kendo-angular-grid';
 import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-status-period',
@@ -59,8 +60,17 @@ export class StatusPeriodComponent implements OnInit {
   /** Private methods **/
   private loadStatusPeriod() {
     this.statusPeriodFacade.loadStatusPeriod();
- 
   }
+
+  onExpand(event: any) {
+    console.log(event);
+  }
+
+  onGroupChangeCancelClicked(event: any) {
+    
+  }
+
+  onGroupChangeUpdateClicked(event: any) {}
 
 
 }

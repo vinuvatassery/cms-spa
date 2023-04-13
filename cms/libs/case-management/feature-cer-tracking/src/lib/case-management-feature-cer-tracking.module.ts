@@ -17,6 +17,8 @@ import { CerCountsComponent } from './components/cer-counts/cer-counts.component
 import { StatusPeriodComponent } from './components/status-period/status-period.component';
 import { ProfileCerTrackingPageComponent } from './containers/profile-cer-tracking-page/profile-cer-tracking-page.component';
 import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
+import { StatusGroupHistoryComponent } from './components/status-group-history/status-group-history.component';
+import { StatusFplHistoryComponent } from './components/status-fpl-history/status-fpl-history.component';
 
 @NgModule({
   imports: [
@@ -36,7 +38,9 @@ import { AppHistoryListComponent } from './components/application-history/applic
     CerCountsComponent,
     StatusPeriodComponent,
     ProfileCerTrackingPageComponent,
-    AppHistoryListComponent
+    AppHistoryListComponent,
+    StatusGroupHistoryComponent,
+    StatusFplHistoryComponent,
   ],
   exports: [
     CerTrackingPageComponent,
@@ -47,7 +51,7 @@ import { AppHistoryListComponent } from './components/application-history/applic
     CerCountsComponent,
     StatusPeriodComponent,
     ProfileCerTrackingPageComponent,
-    AppHistoryListComponent
+    AppHistoryListComponent,
   ],
 })
 export class CaseManagementFeatureCerTrackingModule {}

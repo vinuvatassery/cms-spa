@@ -3,7 +3,8 @@
 
         <div class="app-c-table">
 
-            <kendo-grid [pageSize]="5" [pageable]="true" [data]="StatusPeriod$ | async">
+            <kendo-grid [pageSize]="5" [pageable]="true" [data]="StatusPeriod$ | async"
+             (detailExpand)="onExpand($event)">
                 <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
                     <section *ngIf="dataItem.RamseelInfo">
                         <div class="flex-col flex-col-6 mt-2 p-0">
@@ -34,88 +35,11 @@
                         </div>
 
                     </section>
-                    <div *ngIf="dataItem.GroupHistory" class="mt-5">
-                        <h4>Group History</h4>
-
-                        <table>
-                            <caption hidden> Group History</caption>
-                            <tr>
-                                <th>Group</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Actual Days in Group</th>
-                                <th>Date Record Created</th>
-                                <th>Record Created By</th>
-                            </tr>
-                            <tbody>
-                                <tr *ngFor="let GroupHistory of dataItem.GroupHistory">
-                                    <td> {{GroupHistory.groupCodeDesc}}</td>
-                                    <td>
-                                        <a *ngIf="GroupHistory.isFutureStartDate">Scheduled for
-                                            {{GroupHistory.groupStartDate}} </a>
-                                        <span
-                                            *ngIf="!GroupHistory.isFutureStartDate">{{GroupHistory.groupStartDate}}</span>
-                                    </td>
-                                    <td> {{GroupHistory.groupEndDate}}</td>
-                                    <td> {{GroupHistory.actualDaysinGroup}}</td>
-                                    <td> {{GroupHistory.creationTime}}</td>
-                                    <td>
-                                        <button kendoButton [primary]="true" class="avatar-sm-btn c-default"
-                                            kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                                            aria-label="profile avathar">
-                                            <common-user-photo-icon
-                                                [userId]="GroupHistory.creatorId"></common-user-photo-icon>
-                                        </button>
-                                        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                                            <ng-template kendoPopoverBodyTemplate>
-                                                <common-user-profile-card
-                                                    [userId]="GroupHistory.creatorId"></common-user-profile-card>
-                                            </ng-template>
-                                        </kendo-popover>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                    <div class="mt-5">
+                        <case-management-status-group-history [eligibilityId]="dataItem.eligibilityId"></case-management-status-group-history>
                     </div>
-                    <div *ngIf="dataItem.FlipHistory" class="mt-5 mb-2">
-                        <h4>FPL History</h4>
-
-                        <table>
-                            <caption hidden> FPL History</caption>
-                            <tr>
-                                <th>FPL</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Actual Days with Flp</th>
-                                <th>Date Record Created</th>
-                                <th>Record Created By</th>
-                            </tr>
-                            <tbody>
-                                <tr *ngFor="let FlipHistory of dataItem.FlipHistory">
-                                    <td> {{FlipHistory.fplPercentage}}</td>
-                                    <td> {{FlipHistory.fplStartDate}}</td>
-                                    <td> {{FlipHistory.fplEndDate}}</td>
-                                    <td> {{FlipHistory.actualDayswithFlp}}</td>
-                                    <td> {{FlipHistory.creationTime}}</td>
-                                    <td>
-                                        <button kendoButton [primary]="true" class="avatar-sm-btn c-default"
-                                            kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                                            aria-label="profile avathar">
-                                            <common-user-photo-icon
-                                                [userId]="FlipHistory.creatorId"></common-user-photo-icon>
-                                        </button>
-                                        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                                            <ng-template kendoPopoverBodyTemplate>
-                                                <common-user-profile-card
-                                                    [userId]="FlipHistory.creatorId"></common-user-profile-card>
-                                            </ng-template>
-                                        </kendo-popover>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                    <div class="mt-5 mb-2">
+                        <case-management-status-fpl-history [eligibilityId]="dataItem.eligibilityId"></case-management-status-fpl-history>
                     </div>
                 </ng-template>
                 <kendo-grid-column field="StatusStart" title="Status Start" [width]="100"></kendo-grid-column>
@@ -200,12 +124,11 @@
 
     </div>
 </div>
-
 <!-- Eligibility Group Detail Modal -->
-<kendo-dialog *ngIf="isGroupDetailOpened$ | async " (close)="onGroupDetailClosed()"
+<!-- <kendo-dialog (close)="onGroupDetailClosed()"
     class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
     <kendo-dialog-titlebar> Change Group </kendo-dialog-titlebar>
-    <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
-        (updateGroup)="onGroupChangeUpdateClicked($event)"
-        (cancelGroupChange)="onGroupChangeCancelClicked()"></case-management-group-detail>
-</kendo-dialog>
+    <case-management-group-detail [showDeleteOption]="true" (updateGroup)="onGroupChangeUpdateClicked($event)"
+        (cancelGroupChange)="onGroupChangeCancelClicked($event)">
+    </case-management-group-detail>
+</kendo-dialog> -->
