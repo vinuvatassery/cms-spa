@@ -48,6 +48,7 @@ assignCaseManagerStatus$ = this.caseManagerFacade.assignCaseManagerStatus$;
 removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
 userImage$ = this.userManagementFacade.userImage$;
 showAddNewManagerButton$ = this.caseManagerFacade.showAddNewManagerButton$;
+updateDatesCaseManager$ = this.caseManagerFacade.updateDatesCaseManager$;
 historychkBoxChecked = false
 
 /** Private properties **/
@@ -158,6 +159,12 @@ historychkBoxChecked = false
   removecaseManagerHandler(data : any)
    {    
      this.caseManagerFacade.removeCaseManager(this.clientCaseId, data?.endDate, data?.assignedcaseManagerId)
+   }
+
+
+   updateCaseManagerDates(data : any)
+   {    
+     this.caseManagerFacade.updateCaseManagerDates(data?.clientCaseManagerId,data?.assignedcaseManagerId,data?.startDate,data?.endDate)
    }
  
    searchTextEventHandler(text : string)

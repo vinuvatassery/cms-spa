@@ -23,6 +23,7 @@ private removeCaseManagerSubject = new Subject<any>();
 private selectedCaseManagerDetailsSubject = new Subject<any>();
 private assignCaseManagerSubject = new Subject<any>();
 private genericCaseManagerSubject = new Subject<any>();
+private updateDatesCaseManagerSubject = new Subject<any>();
 
 
 /** Public properties **/
@@ -36,6 +37,7 @@ removeCaseManager$ = this.removeCaseManagerSubject.asObservable();
 selectedCaseManagerDetails$ = this.selectedCaseManagerDetailsSubject.asObservable();
 assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
 genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
+updateDatesCaseManager$ = this.updateDatesCaseManagerSubject.asObservable();
 public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
@@ -93,8 +95,7 @@ public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   loadCaseManagers(caseId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated :boolean): void {
     this.showLoader()
     this.caseManagerDataService.loadCaseManagersGrid(caseId  ,skipcount ,maxResultCount  ,sort , sortType , showDeactivated ).subscribe({
-      next: (getCaseManagersResponse : any) => {
-        debugger
+      next: (getCaseManagersResponse : any) => {        
         if(getCaseManagersResponse)
         {
           const gridView = {
@@ -169,6 +170,25 @@ public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
       }
         return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager ?? 'NULL', needManager ?? 'NULL')
     }
+
+    updateCaseManagerDates( clientCaseManagerId: string,
+      userId: string,
+      startDate: Date,
+      endDate: Date): void {
+      this.showLoader()
+      this.caseManagerDataService.updateCaseManagerDates( clientCaseManagerId,
+        userId,
+        startDate,
+        endDate).subscribe({
+        next: (updateDateManagerResponse) => {
+         this.updateDatesCaseManagerSubject.next(updateDateManagerResponse);
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Dates Updated')    
+       },
+         error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+         },
+       });
+   }
 
     removeCaseManager(clientCaseId : string, endDate : Date, userId : string): void {
       this.showLoader()

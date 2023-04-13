@@ -18,6 +18,7 @@
 
 </div>
 <case-management-case-manager-list
+[updateDatesCaseManager$]="updateDatesCaseManager$"
 [showAddNewManagerButton$]="showAddNewManagerButton$"
 [managementTab]="true"    
 [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort" 
@@ -33,7 +34,7 @@
 (getExistingCaseManagerEvent)="getExistingCaseManagerEventHandler($event)"
 (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
 (loadprofilePhotoEvent)="getCaseManagerImage($event)"
-></case-management-case-manager-list>
+(changeDateConfimEvent)="updateCaseManagerDates($event)"></case-management-case-manager-list>
 </div>
 
 

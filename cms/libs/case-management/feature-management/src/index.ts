@@ -16,3 +16,4 @@ export * from './lib/components/viral-load-cd4-count/viral-load-cd4-count.compon
 export * from './lib/components/hiv-case-manager-card/hiv-case-manager-card.component';
 export * from './lib/components/remove-case-manager-confirmation/remove-case-manager-confirmation.component';
 export * from './lib/components/case-manager-search/case-manager-search.component';
+export * from './lib/components/case-manager-effective-dates/case-manager-effective-dates.component';

@@ -25,6 +25,7 @@ export class CaseManagerListComponent implements OnChanges {
   @Output() getExistingCaseManagerEvent = new EventEmitter<string>();
   @Output() addExistingCaseManagerEvent = new EventEmitter<string>();
   @Output() loadprofilePhotoEvent = new EventEmitter<string>();
+  @Output() changeDateConfimEvent = new EventEmitter<any>();
 
   /** Input properties **/
   @Input() getCaseManagers$: any;
@@ -39,6 +40,7 @@ export class CaseManagerListComponent implements OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() updateDatesCaseManager$: any;
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -65,7 +67,9 @@ export class CaseManagerListComponent implements OnChanges {
   showUnAssignConfirmation = false;
   showReferralConfirmation = false;
   showDateChangePopup = false;
-
+  clientCaseManagerId!: string;
+  assignmentStartDate!: Date;
+  assignmentEndDate!: Date;
   public newAppActions = [
     {
       buttonType: 'btn-h-primary',
@@ -89,7 +93,7 @@ export class CaseManagerListComponent implements OnChanges {
       click: (clientCaseId: string, caseManagerId: string): void => {
         if (this.removeButttonEmitted === false) {
           this.deleteCaseManagerCaseId = clientCaseId;
-          this.selectedCaseManagerId = caseManagerId
+          this.selectedCaseManagerId = caseManagerId;
           this.onremoveManagerClicked();
           this.removeButttonEmitted = true;
         }
@@ -102,10 +106,14 @@ export class CaseManagerListComponent implements OnChanges {
       text: 'Un Assign Case Manager',
       icon: 'delete',
       buttonName: 'unAssignMngr',
-      click: (clientCaseId: string, caseManagerId: string): void => {
+      click: (
+        clientCaseId: string,
+        caseManagerId: string,
+        clientCaseManagerId: string
+      ): void => {
         if (this.unAssignButttonEmitted === false) {
-          this.deleteCaseManagerCaseId = clientCaseId;        
-          this.selectedCaseManagerId = caseManagerId
+          this.deleteCaseManagerCaseId = clientCaseId;
+          this.selectedCaseManagerId = caseManagerId;
           this.onUnAssignManagerClicked();
           this.unAssignButttonEmitted = true;
         }
@@ -116,10 +124,14 @@ export class CaseManagerListComponent implements OnChanges {
       text: 'Re Assign Case Manager',
       icon: 'delete',
       buttonName: 'reAssignMngr',
-      click: (clientCaseId: string, caseManagerId: string): void => {
+      click: (
+        clientCaseId: string,
+        caseManagerId: string,
+        clientCaseManagerId: string
+      ): void => {
         if (this.reAssignButttonEmitted === false) {
           this.deleteCaseManagerCaseId = clientCaseId;
-          this.selectedCaseManagerId = caseManagerId
+          this.selectedCaseManagerId = caseManagerId;
           this.onReAssignManagerClicked();
           this.reAssignButttonEmitted = true;
         }
@@ -130,11 +142,20 @@ export class CaseManagerListComponent implements OnChanges {
       text: 'Edit Dates',
       icon: 'delete',
       buttonName: 'editDatesMngr',
-      click: (clientCaseId: string, caseManagerId: string): void => {
+      click: (
+        clientCaseId: string,
+        caseManagerId: string,
+        clientCaseManagerId: string,
+        assignmentStartDate: Date,
+        assignmentEndDate: Date
+      ): void => {
         if (this.editButtonEmitted === false) {
           this.deleteCaseManagerCaseId = clientCaseId;
-          this.selectedCaseManagerId = caseManagerId
-          this.onremoveManagerClicked();
+          this.selectedCaseManagerId = caseManagerId;
+          this.clientCaseManagerId = clientCaseManagerId;
+          this.assignmentStartDate=new Date(assignmentStartDate);
+          this.assignmentEndDate = new Date(assignmentEndDate)
+          this.onDateChangeClicked();
           this.editButtonEmitted = true;
         }
       },
@@ -245,9 +266,9 @@ export class CaseManagerListComponent implements OnChanges {
   onDeleteConfirmHandle(data: any) {
     if (!(data?.confirm ?? false)) {
       this.onDeleteConfirmCloseClicked();
-      this.onUnAssignManagerCloseClicked()
+      this.onUnAssignManagerCloseClicked();
     } else {
-      data.deleteCaseManagerCaseId =this.deleteCaseManagerCaseId 
+      data.deleteCaseManagerCaseId = this.deleteCaseManagerCaseId;
       this.deleteCasemanagersGridEvent.emit(data);
       this.removeCaseManager$
         .pipe(first((removeResponse: any) => removeResponse != null))
@@ -255,7 +276,7 @@ export class CaseManagerListComponent implements OnChanges {
           if (removeResponse === true) {
             this.loadCaseManagerssList();
             this.onDeleteConfirmCloseClicked();
-            this.onUnAssignManagerCloseClicked()
+            this.onUnAssignManagerCloseClicked();
           }
         });
     }
@@ -281,13 +302,27 @@ export class CaseManagerListComponent implements OnChanges {
   }
 
   reAssignConfimEvent(data: any) {
-    if (data?.confirm === true) 
-    {
+    if (data?.confirm === true) {
       this.addExistingCaseManagerEventEventHandler(data);
-    } 
-    else 
-    {
+    } else {
       this.onReAssignConfirmCloseClicked();
+    }
+  }
+
+  editDateCaseManagerEventEventHandler(data: any) {
+    if (data?.confirm === true) {
+      this.changeDateConfimEvent.emit(data);
+
+      this.updateDatesCaseManager$
+        .pipe(first((editResponse: any) => editResponse != null))
+        .subscribe((editResponse: any) => {
+          if (editResponse ?? false) {
+            this.loadCaseManagerssList();
+            this.onDateChangeCloseClicked();
+          }
+        });
+    } else {
+      this.onDateChangeCloseClicked();
     }
   }
 

@@ -71,7 +71,8 @@
               let-clientCaseId="clientCaseId">
               <button [hidden]="(manager.activeFlag === 'Y' && dataItem.buttonName==='reAssignMngr') || (manager.activeFlag === 'N' && dataItem.buttonName==='unAssignMngr')"
                kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId);">
+                aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId,manager.clientCaseManagerId
+                ,manager.assignmentStartDate,manager.assignmentEndDate);">
                 <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                 <label> {{ dataItem.text }} </label>
               </button>
@@ -178,4 +179,15 @@
   [assignedcaseManagerId]="selectedCaseManagerId"
   (unAssignConfimEvent)="onDeleteConfirmHandle($event)">
   </case-management-un-assign-case-manager>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="showDateChangePopup"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <case-management-case-manager-effective-dates 
+  [startDate]="assignmentStartDate"
+  [endDate]="assignmentEndDate"
+  [assignedcaseManagerId]="selectedCaseManagerId"
+  [clientCaseManagerId]="clientCaseManagerId"
+  (changeDateConfimEvent)="editDateCaseManagerEventEventHandler($event)">
+  </case-management-case-manager-effective-dates>
 </kendo-dialog>
