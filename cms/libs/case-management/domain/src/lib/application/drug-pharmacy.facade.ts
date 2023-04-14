@@ -177,7 +177,7 @@ export class DrugPharmacyFacade {
     this.searchLoaderVisibilitySubject.next(true);
     return this.drugDataService.searchPharmacies(searchText).subscribe({
       next: (response: Pharmacy[]) => {
-        response?.forEach(vendor => {
+        response?.forEach((vendor:any) => {
           vendor.vendorFullName = `${vendor.vendorName ?? ''} #${vendor.vendorNbr ?? ''} ${vendor.address1 ?? ''} ${vendor.address2 ?? ''} ${vendor.cityCode ?? ''} ${vendor.stateCode ?? ''} ${vendor.zip ?? ''}`;
         });
         this.pharmaciesSubject.next(response);

@@ -24,6 +24,7 @@
                         <kendo-label text="Search Pharmacy Name/Number">
                             <kendo-autocomplete autofocusfield [fillMode]="formUiStyle.dropDownFillMode" 
                             autofocusfield
+                            #autocomplete
                             [fillMode]="formUiStyle.dropDownFillMode" 
                             [data]="pharmacysearchResult$ | async"     
                            
