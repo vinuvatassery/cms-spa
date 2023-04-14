@@ -4,8 +4,12 @@
     example, adding a new mailing address will deactivate the current mailing
     address.
   </p>
-  <p class="text-muted mb-2" *ngIf="isEditValue">
-    Edit or Deactivate the client's {{editAddressTypeText}} addresses
+  <p class="text-muted mb-2" *ngIf="isEditValue && editAddressTypeText == 'mailing'">
+    Edit or Deactivate the client's {{editAddressTypeText}} addresses.
+    You must add a new mailing address if you deactivate this one.
+  </p>
+  <p class="text-muted mb-2" *ngIf="isEditValue && editAddressTypeText == 'home'">
+    Edit or Deactivate the client's {{editAddressTypeText}} addresses.
   </p>
   <p class="text-muted mb-2" *ngIf="deactivateFlag">
     To deactivate the current mailing address, you must add a new one

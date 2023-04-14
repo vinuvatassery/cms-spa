@@ -13,7 +13,7 @@
     <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
     <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-      attr.aria-hidden="false" (click)="dataItem.click">
+      aria-hidden="false" (click)="dataItem.click">
         <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>

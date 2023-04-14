@@ -69,7 +69,7 @@ export class EmailListComponent implements OnChanges {
   public gridOption = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Email',
+      text: 'Edit Email Address',
       buttonName: 'edit',
       icon: 'edit',
       click: (clientEmailId: string): void => {

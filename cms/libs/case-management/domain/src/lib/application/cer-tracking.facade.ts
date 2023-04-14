@@ -5,6 +5,7 @@ import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
+  NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -27,7 +28,7 @@ export class CerTrackingFacade {
   private cerTrackingListSubject = new Subject<any>();
   private cerTrackingDatesListSubject = new Subject<any>();
   private cerTrackingCountSubject = new Subject<any>();
-
+  private sendResponseSubject = new Subject<boolean>();
   /** Public properties **/
   cer$ = this.cerSubject.asObservable();
   cerGrid$ = this.cerGridSubject.asObservable();
@@ -35,7 +36,7 @@ export class CerTrackingFacade {
   cerTrackingList$ = this.cerTrackingListSubject.asObservable();
   cerTrackingDates$ = this.cerTrackingDatesListSubject.asObservable();
   cerTrackingCount$ = this.cerTrackingCountSubject.asObservable();
-
+  sendResponse$ = this.sendResponseSubject.asObservable();
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -164,6 +165,21 @@ export class CerTrackingFacade {
       },
       error: (err) => {
         console.error('err', err);
+      },
+    });
+  }
+
+  sendCerCount(cerId: any){
+    this.cerDataService.sendCerCounts(cerId)
+    .subscribe({
+      next: (sendCerCountResp: any) => {
+        if(!sendCerCountResp?? false){
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Something went wrong while sending CER.', NotificationSource.UI);
+        }
+        this.sendResponseSubject.next(sendCerCountResp);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }

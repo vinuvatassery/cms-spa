@@ -119,6 +119,7 @@
     (removePharmacyEvent)="removeClientPharmacyOnEditMode()"
     (searchPharmacyEvent)="onSearchPharmacy($event)"
     (closePharmacyEvent)="handleClosePharmacyClicked()"
+    [isNewPharmacyAdded]="true"
   ></case-management-pharmacy-detail>
 </kendo-dialog>
 
@@ -137,7 +138,7 @@
   <case-management-set-pharmacy-priority
     (closeChangePriority)="handleCloseChangePriorityClikced()"
     [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
-    [clientpharmacies$]="clientpharmacies$"
+    [clientpharmacies]="clientpharmacies"
     [clientId]="clientId"
   ></case-management-set-pharmacy-priority>
 </kendo-dialog>

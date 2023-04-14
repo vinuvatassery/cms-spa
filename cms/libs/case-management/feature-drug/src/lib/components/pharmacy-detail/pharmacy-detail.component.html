@@ -49,7 +49,7 @@
       </div>
     </div>
   </div>
-  <span class="app-checkboxwidtext-wrapper"> 
+  <span class="app-checkboxwidtext-wrapper" *ngIf="!isNewPharmacyAdded"> 
     <input
       type="checkbox"
       [disabled]="!selectedPharmacyId"
