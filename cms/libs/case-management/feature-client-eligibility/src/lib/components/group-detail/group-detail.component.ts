@@ -18,7 +18,7 @@ export class GroupDetailComponent implements OnInit {
   /** Input Properties **/
   @Input() currentGroup$!: Observable<any>;
   @Input() ddlGroups$!: Observable<any>;
-  @Input() showDeleteOption: boolean = false;
+  @Input() showDeleteOption!: boolean;
   /** Output Properties **/
   @Output() updateGroup = new EventEmitter<any>();
   @Output() cancelGroupChange = new EventEmitter();

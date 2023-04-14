@@ -7,6 +7,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 import { CaseManagementFeatureCerTrackingRoutingModule } from './case-management-feature-cer-tracking-routing.module';
+import { CaseManagementFeatureClientEligibilityModule } from '@cms/case-management/feature-client-eligibility';
 /** Components  **/
 import { CerTrackingPageComponent } from './containers/cer-tracking-page/cer-tracking-page.component';
 import { CerListComponent } from './components/cer-list/cer-list.component';
@@ -27,6 +28,7 @@ import { StatusFplHistoryComponent } from './components/status-fpl-history/statu
     CaseManagementDomainModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
+    CaseManagementFeatureClientEligibilityModule,
     SystemConfigFeatureUserManagementModule,
   ],
   declarations: [

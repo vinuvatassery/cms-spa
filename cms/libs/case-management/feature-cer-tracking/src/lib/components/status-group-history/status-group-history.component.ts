@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { StatusPeriodFacade } from '@cms/case-management/domain';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'case-management-status-group-history',
@@ -9,7 +10,8 @@ import { StatusPeriodFacade } from '@cms/case-management/domain';
 export class StatusGroupHistoryComponent implements OnInit {
 
   @Input() eligibilityId!: string;
-
+  currentGroup$!: Observable<any>;
+  ddlGroups$!: Observable<any>;
   statusGroupHistory: any = [];
 
   constructor(private statusPeriodFacade: StatusPeriodFacade) {
@@ -30,5 +32,15 @@ export class StatusGroupHistoryComponent implements OnInit {
       },
     });
   }
+
+  onGroupDetailClosed() {
+
+  }
+
+  onGroupChangeCancelClicked(event: any) {
+  }
+
+  onGroupChangeUpdateClicked(event: any) { }
+
 
 }

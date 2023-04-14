@@ -62,17 +62,6 @@ export class StatusPeriodComponent implements OnInit {
     this.statusPeriodFacade.loadStatusPeriod();
   }
 
-  onExpand(event: any) {
-    console.log(event);
-  }
-
-  onGroupChangeCancelClicked(event: any) {
-    
-  }
-
-  onGroupChangeUpdateClicked(event: any) {}
-
-
 }
 
 
