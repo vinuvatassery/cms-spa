@@ -47,6 +47,9 @@
           title="Phone Number"
           [width]="150"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.phoneNbr | phone }}
+         </ng-template> 
         </kendo-grid-column>
         <kendo-grid-column
           field="detailMsgConsentFlag"
@@ -117,7 +120,7 @@
             
               <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
                 <button kendoButton  [hidden]="(clientPhone.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
-                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
+                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred') ||(hasPhoneDeletePermission === false && dataItem.buttonName ==='delete')" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
                 (click)="dataItem.click(clientPhone?.clientPhoneId)">
                   <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
