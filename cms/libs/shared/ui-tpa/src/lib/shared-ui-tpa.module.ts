@@ -26,6 +26,7 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
 import {UIFormStyle} from './kendo-uiform-style-config';
 import {UploadFileRistrictionOptions, CurrencyFormat,IntlDateService, DataQuery} from './kendo-form-element-config';
 import { SortableModule } from "@progress/kendo-angular-sortable";
+import { ScrollViewModule } from "@progress/kendo-angular-scrollview";
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { TreeViewModule } from "@progress/kendo-angular-treeview";
 
@@ -51,6 +52,7 @@ const MODULES = [
   NotificationModule,
   IndicatorsModule,
   SortableModule, 
+  ScrollViewModule,
   TreeListModule,
   TreeViewModule
 ];
