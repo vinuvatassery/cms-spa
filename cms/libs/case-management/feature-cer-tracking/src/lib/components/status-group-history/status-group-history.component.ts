@@ -10,7 +10,7 @@ export class StatusGroupHistoryComponent implements OnInit {
 
   @Input() eligibilityId!: string;
 
-  statusGroupHistory$ = this.statusPeriodFacade.statusGroupHistory$;
+  statusGroupHistory: any = [];
 
   constructor(private statusPeriodFacade: StatusPeriodFacade) {
   }
@@ -21,7 +21,14 @@ export class StatusGroupHistoryComponent implements OnInit {
 
   /* Private methods */
   private loadGroupHistory() {
-    this.statusPeriodFacade.loadStatusGroupHistory(this.eligibilityId);
+    this.statusPeriodFacade.loadStatusGroupHistory(this.eligibilityId).subscribe({
+      next: (data) => {
+        this.statusGroupHistory = data;
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
   }
 
 }

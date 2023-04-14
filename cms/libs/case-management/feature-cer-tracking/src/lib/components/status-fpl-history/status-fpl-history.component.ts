@@ -10,7 +10,7 @@ export class StatusFplHistoryComponent implements OnInit {
 
   @Input() eligibilityId!: string;
 
-  statusFplHistory$ = this.statusPeriodFacade.statusFplHistory$;
+  statusFplHistory: any = [];
 
   constructor(private statusPeriodFacade: StatusPeriodFacade) {
   }
@@ -21,7 +21,14 @@ export class StatusFplHistoryComponent implements OnInit {
 
   /* Private methods */
   private loadFplHistory() {
-    this.statusPeriodFacade.loadStatusFplHistory(this.eligibilityId);
+    this.statusPeriodFacade.loadStatusFplHistory(this.eligibilityId).subscribe({
+      next: (data) => {
+        this.statusFplHistory = data;
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
   }
 
 }

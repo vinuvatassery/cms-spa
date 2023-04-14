@@ -1,37 +1,43 @@
 <h4>Group History</h4>
 
-<table>
-    <caption hidden> Group History</caption>
-    <tr>
-        <th>Group</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Actual Days in Group</th>
-        <th>Date Record Created</th>
-        <th>Record Created By</th>
-    </tr>
-    <tbody>
-        <tr *ngFor="let history of statusGroupHistory$">
-            <td> {{history.groupCodeDesc}}</td>
-            <td>
-                <a *ngIf="history.isFutureStartDate">Scheduled for
-                    {{history.groupStartDate}} </a>
-                <span *ngIf="!history.isFutureStartDate">{{history.groupStartDate}}</span>
-            </td>
-            <td> {{history.groupEndDate}}</td>
-            <td> {{history.actualDaysinGroup}}</td>
-            <td> {{history.creationTime}}</td>
-            <td>
-                <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                    [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avathar">
-                    <common-user-photo-icon [userId]="history.creatorId"></common-user-photo-icon>
-                </button>
-                <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                    <ng-template kendoPopoverBodyTemplate>
-                        <common-user-profile-card [userId]="history.creatorId"></common-user-profile-card>
-                    </ng-template>
-                </kendo-popover>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<kendo-grid [data]="statusGroupHistory">
+    <kendo-grid-column field="groupCodeDesc" title="Group" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="groupEndDate" title="End Date" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="actualDaysInGroup" title="Actual Days in Group" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="creationTime" title="Date Record Created" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="by" title="By" [width]="80">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button
+            kendoButton
+            [primary]="true"
+            class="avatar-sm-btn c-default"
+            kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered"
+            showOn="hover"
+            aria-label="profile avathar"
+          >
+          <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
+          </button>
+          <kendo-popover
+            #onUserProfileDetailsHovered
+            width="330"
+            position="left"
+          >
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
+        </ng-template>
+      </kendo-grid-column>
+    <!-- grid Loader Template -->
+    <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+    </ng-template>
+</kendo-grid>

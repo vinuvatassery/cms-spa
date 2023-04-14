@@ -12,13 +12,9 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 export class StatusPeriodFacade {
   /** Private properties **/
   private statusPeriodSubject = new BehaviorSubject<any>([]);
-  private statusGroupHistorySubject = new BehaviorSubject<any>([]);
-  private statusFplHistorySubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   statusPeriod$ = this.statusPeriodSubject.asObservable();
-  statusGroupHistory$ = this.statusGroupHistorySubject.asObservable();
-  statusFplHistory$ = this.statusFplHistorySubject.asObservable();
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -49,25 +45,11 @@ export class StatusPeriodFacade {
     });
   }
 
-  loadStatusGroupHistory(eligibilityId: string): void {
-    this.statusPeriodDataService.loadStatusGroupHistory(eligibilityId).subscribe({
-      next: (data) => {
-        this.statusGroupHistorySubject.next(data);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
+  loadStatusGroupHistory(eligibilityId: string) {
+    return this.statusPeriodDataService.loadStatusGroupHistory(eligibilityId);
   }
 
-  loadStatusFplHistory(eligibilityId: string): void {
-    this.statusPeriodDataService.loadStatusFplHistory(eligibilityId).subscribe({
-      next: (data) => {
-        this.statusFplHistorySubject.next(data);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
+  loadStatusFplHistory(eligibilityId: string) {
+    return this.statusPeriodDataService.loadStatusFplHistory(eligibilityId);
   }
 }
