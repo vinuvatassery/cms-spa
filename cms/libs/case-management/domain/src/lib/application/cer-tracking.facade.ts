@@ -5,6 +5,7 @@ import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
+  NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -16,7 +17,7 @@ import { Cer } from '../entities/cer';
 /** Data services **/
 import { CerDataService } from '../infrastructure/cer.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
-import { Subject, catchError, of } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CerTrackingFacade {
@@ -27,9 +28,7 @@ export class CerTrackingFacade {
   private cerTrackingListSubject = new Subject<any>();
   private cerTrackingDatesListSubject = new Subject<any>();
   private cerTrackingCountSubject = new Subject<any>();
-  private sendCerCountSubject = new Subject<any>();
-  private reminderCerCountSubject = new Subject<any>();
-  private sendCerResultCountSubject = new Subject<boolean>();
+  private sendResponseSubject = new Subject<boolean>();
   /** Public properties **/
   cer$ = this.cerSubject.asObservable();
   cerGrid$ = this.cerGridSubject.asObservable();
@@ -37,9 +36,7 @@ export class CerTrackingFacade {
   cerTrackingList$ = this.cerTrackingListSubject.asObservable();
   cerTrackingDates$ = this.cerTrackingDatesListSubject.asObservable();
   cerTrackingCount$ = this.cerTrackingCountSubject.asObservable();
-  sendCerCount$ = this.sendCerCountSubject.asObservable();
-  reminderCerCount$ = this.reminderCerCountSubject.asObservable();
-  sendCerResultCount$ = this.sendCerResultCountSubject.asObservable();
+  sendResponse$ = this.sendResponseSubject.asObservable();
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -172,25 +169,14 @@ export class CerTrackingFacade {
     });
   }
 
-  loadSendCerCount(spEndDate : Date){
-    this.cerDataService.getSendCerCounts(spEndDate)
-    .subscribe({
-      next: (cerCountResp: any) => {
-        if (cerCountResp) {
-          this.sendCerCountSubject.next(cerCountResp);
-        }
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
-  }
-
-  sendCerCount(spEndDate : any){
-    this.cerDataService.sendCerCounts(spEndDate)
+  sendCerCount(cerId: any){
+    this.cerDataService.sendCerCounts(cerId)
     .subscribe({
       next: (sendCerCountResp: any) => {
-        console.log(sendCerCountResp)
+        if(!sendCerCountResp?? false){
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Something went wrong while sending CER.', NotificationSource.UI);
+        }
+        this.sendResponseSubject.next(sendCerCountResp);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

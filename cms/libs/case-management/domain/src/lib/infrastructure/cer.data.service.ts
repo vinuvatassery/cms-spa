@@ -108,15 +108,7 @@ export class CerDataService {
     );
   }
 
-  getSendCerCounts(spEndDate: Date) {
-    return this.http.get<any[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients-cer-tracking/send-cers/count?spEndDate=${spEndDate}`
-    );
-  }
-
-  sendCerCounts(spEndDate: Date) {
-    const body = { spEndDate: spEndDate };
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients-cer-tracking/send-cers`, body);
+  sendCerCounts(cerId: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients-cer-tracking/re-send-cers/${cerId}`, {});
   }
 }

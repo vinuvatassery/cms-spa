@@ -8,12 +8,11 @@ import {
   Input,
   OnChanges,
 } from '@angular/core';
+import { StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider } from '@cms/shared/util-core';
-import { IntlService } from '@progress/kendo-angular-intl';
 import { State } from '@progress/kendo-data-query';
-import { BehaviorSubject, Subject, first } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -28,16 +27,13 @@ export class CerListComponent implements OnInit, OnChanges {
   @Input() cerTrackingData$: any;
   @Input() cerTrackingDates$: any
   @Input() cerTrackingCount$: any;
-  @Input() sendCerCount$: any;
+  @Input() sendResponse$!: Observable<any>;;
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
-  @Output() loadSendCerCountEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
-  // @Output() SendCerRemainderEvent = new EventEmitter<any>();
-  // @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
 
   /** Public properties **/
-  isOpenSendCER = false;
+  isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
   todayDate = new Date();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public isGridLoaderShow = false;
@@ -51,44 +47,24 @@ export class CerListComponent implements OnInit, OnChanges {
   gridCERData$ = this.gridCERDataSubject.asObservable();
   public state!: State;
   dateDropdownDisabled = false;
-  cerActionButtonType$ = new BehaviorSubject<string>('NONE');
-  // isSendButtonVisible:boolean = null;
-  // actions: Array<any> = [{ text: 'Action' }];
+  gridOptionButtonVisible$ = new BehaviorSubject<boolean>(false);
+  selectedEligibilityCerId!:string;
+  isPaperLessFlag!:boolean;
+  clientName!:string;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public bulkActions = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Send CER Reminders',
-      // icon: "done",
-      click: (): void => { },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Send Restricted Notices',
-      // icon: "edit",
-      click: (): void => { },
-    },
-  ];
 
   public gridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Send CER Reminders',
-      // icon: "done",
-      click: (): void => { },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Send Restricted Notices',
-      // icon: "edit",
-      click: (): void => { },
-    },
+      text: 'Re-send CER',
+      click: (eligibilityCer: any): void => { 
+        this.selectedEligibilityCerId = eligibilityCer?.clientCaseEligibilityCerId;
+        this.isPaperLessFlag = eligibilityCer?.paperlessFlag === StatusFlag.Yes;
+        this.clientName = eligibilityCer?.clientFullName;
+        this.resendCer();
+      },
+    }
   ];
-
-  /* Constructor */
-  constructor(private readonly intl: IntlService, 
-    private readonly configProvider: ConfigurationProvider,){    
-  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -112,12 +88,11 @@ export class CerListComponent implements OnInit, OnChanges {
 
   /** Internal event methods **/
   onCloseSendCERClicked() {
-    this.isOpenSendCER = false;
+    this.isOpenSendCER$.next(false);
   }
 
   onOpenSendCERClicked() {
-    this.isOpenSendCER = true;
-    this.loadSendCerCountEvent.emit(this.selectedDate);
+    this.isOpenSendCER$.next(true);
   }
 
   // updating the pagination infor based on dropdown selection
@@ -150,22 +125,6 @@ export class CerListComponent implements OnInit, OnChanges {
       this.sortType
     );
 
-  }
-
-  private setCerActionButtonVisibility(data: any){
-    if(data?.total > 0){
-      const isCerSendAlready = data?.data.findIndex((i:any) => i.cerSentDate !== null) !== -1;
-      if(isCerSendAlready){
-        this.cerActionButtonType$.next('BULK');
-        return;
-      }
-      if(new Date(this.selectedDate) < new Date()){
-        this.cerActionButtonType$.next('SEND');
-        return;
-      }     
-    }    
-
-    this.cerActionButtonType$.next('NONE');    
   }
 
   loaCerData(
@@ -204,7 +163,6 @@ export class CerListComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.cerTrackingData$.subscribe((data: any) => {
       this.gridCERDataSubject.next(data);
-      this.setCerActionButtonVisibility(data);
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
         this.dateDropdownDisabled = false
@@ -212,12 +170,14 @@ export class CerListComponent implements OnInit, OnChanges {
     });
   }
 
-  sendCer(){
-    const date = this.intl.formatDate(new Date(this.selectedDate), this.configProvider.appSettings.dateFormat)
-    this.sendCersEvent.emit(date);
+  resendCer(){
+    this.isOpenSendCER$.next(true); 
+    this.sendResponse$.subscribe((resp: boolean) => {
+      this.isOpenSendCER$.next(!resp); 
+    });
   }
 
-  cancelSendCer(){
-    this.isOpenSendCER = false;
+  sendCer(){
+    this.sendCersEvent.emit(this.selectedEligibilityCerId);
   }
 }

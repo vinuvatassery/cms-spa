@@ -1,17 +1,8 @@
 <section class="k-dialog-body">
   <div class="flex-row">
-    <div class="flex-col" *ngIf="(sendCerCount$ | async) as sendCerCount">
-      <p class="mb-1">
-        <span class="text-bold pr-1">Via Email:</span><span>{{ sendCerCount?.emailCount ?? 0 }}</span>
-      </p>
-      <p class="mb-1">
-        <span class="text-bold pr-1">Via Mail:</span><span>{{ sendCerCount?.mailCount ?? 0 }}</span>
-      </p>
-    </div>
-    <div style="width:100%" *ngIf="!(sendCerCount$ | async)">
-      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
-      <p></p>
-      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+    <div class="flex-col">
+      <p class="mb-1" *ngIf="!isPaperLess"> It will be sent to {{clientName}}'s mailing address </p>
+      <p class="mb-1" *ngIf="isPaperLess"> It will be sent to {{clientName}} via email</p>
     </div>
   </div>
 </section>
@@ -21,7 +12,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="cancel cers" (click)="cancelSendCer()">
         Cancel
       </button>
-      <button kendoButton *ngIf="sendCerCount$ | async" [primary]="true" aria-label="send cers" (click)="sendCer()">Send</button>
+      <button kendoButton [primary]="true" aria-label="send cers" (click)="sendCer()">Send</button>
     </div>
   </div>
 </kendo-dialog-actions>

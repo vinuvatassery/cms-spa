@@ -17,25 +17,6 @@
   <case-management-cer-counts
   [cerTrackingCount]="cerTrackingCount$ | async"></case-management-cer-counts>
   </div>
-
-  <button *ngIf="(cerActionButtonType$ | async) === 'SEND'"  kendoButton [primary]="true" (click)="onOpenSendCERClicked()" appendTo="body" aria-label="send cers">
-    Send CERS
-  </button>
-
-  <!-- Bulk dropdown -->
-  <kendo-dropdownbutton [data]="bulkActions" icon="expand_more" class="TableActionPopup app-dropdown-action" *ngIf="(cerActionButtonType$ | async) === 'BULK'"
-    buttonClass="k-flat-button" aria-label="more actions"
-    [popupSettings]="{ popupClass: popupClassAction, animate: true }" hidden>
-    Bulk  <span class="material-icons">
-      arrow_drop_down
-      </span>
-    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-      <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-        aria-hidden="false" (click)="dataItem.click">
-        <label> {{ dataItem.text }} </label>
-      </button>
-    </ng-template>
-  </kendo-dropdownbutton>
 </section>
 
 <!-- Sorted Info -->
@@ -146,8 +127,8 @@
   <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"
     [format]="{ date: 'MM-dd-yyyy' }" filter="date">  
   </kendo-grid-column>
-  <kendo-grid-column title="Options" [sortable]="false" [width]="70" class="text-center" [sticky]="true" [columnMenu]="false" [hidden]="(cerActionButtonType$ | async) !== 'BULK'">
-    <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-pharmacyId="field">
+  <kendo-grid-column title="Options" [sortable]="false" [width]="70" class="text-center" [sticky]="true" [columnMenu]="false">
+    <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton 
         [data]="gridActions"
         icon="more-vertical"
@@ -157,11 +138,13 @@
         aria-label="more actions"
         [popupSettings]="{ popupClass: popupClassAction, animate: true }">
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-                <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(clientPharmacy)">
-                    <span class="material-icons"
-                        [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                    <label> {{ buttondataItem.text }} </label>
+                <button kendoButton look="flat" 
+                [attr.aria-label]="buttondataItem.text"
+                [class]="buttondataItem.buttonType" 
+                aria-hidden="false" 
+                (click)="buttondataItem.click(dataItem)"
+                [disabled]="false">
+                  {{ buttondataItem.text }} 
                 </button>
             </ng-template>
         </kendo-dropdownbutton>
@@ -205,12 +188,13 @@
 
 
 <!-- Send CER Modal Html-->
-<kendo-dialog *ngIf="isOpenSendCER" (close)="onCloseSendCERClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-top" title="Send CERs?">
+<kendo-dialog *ngIf="isOpenSendCER$ | async" (close)="onCloseSendCERClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-top" title="Re-send CERs?">
   <case-management-send-cer 
-    [sendCerCount$]="sendCerCount$" 
+    [isPaperLess]="isPaperLessFlag" 
+    [clientName]="clientName" 
     (sendCerEvent)="sendCer()"
-    (cancelSendCerEvent)="cancelSendCer()"
+    (cancelSendCerEvent)="onCloseSendCERClicked()"
   >
   </case-management-send-cer>
 </kendo-dialog>

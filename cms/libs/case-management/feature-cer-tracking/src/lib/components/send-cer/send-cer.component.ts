@@ -1,6 +1,5 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'case-management-send-cer',
@@ -9,7 +8,8 @@ import { Observable } from 'rxjs';
 })
 export class SendCerComponent {
   /* Input Properties */
-  @Input() sendCerCount$!: Observable<any>;
+  @Input() isPaperLess!: boolean;
+  @Input() clientName!: string;
 
   /* Output Properties */
   @Output() sendCerEvent = new EventEmitter<any>();
