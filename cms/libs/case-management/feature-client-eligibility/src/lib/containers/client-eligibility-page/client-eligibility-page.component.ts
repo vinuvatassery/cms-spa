@@ -38,7 +38,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     private readonly ref: ChangeDetectorRef,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private readonly loggingService: LoggingService,
+    private readonly loggingService: LoggingService
   ) { }
 
   /** Lifecycle Hooks **/
