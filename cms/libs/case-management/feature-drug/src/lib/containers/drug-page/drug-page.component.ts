@@ -238,6 +238,9 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showPharmacyRequiredValidation$.next(true);
       return of(false);;
     }
+    else{
+      this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
+    }
     if (this.prescriptionDrugForm.valid) {
       const drugs = this.workflowFacade.deepCopy(this.prescriptionDrugForm.value);
       drugs.clientCaseEligibilityId = this.clientCaseEligibilityId;
