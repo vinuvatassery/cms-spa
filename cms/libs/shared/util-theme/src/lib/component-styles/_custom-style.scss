@@ -44,7 +44,12 @@
     }
   }
 }
-
+.client-header-wrapper-stickey{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: $white;
+}
 /* Case Tabs*/
 .client-tab-section {
   position: relative;

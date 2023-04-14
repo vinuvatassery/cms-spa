@@ -1,27 +1,18 @@
 <section class="k-dialog-body">
   <div class="flex-row">
     <div class="flex-col">
-      <p class="mb-1">
-        <span class="text-bold pr-1">Via Email:</span><span>21</span>
-      </p>
-      <p class="mb-1">
-        <span class="text-bold pr-1">Via Mail:</span><span>11</span>
-      </p>
+      <p class="mb-1" *ngIf="!isPaperLess"> It will be sent to {{clientName}}'s mailing address </p>
+      <p class="mb-1" *ngIf="isPaperLess"> It will be sent to {{clientName}} via email</p>
     </div>
   </div>
 </section>
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div class="justify-content-end">
-      <button
-        kendoButton
-        [primary]="true"
-        look="outline"
-        aria-label="cancel cers"
-      >
+      <button kendoButton [primary]="true" look="outline" aria-label="cancel cers" (click)="cancelSendCer()">
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="send cers">Send</button>
+      <button kendoButton [primary]="true" aria-label="send cers" (click)="sendCer()">Send</button>
     </div>
   </div>
 </kendo-dialog-actions>

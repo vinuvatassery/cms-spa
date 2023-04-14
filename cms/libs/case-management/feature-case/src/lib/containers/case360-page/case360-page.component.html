@@ -1,3 +1,6 @@
+<div class="client-header-wrapper-stickey">
+
+
 <common-bread-crumb></common-bread-crumb>
 <case-management-case360-header
   [caseWorkerId]="caseWorkerId"
@@ -128,12 +131,13 @@
     </div>
 
   </div>
-  <div class="client-profile-outlet">
-    <router-outlet></router-outlet>
-  </div>
+
 
 </section>
-
+</div>
+<div class="client-profile-outlet">
+  <router-outlet></router-outlet>
+</div>
 
 <!-- Review HIV Verification Html-->
 <kendo-dialog *ngIf="isVerificationReviewPopupOpened" (close)="onVerificationReviewClosed()"

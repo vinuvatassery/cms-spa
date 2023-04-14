@@ -23,7 +23,7 @@ export class PharmacyDetailComponent implements OnInit {
   @Input() selectedPharmacy: any;
   @Input() pharmacySearchResult$!: Observable<Pharmacy>;
   @Input() searchLoaderVisibility$!: Observable<boolean>;
-
+  @Input() isNewPharmacyAdded = false;
   /** Output properties  **/
   @Output() closePharmacyEvent = new EventEmitter();
   @Output() searchPharmacyEvent = new EventEmitter<string>();
