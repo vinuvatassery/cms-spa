@@ -30,7 +30,7 @@
 <div class="app-c-table">
   <kendo-grid [data]="gridCERData$ | async" [pageSize]="state.take" [pageable]="true" [sortable]="true"
     [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader">
+    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader" (columnVisibilityChange)="columnChange($event)">
 
     <ng-template kendoGridColumnMenuTemplate let-service="service">
       <span class="k-icon k-i-x" (click)="service.close()"

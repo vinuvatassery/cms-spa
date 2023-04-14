@@ -58,7 +58,7 @@
                           [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(clientPharmacy)">
                           <span class="material-icons"
                               [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                          <label> {{clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'Deactivate' ? 'Deactivate and Select New Primary Pharmacy' : clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'delete' ? 'Remove and Select New Primary Pharmacy' : buttondataItem.text }} </label>
+                          <label> {{clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'Deactivate' ? 'Deactivate' : clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'delete' ? 'Remove' : buttondataItem.text }} </label>
                       </button>
                   </ng-template>
               </kendo-dropdownbutton>
