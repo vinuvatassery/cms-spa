@@ -73,6 +73,7 @@ export class PharmaciesListComponent implements OnInit {
   selectClientPharmacyDetails!: any;
   selectedPharmacyForEdit!: any;
   removeButtonEmitted = false;
+  pharamciesLength= false;
   editButtonEmitted = false;
   pharmacies:any[] = [];
   changePharmacyObj:any;
@@ -102,7 +103,7 @@ export class PharmaciesListComponent implements OnInit {
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId =clientPharmacy.vendorId
           this.changePharmacyObj = pharmacyObj;
-          if (clientPharmacy.priorityCode === PriorityCode.Primary) {
+          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharamciesLength === true) {
             this.OpenSelectNewPrimaryPharmaciesClicked(
               clientPharmacy,
               'deactivate'
@@ -143,7 +144,7 @@ export class PharmaciesListComponent implements OnInit {
         if(clientPharmacy.clientPharmacyId){
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId =clientPharmacy.clientPharmacyId
-          if (clientPharmacy.priorityCode === PriorityCode.Primary) {
+          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharamciesLength === true ) {
             this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
           } else  {
             if (this.removeButtonEmitted === false) {
@@ -204,6 +205,7 @@ export class PharmaciesListComponent implements OnInit {
       sort: this.sort,
     };
     this.drugPharmacyFacade.clientPharmacies$.subscribe(list =>{
+      debugger;
       if(list && list.length > 0){
         this.pharmacies = list;
         this.handleClosePharmacyClicked();
@@ -211,13 +213,17 @@ export class PharmaciesListComponent implements OnInit {
         this.handleCloseReactivatePharmaciesClicked();
         this.isOpenDeactivatePharmaciesClicked = false;
       }
+      if(list.length===1)
+      {
+       this.pharamciesLength =true;
+      }
     })
   }
 
   /** Private methods **/
   filterActionButtonOptions(options:any[],actionType:any):any[]{
     let filteredOptions:any[] = [];
-    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes){
+    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes ){
       filteredOptions = options.filter(option =>option.type != 'Reactivate');
     } else if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.No)
     {
