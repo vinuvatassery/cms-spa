@@ -24,7 +24,12 @@
         <kendo-grid-column field="address" title="Address" [width]="200"></kendo-grid-column>
         <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="120">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem?.effectiveDate| date: 'MM/dd/yyyy'}}
+            <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
+              {{dataItem.effectiveDate | date:'MM/dd/yyyy'}}
+            </span>
+            <ng-template #endDateBlock>
+              {{dataItem.effectiveDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
+            </ng-template>
         </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
