@@ -1,4 +1,6 @@
 export enum UserDefaultRoles {
     CACaseWorker = 'CACW' ,
-    CACaseManager = 'CACM' 
+    CACaseManager = 'CACM' ,
+    ADMIN ='ADMIN',
+    SUPER_ADMIN = 'SUPER_ADMIN'
 }
