@@ -4,7 +4,6 @@ export * from './lib/shared-util-core.module';
 /** Enums **/
 export * from './lib/enums/hub-method-types.enum';
 export * from './lib/enums/snack-bar-notification-type.enum';
-export * from './lib/enums/local-storage-keys.enum';
 
  
 /** service **/

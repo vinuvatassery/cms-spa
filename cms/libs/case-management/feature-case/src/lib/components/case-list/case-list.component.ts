@@ -17,7 +17,8 @@ import { LovFacade } from '@cms/system-config/domain';
 import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
-import {ConfigurationProvider, LocalStorageKeys, LocalStorageService} from '@cms/shared/util-core';
+import {ConfigurationProvider, LocalStorageService} from '@cms/shared/util-core';
+import { LocalStorageKeys } from '@cms/shared/ui-common';
 
 
 @Component({
