@@ -73,7 +73,6 @@ export class PharmaciesListComponent implements OnInit {
   selectClientPharmacyDetails!: any;
   selectedPharmacyForEdit!: any;
   removeButtonEmitted = false;
-  pharamciesLength= false;
   editButtonEmitted = false;
   pharmacies:any[] = [];
   changePharmacyObj:any;
@@ -103,7 +102,7 @@ export class PharmaciesListComponent implements OnInit {
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId =clientPharmacy.vendorId
           this.changePharmacyObj = pharmacyObj;
-          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharamciesLength === true) {
+          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharmacies.length === 1) {
             this.OpenSelectNewPrimaryPharmaciesClicked(
               clientPharmacy,
               'deactivate'
@@ -144,7 +143,7 @@ export class PharmaciesListComponent implements OnInit {
         if(clientPharmacy.clientPharmacyId){
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId =clientPharmacy.clientPharmacyId
-          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharamciesLength === true ) {
+          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharmacies.length === 1 ) {
             this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
           } else  {
             if (this.removeButtonEmitted === false) {
@@ -212,10 +211,6 @@ export class PharmaciesListComponent implements OnInit {
         this.handleCloseSelectNewPrimaryPharmaciesClicked();
         this.handleCloseReactivatePharmaciesClicked();
         this.isOpenDeactivatePharmaciesClicked = false;
-      }
-      if(list.length===1)
-      {
-       this.pharamciesLength =true;
       }
     })
   }
