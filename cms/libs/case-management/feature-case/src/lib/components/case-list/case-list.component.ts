@@ -17,7 +17,7 @@ import { LovFacade } from '@cms/system-config/domain';
 import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
-import {ConfigurationProvider} from '@cms/shared/util-core';
+import {ConfigurationProvider, LocalStorageKeys, LocalStorageService} from '@cms/shared/util-core';
 
 
 @Component({
@@ -36,7 +36,7 @@ filteredBy = "";
 searchValue = "";
 isFiltered = false;
 
-public state!: State;
+public state!: any;
   /*** Input properties ***/
   @Input() cases: any;
   @Input() pageSizes : any;
@@ -94,8 +94,9 @@ public state!: State;
   caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
-  constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider, private cdr :ChangeDetectorRef
+  constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
+    private readonly localStorageService: LocalStorageService
     ) {}
 
   /** Lifecycle hooks **/
@@ -134,11 +135,11 @@ public state!: State;
       this.sortType = "";
       this.sortValue = "";
     }
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort
-      };
+    this.state=this.getGridState();
+    if (Object.keys(this.state).length === 0) {
+      this.defaultGridState();
+    }
+    
       this.sortColumn = this.columns[this.sort[0]?.field];
       this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
       this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
@@ -149,6 +150,14 @@ public state!: State;
         this.filter = "";
       }
     this.loadProfileCasesList()
+  }
+  defaultGridState(){
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filters:{logic:'and',filters:[]}
+      };
   }
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
@@ -181,7 +190,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
   public dataStateChange(stateData: any): void {
     this.state=stateData;
-    localStorage.setItem('gridState',JSON.stringify(this.state) );
+    this.saveGridState();
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -231,6 +240,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
    }
 
   /** Private methods **/
+  private saveGridState(){
+    this.localStorageService.setItem(this.selectedTab+'_'+LocalStorageKeys.GridState, JSON.stringify(this.state));
+  }
+  private getGridState(){
+   return JSON.parse(this.localStorageService.getItem(this.selectedTab+'_'+LocalStorageKeys.GridState) || '{}');
+  }
   private loadDdlGridColumns() {
     this.caseFacade.loadDdlGridColumns();
     this.searchLoaderVisibility$.subscribe((data : any) => {
@@ -274,7 +289,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.searchValue = "";
     this.isFiltered = false;
     this.columnsReordered = false;
-    localStorage.setItem('gridState',JSON.stringify(this.state) );
+    this.saveGridState();
     this.loadProfileCasesList();
   }
   onColumnReorder(event:any)
