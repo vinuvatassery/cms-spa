@@ -15,7 +15,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
-import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
