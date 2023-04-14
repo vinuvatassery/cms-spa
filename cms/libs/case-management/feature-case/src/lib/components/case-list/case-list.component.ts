@@ -123,11 +123,17 @@ public state!: State;
         data.forEach((item: any) => {
           item.lovDesc = item.lovDesc.toUpperCase();
         });
-        this.caseStatusTypes=data;
+        this.caseStatusTypes=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
       }
     });
   }
   ngOnChanges(): void {
+    if (this.selectedTab == 1)
+    {
+      this.sort = [];
+      this.sortType = "";
+      this.sortValue = "";
+    }
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -197,8 +203,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.isFiltered = false
     }
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? 'clientFullName'
-    this.sortType = stateData.sort[0]?.dir ?? 'asc'
+    this.sortValue = stateData.sort[0]?.field ?? ""
+    this.sortType = stateData.sort[0]?.dir ?? ""
     this.state=stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
@@ -233,6 +239,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   onChange(event :any)
   {
+    this.state.skip = 0;
+    this.state.take = this.pageSizes[0]?.value;
     this.columnName = this.columnDroplist[this.selectedColumn];
     this.filter = event;
     this.loadProfileCasesList();
@@ -243,6 +251,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.sortValue  = this.caseFacade.sortValue;
     this.sortType  = this.caseFacade.sortType;
     this.sort  = this.caseFacade.sort;
+    if (this.selectedTab == 1)
+    {
+      this.sort = [];
+      this.sortType = "";
+      this.sortValue = "";
+    }
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,

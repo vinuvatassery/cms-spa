@@ -73,6 +73,33 @@
         <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['group'].valid && !eligibilityPeriodForm.controls['group'].disabled">Group is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
+    <div class="flex-col" *ngIf="!isEdit && eligibilityPeriodForm.controls['eligibilityStatus'].value ==='DISENROLLED'">
+      <kendo-floatinglabel text="Disenrollment Reason">
+        <kendo-dropdownlist 
+        [fillMode]="formUiStyle.dropDownFillMode" 
+        [data]="disenrollmentReason$ | async"
+        formControlName ="reasonCode"
+        textField="lovDesc" 
+        valueField="lovCode"
+        [valuePrimitive]="true"> </kendo-dropdownlist>
+        <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['reasonCode'].valid ">Disenrollment Reason is required.</kendo-formerror>
+      </kendo-floatinglabel>
+    </div>    
+
+    <div class="flex-col" *ngIf="!isEdit && eligibilityPeriodForm.controls['eligibilityStatus'].value ==='DISENROLLED' 
+    && eligibilityPeriodForm.controls['reasonCode'].value === 'OTHRS'">
+        <kendo-floatinglabel text="Other Description" >
+          <kendo-textbox 
+          aria-label="Other Reason Description"              
+            formControlName="otherReasonDesc"
+            [fillMode]="formUiStyle.inputFillMode"
+            [maxlength]="maxLengthTen"
+            placeholder="Enter Other Reason"  
+            >               
+          </kendo-textbox>                  
+        </kendo-floatinglabel>
+    </div>
+    
   </div>
 </section>
 <kendo-dialog-actions>
