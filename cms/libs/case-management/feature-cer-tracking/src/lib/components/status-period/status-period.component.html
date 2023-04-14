@@ -3,8 +3,7 @@
 
         <div class="app-c-table">
 
-            <kendo-grid [pageSize]="5" [pageable]="true" [data]="StatusPeriod$ | async"
-             (detailExpand)="onExpand($event)">
+            <kendo-grid [pageSize]="5" [pageable]="true" [data]="StatusPeriod$ | async">
                 <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
                     <section *ngIf="dataItem.RamseelInfo">
                         <div class="flex-col flex-col-6 mt-2 p-0">
