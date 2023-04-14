@@ -1,10 +1,10 @@
 <!-- User Card Profile Details Popover -->
-<kendo-popover #onUserProfileDetailsHovered width="330">
+<!-- <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
     <case-management-hiv-case-manager-card [gridHoverDataItem]="gridHoverDataItem" [userImage$]="userImage$"
       (loadprofilePhotoEvent)="loadprofilePhotoEventHandler($event)"></case-management-hiv-case-manager-card>
   </ng-template>
-</kendo-popover>
+</kendo-popover> -->
 
 
 <div class="flex-row">
@@ -17,6 +17,11 @@
             <button look="flat" class="card-link-button" (mouseover)="onManagerHover(dataItem)" kendoButton
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered"
               showOn="hover">{{dataItem.caseManagerName}}</button>
+              <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                <ng-template kendoPopoverBodyTemplate>
+                  <common-user-profile-card [userId]="dataItem?.caseManagerId" [reassign]=false></common-user-profile-card>
+                </ng-template>
+              </kendo-popover>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="pNumber" title="PNUmber" [width]="100" *ngIf="managementTab"></kendo-grid-column>
@@ -176,6 +181,7 @@
 <kendo-dialog *ngIf="showUnAssignConfirmation"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <case-management-un-assign-case-manager 
+  [startDate]="assignmentStartDate"
   [assignedcaseManagerId]="selectedCaseManagerId"
   (unAssignConfimEvent)="onDeleteConfirmHandle($event)">
   </case-management-un-assign-case-manager>

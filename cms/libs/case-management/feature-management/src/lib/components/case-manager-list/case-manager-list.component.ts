@@ -109,11 +109,13 @@ export class CaseManagerListComponent implements OnChanges {
       click: (
         clientCaseId: string,
         caseManagerId: string,
-        clientCaseManagerId: string
+        clientCaseManagerId: string,
+        assignmentStartDate: Date
       ): void => {
         if (this.unAssignButttonEmitted === false) {
           this.deleteCaseManagerCaseId = clientCaseId;
           this.selectedCaseManagerId = caseManagerId;
+          this.assignmentStartDate=new Date(assignmentStartDate);
           this.onUnAssignManagerClicked();
           this.unAssignButttonEmitted = true;
         }

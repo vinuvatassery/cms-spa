@@ -15,11 +15,12 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class UnAssignCaseManagerComponent {
   @Input() assignedcaseManagerId :any
+  @Input() startDate!: any ;
   endDate!: Date;
   showError = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() unAssignConfimEvent = new EventEmitter<any>();
-  onUnAssignConfirm(confirm: boolean) {
+  onUnAssignConfirm(confirm: boolean) {   
     if (this.endDate) 
     {
       this.showError= false;
@@ -30,8 +31,17 @@ export class UnAssignCaseManagerComponent {
       };
       this.unAssignConfimEvent.emit(existCaseManagerData);
     }else
+    if(confirm)
     {
       this.showError= true;
+    }
+   else
+    {
+      this.showError= false;
+      const existCaseManagerData = {      
+        confirm: false        
+      };
+      this.unAssignConfimEvent.emit(existCaseManagerData);
     }
   }
 }

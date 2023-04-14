@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (click)="onUnAssignConfirm(false)"> Unassign Case Manager? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar  type="button" (click)="onUnAssignConfirm(false)"> Unassign Case Manager? </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
     <p>
         They will be unassigned from this client. You will be able to assign another one or submit a new referral.
@@ -10,7 +10,8 @@
           <kendo-floatinglabel text="End Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
              format="MM-dd-yyyy" 
-            formatPlaceholder="formatPattern"           
+            formatPlaceholder="formatPattern"   
+            [min]="startDate"        
             aria-label="End Date"
             placeholder=""
             [(ngModel)]="endDate">
@@ -24,9 +25,9 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button
-          kendoButton
-          [primary]="true"
+          kendoButton      
           look="outline"
+          type="button"
           aria-label="cancel removing case manager"
           (click)="onUnAssignConfirm(false)"
         >
