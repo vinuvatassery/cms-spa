@@ -117,6 +117,22 @@ export class PharmaciesListComponent implements OnInit {
       },
     },
     {
+      buttonType: 'btn-h-warn',
+      text: 'Mark Primary',
+      icon: 'star',
+      type:'MarkAsPrimary',
+      click: (clientPharmacy: any): void => {
+        if(clientPharmacy.clientPharmacyId){
+          let pharmacyPriorityites = [{
+            ClientPharmacyId:clientPharmacy.clientPharmacyId,
+            ClientId:this.clientId,
+            PriorityCode:'P'
+          }]
+          this.drugPharmacyFacade.updateDrugPharamcyPriority(this.clientId,pharmacyPriorityites)
+        }
+      },
+    },
+    {
       buttonType: 'btn-h-primary',
       text: 'Re-activate',
       icon: 'done',
@@ -226,11 +242,11 @@ export class PharmaciesListComponent implements OnInit {
     }
     else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes)
     {
-      filteredOptions = options.filter(option =>option.type !='Reactivate');
+      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type !='Reactivate');
     } 
     else if(actionType.priorityCode === PriorityCode.Primary && actionType.activeFlag === StatusFlag.No)
     {
-      filteredOptions = options.filter(option =>option.type  !='Deactivate');
+      filteredOptions = options.filter(option =>option.type != 'MarkAsPrimary' && option.type  !='Deactivate');
     }
     else {
       filteredOptions = options;
