@@ -9,10 +9,11 @@ import {
   OnChanges,
   ChangeDetectorRef,
 } from '@angular/core';
+import { StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
@@ -26,18 +27,20 @@ export class CerListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() cerTrackingData$: any;
-  @Input() cerTrackingDates$ : any
-  @Input() cerTrackingCount$ : any;
+  @Input() cerTrackingDates$: any
+  @Input() cerTrackingCount$: any;
+  @Input() sendResponse$!: Observable<any>;;
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
+  @Output() sendCersEvent = new EventEmitter<any>();
 
   /** Public properties **/
-  isOpenSendCER = false;
+  isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
   todayDate = new Date();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public isGridLoaderShow = false;
-  selectedDate! : any;
-  loader= false;
+  selectedDate!: any;
+  loader = false;
   datesSubject = new Subject<any>();
   cerTrackingDatesList$ = this.datesSubject.asObservable();
   loadDefSelectedateSubject = new Subject<any>();
@@ -45,22 +48,24 @@ export class CerListComponent implements OnInit, OnChanges {
   gridCERDataSubject = new Subject<any>();
   gridCERData$ = this.gridCERDataSubject.asObservable();
   public state!: State;
-  dateDropdownDisabled= false
-  // actions: Array<any> = [{ text: 'Action' }];
+  dateDropdownDisabled = false;
+  gridOptionButtonVisible$ = new BehaviorSubject<boolean>(false);
+  selectedEligibilityCerId!:string;
+  isPaperLessFlag!:boolean;
+  clientName!:string;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public actions = [
+
+  public gridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Send CER Reminders',
-      // icon: "done",
-      click: (): void => {},
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Send Restricted Notices',
-      // icon: "edit",
-      click: (): void => {},
-    },
+      text: 'Re-send CER',
+      click: (eligibilityCer: any): void => { 
+        this.selectedEligibilityCerId = eligibilityCer?.clientCaseEligibilityCerId;
+        this.isPaperLessFlag = eligibilityCer?.paperlessFlag === StatusFlag.Yes;
+        this.clientName = eligibilityCer?.clientFullName;
+        this.resendCer();
+      },
+    }
   ];
 
   constructor(private cdr:ChangeDetectorRef){
@@ -88,11 +93,11 @@ export class CerListComponent implements OnInit, OnChanges {
 
   /** Internal event methods **/
   onCloseSendCERClicked() {
-    this.isOpenSendCER = false;
+    this.isOpenSendCER$.next(false);
   }
 
   onOpenSendCERClicked() {
-    this.isOpenSendCER = true;
+    this.isOpenSendCER$.next(true);
   }
 
   // updating the pagination infor based on dropdown selection
@@ -172,5 +177,16 @@ export class CerListComponent implements OnInit, OnChanges {
 
   public columnChange(e: ColumnVisibilityChangeEvent) {
     this.cdr.detectChanges()
+  }
+
+  resendCer(){
+    this.isOpenSendCER$.next(true); 
+    this.sendResponse$.subscribe((resp: boolean) => {
+      this.isOpenSendCER$.next(!resp); 
+    });
+  }
+
+  sendCer(){
+    this.sendCersEvent.emit(this.selectedEligibilityCerId);
   }
 }

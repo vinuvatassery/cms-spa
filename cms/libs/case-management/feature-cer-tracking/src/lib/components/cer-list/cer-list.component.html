@@ -17,25 +17,6 @@
   <case-management-cer-counts
   [cerTrackingCount]="cerTrackingCount$ | async"></case-management-cer-counts>
   </div>
-
-  <button kendoButton [primary]="true" (click)="onOpenSendCERClicked()" appendTo="body" aria-label="send cers">
-    Send CERS
-  </button>
-
-  <!-- Bulk dropdown -->
-  <kendo-dropdownbutton [data]="actions"  class="TableActionPopup app-dropdown-action bulk-dropdown"
-    buttonClass="k-flat-button" aria-label="more actions"
-    [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-    Bulk  <span class="material-icons">
-      arrow_drop_down
-      </span>
-    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-      <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-        aria-hidden="false" (click)="dataItem.click">
-        <label> {{ dataItem.text }} </label>
-      </button>
-    </ng-template>
-  </kendo-dropdownbutton>
 </section>
 
 <!-- Sorted Info -->
@@ -74,12 +55,36 @@
     <kendo-grid-column field="clientOfficialIdFullName" title="Official Id Full Name" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="clientInsuranceFullName" title="Official Insurance Full Name" [width]="130"></kendo-grid-column>  
     <kendo-grid-column field="eligibilityStatus" title="Current Status" [width]="130"></kendo-grid-column>
-    <kendo-grid-column title="Date CER Sent" [sortable]="false" [width]="130"></kendo-grid-column>
-    <kendo-grid-column title="Date CER Received" [sortable]="false" [width]="130"></kendo-grid-column>
-    <kendo-grid-column title="Date CER Completed" [sortable]="false" [width]="130"></kendo-grid-column>
-    <kendo-grid-column title="Reminder Sent Date" [sortable]="false" [width]="130"></kendo-grid-column>
-    <kendo-grid-column title="CER Resent Date" [sortable]="false" [width]="130"></kendo-grid-column>
-    <kendo-grid-column title="Restricted Sent Date" [sortable]="false" [width]="130"></kendo-grid-column>
+    <kendo-grid-column field="cerSentDate" title="Date CER Sent" [sortable]="false" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>  
+          {{dataItem.cerSentDate | date:'MM/dd/yyyy'}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="cerReceivedDate" title="Date CER Received"  filter="date" [sortable]="false" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>  
+        {{dataItem.cerReceivedDate | date:'MM/dd/yyyy'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="cerCompletedDate" title="Date CER Completed" [sortable]="false" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>  
+        {{dataItem.cerCompletedDate | date:'MM/dd/yyyy'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="reminderSentDate" title="Reminder Sent Date" [sortable]="false" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>  
+        {{dataItem.reminderSentDate | date:'MM/dd/yyyy'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="cerResentDate" title="CER Resent Date" [sortable]="false" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>  
+        {{dataItem.cerResentDate | date:'MM/dd/yyyy'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="restrictedSentDate" title="Restricted Sent Date" [sortable]="false" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>  
+        {{dataItem.restrictedSentDate | date:'MM/dd/yyyy'}}
+    </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="spokenLanguage" title="Spoken Language" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="sssignedCm" title="Case Manager" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -122,6 +127,29 @@
   <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"
     [format]="{ date: 'MM-dd-yyyy' }" filter="date">  
   </kendo-grid-column>
+  <kendo-grid-column title="Options" [sortable]="false" [width]="70" class="text-center" [sticky]="true" [columnMenu]="false">
+    <ng-template kendoGridCellTemplate let-dataItem>
+        <kendo-dropdownbutton 
+        [data]="gridActions"
+        icon="more-vertical"
+        title="More Options"
+        class="TableActionPopup app-dropdown-action"
+        buttonClass="k-icon-button"
+        aria-label="more actions"
+        [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                <button kendoButton look="flat" 
+                [attr.aria-label]="buttondataItem.text"
+                [class]="buttondataItem.buttonType" 
+                aria-hidden="false" 
+                (click)="buttondataItem.click(dataItem)"
+                [disabled]="false">
+                  {{ buttondataItem.text }} 
+                </button>
+            </ng-template>
+        </kendo-dropdownbutton>
+    </ng-template>
+</kendo-grid-column>
 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
@@ -160,7 +188,13 @@
 
 
 <!-- Send CER Modal Html-->
-<kendo-dialog *ngIf="isOpenSendCER" (close)="onCloseSendCERClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-top" title="Send CERs?">
-  <case-management-send-cer></case-management-send-cer>
+<kendo-dialog *ngIf="isOpenSendCER$ | async" (close)="onCloseSendCERClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-top" title="Re-send CERs?">
+  <case-management-send-cer 
+    [isPaperLess]="isPaperLessFlag" 
+    [clientName]="clientName" 
+    (sendCerEvent)="sendCer()"
+    (cancelSendCerEvent)="onCloseSendCERClicked()"
+  >
+  </case-management-send-cer>
 </kendo-dialog>
