@@ -15,7 +15,7 @@ import {
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { CaseFacade, CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-client-eligibility-page',
@@ -39,7 +39,6 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
-    private readonly caseFacade: CaseFacade
   ) { }
 
   /** Lifecycle Hooks **/
