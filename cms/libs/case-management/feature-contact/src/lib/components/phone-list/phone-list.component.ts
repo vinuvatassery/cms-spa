@@ -11,6 +11,8 @@ import {
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { UserDefaultRoles } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-phone-list',
@@ -60,6 +62,7 @@ export class PhoneListComponent implements OnChanges {
   public state!: State;
   historychkBoxChecked = false;
   loader = false;
+  hasPhoneDeletePermission =false;
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public gridOption = [
@@ -115,7 +118,10 @@ export class PhoneListComponent implements OnChanges {
       },
     },
   ];
-
+ /** Constructor**/
+ constructor( 
+  private readonly userManage: UserManagementFacade
+) {}
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -123,6 +129,8 @@ export class PhoneListComponent implements OnChanges {
       sort: this.sort,
     };
     this.loadClientPhonesList();
+    
+    this.hasPhoneDeletePermission = this.userManage.hasPermission(["Client_Profile_Client_ContactInfo_Phone_Delete"]);
   }
   pageselectionchange(data: any) {
     this.state.take = data.value;

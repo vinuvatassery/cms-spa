@@ -63,11 +63,6 @@
     </kendo-grid-column>
     <kendo-grid-column field="clientId" title="Client ID" [width]="120"></kendo-grid-column>
     <kendo-grid-column field="urn" title="URN" [width]="110"></kendo-grid-column>
-    <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="130" [hidden]="true">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.preferredContact?.includes('@')?dataItem.preferredContact: dataItem.preferredContact | phone  }}
-      </ng-template>
-    </kendo-grid-column>
     <kendo-grid-column field="caseStatus" title="Status" [width]="120">
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
@@ -141,8 +136,6 @@
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.ssn | ssn }}
       </ng-template>
-    </kendo-grid-column>
-    <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120" [hidden]="true">
     </kendo-grid-column>
     <kendo-grid-column *ngIf="selectedTab === 1 || selectedTab === 2" field="assignedCw" title="Assigned to" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
