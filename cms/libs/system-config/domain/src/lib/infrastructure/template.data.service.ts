@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
@@ -15,7 +15,7 @@ export class TemplateDataService {
   constructor(private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
   ) { }
-
+															
   /** Public methods **/
   loadTemplates(): Observable<Template[]> {
     return of([
@@ -33,17 +33,19 @@ export class TemplateDataService {
     ]);
   }
 
-  getDirectoryContent(filepath?: string) {
-    let url = `/case-management/browse?filepath=` + (!!filepath ? `${filepath}` : '""');
+  getDirectoryContent(typeCode:any ,filepath?: any) {
+    let params = new HttpParams();
+    params = params.append('path',filepath);
+    params = params.append('typeCode',typeCode);
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + url
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + '/system-config/templates/browse',{params:params}
     );
   }
 
-  getFormsandDocumentsViewDownload(filepath: string) {
-    let url = `/case-management/document/path?filepath=` + `${filepath}`;
+  getFormsandDocumentsViewDownload(id: string) {
+    let url = `/system-config/templates/${id}/content`;
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + url
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + url
       , {
         responseType: 'blob'
       });

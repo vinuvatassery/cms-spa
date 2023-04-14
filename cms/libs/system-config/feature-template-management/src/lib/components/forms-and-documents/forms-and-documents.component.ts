@@ -25,7 +25,7 @@ export class FormsAndDocumentsComponent {
   }
 
   ngOnInit() {
-    this.templateManagementFacade.getDirectoryContent("").subscribe((documentlist: any) => {
+    this.templateManagementFacade.getDirectoryContent('Forms','').subscribe((documentlist: any) => {
       this.isShowLoader = false;
       this.loaderService.hide();
       if (!!documentlist && this.foldersTree.length == 0) {
@@ -47,13 +47,13 @@ export class FormsAndDocumentsComponent {
   }
 
   fetchSubfolders = (node: any) =>
-    this.templateManagementFacade.getDirectoryContent(node.filePath).pipe(map((response: any[]) => {
+    this.templateManagementFacade.getDirectoryContent('Forms',node.templateId).pipe(map((response: any[]) => {
       return node.files = response;
     }));
 
   hasFiles = function (data: any) {
 
-    return data.isDirectory;
+    return data.isFolder;
   }
   /** Public methods **/
   showSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -64,13 +64,13 @@ export class FormsAndDocumentsComponent {
     this.snackbarService.manageSnackBar(type, subtitle);
   }
 
-  onDownloadViewFileClick(viewType: string, documentname: string) {
+  onDownloadViewFileClick(viewType: string, templateId: string,templateName:string) {
 
-    if (documentname === undefined || documentname === '') {
+    if (templateId === undefined || templateId === '') {
       return;
     }
     this.loaderService.show()
-    this.templateManagementFacade.getFormsandDocumentsViewDownload(documentname).subscribe({
+    this.templateManagementFacade.getFormsandDocumentsViewDownload(templateId).subscribe({
       next: (data: any) => {
 
         const fileUrl = window.URL.createObjectURL(data);
@@ -79,8 +79,7 @@ export class FormsAndDocumentsComponent {
         } else {
           const downloadLink = document.createElement('a');
           downloadLink.href = fileUrl;
-          var filename = documentname.split("\\");
-          downloadLink.download = filename[filename.length - 1];
+          downloadLink.download = templateName;
           downloadLink.click();
         }
         this.loaderService.hide();

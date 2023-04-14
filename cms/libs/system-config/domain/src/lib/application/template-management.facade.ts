@@ -45,12 +45,12 @@ export class TemplateManagementFacade {
     this.snackbarService.manageSnackBar(type, subtitle);
   }
 
-  getDirectoryContent(filepath?: string): any {
-    return this.templateDataService.getDirectoryContent(filepath);
+  getDirectoryContent(typeCode:string,filepath?: string): any {
+    return this.templateDataService.getDirectoryContent(typeCode,filepath);
   }
 
-  getFormsandDocumentsViewDownload(filename: string) {
-    return this.templateDataService.getFormsandDocumentsViewDownload(filename);
+  getFormsandDocumentsViewDownload(id: string) {
+    return this.templateDataService.getFormsandDocumentsViewDownload(id);
   }
 
 }
