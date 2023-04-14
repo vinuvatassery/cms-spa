@@ -90,7 +90,7 @@ export class CerDataService {
   getCerTrackingList(trackingDate: Date, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients-cer-tracking?trackingDate=${trackingDate}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/cer?trackingDate=${trackingDate}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
 
   }
@@ -98,17 +98,17 @@ export class CerDataService {
   getCerTrackingDatesList() {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients-cer-tracking/dates`
+      `/case-management/cer/dates`
     );
   }
   getCerTrackingDateCounts(trackingDate: Date) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients-cer-tracking/counts?trackingDate=${trackingDate}`
+      `/case-management/cer/counts?trackingDate=${trackingDate}`
     );
   }
 
   sendCerCounts(cerId: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients-cer-tracking/re-send-cers/${cerId}`, {});
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cer/re-send/${cerId}`, {});
   }
 }
