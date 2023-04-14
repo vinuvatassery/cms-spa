@@ -32,6 +32,7 @@
 <div class="app-c-table">
   <kendo-grid
   (columnReorder)="onColumnReorder($event)"
+  (columnVisibilityChange)="columnChange($event)"
   [filter]="gridFilter"
   [pageSize]="state.take"
   [pageable]="true"
@@ -54,15 +55,19 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="officialIdFullName" title="Name on Official ID"  [width]="160">
+    <kendo-grid-column field="officialIdFullName" title="Name on Official ID"  [width]="160" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="insuranceFullName" title="Name on Primary Insurance Card"  [width]="160">
+    <kendo-grid-column field="insuranceFullName" title="Name on Primary Insurance Card"  [width]="160" [hidden]="true">
     </kendo-grid-column>
     <kendo-grid-column field="pronouns" title="Pronouns"   [width]="120">
     </kendo-grid-column>
-    <kendo-grid-column field="clientId" title="ID" [width]="70"></kendo-grid-column>
+    <kendo-grid-column field="clientId" title="Client ID" [width]="120"></kendo-grid-column>
     <kendo-grid-column field="urn" title="URN" [width]="110"></kendo-grid-column>
-    <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="130"></kendo-grid-column>
+    <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="130">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.preferredContact?.includes('@')?dataItem.preferredContact: dataItem.preferredContact | phone  }}
+      </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="caseStatus" title="Status" [width]="120">
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
@@ -95,47 +100,44 @@
    </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="160"
-      [format]="{ date: 'MM-dd-yyyy' }" filter="date">
-
+      [format]="{ date: 'MM-dd-yyyy' }" filter="date" >
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-date-filter-menu
-            [column]="column"
+          <common-grid-cell-date-range-filter
+            [field]="'eilgibilityStartDate'"
             [filter]="filter"
             [filterService]="filterService"
-            operator="eq" >
-                <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        </kendo-grid-date-filter-menu>
+          >
+          </common-grid-cell-date-range-filter>
     </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-date-filter-menu
-            [column]="column"
-            [filter]="filter"
-            [filterService]="filterService"
-            operator="eq" >
-                <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        </kendo-grid-date-filter-menu>
-    </ng-template>
+        <common-grid-cell-date-range-filter
+          [field]="'eligibilityEndDate'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+  </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="email" title="Email" [width]="120">
+    <kendo-grid-column field="email" title="Email" [width]="120" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="phone" title="Phone" [width]="120">
+    <kendo-grid-column field="phone" title="Phone" [width]="120" [hidden]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.phone | phone }}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="genders" title="Gender" [width]="120">
+    <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="homeAddress" title="Home Address" [width]="120">
+    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="ssn" title="SSN" [width]="120">
+    <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
+    </kendo-grid-column>
+    <kendo-grid-column field="ssn" title="SSN" [width]="120" [hidden]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.ssn | ssn }}
       </ng-template>
-    </kendo-grid-column>
-    <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column *ngIf="selectedTab === 1 || selectedTab === 2" field="assignedCw" title="Assigned to" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>

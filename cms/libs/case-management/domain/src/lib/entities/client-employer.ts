@@ -4,4 +4,5 @@ export class ClientEmployer {
     employerName: string | null = null;
     dateOfHire: Date = new Date;
     concurrencyStamp: string | null = null;
+    creatorId: string | null = null;
 }

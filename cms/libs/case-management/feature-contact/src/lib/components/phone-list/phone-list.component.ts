@@ -11,6 +11,8 @@ import {
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { UserDefaultRoles } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-phone-list',
@@ -37,6 +39,7 @@ export class PhoneListComponent implements OnChanges {
   @Output() preferredClientPhoneEvent = new EventEmitter<any>();
   @Output() deactivateClientPhoneEvent = new EventEmitter<any>();
   @Output() removeClientPhoneEvent = new EventEmitter<any>();
+  @Output() reloadEmailsEvent = new EventEmitter();
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -59,6 +62,7 @@ export class PhoneListComponent implements OnChanges {
   public state!: State;
   historychkBoxChecked = false;
   loader = false;
+  hasPhoneDeletePermission =false;
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public gridOption = [
@@ -114,7 +118,10 @@ export class PhoneListComponent implements OnChanges {
       },
     },
   ];
-
+ /** Constructor**/
+ constructor( 
+  private readonly userManage: UserManagementFacade
+) {}
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -122,6 +129,8 @@ export class PhoneListComponent implements OnChanges {
       sort: this.sort,
     };
     this.loadClientPhonesList();
+    
+    this.hasPhoneDeletePermission = this.userManage.hasPermission(["Client_Profile_Client_ContactInfo_Phone_Delete"]);
   }
   pageselectionchange(data: any) {
     this.state.take = data.value;
@@ -160,15 +169,20 @@ export class PhoneListComponent implements OnChanges {
 
   /** grid event methods **/
 
-  public dataStateChange(stateData: any): void {
+  public dataStateChange(stateData: any): void {    
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortValue = stateData?.sort[0]?.field ?? 'deviceTypeCode';
+    this.sortType = stateData?.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.loadClientPhonesList();
   }
 
   /** Internal event methods **/
+reloadEmails()
+{
+this.reloadEmailsEvent.emit();  
+}
+
   gridDataHandle() {
     this.clientPhonesData$.subscribe((data: any) => {
       this.gridPhoneDataSubject.next(data);
@@ -213,6 +227,10 @@ export class PhoneListComponent implements OnChanges {
         if (addResponse === true) {
           this.loadClientPhonesList();
           this.onPhoneNumberDetailClosed();
+          if(phoneData?.preferredFlag === 'Y')
+          {
+          this.reloadEmails()
+          }
         }
       });
   }
@@ -251,6 +269,7 @@ export class PhoneListComponent implements OnChanges {
         if (Response === true) {
           this.preferredButtonEmitted = false;
           this.loadClientPhonesList();
+          this.reloadEmails()
         }
       });
   }

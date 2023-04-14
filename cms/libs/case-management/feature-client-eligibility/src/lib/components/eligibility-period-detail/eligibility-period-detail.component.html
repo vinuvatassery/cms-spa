@@ -33,11 +33,13 @@
          format="MM-dd-yyyy" 
         formatPlaceholder="formatPattern"
         formControlName ="statusStartDate"
-        (valueChange)="startDateOnChange()">
-        </kendo-datepicker>
-         <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusStartDate'].valid && !eligibilityPeriodForm.controls['statusStartDate'].disabled"> Start Date is
-          required.</kendo-formerror>
+        (valueChange)="startDateOnChange()"
+        aria-label="Status Start Date"
+        placeholder="">
+        </kendo-datepicker>       
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusStartDate'].valid && !eligibilityPeriodForm.controls['statusStartDate'].disabled"> Start Date is
+        required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status End Date">
@@ -47,15 +49,17 @@
         formControlName ="statusEndDate"
         (blur)="endDateOnChange()"
         (valueChange)="endDateValueChange($event)"
-        >
-        </kendo-datepicker>
-        <kendo-formerror
-        *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">
-        End Date is required.</kendo-formerror>
-      <kendo-formerror
-        *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date must be after Start Date.</kendo-formerror>
-
+        aria-label="Status End Date"
+        placeholder="">
+        </kendo-datepicker>  
       </kendo-floatinglabel>
+      <kendo-formerror
+      *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">
+      End Date is required.
+    </kendo-formerror>
+    <kendo-formerror
+      *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date must be after Start Date.
+    </kendo-formerror>
     </div>
     <div class="flex-col" *ngIf="!isEdit">
       <kendo-floatinglabel text="Group">
@@ -69,6 +73,33 @@
         <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['group'].valid && !eligibilityPeriodForm.controls['group'].disabled">Group is required.</kendo-formerror>
       </kendo-floatinglabel>
     </div>
+    <div class="flex-col" *ngIf="!isEdit && eligibilityPeriodForm.controls['eligibilityStatus'].value ==='DISENROLLED'">
+      <kendo-floatinglabel text="Disenrollment Reason">
+        <kendo-dropdownlist 
+        [fillMode]="formUiStyle.dropDownFillMode" 
+        [data]="disenrollmentReason$ | async"
+        formControlName ="reasonCode"
+        textField="lovDesc" 
+        valueField="lovCode"
+        [valuePrimitive]="true"> </kendo-dropdownlist>
+        <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['reasonCode'].valid ">Disenrollment Reason is required.</kendo-formerror>
+      </kendo-floatinglabel>
+    </div>    
+
+    <div class="flex-col" *ngIf="!isEdit && eligibilityPeriodForm.controls['eligibilityStatus'].value ==='DISENROLLED' 
+    && eligibilityPeriodForm.controls['reasonCode'].value === 'OTHRS'">
+        <kendo-floatinglabel text="Other Description" >
+          <kendo-textbox 
+          aria-label="Other Reason Description"              
+            formControlName="otherReasonDesc"
+            [fillMode]="formUiStyle.inputFillMode"
+            [maxlength]="maxLengthTen"
+            placeholder="Enter Other Reason"  
+            >               
+          </kendo-textbox>                  
+        </kendo-floatinglabel>
+    </div>
+    
   </div>
 </section>
 <kendo-dialog-actions>

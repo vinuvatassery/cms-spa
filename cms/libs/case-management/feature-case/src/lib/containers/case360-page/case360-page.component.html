@@ -1,11 +1,14 @@
+<div class="client-header-wrapper-stickey">
+
+
 <common-bread-crumb></common-bread-crumb>
 <case-management-case360-header
   [caseWorkerId]="caseWorkerId"
   [loadedClientHeader]="loadedClientHeader$ | async"
   [clientProfileImpInfo$]="clientProfileImpInfo$"
-[clientId] = "clientId"
-[clientCaseId]="clientCaseId"
-[clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientId] = "clientId"
+  [clientCaseId]="clientCaseId"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
   [currentGroup$]="currentGroup$"
   [ddlGroups$]="ddlGroups$"
   [groupUpdated$]="groupUpdated$"
@@ -19,7 +22,11 @@
 <!-- Case 360 details section -->
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
-  <case-management-case360-header-tools></case-management-case360-header-tools>
+  <case-management-case360-header-tools 
+  [clientId] = "profileClientId" 
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  *ngIf="clientId && clientCaseEligibilityId"
+  ></case-management-case360-header-tools>
 
   <div class="client-tab-bar-wrappers">
 
@@ -124,12 +131,13 @@
     </div>
 
   </div>
-  <div class="client-profile-outlet">
-    <router-outlet></router-outlet>
-  </div>
+
 
 </section>
-
+</div>
+<div class="client-profile-outlet">
+  <router-outlet></router-outlet>
+</div>
 
 <!-- Review HIV Verification Html-->
 <kendo-dialog *ngIf="isVerificationReviewPopupOpened" (close)="onVerificationReviewClosed()"
