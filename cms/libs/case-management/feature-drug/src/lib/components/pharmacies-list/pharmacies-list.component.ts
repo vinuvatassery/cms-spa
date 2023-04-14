@@ -205,7 +205,7 @@ export class PharmaciesListComponent implements OnInit {
       sort: this.sort,
     };
     this.drugPharmacyFacade.clientPharmacies$.subscribe(list =>{
-      debugger;
+ 
       if(list && list.length > 0){
         this.pharmacies = list;
         this.handleClosePharmacyClicked();
