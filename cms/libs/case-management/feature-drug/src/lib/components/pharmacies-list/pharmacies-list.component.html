@@ -104,7 +104,7 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button kendoButton [primary]="true" icon="add" [disabled]="(pharmaciesList$ | async).length === 3" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
+        <button kendoButton [primary]="true" icon="add" [disabled]="disableAddpharmacyButton((pharmaciesList$ | async))" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
           Pharmacy
         </button>
       </div>

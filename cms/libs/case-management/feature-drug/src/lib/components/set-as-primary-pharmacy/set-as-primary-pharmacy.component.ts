@@ -48,7 +48,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     /** Lifecycle hooks **/
     ngOnInit(): void{
   
-      this.pharmacies = this.pharmacies.filter(pharmacy => pharmacy.priorityCode != PriorityCode.Primary)
+      this.pharmacies = this.pharmacies.filter(pharmacy => pharmacy.priorityCode != PriorityCode.Primary && pharmacy.activeFlag === 'Y');
     }
   onCloseSelectNewPrimaryPharmaciesClicked() {
     this.closeSelectNewPrimaryPharmacies.emit();
@@ -85,17 +85,23 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
         isNewAdded: isNewAdded,
         newPharmacy: newPharmacy,
       });
+    }else {
+      this.addNewPharmacyClick.emit(null);
     }
   }
   onRemovePharmacy() {
-   
-    let isNewAdded = this.selectedSearchedPharmacy ? true : false;
-    let newPharmacy = this.selectedSearchedPharmacy
-    ? this.selectedSearchedPharmacy
-    : this.selectedPharmacy;
-    this.removePharmacyClick.emit({
-      isNewAdded: isNewAdded,
-      newPharmacy: newPharmacy,
-    });
+    if (this.IsDeactivateSelectPrimaryPharmacies){
+      let isNewAdded = this.selectedSearchedPharmacy ? true : false;
+      let newPharmacy = this.selectedSearchedPharmacy
+      ? this.selectedSearchedPharmacy
+      : this.selectedPharmacy;
+      this.removePharmacyClick.emit({
+        isNewAdded: isNewAdded,
+        newPharmacy: newPharmacy,
+      });
+    }else {
+      this.removePharmacyClick.emit(null);
+    }
+    
   }
 }

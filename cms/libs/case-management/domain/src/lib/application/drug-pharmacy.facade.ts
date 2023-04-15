@@ -157,20 +157,25 @@ export class DrugPharmacyFacade {
     return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
   }
   updateDrugPharamcyPriority(clientId :any,pharmacyPriority: any){
-    
+   return new Promise((resolve,reject) =>{
     this.loaderService.show();
-     this.drugDataService.savePharmacyPriorityService(pharmacyPriority).subscribe({
-      next: (response:any) => {
-        this.loaderService.hide();
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy updated Successfully');
-        this.loadClientPharmacyList(clientId,false,false);
-      },
-      error: (err) => {
-        this.loaderService.hide();
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        this.loggingService.logException(err);
-      },
-    }); 
+    this.drugDataService.savePharmacyPriorityService(pharmacyPriority).subscribe({
+     next: (response:any) => {
+       this.loaderService.hide();
+       this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy updated Successfully');
+       var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
+       this.loadClientPharmacyList(clientId,false,flag);
+       resolve(true)
+     },
+     error: (err) => {
+       this.loaderService.hide();
+       this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+       this.loggingService.logException(err);
+       resolve(false);
+     },
+   }); 
+   })
+    
   }
 
   searchPharmacies(searchText: string) {
@@ -218,7 +223,8 @@ export class DrugPharmacyFacade {
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-          this.loadClientPharmacyList(clientId, true);
+          var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
+          this.loadClientPharmacyList(clientId, true,flag);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Added Successfully');
         }
@@ -262,7 +268,8 @@ export class DrugPharmacyFacade {
       return this.drugDataService.removeClientPharmacy(clientId, clientPharmacyId).subscribe({
         next: (response) => {
           if (response === true) {
-            this.loadClientPharmacyList(clientId);
+            var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
+            this.loadClientPharmacyList(clientId,false,flag);
             this.removePharmacyResponseSubject.next(true);
             resolve(true);
             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Removed Successfully');
@@ -282,7 +289,7 @@ export class DrugPharmacyFacade {
   }
  
   addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string) {
-   
+   return new Promise((resolve,reject) =>{
     const model = {
       vendorId: vendorId,
       PriorityCode:priorityCode,   
@@ -293,19 +300,24 @@ export class DrugPharmacyFacade {
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-          this.loadClientPharmacyList(clientId, true,false);
+          var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
+          this.loadClientPharmacyList(clientId, false,flag);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Added Successfully');
         }
         this.loaderService.hide();
+        resolve(true);
       },
       error: (err) => {
         this.addPharmacyResponseSubject.next(false);
         this.loaderService.hide();
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        resolve(false);
         this.loggingService.logException(err);
       },
     });
+   })
+ 
   }
 
  
@@ -333,7 +345,8 @@ export class DrugPharmacyFacade {
       next: (response:any) => {
         this.loaderService.hide();
         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Re-Activated Successfully');
-        this.loadClientPharmacyList(pharmacy.ClientId,false,true);
+        var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
+        this.loadClientPharmacyList(pharmacy.ClientId,false,flag);
       },
       error: (err) => {
         this.loaderService.hide();
@@ -353,7 +366,8 @@ export class DrugPharmacyFacade {
          }
          this.loaderService.hide();
          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy De-Activated Successfully');
-         this.loadClientPharmacyList(pharmacy.ClientId,false,false);
+         var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
+         this.loadClientPharmacyList(pharmacy.ClientId,false,flag);
        },
        error: (err) => {
         resolve(false);
