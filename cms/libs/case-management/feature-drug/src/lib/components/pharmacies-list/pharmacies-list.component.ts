@@ -103,8 +103,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
           this.vendorId = clientPharmacy.vendorId;
           this.changePharmacyObj = pharmacyObj;
           if (
-            clientPharmacy.priorityCode === PriorityCode.Primary ||
-            this.pharmacies.length === 1
+            clientPharmacy.priorityCode === PriorityCode.Primary
           ) {
             this.OpenSelectNewPrimaryPharmaciesClicked(
               clientPharmacy,
