@@ -258,7 +258,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
       actionType.priorityCode != PriorityCode.Primary &&
       actionType.activeFlag === StatusFlag.No
     ) {
-      filteredOptions = options.filter((option) => option.type != 'Deactivate');
+      filteredOptions = options.filter((option) => option.type != 'Deactivate' && option.type != 'MarkAsPrimary');
     } else if (
       actionType.priorityCode === PriorityCode.Primary &&
       actionType.activeFlag === StatusFlag.Yes
