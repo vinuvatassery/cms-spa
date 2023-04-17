@@ -192,12 +192,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(!this.checkValidations()){
-          this.workflowFacade.showCancelApplicationPopup(true);
-        }
-        else{
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations()
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }

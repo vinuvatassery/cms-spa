@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { LoginUser } from '../entities/login-user';
@@ -101,7 +101,41 @@ export class UserManagementFacade {
     }
 
   /** Public methods **/
+  hasRole(roleCode : string) : any
+  {
+    this.userDataService.getProfile$
+      .pipe(first(profile => profile[0]?.permissions != null))
+      .subscribe((profile:any)=>{ 
+      return  (profile[0]?.roleCode === roleCode)
+      })
+  }
 
+  hasPermission(ifPermission : string[]) : any
+  {
+   let hasPerm =false;
+    this.userDataService.getProfile$
+      .pipe(first(profile => profile[0]?.permissions != null))
+      .subscribe((profile:any)=>{ 
+        const permission =profile[0]?.permissions 
+        if (permission?.length == 0) {
+          hasPerm = false;
+        }  
+
+        const searchPermission  = ifPermission;    
+        let hasPermissions = false;    
+        for (const perm of searchPermission)
+        {            
+            hasPermissions = permission?.some((x : any)=> x.permissionsCode   === perm)   
+        }
+
+        if (!hasPermissions) {
+          hasPerm = false;
+        } else {
+          hasPerm = true;
+        }  
+      })
+      return  hasPerm;
+  }
 
   ///for case manager hover popup //NOSONAR 
   getUserById(userId : string): void {

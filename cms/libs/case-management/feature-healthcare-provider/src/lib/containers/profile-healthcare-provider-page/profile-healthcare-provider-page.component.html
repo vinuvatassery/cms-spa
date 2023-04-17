@@ -4,11 +4,53 @@
   <div class="flex-col flex-space-bw align-items-center mb-1">
     <h2 class="title-md mb-0 text-bold">HIV Healthcare Providers</h2>
     <div>
-
+      <span class="app-checkboxwidtext-wrapper"> 
+        <input type="checkbox"
+        kendoCheckBox aria-labelledby="historyCheckBox"      
+        (click)="onHistoryChkBoxChanged()" 
+        id="historyCheckBox"
+        name="historyCheckBox"
+        [checked]="historychkBoxChecked"
+        />
+        <label class="k-checkbox-label" for="historyCheckBox"
+          >Show historical</label
+        >
+      </span>
     </div>
 
-  </div>
-  <case-management-health-care-provider-list></case-management-health-care-provider-list>
+  </div>  
+    <section>
+      <div class="block-section pt-1">
+        <div class="flex-row">     
+         
+          <div class="flex-col">
+            <case-management-health-care-provider-list     
+              [managementTab]="true"     
+              [pageSizes]="pageSizes"
+              [sortValue]="sortValue"
+              [sortType]="sortType"
+              [sort]="sort"
+              [searchProviderLoaded$]="searchProviderLoaded$"
+              [healthCareProviderSearchList$]="healthCareProviderSearchList$"
+              [removeHealthProvider$]="removeHealthProvider$"
+              [healthCareProvidersData$]="healthCareProviders$"
+              [addExistingProvider$]="addExistingProvider$"
+              [loadExistingProvider$]="loadExistingProvider$"
+              [healthCareProvideReactivate$]="healthCareProvideReactivate$"
+              (deleteConfimedEvent)="handlePrvRemove($event)"    
+              (deactivateConfimEvent)="handlePrvDeacivate($event)"    
+              (reactivateConfimEvent)="handlePrvReactivate($event)"    
+              (loadProvidersListEvent)="loadProvidersEvent($event)"          
+              (searchTextEvent)="searchTextEventHandleer($event)"
+              (addExistingProviderEvent)="addExistingProviderEventHandler($event)"
+              (getExistingProviderEvent)="getExistingProviderEventHandler($event)"
+            ></case-management-health-care-provider-list>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  
 </div>
 
 
