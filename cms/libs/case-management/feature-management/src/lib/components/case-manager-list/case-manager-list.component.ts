@@ -69,7 +69,7 @@ export class CaseManagerListComponent implements OnChanges {
   showDateChangePopup = false;
   clientCaseManagerId!: string;
   assignmentStartDate!: Date;
-  assignmentEndDate!: Date;
+  assignmentEndDate: any;
   public newAppActions = [
     {
       buttonType: 'btn-h-primary',
@@ -115,7 +115,7 @@ export class CaseManagerListComponent implements OnChanges {
         if (this.unAssignButttonEmitted === false) {
           this.deleteCaseManagerCaseId = clientCaseId;
           this.selectedCaseManagerId = caseManagerId;
-          this.assignmentStartDate=new Date(assignmentStartDate);
+          this.assignmentStartDate = new Date(assignmentStartDate);
           this.onUnAssignManagerClicked();
           this.unAssignButttonEmitted = true;
         }
@@ -152,11 +152,13 @@ export class CaseManagerListComponent implements OnChanges {
         assignmentEndDate: Date
       ): void => {
         if (this.editButtonEmitted === false) {
+          debugger;
           this.deleteCaseManagerCaseId = clientCaseId;
           this.selectedCaseManagerId = caseManagerId;
           this.clientCaseManagerId = clientCaseManagerId;
-          this.assignmentStartDate=new Date(assignmentStartDate);
-          this.assignmentEndDate = new Date(assignmentEndDate)
+          this.assignmentStartDate = new Date(assignmentStartDate);
+          this.assignmentEndDate =
+            assignmentEndDate === null ? '' : new Date(assignmentEndDate);
           this.onDateChangeClicked();
           this.editButtonEmitted = true;
         }
