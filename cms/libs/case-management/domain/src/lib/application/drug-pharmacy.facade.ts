@@ -281,7 +281,8 @@ export class DrugPharmacyFacade {
     
   }
  
-  addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string) {
+  addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string,isOpenPriroityPopup?:any) {
+   debugger;
    
     const model = {
       vendorId: vendorId,
@@ -293,7 +294,8 @@ export class DrugPharmacyFacade {
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-          this.loadClientPharmacyList(clientId, true,false);
+          let showPopUp = isOpenPriroityPopup !== null ? !isOpenPriroityPopup  : true;
+          this.loadClientPharmacyList(clientId, showPopUp,false);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Added Successfully');
         }

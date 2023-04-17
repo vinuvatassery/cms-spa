@@ -28,6 +28,7 @@ export class PharmacyDetailComponent implements OnInit {
   @Output() closePharmacyEvent = new EventEmitter();
   @Output() searchPharmacyEvent = new EventEmitter<string>();
   @Output() addPharmacyEvent = new EventEmitter<string>();
+  @Output() onEmitingSetAsPrimaryFlag = new EventEmitter<boolean>();
   @Output() editPharmacyEvent = new EventEmitter<string>();
   @Output() removePharmacyEvent = new EventEmitter<string>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -75,8 +76,9 @@ export class PharmacyDetailComponent implements OnInit {
         this.editPharmacyEvent.emit(this.selectedPharmacyId ?? '');
       }
       else {
-       
+        this.onEmitingSetAsPrimaryFlag.emit(this.isSetAsPrimary);
         this.addPharmacyEvent.emit(this.selectedPharmacyId ?? '');
+       
         
       }
     }

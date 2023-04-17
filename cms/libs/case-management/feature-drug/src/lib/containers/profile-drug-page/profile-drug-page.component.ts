@@ -34,6 +34,7 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
     removeDrugPharmacyRsp$ = this.drugPharmacyFacade.removeDrugPharmacyResponse$;
     triggerPriorityPopup$ = this.drugPharmacyFacade.triggerPriorityPopup$;
     selectedPharmacy$ = this.drugPharmacyFacade.selectedPharmacy$;
+    isSetAsPrimary = null;
     
     ngOnInit(): void {
 
@@ -90,8 +91,13 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
     this.drugPharmacyFacade.addDrugPharmacy(
       this.profileClientId,
       vendorId,
-      priorityCode
+      priorityCode,
+      this.isSetAsPrimary
     );
+  }
+  onEmitingSetAsPrimaryFlag(event:any){
+    debugger;
+          this.isSetAsPrimary = event;
   }
 }
 

@@ -1,102 +1,223 @@
 <div class="flex-row">
-  <div class="flex-col flex-space-bw align-items-center"> 
+  <div class="flex-col flex-space-bw align-items-center">
     <h2 class="title-md mb-0 text-bold">Pharmacies</h2>
     <span>
-      <input type="checkbox" kendoCheckBox aria-labelledby="PremiumShowhistorical" [(ngModel)]="isShowHistoricalData" (ngModelChange)="onGetHistoricalPharmaciesData()" id="PremiumShowhistorical" />
-      <label class="k-checkbox-label" for="PremiumShowhistorical">Show historical</label>
+      <input
+        type="checkbox"
+        kendoCheckBox
+        aria-labelledby="PremiumShowhistorical"
+        [(ngModel)]="isShowHistoricalData"
+        (ngModelChange)="onGetHistoricalPharmaciesData()"
+        id="PremiumShowhistorical"
+      />
+      <label class="k-checkbox-label" for="PremiumShowhistorical"
+        >Show historical</label
+      >
     </span>
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid  [pageSize]="5" [pageable]="true"  [data]="pharmaciesList$ | async">
-        <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="180">
+      <kendo-grid
+        [pageSize]="5"
+        [pageable]="true"
+        [data]="pharmaciesList$ | async"
+      >
+        <kendo-grid-column
+          field="pharmacyName"
+          title="Pharmacy Name"
+          [width]="180"
+        >
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
-              <span class="preferred-phoneNo" title="Primacy Pharmacy Name" *ngIf="dataItem.priorityCode === priority ">
-               <span class="material-icons icon-size-md" aria-label="Primacy Pharmacy Name" aria-hidden="true" >star</span>
+              <span
+                class="preferred-phoneNo"
+                title="Primacy Pharmacy Name"
+                *ngIf="dataItem.priorityCode === priority"
+              >
+                <span
+                  class="material-icons icon-size-md"
+                  aria-label="Primacy Pharmacy Name"
+                  aria-hidden="true"
+                  >star</span
+                >
               </span>
-              <span class="pl-3">{{ dataItem.pharmacyName }}</span></div> 
-            </ng-template></kendo-grid-column>
-        <kendo-grid-column field="tin" title="TIN" [width]="80"></kendo-grid-column>
-        <kendo-grid-column field="phone" title="Phone Number" [width]="130"></kendo-grid-column>
-        <kendo-grid-column field="fax" title="Fax Number" [width]="130"></kendo-grid-column>
-        <kendo-grid-column field="mailCode" title="Mail Codes" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="address" title="Address" [width]="200"></kendo-grid-column>
-        <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="120">
+              <span class="pl-3">{{ dataItem.pharmacyName }}</span>
+            </div>
+          </ng-template></kendo-grid-column
+        >
+        <kendo-grid-column
+          field="tin"
+          title="TIN"
+          [width]="80"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="phone"
+          title="Phone Number"
+          [width]="130"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="fax"
+          title="Fax Number"
+          [width]="130"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="mailCode"
+          title="Mail Codes"
+          [width]="100"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="address"
+          title="Address"
+          [width]="200"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="effectiveDate"
+          title="Effective Date"
+          [width]="120"
+        >
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
-              {{dataItem.effectiveDate | date:'MM/dd/yyyy'}}
+            <span *ngIf="dataItem.activeFlag == 'Y'; else endDateBlock">
+              {{ dataItem.effectiveDate | date : 'MM/dd/yyyy' }}
             </span>
             <ng-template #endDateBlock>
-              {{dataItem.effectiveDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
+              {{ dataItem.effectiveDate | date : 'MM/dd/yyyy' }}
+              {{
+                dataItem.endDate
+                  ? ' - ' + (dataItem.endDate | date : 'MM/dd/yyyy')
+                  : ''
+              }}
             </ng-template>
-        </ng-template>
+          </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar of Ahith Kumar">
+            <button
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="profile avatar of Ahith Kumar"
+            >
               <div mat-card-avatar="" class="app-c-avatar avatar-sm">
                 <span class="profile-text-avatar">AK</span>
               </div>
             </button>
-            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              position="left"
+            >
               <ng-template kendoPopoverBodyTemplate>
                 <common-user-profile-card></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Options" [width]="50" class="text-center">
-          <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-pharmacyId="field">
-              <kendo-dropdownbutton 
-              [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)"
+        <kendo-grid-column
+          field="Option"
+          title="Options"
+          [width]="50"
+          class="text-center"
+        >
+          <ng-template
+            kendoGridCellTemplate
+            let-dataItem
+            let-clientPharmacy
+            let-pharmacyId="field"
+          >
+            <kendo-dropdownbutton
+              [data]="
+                filterActionButtonOptions(pharmacyOptions, clientPharmacy)
+              "
               icon="more-vertical"
               title="More Options"
               class="TableActionPopup app-dropdown-action"
               buttonClass="k-icon-button"
               aria-label="more actions"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-
-                  <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-                      <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                          [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(clientPharmacy)">
-                          <span class="material-icons"
-                              [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                          <label> {{clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'Deactivate' ? 'Deactivate' : clientPharmacy.priorityCode === 'P' && clientPharmacy.activeFlag === 'Y' && buttondataItem.type === 'delete' ? 'Remove' : buttondataItem.text }} </label>
-                      </button>
-                  </ng-template>
-              </kendo-dropdownbutton>
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+            >
+              <ng-template
+                class="app-dropdown-action-list"
+                kendoDropDownButtonItemTemplate
+                let-buttondataItem
+              >
+                <button
+                  kendoButton
+                  look="flat"
+                  [attr.aria-label]="buttondataItem.text"
+                  [class]="buttondataItem.buttonType"
+                  aria-hidden="false"
+                  (click)="buttondataItem.click(clientPharmacy)"
+                >
+                  <span
+                    class="material-icons"
+                    [attr.aria-label]="buttondataItem.text"
+                    >{{ buttondataItem.icon }}</span
+                  >
+                  <label>
+                    {{
+                      clientPharmacy.priorityCode === 'P' &&
+                      clientPharmacy.activeFlag === 'Y' &&
+                      buttondataItem.type === 'Deactivate'
+                        ? 'Deactivate'
+                        : clientPharmacy.priorityCode === 'P' &&
+                          clientPharmacy.activeFlag === 'Y' &&
+                          buttondataItem.type === 'delete'
+                        ? 'Remove'
+                        : buttondataItem.text
+                    }}
+                  </label>
+                </button>
+              </ng-template>
+            </kendo-dropdownbutton>
           </ng-template>
-      </kendo-grid-column>
-
+        </kendo-grid-column>
 
         <!-- Pagination Template -->
-        <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
-        let-currentPage="currentPage">
-        <div class="grid-custom-paginationtemplates d-flex"> 
-          <div class="d-flex align-items-center"> 
-            <label class="mr-1" for="pharmacieslistrowperpage">Rows Per Page</label> 
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" [valuePrimitive]="true" #pharmacieslistrowperpage id="pharmacieslistrowperpage" [(value)]="state.take"></kendo-dropdownlist>
-            <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
-  
+        <ng-template
+          kendoPagerTemplate
+          let-totalPages="totalPages"
+          let-pagerFirstPage="pagerFirstPage"
+          let-currentPage="currentPage"
+        >
+          <div class="grid-custom-paginationtemplates d-flex">
+            <div class="d-flex align-items-center">
+              <label class="mr-1" for="pharmacieslistrowperpage"
+                >Rows Per Page</label
+              >
+              <kendo-dropdownlist
+                [fillMode]="formUiStyle.dropDownFillMode"
+                [data]="pageSizes"
+                [textField]="'text'"
+                [valueField]="'value'"
+                [valuePrimitive]="true"
+                #pharmacieslistrowperpage
+                id="pharmacieslistrowperpage"
+                [(value)]="state.take"
+              ></kendo-dropdownlist>
+              <kendo-pager-info> </kendo-pager-info>
+              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'">
+              </kendo-grid-messages>
+            </div>
+            <div class="d-flex">
+              <kendo-pager-input></kendo-pager-input>
+              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+              <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            </div>
           </div>
-          <div class="d-flex"> 
-            <kendo-pager-input></kendo-pager-input> 
-            <kendo-pager-prev-buttons></kendo-pager-prev-buttons> 
-            <kendo-pager-next-buttons></kendo-pager-next-buttons>
-          </div> 
-        </div>
-      </ng-template>
-        <!-- grid Loader Template -->  
-       <ng-template kendoGridLoadingTemplate>
-         <common-grid-loader-component></common-grid-loader-component>
         </ng-template>
-        <!-- grid No data Template -->  
+        <!-- grid Loader Template -->
+        <ng-template kendoGridLoadingTemplate>
+          <common-grid-loader-component></common-grid-loader-component>
+        </ng-template>
+        <!-- grid No data Template -->
         <ng-template kendoGridNoRecordsTemplate>
-          <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+          <div>
+            <kendo-badge-container>
+              <span class="material-icons"> info </span>
+            </kendo-badge-container>
           </div>
           <p>There is no data to display.</p>
         </ng-template>
@@ -104,7 +225,13 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button kendoButton [primary]="true" icon="add" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
+        <button
+          kendoButton
+          [primary]="true"
+          icon="add"
+          (click)="onOpenPharmacyClicked()"
+          aria-label="add pharmacy"
+        >
           Pharmacy
         </button>
       </div>
@@ -113,69 +240,106 @@
 </div>
 
 <!-- Add Pharmacy  Modal -->
-<kendo-dialog *ngIf="isOpenPharmacyClicked" (close)="handleClosePharmacyClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar>
-   Add Pharmacy
-  </kendo-dialog-titlebar>
+<kendo-dialog
+  *ngIf="isOpenPharmacyClicked"
+  (close)="handleClosePharmacyClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Add Pharmacy </kendo-dialog-titlebar>
   <case-management-pharmacy-detail
-  [isEditPharmacy]="isEditPharmacyListClicked"
-  [selectedPharmacy]="selectedPharmacyForEdit"
-  [pharmacySearchResult$]="pharmacysearchResult$"
-  [searchLoaderVisibility$]="searchLoaderVisibility$" 
-  (addPharmacyEvent)="addPharmacyEvent($event)"
-
-  (removePharmacyEvent)="removeClientPharmacyOnEditMode()"
-  (searchPharmacyEvent)="onSearchPharmacy($event)"
-  (closePharmacyEvent)="handleClosePharmacyClicked()"
-></case-management-pharmacy-detail>
+    [isEditPharmacy]="isEditPharmacyListClicked"
+    [selectedPharmacy]="selectedPharmacyForEdit"
+    [pharmacySearchResult$]="pharmacysearchResult$"
+    [searchLoaderVisibility$]="searchLoaderVisibility$"
+    (addPharmacyEvent)="addPharmacyEvent($event)"
+    (removePharmacyEvent)="removeClientPharmacyOnEditMode()"
+    (searchPharmacyEvent)="onSearchPharmacy($event)"
+    (closePharmacyEvent)="handleClosePharmacyClicked()"
+    (onEmitingSetAsPrimaryFlag)="onCatchSetAsPrimaryEvent($event)"
+  ></case-management-pharmacy-detail>
 </kendo-dialog>
 <!-- Remove Pharmacy Modal -->
 <kendo-dialog
   *ngIf="isRemoveClientPharmacyClicked$ | async"
   (close)="handleRemoveClientPharmacyClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Remove pharmacy? </kendo-dialog-titlebar>
+  <case-management-remove-pharmacy
+    [clientPharmacyId]="selectClientPharmacyId"
+    (removeConfirmEvent)="removeClientPharmacy($event)"
   >
-    <kendo-dialog-titlebar> Remove pharmacy? </kendo-dialog-titlebar>
-      <case-management-remove-pharmacy
-        [clientPharmacyId]="selectClientPharmacyId"
-        (removeConfirmEvent)="removeClientPharmacy($event)"
-    >     </case-management-remove-pharmacy>
+  </case-management-remove-pharmacy>
 </kendo-dialog>
 <!-- Change Pharmacy Priority Modal -->
-<kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog
+  *ngIf="isOpenChangePriorityClicked"
+  (close)="handleCloseChangePriorityClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
   <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
-  <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClicked()">
+  <case-management-set-pharmacy-priority
+    (closeChangePriority)="handleCloseChangePriorityClicked()"
+  >
   </case-management-set-pharmacy-priority>
 </kendo-dialog>
 
-
 <!-- deactivate-pharmacy Modal -->
-<kendo-dialog *ngIf="isOpenDeactivatePharmaciesClicked" (close)="handleCloseDeactivatePharmaciesClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog
+  *ngIf="isOpenDeactivatePharmaciesClicked"
+  (close)="handleCloseDeactivatePharmaciesClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
   <kendo-dialog-titlebar> Deactivate Pharmacy </kendo-dialog-titlebar>
-  <case-management-deactivate-pharmacy   [clientPharmacyDetails]="selectClientPharmacyDetails"
-   (closeDeactivatePharmacies)="handleCloseDeactivatePharmaciesClicked()">
+  <case-management-deactivate-pharmacy
+    [clientPharmacyDetails]="selectClientPharmacyDetails"
+    (closeDeactivatePharmacies)="handleCloseDeactivatePharmaciesClicked()"
+  >
   </case-management-deactivate-pharmacy>
 </kendo-dialog>
 
-
-
 <!-- Reactivate-pharmacy Modal -->
-<kendo-dialog *ngIf="isOpenReactivatePharmaciesClicked" (close)="handleCloseReactivatePharmaciesClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog
+  *ngIf="isOpenReactivatePharmaciesClicked"
+  (close)="handleCloseReactivatePharmaciesClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+>
   <kendo-dialog-titlebar> Reactivate Pharmacy </kendo-dialog-titlebar>
-  <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails"
-   (closeReactivatePharmacies)="handleCloseReactivatePharmaciesClicked()">
+  <case-management-reactivate-pharmacies
+    [clientPharmacyDetails]="selectClientPharmacyDetails"
+    (closeReactivatePharmacies)="handleCloseReactivatePharmaciesClicked()"
+  >
   </case-management-reactivate-pharmacies>
 </kendo-dialog>
 
-
 <!-- Select New Primary Pharmacy -->
-<kendo-dialog *ngIf="isOpenSelectNewPrimaryPharmaciesClicked" (close)="handleCloseSelectNewPrimaryPharmaciesClicked()"
-  class="app-c-modal app-c-modal-md app-c-modal-np">
-  <case-management-set-as-primary-pharmacy [pharmacies]="pharmacies" (removePharmacyClick)="onRemovePharmacy($event)" (addNewPharmacyClick)="updateAndDeactivatePharmacy($event)" [clientPharmacyDetails]="selectClientPharmacyDetails"
-   (closeSelectNewPrimaryPharmacies)="handleCloseSelectNewPrimaryPharmaciesClicked()">
+<kendo-dialog
+  *ngIf="isOpenSelectNewPrimaryPharmaciesClicked"
+  (close)="handleCloseSelectNewPrimaryPharmaciesClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
+>
+  <case-management-set-as-primary-pharmacy
+    [pharmacies]="pharmacies"
+    (removePharmacyClick)="onRemovePharmacy($event)"
+    (addNewPharmacyClick)="updateAndDeactivatePharmacy($event)"
+    [clientPharmacyDetails]="selectClientPharmacyDetails"
+    (closeSelectNewPrimaryPharmacies)="
+      handleCloseSelectNewPrimaryPharmaciesClicked()
+    "
+  >
   </case-management-set-as-primary-pharmacy>
+</kendo-dialog>
+<!-- Change Pharmacy Priority Modal -->
+<kendo-dialog
+  *ngIf="isTriggerPriorityPopup"
+  (close)="handleCloseChangePriorityClikced()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
+  <case-management-set-pharmacy-priority
+    (closeChangePriority)="handleCloseChangePriorityClikced()"
+    [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
+    [clientpharmacies]="pharmacies"
+    [clientId]="clientId"
+  ></case-management-set-pharmacy-priority>
 </kendo-dialog>

@@ -44,6 +44,7 @@ export class PharmaciesListComponent implements OnInit {
   @Output() searchPharmacy = new EventEmitter<string>();
   @Output() addPharmacyClick = new EventEmitter<string>();
   @Output() editPharmacyInit = new EventEmitter<string>();
+  @Output() onEmitingSetAsPrimaryFlag = new EventEmitter<any>();
   @Output() editPharmacyClick = new EventEmitter<{
     clientPharmacyId: string;
     vendorId: string;
@@ -64,6 +65,7 @@ export class PharmaciesListComponent implements OnInit {
   isTriggerPriorityPopup = false;
   isEditPharmacyPriorityTitle = false;
   isShowHistoricalData = false;
+  isSetAsPrimary = null;
   isOpenSelectNewPrimaryPharmaciesClicked = false;
   pharmacyPriorityModalButtonText = 'Save';
   isOpenChangePriorityClicked$ = new Subject();
@@ -76,6 +78,7 @@ export class PharmaciesListComponent implements OnInit {
   editButtonEmitted = false;
   pharmacies:any[] = [];
   changePharmacyObj:any;
+   triggerPriorityPopupNumber = 0;
   pharmacyId:any;
   vendorId:any;
   public sortValue = this.drugPharmacyFacade.sortValue;
@@ -203,6 +206,7 @@ export class PharmaciesListComponent implements OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+    
     this.drugPharmacyFacade.clientPharmacies$.subscribe(list =>{
  
       if(list && list.length > 0){
@@ -211,6 +215,15 @@ export class PharmaciesListComponent implements OnInit {
         this.handleCloseSelectNewPrimaryPharmaciesClicked();
         this.handleCloseReactivatePharmaciesClicked();
         this.isOpenDeactivatePharmaciesClicked = false;
+      
+        this.triggerPriorityPopup$.subscribe(isTrigered =>{
+          
+          if(isTrigered && this.triggerPriorityPopupNumber == 0){
+            this.triggerPriorityPopupNumber++;
+            this.isTriggerPriorityPopup = true;
+            this.isSetAsPrimary = null;
+          }
+        })
       }
     })
   }
@@ -253,9 +266,10 @@ export class PharmaciesListComponent implements OnInit {
     this.loadPharmacieslist();
   }
   private loadPharmacieslist() {
+
     this.drugPharmacyFacade.loadClientPharmacyList(
       this.clientId,
-      false,
+       false,
       this.isShowHistoricalData
     );
   }
@@ -341,8 +355,15 @@ export class PharmaciesListComponent implements OnInit {
     this.removeButtonEmitted = false;
     this.removePharmacyClick.emit(clientPharmacyId);
   }
-  addPharmacyEvent(pharmacyId: string) {
-    this.addPharmacyClick.emit(pharmacyId);
+  addPharmacyEvent(vendorId: string,isSetAsPrimary?:any) {
+    this.triggerPriorityPopupNumber = 0;
+    this.onEmitingSetAsPrimaryFlag.emit(this.isSetAsPrimary);
+   this.addPharmacyClick.emit(vendorId);
+  
+  }
+  onCatchSetAsPrimaryEvent(isSetAsPrimary:any){
+    debugger;
+        this.isSetAsPrimary = isSetAsPrimary;
   }
   removeClientPharmacyOnEditMode() {
     this.handleClosePharmacyClicked();
@@ -405,5 +426,8 @@ export class PharmaciesListComponent implements OnInit {
   }
   handleCloseSelectNewPrimaryPharmaciesClicked() {
     this.isOpenSelectNewPrimaryPharmaciesClicked = false;
+  }
+  handleCloseChangePriorityClikced() {
+    this.isTriggerPriorityPopup = false;
   }
 }
