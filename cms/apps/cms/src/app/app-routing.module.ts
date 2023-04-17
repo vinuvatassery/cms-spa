@@ -18,6 +18,9 @@ const routes: Routes = [
       import('@cms/case-management/feature-home').then(
         (m) => m.CaseManagementFeatureHomeModule
       ),
+      data: {
+        title: 'Clients',
+      },
     canLoad: [AutoLoginAllRoutesGuard],
   },
   {
