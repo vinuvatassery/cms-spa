@@ -42,7 +42,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
   // @Input() clientpharmacies$!: Observable<any>;
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
-  @Output() addPharmacyClick = new EventEmitter<string>();
+  @Output() addPharmacyClick = new EventEmitter<any>();
   @Output() editPharmacyInit = new EventEmitter<string>();
   @Output() editPharmacyClick = new EventEmitter<{
     clientPharmacyId: string;
@@ -136,7 +136,8 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
           ];
           this.drugPharmacyFacade.updateDrugPharamcyPriority(
             this.clientId,
-            pharmacyPriorityites
+            pharmacyPriorityites,
+            this.isShowHistoricalData
           );
         }
       },
@@ -148,7 +149,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
       type: 'Reactivate',
       click: (clientPharmacy: any): void => {
         if (clientPharmacy.vendorId) {
-          this.drugPharmacyFacade.addClientPharmacy(this.clientId,clientPharmacy?.vendorId);
+          this.drugPharmacyFacade.addClientPharmacy(this.clientId,clientPharmacy?.vendorId,this.isShowHistoricalData);
         }
       },
     },
@@ -218,7 +219,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly cdr: ChangeDetectorRef
   ) {
-    localStorage.setItem("isShowHistoricalData" ,String(false));
+
     this.isOpenPharmacyClicked$.next(false);
     this.isRemoveClientPharmacyClicked$.next(false);
   }
@@ -242,7 +243,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    localStorage.removeItem("isShowHistoricalData");
+   
   }
 
   /** Private methods **/
@@ -291,7 +292,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
     this.workflowFacade.updateChecklist(workFlowdata);
   }
   onGetHistoricalPharmaciesData() {
-    localStorage.setItem("isShowHistoricalData" ,String(this.isShowHistoricalData));
+
     this.loadPharmacieslist();
   }
   private loadPharmacieslist() {
@@ -309,13 +310,15 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
         .addDrugPharmacy(
           this.clientId,
           data.newPharmacy.vendorId,
-          PriorityCode.Primary
+          PriorityCode.Primary,
+          this.isShowHistoricalData
         )
         .then((isSucceed: any) => {
           if (isSucceed) {
             this.drugPharmacyFacade.deactivePharmacies(
               this.pharmacyId,
-              this.changePharmacyObj
+              this.changePharmacyObj,
+              this.isShowHistoricalData
             );
           }
         });
@@ -328,19 +331,22 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
         },
       ];
       this.drugPharmacyFacade
-        .updateDrugPharamcyPriority(this.clientId, updatedPharmacy)
+        .updateDrugPharamcyPriority(this.clientId, updatedPharmacy,
+          this.isShowHistoricalData)
         .then((isSucceed: any) => {
           if (isSucceed) {
             this.drugPharmacyFacade.deactivePharmacies(
               this.pharmacyId,
-              this.changePharmacyObj
+              this.changePharmacyObj,
+              this.isShowHistoricalData
             );
           }
         });
     } else {
       this.drugPharmacyFacade.deactivePharmacies(
         this.pharmacyId,
-        this.changePharmacyObj
+        this.changePharmacyObj,
+        this.isShowHistoricalData
       );
     }
   }
@@ -354,7 +360,8 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
     ];
     this.drugPharmacyFacade.updateDrugPharamcyPriority(
       this.clientId,
-      updatedPharmacy
+      updatedPharmacy,
+      this.isShowHistoricalData
     );
   }
   onRemovePharmacy(data: any) {
@@ -362,12 +369,14 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
       this.removeButtonEmitted = true;
       if (data && data.isNewAdded) {
         this.drugPharmacyFacade
-          .addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, 'P')
+          .addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, 'P',
+          this.isShowHistoricalData)
           .then((isSuceed) => {
             if (isSuceed) {
               this.drugPharmacyFacade.removeClientPharmacy(
                 this.clientId ?? 0,
-                this.pharmacyId
+                this.pharmacyId,
+                this.isShowHistoricalData
               );
             }
           });
@@ -380,12 +389,14 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
           },
         ];
         this.drugPharmacyFacade
-          .updateDrugPharamcyPriority(this.clientId, updatedPharmacy)
+          .updateDrugPharamcyPriority(this.clientId, updatedPharmacy,
+            this.isShowHistoricalData)
           .then((isSucceed: any) => {
             if (isSucceed) {
               this.drugPharmacyFacade.removeClientPharmacy(
                 this.clientId ?? 0,
-                this.pharmacyId
+                this.pharmacyId,
+                this.isShowHistoricalData
               );
             }
           });
@@ -393,7 +404,8 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
     } else {
       this.drugPharmacyFacade.removeClientPharmacy(
         this.clientId ?? 0,
-        this.pharmacyId
+        this.pharmacyId,
+        this.isShowHistoricalData
       );
     }
   }
@@ -431,7 +443,11 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
     this.removePharmacyClick.emit(clientPharmacyId);
   }
   addPharmacyEvent(pharmacyId: string) {
-    this.addPharmacyClick.emit(pharmacyId);
+    let data = {
+      vendorId:pharmacyId,
+      isShowHistoricalData:this.isShowHistoricalData
+    }
+    this.addPharmacyClick.emit(data);
   }
   removeClientPharmacyOnEditMode() {
     this.handleClosePharmacyClicked();

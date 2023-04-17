@@ -82,15 +82,16 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
   searchPharmacy(searchText: string) {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
-  addPharmacy(vendorId: string) {
+  addPharmacy(data:any) {
     let priorityCode :string = "";
     this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
       priorityCode = priorityCodes;
     })
     this.drugPharmacyFacade.addDrugPharmacy(
       this.profileClientId,
-      vendorId,
-      priorityCode
+      data.vendorId,
+      priorityCode,
+      data.isShowHistoricalData
     );
   }
 }

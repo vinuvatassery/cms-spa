@@ -156,15 +156,15 @@ export class DrugPharmacyFacade {
        
     return this.drugDataService.savePharmacyPriorityService(pharmacyPriority);
   }
-  updateDrugPharamcyPriority(clientId :any,pharmacyPriority: any){
+  updateDrugPharamcyPriority(clientId :any,pharmacyPriority: any,isShowHistoricalData?:boolean){
    return new Promise((resolve,reject) =>{
     this.loaderService.show();
     this.drugDataService.savePharmacyPriorityService(pharmacyPriority).subscribe({
      next: (response:any) => {
        this.loaderService.hide();
        this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy updated Successfully');
-       var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
-       this.loadClientPharmacyList(clientId,false,flag);
+
+       this.loadClientPharmacyList(clientId,false,isShowHistoricalData);
        resolve(true)
      },
      error: (err) => {
@@ -212,7 +212,7 @@ export class DrugPharmacyFacade {
     });
   }
 
-  addClientPharmacy(clientId: number, vendorId: string,) {
+  addClientPharmacy(clientId: number, vendorId: string,isShowHistoricalData?:boolean) {
   
     const model = {
       vendorId: vendorId ,   
@@ -223,8 +223,8 @@ export class DrugPharmacyFacade {
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-          var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
-          this.loadClientPharmacyList(clientId, true,flag);
+
+          this.loadClientPharmacyList(clientId, true,isShowHistoricalData);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Added Successfully');
         }
@@ -262,14 +262,14 @@ export class DrugPharmacyFacade {
     });
   }
 
-  removeClientPharmacy(clientId: number, clientPharmacyId: string) {
+  removeClientPharmacy(clientId: number, clientPharmacyId: string,isShowHistoricalData?:boolean) {
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
       return this.drugDataService.removeClientPharmacy(clientId, clientPharmacyId).subscribe({
         next: (response) => {
           if (response === true) {
-            var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
-            this.loadClientPharmacyList(clientId,false,flag);
+         
+            this.loadClientPharmacyList(clientId,false,isShowHistoricalData);
             this.removePharmacyResponseSubject.next(true);
             resolve(true);
             this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Client Pharmacy Removed Successfully');
@@ -288,7 +288,7 @@ export class DrugPharmacyFacade {
     
   }
  
-  addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string) {
+  addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string,isShowHistoricalData?:boolean) {
    return new Promise((resolve,reject) =>{
     const model = {
       vendorId: vendorId,
@@ -300,8 +300,8 @@ export class DrugPharmacyFacade {
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-          var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
-          this.loadClientPharmacyList(clientId, false,flag);
+
+          this.loadClientPharmacyList(clientId, false,isShowHistoricalData);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Added Successfully');
         }
@@ -339,14 +339,14 @@ export class DrugPharmacyFacade {
   updatedMakePharmaciesPrimary(clientPharmacyId: string){    
     this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Primary Pharmacy Updated Successfully');
   }
-  reActivatePharmacies(clientPharmacyId: string,pharmacy: any){
+  reActivatePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){
     this.loaderService.show();
      this.drugDataService.activeDrugPharmacy(clientPharmacyId,pharmacy).subscribe({
       next: (response:any) => {
         this.loaderService.hide();
         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Re-Activated Successfully');
-        var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
-        this.loadClientPharmacyList(pharmacy.ClientId,false,flag);
+
+        this.loadClientPharmacyList(pharmacy.ClientId,false,isShowHistoricalData);
       },
       error: (err) => {
         this.loaderService.hide();
@@ -355,7 +355,7 @@ export class DrugPharmacyFacade {
       },
     });
   }
-  deactivePharmacies(clientPharmacyId: string,pharmacy: any){ 
+  deactivePharmacies(clientPharmacyId: string,pharmacy: any,isShowHistoricalData?:boolean){ 
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
       this.drugDataService.activeDrugPharmacy(clientPharmacyId,pharmacy).subscribe({
@@ -366,8 +366,7 @@ export class DrugPharmacyFacade {
          }
          this.loaderService.hide();
          this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy De-Activated Successfully');
-         var flag = localStorage.getItem("isShowHistoricalData")  === 'true' ? true : false;
-         this.loadClientPharmacyList(pharmacy.ClientId,false,flag);
+         this.loadClientPharmacyList(pharmacy.ClientId,false,isShowHistoricalData);
        },
        error: (err) => {
         resolve(false);
