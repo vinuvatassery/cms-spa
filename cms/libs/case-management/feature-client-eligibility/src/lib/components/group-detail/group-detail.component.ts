@@ -23,6 +23,7 @@ export class GroupDetailComponent implements OnInit {
   @Output() updateGroup = new EventEmitter<any>();
   @Output() cancelGroupChange = new EventEmitter();
   @Output() deleteGroupChange = new EventEmitter();
+  @Output() deleteGroup = new EventEmitter<any>();
   /** Public properties **/
   currentDate = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate());
   formUiStyle: UIFormStyle = new UIFormStyle();

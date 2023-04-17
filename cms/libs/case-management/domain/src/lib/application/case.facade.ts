@@ -266,11 +266,27 @@ export class CaseFacade {
         return of(false);
       })
     ).subscribe((response: boolean) => {
+      this.hideLoader();
       if (response) {
-        this.hideLoader();
         this.groupUpdatedSubject.next(true);
         this.currentGroupSubject.next(null);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group updated successfully');
+      }
+    });
+  }
+
+  deleteEligibilityGroup(eligibilityId: string){
+    this.showLoader();
+    return this.caseDataService.deleteEligibilityGroup(eligibilityId).pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    ).subscribe((response: boolean) => {
+      this.hideLoader();
+      if (response) {
+        this.currentGroupSubject.next(null);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group deleted successfully');
       }
     });
   }

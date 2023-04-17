@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StatusPeriodFacade } from '@cms/case-management/domain';
+import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -10,11 +10,15 @@ import { Observable } from 'rxjs';
 export class StatusGroupHistoryComponent implements OnInit {
 
   @Input() eligibilityId!: string;
-  currentGroup$!: Observable<any>;
-  ddlGroups$!: Observable<any>;
+  currentGroup$ = this.caseFacade.currentGroup$;
+  ddlGroups$ = this.caseFacade.ddlGroups$;
   statusGroupHistory: any = [];
+  isGroupDetailOpened: boolean = false;
+  isGroupDeleteOpened: boolean = false;
 
-  constructor(private statusPeriodFacade: StatusPeriodFacade) {
+  constructor(
+    private statusPeriodFacade: StatusPeriodFacade,
+    private caseFacade: CaseFacade) {
   }
 
   ngOnInit() {
@@ -33,14 +37,40 @@ export class StatusGroupHistoryComponent implements OnInit {
     });
   }
 
-  onGroupDetailClosed() {
+  loadEligibilityChangeModal(event: any){
+    this.caseFacade.loadEligibilityChangeGroups(this.eligibilityId);
+    this.isGroupDetailOpened = true;
+  }
 
+  onGroupDetailClosed() {
+    this.isGroupDetailOpened = false;
+  }
+
+  onGroupChangeUpdateClicked(group: any) {
+    let newGroup = {
+      eligibilityId: this.eligibilityId,
+      groupCodeId: group.groupCodeId,
+      groupStartDate: group.groupStartDate
+    };
+    this.caseFacade.updateEligibilityGroup(newGroup);
+    this.isGroupDetailOpened = false;
   }
 
   onGroupChangeCancelClicked(event: any) {
+    this.isGroupDetailOpened = false;
   }
 
-  onGroupChangeUpdateClicked(event: any) { }
+  onDeleteGroupClicked(event: any) {
+    this.isGroupDeleteOpened = true;
+  }
+  
+  onConfirmGroupDelete() {
+    this.caseFacade.deleteEligibilityGroup(this.eligibilityId);
+    this.isGroupDetailOpened = false;
+  }
 
+  onCancelDelete() {
+    this.isGroupDeleteOpened = false;
+  }
 
 }

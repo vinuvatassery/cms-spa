@@ -5,7 +5,7 @@
     <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.isFutureStartDate">
-                <a>Scheduled for {{dataItem.groupStartDate}}</a>
+                <a (click)="loadEligibilityChangeModal($event)">Scheduled for {{dataItem.groupStartDate}}</a>
             </div>
             <div *ngIf="!dataItem.isFutureStartDate">
                 {{dataItem.groupStartDate}}
@@ -41,9 +41,36 @@
 </kendo-grid>
 
 <!-- Eligibility Group Detail Modal -->
-<kendo-dialog (close)="onGroupDetailClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
-    <kendo-dialog-titlebar> Change Group </kendo-dialog-titlebar>
+<kendo-dialog *ngIf="isGroupDetailOpened" (close)="onGroupDetailClosed()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
+    <kendo-dialog-titlebar>Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
-        (updateGroup)="onGroupChangeUpdateClicked($event)"
-        (cancelGroupChange)="onGroupChangeCancelClicked($event)"></case-management-group-detail>
+        (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event)"
+        (cancelGroupChange)="onGroupChangeCancelClicked($event)">
+    </case-management-group-detail>
+</kendo-dialog>
+
+<!-- Eligibility Group delete Modal -->
+<kendo-dialog *ngIf="isGroupDeleteOpened" (close)="onCancelDelete()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
+    <kendo-dialog-titlebar> Delete scheduled group change </kendo-dialog-titlebar>
+    <section class="k-dialog-body">
+        <p class="text-muted mb-2">
+            This action cannot be undone. You may schedule another group change at any time.
+        </p>
+    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between">
+            <button kendoButton aria-label="delete client’s benefits" [primary]="true"
+                look="outline" (click)="onConfirmGroupDelete()">
+                Delete
+            </button>
+            <div class="justify-content-end">
+                <button kendoButton aria-label="cancel client’s benefits" [primary]="true" look="outline"
+                    (click)="onCancelDelete()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
 </kendo-dialog>
