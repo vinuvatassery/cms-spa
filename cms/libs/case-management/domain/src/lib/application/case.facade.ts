@@ -326,10 +326,8 @@ export class CaseFacade {
     sort: string,
     sortType: string,
     columnName: any,
-    filter: any,
-    filterGrid :any
+    filter: any
   ): void {
-    debugger;
     this.searchLoaderVisibilitySubject.next(true);
     this.caseDataService
       .loadCases(
@@ -339,8 +337,7 @@ export class CaseFacade {
         sort,
         sortType,
         columnName,
-        filter,
-        filterGrid
+        filter
       )
       .subscribe({
         next: (casesResponse: any) => {

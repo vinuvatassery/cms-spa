@@ -101,9 +101,6 @@
     </kendo-grid-column>
     <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="160"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date" >
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{ dataItem.eilgibilityStartDate | date: 'MM/dd/yyyy' }}
-      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <common-grid-cell-date-range-filter
             [field]="'eilgibilityStartDate'"
@@ -115,9 +112,6 @@
     </kendo-grid-column>
     <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{ dataItem.eligibilityEndDate | date: 'MM/dd/yyyy'}}
-      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <common-grid-cell-date-range-filter
           [field]="'eligibilityEndDate'"
@@ -137,9 +131,6 @@
     <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true">
     </kendo-grid-column>
     <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{ dataItem.dateOfBirth | date: 'MM/dd/yyyy'}}
-      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
     </kendo-grid-column>
