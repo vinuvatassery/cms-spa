@@ -102,7 +102,7 @@ export class PharmaciesListComponent implements OnInit {
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId =clientPharmacy.vendorId
           this.changePharmacyObj = pharmacyObj;
-          if (clientPharmacy.priorityCode === PriorityCode.Primary) {
+          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharmacies.length === 1) {
             this.OpenSelectNewPrimaryPharmaciesClicked(
               clientPharmacy,
               'deactivate'
@@ -143,7 +143,7 @@ export class PharmaciesListComponent implements OnInit {
         if(clientPharmacy.clientPharmacyId){
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId =clientPharmacy.clientPharmacyId
-          if (clientPharmacy.priorityCode === PriorityCode.Primary) {
+          if (clientPharmacy.priorityCode === PriorityCode.Primary || this.pharmacies.length === 1 ) {
             this.OpenSelectNewPrimaryPharmaciesClicked(clientPharmacy, 'remove');
           } else  {
             if (this.removeButtonEmitted === false) {
@@ -204,6 +204,7 @@ export class PharmaciesListComponent implements OnInit {
       sort: this.sort,
     };
     this.drugPharmacyFacade.clientPharmacies$.subscribe(list =>{
+ 
       if(list && list.length > 0){
         this.pharmacies = list;
         this.handleClosePharmacyClicked();
@@ -217,7 +218,7 @@ export class PharmaciesListComponent implements OnInit {
   /** Private methods **/
   filterActionButtonOptions(options:any[],actionType:any):any[]{
     let filteredOptions:any[] = [];
-    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes){
+    if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.Yes ){
       filteredOptions = options.filter(option =>option.type != 'Reactivate');
     } else if(actionType.priorityCode != PriorityCode.Primary && actionType.activeFlag === StatusFlag.No)
     {
