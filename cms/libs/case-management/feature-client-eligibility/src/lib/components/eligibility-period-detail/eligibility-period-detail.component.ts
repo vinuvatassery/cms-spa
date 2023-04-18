@@ -81,6 +81,16 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.validateForm();
     this.eligibilityPeriodForm.markAllAsTouched();
     if (this.eligibilityPeriodForm.valid) {
+      if (this.eligibilityPeriodsOverlapCheck(
+        new Date(this.currentEligibility.eligibilityStartDate),
+        this.eligibilityPeriodForm.controls['statusStartDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusStartDate'].value,
+        this.eligibilityPeriodForm.controls['statusEndDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusEndDate'].value)) {
+        this.clientEligibilityFacade.showHideSnackBar(
+          SnackBarNotificationType.WARNING,
+          'There cannot be two eligibility periods with overlapping date ranges.'
+        );
+      }
+      else{
       this.loaderService.show();    
         this.acceptedApplication.clientCaseId = this.clientCaseId;
         this.acceptedApplication.clientCaseEligibilityId = this.clientCaseEligibilityId;
@@ -108,6 +118,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
             this.onModalCloseClicked();
           },
         });
+      }
     }
   }
   updateCurrentEligibility() {
@@ -459,5 +470,18 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.eligibilityPeriodForm.controls['statusEndDate'].setValidators([Validators.required]);
     this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
     this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
+  }
+  private eligibilityPeriodsOverlapCheck(currentStartDate: Date,  newStartDate: Date, newEndDate: Date) {   
+    let cuStartDate =this.intl.formatDate(currentStartDate, this.dateFormat) ;
+    let nwStartDate = this.intl.formatDate(newStartDate,  this.dateFormat ) ;
+    let nwEndDate = this.intl.formatDate(newEndDate,this.dateFormat ) ;
+
+    if (cuStartDate === nwStartDate){
+     return true;
+    }       
+    if (nwStartDate <= cuStartDate && nwEndDate >= cuStartDate ) {
+      return true;
+    }        
+    return false;
   }
 }
