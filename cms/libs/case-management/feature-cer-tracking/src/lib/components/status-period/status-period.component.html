@@ -5,34 +5,8 @@
 
             <kendo-grid [pageSize]="5" [pageable]="true" [data]="StatusPeriod$ | async">
                 <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
-                    <section *ngIf="dataItem.RamseelInfo">
-                        <div class="flex-col flex-col-6 mt-2 p-0">
-                            <h4>Ramsell Info</h4>
-                            <table>
-                                <caption hidden> Ramsell Info</caption>
-                                <tr hidden>
-                                    <th scope="col"></th>
-                                    <th scope="col"></th>
-                                    <th scope="col"></th>
-                                </tr>
-                                <tbody>
-                                    <tr>
-                                        <td class="greycolor"> Most Recent Transfer</td>
-                                        <td> {{dataItem.RamseelInfo.MostRecentTransfer}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="greycolor"> Card Requested</td>
-                                        <td> {{dataItem.RamseelInfo.CardRequested}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="greycolor"> Date Card Last Sent</td>
-                                        <td> {{dataItem.RamseelInfo.DateCardLastSent}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-
+                    <section>
+                        <case-management-status-ramsell-info [clientId]="''"></case-management-status-ramsell-info>
                     </section>
                     <div class="mt-5">
                         <case-management-status-group-history [eligibilityId]="'9C56832C-2F4C-4C46-B794-421F02110FC3'"></case-management-status-group-history>

@@ -20,6 +20,7 @@ import { ProfileCerTrackingPageComponent } from './containers/profile-cer-tracki
 import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
 import { StatusGroupHistoryComponent } from './components/status-group-history/status-group-history.component';
 import { StatusFplHistoryComponent } from './components/status-fpl-history/status-fpl-history.component';
+import { StatusRamsellInfoComponent } from './components/status-ramsell-info/status-ramsell-info.component';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { StatusFplHistoryComponent } from './components/status-fpl-history/statu
     AppHistoryListComponent,
     StatusGroupHistoryComponent,
     StatusFplHistoryComponent,
+    StatusRamsellInfoComponent,
   ],
   exports: [
     CerTrackingPageComponent,

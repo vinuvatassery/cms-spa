@@ -171,4 +171,11 @@ export class StatusPeriodDataService {
       `/eligibility-periods/${eligibilityId}/fpl-history`
     );
   }
+
+  loadRamSellInfo(clientId) {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${clientId}/fpl-history`
+    );
+  }
 }
