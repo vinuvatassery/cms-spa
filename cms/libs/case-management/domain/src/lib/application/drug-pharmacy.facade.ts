@@ -41,6 +41,7 @@ export class DrugPharmacyFacade {
   private removePharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private removeDrugPharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+  public newAddedPharmacySubject = new BehaviorSubject<boolean>(false);
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   public durgPharmacyPrioritySubject = new BehaviorSubject<string>("");
   private deActivePharmacySubject = new BehaviorSubject<boolean>(false);
@@ -57,6 +58,7 @@ export class DrugPharmacyFacade {
   removePharmacyResponse$ = this.removePharmacyResponseSubject.asObservable();
   removeDrugPharmacyResponse$ = this.removeDrugPharmacyResponseSubject.asObservable();
   triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
+  public newAddedPharmacyObs = this.newAddedPharmacySubject.asObservable();
   searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
   drugPurchases$ = this.drugPurchaseSubject.asObservable();
   drugPharnacyPriority = this.durgPharmacyPrioritySubject.asObservable();
@@ -301,7 +303,7 @@ export class DrugPharmacyFacade {
       next: (response) => {
         if (response === true) {
 
-          this.loadClientPharmacyList(clientId, false,isShowHistoricalData);
+          this.loadClientPharmacyList(clientId, true,isShowHistoricalData);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Added Successfully');
         }

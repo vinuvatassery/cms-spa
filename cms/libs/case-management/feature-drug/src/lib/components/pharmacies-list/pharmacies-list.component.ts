@@ -73,10 +73,12 @@ export class PharmaciesListComponent implements OnInit{
   selectedPharmacyForEdit!: any;
   removeButtonEmitted = false;
   editButtonEmitted = false;
+  isSetAsPrimary = false;
   pharmacies: any[] = [];
   changePharmacyObj: any;
   pharmacyId: any;
   vendorId: any;
+  triggerPriorityPopupNumber = 0;
   public sortValue = this.drugPharmacyFacade.sortValue;
   public sortType = this.drugPharmacyFacade.sortType;
   public pageSizes = this.drugPharmacyFacade.gridPageSizes;
@@ -238,8 +240,23 @@ export class PharmaciesListComponent implements OnInit{
         this.handleCloseSelectNewPrimaryPharmaciesClicked();
         this.handleCloseReactivatePharmaciesClicked();
         this.isOpenDeactivatePharmaciesClicked = false;
+   
+       // this.handleCloseChangePriorityClikced();
       }
     });
+    this.triggerPriorityPopup$.subscribe(isTrigered =>{
+      if(isTrigered && this.triggerPriorityPopupNumber == 0 && !this.isSetAsPrimary){
+        this.triggerPriorityPopupNumber++;
+        this.isTriggerPriorityPopup = true;
+
+      }
+    });
+    this.drugPharmacyFacade.newAddedPharmacyObs.subscribe((isAdded) =>{
+      if(isAdded){
+        this.triggerPriorityPopupNumber = 0;
+        this.handleCloseChangePriorityClikced();
+      }
+    })
   }
 
   /** Private methods **/
@@ -444,12 +461,16 @@ export class PharmaciesListComponent implements OnInit{
     this.removePharmacyClick.emit(data);
   }
   addPharmacyEvent(pharmacyId: string) {
+    this.triggerPriorityPopupNumber = 0;
     let data = {
       vendorId:pharmacyId,
       isShowHistoricalData:this.isShowHistoricalData
     }
     this.addPharmacyClick.emit(data);
   }
+  setAsPrimaryEvent(data:any){
+    this.isSetAsPrimary = data;
+}
   removeClientPharmacyOnEditMode() {
     this.handleClosePharmacyClicked();
     let data = {
@@ -521,5 +542,8 @@ export class PharmaciesListComponent implements OnInit{
   }
   handleCloseSelectNewPrimaryPharmaciesClicked() {
     this.isOpenSelectNewPrimaryPharmaciesClicked = false;
+  }
+  handleCloseChangePriorityClikced() {
+    this.isTriggerPriorityPopup = false;
   }
 }

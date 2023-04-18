@@ -49,6 +49,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     ngOnInit(): void{
   
       this.pharmacies = this.pharmacies.filter(pharmacy => pharmacy.priorityCode != PriorityCode.Primary && pharmacy.activeFlag === 'Y');
+    ;
     }
   onCloseSelectNewPrimaryPharmaciesClicked() {
     this.closeSelectNewPrimaryPharmacies.emit();
