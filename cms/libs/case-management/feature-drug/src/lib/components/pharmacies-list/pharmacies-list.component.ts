@@ -223,7 +223,8 @@ export class PharmaciesListComponent implements OnInit {
             this.isTriggerPriorityPopup = true;
             this.isSetAsPrimary = null;
           }
-        })
+        });
+        this.handleCloseChangePriorityClikced();
       }
     })
   }
