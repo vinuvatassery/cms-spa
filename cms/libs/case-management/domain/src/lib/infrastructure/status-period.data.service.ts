@@ -11,24 +11,24 @@ export class StatusPeriodDataService {
 
   /** Constructor**/
   constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider) {}
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadStatusPeriod() {
     return of([
-      { 
-        id: 1, 
-        StatusStart: '02-22-2022', 
-        StatusEnd: '02-22-2022' ,
-        Status: 'status A' ,
-        CurrentGroup: 'Proof ' , 
-        DaysinGroup: 'daysin' ,
-        FamilySize: 5 ,
-        GrossMonthlyIncome: '$ 23000' ,
-        FPLSPStart: '244%' ,
-        CurrentFPL: '253%' ,
-        ReviewCompleted: '02-22-2022' ,
-        By: 'James' ,
+      {
+        id: 1,
+        StatusStart: '02-22-2022',
+        StatusEnd: '02-22-2022',
+        Status: 'status A',
+        CurrentGroup: 'Proof ',
+        DaysinGroup: 'daysin',
+        FamilySize: 5,
+        GrossMonthlyIncome: '$ 23000',
+        FPLSPStart: '244%',
+        CurrentFPL: '253%',
+        ReviewCompleted: '02-22-2022',
+        By: 'James',
         RamseelInfo: {
           MostRecentTransfer: '02-22-2022 - 10:00 AM',
           CardRequested: "Beverages",
@@ -37,7 +37,7 @@ export class StatusPeriodDataService {
         GroupHistory: [
           {
             id: 2,
-            Group : '02-22-2022 - 10:00 AM',
+            Group: '02-22-2022 - 10:00 AM',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDaysinGroup: 149,
@@ -46,7 +46,7 @@ export class StatusPeriodDataService {
           },
           {
             id: 2,
-            Group : '02-22-2022 - 10:00 AM',
+            Group: '02-22-2022 - 10:00 AM',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDaysinGroup: 149,
@@ -55,7 +55,7 @@ export class StatusPeriodDataService {
           },
           {
             id: 3,
-            Group : '02-22-2022 - 10:00 AM',
+            Group: '02-22-2022 - 10:00 AM',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDaysinGroup: 149,
@@ -63,10 +63,10 @@ export class StatusPeriodDataService {
             RecordCreatedBy: "Jan",
           },
         ],
-        FlipHiwebwestory:[
+        FlipHiwebwestory: [
           {
             id: 1,
-            Flp : '253%',
+            Flp: '253%',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDayswithFlp: 149,
@@ -75,29 +75,29 @@ export class StatusPeriodDataService {
           },
           {
             id: 2,
-            Flp : '253%',
+            Flp: '253%',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDayswithFlp: 149,
             DateRecordCreated: "02-22-2022",
             RecordCreatedBy: "Jan",
           },
-          
+
         ],
       },
-      { 
-        id: 2, 
-        StatusStart: '02-22-2022', 
-        StatusEnd: '02-22-2022' ,
-        Status: 'status A' ,
-        CurrentGroup: 'Proof ' , 
-        DaysinGroup: 'daysin' ,
-        FamilySize: 5 ,
-        GrossMonthlyIncome: '$ 23000' ,
-        FPLSPStart: '244%' ,
-        CurrentFPL: '253%' ,
-        ReviewCompleted: '02-22-2022' ,
-        By: 'James' ,
+      {
+        id: 2,
+        StatusStart: '02-22-2022',
+        StatusEnd: '02-22-2022',
+        Status: 'status A',
+        CurrentGroup: 'Proof ',
+        DaysinGroup: 'daysin',
+        FamilySize: 5,
+        GrossMonthlyIncome: '$ 23000',
+        FPLSPStart: '244%',
+        CurrentFPL: '253%',
+        ReviewCompleted: '02-22-2022',
+        By: 'James',
         RamseelInfo: {
           MostRecentTransfer: '02-22-2022 - 10:00 AM',
           CardRequested: "Beverages",
@@ -106,7 +106,7 @@ export class StatusPeriodDataService {
         GroupHistory: [
           {
             id: 2,
-            Group : '02-22-2022 - 10:00 AM',
+            Group: '02-22-2022 - 10:00 AM',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDaysinGroup: 149,
@@ -115,7 +115,7 @@ export class StatusPeriodDataService {
           },
           {
             id: 2,
-            Group : '02-22-2022 - 10:00 AM',
+            Group: '02-22-2022 - 10:00 AM',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDaysinGroup: 149,
@@ -124,7 +124,7 @@ export class StatusPeriodDataService {
           },
           {
             id: 3,
-            Group : '02-22-2022 - 10:00 AM',
+            Group: '02-22-2022 - 10:00 AM',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDaysinGroup: 149,
@@ -132,11 +132,11 @@ export class StatusPeriodDataService {
             RecordCreatedBy: "Jan",
           },
         ],
-        
-        FlipHistory:[
+
+        FlipHistory: [
           {
             id: 1,
-            Flp : '253%',
+            Flp: '253%',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDayswithFlp: 149,
@@ -145,14 +145,14 @@ export class StatusPeriodDataService {
           },
           {
             id: 2,
-            Flp : '253%',
+            Flp: '253%',
             StartDate: "02-22-2022",
             EndDate: "02-22-2022",
             ActualDayswithFlp: 149,
             DateRecordCreated: "02-22-2022",
             RecordCreatedBy: "Jan",
           },
-          
+
         ],
       },
     ]);
@@ -172,10 +172,10 @@ export class StatusPeriodDataService {
     );
   }
 
-  loadRamSellInfo(clientId) {
+  loadRamSellInfo(clientId: string) {
     return this.http.get<any[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
-      `/eligibility-periods/${clientId}/fpl-history`
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}` 
+      + `/system-interface/ramsell/clients/${clientId}`
     );
   }
 }

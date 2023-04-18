@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { StatusPeriodFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-status-ramsell-info',
@@ -11,7 +12,7 @@ export class StatusRamsellInfoComponent implements OnInit {
   ramSellInfo: any;
 
   constructor(
-    private readonly statusPeriodFacade: StatusPeriodFacade
+    private statusPeriodFacade: StatusPeriodFacade
   ) {
   }
 
@@ -20,8 +21,13 @@ export class StatusRamsellInfoComponent implements OnInit {
   }
 
   loadRamSellInfo() {
-    this.statusPeriodFacade.loadRamSellInfo(this.clientId).subscribe((resp: any) => {
-      this.ramSellInfo = resp.data;
+    this.statusPeriodFacade.loadRamSellInfo(this.clientId).subscribe({
+      next: (data) => {
+        this.ramSellInfo = data;
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
     });
   }
 }

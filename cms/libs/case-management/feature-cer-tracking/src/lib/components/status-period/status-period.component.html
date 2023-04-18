@@ -6,7 +6,7 @@
             <kendo-grid [pageSize]="5" [pageable]="true" [data]="StatusPeriod$ | async">
                 <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
                     <section>
-                        <case-management-status-ramsell-info [clientId]="''"></case-management-status-ramsell-info>
+                        <case-management-status-ramsell-info [clientId]="'1234'"></case-management-status-ramsell-info>
                     </section>
                     <div class="mt-5">
                         <case-management-status-group-history [eligibilityId]="'9C56832C-2F4C-4C46-B794-421F02110FC3'"></case-management-status-group-history>
