@@ -21,13 +21,14 @@ import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
-import {KendoFileSelectDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
+import {KendoFileSelectDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessibility.directive'
 
 import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessibility.directive';
 import { AfterValueChangedDirective } from './directives/after-value-changed.directive';
 import { PermissionManagerDirective } from './directives/permission-manager.directive';
-import { UserPhotoIconComponent} from './user-photo-icon/user-photo-icon.component';
+import { UserPhotoIconComponent } from './user-photo-icon/user-photo-icon.component';
 import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case-eligibility-periods.component';
+import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/grid-cell-date-range-filter.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -55,7 +56,8 @@ import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case
     DropDownFieldFormFieldAutoFocus,
     PermissionManagerDirective,
     UserPhotoIconComponent,
-    CaseEligibilityPeriodsComponent
+    CaseEligibilityPeriodsComponent,
+    GridCellDateRangeFilterComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -81,7 +83,8 @@ import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case
     DropDownFieldFormFieldAutoFocus,
     PermissionManagerDirective,
     UserPhotoIconComponent,
-    CaseEligibilityPeriodsComponent
+    CaseEligibilityPeriodsComponent,
+    GridCellDateRangeFilterComponent,
   ],
 })
 export class SharedUiCommonModule {}

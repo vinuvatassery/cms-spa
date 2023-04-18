@@ -9,3 +9,5 @@ export * from './lib/components/health-care-provider-detail/health-care-provider
 export * from './lib/components/health-care-provider-search/health-care-provider-search.component';
 export * from './lib/components/health-care-provider-card/health-care-provider-card.component';
 export * from './lib/components/remove-health-care-provider-confirmation/remove-health-care-provider-confirmation.component';
+export * from './lib/components/deactivate-health-care-provider-confirmation/deactivate-health-care-provider-confirmation.component';
+export * from './lib/components/reactivate-health-care-provider-confirmation/reactivate-health-care-provider-confirmation.component';

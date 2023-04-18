@@ -236,6 +236,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     completedDataPoints.push({ dataPointName: 'homeAddress_city', status: homeAddressGroup?.controls['city']?.value ? StatusFlag.Yes : StatusFlag.No });
     completedDataPoints.push({ dataPointName: 'homeAddress_state', status: homeAddressGroup?.controls['state']?.value ? StatusFlag.Yes : StatusFlag.No });
     completedDataPoints.push({ dataPointName: 'homeAddress_zip', status: homeAddressGroup?.controls['zip']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_county', status: homeAddressGroup?.controls['county']?.value ? StatusFlag.Yes : StatusFlag.No });
+    completedDataPoints.push({ dataPointName: 'homeAddress_housingStabilityCode', status: homeAddressGroup?.controls['housingStabilityCode']?.value ? StatusFlag.Yes : StatusFlag.No });
   }
 
   private getFieldChanges(completedDataPoints: CompletionChecklist[], groupKey: string, prev: any, curr: any){
@@ -1565,12 +1567,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if (!this.checkValidations()) {
-          this.workflowFacade.showCancelApplicationPopup(true);
-        }
-        else {
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations()
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }

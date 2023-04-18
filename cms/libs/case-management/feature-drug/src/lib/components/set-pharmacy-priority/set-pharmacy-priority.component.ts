@@ -27,7 +27,7 @@ import { SnackBarNotificationType,LoaderService,NotificationSnackbarService, Not
 })
 export class SetPharmacyPriorityComponent implements OnInit {
   /** Input properties  **/
-  @Input() clientpharmacies$!: Observable<any>;
+  @Input() clientpharmacies:any[] = [];
   @Input() pharmacyPriorityModalButtonText: any;
   @Input() clientId: any;
   /** Output properties  **/
@@ -79,16 +79,14 @@ export class SetPharmacyPriorityComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.loadSessionSubscription.unsubscribe();
+    this.loadSessionSubscription?.unsubscribe();
   }
 
   /** Private methods **/
   private loadPriority() {
     return new Promise((resolve, reject) => {
       this.lov.pharmacyPrioritylov$.subscribe((priorityLov: Lov[]) => {
-
         this.priorities = priorityLov;
-        this.cdr.detectChanges();
         if (priorityLov.length > 0) {
           resolve(true);
         }
@@ -123,9 +121,8 @@ export class SetPharmacyPriorityComponent implements OnInit {
   }
 
   private loadClientPharmacies(){
-   
-    this.clientpharmacies$.subscribe(list =>{
-      this.savePriorityObjectList =JSON.parse(JSON.stringify(list));
+      this.savePriorityObjectList =JSON.parse(JSON.stringify(this.clientpharmacies));
+      this.cdr.detectChanges();
       for(let priority of this.savePriorityObjectList){
           priority.priorityCode = priority.priorityCode?.replace(/\s/g, '');
       }
@@ -141,9 +138,6 @@ export class SetPharmacyPriorityComponent implements OnInit {
       else {
         this.copyLoadPriorties = this.priorities.filter((x: any) => x.lovCode === PriorityCode.Primary || x.lovCode === PriorityCode.Secondary || x.lovCode === PriorityCode.Tertiary);
       }
-
-
-    })
   }
   // /** Internal event methods **/
   onCloseChangePriorityClicked() {

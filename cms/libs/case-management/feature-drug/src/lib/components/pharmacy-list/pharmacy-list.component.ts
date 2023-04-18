@@ -45,6 +45,7 @@ export class PharmacyListComponent implements OnInit {
   removeButtonEmitted = false;
   editButtonEmitted = false;
   addButtonEmitted = false;
+  clientpharmacies:any[] = []
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -65,11 +66,7 @@ export class PharmacyListComponent implements OnInit {
       text: "Change Priority",
       icon: "format_line_spacing",
       click: (clientPharmacyId: string, vendorId: string): void => {
-        this.addButtonEmitted = false
-        if (this.addButtonEmitted === false) {
           this.onOpenChangePriorityClicked()
-          this.addButtonEmitted = true;
-        }
       },
     },
 
@@ -116,6 +113,7 @@ export class PharmacyListComponent implements OnInit {
         }
         else
         {
+          this.clientpharmacies = pharmacies;
           this.isEditPharmacyPriorityTitle = true;
           this.pharmacyPriorityModalButtonText = 'Update';
         }
