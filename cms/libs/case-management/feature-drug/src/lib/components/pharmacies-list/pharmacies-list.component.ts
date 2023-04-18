@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   ViewEncapsulation,
   Input,
   ChangeDetectorRef,
@@ -27,7 +26,7 @@ import { LoggingService } from '@cms/shared/util-core';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmaciesListComponent implements OnInit,OnDestroy {
+export class PharmaciesListComponent implements OnInit{
   /** Input properties **/
   @Input() clientId: any;
   @Input() clientpharmacies$!: Observable<any>;
@@ -241,9 +240,6 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
         this.isOpenDeactivatePharmaciesClicked = false;
       }
     });
-  }
-  ngOnDestroy(): void {
-   
   }
 
   /** Private methods **/
