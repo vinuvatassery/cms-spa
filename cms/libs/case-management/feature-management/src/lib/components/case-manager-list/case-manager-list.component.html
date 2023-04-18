@@ -1,16 +1,18 @@
-<!-- User Card Profile Details Popover -->
-<!-- <kendo-popover #onUserProfileDetailsHovered width="330">
-  <ng-template kendoPopoverBodyTemplate>
-    <case-management-hiv-case-manager-card [gridHoverDataItem]="gridHoverDataItem" [userImage$]="userImage$"
-      (loadprofilePhotoEvent)="loadprofilePhotoEventHandler($event)"></case-management-hiv-case-manager-card>
-  </ng-template>
-</kendo-popover> -->
-
 
 <div class="flex-row">
   <div class="flex-col">
     <div class="app-c-table">
-      <kendo-grid [data]="getCaseManagers$ | async">
+      <kendo-grid [data]="getCaseManagers$ | async"
+      [pageSize]="state.take" 
+      [pageable]="true" 
+      [sortable]="true" 
+      [skip]="state.skip"
+      [groupable]="false"
+      [reorderable]="true"     
+      [resizable]="true" 
+      [columnMenu]="{ filter: true }"
+      [sort]="state.sort"
+      (dataStateChange)="dataStateChange($event)">
 
         <kendo-grid-column field="caseManagerName" title="Case Manager Name" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -29,7 +31,7 @@
         <kendo-grid-column field="assisterGroup" title="Assister Group" [width]="100"
           *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column *ngIf="managementTab" field="assignmentStartDate" title="Effective Date" [width]="100"
-          [sortable]="false">
+         >
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.assignmentStartDate | date: 'MM/dd/yyyy'}} {{dataItem.assignmentEndDate ? '-' : ''}}
             {{dataItem.assignmentEndDate | date: 'MM/dd/yyyy'}}
@@ -127,7 +129,7 @@
     </div>
       <div class="justify-content-between">
         <div class="flex-col mt-1" *ngIf="(showAddNewManagerButton$ | async) &&managementTab">
-          <button kendoButton [primary]="true" icon="add" (click)="onOpenManagerSearchClicked('','',false)"
+          <button kendoButton [primary]="true" icon="add" (click)="showReferalBtnClicked()"
             aria-label="add case manager provider">
             SUBMIT REFERRAL
           </button>
@@ -196,4 +198,11 @@
   [clientCaseManagerId]="clientCaseManagerId"
   (changeDateConfimEvent)="editDateCaseManagerEventEventHandler($event)">
   </case-management-case-manager-effective-dates>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="showReferralPopup"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <case-management-case-manager-referral-request  
+  (submitReferalEvent)="submitReferalEvent($event)">
+  </case-management-case-manager-referral-request>
 </kendo-dialog>

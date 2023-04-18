@@ -1,7 +1,6 @@
 /** Angular **/
 import {
-  Component,
-  OnInit,
+  Component,  
   ChangeDetectionStrategy,
   Input,
   Output,
@@ -67,6 +66,7 @@ export class CaseManagerListComponent implements OnChanges {
   showUnAssignConfirmation = false;
   showReferralConfirmation = false;
   showDateChangePopup = false;
+  showReferralPopup =false;
   clientCaseManagerId!: string;
   assignmentStartDate!: Date;
   assignmentEndDate: any;
@@ -152,7 +152,6 @@ export class CaseManagerListComponent implements OnChanges {
         assignmentEndDate: Date
       ): void => {
         if (this.editButtonEmitted === false) {
-          debugger;
           this.deleteCaseManagerCaseId = clientCaseId;
           this.selectedCaseManagerId = caseManagerId;
           this.clientCaseManagerId = clientCaseManagerId;
@@ -200,6 +199,14 @@ export class CaseManagerListComponent implements OnChanges {
       sortType: sortTypeValue,
     };
     this.loadCasemanagersGridEvent.next(gridDataRefinerValue);
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.loadCaseManagerssList();
   }
 
   onManagerHover(dataItem: any) {
@@ -265,6 +272,15 @@ export class CaseManagerListComponent implements OnChanges {
   onDeleteConfirmCloseClicked() {
     this.showDeleteConfirmation = false;
     this.removeButttonEmitted = false;
+  }
+  showReferalBtnClicked()
+  {
+     this.showReferralPopup =true;    
+  }
+
+  submitReferalEvent(confirm : boolean)
+  {
+     this.showReferralPopup =false;    
   }
 
   onDeleteConfirmHandle(data: any) {

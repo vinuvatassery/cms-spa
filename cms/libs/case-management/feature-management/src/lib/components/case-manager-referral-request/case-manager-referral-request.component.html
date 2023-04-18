@@ -1,1 +1,25 @@
-<p>case-manager-referral-request works!</p>
+<kendo-dialog-titlebar (click)="onSubmitConfirm(false)"> Submit Case Manager referral </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+        A referral will be sent to an Intake Coordinator. You will be notified once the client is assigned a Case Manager.
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        (click)="onSubmitConfirm(false)"
+        aria-label="cancel adding provider"
+      >
+        CANCEL
+      </button>
+      <button kendoButton [primary]="true" aria-label="add or update case manager" (click)=onSubmitConfirm(false) >
+       SUBMIT
+      </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
