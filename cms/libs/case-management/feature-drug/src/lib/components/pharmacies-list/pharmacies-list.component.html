@@ -139,6 +139,7 @@
     <kendo-dialog-titlebar> Remove pharmacy? </kendo-dialog-titlebar>
       <case-management-remove-pharmacy
         [clientPharmacyId]="selectClientPharmacyId"
+        [isShowHistoricalData]="isShowHistoricalData"
         (removeConfirmEvent)="removeClientPharmacy($event)"
     >     </case-management-remove-pharmacy>
 </kendo-dialog>
@@ -155,7 +156,7 @@
 <kendo-dialog *ngIf="isOpenDeactivatePharmaciesClicked" (close)="handleCloseDeactivatePharmaciesClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Deactivate Pharmacy </kendo-dialog-titlebar>
-  <case-management-deactivate-pharmacy   [clientPharmacyDetails]="selectClientPharmacyDetails"
+  <case-management-deactivate-pharmacy [isShowHistoricalData]="isShowHistoricalData"  [clientPharmacyDetails]="selectClientPharmacyDetails"
    (closeDeactivatePharmacies)="handleCloseDeactivatePharmaciesClicked()">
   </case-management-deactivate-pharmacy>
 </kendo-dialog>

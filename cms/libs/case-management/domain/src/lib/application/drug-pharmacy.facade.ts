@@ -293,7 +293,7 @@ export class DrugPharmacyFacade {
     const model = {
       vendorId: vendorId,
       PriorityCode:priorityCode,   
-      IsUpdatePriorityCode:true  
+      IsUpdatePriorityCode:priorityCode != "" ? true : false
     };
 
     this.loaderService.show();

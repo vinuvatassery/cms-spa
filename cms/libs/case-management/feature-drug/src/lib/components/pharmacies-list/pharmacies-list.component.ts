@@ -48,7 +48,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
     clientPharmacyId: string;
     vendorId: string;
   }>();
-  @Output() removePharmacyClick = new EventEmitter<string>();
+  @Output() removePharmacyClick = new EventEmitter<any>();
   /** Public properties **/
   pharmaciesTotal: any = {};
   priority: string = PriorityCode.Primary;
@@ -233,7 +233,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
       sort: this.sort,
     };
     this.drugPharmacyFacade.clientPharmacies$.subscribe((list) => {
-      if (list && list.length > 0) {
+      if (list && list.length >= 0) {
         this.pharmacies = list;
         this.handleClosePharmacyClicked();
         this.handleCloseSelectNewPrimaryPharmaciesClicked();
@@ -305,6 +305,7 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
 
   /** Internal event methods **/
   updateAndDeactivatePharmacy(data: any) {
+ 
     if (data && data.isNewAdded) {
       this.drugPharmacyFacade
         .addDrugPharmacy(
@@ -440,7 +441,11 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
   }
   removePharmacyEvent(clientPharmacyId: string) {
     this.removeButtonEmitted = false;
-    this.removePharmacyClick.emit(clientPharmacyId);
+    let data = {
+      vendorId:clientPharmacyId,
+      isShowHistoricalData:this.isShowHistoricalData
+    }
+    this.removePharmacyClick.emit(data);
   }
   addPharmacyEvent(pharmacyId: string) {
     let data = {
@@ -451,7 +456,11 @@ export class PharmaciesListComponent implements OnInit,OnDestroy {
   }
   removeClientPharmacyOnEditMode() {
     this.handleClosePharmacyClicked();
-    this.removePharmacyClick.emit(this.selectClientPharmacyId);
+    let data = {
+      vendorId:this.selectClientPharmacyId,
+      isShowHistoricalData:this.isShowHistoricalData
+    }
+    this.removePharmacyClick.emit(data);
   }
   onSearchPharmacy(searchText: string) {
     this.searchPharmacy.emit(searchText);
