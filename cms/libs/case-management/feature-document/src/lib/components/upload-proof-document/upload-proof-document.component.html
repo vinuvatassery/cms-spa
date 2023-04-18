@@ -1,48 +1,90 @@
-<section class="k-dialog-body">
 
-    <div class="flex-row">
+<form class="form-group" (ngSubmit)="SubmitForm()" [formGroup]="uploadform">
+    <section class="k-dialog-body">
+  
+      <div class="flex-row">
         <div class="flex-col mb-2">
-            <p>Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
+          <p *ngIf="!isEdit">Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
+          <p *ngIf="isEdit">Make changes as needed then click "Update".</p>
         </div>
+        <div class="flex-col mb-2" *ngIf="isEdit">
+          <legend class="k-form-legend">  <h5>Attachment Name:</h5> {{this.documentName}} </legend>
+        </div>
+  
+        <input type="hidden" formControlName="concurrencyStamp">
+        <input type="hidden" formControlName="clientId">
         <div class="flex-col">
-            <kendo-floatinglabel text="Attachment Type">
-                <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="listItems">
-                </kendo-dropdownlist>
-            </kendo-floatinglabel>
+          <kendo-floatinglabel text="Attachment Type">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlAttachmentTypes$ | async"
+                                textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" formControlName="attachmentType">
+            </kendo-dropdownlist>
+            <kendo-formerror *ngIf="uploadform?.hasError('required','attachmentType') && isSubmitted">
+              Attachment
+              Type
+              is required
+            </kendo-formerror>
+          </kendo-floatinglabel>
         </div>
         <div class="flex-col mt-2">
-            <kendo-upload></kendo-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <kendo-upload aria-label="copy Of attachment" name="copyOfattachment" #copyOfAttachment
+                        [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)"
+                        [ngModel]="copyOfUploadedFiles" [ngModelOptions]="{standalone: true}"
+                        [restrictions]="uploadFileRestrictions.fileRestrictions"
+                        [removeUrl]="uploadRemoveUrl"
+                        (remove)="handleFileRemoved(copyOfUploadedFiles)">
+            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+              <span (click)="documentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+                <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
+                        class="card-link-button">
+                  <a>{{ files[0].name }} </a>
+                </button>
+                <br>
+                <span>{{files[0].size | fileSize}}</span>
+              </span>
+            </ng-template>
+          </kendo-upload>
+          <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <kendo-formerror *ngIf="uploadedFileExceedsFileSizeLimit">
+            File size is limited to 25 MB. Please select a
+            smaller
+            file.
+          </kendo-formerror>
+          <kendo-formerror *ngIf="!isFileUploaded && !uploadedFileExceedsFileSizeLimit">
+            document is required.
+          </kendo-formerror>
         </div>
         <div class="flex-col mt-2">
-            <kendo-floatinglabel text="Attachment Note" class="pb-0">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Attachment Note" aria-label="Attachment Note" [rows]="2"
-                    [cols]="40">
-                    <kendo-textarea-suffix class="justify-content-end">
-                        <kendo-formhint class="justify-content-end">0/750</kendo-formhint>
-
-                    </kendo-textarea-suffix>
-                </kendo-textarea>
-            </kendo-floatinglabel>
+          <kendo-floatinglabel text="Attachment Note" class="pb-0">
+            <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Attachment Note"
+                            aria-label="Attachment Note" [rows]="2" [cols]="40" formControlName="attachmentNote"
+                            [maxlength]="tareaNotesMaxLength"
+                            [value]="tareaUploadNote"
+                            (valueChange)="OnNoteValueChange($event)">
+              <kendo-textarea-suffix class="justify-content-end">
+                <span class="counter">{{ tareaUploadNotesCounter }}</span>
+              </kendo-textarea-suffix>
+            </kendo-textarea>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="uploadform?.hasError('required','attachmentNote') && isSubmitted">
+            Attachment note is required
+          </kendo-formerror>
         </div>
-
-    </div>
-</section>
-<kendo-dialog-actions>
-    <div class="justify-content-between">
-        <div>
-
-            <button kendoButton class="k-danger-link" aria-label="remove pharmacy">
-                Remove
-            </button>
-        </div>
+  
+      </div>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding pharmacy">
-                Cancel
-            </button>
-            <button kendoButton [primary]="true" aria-label="add or update pharmacy">
-                Upload
-            </button>
+          <button kendoButton [primary]="true" look="outline" aria-label="cancel adding attachment"
+                  (click)="onAttachmentPopupClosed()">
+            Cancel
+          </button>
+          <button kendoButton [primary]="true" aria-label="add or update attachment" [disabled]="btnDisabled">
+            {{!isEdit ? 'UPLOAD' : 'UPDATE'}}
+          </button>
         </div>
-    </div>
-</kendo-dialog-actions>
+      </div>
+    </kendo-dialog-actions>
+  </form>
+  

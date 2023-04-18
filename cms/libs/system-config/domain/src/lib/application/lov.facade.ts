@@ -68,6 +68,7 @@ export class LovFacade {
   private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
   private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
   private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
+  private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -112,7 +113,7 @@ export class LovFacade {
   showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
   disenrollmentReason$ = this.disenrollmentReasonSubject.asObservable();
   disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
-
+  attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
 
 
         /** Public methods **/
@@ -564,6 +565,18 @@ getDisenrollmentReasonLovs(): void {
       this.disenrollmentReasonStatusSubject.next(false);
     },
   });
+}
+
+getAttachmentTypesLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.AttachmentsTypes).subscribe({
+    next: (lovResponse) => {
+      this.lovAttachmentsDroplistSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+
 }
 
 }
