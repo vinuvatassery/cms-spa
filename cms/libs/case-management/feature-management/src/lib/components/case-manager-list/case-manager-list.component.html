@@ -128,13 +128,13 @@
       </div>
     </div>
       <div class="justify-content-between">
-        <div class="flex-col mt-1" *ngIf="(showAddNewManagerButton$ | async) &&managementTab">
+        <div class="mt-1" *ngIf="(showAddNewManagerButton$ | async) &&managementTab">
           <button kendoButton [primary]="true" icon="add" (click)="showReferalBtnClicked()"
-            aria-label="add case manager provider">
+            aria-label="add case manager provider" class="mr-1">
             SUBMIT REFERRAL
           </button>
 
-          <button kendoButton [primary]="true" look="outline" (click)="onOpenManagerSearchClicked('','',false)"
+          <button kendoButton [primary]="true" look="flat" (click)="onOpenManagerSearchClicked('','',false)"
             aria-label="assign case manager">
             ASSIGN CASE MANAGER
           </button>
