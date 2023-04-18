@@ -17,8 +17,7 @@ export class ProviderDataService {
 
   loadLabResults(
     labResultTypeCode: string,
-    clientId: number,
-    clientCaseEligibilityId: string,
+    clientId: number,  
     skip: any,
     pageSize: any,
     sortBy: any,

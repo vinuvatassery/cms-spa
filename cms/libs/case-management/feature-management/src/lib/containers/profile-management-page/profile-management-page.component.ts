@@ -106,8 +106,7 @@ historychkBoxChecked = false
     this.pageSizes = this.managementFacade.gridPageSizes;
     this.managementFacade.loadLabResults(
       this.labResultType,
-      this.profileClientId,
-      this.clientCaseEligibilityId,
+      this.profileClientId,     
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sort,
