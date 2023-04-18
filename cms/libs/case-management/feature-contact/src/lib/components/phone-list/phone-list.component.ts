@@ -162,7 +162,7 @@ export class PhoneListComponent implements OnChanges {
       sortType: sortTypeValue,
       showDeactivated: this.historychkBoxChecked,
     };
-    this.loader = true;
+    this.loader = false;
     this.loadClientPhonesListEvent.next(gridDataRefinerValue);
   }
 
@@ -331,5 +331,6 @@ this.reloadEmailsEvent.emit();
       this.sortType,
       this.historychkBoxChecked
     );
+    this.loader = true;
   }
 }
