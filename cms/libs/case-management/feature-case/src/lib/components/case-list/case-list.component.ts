@@ -35,6 +35,7 @@ columnsReordered = false;
 filteredBy = "";
 searchValue = "";
 isFiltered = false;
+filterGrid = "";
 
 public state!: State;
   /*** Input properties ***/
@@ -180,6 +181,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.loadProfileCasesList()
   }
   public dataStateChange(stateData: any): void {
+    debugger;
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -194,11 +196,15 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         this.filter = stateFilter.value;
       }
       this.isFiltered = true;
+      const filterGrid = [];
       const filterList = []
       for(const filter of stateData.filter.filters)
       {
+        filterGrid.push(filter.filters[0]);
         filterList.push(this.columns[filter.filters[0].field]);
       }
+      this.filterGrid = JSON.stringify(filterGrid);
+      console.log(filterGrid);
       this.filteredBy =  filterList.toString();
     }
     else
@@ -217,9 +223,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.loadProfileCasesList();
 }
   private loadProfileCasesList(): void {
-    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter)
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter, this.filterGrid)
   }
-   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any)
+   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, filterGrid:any)
    {
      const gridDataRefinerValue =
      {
@@ -228,7 +234,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
        sortColumn : sortValue,
        sortType : sortTypeValue,
        columnName : columnName,
-       filter : filter
+       filter : filter,
+       filterGrid : filterGrid,
      }
      this.loadCasesListEvent.next(gridDataRefinerValue)
    }
