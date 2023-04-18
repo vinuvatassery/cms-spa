@@ -51,7 +51,7 @@ public state!: any;
     officialIdFullName:"Name on Official ID",
     insuranceFullName:"Name on Primary Insurance Card",
     pronouns:"Pronouns",
-    clientId:"ID",
+    clientId:"Client ID",
     urn:"URN",
     preferredContact:"Preferred Contact",
     caseStatus:"Status",
@@ -205,8 +205,13 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       {
         this.filter = stateFilter.value;
       }
-      this.filteredBy = this.columns[this.columnName];
       this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
     }
     else
     {
