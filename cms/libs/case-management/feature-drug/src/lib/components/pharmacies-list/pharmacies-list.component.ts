@@ -366,7 +366,7 @@ export class PharmaciesListComponent implements OnInit{
       this.removeButtonEmitted = true;
       if (data && data.isNewAdded) {
         this.drugPharmacyFacade
-          .addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, 'P',
+          .addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, PriorityCode.Primary,
           this.isShowHistoricalData)
           .then((isSuceed) => {
             if (isSuceed) {
