@@ -2,11 +2,39 @@
 <div class="flex-col flex-space-bw align-items-center mb-1">
   <h2 class="title-md mb-0 text-bold">Case Manager</h2>
   <div>
-
+    <span class="app-checkboxwidtext-wrapper"> 
+      <input type="checkbox"
+      kendoCheckBox aria-labelledby="historyCheckBox"      
+      (click)="onHistoryChkBoxChanged()" 
+      id="historyCheckBox"
+      name="historyCheckBox"
+      [checked]="historychkBoxChecked"
+      />
+      <label class="k-checkbox-label" for="historyCheckBox"
+        >Show historical</label
+      >
+    </span>
   </div>
 
 </div>
-<case-management-case-manager-list></case-management-case-manager-list>
+<case-management-case-manager-list
+[updateDatesCaseManager$]="updateDatesCaseManager$"
+[showAddNewManagerButton$]="showAddNewManagerButton$"
+[managementTab]="true"    
+[pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort" 
+[userImage$]="userImage$"
+[selectedCaseManagerDetails$]="selectedCaseManagerDetails$"
+[getManagerUsers$]="getManagerUsers$"
+[getCaseManagers$]="getCaseManagers$"
+[assignCaseManagerStatus$]="assignCaseManagerStatus$"
+[removeCaseManager$]="removeCaseManager$"
+(loadCasemanagersGridEvent)="loadCaseManagers($event)"
+(deleteCasemanagersGridEvent)="removecaseManagerHandler($event)"
+(searchTextEvent)="searchTextEventHandler($event)"
+(getExistingCaseManagerEvent)="getExistingCaseManagerEventHandler($event)"
+(addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
+(loadprofilePhotoEvent)="getCaseManagerImage($event)"
+(changeDateConfimEvent)="updateCaseManagerDates($event)"></case-management-case-manager-list>
 </div>
 
 

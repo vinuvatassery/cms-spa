@@ -7,7 +7,7 @@ import {
   WorkflowFacade,
 } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
-import { Subject, Subscription, filter } from 'rxjs';
+import { Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'case-management-profile-healthcare-provider-page',

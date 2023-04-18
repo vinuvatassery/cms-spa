@@ -256,7 +256,7 @@ export class PharmaciesListComponent implements OnInit{
         this.triggerPriorityPopupNumber = 0;
         this.handleCloseChangePriorityClikced();
       }
-    })
+    });
   }
 
   /** Private methods **/
@@ -461,16 +461,8 @@ export class PharmaciesListComponent implements OnInit{
     this.removePharmacyClick.emit(data);
   }
   addPharmacyEvent(pharmacyId: string) {
-    this.triggerPriorityPopupNumber = 0;
-    let data = {
-      vendorId:pharmacyId,
-      isShowHistoricalData:this.isShowHistoricalData
-    }
-    this.addPharmacyClick.emit(data);
+    this.addPharmacyClick.emit(pharmacyId);
   }
-  setAsPrimaryEvent(data:any){
-    this.isSetAsPrimary = data;
-}
   removeClientPharmacyOnEditMode() {
     this.handleClosePharmacyClicked();
     let data = {

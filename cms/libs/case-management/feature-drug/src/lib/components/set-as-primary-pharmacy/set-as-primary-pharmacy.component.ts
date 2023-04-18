@@ -42,15 +42,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     private readonly ref: ChangeDetectorRef,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private workflowFacade: WorkflowFacade
-  ) {
-    
-  }
-    /** Lifecycle hooks **/
-    ngOnInit(): void{
-  
-      this.pharmacies = this.pharmacies.filter(pharmacy => pharmacy.priorityCode != PriorityCode.Primary && pharmacy.activeFlag === 'Y');
-    ;
-    }
+  ) {}
   onCloseSelectNewPrimaryPharmaciesClicked() {
     this.closeSelectNewPrimaryPharmacies.emit();
   }

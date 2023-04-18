@@ -302,8 +302,7 @@ export class DrugPharmacyFacade {
     return this.drugDataService.addClientPharmacy(clientId, model).subscribe({
       next: (response) => {
         if (response === true) {
-
-          this.loadClientPharmacyList(clientId, true,isShowHistoricalData);
+          this.loadClientPharmacyList(clientId, true,false);
           this.addPharmacyResponseSubject.next(true);
           this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Drug Pharmacy Added Successfully');
         }
