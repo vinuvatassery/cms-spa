@@ -240,8 +240,6 @@ export class PharmaciesListComponent implements OnInit{
         this.handleCloseSelectNewPrimaryPharmaciesClicked();
         this.handleCloseReactivatePharmaciesClicked();
         this.isOpenDeactivatePharmaciesClicked = false;
-   
-       // this.handleCloseChangePriorityClikced();
       }
     });
     this.triggerPriorityPopup$.subscribe(isTrigered =>{
@@ -461,6 +459,7 @@ export class PharmaciesListComponent implements OnInit{
     this.removePharmacyClick.emit(data);
   }
   addPharmacyEvent(pharmacyId: string) {
+    this.triggerPriorityPopupNumber = 0;
     this.addPharmacyClick.emit(pharmacyId);
   }
   removeClientPharmacyOnEditMode() {
@@ -471,6 +470,9 @@ export class PharmaciesListComponent implements OnInit{
     }
     this.removePharmacyClick.emit(data);
   }
+  setAsPrimaryEvent(data:any){
+    this.isSetAsPrimary = data;
+}
   onSearchPharmacy(searchText: string) {
     this.searchPharmacy.emit(searchText);
   }
