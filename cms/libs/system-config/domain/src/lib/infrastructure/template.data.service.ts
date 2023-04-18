@@ -35,17 +35,18 @@ export class TemplateDataService {
 
   getDirectoryContent(typeCode:any ,filepath?: any) {
     let params = new HttpParams();
-    params = params.append('path',filepath);
+    params = params.append('templateId',filepath);
     params = params.append('typeCode',typeCode);
     return this.http.get(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + '/system-config/templates/browse',{params:params}
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + '/system-config/templates/browsefiles',{params:params}
     );
   }
 
   getFormsandDocumentsViewDownload(id: string) {
+    let roleId = "";
     let url = `/system-config/templates/${id}/content`;
     return this.http.get(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + url
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + url+ `/${roleId}`
       , {
         responseType: 'blob'
       });
