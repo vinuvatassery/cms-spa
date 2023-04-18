@@ -73,18 +73,17 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
       clientPharmacyId
     );
   }
-  removeDrugPharmacyRsp(data: any) {
+  removeDrugPharmacyRsp(vendorId: any) {
     this.drugPharmacyFacade.removeClientPharmacy(
       this.profileClientId ?? 0,
-      data.vendorId,
-      data.isShowHistoricalData
+      vendorId
     );
   }
 
   searchPharmacy(searchText: string) {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
-  addPharmacy(data:any) {
+  addPharmacy(vendorId: string) {
     let priorityCode :string = "";
     this.drugPharmacyFacade.drugPharnacyPriority.subscribe(priorityCodes =>{
       priorityCode = priorityCodes;

@@ -20,7 +20,6 @@ export class DeactivatePharmacyComponent {
   @Input() clientId: any;
   @Output() closeDeactivatePharmacies = new EventEmitter();
   @Input() clientPharmacyDetails: any;
-  @Input() isShowHistoricalData: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
  /** Constructor **/
  constructor(
@@ -36,6 +35,6 @@ export class DeactivatePharmacyComponent {
       ClientId:this.clientPharmacyDetails.clientId,
       IsActive:false
     }
-    this.drugPharmacyFacade.deactivePharmacies(this.clientPharmacyDetails.clientPharmacyId,pharmacy,this.isShowHistoricalData);
+    this.drugPharmacyFacade.deactivePharmacies(this.clientPharmacyDetails.clientPharmacyId,pharmacy);
   }
 }

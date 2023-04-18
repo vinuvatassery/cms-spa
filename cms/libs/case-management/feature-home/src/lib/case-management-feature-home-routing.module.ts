@@ -11,7 +11,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureCaseModule
       ),
     data: {
-      title: '',
+      title: 'Clients',
     },
   },
   {
