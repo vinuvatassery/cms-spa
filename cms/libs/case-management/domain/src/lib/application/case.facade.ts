@@ -275,9 +275,9 @@ export class CaseFacade {
     });
   }
 
-  deleteEligibilityGroup(eligibilityId: string){
+  deleteEligibilityGroup(groupId: string){
     this.showLoader();
-    return this.caseDataService.deleteEligibilityGroup(eligibilityId).pipe(
+    return this.caseDataService.deleteEligibilityGroup(groupId).pipe(
       catchError((err: any) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         return of(false);

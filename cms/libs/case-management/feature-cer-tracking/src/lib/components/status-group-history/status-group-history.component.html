@@ -5,7 +5,7 @@
     <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.isFutureStartDate">
-                <a (click)="loadEligibilityChangeModal($event)">Scheduled for {{dataItem.groupStartDate}}</a>
+                <a (click)="loadEligibilityChangeModal(dataItem)">Scheduled for {{dataItem.groupStartDate}}</a>
             </div>
             <div *ngIf="!dataItem.isFutureStartDate">
                 {{dataItem.groupStartDate}}
@@ -51,7 +51,7 @@
 </kendo-dialog>
 
 <!-- Eligibility Group delete Modal -->
-<kendo-dialog *ngIf="isGroupDeleteOpened" (close)="onCancelDelete()"
+<kendo-dialog *ngIf="isGroupDeleteModalOpened" (close)="onCancelDelete()"
     class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
     <kendo-dialog-titlebar> Delete scheduled group change </kendo-dialog-titlebar>
     <section class="k-dialog-body">

@@ -14,7 +14,8 @@ export class StatusGroupHistoryComponent implements OnInit {
   ddlGroups$ = this.caseFacade.ddlGroups$;
   statusGroupHistory: any = [];
   isGroupDetailOpened: boolean = false;
-  isGroupDeleteOpened: boolean = false;
+  isGroupDeleteModalOpened: boolean = false;
+  selectedGroupId!: string;
 
   constructor(
     private statusPeriodFacade: StatusPeriodFacade,
@@ -37,13 +38,15 @@ export class StatusGroupHistoryComponent implements OnInit {
     });
   }
 
-  loadEligibilityChangeModal(event: any){
+  loadEligibilityChangeModal(event: any) {
     this.caseFacade.loadEligibilityChangeGroups(this.eligibilityId);
     this.isGroupDetailOpened = true;
+    this.selectedGroupId = event.groupId;
   }
 
   onGroupDetailClosed() {
     this.isGroupDetailOpened = false;
+    this.selectedGroupId = "";
   }
 
   onGroupChangeUpdateClicked(group: any) {
@@ -54,23 +57,29 @@ export class StatusGroupHistoryComponent implements OnInit {
     };
     this.caseFacade.updateEligibilityGroup(newGroup);
     this.isGroupDetailOpened = false;
+    this.selectedGroupId = "";
   }
 
   onGroupChangeCancelClicked(event: any) {
     this.isGroupDetailOpened = false;
+    this.selectedGroupId = "";
   }
 
   onDeleteGroupClicked(event: any) {
-    this.isGroupDeleteOpened = true;
+    this.isGroupDeleteModalOpened = true;
   }
-  
+
   onConfirmGroupDelete() {
-    this.caseFacade.deleteEligibilityGroup(this.eligibilityId);
+    if (!!this.selectedGroupId) {
+      this.caseFacade.deleteEligibilityGroup(this.selectedGroupId);
+    }
+    this.isGroupDeleteModalOpened = false;
     this.isGroupDetailOpened = false;
   }
 
   onCancelDelete() {
-    this.isGroupDeleteOpened = false;
+    this.isGroupDeleteModalOpened = false;
+    this.selectedGroupId = "";
   }
 
 }

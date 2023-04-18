@@ -65,8 +65,8 @@ export class CaseDataService {
     return this.http.put<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${group.eligibilityId}/groups`, group);
   }
 
-  deleteEligibilityGroup(eligibilityId: string) {
-    return this.http.put<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${eligibilityId}/deleted-groups`, eligibilityId);
+  deleteEligibilityGroup(groupId: string) {
+    return this.http.delete<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/groups/${groupId}`);
   }
 
   loadCaseHistory(): Observable<CaseHistory[]> {
