@@ -70,13 +70,14 @@ export class LastVisitedCasesComponent implements OnInit, OnDestroy {
 
   onCaseClicked(session: ActiveSessions) {
     const clientId = this.route.snapshot.queryParams['id'] ?? 0;
-    if (session && session?.caseStatusCode !== CaseStatusCode.new && clientId != session?.clientId) {
+    const newApplicationStatus: string[] = [CaseStatusCode.new, CaseStatusCode.incomplete];
+    if (session && !newApplicationStatus.includes(session?.caseStatusCode) && clientId != session?.clientId) {
       this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);
       return;
     }
 
     const sessionId = this.route.snapshot.queryParams['sid'];
-    if (sessionId !== session?.sessionId && session?.caseStatusCode === CaseStatusCode.new) {
+    if (sessionId !== session?.sessionId && newApplicationStatus.includes(session?.caseStatusCode)) {
       this.router.navigate(['case-management/case-detail'], {
         queryParams: {
           sid: session?.sessionId,
@@ -89,8 +90,8 @@ export class LastVisitedCasesComponent implements OnInit, OnDestroy {
   public onDragEnd(e: DragEndEvent): void {
     if (this.isOrderChanged()) {
       this.orderUpdateLoader$.next(true);
-      this.updateActiveSessionOrder(this.activeSessionCur).subscribe((isUpdated:boolean) => {
-        if(isUpdated){
+      this.updateActiveSessionOrder(this.activeSessionCur).subscribe((isUpdated: boolean) => {
+        if (isUpdated) {
           this.activeSessionPrv = this.deepCopy(this.activeSessionCur);
         }
         this.orderUpdateLoader$.next(false);

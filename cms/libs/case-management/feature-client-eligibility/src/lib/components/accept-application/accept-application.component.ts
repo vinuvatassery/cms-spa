@@ -127,6 +127,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
           this.loaderService.hide();
           this.onCancel();
         }
+        this.caseFacade.loadActiveSession();
       },
       error: (err) => {
         if (err){
