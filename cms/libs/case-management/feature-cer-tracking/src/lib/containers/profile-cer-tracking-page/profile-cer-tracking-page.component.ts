@@ -44,7 +44,7 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
     this.tabId = this.route.snapshot.queryParams['tid'];
     this.clientCaseId = this.route.snapshot.queryParams['cid'];
     if(ClientProfileTabs.STATUS_PERIOD){
-      this.statusPeriodFacade.loadStatusPeriod(this.clientCaseId,this.profileClientId,this.showHistoricalFlag);
+      this.loadStatusPeriod();
     }
     this.tabIdSubject.next(this.tabId);
   }
@@ -61,7 +61,15 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
       });
   }
 
+  handleShowHistoricalClick(){
+    this.loadStatusPeriod();
+  }
+
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
+  }
+
+  loadStatusPeriod(){
+    this.statusPeriodFacade.loadStatusPeriod(this.clientCaseId,this.profileClientId,this.showHistoricalFlag);
   }
 }

@@ -9,6 +9,7 @@
           aria-labelledby="AddressesshowHistorical"
           id="AddressesshowHistorical"
           [(ngModel)]="showHistoricalFlag"
+          (change)="handleShowHistoricalClick()"
         />
         <label class="k-checkbox-label" for="AddressesshowHistorical"
           >Show historical</label

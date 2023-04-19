@@ -55,12 +55,14 @@ export class StatusPeriodFacade {
     }
   /** Public methods **/
   loadStatusPeriod(caseId:any,clientId:any,showHistorical:any): void {
+    this.showLoader();
     this.statusPeriodDataService.loadStatusPeriod(caseId,clientId,showHistorical).subscribe({
       next: (statusPeriodResponse) => {
         this.statusPeriodSubject.next(statusPeriodResponse);
+        this.hideLoader();
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       },
     });
   }
