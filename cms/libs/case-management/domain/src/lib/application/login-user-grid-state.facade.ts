@@ -35,8 +35,8 @@ export class LoginUserGridStateFacade {
   hideLoader() {
     this.loaderService.hide();
   }
-  loadLoginUserGridState() {
-    return this.loginUserGridStateDataService.loadLoginUserGridState();
+  loadLoginUserGridState(userId:any,gridStateKey:string,moduleCode:string) {
+    return this.loginUserGridStateDataService.loadLoginUserGridState(userId,gridStateKey,moduleCode);
   }
   createLoginUserGridState(loginUserGridState: LoginUserGridState) {
     return this.loginUserGridStateDataService.createLoginUserGridState(loginUserGridState);

@@ -1,5 +1,7 @@
 export interface LoginUserGridState {
-    GridStateKey:string
-    GridStateValue:string
-    ModuleCode : string
+    gridStateKey:string
+    gridStateValue:string
+    moduleCode : string
+    parentModuleCode : string
+    userId:string;
 }

@@ -10,9 +10,9 @@ export class LoginUserGridStateDataService {
   }
 
 
-  loadLoginUserGridState() {
+  loadLoginUserGridState(userId:any,gridStateKey:string,moduleCode:string) {
     return this.http.get<LoginUserGridState>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management//login-user-grid-state`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/login-user-grid-state?userId=${userId}&gridStateKey=${gridStateKey}&moduleCode=${moduleCode}`);
   }
   createLoginUserGridState(loginUserGridState: LoginUserGridState) {
     return this.http.post<LoginUserGridState>(

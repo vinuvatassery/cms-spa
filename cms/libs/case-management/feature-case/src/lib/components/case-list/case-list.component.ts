@@ -2,6 +2,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   Input,
   Output,
@@ -10,15 +11,14 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade,CaseScreenTab } from '@cms/case-management/domain';
-import { Observable } from 'rxjs';
+import { CaseFacade,CaseScreenTab, LoginUserGridStateFacade, GridStateKey } from '@cms/case-management/domain';
+import { Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserDataService } from '@cms/system-config/domain';
 import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider, LocalStorageService} from '@cms/shared/util-core';
-import { LocalStorageKeys } from '@cms/shared/ui-common';
 
 
 @Component({
@@ -46,6 +46,8 @@ public state!: any;
   @Input() sort : any;
   @Input() columnDroplist$ : any;
   @Input() selectedTab: CaseScreenTab = 0;
+  @Input() module: string = '';
+  @Input() parentModule: string = '';
   columns : any = {
     clientFullName:"Client Name",
     officialIdFullName:"Name on Official ID",
@@ -94,10 +96,14 @@ public state!: any;
   caseStatusTypes:any=[];
   caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
+  private userProfileSubsriction !: Subscription;
+  loginUserId!:any;
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
-    private readonly localStorageService: LocalStorageService
+    private readonly localStorageService: LocalStorageService,
+    private readonly loginUserGridStateFacade: LoginUserGridStateFacade,
+    private readonly userDataService: UserDataService
     ) {}
 
   /** Lifecycle hooks **/
@@ -108,6 +114,10 @@ public state!: any;
     this.getCaseStatusLovs();
     this.selectedColumn = 'ALL';
     this.getGroupLovs() ;
+    this.getLoggedInUserProfile();
+  }
+  ngOnDestroy(): void {
+    this.userProfileSubsriction.unsubscribe();
   }
   private getGroupLovs() {
     this.groupLov$
@@ -136,10 +146,7 @@ public state!: any;
       this.sortType = "";
       this.sortValue = "";
     }
-    this.state=this.getGridState();
-    if (Object.keys(this.state).length === 0) {
       this.defaultGridState();
-    }
     
       this.sortColumn = this.columns[this.sort[0]?.field];
       this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
@@ -246,11 +253,45 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
    }
 
   /** Private methods **/
+  getLoggedInUserProfile(){
+    this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserId= profile[0]?.loginUserId;
+       this.getGridState();
+      }
+    })
+  }
   private saveGridState(){
-    this.localStorageService.setItem(this.selectedTab+'_'+LocalStorageKeys.GridState, JSON.stringify(this.state));
+    const loginUserGridState: any = {
+      gridStateKey: GridStateKey.GRID_STATE,
+      gridStateValue: JSON.stringify(this.state),
+      moduleCode:this.module,
+      parentModuleCode:this.parentModule,
+      userId:this.loginUserId
+    };
+    this.loginUserGridStateFacade.hideLoader();
+    this.loginUserGridStateFacade.createLoginUserGridState(loginUserGridState).subscribe({
+      next: (x:any) =>{
+        this.loginUserGridStateFacade.hideLoader();
+      },
+      error: (error:any) =>{
+        this.loginUserGridStateFacade.hideLoader();
+      }
+    });
   }
   private getGridState(){
-   return JSON.parse(this.localStorageService.getItem(this.selectedTab+'_'+LocalStorageKeys.GridState) || '{}');
+    this.loginUserGridStateFacade.hideLoader();
+    this.loginUserGridStateFacade.loadLoginUserGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
+      next: (x:any) =>{
+        if(x){
+          this.state=JSON.parse(x?.gridStateValue || '{}') ;
+        }
+        this.loginUserGridStateFacade.hideLoader();
+      },
+      error: (error:any) =>{
+        this.loginUserGridStateFacade.hideLoader();
+      }
+    });
   }
   private loadDdlGridColumns() {
     this.caseFacade.loadDdlGridColumns();
