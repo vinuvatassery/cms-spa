@@ -11,7 +11,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade,CaseScreenTab, LoginUserGridStateFacade, GridStateKey } from '@cms/case-management/domain';
+import { CaseFacade,CaseScreenTab, GridFacade, GridStateKey } from '@cms/case-management/domain';
 import { Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade, UserDataService } from '@cms/system-config/domain';
@@ -101,7 +101,7 @@ public state!: any;
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
-    private readonly loginUserGridStateFacade: LoginUserGridStateFacade,
+    private readonly gridFacade: GridFacade,
     private readonly userDataService: UserDataService
     ) {}
 
@@ -268,27 +268,27 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       parentModuleCode:this.parentModule,
       userId:this.loginUserId
     };
-    this.loginUserGridStateFacade.hideLoader();
-    this.loginUserGridStateFacade.createLoginUserGridState(loginUserGridState).subscribe({
+    this.gridFacade.hideLoader();
+    this.gridFacade.createLoginUserGridState(loginUserGridState).subscribe({
       next: (x:any) =>{
-        this.loginUserGridStateFacade.hideLoader();
+        this.gridFacade.hideLoader();
       },
       error: (error:any) =>{
-        this.loginUserGridStateFacade.hideLoader();
+        this.gridFacade.hideLoader();
       }
     });
   }
   private getGridState(){
-    this.loginUserGridStateFacade.hideLoader();
-    this.loginUserGridStateFacade.loadLoginUserGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
+    this.gridFacade.hideLoader();
+    this.gridFacade.loadLoginUserGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
       next: (x:any) =>{
         if(x){
           this.state=JSON.parse(x?.gridStateValue || '{}') ;
         }
-        this.loginUserGridStateFacade.hideLoader();
+        this.gridFacade.hideLoader();
       },
       error: (error:any) =>{
-        this.loginUserGridStateFacade.hideLoader();
+        this.gridFacade.hideLoader();
       }
     });
   }

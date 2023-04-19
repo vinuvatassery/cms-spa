@@ -1,4 +1,4 @@
-export interface LoginUserGridState {
+export interface GridState {
     gridStateKey:string
     gridStateValue:string
     moduleCode : string

@@ -4,10 +4,10 @@ import { Observable, Subject } from 'rxjs';
 import { SnackBar } from '@cms/shared/ui-common';
 import { LoaderService, NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
 
-import { LoginUserGridStateDataService } from '../infrastructure/login-user-grid-state.data.service';
-import { LoginUserGridState } from '../entities/login-user-grid-state';
+import { GridDataService } from '../infrastructure/grid.data.service';
+import { GridState } from '../entities/grid-state';
 @Injectable({ providedIn: 'root' })
-export class LoginUserGridStateFacade {
+export class GridFacade {
 
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -21,7 +21,7 @@ export class LoginUserGridStateFacade {
     this.hideLoader();
   }
 
-  constructor(private readonly loginUserGridStateDataService: LoginUserGridStateDataService,
+  constructor(private readonly GridDataService: GridDataService,
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService) { }
@@ -36,10 +36,10 @@ export class LoginUserGridStateFacade {
     this.loaderService.hide();
   }
   loadLoginUserGridState(userId:any,gridStateKey:string,moduleCode:string) {
-    return this.loginUserGridStateDataService.loadLoginUserGridState(userId,gridStateKey,moduleCode);
+    return this.GridDataService.loadLoginUserGridState(userId,gridStateKey,moduleCode);
   }
-  createLoginUserGridState(loginUserGridState: LoginUserGridState) {
-    return this.loginUserGridStateDataService.createLoginUserGridState(loginUserGridState);
+  createLoginUserGridState(gridState: GridState) {
+    return this.GridDataService.createLoginUserGridState(gridState);
   }
 
 }

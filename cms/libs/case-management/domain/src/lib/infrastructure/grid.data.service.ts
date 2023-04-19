@@ -1,23 +1,23 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ConfigurationProvider } from "@cms/shared/util-core";
-import { LoginUserGridState } from "../entities/login-user-grid-state";
+import { GridState } from "../entities/grid-state"
 
 @Injectable({ providedIn: 'root' })
-export class LoginUserGridStateDataService {
+export class GridDataService {
   constructor(private readonly http: HttpClient, private readonly configurationProvider: ConfigurationProvider) {
 
   }
 
 
   loadLoginUserGridState(userId:any,gridStateKey:string,moduleCode:string) {
-    return this.http.get<LoginUserGridState>(
+    return this.http.get<GridState>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/login-user-grid-state?userId=${userId}&gridStateKey=${gridStateKey}&moduleCode=${moduleCode}`);
   }
-  createLoginUserGridState(loginUserGridState: LoginUserGridState) {
-    return this.http.post<LoginUserGridState>(
+  createLoginUserGridState(GridState: GridState) {
+    return this.http.post<GridState>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/login-user-grid-state`,
-      loginUserGridState,
+      GridState,
 
     )
   }
