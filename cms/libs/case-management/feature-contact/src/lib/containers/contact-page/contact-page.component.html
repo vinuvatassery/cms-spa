@@ -22,7 +22,8 @@
               (blur)="validateMailingAddress()"
               placeholder="Address Line 1"
               > </kendo-textbox>
-            </kendo-floatinglabel>           
+            </kendo-floatinglabel>   
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old Address line 1:</b> 123 Main St <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
             <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.required">
               Mailing Address is required
             </kendo-formerror>
@@ -63,6 +64,8 @@
               (blur)="validateMailingAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old City:</b> City <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror *ngIf="mailingAddress?.city?.errors?.required">
               Mailing City is required
             </kendo-formerror>
@@ -88,6 +91,8 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old State:</b> State <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror>Mailing State is required</kendo-formerror>
           </kendo-formfield>
           </div>
@@ -102,6 +107,8 @@
               (blur)="validateMailingAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old Zip:</b> Zip <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.required">
               Mailing Zip is required
             </kendo-formerror>
@@ -160,6 +167,8 @@
               (blur)="validateHomeAddress()" placeholder="Address Line 1"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old Address line 1:</b> 123 Main St <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
               Home Address is required
             </kendo-formerror>
@@ -202,6 +211,8 @@
               (blur)="validateHomeAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old City:</b> city <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
               Home City is required
             </kendo-formerror>
@@ -228,6 +239,8 @@
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old State:</b> State <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror *ngIf="homeAddress?.state?.errors?.required">
               Home State is required
             </kendo-formerror>
@@ -247,6 +260,8 @@
               (blur)="validateHomeAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old Zip:</b> Zip <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror *ngIf="homeAddress?.zip?.errors?.required">
               Home Zip is required
             </kendo-formerror>
@@ -278,6 +293,8 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isRenewEligibilityCERProcess"><b>Old Country:</b> Country <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+
             <kendo-formerror>Home County is required</kendo-formerror>
           </kendo-formfield>
           </div>

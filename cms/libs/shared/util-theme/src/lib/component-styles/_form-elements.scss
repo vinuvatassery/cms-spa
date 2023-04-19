@@ -157,6 +157,14 @@
       color: $white;
     }
   }
+  &.light-blue-banner {
+    background: material-color($hive-primary-palette, 400, 0.08);
+    color: rgba($color: $black, $alpha: 0.87);
+    padding: $size-xlg1 $size-xlg1;
+    a {
+      color: $app-primary;
+    }
+  }
   &.canyon-banner {
     background: material-color($hive-canyon-palette, 100);
     color: material-color($hive-canyon-palette, 900);
@@ -900,4 +908,8 @@ kendo-timepicker {
 }
 .add-client-wrapper .k-multiselect-wrapper{
   width: 100% !important;
+}
+
+.user-old-section{
+  margin-top: 4px;
 }
