@@ -143,21 +143,6 @@
         (removeConfirmEvent)="removeClientPharmacy($event)"
     >     </case-management-remove-pharmacy>
 </kendo-dialog>
-<!-- Change Pharmacy Priority Modal -->
-<kendo-dialog 
-*ngIf="isOpenChangePriorityClicked" 
-(close)="handleCloseChangePriorityClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
-  <case-management-set-pharmacy-priority 
-  (closeChangePriority)="handleCloseChangePriorityClicked()"
-  [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
-  [clientpharmacies]="pharmacies"
-  [clientId]="clientId">
-  </case-management-set-pharmacy-priority>
-</kendo-dialog>
-
-
 <!-- deactivate-pharmacy Modal -->
 <kendo-dialog *ngIf="isOpenDeactivatePharmaciesClicked" (close)="handleCloseDeactivatePharmaciesClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
@@ -185,4 +170,20 @@
   <case-management-set-as-primary-pharmacy [pharmacies]="pharmacies" (removePharmacyClick)="onRemovePharmacy($event)" (addNewPharmacyClick)="updateAndDeactivatePharmacy($event)" [clientPharmacyDetails]="selectClientPharmacyDetails"
    (closeSelectNewPrimaryPharmacies)="handleCloseSelectNewPrimaryPharmaciesClicked()">
   </case-management-set-as-primary-pharmacy>
+</kendo-dialog>
+
+<!-- Change Pharmacy Priority Modal -->
+<kendo-dialog
+  *ngIf="isTriggerPriorityPopup"
+  (close)="handleCloseChangePriorityClikced()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
+  <case-management-set-pharmacy-priority
+    (closeChangePriority)="handleCloseChangePriorityClikced()"
+    [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
+    [clientpharmacies]="pharmacies"
+    [clientId]="clientId"
+    [isShowHistoricalData]="isShowHistoricalData"
+  ></case-management-set-pharmacy-priority>
 </kendo-dialog>

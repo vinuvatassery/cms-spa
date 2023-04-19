@@ -30,6 +30,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
   @Input() clientpharmacies:any[] = [];
   @Input() pharmacyPriorityModalButtonText: any;
   @Input() clientId: any;
+  @Input() isShowHistoricalData: any;
   /** Output properties  **/
   @Output() closeChangePriority = new EventEmitter();
 
@@ -164,7 +165,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
         next: (x:any) =>{
           if(x){
             this.loaderService.hide();
-            this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
+            this.drugPharmacyFacade.loadClientPharmacyList(this.clientId,false,this.isShowHistoricalData);
             this.drugPharmacyFacade.newAddedPharmacySubject.next(true);
             this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
             this.onCloseChangePriorityClicked();
