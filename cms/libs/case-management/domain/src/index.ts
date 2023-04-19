@@ -103,7 +103,6 @@ export * from './lib/enums/module-code.enum';
 export * from './lib/enums/grid-state-key.enum';
 
 
-
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
 export * from './lib/infrastructure/case.data.service';

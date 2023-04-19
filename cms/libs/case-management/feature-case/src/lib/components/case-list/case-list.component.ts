@@ -18,7 +18,7 @@ import { LovFacade, UserDataService } from '@cms/system-config/domain';
 import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
-import {ConfigurationProvider, LocalStorageService} from '@cms/shared/util-core';
+import {ConfigurationProvider} from '@cms/shared/util-core';
 
 
 @Component({
@@ -101,7 +101,6 @@ public state!: any;
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
-    private readonly localStorageService: LocalStorageService,
     private readonly loginUserGridStateFacade: LoginUserGridStateFacade,
     private readonly userDataService: UserDataService
     ) {}

@@ -5,7 +5,7 @@ import { LoginUserGridState } from "../entities/login-user-grid-state";
 
 @Injectable({ providedIn: 'root' })
 export class LoginUserGridStateDataService {
-  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) {
+  constructor(private readonly http: HttpClient, private readonly configurationProvider: ConfigurationProvider) {
 
   }
 
