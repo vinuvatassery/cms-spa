@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, ElementRef } from "@angular/core";
-import {
-  BaseFilterCellComponent,
+import {  
   FilterService,
   PopupCloseEvent,
   SinglePopupService,
@@ -23,7 +22,7 @@ const closest = (
 @Component({
   selector: 'common-grid-cell-date-range-filter',
   templateUrl: './grid-cell-date-range-filter.component.html',
-  styleUrls: ['./grid-cell-date-range-filter.component.scss'],
+  styleUrls: [],
 })
 
 export class GridCellDateRangeFilterComponent implements OnInit, OnDestroy {

@@ -9,7 +9,7 @@ import { ClientAddress, ContactFacade, StatusFlag, AddressType } from '@cms/case
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressListComponent implements OnInit {
-
+  addressListLoader = false;
   /** Input properties**/
   @Input() clientId!: number;
   @Input() caseEligibilityId!: string;
@@ -86,10 +86,12 @@ export class AddressListComponent implements OnInit {
       this.addressGridView= address.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
       this.allAddressList=address;
       if(this.showHistoricalFlag){
+       
         this.addressGridView=this.allAddressList
       }
       this.cdr.detectChanges();
     })
+    this.addressListLoader = false;
   }
 
   /** Internal event methods **/
@@ -142,13 +144,16 @@ export class AddressListComponent implements OnInit {
   }
 
   handleShowHistoricalClick(){
+    this.addressListLoader = true;
     if(this.showHistoricalFlag){
       this.addressGridView=this.allAddressList;
     }
     else{
       this.addressGridView= this.allAddressList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
     }
+
     this.cdr.detectChanges();
+    this.addressListLoader = false;
   }
 
   public rowClass = (args:any) => ({
