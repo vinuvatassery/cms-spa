@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 
 
 @Component({
@@ -11,6 +11,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 
 export class Case360HeaderNotificationsComponent {
+  @Output() createCerSessionEvent = new EventEmitter<string>();
 
-
+  createCerSession()
+  {
+    this.createCerSessionEvent.emit()
+  }
 }

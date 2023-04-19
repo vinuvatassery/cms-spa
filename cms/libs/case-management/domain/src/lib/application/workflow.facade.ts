@@ -160,6 +160,30 @@ export class WorkflowFacade {
       });
   }
 
+  createNewCerSession(clientCaseEligibilityId: string) {
+    this.showLoader();   
+    
+    this.workflowService.createNewCerSession(clientCaseEligibilityId)
+      .subscribe({
+        next: (sessionResp: any) => {          
+          if (sessionResp && sessionResp?.workflowSessionId) {
+            this.router.navigate(['case-management/case-detail/client'], {
+              queryParams: {
+                sid: sessionResp?.workflowSessionId,
+                eid: sessionResp?.entityId
+              },
+            });
+          }
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New Client Eligibility Review Session Created Successfully')
+          this.hideLoader();
+        },
+        error: (err: any) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+
+      });
+  }
+
   loadWorkflowSession(type: string, entityId: string, sessionId: string) {
     this.workflowReadySubject.next(false);
     this.showLoader();

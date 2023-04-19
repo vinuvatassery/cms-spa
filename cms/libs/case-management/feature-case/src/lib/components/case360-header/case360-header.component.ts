@@ -26,6 +26,8 @@ export class Case360HeaderComponent implements OnInit {
   @Input() groupUpdated$!: Observable<any>;
   @Output() loadChangeGroupEvent = new EventEmitter<string>();
   @Output() updateChangeGroupEvent = new EventEmitter<any>();
+  @Output() createCerSessionEvent = new EventEmitter<string>();
+ 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
@@ -103,6 +105,11 @@ export class Case360HeaderComponent implements OnInit {
       this.isStatusPeriodDetailOpened=false;
       this.loadClientProfileInfoEvent.emit() 
     }
+  }
+
+  createCerSession()
+  {
+    this.createCerSessionEvent.emit()
   }
 
 }
