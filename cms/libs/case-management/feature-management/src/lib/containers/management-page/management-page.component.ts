@@ -46,6 +46,11 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
   userImage$ = this.userManagementFacade.userImage$;
 
+  pageSizes = this.caseManagerFacade.gridPageSizes;
+  sortValue = this.caseManagerFacade.sortValue;
+  sortType = this.caseManagerFacade.sortType;
+  sort = this.caseManagerFacade.sort;
+
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
@@ -138,10 +143,26 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
      //show hide grid
      this.gridVisibleSubject.next(status);
   }
-  loadCaseManagers()
-  {
-    this.caseManagerFacade.loadCaseManagers(this.clientCaseId);
+
+  loadCaseManagers(gridDataRefinerValue: any): void {   
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+
+    this.pageSizes = this.caseManagerFacade.gridPageSizes;
+    this.caseManagerFacade.loadCaseManagers(
+      this.clientCaseId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+      false
+    );   
   }
+ 
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
@@ -206,10 +227,11 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
       return status;
      }
 
- removecaseManagerHandler(deleteCaseManagerCaseId : string)
-  {    
-    this.caseManagerFacade.removeCaseManager(deleteCaseManagerCaseId)
-  }
+     removecaseManagerHandler(data : any)
+     {    
+       this.caseManagerFacade.removeCaseManager(this.clientCaseId, data?.endDate, data?.assignedcaseManagerId)
+     }
+   
 
   searchTextEventHandler(text : string)
   {
@@ -260,12 +282,8 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-        if(!this.checkValidations()){
-          this.workflowFacade.showCancelApplicationPopup(true);
-        }
-        else{
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-        }
+        this.checkValidations()
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }
@@ -320,7 +338,11 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
      if(response){
-     this.getCaseManagerStatus();
+       this.hasManager = '';
+       this.needManager = '';
+       this.gridVisibleSubject.next(false);
+       this.cdr.detectChanges();
+       this.getCaseManagerStatus();
      }
     });
   }

@@ -19,7 +19,7 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [kendoGridBinding]="addressGridView" [rowClass]="rowClass">
+      <kendo-grid [kendoGridBinding]="addressGridView" [rowClass]="rowClass" [loading]="addressListLoader">
         <kendo-grid-column field="addressTypeDesc" title="Type" [width]="80">
         </kendo-grid-column>
         <kendo-grid-column field="address1" title="Address1" [width]="150">
@@ -117,6 +117,16 @@
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
+              <!-- grid Loader Template -->  
+       <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
+       <!-- grid No data Template -->  
+       <ng-template kendoGridNoRecordsTemplate>
+         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+         </div>
+         <p>There is no data to display.</p>
+       </ng-template> 
       </kendo-grid>
     </div>
   </div>

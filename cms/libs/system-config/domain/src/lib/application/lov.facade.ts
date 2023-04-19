@@ -66,6 +66,8 @@ export class LovFacade {
   private showLoaderOnRelationType = new BehaviorSubject<boolean>(false);
   private eligibilityStatusSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
+  private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
+  private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -104,9 +106,12 @@ export class LovFacade {
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
-  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
+  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  
+  eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
   showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
+  disenrollmentReason$ = this.disenrollmentReasonSubject.asObservable();
+  disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
 
 
 
@@ -533,8 +538,6 @@ getApplicantInfoLovs(): void {
     },
   });
 }
-
-
 getEligibilityStatusLovs(): void {
   this.showLoaderOnEligibilityStatusSubject.next(true);
   this.lovDataService.getLovsbyType(LovType.EligibilityStatus).subscribe({
@@ -549,6 +552,19 @@ getEligibilityStatusLovs(): void {
   });
 }
 
+getDisenrollmentReasonLovs(): void {
+  this.disenrollmentReasonStatusSubject.next(true);
+  this.lovDataService.getLovsbyType(LovType.CaseReasonCode).subscribe({
+    next: (lovResponse) => {
+      this.disenrollmentReasonSubject.next(lovResponse);
+      this.disenrollmentReasonStatusSubject.next(false);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.disenrollmentReasonStatusSubject.next(false);
+    },
+  });
+}
 
 }
 

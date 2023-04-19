@@ -42,7 +42,6 @@ export class Case360HeaderComponent implements OnInit {
   this.clientEligibilityFacade.eligibilityPeriodPopupOpen$.subscribe(response=>{
     this.isStatusPeriodDetailOpened = response;
   });
-  this.loadClientProfileInfoEvent.emit();
   this.addGroupUpdatedSubscription();   
 }
 

@@ -11,8 +11,6 @@ import { CaseManagerDetailComponent } from './components/case-manager-detail/cas
 import { HealthCareProviderListComponent } from './components/health-care-provider-list/health-care-provider-list.component';
 import { HealthCareProviderDetailComponent } from './components/health-care-provider-detail/health-care-provider-detail.component';
 import { ReAssignCaseManagerComponent } from './components/re-assign-case-manager/re-assign-case-manager.component';
-import { Cd4CountComponent } from './components/cd4-count/cd4-count.component';
-import { ViralLoadComponent } from './components/viral-load/viral-load.component';
 import { UnAssignCaseManagerComponent } from './components/un-assign-case-manager/un-assign-case-manager.component';
 import { CaseManagerReferralRequestComponent } from './components/case-manager-referral-request/case-manager-referral-request.component';
 import { AssignCaseManagerComponent } from './components/assign-case-manager/assign-case-manager.component';
@@ -22,6 +20,8 @@ import { HivCaseManagerCardComponent } from './components/hiv-case-manager-card/
 import { RemoveCaseManagerConfirmationComponent } from './components/remove-case-manager-confirmation/remove-case-manager-confirmation.component';
 import { CaseManagerSearchComponent } from './components/case-manager-search/case-manager-search.component';
 import { ProfileManagementPageComponent } from './containers/profile-management-page/profile-management-page.component';
+import { ViralLoadCD4CountComponent } from './components/viral-load-cd4-count/viral-load-cd4-count.component';
+import { CaseManagerEffectiveDatesComponent } from './components/case-manager-effective-dates/case-manager-effective-dates.component';
 
 @NgModule({
   imports: [
@@ -36,9 +36,8 @@ import { ProfileManagementPageComponent } from './containers/profile-management-
     CaseManagerDetailComponent,
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
-    ReAssignCaseManagerComponent,
-    Cd4CountComponent,
-    ViralLoadComponent,
+    ReAssignCaseManagerComponent,  
+    ViralLoadCD4CountComponent,
     UnAssignCaseManagerComponent,
     CaseManagerReferralRequestComponent,
     AssignCaseManagerComponent,
@@ -46,7 +45,8 @@ import { ProfileManagementPageComponent } from './containers/profile-management-
     HivCaseManagerCardComponent,
     RemoveCaseManagerConfirmationComponent,
     CaseManagerSearchComponent,
-    ProfileManagementPageComponent
+    ProfileManagementPageComponent,
+    CaseManagerEffectiveDatesComponent
   ],
   exports: [
     CaseManagerListComponent,
@@ -54,15 +54,15 @@ import { ProfileManagementPageComponent } from './containers/profile-management-
     HealthCareProviderListComponent,
     HealthCareProviderDetailComponent,
     ReAssignCaseManagerComponent,
-    Cd4CountComponent,
-    ViralLoadComponent,
+    ViralLoadCD4CountComponent,
     UnAssignCaseManagerComponent,
     CaseManagerReferralRequestComponent,
     AssignCaseManagerComponent,
     HivCaseManagerCardComponent,
     RemoveCaseManagerConfirmationComponent,
     CaseManagerSearchComponent,
-    ProfileManagementPageComponent
+    ProfileManagementPageComponent,
+    CaseManagerEffectiveDatesComponent
   ],
 })
 export class CaseManagementFeatureManagementModule {}

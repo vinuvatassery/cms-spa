@@ -13,6 +13,7 @@ export class DeactivateFriendOrFamilyConfirmationComponent implements OnInit {
   /** Public properties **/
   @Input() clientContact!: any;
   @Input() clientId!: number;
+  @Input() isEdit!: any;
 
   @Output() deactivateModalCloseEvent= new EventEmitter<any>();
   ddlRelationshipToClient$ = this.contactFacade.ddlRelationshipToClient$;
@@ -32,8 +33,8 @@ export class DeactivateFriendOrFamilyConfirmationComponent implements OnInit {
   private loadDdlRelationshipToClientData() {
     this.contactFacade.loadDdlRelationshipToClient();
   }
-  closeDeactivateModal(){
-    this.deactivateModalCloseEvent.emit(true);
+  closeDeactivateModal(isCancelClicked : boolean){
+    this.deactivateModalCloseEvent.emit(isCancelClicked);
   }
   populateModel()
   {
@@ -54,7 +55,7 @@ export class DeactivateFriendOrFamilyConfirmationComponent implements OnInit {
     return this.contactFacade.updateContact(this.clientId ?? 0, this.contact).subscribe({
       next:(data)=>{
         this.loaderService.hide();
-        this.closeDeactivateModal();
+        this.deactivateModalCloseEvent.emit(this.isEdit);
         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Friend Or Family Contact Updated Successfully.")
       },
       error:(error)=>{

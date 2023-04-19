@@ -44,7 +44,12 @@
     }
   }
 }
-
+.client-header-wrapper-stickey{
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: $white;
+}
 /* Case Tabs*/
 .client-tab-section {
   position: relative;
@@ -556,6 +561,9 @@
     position: relative;
     min-height: 37px;
   }
+  .k-numerictextbox.k-input .k-button.k-icon-button{
+    min-height: auto;
+  }
 }
 
 .auto-complete-with-template {
@@ -599,6 +607,12 @@
   padding: 16px;
 }
 .custom-client-tab-main-wrapper {
+  max-width: calc(100% - 150px);
+  word-wrap: normal;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
   .k-scrollview{
     border-top: 0px !important;
   }
@@ -649,4 +663,8 @@
     }
  
   }
+}
+
+.epdropdown{
+  min-width: 120px;
 }

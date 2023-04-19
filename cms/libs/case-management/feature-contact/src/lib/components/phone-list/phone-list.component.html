@@ -27,7 +27,7 @@
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column field="PhoneNbr" title="Type" [width]="80">
+        <kendo-grid-column field="deviceTypeCode" title="Type"  [sortable]="true"  [width]="80">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
               <span class="preferred-phoneNo" title="Preferred Contact" *ngIf="dataItem.preferredFlag==='Y'">
@@ -47,6 +47,9 @@
           title="Phone Number"
           [width]="150"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.phoneNbr | phone }}
+         </ng-template> 
         </kendo-grid-column>
         <kendo-grid-column
           field="detailMsgConsentFlag"
@@ -57,7 +60,7 @@
           {{dataItem.detailMsgConsentFlag === 'Y' ? 'Yes' : 'No'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="50">
+        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="100">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.smsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
            </ng-template>   
@@ -70,7 +73,7 @@
           [width]="100"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.effectiveDate}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate}}  
+          {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
          </ng-template>   
         </kendo-grid-column>
         <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
@@ -117,7 +120,7 @@
             
               <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
                 <button kendoButton  [hidden]="(clientPhone.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
-                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
+                ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred') ||(hasPhoneDeletePermission === false && dataItem.buttonName ==='delete')" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
                 (click)="dataItem.click(clientPhone?.clientPhoneId)">
                   <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
@@ -126,9 +129,7 @@
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
-          <ng-template kendoGridLoadingTemplate>
-            <common-grid-loader-component></common-grid-loader-component>
-           </ng-template>
+        
         </kendo-grid-column>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
@@ -149,6 +150,16 @@
           </div> 
         </div>
       </ng-template> 
+       <!-- grid Loader Template -->  
+       <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
+       <!-- grid No data Template -->  
+       <ng-template kendoGridNoRecordsTemplate>
+         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+         </div>
+         <p>There is no data to display.</p>
+       </ng-template> 
       </kendo-grid>
     </div>
   </div>

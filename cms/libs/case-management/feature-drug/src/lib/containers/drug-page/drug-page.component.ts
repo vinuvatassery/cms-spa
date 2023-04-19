@@ -1,17 +1,16 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectorRef, ElementRef, OnInit, OnDestroy, ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, OnInit, OnDestroy, ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoin, mergeMap, of, Subscription, tap, BehaviorSubject } from 'rxjs';
 /** Facades **/
 import {
-  DrugPharmacyFacade, WorkflowFacade, IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug,
+  DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
   StatusFlag, CompletionChecklist, NavigationType, YesNoFlag
 } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from '@microsoft/signalr';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'case-management-drug-page',
@@ -239,6 +238,9 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showPharmacyRequiredValidation$.next(true);
       return of(false);;
     }
+    else{
+      this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
+    }
     if (this.prescriptionDrugForm.valid) {
       const drugs = this.workflowFacade.deepCopy(this.prescriptionDrugForm.value);
       drugs.clientCaseEligibilityId = this.clientCaseEligibilityId;
@@ -353,12 +355,8 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.saveForLaterValidationSubscription =
       this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
         if (val) {
-          if (!this.checkValidations()) {
-            this.workflowFacade.showCancelApplicationPopup(true);
-          }
-          else {
-            this.workflowFacade.showSaveForLaterConfirmationPopup(true);
-          }
+          this.checkValidations()
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
         }
       });
   }

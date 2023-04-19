@@ -16,7 +16,6 @@ import { LovFacade } from '@cms/system-config/domain';
 export class ProfileContactPageComponent implements OnInit{
   profileClientId!: number;
   clientCaseEligibilityId!: any;
-
   /** Constructor**/
   constructor( 
     private readonly contactFacade: ContactFacade,
@@ -41,6 +40,8 @@ export class ProfileContactPageComponent implements OnInit{
   addClientPhoneResponse$ = this.contactFacade.addClientPhoneResponse$;
   lovClientPhoneDeviceType$ = this.lovFacade.lovClientPhoneDeviceType$;
   paperless$ = this.contactFacade.paperless$;
+  phonegridDataRefiner! :any
+  emailgridDataRefiner! :any
 
   ngOnInit(): void {
     this. loadQueryParams()   
@@ -73,12 +74,13 @@ export class ProfileContactPageComponent implements OnInit{
       gridDataRefiner.sortType,
       gridDataRefinerValue.showDeactivated
     );
+    this.emailgridDataRefiner = gridDataRefinerValue
   }
 
   addClientEmailHandle(emailData: any): void {
     emailData.clientCaseEligibilityId = this.clientCaseEligibilityId;
     emailData.clientId = this.profileClientId;
-    this.contactFacade.addClientEmail(emailData);
+    this.contactFacade.addClientEmail(emailData);  
   }
 
   loadClientEmailHandle(clientEmailId: string): void {
@@ -86,7 +88,7 @@ export class ProfileContactPageComponent implements OnInit{
       this.profileClientId,
       clientEmailId,
       this.clientCaseEligibilityId
-    );
+    );   
   }
 
   preferredClientEmailHandle(clientEmailId: string): void {
@@ -94,6 +96,7 @@ export class ProfileContactPageComponent implements OnInit{
       this.profileClientId,
       clientEmailId
     );
+   
   }
 
   deactivateClientEmailHandle(clientEmailId: string): void {
@@ -113,9 +116,19 @@ export class ProfileContactPageComponent implements OnInit{
       this.clientCaseEligibilityId
     );
   }
+
+  reloadEmailsEventHandle()
+  {
+    this.loadClientEmailsHandle(this.emailgridDataRefiner)
+  }
   //#endregionclient Email//NOSONAR
 
   //#region client phone//NOSONAR
+  reloadPhonesEventHandle()
+  {
+    this.loadClientPhonesHandle(this.phonegridDataRefiner);
+  }
+
   loadClientPhonesHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
@@ -134,11 +147,13 @@ export class ProfileContactPageComponent implements OnInit{
       gridDataRefiner.sortType,
       gridDataRefinerValue.showDeactivated
     );
+    this.phonegridDataRefiner = gridDataRefinerValue
   }
 
   addClientPhoneHandle(phoneData: any): void {
     phoneData.clientId = this.profileClientId;
     this.contactFacade.addClientPhone(phoneData);
+    
   }
 
   loadClientPhoneHandle(clientPhoneId: string): void {
@@ -149,11 +164,11 @@ export class ProfileContactPageComponent implements OnInit{
     this.lovFacade.getClientPhoneDeviceTypeLovs();
   }
 
-  preferredClientPhoneHandle(clientPhoneId: string): void {
+  preferredClientPhoneHandle(clientPhoneId: string): void {        
     this.contactFacade.preferredClientPhone(
       this.profileClientId,
       clientPhoneId
-    );
+    );  
   }
 
   deactivateClientPhoneHandle(clientPhoneId: string): void {

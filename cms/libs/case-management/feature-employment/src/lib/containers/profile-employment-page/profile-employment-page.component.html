@@ -14,7 +14,9 @@
         <div class="flex-col">
             <case-management-employer-list [data]="screenName" [clientCaseId]="clientCaseId"
                 [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"
-                (loadEmploymentsEvent)="loadEmploymentsHandle($event)"></case-management-employer-list>
+                [employment$]="employmentList$" [isClientProfileTab]="true"
+                (loadEmploymentsEvent)="loadEmploymentsHandle($event)">
+            </case-management-employer-list>
         </div>
     </div>
 </div>

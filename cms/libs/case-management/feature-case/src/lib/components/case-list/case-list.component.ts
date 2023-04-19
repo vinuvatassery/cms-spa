@@ -7,13 +7,14 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab } from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
-import { FilterService } from '@progress/kendo-angular-grid';
+import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
@@ -49,7 +50,7 @@ public state!: State;
     officialIdFullName:"Name on Official ID",
     insuranceFullName:"Name on Primary Insurance Card",
     pronouns:"Pronouns",
-    clientId:"ID",
+    clientId:"Client ID",
     urn:"URN",
     preferredContact:"Preferred Contact",
     caseStatus:"Status",
@@ -65,6 +66,7 @@ public state!: State;
     assignedCw:"Assigned to"
   }
   columnDroplist : any = {
+    ALL: "ALL",
     SSN:"ssn",
     HA:"homeAddress",
     P:"phone",
@@ -89,11 +91,11 @@ public state!: State;
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
   caseStatusTypes:any=[];
+  caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider,
-
+    private readonly configurationProvider: ConfigurationProvider, private cdr :ChangeDetectorRef
     ) {}
 
   /** Lifecycle hooks **/
@@ -117,11 +119,21 @@ public state!: State;
     this.caseStatusType$
     .subscribe({
       next: (data: any) => {
-        this.caseStatusTypes=data;
+        data=data.filter((item:any) => !this.caseStatusCodes.includes(item.lovCode));
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.caseStatusTypes=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
       }
     });
   }
   ngOnChanges(): void {
+    if (this.selectedTab == 1)
+    {
+      this.sort = [];
+      this.sortType = "";
+      this.sortValue = "";
+    }
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -181,8 +193,13 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       {
         this.filter = stateFilter.value;
       }
-      this.filteredBy = this.columns[this.columnName];
       this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
     }
     else
     {
@@ -191,8 +208,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.isFiltered = false
     }
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? 'clientFullName'
-    this.sortType = stateData.sort[0]?.dir ?? 'asc'
+    this.sortValue = stateData.sort[0]?.field ?? ""
+    this.sortType = stateData.sort[0]?.dir ?? ""
     this.state=stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
@@ -227,6 +244,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   onChange(event :any)
   {
+    this.state.skip = 0;
+    this.state.take = this.pageSizes[0]?.value;
     this.columnName = this.columnDroplist[this.selectedColumn];
     this.filter = event;
     this.loadProfileCasesList();
@@ -237,6 +256,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.sortValue  = this.caseFacade.sortValue;
     this.sortType  = this.caseFacade.sortType;
     this.sort  = this.caseFacade.sort;
+    if (this.selectedTab == 1)
+    {
+      this.sort = [];
+      this.sortType = "";
+      this.sortValue = "";
+    }
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -257,5 +282,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   onColumnReorder(event:any)
   {
     this.columnsReordered = true;
+  }
+
+  public columnChange(e: ColumnVisibilityChangeEvent) {
+    this.cdr.detectChanges()
   }
 }

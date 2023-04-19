@@ -2,7 +2,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 /** Facades **/
-import { SearchFacade } from '@cms/case-management/domain';
+import { SearchFacade, CaseStatusCode, CaseFacade } from '@cms/case-management/domain';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Subject } from 'rxjs';
 @Component({
@@ -20,7 +21,10 @@ export class SearchPageComponent implements OnInit {
   filterManager: Subject<string> = new Subject<string>();
 
   /** Constructor **/
-  constructor(private readonly searchFacade: SearchFacade,private router: Router) {
+  constructor(private readonly searchFacade: SearchFacade,private router: Router,
+    private caseFacade: CaseFacade,
+    private loggingService: LoggingService,
+    private loaderService: LoaderService) {
      
   }
 
@@ -41,9 +45,34 @@ export class SearchPageComponent implements OnInit {
       this.searchFacade.loadCaseBySearchText(selectedValue);     
  
   }
-  onSelectChange(selectedValue:any){ 
-    if(selectedValue !== undefined){
-      this.router.navigateByUrl(`case-management/cases/case360/${selectedValue.clientCaseId}`); 
+  onSelectChange(selectedValue: any) {
+    if (selectedValue !== undefined) {
+      if (selectedValue) {
+        if (selectedValue.caseStatus == CaseStatusCode.accept) {
+          this.router.navigate([`/case-management/cases/case360/${selectedValue.clientId}`]);
+        }
+        else {
+          this.loaderService.show();
+          this.caseFacade.getSessionInfoByCaseId(selectedValue.clientCaseId).subscribe({
+            next: (response: any) => {
+              if (response) {
+                this.loaderService.hide();
+                this.router.navigate(['case-management/case-detail'], {
+                  queryParams: {
+                    sid: response.sessionId,
+                    eid: response.entityID
+                  },
+                });
+              }
+            },
+            error: (err: any) => {
+              this.loaderService.hide();
+              this.caseFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+              this.loggingService.logException(err)
+            }
+          })
+        }
+      }
     }
   }
 

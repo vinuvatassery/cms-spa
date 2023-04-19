@@ -40,11 +40,12 @@ export class CaseEligibilityPeriodsComponent {
     this.eligibilityPeriodsData.forEach((x: any) => {
       let period = {
         id: x.clientCaseEligibilityId,
-        label: new Date(x.eilgibilityStartDate).toLocaleDateString()
+        label: new Date(x.eligibilityStartDate).toLocaleDateString()
           + ' - ' + new Date(x.eligibilityEndDate).toLocaleDateString()
       };
       this.eligibilityPeriodsList.push(period);
     });
+    this.setDefaultSelection();
   }
 
   setDefaultSelection() {

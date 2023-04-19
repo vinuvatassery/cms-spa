@@ -11,21 +11,21 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureCaseModule
       ),
     data: {
-      title: 'Clients',
+      title: '',
     },
   },
   {
     path: 'case-detail',
     component: CaseDetailPageComponent,   
     data: {
-      title: 'New Application',
+      title: '',
     }, 
     children: [
       {
         path: 'case-summary',
         component:CaseSummaryComponent,
           data: {
-            title: '',
+            title: 'New Application',
           }, 
       },
       {
@@ -35,7 +35,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureClientModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -45,7 +45,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureContactModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -55,7 +55,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureFamilyAndDependentModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -65,7 +65,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureIncomeModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -75,7 +75,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureEmploymentModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -85,7 +85,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureSmokingCessationModule
           ),
           data: {
-            title: '',
+            title: 'New Application',
           },
       },
       {
@@ -95,7 +95,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureHealthInsuranceModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -105,7 +105,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureDrugModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -115,7 +115,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureHealthcareProviderModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -125,7 +125,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureManagementModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -135,7 +135,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureVerificationModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
@@ -145,7 +145,7 @@ const routes: Routes = [
             (m) => m.CaseManagementFeatureAuthorizationModule
           ),
         data: {
-          title: '',
+          title: 'New Application',
         },
       },
       {
