@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 /** Facades **/
 import { StatusPeriodFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -12,6 +12,8 @@ import { State } from '@progress/kendo-data-query';
 })
 export class StatusPeriodComponent implements OnInit {
 
+    @Input() clientCaseId!: any;
+    @Input() clientId!: any;
   /** Public properties **/
   StatusPeriod$ = this.statusPeriodFacade.statusPeriod$;
     public expandedDetailKeys: number[] = [1];
@@ -48,20 +50,12 @@ export class StatusPeriodComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadStatusPeriod();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
   }
-
-  /** Private methods **/
-  private loadStatusPeriod() {
-    this.statusPeriodFacade.loadStatusPeriod();
- 
-  }
-
 
 }
 

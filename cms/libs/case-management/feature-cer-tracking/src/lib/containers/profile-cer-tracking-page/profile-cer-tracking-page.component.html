@@ -2,11 +2,22 @@
   <div class="flex-col flex-space-bw align-items-center mb-1">
     <h2 class="title-md mb-0 text-bold">Status Periods</h2>
     <div>
-
+      <span class="app-checkboxwidtext-wrapper"> 
+        <input
+          type="checkbox"
+          kendoCheckBox
+          aria-labelledby="AddressesshowHistorical"
+          id="AddressesshowHistorical"
+          [(ngModel)]="showHistoricalFlag"
+        />
+        <label class="k-checkbox-label" for="AddressesshowHistorical"
+          >Show historical</label
+        >
+      </span>
     </div>
 
   </div>
-  <case-management-status-period> </case-management-status-period>
+  <case-management-status-period [clientId]="profileClientId" [clientCaseId]="clientCaseId"> </case-management-status-period>
 </div>
 
 

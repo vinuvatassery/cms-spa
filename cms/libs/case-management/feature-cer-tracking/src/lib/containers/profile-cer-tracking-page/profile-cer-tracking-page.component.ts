@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** Facades **/
-import { CerTrackingFacade, ClientProfileTabs } from '@cms/case-management/domain';
+import { CerTrackingFacade, ClientProfileTabs, StatusPeriodFacade } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -19,10 +19,12 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
   profileClientId!: number;
   clientCaseEligibilityId!: any;
   tabId!: any;
-
+  clientCaseId!: any;
+  showHistoricalFlag!: any;
   /** Constructor**/
   constructor(private readonly cerTrackingFacade: CerTrackingFacade,
-    private route: ActivatedRoute, private readonly router: Router) {}
+    private route: ActivatedRoute, private readonly router: Router, 
+    private readonly statusPeriodFacade: StatusPeriodFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -40,6 +42,10 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
     this.profileClientId = this.route.snapshot.queryParams['id'];
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
     this.tabId = this.route.snapshot.queryParams['tid'];
+    this.clientCaseId = this.route.snapshot.queryParams['cid'];
+    if(ClientProfileTabs.STATUS_PERIOD){
+      this.statusPeriodFacade.loadStatusPeriod(this.clientCaseId,this.profileClientId,this.showHistoricalFlag);
+    }
     this.tabIdSubject.next(this.tabId);
   }
 

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 /** Data services **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusPeriodDataService } from '../infrastructure/status-period.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
 
@@ -32,9 +32,30 @@ export class StatusPeriodFacade {
     private configurationProvider : ConfigurationProvider,
     ) {}
 
+    showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+    {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+         const err= subtitle;    
+         this.loggingService.logException(err)
+      }  
+      this.notificationSnackbarService.manageSnackBar(type,subtitle)
+      this.hideLoader();
+         
+    }
+
+    showLoader()
+    {
+      this.loaderService.show();
+    }
+  
+    hideLoader()
+    {
+      this.loaderService.hide();
+    }
   /** Public methods **/
-  loadStatusPeriod(): void {
-    this.statusPeriodDataService.loadStatusPeriod().subscribe({
+  loadStatusPeriod(caseId:any,clientId:any,showHistorical:any): void {
+    this.statusPeriodDataService.loadStatusPeriod(caseId,clientId,showHistorical).subscribe({
       next: (statusPeriodResponse) => {
         this.statusPeriodSubject.next(statusPeriodResponse);
       },
