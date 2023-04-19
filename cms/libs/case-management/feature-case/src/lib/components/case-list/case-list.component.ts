@@ -184,17 +184,17 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     debugger;
     if(stateData.filter?.filters.length > 0)
     {
-      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-      this.columnName = stateFilter.field;
-      if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate')
-      {
-        let date = this.intl.formatDate(stateFilter.value, this.dateFormat);
-        this.filter = date;
-      }
-      else
-      {
-        this.filter = stateFilter.value;
-      }
+      // let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      // this.columnName = stateFilter.field;
+      // if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate')
+      // {
+      //   let date = this.intl.formatDate(stateFilter.value, this.dateFormat);
+      //   this.filter = date;
+      // }
+      // else
+      // {
+      //   this.filter = stateFilter.value;
+      // }
       this.isFiltered = true;
       const filterGrid = [];
       const filterList = []
@@ -203,7 +203,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         filterGrid.push(filter.filters[0]);
         filterList.push(this.columns[filter.filters[0].field]);
       }
-      this.filterGrid = JSON.stringify(filterGrid);
+      this.filterGrid = JSON.stringify(stateData.filter.filters);
       console.log(filterGrid);
       this.filteredBy =  filterList.toString();
     }
