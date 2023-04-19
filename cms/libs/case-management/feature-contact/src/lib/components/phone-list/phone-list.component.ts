@@ -12,7 +12,6 @@ import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { UserDefaultRoles } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-phone-list',

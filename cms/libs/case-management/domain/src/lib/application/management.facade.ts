@@ -111,8 +111,7 @@ public sort: SortDescriptor[] = [
 
   loadLabResults(
     labResultTypeCode: string,
-    clientId: number,
-    clientCaseEligibilityId: string,
+    clientId: number,   
     skipcount: number,
     maxResultCount: number,
     sort: string,
@@ -122,8 +121,7 @@ public sort: SortDescriptor[] = [
     this.providerDataService
       .loadLabResults(
         labResultTypeCode,
-        clientId,
-        clientCaseEligibilityId,
+        clientId,      
         skipcount,
         maxResultCount,
         sort,

@@ -12,7 +12,7 @@ import {
 } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 /** Internal libraries **/
 import { DrugPharmacyFacade, WorkflowFacade, PharmacyPriority, PriorityCode, } from '@cms/case-management/domain';
 import { Lov, LovFacade } from '@cms/system-config/domain';

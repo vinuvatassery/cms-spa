@@ -1,23 +1,36 @@
-<kendo-dialog-titlebar  type="button" (click)="onUnAssignConfirm(false)"> Unassign Case Manager? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (click)="onUnAssignConfirm(false)"> Edit Effective Dates </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
     <p>
-        They will be unassigned from this client. You will be able to assign another one or submit a new referral.
+      The effective dates will be updated. If an End Date is entered, you will be able to assign another one or submit a new referral.
    
     </p>
 
+    <div class="flex-row">
+      <div class="flex-col flex-col-9">
+        <kendo-floatinglabel text="Start Date">
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
+           format="MM-dd-yyyy" 
+          formatPlaceholder="formatPattern"           
+          aria-label="Start Date"
+          placeholder=""
+          [(ngModel)]="startDate">
+          </kendo-datepicker>       
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="showError">Date is required</kendo-formerror>
+      </div>            
+    </div>
     <div class="flex-row">
         <div class="flex-col flex-col-9">
           <kendo-floatinglabel text="End Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
              format="MM-dd-yyyy" 
-            formatPlaceholder="formatPattern"   
-            [min]="startDate"        
+            formatPlaceholder="formatPattern"           
             aria-label="End Date"
             placeholder=""
             [(ngModel)]="endDate">
             </kendo-datepicker>       
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="showError">End Date is required</kendo-formerror>
+          <kendo-formerror *ngIf="showError">Date is required</kendo-formerror>
         </div>            
       </div>
   </section>
@@ -25,9 +38,9 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button
-          kendoButton      
+          kendoButton
+          [primary]="true"
           look="outline"
-          type="button"
           aria-label="cancel removing case manager"
           (click)="onUnAssignConfirm(false)"
         >
@@ -38,7 +51,7 @@
           aria-label="remove case manager"
           (click)="onUnAssignConfirm(true)"
         >
-        UNASSIGN
+        UPDATE
         </button>
       </div>
     </div>
