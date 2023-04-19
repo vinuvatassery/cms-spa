@@ -122,8 +122,16 @@
       [primary]="true"
       icon="add"
       aria-label="add medical payment"
+      (click)="openCoPaymentDetailsOpened()"
     >
-      Medical Payment
+      Dental Payment
     </button>
   </div>
 </div>
+
+
+<kendo-dialog *ngIf="isCoPaymentDetailsOpened" (close)="closeCoPaymentDetailsOpened()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
+  <kendo-dialog-titlebar> Add Dental Payment</kendo-dialog-titlebar>
+  <case-management-medical-payment-detail ></case-management-medical-payment-detail>
+</kendo-dialog>
