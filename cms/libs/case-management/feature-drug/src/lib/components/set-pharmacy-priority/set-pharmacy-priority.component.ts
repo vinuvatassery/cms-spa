@@ -121,7 +121,10 @@ export class SetPharmacyPriorityComponent implements OnInit {
   }
 
   private loadClientPharmacies(){
-      this.savePriorityObjectList =JSON.parse(JSON.stringify(this.clientpharmacies));
+    this.savePriorityObjectList =JSON.parse(JSON.stringify(this.clientpharmacies.filter(i =>i.activeFlag == 'Y')));
+    this.savePriorityObjectList.forEach((pharmacyData: any) => {
+      pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
+    })
       this.cdr.detectChanges();
       for(let priority of this.savePriorityObjectList){
           priority.priorityCode = priority.priorityCode?.replace(/\s/g, '');
@@ -162,12 +165,14 @@ export class SetPharmacyPriorityComponent implements OnInit {
           if(x){
             this.loaderService.hide();
             this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
+            this.drugPharmacyFacade.newAddedPharmacySubject.next(true);
             this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
             this.onCloseChangePriorityClicked();
           }
         },
         error: (error:any) =>{
           this.btnDisabled = false;
+          this.drugPharmacyFacade.newAddedPharmacySubject.next(true);
           this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
         }
       });

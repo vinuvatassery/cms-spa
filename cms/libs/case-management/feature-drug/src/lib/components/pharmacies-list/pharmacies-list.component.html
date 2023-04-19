@@ -124,7 +124,7 @@
   [pharmacySearchResult$]="pharmacysearchResult$"
   [searchLoaderVisibility$]="searchLoaderVisibility$" 
   (addPharmacyEvent)="addPharmacyEvent($event)"
-   
+  (setAsPrimaryEvent)="setAsPrimaryEvent($event)"
   (removePharmacyEvent)="removeClientPharmacyOnEditMode()"
   (searchPharmacyEvent)="onSearchPharmacy($event)"
   (closePharmacyEvent)="handleClosePharmacyClicked()"
@@ -144,10 +144,16 @@
     >     </case-management-remove-pharmacy>
 </kendo-dialog>
 <!-- Change Pharmacy Priority Modal -->
-<kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClicked()"
+<kendo-dialog 
+*ngIf="isOpenChangePriorityClicked" 
+(close)="handleCloseChangePriorityClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
-  <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClicked()">
+  <case-management-set-pharmacy-priority 
+  (closeChangePriority)="handleCloseChangePriorityClicked()"
+  [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
+  [clientpharmacies]="pharmacies"
+  [clientId]="clientId">
   </case-management-set-pharmacy-priority>
 </kendo-dialog>
 

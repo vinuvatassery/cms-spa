@@ -41,6 +41,7 @@ export class DrugPharmacyFacade {
   private removePharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private removeDrugPharmacyResponseSubject = new BehaviorSubject<boolean>(false);
   private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+  public newAddedPharmacySubject = new BehaviorSubject<boolean>(false);
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   public durgPharmacyPrioritySubject = new BehaviorSubject<string>("");
   private deActivePharmacySubject = new BehaviorSubject<boolean>(false);
@@ -61,6 +62,7 @@ export class DrugPharmacyFacade {
   drugPurchases$ = this.drugPurchaseSubject.asObservable();
   drugPharnacyPriority = this.durgPharmacyPrioritySubject.asObservable();
   deActivePharmacyObs = this.deActivePharmacySubject.asObservable();
+  public newAddedPharmacyObs = this.newAddedPharmacySubject.asObservable();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = ' '
