@@ -21,6 +21,7 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
   tabId!: any;
   clientCaseId!: any;
   showHistoricalFlag!: any;
+  gridDataRefinerValue!: any;
   /** Constructor**/
   constructor(private readonly cerTrackingFacade: CerTrackingFacade,
     private route: ActivatedRoute, private readonly router: Router, 
@@ -44,6 +45,10 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
     this.tabId = this.route.snapshot.queryParams['tid'];
     this.clientCaseId = this.route.snapshot.queryParams['cid'];
     if(ClientProfileTabs.STATUS_PERIOD){
+      this.gridDataRefinerValue = {
+        skipCount: 0,
+        pagesize: 5,
+      };
       this.loadStatusPeriod();
     }
     this.tabIdSubject.next(this.tabId);
@@ -71,5 +76,10 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
 
   loadStatusPeriod(){
     this.statusPeriodFacade.loadStatusPeriod(this.clientCaseId,this.profileClientId,this.showHistoricalFlag);
+  }
+
+  loadStatusPeriodData(gridDataRefinerValue:any){
+    this.gridDataRefinerValue=gridDataRefinerValue;
+    this.loadStatusPeriod();
   }
 }

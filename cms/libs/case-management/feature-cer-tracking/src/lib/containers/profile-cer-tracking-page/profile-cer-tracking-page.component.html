@@ -18,7 +18,7 @@
     </div>
 
   </div>
-  <case-management-status-period [clientId]="profileClientId" [clientCaseId]="clientCaseId"> </case-management-status-period>
+  <case-management-status-period [clientId]="profileClientId" [clientCaseId]="clientCaseId" (loadStatusPeriodEvent)="loadStatusPeriodData($event)"> </case-management-status-period>
 </div>
 
 
