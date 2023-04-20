@@ -46,8 +46,8 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
     this.clientCaseId = this.route.snapshot.queryParams['cid'];
     if(ClientProfileTabs.STATUS_PERIOD){
       this.gridDataRefinerValue = {
-        skipCount: 0,
-        pagesize: 5,
+        skipCount: this.statusPeriodFacade.skipCount,
+        pagesize: this.statusPeriodFacade.gridPageSizes[0]?.value,
       };
       this.loadStatusPeriod();
     }
@@ -75,7 +75,7 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
   }
 
   loadStatusPeriod(){
-    this.statusPeriodFacade.loadStatusPeriod(this.clientCaseId,this.profileClientId,this.showHistoricalFlag);
+    this.statusPeriodFacade.loadStatusPeriod(this.clientCaseId,this.profileClientId,this.showHistoricalFlag,this.gridDataRefinerValue);
   }
 
   loadStatusPeriodData(gridDataRefinerValue:any){

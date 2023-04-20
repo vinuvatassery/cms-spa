@@ -11,8 +11,8 @@ export class StatusPeriodDataService {
   }
 
   /** Public methods **/
-  loadStatusPeriod(caseId:any,clientId:any,showHistorical:any) {
+  loadStatusPeriod(caseId:any,clientId:any,showHistorical:any,gridDataRefinerValue:any) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/status-periods?clientId=${clientId}&showHistorical=${showHistorical}`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/status-periods?clientId=${clientId}&showHistorical=${showHistorical}&SkipCount=${gridDataRefinerValue.skipCount}&MaxResultCount=${gridDataRefinerValue.pagesize}`);
   }
 }

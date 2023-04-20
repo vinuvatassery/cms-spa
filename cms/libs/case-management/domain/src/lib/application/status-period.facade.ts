@@ -54,12 +54,19 @@ export class StatusPeriodFacade {
       this.loaderService.hide();
     }
   /** Public methods **/
-  loadStatusPeriod(caseId:any,clientId:any,showHistorical:any): void {
+  loadStatusPeriod(caseId:any,clientId:any,showHistorical:any,gridDataRefinerValue:any): void {
     this.showLoader();
-    this.statusPeriodDataService.loadStatusPeriod(caseId,clientId,showHistorical).subscribe({
-      next: (statusPeriodResponse) => {
-        this.statusPeriodSubject.next(statusPeriodResponse);
-        this.hideLoader();
+    this.statusPeriodDataService.loadStatusPeriod(caseId,clientId,showHistorical,gridDataRefinerValue).subscribe({
+      next: (statusPeriodResponse:any) => {
+        if (statusPeriodResponse) {
+          const gridView = {
+            data: statusPeriodResponse['items'],
+            total: statusPeriodResponse['totalCount'],
+          };
+
+          this.statusPeriodSubject.next(gridView);
+          this.hideLoader();
+        }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
