@@ -136,8 +136,16 @@
       [primary]="true"
       icon="add"
       aria-label="add medical premium"
+      (click)="openPremiumPaymentDetailsOpened()"
     >
-      Medical Premium
+      Dental Premium
     </button>
   </div>
 </div>
+
+
+<kendo-dialog *ngIf="isPremiumPaymentDetailsOpened" (close)="closePremiumPaymentDetailsOpened()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
+  <kendo-dialog-titlebar> Add Dental Premium</kendo-dialog-titlebar>
+  <case-management-medical-premium-payment-detail ></case-management-medical-premium-payment-detail>
+</kendo-dialog>

@@ -1,10 +1,11 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2"> Add a new dental payment </p>
+    <p class="text-muted mb-2"> Add a new dental premium </p>
     <div class="flex-row">
 
         <div class="flex-col">
             <kendo-floatinglabel text="Service Provider Name">
-                <kendo-textbox aria-label="Service Provider Name" [fillMode]="formUiStyle.inputFillMode">
+                <kendo-textbox aria-label="Service Provider Name" formControlName="medicareBeneficiaryIdNbr"
+                    [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
             </kendo-floatinglabel>
 
@@ -22,7 +23,7 @@
         <div class="flex-col">
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Payment Amount" class="amount-with-symbol">
+                    <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-textbox aria-label="Payment Amount" placeholder=""
                             [fillMode]="formUiStyle.inputFillMode">
@@ -94,24 +95,19 @@
             </kendo-floatinglabel>
         </div>
 
-
-
-
-
-
     </div>
 </section>
 
 <kendo-dialog-actions>
     <div class="justify-content-between">
         <div>
-            <!-- <button kendoButton class="k-danger-link" aria-label="delete Payment"> Delete </button> -->
-            <!-- <button kendoButton [primary]="true" look="outline" aria-label="edit Payment"> Edit </button> -->
+            <!-- <button kendoButton class="k-danger-link" aria-label="delete PREMIUM "> Delete </button> -->
+            <!-- <button kendoButton [primary]="true" look="outline" aria-label="edit PREMIUM "> Edit </button> -->
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding Payment"> Cancel
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding PREMIUM "> Cancel
             </button>
-            <button kendoButton [primary]="true" aria-label="add new Payment"> Add</button>
+            <button kendoButton [primary]="true" aria-label="add new PREMIUM "> Add </button>
 
         </div>
     </div>
