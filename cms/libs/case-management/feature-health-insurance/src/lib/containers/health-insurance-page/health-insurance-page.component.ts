@@ -354,6 +354,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
+      'INSURANCE',
+      'ALL',
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sortColumn,

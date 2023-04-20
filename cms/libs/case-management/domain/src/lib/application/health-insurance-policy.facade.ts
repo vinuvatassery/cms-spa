@@ -183,15 +183,16 @@ export class HealthInsurancePolicyFacade {
     });
   }
   
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,type: string,insuranceStatusType:string, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
     this.showLoader();
-    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize,sortBy,sortType).subscribe({
+    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, type,insuranceStatusType, skipCount, pageSize,sortBy,sortType).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {
           if (medicalHealthPlansResponse['clientInsurancePolicies'] == null) {
             medicalHealthPlansResponse['clientInsurancePolicies'] = []
           }
+          debugger;
           const gridView: any = {
             data: medicalHealthPlansResponse['clientInsurancePolicies'],
             total: medicalHealthPlansResponse?.totalCount,

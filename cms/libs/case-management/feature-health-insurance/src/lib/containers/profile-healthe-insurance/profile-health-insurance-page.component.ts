@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ClientProfileTabs } from '@cms/case-management/domain';
+import { ClientProfileTabs, HealthInsurancePolicyFacade } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
 
 
@@ -16,7 +16,8 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   constructor(
     private route: ActivatedRoute,  
     private readonly router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private insurancePolicyFacade: HealthInsurancePolicyFacade
   ) { }
 
   tabChangeSubscription$ = new Subscription();
@@ -28,12 +29,13 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   healthInsuranceForm!: FormGroup;
   tabId! : any
   clientId: any;
+  triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
 
   ngOnInit(): void {  
     this.routeChangeSubscription();
     this.loadQueryParams()
     this.buildForm();
-    this.getQueryParam();
+    //this.getQueryParam();
   }
 
   /** Private properties **/
@@ -42,10 +44,18 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   }
   loadQueryParams()
   {    
-    this.profileClientId = this.route.snapshot.queryParams['id'];
+    this.clientId = this.route.snapshot.queryParams['id'];
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
+    this.clientCaseId = this.route.snapshot.queryParams['cid'];  
     this.tabId = this.route.snapshot.queryParams['tid'];  
-    this.tabIdSubject.next(this.tabId)   
+    this.tabIdSubject.next(this.tabId);
+    const gridDataRefinerValue = {
+      skipCount: this.insurancePolicyFacade.skipCount,
+      pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+      sortColumn: 'creationTime',
+      sortType: 'asc',
+    };
+    this.loadHealthInsuranceHandle(gridDataRefinerValue);
   }
 
   private routeChangeSubscription() {
@@ -100,10 +110,29 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
   }
-  getQueryParam() {
-    this.clientId = this.route.snapshot.queryParams['id']; 
-    this.clientCaseId = this.route.snapshot.queryParams['cid']; 
-    this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id']; 
+  // getQueryParam() {
+  //   this.clientId = this.route.snapshot.queryParams['id']; 
+  //   this.clientCaseId = this.route.snapshot.queryParams['cid']; 
+  //   this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id']; 
+  // }
+  loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
+    debugger;
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sortColumn: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+    this.insurancePolicyFacade.loadMedicalHealthPlans(
+      this.clientId,
+      this.clientCaseEligibilityId,
+      'DEPENDENTS',
+      this.tabId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType
+    );
   }
 }
 

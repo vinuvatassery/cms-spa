@@ -260,7 +260,7 @@ export class HealthInsurancePolicyDataService {
       },
     ]);
   }
-  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any, sortBy:any, sortType:any) {
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any, type: string,insuranceStatusType:string, skipCount:any,pageSize:any, sortBy:any, sortType:any) {
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
@@ -268,6 +268,6 @@ export class HealthInsurancePolicyDataService {
     params = params.append('maxResultCount',pageSize);
     params = params.append('sorting',sortBy);
     params = params.append('sortType',sortType);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy?type=${type}&insuranceStatusType=${insuranceStatusType}`,{params:params});
   }
 }

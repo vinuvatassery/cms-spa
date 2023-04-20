@@ -1153,6 +1153,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
                 SnackBarNotificationType.SUCCESS,
                 'Insurance plan saved successfully.'
               );
+              debugger;
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
               this.isAddEditClicked.next(true);
