@@ -247,3 +247,25 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
 
 
 </div>
+
+
+<!-- Copy insurance confirmation modal -->
+<kendo-dialog *ngIf="isCopyInsuranceConfirm" (close)="onCopyInsuranceConfirmCloseClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Copy Insurance? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+    Are you sure you want to duplicate this insurance record
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel copy insurance"  >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="copy insurance "> Copy </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

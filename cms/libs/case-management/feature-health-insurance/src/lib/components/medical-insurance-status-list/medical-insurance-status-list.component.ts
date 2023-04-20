@@ -56,6 +56,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       text: "Copy Record",
       icon: "content_copy",
       click: (): void => {
+        this.onCopyInsuranceConfirmOpenClicked();
       },
     },
     {
@@ -245,5 +246,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   private loadHealthInsuranceStatus() {
     this.insurancePolicyFacade.loadHealthInsuranceStatus();
   }
- 
+  onCopyInsuranceConfirmCloseClicked(){
+    this.isCopyInsuranceConfirm = false;
+  }
+  onCopyInsuranceConfirmOpenClicked(){
+    this.isCopyInsuranceConfirm = true;
+  }
 }
