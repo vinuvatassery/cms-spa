@@ -22,7 +22,7 @@ export class MedicalPaymentListComponent implements OnInit {
     {text: 'All', value: 100}
   ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
-  
+  isPremiumPaymentDetailsOpened = false;
  
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
@@ -35,5 +35,12 @@ export class MedicalPaymentListComponent implements OnInit {
   /** Private methods **/
   private loadMedicalPremiumPayments() {
     this.insurancePolicyFacade.loadMedicalPremiumPayments();
+  }
+  closePremiumPaymentDetailsOpened(){
+    this.isPremiumPaymentDetailsOpened = false;
+  }
+
+ openPremiumPaymentDetailsOpened(){
+    this.isPremiumPaymentDetailsOpened = true;
   }
 }
