@@ -913,3 +913,11 @@ kendo-timepicker {
 .user-old-section{
   margin-top: 4px;
 }
+
+.comp-list-horizontal{
+  flex-direction: row;
+  gap: 2rem;
+  .app-radiobtnwidtext-wrapper{
+    width: auto;
+  }
+}

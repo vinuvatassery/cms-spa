@@ -670,3 +670,44 @@
 .epdropdown{
   min-width: 120px;
 }
+
+.cer-eligibility-screen{
+  &.add-client-wrapper{
+    .add-client_right {
+      .client-data-block{
+        border-left: 0px;
+        section{
+          padding-left: 0px;
+          .block-section-two{
+            border-left: 2px solid $theme-border;
+            padding-left: $size-xxx; 
+            &.pt-1{
+              padding-top: 0px !important;
+            }
+          }
+          .new-fmly-ct{
+            display: flex;
+            align-items: baseline;
+          }
+        }
+        .k-form-fieldset{
+          margin-bottom: 1.2rem;
+        }
+        .k-form-legend{
+          h5{
+            margin: 0px 0px 8px;
+          }
+        }
+        .cer-top-space{
+          padding-top: 2rem;
+        }
+        h5{
+          margin: 20px 0px 0px;
+        }
+        .cer-mb-3{
+          margin-bottom: 3rem;
+        }
+      }
+    }
+  }
+}
