@@ -1,7 +1,7 @@
 <!-- Income List -->
 <div class="flex-row">
   <div class="flex-col">
-    <div class="app-c-table" *ngIf="!hasNoIncome">
+    <div class="app-c-table income-grid" *ngIf="!hasNoIncome">
       <kendo-grid [data]="incomes$ | async"[pageSize]="state.take" [pageable]="true"
       [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
