@@ -142,11 +142,12 @@ export class WorkflowFacade {
     this.workflowService.createNewSession(sessionData)
       .subscribe({
         next: (sessionResp: any) => {
-          if (sessionResp && sessionResp?.workflowSessionId) {
+          if (sessionResp && sessionResp?.workflowSessionId) {           
             this.router.navigate(['case-management/case-detail'], {
               queryParams: {
                 sid: sessionResp?.workflowSessionId,
-                eid: sessionData?.entityId
+                eid: sessionData?.entityId,
+                wtc: sessionResp?.workflowTypeCode
               },
             });
           }
@@ -165,16 +166,17 @@ export class WorkflowFacade {
     
     this.workflowService.createNewCerSession(clientCaseEligibilityId)
       .subscribe({
-        next: (sessionResp: any) => {          
+        next: (sessionResp: any) => {  
           if (sessionResp && sessionResp?.workflowSessionId) {
             this.router.navigate(['case-management/case-detail/client'], {
               queryParams: {
                 sid: sessionResp?.workflowSessionId,
-                eid: sessionResp?.entityId
+                eid: sessionResp?.sessionData?.entityID,
+                wtc: sessionResp?.workflowTypeCode
               },
             });
           }
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New Client Eligibility Review Session Created Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New CER Session Created Successfully')
           this.hideLoader();
         },
         error: (err: any) => {
@@ -490,7 +492,7 @@ export class WorkflowFacade {
   loadWorkFlowSessionData(sessionId: string): void {
     this.showLoader();
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
-      next: (sessionResponse) => {
+      next: (sessionResponse) => {        
         if (sessionResponse) {
           const sessionData =
           {
@@ -505,7 +507,8 @@ export class WorkflowFacade {
             sessionData: JSON.stringify(sessionData),
             workFlowProgress: sessionResponse?.workFlowProgress,
             workflowId: sessionResponse?.workflowId,
-            workflowSessionId: sessionResponse?.workflowSessionId
+            workflowSessionId: sessionResponse?.workflowSessionId,
+            workflow : sessionResponse?.workFlow
           }
 
           this.clientId = sessionData?.clientId;

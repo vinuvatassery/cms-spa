@@ -178,6 +178,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
             clientOfficialIdFullName:
               clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
+            clientCaseEligibilityCerId : clientHeaderData?.clientCaseEligibilityCerId
           };
           this.clientCaseId = clientHeader?.clientCaseId;
           this.clientHeaderSubject.next(clientHeader);

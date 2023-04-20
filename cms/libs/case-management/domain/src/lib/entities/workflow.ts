@@ -15,6 +15,7 @@ export interface WorkflowSession {
   workflowSessionId: string;
   sessionData: string;
   workflowId: string;
+  workFlow : any
   workFlowProgress: WorkFlowProgress[];
 }
 

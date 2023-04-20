@@ -83,7 +83,7 @@
      </kendo-popover>
 
   <!-- Banners -->
-  <case-management-case360-header-notifications
+  <case-management-case360-header-notifications *ngIf="loadedClientHeader?.clientCaseEligibilityCerId && loadedClientHeader?.caseStatus!=='DISENROLLED'"
   (createCerSessionEvent)="createCerSession()"
   ></case-management-case360-header-notifications>
 </div>

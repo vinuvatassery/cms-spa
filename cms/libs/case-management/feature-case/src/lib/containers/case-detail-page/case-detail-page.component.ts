@@ -55,6 +55,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isSubmitted: boolean = false;
   sendLetterFlag!: any;
   cancelApplicationFlag!: boolean;
+  workflowType! :string
   data: Array<any> = [
     {
       text: '',
@@ -215,11 +216,11 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.discardChanges(true);
   }
   /** Private Methods */
-  private loadQueryParams() {
-    const workflowType: string = WorkflowTypeCode.NewCase;
+  private loadQueryParams() {    
+    this.workflowType  = this.route.snapshot.queryParams['wtc'];
     const entityId: string = this.route.snapshot.queryParams['eid'];
     this.sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkflowSession(workflowType, entityId, this.sessionId);
+    this.workflowFacade.loadWorkflowSession(this.workflowType, entityId, this.sessionId);
   }
 
   private loadDdlCommonAction() {
