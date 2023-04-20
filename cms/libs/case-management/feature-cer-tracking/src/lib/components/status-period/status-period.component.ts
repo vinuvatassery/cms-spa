@@ -61,14 +61,6 @@ export class StatusPeriodComponent implements OnInit {
     };
   }
 
-  /** Private methods **/
-  private loadStatusPeriod() {
-    this.statusPeriodFacade.loadStatusPeriod();
-  }
-
-  private loadGroupCode() {
-    this.caseFacade.loadGroupCode();
-  }
   
   ngOnChanges(){
     this.state = {
