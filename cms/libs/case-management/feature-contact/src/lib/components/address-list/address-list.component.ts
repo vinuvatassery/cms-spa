@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } 
 /** facades **/
 import { ClientAddress, ContactFacade, StatusFlag, AddressType } from '@cms/case-management/domain';
 
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-address-list',
   templateUrl: './address-list.component.html',
@@ -72,7 +73,9 @@ export class AddressListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef) {}
+  constructor(private readonly contactFacade: ContactFacade, 
+              private readonly cdr:ChangeDetectorRef,
+              private readonly userManage: UserManagementFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -178,5 +181,12 @@ export class AddressListComponent implements OnInit {
   onDeactivateButtonClick(event:any){
     this.contactFacade.showAddPopupSubject.next(false);
     this.onDeactivateAddressClicked(this.clientAddress)
+  }
+
+  showMenuOption(dataItem:any){
+    if(dataItem.activeFlag != StatusFlag.Yes && !(this.userManage.hasPermission(["Client_Profile_Claims_Client_ContactInfo_Client_Address_Create_Update"]))){
+      return false;
+    }
+    return true;
   }
 }

@@ -79,42 +79,42 @@
           class="text-center"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton
-              [data]="actions"
-              icon="more-vertical"
-              class="TableActionPopup app-dropdown-action"
-              buttonClass="k-icon-button"
-              aria-label="more actions"
-              title="More option"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-            >
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-                <div *ngIf="buttondataItem.text == 'Delete Address'; else otherButtons">
-                  <button *ifPermission='["Client_Profile_Claims_Client_ContactInfo_Client_Address_Create_Update"]' kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
-                    <label>   {{ buttondataItem.text }} </label>
-                </button>
-                </div>
-              <ng-template #otherButtons>
-                <div *ngIf="buttondataItem.text === 'Deactivate Address' && dataItem.activeFlag ==='Y'; else editButton">
-                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
-                    <label>   {{ buttondataItem.text }} </label>
-                </button>
-                </div>
-              </ng-template>
-
-              <ng-template #editButton>
-                <div *ngIf="buttondataItem.text === 'Edit Address' && dataItem.activeFlag ==='Y'">
-                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
-                    <label>   {{ buttondataItem.text }} </label>
-                </button>
-                </div>
-              </ng-template>
-                
-              </ng-template>
-            </kendo-dropdownbutton>
+            <ng-container *ngIf="showMenuOption(dataItem)">
+              <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action"
+                buttonClass="k-icon-button" aria-label="more actions" title="More option"
+                [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+                <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                  <div *ngIf="buttondataItem.text == 'Delete Address'; else otherButtons">
+                    <button *ifPermission='["Client_Profile_Claims_Client_ContactInfo_Client_Address_Create_Update"]' kendoButton
+                      look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false"
+                      (click)="buttondataItem.click(dataItem)">
+                      <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                      <label> {{ buttondataItem.text }} </label>
+                    </button>
+                  </div>
+                  <ng-template #otherButtons>
+                    <div *ngIf="buttondataItem.text === 'Deactivate Address' && dataItem.activeFlag ==='Y'; else editButton">
+                      <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
+                        aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                        <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                        <label> {{ buttondataItem.text }} </label>
+                      </button>
+                    </div>
+                  </ng-template>
+          
+                  <ng-template #editButton>
+                    <div *ngIf="buttondataItem.text === 'Edit Address' && dataItem.activeFlag ==='Y'">
+                      <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
+                        aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                        <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                        <label> {{ buttondataItem.text }} </label>
+                      </button>
+                    </div>
+                  </ng-template>
+          
+                </ng-template>
+              </kendo-dropdownbutton>
+            </ng-container>
           </ng-template>
         </kendo-grid-column>
               <!-- grid Loader Template -->  
