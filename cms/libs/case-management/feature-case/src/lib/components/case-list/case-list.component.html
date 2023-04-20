@@ -59,6 +59,8 @@
     </kendo-grid-column>
     <kendo-grid-column field="insuranceFullName" title="Name on Primary Insurance Card"  [width]="160" [hidden]="true">
     </kendo-grid-column>
+    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
+    </kendo-grid-column>
     <kendo-grid-column field="pronouns" title="Pronouns"   [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="clientId" title="Client ID" [width]="120"></kendo-grid-column>
@@ -125,14 +127,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
-    </kendo-grid-column>
     <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
-    </kendo-grid-column>
-    <kendo-grid-column field="ssn" title="SSN" [width]="120" [hidden]="true">
-      <ng-template kendoGridCellTemplate let-dataItem>
-          {{ dataItem.ssn | ssn }}
-      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -157,7 +152,13 @@
     </kendo-grid-column>
     <kendo-grid-column field="caseManager" title="Case Manager"  [width]="160" [hidden]="true">
     </kendo-grid-column>
-
+     <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120" [hidden]="true">
+    </kendo-grid-column>
+    <kendo-grid-column field="ssn" title="SSN" [width]="120" [hidden]="true">
+      <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.ssn | ssn }}
+      </ng-template>
+    </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
