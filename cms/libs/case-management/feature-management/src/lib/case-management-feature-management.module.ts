@@ -21,6 +21,7 @@ import { RemoveCaseManagerConfirmationComponent } from './components/remove-case
 import { CaseManagerSearchComponent } from './components/case-manager-search/case-manager-search.component';
 import { ProfileManagementPageComponent } from './containers/profile-management-page/profile-management-page.component';
 import { ViralLoadCD4CountComponent } from './components/viral-load-cd4-count/viral-load-cd4-count.component';
+import { CaseManagerEffectiveDatesComponent } from './components/case-manager-effective-dates/case-manager-effective-dates.component';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { ViralLoadCD4CountComponent } from './components/viral-load-cd4-count/vi
     HivCaseManagerCardComponent,
     RemoveCaseManagerConfirmationComponent,
     CaseManagerSearchComponent,
-    ProfileManagementPageComponent
+    ProfileManagementPageComponent,
+    CaseManagerEffectiveDatesComponent
   ],
   exports: [
     CaseManagerListComponent,
@@ -59,7 +61,8 @@ import { ViralLoadCD4CountComponent } from './components/viral-load-cd4-count/vi
     HivCaseManagerCardComponent,
     RemoveCaseManagerConfirmationComponent,
     CaseManagerSearchComponent,
-    ProfileManagementPageComponent
+    ProfileManagementPageComponent,
+    CaseManagerEffectiveDatesComponent
   ],
 })
 export class CaseManagementFeatureManagementModule {}

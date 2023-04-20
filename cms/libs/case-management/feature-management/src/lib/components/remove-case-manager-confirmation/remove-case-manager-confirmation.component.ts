@@ -15,14 +15,18 @@ import {
 
 export class RemoveCaseManagerConfirmationComponent
 {
-  /** Input properties **/
-   @Input() clientCaseId!: string;
-  
+  /** Input properties **/  
+   @Input() assignedcaseManagerId :any
   @Output() deleteConfimEvent =  new EventEmitter<any>();
   btnDisabled = false; 
   onDeleteConfirm(isDelete : boolean)
   {  
     this.btnDisabled = true; 
-    this.deleteConfimEvent.emit(isDelete);
+    const existCaseManagerData = {
+      endDate: null,
+      confirm: isDelete,
+      assignedcaseManagerId: this.assignedcaseManagerId
+    };
+    this.deleteConfimEvent.emit(existCaseManagerData);
   }
 }

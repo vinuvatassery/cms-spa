@@ -1,9 +1,11 @@
 /** Angular **/
 import {
   Component,
+  OnInit,
   ChangeDetectionStrategy,
   Output,
   Input,
+  ViewChild,
   EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -11,6 +13,7 @@ import {
 import {
   DrugPharmacyFacade,
   WorkflowFacade,
+  PriorityCode
 } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -20,7 +23,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   templateUrl: './set-as-primary-pharmacy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetAsPrimaryPharmacyComponent {
+export class SetAsPrimaryPharmacyComponent implements OnInit {
+  @ViewChild('autocomplete') autocomplete: any;
   @Output() closeSelectNewPrimaryPharmacies = new EventEmitter();
   @Input() clientPharmacyDetails!: any;
   @Input() pharmacies: any[] = [];
@@ -38,7 +42,14 @@ export class SetAsPrimaryPharmacyComponent {
     private readonly ref: ChangeDetectorRef,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private workflowFacade: WorkflowFacade
-  ) {}
+  ) {
+    
+  }
+    /** Lifecycle hooks **/
+    ngOnInit(): void{
+  
+      this.pharmacies = this.pharmacies.filter(pharmacy => pharmacy.priorityCode != PriorityCode.Primary && pharmacy.activeFlag === 'Y');
+    }
   onCloseSelectNewPrimaryPharmaciesClicked() {
     this.closeSelectNewPrimaryPharmacies.emit();
   }
@@ -52,6 +63,7 @@ export class SetAsPrimaryPharmacyComponent {
     );
     this.selectedSearchedPharmacy = null;
     this.selectedPharmacyForEdit = '';
+    this.autocomplete?.reset();
     this.ref.detectChanges();
   }
   onSearchTemplateClick(pharmacy: any) {
@@ -73,17 +85,23 @@ export class SetAsPrimaryPharmacyComponent {
         isNewAdded: isNewAdded,
         newPharmacy: newPharmacy,
       });
+    }else {
+      this.addNewPharmacyClick.emit(null);
     }
   }
   onRemovePharmacy() {
-   
-    let isNewAdded = this.selectedSearchedPharmacy ? true : false;
-    let newPharmacy = this.selectedSearchedPharmacy
-    ? this.selectedSearchedPharmacy
-    : this.selectedPharmacy;
-    this.removePharmacyClick.emit({
-      isNewAdded: isNewAdded,
-      newPharmacy: newPharmacy,
-    });
+    if (this.IsDeactivateSelectPrimaryPharmacies){
+      let isNewAdded = this.selectedSearchedPharmacy ? true : false;
+      let newPharmacy = this.selectedSearchedPharmacy
+      ? this.selectedSearchedPharmacy
+      : this.selectedPharmacy;
+      this.removePharmacyClick.emit({
+        isNewAdded: isNewAdded,
+        newPharmacy: newPharmacy,
+      });
+    }else {
+      this.removePharmacyClick.emit(null);
+    }
+    
   }
 }
