@@ -1,6 +1,6 @@
 <div class="client-data-block">
   <h3>{{isCerForm ? 'Pharmacies' : 'Prescription Drugs'}}</h3>
-  <div class="block-section-two">
+   
     <form [formGroup]="prescriptionDrugForm">
 
       <section>
@@ -93,5 +93,5 @@
         (editPharmacyClick)="editPharmacy($event)" (removePharmacyClick)="removePharmacy($event)"
         [clientId]="clientId"></case-management-pharmacy-list>
     </section>
-  </div>
+ 
 </div>

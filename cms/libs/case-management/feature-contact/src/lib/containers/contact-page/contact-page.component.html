@@ -1,4 +1,4 @@
-<div class="client-data-block" >
+<div class="client-data-block" [ngClass]="isCerForm ? 'CerForm-contact-screen' : '' ">
   <h3>{{   isCerForm ? 'Mailing Address' : 'Contact Info' }}  </h3>
   <section>
     <form [formGroup]="contactInfoForm">
