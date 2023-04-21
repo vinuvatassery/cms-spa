@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 /** Facades **/
 import { StatusPeriodFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -12,6 +12,10 @@ import { State } from '@progress/kendo-data-query';
 })
 export class StatusPeriodComponent implements OnInit {
 
+    @Input() clientCaseId!: any;
+    @Input() clientId!: any;
+
+    @Output() loadStatusPeriodEvent  = new EventEmitter<any>();
   /** Public properties **/
   StatusPeriod$ = this.statusPeriodFacade.statusPeriod$;
     public expandedDetailKeys: number[] = [1];
@@ -48,21 +52,48 @@ export class StatusPeriodComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadStatusPeriod();
     this.state = {
       skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      take: this.pageSizes[0]?.value
     };
   }
 
-  /** Private methods **/
-  private loadStatusPeriod() {
-    this.statusPeriodFacade.loadStatusPeriod();
- 
+  ngOnChanges(){
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
   }
 
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadStatusPeriodData();
+  }
 
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
+    this.loadStatusPeriodData();
+  }
+
+   // Loading the grid data based on pagination
+   private loadStatusPeriodData(): void {
+    this.LoadStatusPeriodList(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0
+    );
+  }
+
+  LoadStatusPeriodList(
+    skipCountValue: number,
+    maxResultCountValue: number
+  ) {
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      pagesize: maxResultCountValue
+    };
+    this.loadStatusPeriodEvent.next(gridDataRefinerValue);
+  }
 }
 
 

@@ -64,11 +64,7 @@ export class PharmacyDetailComponent implements OnInit {
   }
 
 
-  addOrEditPharmacy() {
-    if(this.isSetAsPrimary){
-      this.drugPharmacyFacade.durgPharmacyPrioritySubject.next(PriorityCode.Primary);
-    }
-    
+  addOrEditPharmacy() {  
     if (this.selectedPharmacyId) {
       this.btnDisabled = true
       if (this.isEditPharmacy) {

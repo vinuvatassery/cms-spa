@@ -11,7 +11,7 @@
       <div class="flex-col flex-col-8">
         <h4 class="mb-1 mt-0">{{question.questionDesc}}</h4>
         <span class="card-buttons-wrap mb-1" *ngIf="question.questionCode===reviewQuestionCode.income">
-          <span class="pr-3"><span class="text-bold">Family Size:</span> {{eligibility?.familySize}}</span>
+          <span class="pr-3"><span class="text-bold">Household Size:</span> {{eligibility?.familySize}}</span>
           <span class="pr-3"><span class="text-bold">Monthly Income:</span> ${{eligibility?.totalIncome}}</span>
           <span class="pr-3"><span class="text-bold">FPL:</span> {{eligibility?.fpl}}%</span>
         </span>
