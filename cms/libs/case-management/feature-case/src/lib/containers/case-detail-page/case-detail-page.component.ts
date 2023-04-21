@@ -26,7 +26,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   private showConfirmationPopupSubscription !: Subscription; public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
-  isCerForm = true;
+  isCerForm = false;
   clientCaseId: any;
   clientId: any;
   clientCaseStatusData: any = {};

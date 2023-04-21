@@ -39,7 +39,7 @@ export class MedicalPremiumListComponent implements OnInit {
   carrierContactInfo:any;
   insurancePlanName:string='';
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  isCerForm = true
+  isCerForm = false;
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
   @Input() closeDeleteModal: boolean = false;

@@ -64,7 +64,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isHomeAddressStateOregon$ = new BehaviorSubject(true);;
   public homeAddressProofFile: any = undefined;
   showAddressProofSizeValidation = false;
-  isCerForm = true;
+  isCerForm = false;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private currentSessionSubscription !: Subscription;
