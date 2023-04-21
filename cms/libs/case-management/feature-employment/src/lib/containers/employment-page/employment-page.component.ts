@@ -26,7 +26,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
   isEmpListGridLoaderShow = false;
   isEmployedGridDisplay = true;
   isEmployedFlag!: StatusFlag;
-  isRenewEligibilityCERProcess = true;
+  isCerForm = true;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private checkBoxSubscription!: Subscription;

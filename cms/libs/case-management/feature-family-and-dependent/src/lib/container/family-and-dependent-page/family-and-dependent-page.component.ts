@@ -45,7 +45,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
-  isRenewEligibilityCERProcess = true;
+  isCerForm = true;
 
   /** Constructor **/
   constructor(

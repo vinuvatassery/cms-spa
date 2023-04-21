@@ -36,7 +36,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   sessionId! : string;
   providersStatus!: StatusFlag;
   showProvidervalidationbox! : boolean;
-  isRenewEligibilityCERProcess = true;
+  isCerForm = true;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;

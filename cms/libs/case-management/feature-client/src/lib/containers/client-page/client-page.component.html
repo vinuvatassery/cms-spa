@@ -2,17 +2,17 @@
 <section class="app-l-mainTittle">
 
   <h2> {{
-    isRenewEligibilityCERProcess ? 'Renew Eligibility' : 'New Application' }}  - {{applicantName}}</h2>
-  <p class="mt-2 mb-2" *ngIf="!isRenewEligibilityCERProcess">
+    isCerForm ? 'Renew Eligibility' : 'New Application' }}  - {{applicantName}}</h2>
+  <p class="mt-2 mb-2" *ngIf="!isCerForm">
     Please complete all fields for this application, then click “Start” to go
     through the eligibility checklist. All items must be addressed before
     starting the application review.
   </p>
-  <p class="mt-2 mb-2" *ngIf="isRenewEligibilityCERProcess">
+  <p class="mt-2 mb-2" *ngIf="isCerForm">
     Please complete the CER by confirming whether there are any changes to the information below and making updates as needed. Once all updates are complete, click “Start” to go through the eligibility checklist. All items must be addressed before starting the eligibility review.
   </p>
 </section>
-<div class="flex-col flex-col-10" *ngIf="isRenewEligibilityCERProcess">
+<div class="flex-col flex-col-10" *ngIf="isCerForm">
   <div class="info-banners blue-banner d-flex mt-2"  >
     <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
     <div><p>Application submitted by the client on XX/XX/XXXX</p></div>
