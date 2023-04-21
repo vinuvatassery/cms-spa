@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { StatusPeriodFacade } from '@cms/case-management/domain';
 
 @Component({
@@ -10,7 +11,8 @@ export class StatusFplHistoryComponent implements OnInit {
 
   @Input() eligibilityId!: string;
 
-  statusFplHistory: any = [];
+  statusFplHistory$: any = new BehaviorSubject<any>([]);
+  loader: boolean = false;
 
   constructor(private statusPeriodFacade: StatusPeriodFacade) {
   }
@@ -21,11 +23,14 @@ export class StatusFplHistoryComponent implements OnInit {
 
   /* Private methods */
   private loadFplHistory() {
+    this.loader = true;
     this.statusPeriodFacade.loadStatusFplHistory(this.eligibilityId).subscribe({
       next: (data) => {
-        this.statusFplHistory = data;
+        this.statusFplHistory$.next(data);
+        this.loader = false;
       },
       error: (err) => {
+        this.loader = false;
         console.error('err', err);
       },
     });

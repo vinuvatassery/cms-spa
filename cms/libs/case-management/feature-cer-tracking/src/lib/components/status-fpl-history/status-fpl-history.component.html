@@ -1,11 +1,23 @@
 <h4>FPL History</h4>
 
-<kendo-grid [data]="statusFplHistory">
+<kendo-grid [data]="statusFplHistory$ | async" [loading]="loader">
     <kendo-grid-column field="fplPercentage" title="FPL" [width]="100"></kendo-grid-column>
-    <kendo-grid-column field="fplStartDate" title="Start Date" [width]="100"></kendo-grid-column>
-    <kendo-grid-column field="fplEndDate" title="End Date" [width]="100"></kendo-grid-column>
-    <kendo-grid-column field="actualDayswithFlp" title="Actual Days with Flp" [width]="100"></kendo-grid-column>
-    <kendo-grid-column field="creationTime" title="Date Record Created" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="fplStartDate" title="Start Date" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.fplStartDate |date:'MM/dd/YYYY'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="fplEndDate" title="End Date" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.fplEndDate |date:'MM/dd/YYYY'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="actualDayswithFpl" title="Actual Days with Fpl" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="creationTime" title="Date Record Created" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.creationTime |date:'MM/dd/YYYY hh:mm:ss'}}
+    </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="by" title="Record Created By" [width]="80">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button

@@ -1,20 +1,28 @@
 <h4>Group History</h4>
 
-<kendo-grid [data]="statusGroupHistory">
+<kendo-grid [data]="statusGroupHistory$ | async" [loading]="loader">
     <kendo-grid-column field="groupCodeDesc" title="Group" [width]="100"></kendo-grid-column>
     <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.isFutureStartDate">
-                <a (click)="loadEligibilityChangeModal(dataItem)">Scheduled for {{dataItem.groupStartDate}}</a>
+                <a (click)="loadEligibilityChangeModal(dataItem)">Scheduled for {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}</a>
             </div>
             <div *ngIf="!dataItem.isFutureStartDate">
-                {{dataItem.groupStartDate}}
+                {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}
             </div>
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="groupEndDate" title="End Date" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="groupEndDate" title="End Date" [width]="100">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.groupEndDate |date:'MM/dd/YYYY'}}
+        </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="actualDaysInGroup" title="Actual Days in Group" [width]="100"></kendo-grid-column>
-    <kendo-grid-column field="creationTime" title="Date Record Created" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="creationTime" title="Date Record Created" [width]="100">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.creationTime |date:'MM/dd/YYYY hh:mm:ss'}}
+        </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="by" title="Record Created By" [width]="80">
         <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
