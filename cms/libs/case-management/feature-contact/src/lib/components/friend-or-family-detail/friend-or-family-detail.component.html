@@ -19,7 +19,7 @@
       </kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Contact’s Relationship to Client">
+      <kendo-floatinglabel text="Contact’s Relationship to Client" class="inline-search-loader">
         <span *ngIf="showLoaderOnRelationType$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRelationshipToClient$ | async"
         textField="lovDesc" valueField="lovCode" formControlName="relationshipType" [valuePrimitive]="true" >

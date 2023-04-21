@@ -291,9 +291,9 @@ export class CaseFacade {
     });
   }
 
-  loadClientProfile(profileClientId: number): void {
+  loadClientProfile(clientCaseEligibilityId: string): void {
     this.showLoader();
-    this.caseDataService.loadClientProfile(profileClientId).subscribe({
+    this.caseDataService.loadClientProfile(clientCaseEligibilityId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileSubject.next(clientProfileResponse);
         this.hideLoader();
@@ -581,8 +581,8 @@ export class CaseFacade {
     return this.caseDataService.UpdateCase(caseData);
   }
 
-  getSessionInfoByCaseId(clientCaseId: any) {
-    return this.caseDataService.getSessionInfoByCaseId(clientCaseId);
+  getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
+    return this.caseDataService.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId);
   }
   updateCaseStatus(clientCaseId: any, caseStatusCode: any) {
     const caseData = {

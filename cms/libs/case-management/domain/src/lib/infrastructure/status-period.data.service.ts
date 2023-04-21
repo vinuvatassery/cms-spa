@@ -10,6 +10,7 @@ export class StatusPeriodDataService {
 
   /** Constructor**/
   constructor(private readonly http: HttpClient,private configurationProvider: ConfigurationProvider) {
+     
   }
 
   /** Public methods **/

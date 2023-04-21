@@ -61,7 +61,6 @@ export class StatusPeriodComponent implements OnInit {
     };
   }
 
-  
   ngOnChanges(){
     this.state = {
       skip: this.gridSkipCount,

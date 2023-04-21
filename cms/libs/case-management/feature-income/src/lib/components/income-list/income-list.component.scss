@@ -26,3 +26,15 @@ label{
         margin: 0 5px;
     }
 }
+
+.income-grid {
+    ::ng-deep .k-table-tfoot {
+        .k-footer-template {
+            .k-table-td{
+                background-color: #54667b !important;
+                border-left-color: rgb(255 255 255 / 50%) !important;
+                border-right-color: rgb(255 255 255 / 50%) !important;
+            }
+        }
+    }
+}
