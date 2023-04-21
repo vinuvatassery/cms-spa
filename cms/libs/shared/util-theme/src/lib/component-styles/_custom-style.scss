@@ -674,6 +674,11 @@
 .cer-eligibility-screen{
   &.add-client-wrapper{
     .add-client_right {
+      .block-section-two{
+        border-left: 2px solid $theme-border;
+        padding-left: $size-xxx; 
+     
+      }
       .client-data-block{
         border-left: 0px;
         section{

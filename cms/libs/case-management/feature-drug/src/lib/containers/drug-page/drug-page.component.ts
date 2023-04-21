@@ -38,7 +38,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   prescriptionInfo = {} as PrescriptionDrug;
   isPharmacyAdded = false;
   showPharmacyRequiredValidation$ = new BehaviorSubject(false);
-
+  isCerForm = true;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private loadSessionSubscription!: Subscription;

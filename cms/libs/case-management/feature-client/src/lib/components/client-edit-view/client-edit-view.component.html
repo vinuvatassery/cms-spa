@@ -1,8 +1,8 @@
  
 
-<form [formGroup]="appInfoForm" *ngIf="appInfoForm">
+<form [formGroup]="appInfoForm" *ngIf="appInfoForm" class="block-section-two">
       <!-- Applicant Full Name Section  -->
-  <section kendoRippleContainer>
+  <section kendoRippleContainer >
     <div class="flex-row">
       <div class="flex-col flex-col-4 inlineloaderwrapper">
         <span *ngIf="showNameDuplicateLoader && showNameDuplicateLoaderField == 'fname'" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
@@ -170,7 +170,7 @@
 
   <!-- Applicant Register to vote Section  -->
   <section>
-    <fieldset class="k-form-fieldset">
+    <fieldset class="k-form-fieldset mt-2">
       <legend class="k-form-legend">  <h5>Register to vote?</h5>  </legend>
 
       <div class="flex-row gap-m">
