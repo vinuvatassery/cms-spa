@@ -5,5 +5,6 @@ export interface ClientCase {
      caseStartDate :  string ,
      concurrencyStamp : string,
      caseStatusCode:string
+     clientCaseEligibilityId: string
   }
   
