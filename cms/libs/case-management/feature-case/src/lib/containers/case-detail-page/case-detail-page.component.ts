@@ -175,7 +175,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   getCase() {
     this.case$.subscribe((caseData: any) => {
       this.clientCaseId = caseData.clientCaseId;
-      if (caseData.caseStatusCode === CaseStatusCode.new ||
+      if (
         caseData.caseStatusCode === CaseStatusCode.incomplete ||
         caseData.caseStatusCode === CaseStatusCode.review) {
         this.showDelete = true;

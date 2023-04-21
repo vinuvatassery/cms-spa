@@ -50,7 +50,7 @@
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
-          routerLink="case360/{{ dataItem.clientId }}">
+          (click)="onCaseClicked(dataItem)">
           {{ dataItem.clientFullName }}
         </button>
       </ng-template>
