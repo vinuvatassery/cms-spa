@@ -3,8 +3,9 @@
         <div class="flex-col flex-space-bw align-items-center mb-1">
             <h2 class="title-md mb-0 text-bold">
                 Income
-                <span class="app-c-badge badge-warn-light ml-1"><span class="material-icons"
-                        aria-label="income Information" aria-hidden="true">info</span>
+                <span *ngIf="historyClientCaseEligibilityId != clientCaseEligibilityId"
+                    class="app-c-badge badge-warn-light ml-1">
+                    <span class="material-icons" aria-label="income Information" aria-hidden="true">info</span>
                     Viewing data from previous EP</span>
             </h2>
             <div class="justify-content-end align-items-center mat-form-no-b-space fmly-epdorpdown">

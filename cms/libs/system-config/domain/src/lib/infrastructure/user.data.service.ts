@@ -9,7 +9,7 @@ import { User } from '../entities/user';
 import { LoginUser } from '../entities/login-user';
 
 /** Providers **/
-import { ConfigurationProvider } from "@cms/shared/util-core";
+import { ConfigurationProvider, LoaderService } from "@cms/shared/util-core";
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -20,22 +20,33 @@ export class UserDataService {
   /** Constructor **/
   constructor(private readonly http: HttpClient,
     private readonly router: Router,
-    private configurationProvider : ConfigurationProvider
+    private configurationProvider : ConfigurationProvider,
+    private readonly loaderService: LoaderService 
     ) {}
 
+    showLoader()
+    {
+      this.loaderService.show();
+    }
+      
+    hideLoader()
+    {
+      this.loaderService.hide();
+    }
   /** Public methods **/
   getUserProfileDetails()
   {   
+    this.showLoader()
     this.getUserProfile().subscribe({
       next: (response: any) => {
-        if (response) {     
-          
-          this.getUserProfileData.next(response);      
+        if (response) {               
+          this.getUserProfileData.next(response);    
+          this.hideLoader()  
         }        
-     
+        this.hideLoader()
       },
       error: (err: any) => {    
-          
+       this.hideLoader()
         this.router.navigate(['/forbidden']);
       }
     });
