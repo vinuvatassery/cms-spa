@@ -5,7 +5,6 @@ import { StatusPeriodFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-status-fpl-history',
   templateUrl: './status-fpl-history.component.html',
-  styleUrls: ['./status-fpl-history.component.scss'],
 })
 export class StatusFplHistoryComponent implements OnInit {
 

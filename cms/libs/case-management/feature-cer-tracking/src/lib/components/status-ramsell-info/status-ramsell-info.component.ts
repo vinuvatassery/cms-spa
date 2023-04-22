@@ -4,7 +4,6 @@ import { StatusPeriodFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-status-ramsell-info',
   templateUrl: './status-ramsell-info.component.html',
-  styleUrls: ['./status-ramsell-info.component.scss'],
 })
 export class StatusRamsellInfoComponent implements OnInit {
 

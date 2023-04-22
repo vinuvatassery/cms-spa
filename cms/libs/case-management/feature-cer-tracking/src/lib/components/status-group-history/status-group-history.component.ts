@@ -1,12 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Component({
   selector: 'case-management-status-group-history',
   templateUrl: './status-group-history.component.html',
-  styleUrls: ['./status-group-history.component.scss'],
 })
 export class StatusGroupHistoryComponent implements OnInit {
 

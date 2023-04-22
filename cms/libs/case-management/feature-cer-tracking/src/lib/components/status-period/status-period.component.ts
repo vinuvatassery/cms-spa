@@ -3,7 +3,6 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 /** Facades **/
 import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { RowArgs } from '@progress/kendo-angular-grid';
 import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'case-management-status-period',
