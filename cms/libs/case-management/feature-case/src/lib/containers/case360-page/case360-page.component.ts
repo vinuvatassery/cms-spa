@@ -116,7 +116,14 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   {    
     if(this.clientCaseEligibilityId)
     {
-    this.workFlowFacade.createNewSession(null ,null)
+     const cerSessionData = {
+        entityId: null,     
+        assignedCwUserId: null,
+        caseOriginCode: null,
+        caseStartDate: null,
+        clientCaseEligibilityId: this.clientCaseEligibilityId,
+      };
+    this.workFlowFacade.createNewSession(null ,cerSessionData)
     }
   }
 

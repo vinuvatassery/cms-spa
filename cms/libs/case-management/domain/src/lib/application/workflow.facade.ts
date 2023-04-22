@@ -89,7 +89,7 @@ export class WorkflowFacade {
   currentSession!: WorkflowSession;
   currentWorkflowMaster!: WorkflowMaster[];
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  sessionData! : SessionData  
+  sessionData!: SessionData;
 
   /**Constructor */
   constructor(
@@ -160,7 +160,7 @@ export class WorkflowFacade {
   createNewSession(newCaseFormData?: any, cerSessionData?: any) {
     this.showLoader();
     let successMessage = '';
-    let navigationPath =''
+    let navigationPath = '';
 
     if (newCaseFormData) {
       this.sessionData = {
@@ -169,41 +169,40 @@ export class WorkflowFacade {
         workflowTypeCode: WorkflowTypeCode.NewCase,
         assignedCwUserId: newCaseFormData?.controls['caseOwnerId'].value,
         caseOriginCode: newCaseFormData?.controls['caseOriginCode'].value,
-        caseStartDate: this.intl.formatDate(newCaseFormData?.controls['applicationDate'].value,this.dateFormat),
+        caseStartDate: this.intl.formatDate(
+          newCaseFormData?.controls['applicationDate'].value,
+          this.dateFormat
+        ),
         clientCaseEligibilityId: null,
       };
-      successMessage = 'New Session Created Successfully'
-      navigationPath = 'case-detail'
+      successMessage = 'New Session Created Successfully';
+      navigationPath = 'case-detail';
     } else {
       this.sessionData = {
-        entityId: cerSessionData?.programId,
+        entityId: '00000000-0000-0000-0000-000000000000',
         EntityTypeCode: EntityTypeCode.Program,
         workflowTypeCode: WorkflowTypeCode.CaseEligibilityReview,
-        assignedCwUserId: cerSessionData?.caseOwnerId,
-        caseOriginCode: cerSessionData?.caseOriginCode,
-        caseStartDate: cerSessionData?.applicationDate,
+        assignedCwUserId: '00000000-0000-0000-0000-000000000000',
+        caseOriginCode: '00000000-0000-0000-0000-000000000000',
+        caseStartDate: this.intl.formatDate(new Date(), this.dateFormat),
         clientCaseEligibilityId: cerSessionData?.clientCaseEligibilityId,
       };
-      successMessage = 'New CER Session Created Successfully'
-      navigationPath = 'cer-case-detail'
+      successMessage = 'New CER Session Created Successfully';
+      navigationPath = 'cer-case-detail';
     }
 
     this.workflowService.createNewSession(this.sessionData).subscribe({
-      next: (sessionResp: any) => {
+      next: (sessionResp: any) => {        
         if (sessionResp && sessionResp?.workflowSessionId) {
-          debugger
-          this.router.navigate(['case-management/'+navigationPath], {
+          this.router.navigate(['case-management/' + navigationPath], {
             queryParams: {
               sid: sessionResp?.workflowSessionId,
-              eid: this.sessionData?.entityId,
+              eid: sessionResp?.sessionData?.entityID,
               wtc: sessionResp?.workflowTypeCode,
             },
           });
         }
-        this.showHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          successMessage
-        );
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
         this.hideLoader();
       },
       error: (err: any) => {

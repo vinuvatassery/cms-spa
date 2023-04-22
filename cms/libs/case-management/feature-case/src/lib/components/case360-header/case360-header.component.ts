@@ -109,7 +109,11 @@ export class Case360HeaderComponent implements OnInit {
 
   createCerSession()
   {
+    //2169 iii.	If the Eligibility has been disenrolled for the CER the link will disable
+    if(this.loadedClientHeader?.caseStatus!=='DISENROLLED')
+    {
     this.createCerSessionEvent.emit()
+    }
   }
 
 }

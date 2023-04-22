@@ -11,10 +11,5 @@ import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angul
 
 
 export class Case360HeaderNotificationsComponent {
-  @Output() createCerSessionEvent = new EventEmitter<string>();
-
-  createCerSession()
-  {
-    this.createCerSessionEvent.emit()
-  }
+ 
 }
