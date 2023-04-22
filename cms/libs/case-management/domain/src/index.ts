@@ -50,6 +50,7 @@ export * from './lib/entities/client-profile';
 export * from './lib/entities/client-hiv-verification';
 export * from './lib/entities/active-sessions';
 export * from './lib/entities/client-note';
+export * from './lib/entities/session-data';
 
 
 /** Enums **/

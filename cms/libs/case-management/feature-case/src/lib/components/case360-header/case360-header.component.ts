@@ -26,6 +26,8 @@ export class Case360HeaderComponent implements OnInit {
   @Input() groupUpdated$!: Observable<any>;
   @Output() loadChangeGroupEvent = new EventEmitter<string>();
   @Output() updateChangeGroupEvent = new EventEmitter<any>();
+  @Output() createCerSessionEvent = new EventEmitter<string>();
+ 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
@@ -102,6 +104,15 @@ export class Case360HeaderComponent implements OnInit {
     if(result){
       this.isStatusPeriodDetailOpened=false;
       this.loadClientProfileInfoEvent.emit() 
+    }
+  }
+
+  createCerSession()
+  {
+    //2169 iii.	If the Eligibility has been disenrolled for the CER the link will disable
+    if(this.loadedClientHeader?.caseStatus!=='DISENROLLED')
+    {
+    this.createCerSessionEvent.emit()
     }
   }
 
