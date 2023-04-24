@@ -34,6 +34,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   clientId: any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   closeDeleteModal: boolean = false;
+  isHistoricalDataLoad:boolean = false;
 
   ngOnInit(): void {  
     this.routeChangeSubscription();
@@ -59,6 +60,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       sortColumn: 'creationTime',
       sortType: 'asc',
     };
+    this.isHistoricalDataLoad = false;
     this.loadHealthInsuranceHandle(gridDataRefinerValue);
   }
 
@@ -129,7 +131,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     };
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
-      this.clientCaseEligibilityId,
+      this.isHistoricalDataLoad? null: this.clientCaseEligibilityId,
       'INSURANCEDEPENDENTS',
       this.tabId,
       gridDataRefiner.skipcount,
@@ -188,7 +190,15 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     }
   }
   loadHistoricalData(isLoadHistoricalData:boolean){
-    debugger
+    debugger;
+    this.isHistoricalDataLoad =isLoadHistoricalData;
+    const gridDataRefinerValue = {
+      skipCount: this.insurancePolicyFacade.skipCount,
+      pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+      sortColumn: 'creationTime',
+      sortType: 'asc',
+    };
+    this.loadHealthInsuranceHandle(gridDataRefinerValue);
   }
 }
 
