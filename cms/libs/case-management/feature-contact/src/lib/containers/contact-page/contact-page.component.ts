@@ -143,7 +143,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loaderService.show();
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
     this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
-      if (resp) {
+      if (resp) {        
         this.loadContactInfo();
         this.loaderService.hide();
       }
