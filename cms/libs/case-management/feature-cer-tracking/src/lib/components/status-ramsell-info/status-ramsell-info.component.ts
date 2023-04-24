@@ -25,7 +25,7 @@ export class StatusRamsellInfoComponent implements OnInit {
         this.ramSellInfo = data;
       },
       error: (err) => {
-        console.error('err', err);
+        this.statusPeriodFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }

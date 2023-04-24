@@ -36,7 +36,7 @@ export class StatusGroupHistoryComponent implements OnInit {
       },
       error: (err) => {
         this.loader = false;
-        console.error('err', err);
+        this.statusPeriodFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
