@@ -648,7 +648,7 @@ export class WorkflowFacade {
     this.showLoader();
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (sessionResponse) => {
-        if (sessionResponse) {
+        if (sessionResponse) {          
           const sessionData = {
             clientId: JSON.parse(sessionResponse?.sessionData).ClientId,
             ClientCaseId: JSON.parse(sessionResponse?.sessionData).ClientCaseId,
@@ -657,6 +657,7 @@ export class WorkflowFacade {
             entityID: JSON.parse(sessionResponse?.sessionData).EntityID,
             EntityTypeCode: JSON.parse(sessionResponse?.sessionData)
               .EntityTypeCode,
+            prevClientCaseEligibilityId :  JSON.parse(sessionResponse?.sessionData)?.PrevClientCaseEligibilityId
           };
           const workflowResponseData = {
             sessionData: JSON.stringify(sessionData),
