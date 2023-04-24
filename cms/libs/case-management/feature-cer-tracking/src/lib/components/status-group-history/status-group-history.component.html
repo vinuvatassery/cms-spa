@@ -5,7 +5,10 @@
     <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.isFutureStartDate">
-                <a (click)="loadEligibilityChangeModal(dataItem)">Scheduled for {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}</a>
+                <button aria-label="scheduled link" kendoButton look="flat" class="card-link-button"
+                    (click)="loadEligibilityChangeModal(dataItem)">
+                    Scheduled for {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}
+                </button>
             </div>
             <div *ngIf="!dataItem.isFutureStartDate">
                 {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}
@@ -69,8 +72,8 @@
     </section>
     <kendo-dialog-actions>
         <div class="justify-content-between">
-            <button kendoButton aria-label="delete client’s benefits" [primary]="true"
-                look="outline" (click)="onConfirmGroupDelete()">
+            <button kendoButton aria-label="delete client’s benefits" [primary]="true" look="outline"
+                (click)="onConfirmGroupDelete()">
                 Delete
             </button>
             <div class="justify-content-end">
