@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-status-group-history',
@@ -11,7 +12,8 @@ export class StatusGroupHistoryComponent implements OnInit {
   @Input() eligibilityId!: string;
   currentGroup$ = this.caseFacade.currentGroup$;
   ddlGroups$ = this.caseFacade.ddlGroups$;
-  statusGroupHistory$: any = new BehaviorSubject<any>([]);
+  statusGroupHistory: any = [];
+
   isGroupDetailOpened: boolean = false;
   isGroupDeleteModalOpened: boolean = false;
   selectedGroupId!: string;
@@ -31,8 +33,7 @@ export class StatusGroupHistoryComponent implements OnInit {
     this.loader = true;
     this.statusPeriodFacade.loadStatusGroupHistory(this.eligibilityId).subscribe({
       next: (data) => {
-        this.statusGroupHistory$.next(data);
-        this.loader = false;
+        this.statusGroupHistory = data;
       },
       error: (err) => {
         this.loader = false;

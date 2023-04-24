@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { StatusPeriodFacade } from '@cms/case-management/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-status-ramsell-info',
