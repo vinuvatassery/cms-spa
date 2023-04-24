@@ -13,6 +13,8 @@
           kendoCheckBox
           aria-labelledby="StatusshowHistorical"
           id="StatusshowHistorical"
+          [(ngModel)]="showHistoricalFlag"        
+          (change)="handleShowHistoricalClick()"
         />
         <label class="k-checkbox-label" for="StatusshowHistorical"
           >Show historical</label
@@ -250,7 +252,7 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
 
 
 <!-- Copy insurance confirmation modal -->
-<kendo-dialog *ngIf="isCopyInsuranceConfirm" (close)="onCopyInsuranceConfirmCloseClicked()"
+<kendo-dialog *ngIf="isCopyInsuranceConfirm" 
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Copy Insurance? </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
@@ -265,6 +267,30 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
           Cancel
         </button>
         <button kendoButton [primary]="true" aria-label="copy insurance "> Copy </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+<!-- Delete Modal -->
+<kendo-dialog *ngIf="isOpenedDeleteConfirm" (close)="onDeleteConfirmCloseClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Delete Health Insurance? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+      The client’s personal insurance info will be permanently deleted, and the
+      insurance carriers and plans will no longer be associated with this
+      client.
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding health insurance" (click)="onDeleteConfirmCloseClicked()">
+          Cancel
+        </button>
+        <button kendoButton class="k-error-button" aria-label="delete health insurance" (click)="deleteInsurancePolicy()">
+          Delete
+        </button>
       </div>
     </div>
   </kendo-dialog-actions>

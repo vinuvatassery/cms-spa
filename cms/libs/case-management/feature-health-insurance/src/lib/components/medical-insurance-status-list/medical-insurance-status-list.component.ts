@@ -17,14 +17,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   /** Public properties **/
   healthInsuranceStatus$ = this.insurancePolicyFacade.healthInsuranceStatus$;
   medicalHealthPlans$ = this.insurancePolicyFacade.medicalHealthPlans$;
-  //public pageSize = 10;
-  //public skip = 5;
-  // public pageSizes = [
-  //   {text: '5', value: 5}, 
-  //   {text: '10', value: 10},
-  //   {text: '20', value: 20},
-  //   {text: 'All', value: 100}
-  // ];
+  isCopyInsuranceConfirm = false;  
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -36,9 +29,15 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() insuranceStatus:any;
+  @Input() closeDeleteModal: boolean = false;
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
+  @Output() deleteInsurancePlan = new EventEmitter<any>();
+  @Output() copyInsurancePlan = new EventEmitter<any>();
+  @Output() loadHistoricalPlan = new EventEmitter<boolean>();
+  showHistoricalFlag:boolean = false;
   carrierContactInfo:any;
   insurancePlanName:any;
+  insuranceStatusType:any;
   isEdit!: boolean;
   currentInsurancePolicyId:any;
   isTriggerPriorityPopup = false;
@@ -48,6 +47,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   public state!: State;
   sort!:any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
+  isOpenedDeleteConfirm:boolean = false;
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   public gridOptionData = [
@@ -55,8 +55,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       buttonType:"btn-h-primary",
       text: "Copy Record",
       icon: "content_copy",
+      type:"Copy",
       click: (): void => {
-        this.onCopyInsuranceConfirmOpenClicked();
+        //this.onCopyInsuranceConfirmOpenClicked();
       },
     },
     {
@@ -95,21 +96,34 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadHealthInsuranceStatus();
-    this.priorityPopupShowSubscription();
+    //this.loadHealthInsuranceStatus();
+    this.priorityPopupShowSubscription();  
   }
   ngOnChanges(): void {
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-    // if (this.closeDeleteModal) {
-    //   this.onDeleteConfirmCloseClicked();
-    //   this.handleHealthInsuranceCloseClicked();
-    // }
-    // this.loadHealthInsurancePlans();
+    if (this.closeDeleteModal) {
+      this.onDeleteConfirmCloseClicked();
+      this.handleHealthInsuranceCloseClicked();
+    }
+    //this.loadHealthInsurancePlans();
   }
-
+  // loadHealthInsurancePlans() {
+  //   this.insurancePolicyFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
+  //     this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
+  //     if(medicalHealthPolicy?.data?.length > 0)
+  //     this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
+  //     if(medicalHealthPolicy?.length > 0){
+  //       const item: CompletionChecklist = {
+  //         dataPointName: 'currentInsuranceFlag',
+  //         status: StatusFlag.Yes
+  //       };
+  //       this.workflowFacade.updateChecklist([item]);
+  //     }
+  //   })
+  // }
   pageselectionchange(data: any) {
     debugger;
     this.state.take = data.value;
@@ -135,29 +149,52 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
         break;
     }
   }
+  handleShowHistoricalClick(){
+    if(this.showHistoricalFlag){
+      this.loadHistoricalPlan.next(true);
+    }
+    else{
+      this.loadHistoricalPlan.next(false);
+    }
+    //this.loadInsurancePolicies();
+  }
   isAddPriority(event:any)
   {
-    debugger;
     this.isTriggerPriorityPopup = event;
   }
   handleOptionClick(dataItem: any, type: any) {
-    // if (type == 'Delete') {
-    //   this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
-    //   this.onDeleteConfirmOpenClicked();
-    // }
-    debugger
+    if (type == 'Delete') {
+      this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.onDeleteConfirmOpenClicked();
+    }
     if (type.toUpperCase() == 'EDIT') {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
         this.insurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
     }
-    // if (type == 'priority') {
-    //   this.selectedInsurance=dataItem;
-    //   this.onChangePriorityOpenClicked()
-    // }
+    if (type == 'priority') {
+      this.selectedInsurance=dataItem;
+      this.onChangePriorityOpenClicked()
+    }
+    if(type.toUpperCase() == 'COPY'){
+      this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.copyInsurancePlan.next(this.currentInsurancePolicyId);
+    }
     this.cdr.detectChanges();
   }
+  
+  onDeleteConfirmOpenClicked() {
+    this.isOpenedDeleteConfirm = true;
+  }
+  onDeleteConfirmCloseClicked() {
+    this.isOpenedDeleteConfirm = false;
+  }
+  deleteInsurancePolicy() {
+    this.isTriggerPriorityPopup = false;
+    this.deleteInsurancePlan.next(this.currentInsurancePolicyId);
+  }
+
   onChangePriorityOpenClicked() {
     this.isOpenedChangePriorityModal = true;
   }
@@ -196,7 +233,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     this.isTriggerPriorityPopup = false;
   }
   addOrEditClicked(addEditButonClicked:any){
-    debugger;
     if(addEditButonClicked){
      this.loadInsurancePolicies();
     }
@@ -227,7 +263,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   private priorityPopupShowSubscription(){
     this.triggerPriorityPopup$.subscribe((value:boolean)=>{
-      debugger;
       if(value && this.isTriggerPriorityPopup){
         this.isEditInsurancePriorityTitle = false;
         this.insurancePriorityModalButtonText = 'Save';
@@ -243,13 +278,11 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
 
   /** Private methods **/
-  private loadHealthInsuranceStatus() {
-    this.insurancePolicyFacade.loadHealthInsuranceStatus();
-  }
-  onCopyInsuranceConfirmCloseClicked(){
-    this.isCopyInsuranceConfirm = false;
-  }
-  onCopyInsuranceConfirmOpenClicked(){
-    this.isCopyInsuranceConfirm = true;
-  }
+
+  // onCopyInsuranceConfirmCloseClicked(){
+  //   this.isCopyInsuranceConfirm = false;
+  // }
+  // onCopyInsuranceConfirmOpenClicked(){
+  //   this.isCopyInsuranceConfirm = true;
+  // }
 }

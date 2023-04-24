@@ -1,9 +1,10 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ClientProfileTabs, HealthInsurancePolicyFacade } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Component({
@@ -17,7 +18,9 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     private route: ActivatedRoute,  
     private readonly router: Router,
     private formBuilder: FormBuilder,
-    private insurancePolicyFacade: HealthInsurancePolicyFacade
+    private insurancePolicyFacade: HealthInsurancePolicyFacade,
+    private readonly loaderService: LoaderService,
+    private readonly ref: ChangeDetectorRef
   ) { }
 
   tabChangeSubscription$ = new Subscription();
@@ -30,6 +33,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   tabId! : any
   clientId: any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
+  closeDeleteModal: boolean = false;
 
   ngOnInit(): void {  
     this.routeChangeSubscription();
@@ -126,13 +130,65 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
-      'DEPENDENTS',
+      'INSURANCEDEPENDENTS',
       this.tabId,
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sortColumn,
       gridDataRefiner.sortType
     );
+  }
+  deleteInsurancePolicy(insurancePolicyId: any) {
+    if (insurancePolicyId != undefined) {
+      this.loaderService.show();
+      this.closeDeleteModal = false;
+      this.insurancePolicyFacade.deleteInsurancePolicy(insurancePolicyId).subscribe({
+        next: () => {
+          this.closeDeleteModal = true;
+          const gridDataRefinerValue = {
+            skipCount: this.insurancePolicyFacade.skipCount,
+            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            sortColumn: 'creationTime',
+            sortType: 'asc',
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
+          this.loaderService.hide();
+          this.ref.detectChanges();
+        },
+        error: (error: any) => {
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+      })
+    }
+
+  }
+  copyInsurancePolicy(insurancePolicyId: any) {
+    if (insurancePolicyId != undefined) {
+      this.loaderService.show();
+      this.closeDeleteModal = false;
+      this.insurancePolicyFacade.copyInsurancePolicy(insurancePolicyId).subscribe({
+        next: () => {
+          this.closeDeleteModal = true;
+          const gridDataRefinerValue = {
+            skipCount: this.insurancePolicyFacade.skipCount,
+            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            sortColumn: 'creationTime',
+            sortType: 'asc',
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy copied successfully");
+          this.loaderService.hide();
+          this.ref.detectChanges();
+        },
+        error: (error: any) => {
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+      })
+    }
+  }
+  loadHistoricalData(isLoadHistoricalData:boolean){
+    debugger
   }
 }
 

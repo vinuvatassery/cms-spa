@@ -148,6 +148,9 @@ export class HealthInsurancePolicyFacade {
   deleteInsurancePolicy(insurancePolicyId: any) {
     return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
   }
+  copyInsurancePolicy(insurancePolicyId: any) {
+    return this.healthInsurancePolicyService.copyInsurancePolicy(insurancePolicyId);
+  }
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
   }
