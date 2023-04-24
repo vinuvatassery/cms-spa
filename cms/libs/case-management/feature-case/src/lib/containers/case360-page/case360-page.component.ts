@@ -12,7 +12,8 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import {
   ScreenType,
   CaseFacade,
-  ClientProfileTabs
+  ClientProfileTabs,
+  WorkflowFacade
 } from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
@@ -69,7 +70,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly workFlowFacade : WorkflowFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -108,6 +110,21 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         console.log('Error', err);
       },
     });
+  }
+
+  createCerSession()
+  {    
+    if(this.clientCaseEligibilityId)
+    {
+     const cerSessionData = {
+        entityId: null,     
+        assignedCwUserId: null,
+        caseOriginCode: null,
+        caseStartDate: null,
+        clientCaseEligibilityId: this.clientCaseEligibilityId,
+      };
+    this.workFlowFacade.createNewSession(null ,cerSessionData)
+    }
   }
 
   private routeChangeSubscription() {    
@@ -168,6 +185,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
             clientOfficialIdFullName:
               clientHeaderData?.clientOfficialIdFullName,
             caseWorkerId: clientHeaderData?.caseWorkerId,
+            clientCaseEligibilityCerId : clientHeaderData?.clientCaseEligibilityCerId
           };
           this.clientCaseId = clientHeader?.clientCaseId;
           this.clientHeaderSubject.next(clientHeader);

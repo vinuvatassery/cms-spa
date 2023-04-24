@@ -1,5 +1,4 @@
-export enum CaseStatusCode {
-    new = "NEW",
+export enum CaseStatusCode {   
     incomplete = "INCOMPLETE",
     review = "REVIEW",
     accept = "ACCEPT",

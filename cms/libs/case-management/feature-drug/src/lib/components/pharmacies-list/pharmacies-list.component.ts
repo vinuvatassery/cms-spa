@@ -462,7 +462,8 @@ export class PharmaciesListComponent implements OnInit{
     this.triggerPriorityPopupNumber = 0;
     let data = {
       vendorId:pharmacyId,
-      isShowHistoricalData:this.isShowHistoricalData
+      isShowHistoricalData:this.isShowHistoricalData,
+      isSetAsPrimary:this.isSetAsPrimary
     }
     this.addPharmacyClick.emit(data);
   }

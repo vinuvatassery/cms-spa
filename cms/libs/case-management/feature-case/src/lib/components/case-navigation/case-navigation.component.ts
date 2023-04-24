@@ -22,6 +22,7 @@ export class CaseNavigationComponent implements OnInit {
   @Input() completeStaus$!: Observable<any>;
   @Input() currentSession: any
   @Input() navigationEvent = new EventEmitter<string>();
+  @Input() workflowType! : string
 
   /** Output Properties **/
   @Output() workflowChange = new EventEmitter<object>();
@@ -114,6 +115,7 @@ export class CaseNavigationComponent implements OnInit {
             sid: sessionId,
             pid: routes[this.navigationIndex].processId,
             eid: entityId,
+            wtc : this.workflowType
           }
         }
       );

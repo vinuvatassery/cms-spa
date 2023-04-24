@@ -48,12 +48,12 @@ export class SearchPageComponent implements OnInit {
   onSelectChange(selectedValue: any) {
     if (selectedValue !== undefined) {
       if (selectedValue) {
-        if (selectedValue.caseStatus == CaseStatusCode.accept) {
+        if (selectedValue.caseStatus !== CaseStatusCode.incomplete) {
           this.router.navigate([`/case-management/cases/case360/${selectedValue.clientId}`]);
         }
         else {
           this.loaderService.show();
-          this.caseFacade.getSessionInfoByCaseId(selectedValue.clientCaseId).subscribe({
+          this.caseFacade.getSessionInfoByCaseEligibilityId(selectedValue.clientCaseEligibilityId).subscribe({
             next: (response: any) => {
               if (response) {
                 this.loaderService.hide();

@@ -42,15 +42,6 @@
       }}">
 
     </kendo-grid-column>
-    <kendo-grid-column [width]="110"
-      field="dependentTypeCode"
-      title="CAREAssist client?"
-
-    >
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{ dataItem.dependentTypeCode === CAClient ? 'YES' : 'NO'}}
-    </ng-template>
-  </kendo-grid-column>
     <kendo-grid-column [width]="80"
       field="dob"
       title="{{
