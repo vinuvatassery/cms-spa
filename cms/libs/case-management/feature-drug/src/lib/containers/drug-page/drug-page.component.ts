@@ -39,12 +39,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isPharmacyAdded = false;
   showPharmacyRequiredValidation$ = new BehaviorSubject(false);
   isCerForm = false;
+  showPharmacySection = new BehaviorSubject(false);
+  
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private loadSessionSubscription!: Subscription;
   private saveForLaterClickSubscription!: Subscription;
   private saveForLaterValidationSubscription!: Subscription;
   private discardChangesSubscription !: Subscription;
+  private hivCodeValueSubscription !: Subscription;
 
   /** Constructor **/
   constructor(
@@ -69,6 +72,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadSessionData();
     this.prescriptionDrugFormChanged();
     this.addDiscardChangesSubscription();
+    this.addHivCodeChangeSubscription();
   }
 
   ngOnDestroy(): void {
@@ -77,6 +81,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
     this.discardChangesSubscription.unsubscribe();
+    this.hivCodeValueSubscription.unsubscribe();
   }
 
 
@@ -238,9 +243,11 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showPharmacyRequiredValidation$.next(true);
       return of(false);;
     }
-    else{
+
+    if (!isHivCodeYes) {
       this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
     }
+
     if (this.prescriptionDrugForm.valid) {
       const drugs = this.workflowFacade.deepCopy(this.prescriptionDrugForm.value);
       drugs.clientCaseEligibilityId = this.clientCaseEligibilityId;
@@ -408,6 +415,13 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadPrescriptionDrug();
       }
     });
+  }
+
+  private addHivCodeChangeSubscription(): void {
+    this.hivCodeValueSubscription = this.prescriptionDrugForm.controls['prescriptionDrugsForHivCode']?.valueChanges
+      .subscribe((value: any) => {
+        this.showPharmacySection.next(value === YesNoFlag.Yes.toUpperCase());
+      });
   }
 }
 

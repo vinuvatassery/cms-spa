@@ -12,7 +12,7 @@ import {
   ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender,
   ClientRace, ClientSexualIdentity, ClientCaseEligibilityFlag,
   ClientCaseEligibilityAndFlag, CaseFacade, YesNoFlag, ControlPrefix,
-  MaterialFormat, CompletionChecklist, NavigationType, PronounCode, TransGenderCode
+  MaterialFormat, CompletionChecklist, NavigationType, PronounCode, TransGenderCode, WorkflowTypeCode
 } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 
@@ -44,8 +44,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   sessionId!: string;
   message!: string;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  isCerForm = false;
-
+  isCerForm = false
+ 
   /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
     private clientFacade: ClientFacade,
@@ -116,15 +116,16 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         if (session && session?.sessionData) {
           this.clientCaseId = JSON.parse(session.sessionData)?.ClientCaseId
           this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
-          this.clientCaseEligibilityId = JSON.parse(session.sessionData)?.clientCaseEligibilityId;
-
+          this.clientCaseEligibilityId = JSON.parse(session.sessionData)?.clientCaseEligibilityId;          
           if (this.clientCaseId) {
             this.applicantInfo.clientCaseId = this.clientCaseId
             this.applicantInfo.workFlowSessionId = this.sessionId;
             if (this.clientCaseEligibilityId) {
               this.initializeClientCaseEligibility();
             }
-          }
+          }          
+          this.isCerForm = session?.workflow?.workflowTypeCode === WorkflowTypeCode.CaseEligibilityReview        
+          
           this.loaderService.hide();
         }
 

@@ -48,6 +48,13 @@ export class WorkflowDataService {
     );
   }
 
+  createNewCerSession(clientCaseEligibilityId: string){    
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/cer-sessions/${clientCaseEligibilityId}`,      
+      null
+    );
+  }
+
   createNewSession(newSessionData: any){    
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/workflows/sessions`,      

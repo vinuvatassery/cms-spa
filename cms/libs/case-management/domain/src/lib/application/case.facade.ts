@@ -6,6 +6,7 @@ import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
+  NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -85,12 +86,12 @@ export class CaseFacade {
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  public sortValue = 'clientFullName';
-  public sortType = 'asc';
+  public sortValue = 'eilgibilityStartDate';
+  public sortType = 'desc';
   public sort: SortDescriptor[] = [
     {
       field: this.sortValue,
-      dir: 'asc',
+      dir: 'desc',
     },
   ];
   activeSession!: ActiveSessions[];
@@ -401,6 +402,7 @@ export class CaseFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.activeSessionLoaderVisibleSubject.next(false);
       },
     });
   }
@@ -411,7 +413,7 @@ export class CaseFacade {
       .createActiveSession(session)
       .pipe(
         catchError((err: any) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.handleMultipleDeviceLogin(err);
           return of(false);
         })
       )
@@ -426,7 +428,7 @@ export class CaseFacade {
   updateActiveSessionOrder(session: any[]) {
     return this.caseDataService.updateActiveSessionOrder(session).pipe(
       catchError((err: any) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.handleMultipleDeviceLogin(err);
         return of(false);
       })
     );
@@ -438,7 +440,7 @@ export class CaseFacade {
       .deleteActiveSession(activeSessionId)
       .pipe(
         catchError((err: any) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.handleMultipleDeviceLogin(err);
           return of(false);
         })
       )
@@ -456,6 +458,18 @@ export class CaseFacade {
           }
         }
       });
+  }
+
+  handleMultipleDeviceLogin(err: any){
+    if(err){
+      if(err?.error?.error?.code?.includes('MULTIPLE_DEVICE_LOGIN_WARNING')){
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message,NotificationSource.UI);
+        this.activeSessionLoaderVisibleSubject.next(false);
+        this.hideLoader();
+        return;
+      }
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    }
   }
 
   loadDdlGridColumns(): void {
