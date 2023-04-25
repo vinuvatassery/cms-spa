@@ -15,6 +15,7 @@ export class StatusPeriodFacade {
 
   /** Public properties **/
   statusPeriod$ = this.statusPeriodSubject.asObservable();
+
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'StatusStart'
@@ -72,5 +73,17 @@ export class StatusPeriodFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       },
     });
+  }
+
+  loadStatusGroupHistory(eligibilityId: string) {
+    return this.statusPeriodDataService.loadStatusGroupHistory(eligibilityId);
+  }
+
+  loadStatusFplHistory(eligibilityId: string) {
+    return this.statusPeriodDataService.loadStatusFplHistory(eligibilityId);
+  }
+
+  loadRamSellInfo(clientId: string) {
+    return this.statusPeriodDataService.loadRamSellInfo(clientId);
   }
 }

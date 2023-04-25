@@ -1,90 +1,18 @@
 <div class="flex-row">
     <div class="flex-col  ">
-         
+
         <div class="app-c-table">
 
-            <kendo-grid [pageSize]="state.take" [pageable]="true"  [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
-                <ng-template kendoGridDetailTemplate let-dataItem  title="Status Start">
-                    <section *ngIf="dataItem.RamseelInfo">
-                        <div class="flex-col flex-col-6 mt-2 p-0">
-                            <h4>Ramsell Info</h4>
-                            <table>
-                                <caption hidden> Ramsell Info</caption>
-                                <tr hidden>
-                                    <th scope="col"></th>
-                                    <th scope="col"></th>
-                                    <th scope="col"></th>
-                                  </tr>
-                                <tbody>
-                                <tr>
-                                    <td class="greycolor"> Most Recent Transfer</td>
-                                    <td> {{dataItem.RamseelInfo.MostRecentTransfer}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="greycolor"> Card Requested</td>
-                                    <td> {{dataItem.RamseelInfo.CardRequested}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="greycolor"> Date Card Last Sent</td>
-                                    <td> {{dataItem.RamseelInfo.DateCardLastSent}}</td>
-                                </tr>
-                            </tbody>
-                            </table>
-
-                        </div>
-
+            <kendo-grid [pageSize]="state.take" [pageable]="true" [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
+                <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
+                    <section>
+                        <case-management-status-ramsell-info [clientId]="clientId"></case-management-status-ramsell-info>
                     </section>
-                    <div *ngIf="dataItem.GroupHistory" class="mt-5">
-                        <h4  >Group History</h4>
-
-                        <table >
-                            <caption hidden> Group History</caption>
-                            <tr>
-                                <th>Group</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Actual Days in Group</th>
-                                <th>Date Record Created</th>
-                                <th>Record Created By</th>
-                            </tr>
-                            <tbody>
-                            <tr *ngFor="let GroupHistory of dataItem.GroupHistory">
-                                <td> {{GroupHistory.Group}}</td>
-                                <td> {{GroupHistory.StartDate}}</td>
-                                <td> {{GroupHistory.EndDate}}</td>
-                                <td> {{GroupHistory.ActualDaysinGroup}}</td>
-                                <td> {{GroupHistory.DateRecordCreated}}</td>
-                                <td> {{GroupHistory.RecordCreatedBy}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
+                    <div class="mt-5">
+                        <case-management-status-group-history [eligibilityId]="dataItem.clientCaseEligibilityId"></case-management-status-group-history>
                     </div>
-                    <div *ngIf="dataItem.FlipHistory" class="mt-5 mb-2">
-                        <h4>FPL History</h4>
-
-                        <table>
-                            <caption hidden> FPL History</caption>
-                            <tr >
-                                <th>FPL</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Actual Days with Flp</th>
-                                <th>Date Record Created</th>
-                                <th>Record Created By</th>
-                            </tr>
-                            <tbody>
-                            <tr *ngFor="let FlipHistory of dataItem.FlipHistory">
-                                <td> {{FlipHistory.Flp}}</td>
-                                <td> {{FlipHistory.StartDate}}</td>
-                                <td> {{FlipHistory.EndDate}}</td>
-                                <td> {{FlipHistory.ActualDayswithFlp}}</td>
-                                <td> {{FlipHistory.DateRecordCreated}}</td>
-                                <td> {{FlipHistory.RecordCreatedBy}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
+                    <div class="mt-5 mb-2">
+                        <case-management-status-fpl-history [eligibilityId]="dataItem.clientCaseEligibilityId"></case-management-status-fpl-history>
                     </div>
                 </ng-template>
                 <kendo-grid-column field="eligibilityStartDate" title="Status Start" [width]="100">
@@ -125,8 +53,7 @@
                 </kendo-grid-column>
                 <kendo-grid-column field="Option" title="Options" [width]="50" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
-                        <kendo-dropdownbutton [data]="actions" icon="more-vertical"
-                        title="More Options"
+                        <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More Options"
                             class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
                             aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 

@@ -1,0 +1,26 @@
+<div class="flex-col flex-col-6 mt-2 p-0">
+    <h4>Ramsell Info</h4>
+    <table>
+        <caption hidden> Ramsell Info</caption>
+        <tr hidden>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        <tbody>
+            <tr>
+                <td class="greycolor"> Most Recent Transfer</td>
+                <td> {{ramSellInfo.mostRecentTransferDate}}</td>
+            </tr>
+            <tr>
+                <td class="greycolor"> Card Requested</td>
+                <td> {{ramSellInfo.cardRequestStatus}}</td>
+            </tr>
+            <tr>
+                <td class="greycolor"> Date Card Last Sent</td>
+                <td> {{ramSellInfo.cardLastSentDate| date:'MM/dd/yyyy'}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
