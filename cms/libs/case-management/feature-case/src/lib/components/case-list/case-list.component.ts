@@ -92,7 +92,7 @@ public state!: State;
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
   caseStatusTypes:any=[];
-  caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
+  caseStatusCodes:any=["CANCELED","REVIEW","NEW","IN_ELIGIBLE","WAITLIST","PENDING"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
