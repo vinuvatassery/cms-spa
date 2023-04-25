@@ -109,6 +109,11 @@ public state!: State;
     this.selectedColumn = 'ALL';
     this.getGroupLovs() ;
   }
+
+  public get tabOptions(): typeof CaseScreenTab {
+    return CaseScreenTab; 
+  }
+
   private getGroupLovs() {
     this.groupLov$
     .subscribe({
