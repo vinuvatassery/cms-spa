@@ -143,7 +143,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loaderService.show();
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
     this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
-      if (resp) {
+      if (resp) {        
         this.loadContactInfo();
         this.loaderService.hide();
       }
@@ -454,9 +454,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private setAddressValidation() {
     const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
     const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
-    mailingAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+    mailingAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
     mailingAddressGroup.controls['address1'].updateValueAndValidity();
-    mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+$')]);
+    mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
     mailingAddressGroup.controls['address2'].updateValueAndValidity();
     mailingAddressGroup.controls['city'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+')]);
     mailingAddressGroup.controls['city'].updateValueAndValidity();
@@ -466,9 +466,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     mailingAddressGroup.controls['zip'].updateValueAndValidity();
 
     if ((homeAddressGroup.controls['homelessFlag']?.value ?? false) === false) {
-      homeAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+      homeAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['address1'].updateValueAndValidity();
-      homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+$')]);
+      homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['address2'].updateValueAndValidity();
       homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
       homeAddressGroup.controls['zip'].updateValueAndValidity();

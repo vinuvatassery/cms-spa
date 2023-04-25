@@ -68,6 +68,13 @@
         >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eligibilityEndDate}}</span
       >
       <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}%</span>
+
+      <span *ngIf="loadedClientHeader?.clientCaseEligibilityCerId"
+      class="title-client-info c-pointer on-hover-t-primary"
+      title="Open Client Eligibility Review"
+      (click)="createCerSession()"
+      >Open CER</span
+    >
     </div>
   </section>
 
@@ -83,7 +90,9 @@
      </kendo-popover>
 
   <!-- Banners -->
-  <case-management-case360-header-notifications></case-management-case360-header-notifications>
+  <case-management-case360-header-notifications 
+  *ngIf="loadedClientHeader?.clientCaseEligibilityCerId && loadedClientHeader?.caseStatus!=='DISENROLLED'"
+  ></case-management-case360-header-notifications>
 </div>
 
 <!-- Status Period Detail Modal -->

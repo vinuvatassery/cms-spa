@@ -135,12 +135,12 @@ export class NewCaseComponent implements OnInit  {
 
   onClientSelected(event: any) {
     if (event) {
-      if (event.caseStatus == CaseStatusCode.accept) {
+      if (event.caseStatus !== CaseStatusCode.incomplete) {
         this.router.navigate([`/case-management/cases/case360/${event.clientId}`]);
       }
       else {
         this.loaderService.show();
-        this.caseFacade.getSessionInfoByCaseId(event.clientCaseId).subscribe({
+        this.caseFacade.getSessionInfoByCaseEligibilityId(event.clientCaseEligibilityId).subscribe({
           next: (response: any) => {
             if (response) {
               this.loaderService.hide();
