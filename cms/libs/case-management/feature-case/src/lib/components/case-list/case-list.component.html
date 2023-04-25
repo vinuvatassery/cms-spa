@@ -129,7 +129,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120">
+    <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120" [hidden]="(selectedTab == 0)">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
         kendoPopoverAnchor
