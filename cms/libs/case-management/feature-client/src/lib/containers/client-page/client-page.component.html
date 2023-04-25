@@ -1,5 +1,5 @@
 <!-- Main Title Section -->
-<section class="app-l-mainTittle">
+<section class="app-l-mainTittle" *ngIf="!isCerForm">
 
   <h2>New Application - {{applicantName}}</h2>
   <p class="mt-2 mb-2">
@@ -9,10 +9,22 @@
   </p>
 </section>
 
+<section class="app-l-mainTittle" *ngIf="isCerForm">
+
+  <h2>Renew Eligibility - {{applicantName}}</h2>
+  <p class="mt-2 mb-2">
+    Please complete the CER by confirming whether there are any changes to the information below and making updates as needed. 
+    Once all updates, click "Start" to go through the eligibility checklist. All items must be addressed before starting the 
+    eligibility review.
+  </p>
+</section>
+
 <div class="client-data-block">
-  <h3>Applicant Info</h3>
+  <h3  *ngIf="!isCerForm">Applicant Info</h3>
+  <h3  *ngIf="isCerForm">Client Information</h3>
   <div class="block-section">
     <case-management-client-edit-view
+    [isCerForm]="isCerForm"
     (AppInfoChanged)="updatePageCount($event)"
     (AdjustAttrChanged)="updateAdjustmentAttrCount($event)"
     (ValidateFields)="setAppInfoForm($event)"
