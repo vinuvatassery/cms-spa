@@ -41,18 +41,6 @@ export class MedicalPaymentDetailComponent {
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() tabStatus:any;
-  // public copayPaymentForm: FormGroup = new FormGroup({
-  //   serviceProviderName: new FormControl('', []),
-  //   serviceDescription: new FormControl('', []),
-  //   paymentAmount: new FormControl('', []),
-  //   type: new FormControl('', []),
-  //   reversal: new FormControl('', []),
-  //   coverageStartDate: new FormControl('', []),
-  //   coverageEndDate: new FormControl('', []),
-  //   entryDate: new FormControl('', []),
-  //   checkMailDate: new FormControl('', []),
-  //   comment: new FormControl('', []),
-  // });
 
     // constructor
   /** Constructor **/
@@ -71,10 +59,9 @@ export class MedicalPaymentDetailComponent {
   
     /** Lifecycle hooks **/
  
-    savePaymentDetails(){
+    savePaymentDetailsClicked(){
       this.copayPaymentForm.markAllAsTouched();
-      this.copayPaymentForm.controls['serviceProviderName'].setValidators([  Validators.required,  ]);
-      this.copayPaymentForm.controls['serviceProviderName'].setValidators([  Validators.required,  ]);
+      this.copayPaymentForm.controls['serviceProviderName'].setValidators([  Validators.required,  ]); 
       this.copayPaymentForm.controls['paymentAmount'].setValidators([  Validators.required,  ]);
       this.copayPaymentForm.controls['type'].setValidators([  Validators.required,  ]);
       this.copayPaymentForm.controls['reversal'].setValidators([  Validators.required,  ]);
@@ -85,8 +72,7 @@ export class MedicalPaymentDetailComponent {
       this.copayPaymentForm.controls['checkMailDate'].setValidators([  Validators.required,  ]);
       this.copayPaymentForm.controls['comment'].setValidators([  Validators.required,  ]);
 
-      this.copayPaymentForm.controls['serviceProviderName'].updateValueAndValidity();
-      this.copayPaymentForm.controls['serviceProviderName'].updateValueAndValidity();
+      this.copayPaymentForm.controls['serviceProviderName'].updateValueAndValidity(); 
       this.copayPaymentForm.controls['paymentAmount'].updateValueAndValidity();
       this.copayPaymentForm.controls['type'].updateValueAndValidity();
       this.copayPaymentForm.controls['reversal'].updateValueAndValidity();
@@ -104,5 +90,29 @@ export class MedicalPaymentDetailComponent {
             } else{
               alert("fail")
             }
+    };
+    resetForm() {
+      this.copayPaymentForm.reset();
+      this.copayPaymentForm.updateValueAndValidity();
+    }
+  
+
+    loadCopayPaymentDetails(){
+    // this.bindValues(data);
+    }
+
+    bindValues(copayPaymentDetails: any) {
+      this.copayPaymentForm.controls['serviceProviderName'].setValue(copayPaymentDetails.serviceProviderName);
+      this.copayPaymentForm.controls['paymentAmount'].setValue(copayPaymentDetails.paymentAmount); 
+      this.copayPaymentForm.controls['type'].setValue(copayPaymentDetails.type); 
+      this.copayPaymentForm.controls['reversal'].setValue(copayPaymentDetails.reversal); 
+      this.copayPaymentForm.controls['coverageStartDate'].setValue(copayPaymentDetails.coverageStartDate != null ? new Date(copayPaymentDetails.coverageStartDate) : null);
+      this.copayPaymentForm.controls['coverageEndDate'].setValue(copayPaymentDetails.coverageEndDate != null ? new Date(copayPaymentDetails.coverageEndDate) : null  );
+      this.copayPaymentForm.controls['entryDate'].setValue(  copayPaymentDetails.entryDate != null ? new Date(copayPaymentDetails.entryDate) : null );
+      this.copayPaymentForm.controls['serviceDescription'].setValue(copayPaymentDetails.serviceDescription);
+      this.copayPaymentForm.controls['checkMailDate'].setValue(copayPaymentDetails.checkMailDate != null ? new Date(copayPaymentDetails.checkMailDate) : null);
+      this.copayPaymentForm.controls['comment'].setValue(copayPaymentDetails.comment);
+   
+  
     }
 }

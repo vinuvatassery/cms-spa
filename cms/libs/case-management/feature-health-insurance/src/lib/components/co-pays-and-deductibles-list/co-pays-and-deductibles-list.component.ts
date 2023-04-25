@@ -31,6 +31,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() tabStatus:any;
+  
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef) {
