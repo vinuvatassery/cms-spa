@@ -18,9 +18,12 @@ export class GroupDetailComponent implements OnInit {
   /** Input Properties **/
   @Input() currentGroup$!: Observable<any>;
   @Input() ddlGroups$!: Observable<any>;
+  @Input() showDeleteOption!: boolean;
   /** Output Properties **/
   @Output() updateGroup = new EventEmitter<any>();
   @Output() cancelGroupChange = new EventEmitter();
+  @Output() deleteGroupChange = new EventEmitter();
+  @Output() deleteGroup = new EventEmitter<any>();
   /** Public properties **/
   currentDate = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate());
   formUiStyle: UIFormStyle = new UIFormStyle();
@@ -68,6 +71,10 @@ export class GroupDetailComponent implements OnInit {
   /* Internal events */
   onCancelGroupChange() {
     this.cancelGroupChange.emit()
+  }
+
+  onDeleteGroupChange() {
+    this.deleteGroupChange.emit();
   }
 
   onUpdateGroup() {

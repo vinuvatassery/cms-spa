@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 /** Facades **/
-import { StatusPeriodFacade } from '@cms/case-management/domain';
+import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 @Component({
@@ -18,37 +18,39 @@ export class StatusPeriodComponent implements OnInit {
     @Output() loadStatusPeriodEvent  = new EventEmitter<any>();
   /** Public properties **/
   StatusPeriod$ = this.statusPeriodFacade.statusPeriod$;
-    public expandedDetailKeys: number[] = [1];
-    public sortValue = this.statusPeriodFacade.sortValue;
-    public sortType = this.statusPeriodFacade.sortType;
-    public pageSizes = this.statusPeriodFacade.gridPageSizes;
-    public gridSkipCount = this.statusPeriodFacade.skipCount;
-    public sort = this.statusPeriodFacade.sort;
-    public state!: State;
-    public formUiStyle : UIFormStyle = new UIFormStyle();
+  public expandedDetailKeys: number[] = [1];
+  public sortValue = this.statusPeriodFacade.sortValue;
+  public sortType = this.statusPeriodFacade.sortType;
+  public pageSizes = this.statusPeriodFacade.gridPageSizes;
+  public gridSkipCount = this.statusPeriodFacade.skipCount;
+  public sort = this.statusPeriodFacade.sort;
+  public state!: State;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
- 
+
   public actions = [
     {
-      buttonType:"btn-h-primary",
+      buttonType: "btn-h-primary",
       text: "Edit Doc",
       icon: "edit",
       click: (): void => {
-      //  this.isOpenDocAttachment = true
+        //  this.isOpenDocAttachment = true
       },
     },
-   
+
     {
-      buttonType:"btn-h-danger",
+      buttonType: "btn-h-danger",
       text: "Remove Doc",
       icon: "delete",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
+        //  this.onDeactivatePhoneNumberClicked()
       },
     },
   ];
   /** Constructor **/
-  constructor(private readonly statusPeriodFacade: StatusPeriodFacade) {}
+  constructor(
+    private readonly statusPeriodFacade: StatusPeriodFacade,
+    private caseFacade: CaseFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
