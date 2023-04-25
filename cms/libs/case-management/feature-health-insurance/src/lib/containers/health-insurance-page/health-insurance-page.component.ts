@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, StatusFlag, NavigationType } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, StatusFlag, NavigationType, YesNoFlag } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
@@ -30,11 +30,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   showTable: boolean = false;
   closeDeleteModal: boolean = false;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
+  medicalHealthPlans$ = this.insurancePolicyFacade.medicalHealthPlans$;
+  isInsuranceAvailable:boolean=false;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private healthInsuranceStatusSubscription !: Subscription;
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
@@ -57,6 +60,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.insuranceFlagFormChangeSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addHealthInsuranceStatusSubscription();
   }
 
   ngOnDestroy(): void {
@@ -153,7 +157,16 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     });
   }
   private saveAndContinue(){    
-    if (this.checkValidations()) {
+    if(this.insuranceFlagForm.controls['currentInsuranceFlag'].value ==StatusFlag.No){
+      this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);
+    }
+    else{
+      if(!this.isInsuranceAvailable)
+      {this.insurancePolicyFacade.showInsuranceRequiredSubject.next(true);}
+    }
+    if (this.checkValidations() && 
+    ((this.insuranceFlagForm.controls['currentInsuranceFlag'].value ==StatusFlag.Yes && this.isInsuranceAvailable)||
+    this.insuranceFlagForm.controls['currentInsuranceFlag'].value ==StatusFlag.No )) {
      this.save();
      return of(true);
     }
@@ -412,6 +425,19 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     });
   }
 
+  private addHealthInsuranceStatusSubscription():void{
+    this.healthInsuranceStatusSubscription = this.medicalHealthPlans$.subscribe((res)=>{
+      if(res.data.length>0){
+        this.isInsuranceAvailable = true;
+        if(this.insuranceFlagForm.controls['currentInsuranceFlag'].value =='Y' ){
+          this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);
+        }
+      }
+      else{
+        this.isInsuranceAvailable = false;
+      }
+    });
+  }
   checkValidations() {
     this.validateForm();
     this.ref.detectChanges();
