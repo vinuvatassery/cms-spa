@@ -12,12 +12,23 @@
 </div>
 
 <div class="block-section " *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_COPAY) || tabId === clientProfileTabs.HEALTH_INSURANCE_COPAY">
-  <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+  <case-management-co-pays-and-deductibles-list
+  [copayPaymentForm]="copayPaymentForm"
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId"
+  (loadCopayEvent)="loadCopayEventHandle($event)" 
+  ></case-management-co-pays-and-deductibles-list>
 </div>
 
 
 <div class="block-section " *ngIf="((tabId$ | async)=== clientProfileTabs.DENTAL_INSURANCE_COPAY) || tabId === clientProfileTabs.DENTAL_INSURANCE_COPAY">
-  <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+  <case-management-co-pays-and-deductibles-list
+  [copayPaymentForm]="copayPaymentForm"
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId"
+  (loadCopayEvent)="loadCopayEventHandle($event)" ></case-management-co-pays-and-deductibles-list>
 </div>
 
 

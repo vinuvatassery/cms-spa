@@ -1,6 +1,7 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2"> {{isHealthInsuranceTab ? 'Add a new medical payment':'Add a new dental payment'}} </p>
-    <form [formGroup]="medicalPaymentForm">
+    <p class="text-muted mb-2" *ngIf="tabStatus === 'hlt-ins-co-pay'"> {{isPaymentAddForm ? 'Add a new medical payment':'Edit or delete dental payment'}} </p>
+    <p class="text-muted mb-2" *ngIf="tabStatus === 'dnt-ins-co-pay'"> {{isPaymentAddForm ? 'Add a new dental payment':'Edit or delete dental payment'}} </p>
+    <form [formGroup]="copayPaymentForm">
         <div class="flex-row">
 
             <div class="flex-col">
@@ -9,7 +10,7 @@
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!medicalPaymentForm.controls['serviceProviderName'].valid">Service Provider Name
+                <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceProviderName'].valid">Service Provider Name
                     is required.</kendo-formerror>
             </div>
             <div class="flex-col">
@@ -20,7 +21,7 @@
                         [disabled]="true" [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!medicalPaymentForm.controls['serviceDescription'].valid">Service Description is
+                <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceDescription'].valid">Service Description is
                     required.</kendo-formerror>
 
 
@@ -35,7 +36,7 @@
                             </kendo-textbox>
 
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!medicalPaymentForm.controls['paymentAmount'].valid">Payment Amount is
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['paymentAmount'].valid">Payment Amount is
                             required.</kendo-formerror>
 
                     </div>
@@ -45,7 +46,7 @@
                                 [fillMode]="formUiStyle.dropDownFillMode">
                             </kendo-dropdownlist>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!medicalPaymentForm.controls['type'].valid">Type is
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['type'].valid">Type is
                             required.</kendo-formerror>
 
                     </div>
@@ -57,7 +58,7 @@
                         [fillMode]="formUiStyle.dropDownFillMode">
                     </kendo-dropdownlist>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!medicalPaymentForm.controls['reversal'].valid">Reversal is
+                <kendo-formerror *ngIf="!copayPaymentForm.controls['reversal'].valid">Reversal is
                     required.</kendo-formerror>
 
             </div>
@@ -70,7 +71,7 @@
                                 aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder="">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!medicalPaymentForm.controls['coverageStartDate'].valid">Coverage Start
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['coverageStartDate'].valid">Coverage Start
                             Date is required.</kendo-formerror>
 
                     </div>
@@ -81,7 +82,7 @@
                                 aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder="">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!medicalPaymentForm.controls['coverageStartDate'].valid">Coverage End
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['coverageStartDate'].valid">Coverage End
                             Date is required.</kendo-formerror>
 
 
@@ -97,7 +98,7 @@
                                 placeholder="">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!medicalPaymentForm.controls['entryDate'].valid">Entry Date is
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['entryDate'].valid">Entry Date is
                             required.</kendo-formerror>
 
                     </div>
@@ -108,7 +109,7 @@
                                 placeholder="">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!medicalPaymentForm.controls['checkMailDate'].valid">Check Mail Date is
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['checkMailDate'].valid">Check Mail Date is
                             required.</kendo-formerror>
 
                     </div>
@@ -120,7 +121,7 @@
                     <kendo-textarea formControlName="comment" aria-label="Comment"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textarea>
-                    <kendo-formerror *ngIf="!medicalPaymentForm.controls['comment'].valid">Comment is
+                    <kendo-formerror *ngIf="!copayPaymentForm.controls['comment'].valid">Comment is
                         required.</kendo-formerror>
 
                 </kendo-floatinglabel>

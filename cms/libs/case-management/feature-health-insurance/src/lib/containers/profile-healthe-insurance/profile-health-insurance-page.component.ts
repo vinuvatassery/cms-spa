@@ -30,6 +30,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   clientCaseEligibilityId!: any;
   clientCaseId!: any;
   healthInsuranceForm!: FormGroup;
+  copayPaymentForm!: FormGroup;
   tabId! : any
   clientId: any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
@@ -40,6 +41,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     this.routeChangeSubscription();
     this.loadQueryParams()
     this.buildForm();
+    this.buildCopayPaymentForm();
     //this.getQueryParam();
   }
 
@@ -112,6 +114,20 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       copyOfSummary: ['']
     });
 
+  }
+  private buildCopayPaymentForm() {
+    this.copayPaymentForm = this.formBuilder.group({
+          serviceProviderName: [''],
+    serviceDescription: [''],
+    paymentAmount: [''],
+    type: [''],
+    reversal: [''],
+    coverageStartDate: [''],
+    coverageEndDate: [''],
+    entryDate: [''],
+    checkMailDate: [''],
+    comment: [''],
+    });
   }
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
@@ -200,6 +216,11 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     };
     this.loadHealthInsuranceHandle(gridDataRefinerValue);
   }
+
+  loadCopayEventHandle(gridDataRefinerValue: any){
+
+  }
+
 }
 
 
