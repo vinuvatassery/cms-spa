@@ -124,6 +124,16 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   updateCurrentEligibility() {
     this.setUpdateEligibilityValidations();
     if (this.eligibilityPeriodForm.valid) {     
+      if (this.eligibilityPeriodsOverlapCheck(
+        new Date(this.currentEligibility.eligibilityStartDate),
+        this.eligibilityPeriodForm.controls['statusStartDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusStartDate'].value,
+        this.eligibilityPeriodForm.controls['statusEndDate'].value === "" ? null : this.eligibilityPeriodForm.controls['statusEndDate'].value)) {
+        this.clientEligibilityFacade.showHideSnackBar(
+          SnackBarNotificationType.WARNING,
+          'There cannot be two eligibility periods with overlapping date ranges.'
+        );
+        return;
+      }
         this.loaderService.show();
         let editEligibilityData = this.currentEligibility;
         editEligibilityData.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
@@ -197,7 +207,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   /** Private methods **/
   private getCurrentEligibility(){
     this.loaderService.show();
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.acceptedEligibility).subscribe(data=>{
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,((this.isEdit) ? EligibilityRequestType.clientEligibilityInfo :EligibilityRequestType.acceptedEligibility)).subscribe(data=>{
       this.currentEligibility = data;
       this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
       if(this.isEdit){
