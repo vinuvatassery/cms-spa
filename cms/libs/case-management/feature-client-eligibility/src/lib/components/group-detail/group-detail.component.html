@@ -1,7 +1,10 @@
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
+    <p class="text-muted mb-2" *ngIf="!showDeleteOption">
       Changing the group may affect the client’s benefits. Select a future start
       date to schedule the change.
+    </p>
+    <p  class="text-muted mb-2" *ngIf="showDeleteOption">
+      The new Group scheduled for the start date below. You may edit or delete this change.
     </p>
     <div class="flex-row" [formGroup]="groupForm" *ngIf="currentGroup$ | async">
       <div class="flex-col">
@@ -33,6 +36,10 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
+      <button *ngIf="showDeleteOption" kendoButton aria-label="delete client’s benefits" [primary]="true" look="outline"
+          (click)="onDeleteGroupChange()">
+          Delete
+        </button>
       <div class="justify-content-end">
         <button kendoButton aria-label="cancel client’s benefits" [primary]="true" look="outline"
           (click)="onCancelGroupChange()">
