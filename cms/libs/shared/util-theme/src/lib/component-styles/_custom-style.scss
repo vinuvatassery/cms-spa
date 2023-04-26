@@ -45,8 +45,13 @@
   }
 }
 .client-header-wrapper-stickey{
-  z-index: 6;
-  background: $white;
+  z-index: 8;
+  background: $white; 
+  position: relative;
+  box-shadow: inset 0px 4px 12px -6px rgba($black, 0.2);
+  .k-breadcrumb{
+    background: transparent;
+  }
 }
 /* Case Tabs*/
 .client-tab-section {
@@ -70,9 +75,9 @@
   }
 }
 .client-profile-outlet{
-  max-height: calc(100vh - 280px);
+  max-height: calc(100vh - 276px);
   overflow-y: auto;
-  margin-top: 4px;
+  // margin-top: 4px;
 }
 .maintitle_withicon {
   span {
@@ -669,4 +674,12 @@
 
 .epdropdown{
   min-width: 120px;
+}
+
+.k-menu-item {
+  .k-menu-link{
+    > div{
+      width: 100%;
+    }
+  }
 }
