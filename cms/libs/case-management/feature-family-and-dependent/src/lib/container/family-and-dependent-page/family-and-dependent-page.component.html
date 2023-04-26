@@ -134,7 +134,7 @@
           >
           </span>
         </div>
-        <div class="flex-col" *ngIf="isFamilyGridDisplay">
+        <div class="flex-col" *ngIf="!isFamilyGridDisplay">
           <case-management-family-and-dependent-list       
           [dependents$]="dependentList$"
           [dependentSearch$]="dependentSearch$"
