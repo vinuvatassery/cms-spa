@@ -3,7 +3,7 @@
         <div class="flex-col flex-space-bw align-items-center mb-1">
             <h2 class="title-md mb-0 text-bold">
                 Income
-                <span *ngIf="historyClientCaseEligibilityId != clientCaseEligibilityId"
+                <span *ngIf="historyStatus"
                     class="app-c-badge badge-warn-light ml-1">
                     <span class="material-icons" aria-label="income Information" aria-hidden="true">info</span>
                     Viewing data from previous EP</span>
@@ -12,8 +12,8 @@
                 <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
                 <div class="fmly-epdorpdown">
                     <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData$ | async"
-                        [caseEligibilityId]="historyClientCaseEligibilityId"
-                        (onEligibilityPeriodChange)="onPeriodSelectionChange($event)">
+                        [caseEligibilityId]="historyClientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
+                        (onEligibilityPeriodChange)="onPeriodSelectionChange($event)" (updateHistoryStatus)="updateHistoryStatus($event)">
                     </case-management-case-eligibility-periods>
                 </div>
             </div>
