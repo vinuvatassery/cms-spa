@@ -318,18 +318,17 @@ export class PharmaciesListComponent implements OnInit{
   updateAndDeactivatePharmacy(data: any) {
  
     if (data && data.isNewAdded) {
-      this.drugPharmacyFacade
-        .addDrugPharmacy(
-          this.clientId,
-          data.newPharmacy.vendorId,
-          PriorityCode.Primary,
-          this.isShowHistoricalData
-        )
-        .then((isSucceed: any) => {
+      this.drugPharmacyFacade.deactivePharmacies(
+        this.pharmacyId,
+        this.changePharmacyObj,
+        this.isShowHistoricalData
+      ).then((isSucceed: any) => {
           if (isSucceed) {
-            this.drugPharmacyFacade.deactivePharmacies(
-              this.pharmacyId,
-              this.changePharmacyObj,
+            this.drugPharmacyFacade
+            .addDrugPharmacy(
+              this.clientId,
+              data.newPharmacy.vendorId,
+              PriorityCode.Primary,
               this.isShowHistoricalData
             );
           }
@@ -380,16 +379,15 @@ export class PharmaciesListComponent implements OnInit{
     if (data !== null) {
       this.removeButtonEmitted = true;
       if (data && data.isNewAdded) {
-        this.drugPharmacyFacade
-          .addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, PriorityCode.Primary,
-          this.isShowHistoricalData)
-          .then((isSuceed) => {
+        this.drugPharmacyFacade.removeClientPharmacy(
+          this.clientId ?? 0,
+          this.pharmacyId,
+          this.isShowHistoricalData
+        ).then((isSuceed) => {
             if (isSuceed) {
-              this.drugPharmacyFacade.removeClientPharmacy(
-                this.clientId ?? 0,
-                this.pharmacyId,
-                this.isShowHistoricalData
-              );
+              this.drugPharmacyFacade
+              .addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, PriorityCode.Primary,
+              this.isShowHistoricalData);
             }
           });
       } else if (data && !data.isNewAdded) {
@@ -400,16 +398,15 @@ export class PharmaciesListComponent implements OnInit{
             PriorityCode: PriorityCode.Primary,
           },
         ];
-        this.drugPharmacyFacade
-          .updateDrugPharamcyPriority(this.clientId, updatedPharmacy,
-            this.isShowHistoricalData)
-          .then((isSucceed: any) => {
+        this.drugPharmacyFacade.removeClientPharmacy(
+          this.clientId ?? 0,
+          this.pharmacyId,
+          this.isShowHistoricalData
+        ).then((isSucceed: any) => {
             if (isSucceed) {
-              this.drugPharmacyFacade.removeClientPharmacy(
-                this.clientId ?? 0,
-                this.pharmacyId,
-                this.isShowHistoricalData
-              );
+              this.drugPharmacyFacade
+              .updateDrugPharamcyPriority(this.clientId, updatedPharmacy,
+                this.isShowHistoricalData);
             }
           });
       }
@@ -545,4 +542,7 @@ export class PharmaciesListComponent implements OnInit{
   handleCloseChangePriorityClikced() {
     this.isTriggerPriorityPopup = false;
   }
+  public rowClass = (args:any) => ({
+    "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
+  });
 }
