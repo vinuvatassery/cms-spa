@@ -58,6 +58,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
     noIncomeNote: new FormControl('', []),
   });
+  isCerForm = false;
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,

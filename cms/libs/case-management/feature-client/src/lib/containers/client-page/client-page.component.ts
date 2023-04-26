@@ -44,8 +44,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   sessionId!: string;
   message!: string;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  isCerForm = false
-  prevClientCaseEligibilityId! : string
+  isCerForm = false;
+  prevClientCaseEligibilityId! : string;
   /** Constructor **/
   constructor(private workFlowFacade: WorkflowFacade,
     private clientFacade: ClientFacade,

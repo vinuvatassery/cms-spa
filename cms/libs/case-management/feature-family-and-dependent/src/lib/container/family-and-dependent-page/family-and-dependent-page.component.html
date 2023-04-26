@@ -2,8 +2,122 @@
   <h3>Family & Dependents</h3>
   <section>
     <div class="block-section pt-1">
+      <div class="flex-row" *ngIf="isCerForm">
+        <div class="flex-col">
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend"><h5>Have their family size or family members changed?</h5></legend>
+
+          <div class="component-list-h comp-list-horizontal">
+            <span class="app-radiobtnwidtext-wrapper">
+              <input type="radio" kendoRadioButton   aria-labelledby="havetheyhavefamilymemberYes"
+                id="havetheyhavefamilymemberYes"
+                class="form-control" 
+                value="Y"
+                
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="havetheyhavefamilymemberYes"
+                text="Yes"
+              ></kendo-label>
+            </span>
+            <span class="app-radiobtnwidtext-wrapper">
+              <input
+                type="radio"
+                kendoRadioButton
+                aria-labelledby="havetheyhavefamilymemberNo" 
+                id="havetheyhavefamilymemberNo"
+                value="N" 
+                
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="havetheyhavefamilymemberNo"
+                text="No"
+              ></kendo-label>
+            </span>
+          </div>
+          </fieldset> 
+        </div>
+        <div class="flex-col">
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend"><h5>Is “Celine Dion (Spouse)” still in their family?</h5></legend>
+
+          <div class="component-list-h comp-list-horizontal">
+            <span class="app-radiobtnwidtext-wrapper">
+              <input type="radio" kendoRadioButton   aria-labelledby="“CelineDionYes"
+                id="“CelineDionYes"
+                class="form-control" 
+                value="Y"
+                
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="“CelineDionYes"
+                text="Yes"
+              ></kendo-label>
+            </span>
+            <span class="app-radiobtnwidtext-wrapper">
+              <input
+                type="radio"
+                kendoRadioButton
+                aria-labelledby="“CelineDionNo" 
+                id="“CelineDionNo"
+                value="N" 
+                
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="“CelineDionNo"
+                text="No"
+              ></kendo-label>
+            </span>
+          </div>
+          </fieldset> 
+        </div>
+
+        <div class="flex-col">
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend"><h5>Is “Frank Ocean (Dependent)" still in their family?</h5></legend>
+
+          <div class="component-list-h comp-list-horizontal">
+            <span class="app-radiobtnwidtext-wrapper">
+              <input type="radio" kendoRadioButton   aria-labelledby="“CelineDionYes"
+                id="“CelineDionYes"
+                class="form-control" 
+                value="Y"
+                
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="“CelineDionYes"
+                text="Yes"
+              ></kendo-label>
+            </span>
+            <span class="app-radiobtnwidtext-wrapper">
+              <input
+                type="radio"
+                kendoRadioButton
+                aria-labelledby="“CelineDionNo" 
+                id="“CelineDionNo"
+                value="N" 
+                
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="“CelineDionNo"
+                text="No"
+              ></kendo-label>
+            </span>
+          </div>
+          </fieldset> 
+        </div>
+        </div>
       <div class="flex-row">
-        <div class="flex-col mb-1">
+        <div class="flex-col mb-2" *ngIf="isCerForm">
+        <h5 >Add new family members:</h5>
+      </div>
+        <div class="flex-col mb-1" *ngIf="!isCerForm">
           <span class="app-checkboxwidtext-wrapper">  
           <input
             type="checkbox"
@@ -20,7 +134,7 @@
           >
           </span>
         </div>
-        <div class="flex-col" *ngIf="!isFamilyGridDisplay">
+        <div class="flex-col" *ngIf="isFamilyGridDisplay">
           <case-management-family-and-dependent-list       
           [dependents$]="dependentList$"
           [dependentSearch$]="dependentSearch$"

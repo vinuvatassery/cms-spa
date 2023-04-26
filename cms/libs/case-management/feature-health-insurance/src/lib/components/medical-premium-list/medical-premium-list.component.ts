@@ -39,6 +39,7 @@ export class MedicalPremiumListComponent implements OnInit {
   carrierContactInfo:any;
   insurancePlanName:string='';
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  isCerForm = false;
   showInsuranceRequired = this.healthInsurancePolicyFacade.showInsuranceRequired$;
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;

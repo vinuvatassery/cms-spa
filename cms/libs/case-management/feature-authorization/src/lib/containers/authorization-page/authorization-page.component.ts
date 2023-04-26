@@ -8,4 +8,5 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class AuthorizationPageComponent {
   btnDisabled = false; 
+  isCerForm = false;
 }

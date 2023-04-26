@@ -18,8 +18,7 @@
     border-color: $app-primary;
   }
   &.k-primary,
-  &.k-button-solid-primary
-   {
+  &.k-button-solid-primary {
     background: $app-primary;
     background-color: $app-primary;
     color: $white;
@@ -100,7 +99,15 @@
     font-family: $font-family-medium;
     padding: $size-0;
     height: auto;
-
+    .material-icons {
+      margin-right: 4px;
+    }
+    &.k-button-flat-success {
+      color: material-color($hive-success-palette, 500) !important;
+    }
+    &.k-button-flat-error {
+      color: material-color($hive-error-palette, 400) !important;
+    }
     &.no-ul {
       text-decoration: none;
     }
@@ -183,7 +190,6 @@
       color: $black-30 !important;
     }
   }
-
 
   &.k-split-button {
     padding: $size-0;
@@ -314,11 +320,9 @@
     &.k-disabled {
       background: material-color($hive-neutral-palette, 50) !important;
       color: $black-30 !important;
-      .k-icon{
-      color: $black-30 !important;
-
+      .k-icon {
+        color: $black-30 !important;
       }
-      
     }
     &.k-split-button-arrow {
       padding: $size-xl;
@@ -335,13 +339,11 @@
       &.k-disabled {
         background: material-color($hive-neutral-palette, 50) !important;
         color: $black-30 !important;
-        .k-icon{
-        color: $black-30 !important; 
-        } 
+        .k-icon {
+          color: $black-30 !important;
+        }
       }
     }
-
-
   }
 }
 
@@ -361,24 +363,22 @@
     }
   }
 
-
-    .k-button-solid-base{
-      transition: .2s;
-      &:hover{
+  .k-button-solid-base {
+    transition: 0.2s;
+    &:hover {
       background: material-color($hive-primary-palette, 800) !important;
       background-color: material-color($hive-primary-palette, 800) !important;
       color: $white !important;
-     
-    } 
+    }
   }
 
   .k-split-button-arrow {
-    transition: .2s;
-   &:hover{
-    background: material-color($hive-primary-palette, 800) !important;
-    background-color: material-color($hive-primary-palette, 800) !important;
-    color: $white !important;
-   }
+    transition: 0.2s;
+    &:hover {
+      background: material-color($hive-primary-palette, 800) !important;
+      background-color: material-color($hive-primary-palette, 800) !important;
+      color: $white !important;
+    }
   }
 }
 
@@ -409,7 +409,6 @@
 //    }
 
 //  }
-
 
 .k-actions {
   .k-button {
@@ -445,7 +444,7 @@
       .k-button {
         width: 100%;
         text-transform: capitalize;
-        justify-content: flex-start; 
+        justify-content: flex-start;
         .k-menu-group {
           padding: 8px;
         }

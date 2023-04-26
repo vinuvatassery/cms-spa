@@ -32,6 +32,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   medicalHealthPlans$ = this.insurancePolicyFacade.medicalHealthPlans$;
   isInsuranceAvailable:boolean=false;
+  isCerForm = false;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
