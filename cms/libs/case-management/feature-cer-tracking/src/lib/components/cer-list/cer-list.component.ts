@@ -12,7 +12,7 @@ import {
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, FilterService } from '@progress/kendo-angular-grid';
 @Component({
@@ -93,7 +93,8 @@ export class CerListComponent implements OnInit, OnChanges {
     homeAddress:"Home Address",
     ssn:"SSN",
     insurancePolicyId:"Insurance Policy Id",
-    assignedCw:"Assigned to"
+    assignedCw:"Assigned to",
+    disEnrollmentDate:"Disenrollment Date"
   }
 
   public gridActions = [
@@ -149,7 +150,8 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();
   }
 
-  public dataStateChange(stateData: any): void {        
+  public dataStateChange(stateData: any): void {       
+    debugger 
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -178,7 +180,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];    
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
-    
+   
     this.loadCerTrackingList();
   }
   pageselectionchange(data: any) {
@@ -235,8 +237,8 @@ export class CerListComponent implements OnInit, OnChanges {
       });
   }
 
-  gridDataHandle() {
-    this.cerTrackingData$.subscribe((data: any) => {
+  gridDataHandle() {   
+    this.cerTrackingData$.subscribe((data: any) => {    
       this.gridCERDataSubject.next(data);
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
@@ -285,10 +287,12 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
+    debugger
     this.gridFilter = filter;
   }
 
   groupFilterChange(value: any, filterService: FilterService): void {
+    debugger
     filterService.filter({
         filters: [{
           field: "group",
@@ -299,6 +303,7 @@ export class CerListComponent implements OnInit, OnChanges {
     });
 }
 dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+  debugger
   filterService.filter({
       filters: [{
         field: field,
