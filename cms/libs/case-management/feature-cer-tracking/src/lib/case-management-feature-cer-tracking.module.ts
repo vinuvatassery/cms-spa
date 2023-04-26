@@ -7,6 +7,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 import { CaseManagementFeatureCerTrackingRoutingModule } from './case-management-feature-cer-tracking-routing.module';
+import { CaseManagementFeatureClientEligibilityModule } from '@cms/case-management/feature-client-eligibility';
 /** Components  **/
 import { CerTrackingPageComponent } from './containers/cer-tracking-page/cer-tracking-page.component';
 import { CerListComponent } from './components/cer-list/cer-list.component';
@@ -17,6 +18,9 @@ import { CerCountsComponent } from './components/cer-counts/cer-counts.component
 import { StatusPeriodComponent } from './components/status-period/status-period.component';
 import { ProfileCerTrackingPageComponent } from './containers/profile-cer-tracking-page/profile-cer-tracking-page.component';
 import { AppHistoryListComponent } from './components/application-history/application-history-list.component';
+import { StatusGroupHistoryComponent } from './components/status-group-history/status-group-history.component';
+import { StatusFplHistoryComponent } from './components/status-fpl-history/status-fpl-history.component';
+import { StatusRamsellInfoComponent } from './components/status-ramsell-info/status-ramsell-info.component';
 
 @NgModule({
   imports: [
@@ -25,6 +29,7 @@ import { AppHistoryListComponent } from './components/application-history/applic
     CaseManagementDomainModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
+    CaseManagementFeatureClientEligibilityModule,
     SystemConfigFeatureUserManagementModule,
   ],
   declarations: [
@@ -36,7 +41,10 @@ import { AppHistoryListComponent } from './components/application-history/applic
     CerCountsComponent,
     StatusPeriodComponent,
     ProfileCerTrackingPageComponent,
-    AppHistoryListComponent
+    AppHistoryListComponent,
+    StatusGroupHistoryComponent,
+    StatusFplHistoryComponent,
+    StatusRamsellInfoComponent,
   ],
   exports: [
     CerTrackingPageComponent,
@@ -47,7 +55,7 @@ import { AppHistoryListComponent } from './components/application-history/applic
     CerCountsComponent,
     StatusPeriodComponent,
     ProfileCerTrackingPageComponent,
-    AppHistoryListComponent
+    AppHistoryListComponent,
   ],
 })
 export class CaseManagementFeatureCerTrackingModule {}

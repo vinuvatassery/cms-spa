@@ -32,9 +32,9 @@ export class CaseDataService {
 
   }
 
-  loadClientProfile(clientId: number) {
+  loadClientProfile(clientCaseEligibilityId: string) {
     return this.http.get<ClientProfileCase[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/profile`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientCaseEligibilityId}/profile`
     );
 
   }
@@ -63,6 +63,10 @@ export class CaseDataService {
 
   updateEligibilityGroup(group : any){
     return this.http.put<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${group.eligibilityId}/groups`, group);
+  }
+
+  deleteEligibilityGroup(groupId: string) {
+    return this.http.delete<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/groups/${groupId}`);
   }
 
   loadCaseHistory(): Observable<CaseHistory[]> {
@@ -394,9 +398,9 @@ export class CaseDataService {
       `/case-management/clients/cases/${clientCaseId}/status`
     );
   }
-  getSessionInfoByCaseId(clientCaseId: any) {
+  getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseId}/SessionSearch`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseEligibilityId}/SessionSearch`);
   }
 
   loadEligibilityPeriods(clientCaseId: string){

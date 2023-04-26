@@ -1,8 +1,15 @@
 <div class="client-data-block">
-  <h3>Prescription Drugs</h3>
+  <h3>{{isCerForm ? 'Pharmacies' : 'Prescription Drugs'}}</h3>
   <form [formGroup]="prescriptionDrugForm">
   <section>
-   
+    <div class="flex-col mb-1" *ngIf="isCerForm">
+      <span>
+        <input class="adjust-attr" type="checkbox" kendoCheckBox aria-labelledby="Clientisnotusinganypharmacies"
+          name="Client is not using any pharmacies" id="Clientisnotusinganypharmacies" />
+        <label class="k-checkbox-label" for="Clientisnotusinganypharmacies">Client is not using any
+          pharmacies</label>
+      </span>
+    </div>
       <fieldset class="k-form-fieldset">
         <legend class="k-form-legend"> <h5 class="mt-1">
           Are they currently taking prescription drugs for HIV (anti-retrovirals)?
@@ -60,7 +67,7 @@
       </div>
       </fieldset>
   </section>
-  <section *ngIf="prescriptionDrugForm.controls['prescriptionDrugsForHivCode'].value?.toUpperCase() == 'YES'">
+  <section *ngIf="showPharmacySection | async">
  
     <fieldset class="k-form-fieldset">
       <legend class="k-form-legend">
@@ -125,8 +132,8 @@
 </form>
 
   <!-- Pharmacies -->
-  <section *ngIf="prescriptionDrugForm.controls['prescriptionDrugsForHivCode'].value?.toUpperCase() == 'YES'">
-    <h5 class="text-capital mt-3">Add Pharmacies</h5>
+  <section *ngIf="showPharmacySection | async">
+    <h5 class="text-capital mt-3">{{isCerForm ? 'Add, edit, or remove pharmacies as needed:' : 'Add Pharmacies'}} </h5>
     <case-management-pharmacy-list
     [clientpharmacies$]="clientpharmacies$"
     [pharmacysearchResult$]="pharmacysearchResult$"
