@@ -46,6 +46,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
   isCerForm = false;
+  prevClientCaseEligibilityId!: string;
 
   /** Constructor **/
   constructor(
@@ -91,7 +92,11 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     .subscribe((session: any) => {
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
      this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId
-     this.clientId = JSON.parse(session.sessionData).clientId
+     this.clientId = JSON.parse(session.sessionData).clientId;
+     this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
+     if(this.prevClientCaseEligibilityId) {
+        this.isCerForm =  true
+     }
      this.loadDependentsStatus();
     });
   }

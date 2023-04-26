@@ -12,7 +12,6 @@ import { FamilyAndDependentDetailComponent } from './components/family-and-depen
 import { RemoveFamilyAndDependentConfirmationComponent } from './components/remove-family-and-dependent-confirmation/remove-family-and-dependent-confirmation.component';
 import { FamilyAndDependentPageComponent } from './container/family-and-dependent-page/family-and-dependent-page.component';
 import { ProfileFamilyAndDependentPageComponent } from './container/profile-family-and -dependent-page/profile-family-and-dependent-page.component';
-import { FamilyDepenedentCerComponent } from './components/family-depenedent-cer/family-depenedent-cer.component';
 
 @NgModule({
   imports: [
@@ -28,7 +27,6 @@ import { FamilyDepenedentCerComponent } from './components/family-depenedent-cer
     RemoveFamilyAndDependentConfirmationComponent,
     FamilyAndDependentPageComponent,
     ProfileFamilyAndDependentPageComponent,
-    FamilyDepenedentCerComponent,
   ],
   exports: [
     FamilyAndDependentListComponent,

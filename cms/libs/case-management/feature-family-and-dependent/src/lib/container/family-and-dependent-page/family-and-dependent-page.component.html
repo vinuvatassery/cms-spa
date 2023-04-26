@@ -13,7 +13,7 @@
                 id="havetheyhavefamilymemberYes"
                 class="form-control" 
                 value="Y"
-                
+                name="havetheyhavefamilymember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -28,7 +28,7 @@
                 aria-labelledby="havetheyhavefamilymemberNo" 
                 id="havetheyhavefamilymemberNo"
                 value="N" 
-                
+                name="havetheyhavefamilymember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -39,21 +39,21 @@
           </div>
           </fieldset> 
         </div>
-        <div class="flex-col">
+        <div class="flex-col" *ngFor="let dependent of (dependentList$ | async)?.items; let i=index">
           <fieldset class="k-form-fieldset">
-            <legend class="k-form-legend"><h5>Is “Celine Dion (Spouse)” still in their family?</h5></legend>
+            <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
 
           <div class="component-list-h comp-list-horizontal">
             <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton   aria-labelledby="“CelineDionYes"
-                id="“CelineDionYes"
+              <input type="radio" kendoRadioButton   aria-labelledby="dependent"
+                id="dependent{{i}}y"
                 class="form-control" 
                 value="Y"
-                
+                name="dependent_{{i}}"
               />
               <kendo-label
                 class="k-radio-label"
-                for="“CelineDionYes"
+                for="dependent{{i}}y"
                 text="Yes"
               ></kendo-label>
             </span>
@@ -61,36 +61,35 @@
               <input
                 type="radio"
                 kendoRadioButton
-                aria-labelledby="“CelineDionNo" 
-                id="“CelineDionNo"
+                aria-labelledby="dependent" 
+                id="dependent{{i}}n"
                 value="N" 
-                
+                name="dependent_{{i}}"
               />
               <kendo-label
                 class="k-radio-label"
-                for="“CelineDionNo"
+                for="dependent{{i}}n"
                 text="No"
               ></kendo-label>
             </span>
           </div>
           </fieldset> 
         </div>
-
         <div class="flex-col">
           <fieldset class="k-form-fieldset">
-            <legend class="k-form-legend"><h5>Is “Frank Ocean (Dependent)" still in their family?</h5></legend>
+            <legend class="k-form-legend"><h5>Are there additionally people in their family?</h5></legend>
 
           <div class="component-list-h comp-list-horizontal">
             <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton   aria-labelledby="“CelineDionYes"
-                id="“CelineDionYes"
+              <input type="radio" kendoRadioButton   aria-labelledby="havetheyhaveadditionalfamilymemberYes"
+                id="havetheyhaveadditionalfamilymemberYes"
                 class="form-control" 
                 value="Y"
-                
+                name="havetheyhaveadditionalfamilymember"
               />
               <kendo-label
                 class="k-radio-label"
-                for="“CelineDionYes"
+                for="havetheyhaveadditionalfamilymemberYes"
                 text="Yes"
               ></kendo-label>
             </span>
@@ -98,21 +97,21 @@
               <input
                 type="radio"
                 kendoRadioButton
-                aria-labelledby="“CelineDionNo" 
-                id="“CelineDionNo"
+                aria-labelledby="havetheyhaveadditionalfamilymemberNo" 
+                id="havetheyhaveadditionalfamilymemberNo"
                 value="N" 
-                
+                name="havetheyhaveadditionalfamilymember"
               />
               <kendo-label
                 class="k-radio-label"
-                for="“CelineDionNo"
+                for="havetheyhaveadditionalfamilymemberNo"
                 text="No"
               ></kendo-label>
             </span>
           </div>
           </fieldset> 
         </div>
-        </div>
+      </div>
       <div class="flex-row">
         <div class="flex-col mb-2" *ngIf="isCerForm">
         <h5 >Add new family members:</h5>
@@ -133,134 +132,6 @@
             >Client does not have any household members or dependents</label
           >
           </span>
-        </div>
-        <div>
-          <fieldset class="k-form-fieldset">  
-            <div class="flex-row mt-2">
-              <div class="flex-col mat-split-list mt-2">
-                <legend class="k-form-legend"> <h5 class="text-capital">Have their family size or family members are changed?</h5></legend> 
-              </div>
-            </div>
-              <div class="flex-row ml-1"> 
-                <kendo-formfield>
-                  <span class="app-radiobtnwidtext-wrapper">
-                    <input
-                      type="radio"
-                      kendoRadioButton
-                      name="familyChange" 
-                      id="familyChangeYes" 
-                      class="form-control" 
-                      aria-labelledby="familyChangeYes"
-                      formControlName="familyChange"
-                      value="YES"
-                    />
-                    <kendo-label class="k-radio-label" text="Yes" for="familyChangeYes"> &nbsp;</kendo-label>
-                  </span>
-                  <span class="app-radiobtnwidtext-wrapper">
-                    <input
-                      type="radio"
-                      kendoRadioButton
-                      name="familyChange" 
-                      id="temporary" 
-                      aria-labelledby="familyChangeNo"
-                      class="form-control" 
-                      formControlName="familyChange"
-                      value="NO"
-                    />
-                    <kendo-label
-                      class="k-radio-label"
-                      text="No"
-                      for="familyChangeNo"
-                    ></kendo-label>
-                  </span>
-                  <kendo-formerror>Have their family size or family members are changed is required</kendo-formerror>
-              </kendo-formfield>
-            </div>
-          </fieldset>
-          <fieldset class="k-form-fieldset">  
-            <div class="flex-row mt-2">
-              <div class="flex-col mat-split-list mt-2">
-                <legend class="k-form-legend"> <h5 class="text-capital">Is still x in their family?</h5></legend> 
-              </div>
-            </div>
-              <div class="flex-row ml-1"> 
-                <kendo-formfield>
-                  <span class="app-radiobtnwidtext-wrapper">
-                    <input
-                      type="radio"
-                      kendoRadioButton
-                      name="familyChange" 
-                      id="familyChangeYes" 
-                      class="form-control" 
-                      aria-labelledby="familyChangeYes"
-                      formControlName="familyChange"
-                      value="YES"
-                    />
-                    <kendo-label class="k-radio-label" text="Yes" for="familyChangeYes"> &nbsp;</kendo-label>
-                  </span>
-                  <span class="app-radiobtnwidtext-wrapper">
-                    <input
-                      type="radio"
-                      kendoRadioButton
-                      name="familyChange" 
-                      id="temporary" 
-                      aria-labelledby="familyChangeNo"
-                      class="form-control" 
-                      formControlName="familyChange"
-                      value="NO"
-                    />
-                    <kendo-label
-                      class="k-radio-label"
-                      text="No"
-                      for="familyChangeNo"
-                    ></kendo-label>
-                  </span>
-                  <kendo-formerror>Have their family size or family members are changed is required</kendo-formerror>
-              </kendo-formfield>
-            </div>
-          </fieldset>
-          <fieldset class="k-form-fieldset">
-            <div class="flex-row mt-2">
-              <div class="flex-col mat-split-list mt-2">
-                <legend class="k-form-legend"> <h5 class="text-capital">Are there additionally people in their family?</h5></legend> 
-              </div>
-            </div>
-              <div class="flex-row ml-1"> 
-                <kendo-formfield>
-                  <span class="app-radiobtnwidtext-wrapper">
-                    <input
-                      type="radio"
-                      kendoRadioButton
-                      name="familyChange" 
-                      id="familyChangeYes" 
-                      class="form-control" 
-                      aria-labelledby="familyChangeYes"
-                      formControlName="familyChange"
-                      value="YES"
-                    />
-                    <kendo-label class="k-radio-label" text="Yes" for="familyChangeYes"> &nbsp;</kendo-label>
-                  </span>
-                  <span class="app-radiobtnwidtext-wrapper">
-                    <input
-                      type="radio"
-                      kendoRadioButton
-                      name="familyChange" 
-                      id="temporary" 
-                      aria-labelledby="familyChangeNo"
-                      class="form-control" 
-                      formControlName="familyChange"
-                      value="NO"
-                    />
-                    <kendo-label
-                      class="k-radio-label"
-                      text="No"
-                      for="familyChangeNo"
-                    ></kendo-label>
-                  </span>
-                  <kendo-formerror>Have their family size or family members are changed is required</kendo-formerror>
-              </kendo-formfield>
-            </div>
-          </fieldset>
         </div>
         <div class="flex-col" *ngIf="!isFamilyGridDisplay">
           <case-management-family-and-dependent-list       
