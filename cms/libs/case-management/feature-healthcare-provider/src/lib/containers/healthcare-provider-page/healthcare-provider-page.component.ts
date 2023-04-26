@@ -36,6 +36,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   sessionId! : string;
   providersStatus!: StatusFlag;
   showProvidervalidationbox! : boolean;
+  isCerForm = false;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;

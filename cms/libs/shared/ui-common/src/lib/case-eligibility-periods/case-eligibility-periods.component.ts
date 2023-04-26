@@ -11,6 +11,7 @@ export class CaseEligibilityPeriodsComponent {
   eligibilityPeriodsList: any = [];
   selectedValue: any = {};
 
+  @Input() historyClientCaseEligibilityId: string = "";
   private caseEligibilityPeriodsData: any = [];
   @Input()
   get eligibilityPeriodsData(): any {
@@ -33,7 +34,7 @@ export class CaseEligibilityPeriodsComponent {
   }
 
   @Output() onEligibilityPeriodChange = new EventEmitter<any>();
- 
+  @Output() updateHistoryStatus = new EventEmitter<boolean>();
 
   setDropdownValues() {
     this.eligibilityPeriodsList = [];
@@ -57,6 +58,21 @@ export class CaseEligibilityPeriodsComponent {
   onPeriodChange(value: any) {
     this.selectedValue = value;
     this.onEligibilityPeriodChange.emit(this.selectedValue);
+    if (!!this.historyClientCaseEligibilityId) {
+      this.checkHistoryStatus();
+    }
+  }
+
+  checkHistoryStatus() {
+    let historyData = this.eligibilityPeriodsData.filter((x: any) => x.clientCaseEligibilityId == this.historyClientCaseEligibilityId);
+    let selectedData = this.eligibilityPeriodsData.filter((x: any) => x.clientCaseEligibilityId == this.selectedValue.id);
+    if (historyData[0].eligibilityStartDate == selectedData[0].eligibilityStartDate
+      && historyData[0].eligibilityEndDate == selectedData[0].eligibilityEndDate) {
+      this.updateHistoryStatus.emit(false);
+    }
+    else {
+      this.updateHistoryStatus.emit(true);
+    }
   }
 
 }

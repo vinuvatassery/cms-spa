@@ -26,11 +26,11 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   private showConfirmationPopupSubscription !: Subscription; public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
-
+  isCerForm = false;
   clientCaseId: any;
   clientId: any;
   clientCaseStatusData: any = {};
-
+  prevClientCaseEligibilityId! : string;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
   openedSaveLater = false;
@@ -195,6 +195,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       .subscribe((session: any) => {
         this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
         this.caseFacade.loadCasesById(this.clientCaseId);
+        JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
+        if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
       });
   }
   hideButton(type: any) {
