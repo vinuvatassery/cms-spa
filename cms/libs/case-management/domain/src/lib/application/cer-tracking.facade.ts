@@ -41,7 +41,7 @@ export class CerTrackingFacade {
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  public sortValue = '';
+  public sortValue = 'clientFullName';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [
     {
