@@ -1,1 +1,118 @@
-<p>medical-payment-detail works!</p>
+<section class="k-dialog-body">
+    <p class="text-muted mb-2"> Add a new dental payment </p>
+    <div class="flex-row">
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Service Provider Name">
+                <kendo-textbox aria-label="Service Provider Name" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+
+        </div>
+        <div class="flex-col">
+
+
+            <kendo-floatinglabel text="Service Description">
+                <kendo-textbox aria-label="Service Description" [disabled]="true"
+                    [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+
+        </div>
+        <div class="flex-col">
+            <div class="flex-row">
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Payment Amount" class="amount-with-symbol">
+                        <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                        <kendo-textbox aria-label="Payment Amount" placeholder=""
+                            [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                    </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Type">
+                        <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode">
+                        </kendo-dropdownlist>
+                    </kendo-floatinglabel>
+
+                </div>
+            </div>
+        </div>
+        <div class="flex-col">
+            <kendo-floatinglabel text="Reversal">
+                <kendo-dropdownlist aria-label="Reversal" [fillMode]="formUiStyle.dropDownFillMode">
+                </kendo-dropdownlist>
+            </kendo-floatinglabel>
+
+        </div>
+        <div class="flex-col">
+            <div class="flex-row">
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Coverage Start Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                            aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder="">
+                        </kendo-datepicker>
+                    </kendo-floatinglabel>
+
+                </div>
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Coverage End Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                            aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder="">
+                        </kendo-datepicker>
+                    </kendo-floatinglabel>
+
+                </div>
+            </div>
+        </div>
+        <div class="flex-col">
+            <div class="flex-row">
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Entry Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                            aria-label="Entry Date" formatPlaceholder="formatPattern" placeholder="">
+                        </kendo-datepicker>
+                    </kendo-floatinglabel>
+
+                </div>
+                <div class="flex-col flex-col-6">
+                    <kendo-floatinglabel text="Check Mail Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                            aria-label="Check Mail Date" formatPlaceholder="formatPattern" placeholder="">
+                        </kendo-datepicker>
+                    </kendo-floatinglabel>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Comment">
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textarea>
+            </kendo-floatinglabel>
+        </div>
+
+
+
+
+
+
+    </div>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div>
+            <!-- <button kendoButton class="k-danger-link" aria-label="delete Payment"> Delete </button> -->
+            <!-- <button kendoButton [primary]="true" look="outline" aria-label="edit Payment"> Edit </button> -->
+        </div>
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding Payment"> Cancel
+            </button>
+            <button kendoButton [primary]="true" aria-label="add new Payment"> Add</button>
+
+        </div>
+    </div>
+</kendo-dialog-actions>

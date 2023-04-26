@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade,CaseScreenTab } from '@cms/case-management/domain';
+import { CaseFacade,CaseScreenTab, CaseStatusCode } from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
@@ -18,6 +18,7 @@ import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angu
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -95,7 +96,8 @@ public state!: State;
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider, private cdr :ChangeDetectorRef
+    private readonly configurationProvider: ConfigurationProvider, private cdr :ChangeDetectorRef,
+    private readonly router: Router
     ) {}
 
   /** Lifecycle hooks **/
@@ -286,5 +288,19 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   public columnChange(e: ColumnVisibilityChangeEvent) {
     this.cdr.detectChanges()
+  }
+
+  onCaseClicked(session: any) {  
+    if (session && session?.caseStatus !==CaseStatusCode.incomplete) {
+      this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);     
+    }    
+    else {
+      this.router.navigate(['case-management/case-detail'], {
+        queryParams: {
+          sid: session?.sessionId,
+          eid: session?.entityId
+        }
+      });
+    }
   }
 }

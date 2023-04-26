@@ -16,6 +16,7 @@
   (loadClientImpInfoEvent)="loadClientImpInfo()"
   (loadChangeGroupEvent)="loadChangeGroupData($event)"
   (updateChangeGroupEvent)="updateChangeGroup($event)"
+  (createCerSessionEvent)="createCerSession()"
 ></case-management-case360-header>
 <case-management-common-actions></case-management-common-actions>
 
@@ -25,7 +26,7 @@
   <case-management-case360-header-tools 
   [clientId] = "profileClientId" 
   [clientCaseEligibilityId]="clientCaseEligibilityId"
-  *ngIf="clientId && clientCaseEligibilityId"
+  *ngIf="clientId && clientCaseEligibilityId"  
   ></case-management-case360-header-tools>
 
   <div class="client-tab-bar-wrappers">

@@ -6,6 +6,7 @@ import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
+  NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -85,12 +86,12 @@ export class CaseFacade {
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  public sortValue = 'clientFullName';
-  public sortType = 'asc';
+  public sortValue = 'eilgibilityStartDate';
+  public sortType = 'desc';
   public sort: SortDescriptor[] = [
     {
       field: this.sortValue,
-      dir: 'asc',
+      dir: 'desc',
     },
   ];
   activeSession!: ActiveSessions[];
@@ -266,8 +267,8 @@ export class CaseFacade {
         return of(false);
       })
     ).subscribe((response: boolean) => {
+      this.hideLoader();
       if (response) {
-        this.hideLoader();
         this.groupUpdatedSubject.next(true);
         this.currentGroupSubject.next(null);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group updated successfully');
@@ -275,9 +276,25 @@ export class CaseFacade {
     });
   }
 
-  loadClientProfile(profileClientId: number): void {
+  deleteEligibilityGroup(groupId: string){
     this.showLoader();
-    this.caseDataService.loadClientProfile(profileClientId).subscribe({
+    return this.caseDataService.deleteEligibilityGroup(groupId).pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    ).subscribe((response: boolean) => {
+      this.hideLoader();
+      if (response) {
+        this.currentGroupSubject.next(null);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group deleted successfully');
+      }
+    });
+  }
+
+  loadClientProfile(clientCaseEligibilityId: string): void {
+    this.showLoader();
+    this.caseDataService.loadClientProfile(clientCaseEligibilityId).subscribe({
       next: (clientProfileResponse) => {
         this.clientProfileSubject.next(clientProfileResponse);
         this.hideLoader();
@@ -401,6 +418,7 @@ export class CaseFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.activeSessionLoaderVisibleSubject.next(false);
       },
     });
   }
@@ -411,7 +429,7 @@ export class CaseFacade {
       .createActiveSession(session)
       .pipe(
         catchError((err: any) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.handleMultipleDeviceLogin(err);
           return of(false);
         })
       )
@@ -426,7 +444,7 @@ export class CaseFacade {
   updateActiveSessionOrder(session: any[]) {
     return this.caseDataService.updateActiveSessionOrder(session).pipe(
       catchError((err: any) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.handleMultipleDeviceLogin(err);
         return of(false);
       })
     );
@@ -438,7 +456,7 @@ export class CaseFacade {
       .deleteActiveSession(activeSessionId)
       .pipe(
         catchError((err: any) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.handleMultipleDeviceLogin(err);
           return of(false);
         })
       )
@@ -456,6 +474,18 @@ export class CaseFacade {
           }
         }
       });
+  }
+
+  handleMultipleDeviceLogin(err: any){
+    if(err){
+      if(err?.error?.error?.code?.includes('MULTIPLE_DEVICE_LOGIN_WARNING')){
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message,NotificationSource.UI);
+        this.activeSessionLoaderVisibleSubject.next(false);
+        this.hideLoader();
+        return;
+      }
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    }
   }
 
   loadDdlGridColumns(): void {
@@ -565,8 +595,8 @@ export class CaseFacade {
     return this.caseDataService.UpdateCase(caseData);
   }
 
-  getSessionInfoByCaseId(clientCaseId: any) {
-    return this.caseDataService.getSessionInfoByCaseId(clientCaseId);
+  getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
+    return this.caseDataService.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId);
   }
   updateCaseStatus(clientCaseId: any, caseStatusCode: any) {
     const caseData = {

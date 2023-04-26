@@ -70,7 +70,7 @@ export class LastVisitedCasesComponent implements OnInit, OnDestroy {
 
   onCaseClicked(session: ActiveSessions) {
     const clientId = this.route.snapshot.queryParams['id'] ?? 0;
-    const newApplicationStatus: string[] = [CaseStatusCode.new, CaseStatusCode.incomplete];
+    const newApplicationStatus: string[] = [CaseStatusCode.incomplete];
     if (session && !newApplicationStatus.includes(session?.caseStatusCode) && clientId != session?.clientId) {
       this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);
       return;

@@ -34,15 +34,24 @@
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar of Ahith Kumar">
-              <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                <span class="profile-text-avatar">AK</span>
-              </div>
+            <button
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="profile avathar"
+            >
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
-            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              position="left"
+            >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card></common-user-profile-card>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </ng-template>
@@ -124,7 +133,7 @@
   [pharmacySearchResult$]="pharmacysearchResult$"
   [searchLoaderVisibility$]="searchLoaderVisibility$" 
   (addPharmacyEvent)="addPharmacyEvent($event)"
-   
+  (setAsPrimaryEvent)="setAsPrimaryEvent($event)"
   (removePharmacyEvent)="removeClientPharmacyOnEditMode()"
   (searchPharmacyEvent)="onSearchPharmacy($event)"
   (closePharmacyEvent)="handleClosePharmacyClicked()"
@@ -143,15 +152,6 @@
         (removeConfirmEvent)="removeClientPharmacy($event)"
     >     </case-management-remove-pharmacy>
 </kendo-dialog>
-<!-- Change Pharmacy Priority Modal -->
-<kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
-  <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClicked()">
-  </case-management-set-pharmacy-priority>
-</kendo-dialog>
-
-
 <!-- deactivate-pharmacy Modal -->
 <kendo-dialog *ngIf="isOpenDeactivatePharmaciesClicked" (close)="handleCloseDeactivatePharmaciesClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
@@ -179,4 +179,20 @@
   <case-management-set-as-primary-pharmacy [pharmacies]="pharmacies" (removePharmacyClick)="onRemovePharmacy($event)" (addNewPharmacyClick)="updateAndDeactivatePharmacy($event)" [clientPharmacyDetails]="selectClientPharmacyDetails"
    (closeSelectNewPrimaryPharmacies)="handleCloseSelectNewPrimaryPharmaciesClicked()">
   </case-management-set-as-primary-pharmacy>
+</kendo-dialog>
+
+<!-- Change Pharmacy Priority Modal -->
+<kendo-dialog
+  *ngIf="isTriggerPriorityPopup"
+  (close)="handleCloseChangePriorityClikced()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
+>
+  <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
+  <case-management-set-pharmacy-priority
+    (closeChangePriority)="handleCloseChangePriorityClikced()"
+    [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
+    [clientpharmacies]="pharmacies"
+    [clientId]="clientId"
+    [isShowHistoricalData]="isShowHistoricalData"
+  ></case-management-set-pharmacy-priority>
 </kendo-dialog>

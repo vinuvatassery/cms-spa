@@ -151,9 +151,9 @@ export class AddressListComponent implements OnInit {
     else{
       this.addressGridView= this.allAddressList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
     }
-
-    this.cdr.detectChanges();
     this.addressListLoader = false;
+    this.cdr.detectChanges();   
+    
   }
 
   public rowClass = (args:any) => ({

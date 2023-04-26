@@ -12,6 +12,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   /** Public properties **/
   healthInsuranceStatus$ = this.insurancePolicyFacade.healthInsuranceStatus$;
   public pageSize = 10;
+  isCopyInsuranceConfirm = false;
   public skip = 5;
   public pageSizes = [
     {text: '5', value: 5}, 
@@ -28,6 +29,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       text: "Copy Status",
       icon: "content_copy",
       click: (): void => {
+        this.onCopyInsuranceConfirmOpenClicked();
       },
     },
     {
@@ -54,5 +56,11 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   /** Private methods **/
   private loadHealthInsuranceStatus() {
     this.insurancePolicyFacade.loadHealthInsuranceStatus();
+  }
+  onCopyInsuranceConfirmCloseClicked(){
+    this.isCopyInsuranceConfirm = false;
+  }
+  onCopyInsuranceConfirmOpenClicked(){
+    this.isCopyInsuranceConfirm = true;
   }
 }
