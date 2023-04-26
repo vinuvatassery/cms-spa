@@ -10,6 +10,16 @@
       <kendo-grid [data]="medicalHealthPlans$ |async" #employersGrid [pageSize]="state.take" [pageable]="true"
       [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
+
+      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="75" [sortable]="false">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button kendoButton look="flat"  themeColor="error" class="card-link-button" aria-label="Start Review"> <span class="material-icons">
+            error  </span>Start Review   </button>
+          <button kendoButton look="flat"  themeColor="success" class="card-link-button" aria-label="Reviewed">  <span class="material-icons">
+            check_circle </span>  Reviewed   </button>
+        
+        </ng-template>
+      </kendo-grid-column>
         <kendo-grid-column field="FullDetail" title="Full Detail" [width]="75" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
@@ -105,6 +115,7 @@
    <p>There is no data to display.</p>
  </ng-template> 
       </kendo-grid>
+      <kendo-formerror *ngIf="showInsuranceRequired | async"> A Response is required.</kendo-formerror>
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">

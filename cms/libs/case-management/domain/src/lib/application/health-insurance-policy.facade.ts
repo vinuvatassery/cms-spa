@@ -21,6 +21,7 @@ export class HealthInsurancePolicyFacade {
   private healthInsurancePolicySubject = new Subject<HealthInsurancePolicy>();
   private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
   private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+  showInsuranceRequiredSubject  = new BehaviorSubject<boolean>(false);
   private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
   private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
   private ddlMedicalHealthPalnPremiumFrequecySubject = new BehaviorSubject<any>(
@@ -36,6 +37,7 @@ export class HealthInsurancePolicyFacade {
   healthFacadesnackbar$ = this.snackbarSubject.asObservable();
   healthInsurancePolicy$ = this.healthInsurancePolicySubject.asObservable();
   healthInsuranceStatus$ = this.healthInsuranceStatusSubject.asObservable();
+  showInsuranceRequired$ = this.showInsuranceRequiredSubject.asObservable();
   medicalPremiumPayments$ = this.medicalPremiumPaymentsSubject.asObservable();
   triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
   medicalHealthPolicy$ = this.medicalHealthPolicySubject.asObservable();

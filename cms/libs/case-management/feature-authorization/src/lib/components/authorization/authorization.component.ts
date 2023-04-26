@@ -22,7 +22,7 @@ export class AuthorizationComponent {
   isSendNewEmailPopupOpened = false;
   isAuthorizationNoticePopupOpened = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
-
+  isCerForm = false;
   /** Internal event methods **/
   onSendNewLetterClicked() {
     this.isSendNewLetterPopupOpened = true;

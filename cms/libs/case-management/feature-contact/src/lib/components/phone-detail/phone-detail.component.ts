@@ -31,6 +31,8 @@ export class PhoneDetailComponent implements OnInit {
   btnDisabled = false;
   isDeleted = false;
   otherNoteError =false
+  noteCounter!: string;
+  noteCharachtersCount!: number;
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade,
     private formBuilder: FormBuilder) {}
@@ -88,6 +90,7 @@ export class PhoneDetailComponent implements OnInit {
   {     
     this.selectedclientPhoneId = this.selectedPhoneData?.clientPhoneId 
     this.isDeleted = this.selectedPhoneData?.isDeleted 
+    this.incomeNoteWordCount(this.selectedPhoneData?.otherPhoneNote)
     this.clientPhoneForm.setValue(
             {
               clientPhoneId: this.selectedPhoneData?.clientPhoneId   ,
@@ -136,5 +139,14 @@ export class PhoneDetailComponent implements OnInit {
 
   private getStatusFlag(status?: StatusFlag) {
     return status === StatusFlag.Yes ? true : false;
+  }
+
+  onIncomeNoteValueChange(event: any): void {
+    this.noteCharachtersCount = event.length;
+    this.noteCounter = `${this.noteCharachtersCount}/75`;
+  }
+  private incomeNoteWordCount(note : string) {
+    this.noteCharachtersCount = note ? note.length : 0;
+    this.noteCounter = `${this.noteCharachtersCount}/75`;
   }
 }
