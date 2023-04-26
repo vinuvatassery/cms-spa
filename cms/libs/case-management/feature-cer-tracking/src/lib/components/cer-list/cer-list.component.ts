@@ -9,12 +9,12 @@ import {
   OnChanges,
   ChangeDetectorRef,
 } from '@angular/core';
-import { StatusFlag } from '@cms/case-management/domain';
+import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, FilterService } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -54,6 +54,47 @@ export class CerListComponent implements OnInit, OnChanges {
   isPaperLessFlag!:boolean;
   clientName!:string;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  sortColumn = "Client Name";
+  sortDir = "Ascending";
+  columnsReordered = false;
+  filteredBy = "";
+  searchValue = "";
+  isFiltered = false;
+  public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
+  filter! : any
+  columnName!: any;
+  selectedColumn!: any;
+
+  columns : any = {
+    clientFullName:"Client Name",
+    dob :"Date of Birth",  
+    clientOfficialIdFullName:"Official Id Full Name",
+    clientInsuranceFullName:"Name on Primary Insurance Card",
+    cerSentDate :"Date CER Sent",
+    cerReceivedDate : "Date CER Received",
+    cerCompletedDate : "Date CER Completed",
+    reminderSentDate : "Reminder SentDate",
+    cerResentDate : "CER Re-Sent Date",
+    restrictedSentDate : "Restricted Sent Date",
+    spokenLanguage : "Spoken Language" ,
+    assignedCmId : "Case Manager" ,
+    assignedCwId : "Case Worker" ,
+    pronouns:"Pronouns",
+    clientId:"Client ID",
+    urn:"URN",
+    preferredContact:"Preferred Contact",
+    eligibilityStatus:"Current Status",
+    group:"Group",
+    eilgibilityStartDate:"Eligibility Start Date",
+    eligibilityEndDate:"Eligibility End Date",
+    email:"Email",
+    phone:"Phone",
+    genders:"Gender",
+    homeAddress:"Home Address",
+    ssn:"SSN",
+    insurancePolicyId:"Insurance Policy Id",
+    assignedCw:"Assigned to"
+  }
 
   public gridActions = [
     {
@@ -68,7 +109,7 @@ export class CerListComponent implements OnInit, OnChanges {
     }
   ];
 
-  constructor(private cdr:ChangeDetectorRef){
+  constructor(private cdr:ChangeDetectorRef,private readonly cerTrackingFacade: CerTrackingFacade){
   }
 
   /** Lifecycle hooks **/
@@ -84,6 +125,7 @@ export class CerListComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+  
   }
   /** Private methods **/
   private loadcerTrackingDates() {
@@ -107,12 +149,36 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();
   }
 
-  public dataStateChange(stateData: any): void {
+  public dataStateChange(stateData: any): void {        
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+     
+        this.filter = stateFilter.value;
+     
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.columnName = "";
+      this.isFiltered = false
+    }
     this.loader = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.sortColumn = this.columns[stateData.sort[0]?.field];    
+    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
+    
     this.loadCerTrackingList();
   }
   pageselectionchange(data: any) {
@@ -129,7 +195,7 @@ export class CerListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType
     );
-
+   
   }
 
   loaCerData(
@@ -144,11 +210,15 @@ export class CerListComponent implements OnInit, OnChanges {
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-    };
+    };    
+ 
     this.loadCerTrackingListEvent.next(gridDataRefinerValue);
     this.gridDataHandle()
   }
-
+  onColumnReorder(event:any)
+  {
+    this.columnsReordered = true;
+  }
   loadCerTrackingDateListHandle() {
 
     this.cerTrackingDates$
@@ -189,4 +259,53 @@ export class CerListComponent implements OnInit, OnChanges {
   sendCer(){
     this.sendCersEvent.emit(this.selectedEligibilityCerId);
   }
+
+  setToDefault()
+  {  
+    this.pageSizes = this.cerTrackingFacade.gridPageSizes;
+    this.sortValue  = this.cerTrackingFacade.sortValue;
+    this.sortType  = this.cerTrackingFacade.sortType;
+    this.sort  = this.cerTrackingFacade.sort;
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort
+      };
+    this.gridFilter = {logic:'and',filters:[]}
+    this.sortColumn = this.columns[this.sort[0]?.field];
+    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending':  'Descending';
+    
+    this.filter = "";
+    this.columnName = "";
+    this.selectedColumn = "ALL";
+    this.searchValue = "";
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    this.loadCerTrackingList();
+  }
+
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.gridFilter = filter;
+  }
+
+  groupFilterChange(value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: "group",
+          operator: "eq",
+          value:value.lovTypeCode
+      }],
+        logic: "or"
+    });
+}
+dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+  filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovDesc
+    }],
+      logic: "or"
+  });
+}
 }
