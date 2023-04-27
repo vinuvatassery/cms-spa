@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Output, EventEmitter, ElementRef, OnDestroy, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 
@@ -17,6 +17,8 @@ import { LovFacade, LovType } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit, OnDestroy {
+  
+  @Input() isCerForm =false
 
   /** Output Properties **/
   @Output() AppInfoChanged = new EventEmitter<{ completedDataPoints: CompletionChecklist[], updateWorkflowCount: boolean }>();

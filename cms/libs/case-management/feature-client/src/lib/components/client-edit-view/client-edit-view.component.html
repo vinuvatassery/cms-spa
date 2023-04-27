@@ -169,7 +169,7 @@
   </section>
 
   <!-- Applicant Register to vote Section  -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset mt-2">
       <legend class="k-form-legend">  <h5>Register to vote?</h5>  </legend>
 
@@ -206,7 +206,7 @@
   </section>
 
   <!-- Applicant pronouns Section  -->
-  <section>
+  <section *ngIf="!isCerForm">
 
     <fieldset class="k-form-fieldset">
       <legend class="k-form-legend">
@@ -222,22 +222,22 @@
   </section>
 
   <!-- Applicant gender Section Checkboxes -->
-  <case-management-client-edit-view-gender [appInfoForm]="appInfoForm" [textboxDisable]="textboxDisable"></case-management-client-edit-view-gender>
+  <case-management-client-edit-view-gender *ngIf="!isCerForm" [appInfoForm]="appInfoForm" [textboxDisable]="textboxDisable"></case-management-client-edit-view-gender>
 
   <!-- Applicant transgender Section Checkboxes -->
-  <case-management-client-edit-view-transgender
+  <case-management-client-edit-view-transgender *ngIf="!isCerForm"
     [appInfoForm]="appInfoForm"></case-management-client-edit-view-transgender>
 
   <!-- Applicant sexual orientation or sexual identity Section Checkboxes -->
-  <case-management-client-edit-view-sexual-identity
+  <case-management-client-edit-view-sexual-identity *ngIf="!isCerForm"
     [appInfoForm]="appInfoForm" [textboxDisable]="textboxDisable"></case-management-client-edit-view-sexual-identity>
 
   <!-- Applicant sex assigned at birth Section Checkboxes -->
-  <case-management-client-edit-view-sex-at-birth
+  <case-management-client-edit-view-sex-at-birth *ngIf="!isCerForm"
     [appInfoForm]="appInfoForm"></case-management-client-edit-view-sex-at-birth>
 
   <!-- Applicant racial or ethnic identity?  Section dropdown -->
-  <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm"
+  <case-management-client-edit-view-race-and-ethnicity [appInfoForm]="appInfoForm" *ngIf="!isCerForm"
     [raceAndEthnicityPrimaryData]="raceAndEthnicityPrimaryData"
     [raceAndEthnicityPrimaryNotListed]="raceAndEthnicityPrimaryNotListed"
     (RaceAndEthnicityData)="setRaceAndEthnicityData($event)"
@@ -245,7 +245,7 @@
 
   <!-- Applicant Needs materials in alternate format Section Radio Button -->
 
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset">
       <legend class="k-form-legend">
         <h5> Needs materials in alternate format (Braille, large print, audio recordings, etc.)? </h5>
@@ -303,7 +303,7 @@
   </section>
 
   <!-- Applicant Needs interpreter Section -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset" [tabindex]="0">
       <legend class="k-form-legend">
         <h5>Needs interpreter?</h5>
@@ -321,7 +321,7 @@
   </section>
 
   <!-- Applicant serious difficulty hearing Section -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset" [tabindex]="0">
       <legend class="k-form-legend">
         <h5 class="mt-3">Deaf or serious difficulty hearing?</h5>
@@ -339,7 +339,7 @@
   </section>
 
   <!-- Applicant Blind or serious difficulty Section -->
-  <section>
+  <section *ngIf="!isCerForm">
 
     <fieldset class="k-form-fieldset" [tabindex]="0">
       <legend class="k-form-legend">
@@ -357,7 +357,7 @@
   </section>
 
   <!-- Applicant limiting physical, mental, or emotional Section -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset">
       <legend class="k-form-legend">
         <h5 class="mt-3">Any limiting physical, mental, or emotional conditions?</h5>
@@ -370,7 +370,7 @@
   </section>
 
   <!-- Applicant Serious difficulty walking or climbing Section -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset" [tabindex]="0">
       <legend class="k-form-legend">
         <h5 class="mt-3">Serious difficulty walking or climbing stairs?</h5>
@@ -389,7 +389,7 @@
   </section>
 
   <!-- Applicant Difficulty dressing or bathing Section -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset"  [tabindex]="0">
       <legend class="k-form-legend">
         <h5 class="mt-3">Difficulty dressing or bathing?</h5>
@@ -408,7 +408,7 @@
   </section>
 
   <!-- Applicant difficulty concentrating, remembering, or making  Section -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset"  [tabindex]="0">
       <legend class="k-form-legend">
         <h5 class="mt-3">
@@ -428,7 +428,7 @@
   </section>
 
   <!-- Applicant Serious difficulty doing errands alone due to a physical  Section -->
-  <section>
+  <section *ngIf="!isCerForm">
     <fieldset class="k-form-fieldset" [tabindex]="0">
       <legend class="k-form-legend">
         <h5 class="mt-3">

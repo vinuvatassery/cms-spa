@@ -1,15 +1,16 @@
 <!-- Main Title Section -->
 <section class="app-l-mainTittle">
 
-  <h2> {{
-    isCerForm ? 'Renew Eligibility' : 'New Application' }}  - {{applicantName}}</h2>
+  <h2> {{isCerForm ? 'Renew Eligibility' : 'New Application' }}  - {{applicantName}}</h2>
   <p class="mt-2 mb-2" *ngIf="!isCerForm">
     Please complete all fields for this application, then click “Start” to go
     through the eligibility checklist. All items must be addressed before
     starting the application review.
   </p>
   <p class="mt-2 mb-2" *ngIf="isCerForm">
-    Please complete the CER by confirming whether there are any changes to the information below and making updates as needed. Once all updates are complete, click “Start” to go through the eligibility checklist. All items must be addressed before starting the eligibility review.
+    Please complete the CER by confirming whether there are any changes to the information below and making updates as needed.
+     Once all updates are complete, click “Start” to go through the eligibility checklist.
+      All items must be addressed before starting the eligibility review.
   </p>
 </section>
 <div class="flex-col flex-col-10" *ngIf="isCerForm">
@@ -35,13 +36,16 @@
         <common-user-profile-card> </common-user-profile-card>
       </ng-template>
     </kendo-popover>
-    <p>This note is displaying from the Event Log or from the last CER process. Integer quis quam ac odio ornare aliquet. Donec volutpat, neque sit amet fringilla pulvinar, arcu odio feugiat augue.</p></div>
+    <p>This note is displaying from the Event Log or from the last CER process. Integer quis quam ac odio ornare aliquet. 
+      Donec volutpat, neque sit amet fringilla pulvinar, arcu odio feugiat augue.</p></div>
   </div>
   </div>
 <div class="client-data-block">
-  <h3>Applicant Info</h3>
+  <h3  *ngIf="!isCerForm">Applicant Info</h3>
+  <h3  *ngIf="isCerForm">Client Information</h3>
   <div class="block-section">
     <case-management-client-edit-view
+    [isCerForm]="isCerForm"
     (AppInfoChanged)="updatePageCount($event)"
     (AdjustAttrChanged)="updateAdjustmentAttrCount($event)"
     (ValidateFields)="setAppInfoForm($event)"

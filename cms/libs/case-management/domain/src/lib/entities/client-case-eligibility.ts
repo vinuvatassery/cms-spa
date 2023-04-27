@@ -21,4 +21,5 @@ export class ClientCaseEligibility {
   serviceCoordinatorServicePointId: number = 0;
   fplPercentage: number = 0;
   justMemo: string = '';
+  prevClientCaseEligibilityId: string | null = null;
 }

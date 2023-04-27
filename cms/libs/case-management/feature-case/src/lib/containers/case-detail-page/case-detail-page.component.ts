@@ -71,7 +71,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       },
     },
     {
-      buttonType: "btn-h-primary",
+      buttonType: "btn-h-danger",
       text: "DISCARD CHANGES",
       icon: "do_disturb_alt",
       click: (): void => {
