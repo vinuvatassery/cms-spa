@@ -56,32 +56,32 @@
     <kendo-grid-column field="clientInsuranceFullName" title="Official Insurance Full Name" [width]="130"
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="eligibilityStatus" title="Current Status" [width]="130"></kendo-grid-column>
-    <kendo-grid-column field="cerSentDate" title="Date CER Sent" [sortable]="false" [width]="130">
+    <kendo-grid-column field="cerSentDate" title="Date CER Sent"  [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.cerSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="cerReceivedDate" title="Date CER Received" filter="date" [sortable]="false" [width]="130">
+    <kendo-grid-column field="cerReceivedDate" title="Date CER Received" filter="date"  [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.cerReceivedDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="cerCompletedDate" title="Date CER Completed" [sortable]="false" [width]="130">
+    <kendo-grid-column field="cerCompletedDate" title="Date CER Completed"  [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.cerCompletedDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="reminderSentDate" title="Reminder Sent Date" [sortable]="false" [width]="130">
+    <kendo-grid-column field="reminderSentDate" title="Reminder Sent Date" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.reminderSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="cerResentDate" title="CER Re-Sent Date" [sortable]="false" [width]="130">
+    <kendo-grid-column field="cerResentDate" title="CER Re-Sent Date" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.cerResentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="restrictedSentDate" title="Restricted Sent Date" [sortable]="false" [width]="130">
+    <kendo-grid-column field="restrictedSentDate" title="Restricted Sent Date"  [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.restrictedSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
@@ -100,16 +100,23 @@
         </kendo-popover>
       </ng-template>
     </kendo-grid-column>
-
+    <kendo-grid-column field="disEnrollmentDate" title="Disenrollment Date" [width]="160"
+    [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.disEnrollmentDate | date:'MM/dd/yyyy'}}
+    </ng-template>
+  </kendo-grid-column>
+    <kendo-grid-column field="caseManagerDomain" title="Case Manager Domain" [width]="130"
+   ></kendo-grid-column>
     <kendo-grid-column field="pronouns" [sortable]="false" title="Pronouns" [width]="130"
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="genders" [sortable]="false" title="Gender" [width]="130"
       [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="phone" [sortable]="false" title="Phone" [width]="130" [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="email" [sortable]="false" title="Email" [width]="130" [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="homeAddress" [sortable]="false" title="Home Address" [width]="130"
+    <kendo-grid-column field="phone"  title="Phone" [width]="130" [hidden]="true"></kendo-grid-column>
+    <kendo-grid-column field="email"  title="Email" [width]="130" [hidden]="true"></kendo-grid-column>
+    <kendo-grid-column field="homeAddress"  title="Home Address" [width]="130"
       [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="ssn" [sortable]="false" title="SSN" [width]="130" [hidden]="true"></kendo-grid-column>
+    <kendo-grid-column field="ssn"  title="SSN" [width]="130" [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="160" [hidden]="true"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
       <ng-template kendoGridCellTemplate let-dataItem>
