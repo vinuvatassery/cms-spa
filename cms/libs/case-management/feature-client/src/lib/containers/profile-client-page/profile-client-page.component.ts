@@ -81,6 +81,7 @@ export class ProfileClientPageComponent implements OnInit {
             clientTransgenderDesc: clientData?.clientTransgenderDesc,
             clientSexualIdentities: clientData?.clientSexualIdentities,
             otherSexualDesc: clientData?.otherSexualDesc,
+            sexAtBirth: clientData?.sexAtBirth,
             spokenLanguage: clientData?.spokenLanguage,
             writtenLanguage: clientData?.writtenLanguage,
             englishProficiency: clientData?.englishProficiency,

@@ -56,12 +56,17 @@
         <tr>
           <td>Case Manager</td>
           <td>
-            <a
-              kendoPopoverAnchor
-              [popover]="onCaseManagerDetailsHovered"
-              showOn="hover"
-              >{{clientProfile?.caseManagerName}}</a
-            >
+            <button
+            kendoButton
+            [primary]="true"
+            class="avatar-sm-btn c-default"
+            kendoPopoverAnchor
+            [popover]="onCaseManagerDetailsHovered"
+            showOn="hover"
+            aria-label="profile avatar"
+          >
+          <common-user-photo-icon  [userId]="clientProfile?.caseManagerId"></common-user-photo-icon>  
+          </button>
           </td>
         </tr>
         <tr>
@@ -80,6 +85,10 @@
         <tr>
           <td>Last Name on Official ID</td>
           <td>{{(clientProfile?.officialIdLastName) ? clientProfile?.officialIdLastName : '-'}}</td>
+        </tr>
+        <tr>
+          <td>Date ID Card last sent</td>
+          <td></td>
         </tr>
         <tr>
           <td>Social Security Number:</td>
@@ -106,8 +115,8 @@
           <td>{{clientProfile?.clientSexualIdentities}}</td>
         </tr>
         <tr>
-          <td>Sexual Orientation/Identity:</td>
-          <td>{{clientProfile?.clientSexualIdentities}}</td>
+          <td>Sex assigned at Birth</td>
+          <td>{{clientProfile?.sexAtBirth}}</td>
         </tr>
         <tr>
           <td>Spoken Language</td>
@@ -122,27 +131,37 @@
           <td>{{clientProfile?.englishProficiency}}</td>
         </tr>
         <tr>
-          <td>Racial or Ethnic Identity</td>
+          <td>Ethnic Identity</td>
+          <td>{{clientProfile?.ethnicIdentity}}</td>
+        </tr>
+        <tr>
+          <td>Racial Identity</td>
           <td>
             <span class="app-c-badge full-rounded" *ngFor="let item of clientProfile?.racialIdentities">{{item}}</span>
           </td>
         </tr>
         <tr>
-          <td>Primary Racial or Ethnic Identity</td>
+          <td>Primary Racial Identity</td>
           <td>{{clientProfile?.primaryRacialIdentity}}</td>
         </tr>
+        
       </tbody>
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
         <span class="badge-dot-info bdi-left"></span> Last Updated on {{clientProfile?.lastModificationTime | date:'MM/dd/yyyy'}}
         by
-        <a
-          kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered"
-          showOn="hover"
-          >{{clientProfile?.lastModifierName}}</a
-        >
+        <button
+        kendoButton
+        [primary]="true"
+        class="avatar-sm-btn c-default"
+        kendoPopoverAnchor
+        [popover]="onUserProfileDetailsHovered"
+        showOn="hover"
+        aria-label="profile avatar"
+      >
+      <common-user-photo-icon  [userId]="clientProfile?.caseManagerId"></common-user-photo-icon>  
+      </button>
       </p>
     </div>
   </div>
