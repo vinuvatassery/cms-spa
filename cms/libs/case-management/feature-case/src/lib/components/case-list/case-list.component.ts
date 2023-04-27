@@ -135,20 +135,18 @@ public state!: State;
     });
   }
   ngOnChanges(): void {
-    if (this.selectedTab == 1)
-    {
-      this.sort = [];
-      this.sortType = "";
-      this.sortValue = "";
-    }
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort
       };
       this.sortColumn = this.columns[this.sort[0]?.field];
-      this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
-      this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
+      if(this.sort[0]?.dir === 'asc') {
+        this.sortDir = 'Ascending';
+      }
+      if(this.sort[0]?.dir === 'desc') {
+        this.sortDir = 'Descending';
+      }
       if(!this.selectedColumn)
       {
         this.selectedColumn = "";

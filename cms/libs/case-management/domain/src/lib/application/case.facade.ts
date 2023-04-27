@@ -86,12 +86,12 @@ export class CaseFacade {
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  public sortValue = 'eilgibilityStartDate';
-  public sortType = 'desc';
+  public sortValue = 'clientFullName';
+  public sortType = 'asc';
   public sort: SortDescriptor[] = [
     {
       field: this.sortValue,
-      dir: 'desc',
+      dir: 'asc',
     },
   ];
   activeSession!: ActiveSessions[];
