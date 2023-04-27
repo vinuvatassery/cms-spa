@@ -20,7 +20,7 @@
     </div>
     <div class="flex-col mt-1">
       <div class="app-c-table">
-        <kendo-grid  [data]="gridSmokingData">
+        <kendo-grid [resizable]="true" [data]="gridSmokingData">
           <kendo-grid-column
             field="smokingCessationNote"
             title="Did client request referral for smoking cessation?"
