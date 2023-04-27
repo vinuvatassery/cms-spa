@@ -64,7 +64,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isHomeAddressStateOregon$ = new BehaviorSubject(true);;
   public homeAddressProofFile: any = undefined;
   showAddressProofSizeValidation = false;
-
+  isCerForm = false;
+  prevClientCaseEligibilityId! : string;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private currentSessionSubscription !: Subscription;
@@ -143,7 +144,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loaderService.show();
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
     this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
-      if (resp) {        
+      if (resp) {   
+        this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;     
+        if(this.prevClientCaseEligibilityId)
+        {
+        this.isCerForm =  true
+        }      
         this.loadContactInfo();
         this.loaderService.hide();
       }
