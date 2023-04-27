@@ -138,7 +138,7 @@
       aria-label="add medical premium"
       (click)="openPremiumPaymentDetailsOpened()"
     >
-      Dental Premium
+    {{tabStatus}}  {{tabStatus === 'dnt-ins-prm-pym' ? 'Dental Premium' :'Medical Premium'}}
     </button>
   </div>
 </div>
@@ -146,6 +146,12 @@
 
 <kendo-dialog *ngIf="isPremiumPaymentDetailsOpened" (close)="closePremiumPaymentDetailsOpened()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar> Add Dental Premium</kendo-dialog-titlebar>
-  <case-management-medical-premium-payment-detail ></case-management-medical-premium-payment-detail>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add Medical Premium</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add Dental Premium</kendo-dialog-titlebar>
+  <case-management-medical-premium-payment-detail 
+  [premiumPaymentForm]="premiumPaymentForm"
+  [caseEligibilityId]="caseEligibilityId"
+  [clientId] ="clientId"
+  [tabStatus]="tabStatus" 
+  ></case-management-medical-premium-payment-detail>
 </kendo-dialog>

@@ -124,7 +124,7 @@
       aria-label="add medical payment"
       (click)="openCoPaymentDetailsOpened()"
     >
-      Dental Payment
+      {{tabStatus === 'dnt-ins-co-pay' ? 'Dental Payment' :'Medical Payment'}}
     </button>
   </div>
 </div>

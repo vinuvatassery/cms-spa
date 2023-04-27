@@ -1,6 +1,6 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'hlt-ins-co-pay'"> {{isPaymentAddForm ? 'Add a new medical payment':'Edit or delete dental payment'}} </p>
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'dnt-ins-co-pay'"> {{isPaymentAddForm ? 'Add a new dental payment':'Edit or delete dental payment'}} </p>
+    <p class="text-muted mb-2" *ngIf="tabStatus === 'hlt-ins-prm-pym'"> {{isPaymentAddForm ? 'Add a new medical payment':'Edit or delete dental payment'}} </p>
+    <p class="text-muted mb-2" *ngIf="tabStatus === 'dnt-ins-prm-pym'"> {{isPaymentAddForm ? 'Add a new dental payment':'Edit or delete dental payment'}} </p>
     <form [formGroup]="copayPaymentForm">
         <div class="flex-row">
 

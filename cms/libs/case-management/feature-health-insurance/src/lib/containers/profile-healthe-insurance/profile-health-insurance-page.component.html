@@ -43,5 +43,19 @@
 </div>
 
 <div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS) || tabId === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS">
-  <case-management-medical-payment-list></case-management-medical-payment-list>
+  <case-management-medical-payment-list
+    [premiumPaymentForm]="premiumPaymentForm"
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId" 
+  ></case-management-medical-payment-list>
+</div>
+
+<div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS) || tabId === clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS">
+  <case-management-medical-payment-list
+    [premiumPaymentForm]="premiumPaymentForm"
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId" 
+  ></case-management-medical-payment-list>
 </div>

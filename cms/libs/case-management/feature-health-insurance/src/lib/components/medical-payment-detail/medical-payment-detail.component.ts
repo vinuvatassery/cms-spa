@@ -42,7 +42,6 @@ export class MedicalPaymentDetailComponent {
   @Input() clientId:any;
   @Input() tabStatus:any;
 
-    // constructor
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
