@@ -46,7 +46,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadSessionSubscription!: Subscription;
   private saveForLaterClickSubscription!: Subscription;
   private saveForLaterValidationSubscription!: Subscription;
-  private discardChangesSubscription !: Subscription;
   private hivCodeValueSubscription !: Subscription;
 
   /** Constructor **/
@@ -71,7 +70,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterValidationsSubscription();
     this.loadSessionData();
     this.prescriptionDrugFormChanged();
-    this.addDiscardChangesSubscription();
     this.addHivCodeChangeSubscription();
   }
 
@@ -80,7 +78,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
-    this.discardChangesSubscription.unsubscribe();
     this.hivCodeValueSubscription.unsubscribe();
   }
 
@@ -407,14 +404,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.adjustAttributeChanged(false);
       this.showPharmacyRequiredValidation$.next(false);
     }
-  }
-
-  private addDiscardChangesSubscription(): void {
-    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
-      if (response) {
-        this.loadPrescriptionDrug();
-      }
-    });
   }
 
   private addHivCodeChangeSubscription(): void {
