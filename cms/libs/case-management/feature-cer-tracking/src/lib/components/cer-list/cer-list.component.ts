@@ -150,8 +150,8 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();
   }
 
-  public dataStateChange(stateData: any): void {       
-    debugger 
+  public dataStateChange(stateData: any): void {      
+     
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -287,12 +287,12 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
-    debugger
+    
     this.gridFilter = filter;
   }
 
   groupFilterChange(value: any, filterService: FilterService): void {
-    debugger
+    
     filterService.filter({
         filters: [{
           field: "group",
@@ -303,7 +303,7 @@ export class CerListComponent implements OnInit, OnChanges {
     });
 }
 dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
-  debugger
+  
   filterService.filter({
       filters: [{
         field: field,
