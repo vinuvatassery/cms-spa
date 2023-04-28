@@ -54,6 +54,7 @@
     "@progress/kendo-angular-sortable": "^11.4.0",
     "@progress/kendo-angular-toolbar": "^11.4.0",
     "@progress/kendo-angular-tooltip": "^11.4.0",
+    "@progress/kendo-angular-treelist": "^11.4.0",
     "@progress/kendo-angular-treeview": "^11.4.0",
     "@progress/kendo-angular-upload": "^11.4.0",
     "@progress/kendo-data-query": "^1.6.0",
