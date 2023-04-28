@@ -66,7 +66,7 @@ export class UploadProofDocumentComponent implements OnInit {
     this.uploadform = this.formBuilder.group({
       concurrencyStamp: [''],
       attachmentType: ['', Validators.required],
-      attachmentNote: ['', Validators.required],
+      clientDocumentDescription: ['', Validators.required],
       clientId: [0,]
     });
 
@@ -92,7 +92,7 @@ export class UploadProofDocumentComponent implements OnInit {
         document: this.copyOfUploadedFiles[0].document.rawFile,
         documentName: this.copyOfUploadedFiles[0].name,       
         documentSize: this.copyOfUploadedFiles[0].size ,
-        attachmentNote: this.uploadform.controls['attachmentNote'].value,
+        clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
         documentTypeCode: this.uploadform.controls['attachmentType'].value        
       };
       return saveDocument;
@@ -106,7 +106,7 @@ export class UploadProofDocumentComponent implements OnInit {
         document: this.copyOfUploadedFiles[0].uid == ''? this.copyOfUploadedFiles[0].document.rawFile:'',
         documentName: this.copyOfUploadedFiles[0].name,       
         documentSize: this.copyOfUploadedFiles[0].size ,
-        attachmentNote: this.uploadform.controls['attachmentNote'].value,
+        clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
         documentTypeCode: this.uploadform.controls['attachmentType'].value        
       };
       return updateDocument;
@@ -217,8 +217,8 @@ export class UploadProofDocumentComponent implements OnInit {
     this.clientDocumentId = document.clientDocumentId;    
     this.uploadform.controls['attachmentType'].setValue(document.documentTypeCode);
     this.documentName = document.documentName;
-    this.uploadform.controls['attachmentNote'].setValue(document.attachmentNote);
-    this.tareaUploadNote = this.uploadform.controls['attachmentNote'].value;
+    this.uploadform.controls['clientDocumentDescription'].setValue(document.clientDocumentDescription);
+    this.tareaUploadNote = this.uploadform.controls['clientDocumentDescription'].value;
     this.tareaUploadNotesharactersCount = this.tareaUploadNote.length;
     this.tareaUploadNotesCounter = `${this.tareaUploadNotesharactersCount}/${this.tareaNotesMaxLength}`;
     this.copyOfUploadedFiles = [

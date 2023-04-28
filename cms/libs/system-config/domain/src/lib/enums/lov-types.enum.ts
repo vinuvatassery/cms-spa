@@ -37,5 +37,5 @@ export enum LovType {
     EligibilityStatus ='ELIGIBILITY_STATUS',
     LabResultType ='LAB_RESULT_TYPE_CODE',
     CaseReasonCode = 'CASE_REASON_CODE' ,
-    AttachmentsTypes = 'ATTACHMENT_Type_CODE'
+    AttachmentsTypes = 'DOCUMENT_TYPE'
   }

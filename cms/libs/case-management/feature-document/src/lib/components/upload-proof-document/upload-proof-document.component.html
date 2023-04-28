@@ -57,7 +57,7 @@
         <div class="flex-col mt-2">
           <kendo-floatinglabel text="Attachment Note" class="pb-0">
             <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Attachment Note"
-                            aria-label="Attachment Note" [rows]="2" [cols]="40" formControlName="attachmentNote"
+                            aria-label="Attachment Note" [rows]="2" [cols]="40" formControlName="clientDocumentDescription"
                             [maxlength]="tareaNotesMaxLength"
                             [value]="tareaUploadNote"
                             (valueChange)="OnNoteValueChange($event)">
@@ -66,7 +66,7 @@
               </kendo-textarea-suffix>
             </kendo-textarea>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="uploadform?.hasError('required','attachmentNote') && isSubmitted">
+          <kendo-formerror *ngIf="uploadform?.hasError('required','clientDocumentDescription') && isSubmitted">
             Attachment note is required
           </kendo-formerror>
         </div>

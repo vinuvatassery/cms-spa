@@ -63,7 +63,7 @@ export class DocumentDataService {
   getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: any, columnName: any) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/client-document/${clientCaseEligibilityId}/attachments?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}&ColumnName=${columnName}`
+      `/case-management/client-document/${clientCaseEligibilityId}/documents?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}&ColumnName=${columnName}`
     );
   }
 
@@ -97,7 +97,7 @@ export class DocumentDataService {
       documentFormData.append("documentName", doc?.documentName ?? '');
       documentFormData.append("documentSize", doc?.documentSize ?? '');
       documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
-      documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
+      documentFormData.append("clientDocumentDescription", doc?.clientDocumentDescription ?? '');
     }
     else {
       documentFormData.append("clientDocumentId", doc?.clientDocumentId ?? '');
@@ -105,7 +105,7 @@ export class DocumentDataService {
       documentFormData.append("clientCaseId", doc?.clientCaseId ?? '');
       documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
       documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
-      documentFormData.append("attachmentNote", doc?.attachmentNote ?? '');
+      documentFormData.append("clientDocumentDescription", doc?.clientDocumentDescription ?? '');
       documentFormData.append("document", doc?.document ?? '');
       documentFormData.append("documentName", doc?.documentName ?? '');
       documentFormData.append("documentSize", doc?.documentSize ?? '');

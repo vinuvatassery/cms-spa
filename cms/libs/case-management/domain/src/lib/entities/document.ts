@@ -16,4 +16,5 @@ export interface Document {
   attachmentNote?: string;
   documentPath?: string;
   documentSizeInMB?: string;
+  clientDocumentDescription?: string;
 }
