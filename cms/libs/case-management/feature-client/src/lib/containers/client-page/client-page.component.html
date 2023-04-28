@@ -13,12 +13,7 @@
       All items must be addressed before starting the eligibility review.
   </p>
 </section>
-<div class="flex-col flex-col-10" *ngIf="isCerForm">
-  <div class="info-banners blue-banner d-flex mt-2"  >
-    <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
-    <div><p>Application submitted by the client on XX/XX/XXXX</p></div>
-  </div>
- 
+<div class="flex-col flex-col-10" *ngIf="isCerForm"> 
   <div class="info-banners light-blue-banner d-flex mt-2 align-item-fstart mb-2"   >
      
     <div>
@@ -41,8 +36,6 @@
   </div>
   </div>
 <div class="client-data-block">
-  <h3  *ngIf="!isCerForm">Applicant Info</h3>
-  <h3  *ngIf="isCerForm">Client Information</h3>
   <div class="block-section">
     <case-management-client-edit-view
     [isCerForm]="isCerForm"
