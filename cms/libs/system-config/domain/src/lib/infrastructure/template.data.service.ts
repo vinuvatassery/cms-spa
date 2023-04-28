@@ -38,15 +38,15 @@ export class TemplateDataService {
     params = params.append('templateId',filepath);
     params = params.append('typeCode',typeCode);
     return this.http.get(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + '/system-config/templates/browsefiles',{params:params}
+      `${this.configurationProvider.appSettings.caseApiUrl}` + '/case-management/templates/'+`${typeCode}`+'/forms',{params:params}
     );
   }
 
   getFormsandDocumentsViewDownload(templateId: string) {
     let roleId = "";
-    let url = `/system-config/templates/${templateId}/content`;
+    let url = `/case-management/templates/${templateId}/content`;
     return this.http.get(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}` + url+ `/${roleId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}` + url+ `/${roleId}`
       , {
         responseType: 'blob'
       });

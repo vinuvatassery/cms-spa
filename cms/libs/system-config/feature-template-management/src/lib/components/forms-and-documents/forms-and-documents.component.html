@@ -10,7 +10,7 @@
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body mb-2 pd-2">
-    <kendo-treeview [nodes]="foldersTree" textField="templateName" TreeViewSize="large" kendoTreeViewExpandable
+    <kendo-treeview [nodes]="foldersTree" textField="name" TreeViewSize="large" kendoTreeViewExpandable
       [hasChildren]="hasFiles" [children]="fetchSubfolders" childrenField="items">
       <ng-template kendoTreeViewNodeTemplate let-dataItem>
         <div class="attachments-lists-wrap" [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">
@@ -20,16 +20,16 @@
 
             <span class="attachments-buttons-wrap" *ngIf="dataItem.isFolder===false">
               <button kendoButton look="flat" aria-label="download attachment" *ngIf="dataItem.isFolder===false"
-                (click)="onDownloadViewFileClick('download',dataItem.templateId,dataItem.templateName)">
+                (click)="onDownloadViewFileClick('download',dataItem.documentTemplateId,dataItem.name)">
                 <span class="material-icons" aria-label="download" aria-hidden="true">file_download</span>
               </button>
               <button kendoButton look="flat" aria-label="open in new tab" *ngIf="dataItem.isFolder===false"
-                (click)="onDownloadViewFileClick('view',dataItem.templateId,dataItem.templateName)">
+                (click)="onDownloadViewFileClick('view',dataItem.documentTemplateId,dataItem.name)">
                 <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
               </button>
             </span>
-            <label>{{dataItem.templateName}} <label
-                *ngIf="dataItem.isFolder===false">({{dataItem.metadata/(1024 * 1024)| number: '1.0-0'}} MB)</label></label>
+            <label>{{dataItem.name}} <label
+                *ngIf="dataItem.isFolder===false">({{dataItem.templateSize| number: '1.0-0'}} MB)</label></label>
           </div>
           <span class="attachments-date" *ngIf="dataItem.isFolder===false">Last Updated
             {{dataItem.lastModificationTime
