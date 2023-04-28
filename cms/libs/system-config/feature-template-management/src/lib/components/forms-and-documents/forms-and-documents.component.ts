@@ -29,7 +29,7 @@ export class FormsAndDocumentsComponent {
       this.isShowLoader = false;
       this.loaderService.hide();
       if (!!documentlist && this.foldersTree.length == 0) {
-        this.foldersTree = documentlist;
+        this.foldersTree = this.folderstreeformatting(documentlist);
       }
     })
   }
@@ -47,13 +47,12 @@ export class FormsAndDocumentsComponent {
   }
 
   fetchSubfolders = (node: any) =>
-    this.templateManagementFacade.getDirectoryContent('Forms',node.templateId).pipe(map((response: any[]) => {
-      return node.files = response;
+    this.templateManagementFacade.getDirectoryContent('Forms',node.documentTemplateId).pipe(map((response: any[]) => {
+      return node.files = this.folderstreeformatting(response);
     }));
 
   hasFiles = function (data: any) {
-
-    return data.isFolder;
+    return data.folderName==null?false:true;
   }
   /** Public methods **/
   showSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -72,7 +71,6 @@ export class FormsAndDocumentsComponent {
     this.loaderService.show()
     this.templateManagementFacade.getFormsandDocumentsViewDownload(templateId).subscribe({
       next: (data: any) => {
-
         const fileUrl = window.URL.createObjectURL(data);
         if (viewType === 'view') {
           window.open(fileUrl, "_blank");
@@ -89,5 +87,15 @@ export class FormsAndDocumentsComponent {
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       }
     })
+  }
+
+  folderstreeformatting(folderdata:any)
+  {
+  folderdata.forEach((element: any) => {
+    element.isFolder=element.folderName!=null;
+    element.templateSize=(element.templateSize/(1024 * 1024));
+  });
+
+  return folderdata;
   }
 }
