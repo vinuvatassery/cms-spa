@@ -133,15 +133,34 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   handleNeedManagerRadioChange($event : any)
-  {
+  {    
     this.caseManagerFacade.updateWorkFlow(true)
     this.validate();
+   
   }
 
   hasManagerChangeEvent(status : boolean)
-  {    
-     //show hide grid
-     this.gridVisibleSubject.next(status);
+  {   
+    this.gridVisibleSubject.next(status); 
+    let needMngr 
+    if(!this.hasManager)
+    {
+      needMngr = status ===true ? 'Y' : 'N'
+    }
+    else{ needMngr = this.hasManager}   
+      this.caseManagerFacade.updateCaseManagerStatus
+    (this.clientCaseId , needMngr , 'N')
+     
+    .subscribe({
+      next: (updateDateManagerResponse) => {
+       
+      this.caseManagerFacade.hideLoader() 
+     },
+       error: (err) => {
+        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.caseManagerFacade.hideLoader() 
+       },
+     })    
   }
 
   loadCaseManagers(gridDataRefinerValue: any): void {   
