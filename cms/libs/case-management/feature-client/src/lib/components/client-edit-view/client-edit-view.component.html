@@ -453,5 +453,5 @@
 
 <kendo-dialog *ngIf="showDuplicatePopup" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="onDuplicatPopupCloseClick()">
   <kendo-dialog-titlebar>Possible Duplicate Found</kendo-dialog-titlebar>
-  <case-management-duplicate-client-found [currentClientInfo]="currentClient" [matchingClientInfo]="matchingClient" (closeModalClick)="onDuplicatPopupCloseClick()"> </case-management-duplicate-client-found>
+  <case-management-duplicate-client-found [currentClientInfo]="currentClient" [matchingClientInfo]="matchingClient" [clientCaseEligibilityId]="clientCaseEligibilityId" (closeModalClick)="onDuplicatPopupCloseClick()"> </case-management-duplicate-client-found>
 </kendo-dialog>

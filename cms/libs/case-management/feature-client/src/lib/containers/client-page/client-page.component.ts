@@ -1469,15 +1469,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
               if (response) {
                 this.loaderService.hide();
                 this.workFlowFacade.handleSendNewsLetterpopup(
-                  statusResponse,
-                  this.clientCaseId
+                  statusResponse
                 );
               }
             });
           } else {
             this.workFlowFacade.handleSendNewsLetterpopup(
-              statusResponse,
-              this.clientCaseId
+              statusResponse
             );
           }
         }

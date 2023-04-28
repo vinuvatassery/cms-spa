@@ -600,8 +600,9 @@ export class CaseFacade {
   getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
     return this.caseDataService.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId);
   }
-  updateCaseStatus(clientCaseId: any, caseStatusCode: any) {
+  updateCaseStatus(clientCaseId: any, caseStatusCode: any, clientCaseEligibilityId: any) {
     const caseData = {
+      clientCaseEligibilityId: clientCaseEligibilityId,
       caseStatusCode: caseStatusCode,
     };
     return this.caseDataService.updateCaseStatus(caseData, clientCaseId);
