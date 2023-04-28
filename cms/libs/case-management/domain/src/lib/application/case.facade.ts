@@ -86,6 +86,7 @@ export class CaseFacade {
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  public totalClientsCount = 50;
   public sortValue = 'clientFullName';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [
@@ -343,7 +344,8 @@ export class CaseFacade {
     sort: string,
     sortType: string,
     columnName: any,
-    filter: any
+    filter: any,
+    totalClientsCount : any
   ): void {
     this.searchLoaderVisibilitySubject.next(true);
     this.caseDataService
@@ -354,7 +356,8 @@ export class CaseFacade {
         sort,
         sortType,
         columnName,
-        filter
+        filter,
+        totalClientsCount
       )
       .subscribe({
         next: (casesResponse: any) => {
