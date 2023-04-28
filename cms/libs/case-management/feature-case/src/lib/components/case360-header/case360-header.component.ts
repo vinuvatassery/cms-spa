@@ -32,6 +32,7 @@ export class Case360HeaderComponent implements OnInit {
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
   isEditEligibilityFlag!:boolean;
+  groupChangeTitle !: string;
 
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
@@ -62,10 +63,6 @@ export class Case360HeaderComponent implements OnInit {
     this.isStatusPeriodDetailOpened = true;
   }
 
-  onGroupDetailClosed() {
-    this.isGroupDetailOpened$.next(false);
-  }
-
   onGroupDetailClicked(eligibilityId: string) {
     if (eligibilityId) {
       this.loadChangeGroupEvent.emit(eligibilityId);
@@ -89,6 +86,7 @@ export class Case360HeaderComponent implements OnInit {
 
   onGroupChangeCancelClicked() {
     this.isGroupDetailOpened$.next(false);
+    this.groupChangeTitle ='';    
   }
 
   addGroupUpdatedSubscription() {
@@ -96,8 +94,13 @@ export class Case360HeaderComponent implements OnInit {
       if(value){
       this.isGroupDetailOpened$.next(false);
         this.loadClientProfileInfoEvent.emit();
+        this.groupChangeTitle ='';
       }  
     })
+  }
+
+  checkIfSCheduledGroup(isScheduled:boolean){
+    this.groupChangeTitle =  isScheduled ? 'Edit Scheduled Group Change':'Change Group';
   }
 
   onModalSaveAndClose(result:any){
@@ -115,5 +118,7 @@ export class Case360HeaderComponent implements OnInit {
     this.createCerSessionEvent.emit()
     }
   }
+
+  
 
 }
