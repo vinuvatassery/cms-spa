@@ -25,7 +25,6 @@ export class DependentDataService {
 
   ///1load dependents for grid
   loadDependents(eligibilityId: string, clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
-    debugger;
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
       `/eligibility-periods/${eligibilityId}/dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&LovTypeCode=${LovType.RelationshipCode}`
@@ -35,7 +34,6 @@ export class DependentDataService {
 
   ///2load dependent status  for checkbox
   loadDependentsStatus(eligibilityId: string) {
-    debugger;
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
       `/eligibility-periods/${eligibilityId}/dependent-status`
@@ -141,7 +139,6 @@ export class DependentDataService {
   }
 
   loadClientDependents(clientId: any) {
-    debugger;
     return this.http.get<Array<Dependent>>(
       `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}`
     );

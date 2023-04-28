@@ -113,7 +113,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       clientDependentId: ['', ],
       dependentTypeCode: ['', ]
   });
-  debugger
   this.onFamilyFormLoad()
   }
 
@@ -177,7 +176,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   onSearchTemplateClick(dataItem : any)
   {  
-    debugger;
    this.existFamilyMemberForm.patchValue(
      {
        clientId: dataItem?.clientId ?? 0 ,    
@@ -191,8 +189,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientRelationshipId != null))
    .subscribe((existDependentData: any) =>
    {  
-    debugger;
-       if(existDependentData?.clientDependentId)
+       if(existDependentData?.clientRelationshipId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
 
@@ -200,7 +197,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         
         this.fullClientName = fullName + ' DOB '+ ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )+((existDependentData?.ssn=='' || existDependentData?.ssn==null) ?  "" :' SSN '+existDependentData?.ssn )
 
-        this.clientDependentId = existDependentData?.clientDependentId;
+        this.clientDependentId = existDependentData?.clientRelationshipId;
         this.dependentTypeCode = DependentTypeCode.CAClient;
          this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
@@ -208,9 +205,9 @@ export class FamilyAndDependentDetailComponent implements OnInit {
                clientId:  existDependentData?.dependentClientId ?? 0,  
                dependentClientId:  existDependentData?.dependentClientId ?? 0,     
                existRelationshipCode: existDependentData?.relationshipCode, 
-               clientDependentId: existDependentData?.clientDependentId,
+               clientDependentId: existDependentData?.clientRelationshipId,
                dependentType: DependentTypeCode.CAClient,
-               selectedClientDependentId :  existDependentData?.clientDependentId
+               selectedClientDependentId :  existDependentData?.clientRelationshipId
              }
            )
          
@@ -220,7 +217,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   onExistDependentSubmit()
   {
-    debugger
     this.isExistSubmitted =true;
     this.existFamilyMemberForm.markAllAsTouched();
     
@@ -246,7 +242,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   onDependentSubmit()
   {
-    debugger
     this.isSubmitted = true;    
     this.familyMemberForm.markAllAsTouched();
    if(this.familyMemberForm.valid)
@@ -280,7 +275,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       this.dependentGet$.pipe(first((dependentData: any ) => dependentData?.clientRelationshipId != null))
       .subscribe((dependentData: any) =>
       {  
-        debugger;
           if(dependentData?.clientRelationshipId)
           {             
             this.isOpenedNewFamilyMember =true;

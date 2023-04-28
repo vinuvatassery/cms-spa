@@ -44,7 +44,6 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   private loadClientDependents() {
     this.familyAndDependentSubscription = this.familyAndDependentFacade.clientDependents$.subscribe((data: any) => {
       if (!!data) {
-        debugger;
         let dependents = data.filter((dep: any) => dep.relationshipTypeCode == 'D');
         const othersCoveredOnPlanSaved = this.healthInsuranceForm.controls['othersCoveredOnPlanSaved'].value;
         dependents.forEach((el: any) => {
@@ -95,11 +94,9 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
     this.newOthersCoveredOnPlan.removeAt(i);
   }
   updateEnrollStatus(event: any, i: number) {
-    debugger
     this.othersCoveredOnPlan.controls[i].patchValue({ 'enrolledInInsuranceFlag': event.target.checked ? true : false });
   }
   get othersCoveredOnPlan(): FormArray {
-    debugger
     return this.healthInsuranceForm.get("othersCoveredOnPlan") as FormArray;
   }
   private loadRelationshipLov() {

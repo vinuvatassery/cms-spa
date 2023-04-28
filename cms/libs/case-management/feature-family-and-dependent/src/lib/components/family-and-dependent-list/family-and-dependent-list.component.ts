@@ -80,9 +80,8 @@ CAClient = DependentTypeCode.CAClient;
       click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {
         if(!this.editbuttonEmitted)
         {
-          debugger;
           this.editbuttonEmitted =true;
-        this.onEditFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
+          this.onEditFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
         }
       },
     },
@@ -224,7 +223,6 @@ pageselectionchange(data: any) {
   }
 
   addUpdateDependentHandle(dependent : any) {
-    debugger
     this.addUpdateDependentEvent.next(dependent);
     this.editbuttonEmitted =false;
 
@@ -293,7 +291,6 @@ pageselectionchange(data: any) {
 
   addExistingClientEventHandle($event : any)
   {
-    debugger
     this.addExistingClientEvent.emit($event)
     this.editbuttonEmitted =false;
       this.existdependentStatus$.pipe(first((updateResponse: any ) => updateResponse?.clientRelationshipId != null))
