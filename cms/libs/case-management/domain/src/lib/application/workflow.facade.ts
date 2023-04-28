@@ -193,7 +193,7 @@ export class WorkflowFacade {
 
     this.workflowService.createNewSession(this.sessionData).subscribe({
       next: (sessionResp: any) => {        
-        if (sessionResp && sessionResp?.workflowSessionId) {
+        if (sessionResp && sessionResp?.workflowSessionId) {          
           this.router.navigate(['case-management/' + navigationPath], {
             queryParams: {
               sid: sessionResp?.workflowSessionId,
@@ -202,7 +202,10 @@ export class WorkflowFacade {
             },
           });
         }
+        if(!sessionResp?.sessionData?.prevClientCaseEligibilityId)
+        {
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
+        }
         this.hideLoader();
       },
       error: (err: any) => {
