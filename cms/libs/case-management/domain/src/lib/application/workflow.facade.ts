@@ -698,7 +698,7 @@ export class WorkflowFacade {
     if (showHideValue) {
       this.showSendEmailLetterPopup(true);
     } else {
-      this.router.navigate([`/case-management/cases/case360/${this.clientId}`]);
+      this.router.navigate([`/case-management/cases`]);
     }
   }
 }

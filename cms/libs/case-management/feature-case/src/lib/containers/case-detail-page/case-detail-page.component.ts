@@ -296,7 +296,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     if (event === CommunicationEvents.Close) {
       this.isShowSendNewLetterPopup = false;
     }
-    this.router.navigateByUrl(`case-management/cases/case360/${this.clientId}`);
+    this.router.navigateByUrl(`case-management/cases`);
   }
   public onPaste(): void {
     console.log("Paste");
