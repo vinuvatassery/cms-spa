@@ -41,8 +41,7 @@ import {
   CompletionChecklist,
   NavigationType,
   PronounCode,
-  TransGenderCode,
-  WorkflowTypeCode,
+  TransGenderCode  
 } from '@cms/case-management/domain';
 import {
   LoaderService,
