@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { DocumentFacade } from '@cms/case-management/domain';
+import { DocumentFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 @Component({
@@ -22,6 +22,7 @@ export class DocumentListComponent implements OnInit {
     public state!: State;
     public formUiStyle : UIFormStyle = new UIFormStyle(); 
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
+    isReadOnly$=this.caseFacade.isCaseReadOnly$;
     public actions = [
       {
         buttonType:"btn-h-primary",
@@ -42,7 +43,7 @@ export class DocumentListComponent implements OnInit {
       },
     ];
     /** Constructor **/
-    constructor(private documentFacade: DocumentFacade) {}
+    constructor(private documentFacade: DocumentFacade, private caseFacade: CaseFacade) {}
   
     /** Lifecycle hooks **/
     ngOnInit() {

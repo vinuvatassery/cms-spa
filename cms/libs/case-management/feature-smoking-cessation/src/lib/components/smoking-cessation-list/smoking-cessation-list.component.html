@@ -88,6 +88,7 @@
         icon="add"
         (click)="openAddReferralSmokingCessationClicked()"
         aria-label="add email address"
+        [disabled]="(isReadOnly$ | async) ? true : false"
       >
         REFERRAL
       </button>

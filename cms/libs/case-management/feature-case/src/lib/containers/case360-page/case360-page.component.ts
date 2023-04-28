@@ -13,10 +13,12 @@ import {
   ScreenType,
   CaseFacade,
   ClientProfileTabs,
-  WorkflowFacade
+  WorkflowFacade,
+  CaseStatusCode
 } from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
+import { LoaderService, LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -71,7 +73,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly workFlowFacade : WorkflowFacade
+    private readonly workFlowFacade : WorkflowFacade,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
   ) {}
 
   /** Lifecycle hooks **/
@@ -95,6 +99,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.profileClientId = this.route.snapshot.params['id'];
     if (this.profileClientId > 0) {
       this.clientHeaderVisibleSubject.next(true);
+      this.getCaseStatusDetails(this.profileClientId);
     }
   }
 
@@ -275,5 +280,25 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
   updateChangeGroup(group: any) {
     this.caseFacade.updateEligibilityGroup(group);
+  }
+
+  getCaseStatusDetails(clientId:any) {
+    this.loaderService.show();
+    this.caseFacade.getCaseStatusByClientId(clientId).subscribe({
+      next: (response: any) => {
+        this.loaderService.hide();
+        if(response?.caseStatusCode == CaseStatusCode.incomplete || response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
+          this.caseFacade.setCaseReadOnly(true);
+        }
+        
+        else{
+          this.caseFacade.setCaseReadOnly(false);
+        }
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      }
+    })
   }
 }

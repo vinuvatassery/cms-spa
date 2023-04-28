@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import {  HealthInsurancePolicyFacade } from '@cms/case-management/domain';
+import {  HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
@@ -22,9 +22,10 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
     {text: 'All', value: 100}
   ];
   isCoPaymentDetailsOpened = false;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   /** Constructor **/
-  constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
+  constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade, private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

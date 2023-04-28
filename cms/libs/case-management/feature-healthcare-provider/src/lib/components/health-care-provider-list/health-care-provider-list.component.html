@@ -84,7 +84,7 @@
                 [hidden]="((!managementTab && dataItem.buttonName==='deactivate') || (provider.isDeleted === true && dataItem.buttonName==='deactivate'))
                 || ((!managementTab&& dataItem.buttonName==='reactivate') ||  (!provider.isDeleted === true && dataItem.buttonName==='reactivate'))" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                  aria-hidden="false" (click)="dataItem.click(provider.clientProviderId);">
+                  aria-hidden="false" (click)="dataItem.click(provider.clientProviderId);" [disabled]="(isReadOnly$ | async) ? true : false">
                   <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
@@ -127,7 +127,7 @@
     <div class="flex-row">
       <div class="flex-col mt-1">
         <button kendoButton [primary]="true" icon="add" (click)="onOpenProviderSearchClicked('',false)"
-          aria-label="add healthcare provider">
+          aria-label="add healthcare provider" [disabled]="(isReadOnly$ | async) ? true : false">
           Provider
         </button>
       </div>

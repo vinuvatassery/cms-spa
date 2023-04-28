@@ -49,6 +49,7 @@ export class CaseFacade {
     false
   );
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  private isCaseReadOnlySubject = new BehaviorSubject<Case[]>([]);
   private clientProfileImpInfoSubject  = new Subject<any>();
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private currentGroupSubject = new BehaviorSubject<any>(null);
@@ -81,6 +82,7 @@ export class CaseFacade {
   currentGroup$ =  this.currentGroupSubject.asObservable();
   groupUpdated$ = this.groupUpdatedSubject.asObservable();
   ddlEligPeriods$ = this.ddlEligPeriodsSubject.asObservable();
+  isCaseReadOnly$ = this.isCaseReadOnlySubject.asObservable();
 
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
@@ -607,5 +609,13 @@ export class CaseFacade {
 
   getCaseStatusById(clientCaseId: string) {
     return this.caseDataService.loadCasesStatusById(clientCaseId);
+  }
+
+  setCaseReadOnly(isReadOnly:any){
+    this.isCaseReadOnlySubject.next(isReadOnly);
+  }
+
+  getCaseStatusByClientId(clientId: string) {
+    return this.caseDataService.loadCasesStatusByClientId(clientId);
   }
 }
