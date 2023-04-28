@@ -113,6 +113,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       clientDependentId: ['', ],
       dependentTypeCode: ['', ]
   });
+  debugger
   this.onFamilyFormLoad()
   }
 
@@ -176,6 +177,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   onSearchTemplateClick(dataItem : any)
   {  
+    debugger;
    this.existFamilyMemberForm.patchValue(
      {
        clientId: dataItem?.clientId ?? 0 ,    
@@ -186,10 +188,10 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
   onExitFamilyFormLoad()
   {    
-   this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
+   this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientRelationshipId != null))
    .subscribe((existDependentData: any) =>
    {  
-    
+    debugger;
        if(existDependentData?.clientDependentId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
@@ -218,6 +220,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   onExistDependentSubmit()
   {
+    debugger
     this.isExistSubmitted =true;
     this.existFamilyMemberForm.markAllAsTouched();
     
@@ -243,15 +246,16 @@ export class FamilyAndDependentDetailComponent implements OnInit {
 
   onDependentSubmit()
   {
+    debugger
     this.isSubmitted = true;    
     this.familyMemberForm.markAllAsTouched();
    if(this.familyMemberForm.valid)
    {
       const dependent  = {
         concurrencyStamp: this.familyMemberForm?.controls["concurrencyStamp"].value,
-        clientDependentId: this.familyMemberForm?.controls["clientDependentId"].value,
+        clientRelationshipId: this.familyMemberForm?.controls["clientDependentId"].value,
         clientId:  this.familyMemberForm?.controls["clientId"].value,     
-        relationshipCode: this.familyMemberForm?.controls["relationshipCode"].value,       
+        relationshipTypeCode: this.familyMemberForm?.controls["relationshipCode"].value,       
         firstName:  this.familyMemberForm?.controls["firstName"].value,
         lastName:  this.familyMemberForm?.controls["lastName"].value,       
         ssn:  this.familyMemberForm?.controls["ssn"].value?.replace('-', '').replace('-', ''),
@@ -273,20 +277,20 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     {         
       
       this.isExistDependent =false;
-      this.dependentGet$?.pipe(first((dependentData: any ) => dependentData?.clientDependentId != null))
+      this.dependentGet$.pipe(first((dependentData: any ) => dependentData?.clientRelationshipId != null))
       .subscribe((dependentData: any) =>
       {  
-        
-          if(dependentData?.clientDependentId)
+        debugger;
+          if(dependentData?.clientRelationshipId)
           {             
             this.isOpenedNewFamilyMember =true;
             this.isAddFamilyMember =false;
-            this.clientDependentId = dependentData?.clientDependentId;
+            this.clientDependentId = dependentData?.clientRelationshipId;
               this.dependentTypeCode = dependentData?.dependentTypeCode;
               this.familyMemberForm.setValue(
                 {
                   concurrencyStamp: dependentData?.concurrencyStamp,
-                  clientDependentId: dependentData?.clientDependentId,
+                  clientDependentId: dependentData?.clientRelationshipId,
                   clientId:  dependentData?.clientId,     
                   relationshipCode: dependentData?.relationshipCode,       
                   firstName:  dependentData?.firstName,

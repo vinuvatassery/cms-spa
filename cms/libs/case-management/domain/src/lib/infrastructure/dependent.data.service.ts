@@ -25,6 +25,7 @@ export class DependentDataService {
 
   ///1load dependents for grid
   loadDependents(eligibilityId: string, clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
+    debugger;
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
       `/eligibility-periods/${eligibilityId}/dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&LovTypeCode=${LovType.RelationshipCode}`
@@ -34,6 +35,7 @@ export class DependentDataService {
 
   ///2load dependent status  for checkbox
   loadDependentsStatus(eligibilityId: string) {
+    debugger;
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
       `/eligibility-periods/${eligibilityId}/dependent-status`
@@ -57,7 +59,7 @@ export class DependentDataService {
       clientDependentId: "00000000-0000-0000-0000-000000000000",
       clientId: dependent.clientId,
       dependentTypeCode: DependentTypeCode.Dependent,
-      relationshipCode: dependent?.relationshipCode,
+      relationshipCode: dependent?.relationshipTypeCode,
       firstName: dependent?.firstName,
       lastName: dependent?.lastName,
       ssn: dependent?.ssn,
@@ -84,10 +86,10 @@ export class DependentDataService {
 
     const data =
     {
-      clientDependentId: dependent?.clientDependentId,
+      clientDependentId: dependent?.clientRelationshipId,
       clientId: dependent.clientId,
       dependentTypeCode: DependentTypeCode.Dependent,
-      relationshipCode: dependent?.relationshipCode,
+      relationshipCode: dependent?.relationshipTypeCode,
       firstName: dependent?.firstName,
       lastName: dependent?.lastName,
       ssn: dependent?.ssn,
@@ -96,7 +98,7 @@ export class DependentDataService {
       concurrencyStamp: dependent?.concurrencyStamp
     }
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${dependent.clientDependentId}`,
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${dependent.clientRelationshipId}`,
       data
     );
   }
@@ -139,6 +141,7 @@ export class DependentDataService {
   }
 
   loadClientDependents(clientId: any) {
+    debugger;
     return this.http.get<Array<Dependent>>(
       `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}`
     );

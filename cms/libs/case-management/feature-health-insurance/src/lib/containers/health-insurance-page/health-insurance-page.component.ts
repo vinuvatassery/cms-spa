@@ -428,7 +428,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   private addHealthInsuranceStatusSubscription():void{
     this.healthInsuranceStatusSubscription = this.medicalHealthPlans$.subscribe((res)=>{
-      if(res.data.length>0){
+      if(res?.data?.length>0){
         this.isInsuranceAvailable = true;
         if(this.insuranceFlagForm.controls['currentInsuranceFlag'].value =='Y' ){
           this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);
