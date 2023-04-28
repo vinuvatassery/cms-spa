@@ -19,7 +19,7 @@ import { LovFacade, LovType } from '@cms/system-config/domain';
 export class ClientEditViewComponent implements OnInit, OnDestroy {
   
   @Input() isCerForm =false
-
+  @Input() clientCaseEligibilityId: string ='';
   /** Output Properties **/
   @Output() AppInfoChanged = new EventEmitter<{ completedDataPoints: CompletionChecklist[], updateWorkflowCount: boolean }>();
   @Output() AdjustAttrChanged = new EventEmitter<CompletionChecklist[]>();

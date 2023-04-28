@@ -6,7 +6,7 @@ import {
 import { Subject } from 'rxjs/internal/Subject';
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
-import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
 import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
 import { LoaderService,  LoggingService,  SnackBarNotificationType,} from '@cms/shared/util-core';
@@ -51,6 +51,7 @@ export class IncomeListComponent implements OnInit {
   proofOfSchoolDocument!:any
   incomeValid$ = this.incomeFacade.incomeValid$;
   isIncomeAvailable:boolean = true;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -109,7 +110,8 @@ export class IncomeListComponent implements OnInit {
       private readonly loaderService: LoaderService,
       private readonly clientDocumentFacade: ClientDocumentFacade,
       private readonly dependentFacade:FamilyAndDependentFacade,
-      private readonly cdr: ChangeDetectorRef) {}
+      private readonly cdr: ChangeDetectorRef,
+      private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

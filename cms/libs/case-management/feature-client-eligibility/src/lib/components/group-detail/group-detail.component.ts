@@ -7,7 +7,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries**/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { GroupCode } from '@cms/case-management/domain';
+import { GroupCode, CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-group-detail',
@@ -32,9 +32,11 @@ export class GroupDetailComponent implements OnInit {
   groupCodes!: any[];
   groupCodesSubscription = new Subscription();
   isScheduledGroupChange$ = new BehaviorSubject(false);
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   /** Constructor **/
   constructor(private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
+    private readonly caseFacade: CaseFacade,
     private readonly notifySnackbarService: NotificationSnackbarService) { }
 
   /* Lifecycle events */

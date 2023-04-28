@@ -1560,12 +1560,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.workflowFacade.clientCaseId)
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.workflowFacade.clientCaseId)
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }

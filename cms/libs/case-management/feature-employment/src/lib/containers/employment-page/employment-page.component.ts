@@ -183,7 +183,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.save().subscribe((response: any) => {
         if (response) {
           this.loaderService.hide();
-          this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         }
       })
     });

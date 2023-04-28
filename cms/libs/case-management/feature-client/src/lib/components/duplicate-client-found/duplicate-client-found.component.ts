@@ -21,7 +21,7 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   @Input() currentClientInfo: any = {};
   @Input() matchingClientInfo: any = {};
- 
+  @Input() clientCaseEligibilityId: string = '';
   duplicateBtnDisabled = false;
 
   @Output() closeModalClick = new EventEmitter<any>();
@@ -48,7 +48,7 @@ export class DuplicateClientFoundComponent implements OnInit {
   onDuplicateFoundClick() {
     this.duplicateBtnDisabled = true;
     this.loaderService.show();
-    this.caseFacade.updateCaseStatus(this.currentClientInfo.clientCaseId, CaseStatusCode.canceled).subscribe({
+    this.caseFacade.updateCaseStatus(this.currentClientInfo.clientCaseId, CaseStatusCode.canceled,this.clientCaseEligibilityId).subscribe({
       next: (response: any) => {
         this.router.navigate([`/case-management/cases/case360/${this.matchingClientInfo.clientId}`])
         this.closeModalClick.next(true);

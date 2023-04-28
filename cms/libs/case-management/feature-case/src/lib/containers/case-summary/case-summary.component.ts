@@ -183,12 +183,12 @@ private updateFormCompleteCount(prev: any, curr: any) {
         this.updateCase().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }

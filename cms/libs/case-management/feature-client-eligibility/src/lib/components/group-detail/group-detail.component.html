@@ -38,7 +38,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <button *ngIf="showDeleteOption" kendoButton aria-label="delete client’s benefits" [primary]="true" look="outline"
-        (click)="onDeleteGroupChange()">
+        (click)="onDeleteGroupChange()" [disabled]="(isReadOnly$ | async) ? true : false">
         Delete
       </button>
       <div class="justify-content-end">
@@ -46,7 +46,7 @@
           (click)="onCancelGroupChange()">
           Cancel
         </button>
-        <button kendoButton aria-label="change client’s benefits" [primary]="true" (click)="onUpdateGroup()">
+        <button kendoButton aria-label="change client’s benefits" [primary]="true" (click)="onUpdateGroup()" [disabled]="(isReadOnly$ | async) ? true : false">
           Change
         </button>
       </div>
