@@ -1,6 +1,6 @@
 <form [formGroup]="appInfoForm" *ngIf="appInfoForm">
 
-  <section kendoRippleContainer *ngIf="isCerForm">
+  <div kendoRippleContainer *ngIf="isCerForm" class="cerdatefield">
     <input type="hidden"  formControlName="cerSentDate">
     <div class="flex-row">
       <div class="flex-col flex-col-4">       
@@ -15,7 +15,7 @@
         </kendo-floatinglabel>
       </div>
     </div>
-  </section>
+  </div>
 
   <h3 *ngIf="!isCerForm">Applicant Info</h3>
   <h3 *ngIf="isCerForm">Client Information</h3>
