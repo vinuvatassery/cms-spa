@@ -35,7 +35,7 @@ export class IncomeListComponent implements OnInit {
   incomes$ = this.incomeFacade.incomes$;
   incomesTotal:any={};
   columnOptionDisabled = false;
-  dependentsProofofSchools$!:any;
+  dependentsProofofSchools:any = [];
   isEdit!: boolean;
   selectedIncome: any;
   showRemoveUpoadProofDoc = false;
@@ -310,8 +310,11 @@ onIncomeActionClicked(
   loadDependents(){
     this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
       if(response&&response.length>0){
-        this.dependentsProofofSchools$=response;
+        this.dependentsProofofSchools=response;
         this.cdr.detectChanges();
+      }
+      else{
+        this.dependentsProofofSchools = [];
       }
     })
   }
@@ -337,7 +340,7 @@ onIncomeActionClicked(
   }
 
   showHideImageUploadLoader(showHide:boolean,dataItem:any){
-    this.dependentsProofofSchools$.filter((dep:any)=>dep.clientDependentId==dataItem.clientDependentId).forEach((element:any)=>{
+    this.dependentsProofofSchools.filter((dep:any)=>dep.clientDependentId==dataItem.clientDependentId).forEach((element:any)=>{
       element["uploaingProofDoc"]=showHide;
       this.cdr.detectChanges();
     })
