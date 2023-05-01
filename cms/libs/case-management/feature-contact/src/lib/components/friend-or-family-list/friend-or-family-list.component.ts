@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 /** Facades **/
-import { ContactFacade, StatusFlag } from '@cms/case-management/domain';
+import { ContactFacade, StatusFlag, CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-friend-or-family-list',
@@ -30,7 +30,7 @@ export class FriendOrFamilyListComponent implements OnInit {
 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public gridOptionData = [
     {
       buttonType:"btn-h-primary",
@@ -68,7 +68,7 @@ export class FriendOrFamilyListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade,  private readonly cdr:ChangeDetectorRef) {}
+  constructor(private readonly contactFacade: ContactFacade,  private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

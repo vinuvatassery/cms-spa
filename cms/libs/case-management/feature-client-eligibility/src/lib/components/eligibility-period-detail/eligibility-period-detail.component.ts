@@ -44,7 +44,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     day: 'numeric',
   };
   maxLengthTen:number=10;
-  
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
 
   /** Constructor **/
   constructor(

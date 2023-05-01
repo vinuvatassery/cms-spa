@@ -27,7 +27,7 @@ export class StatusPeriodComponent implements OnInit {
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType: "btn-h-primary",

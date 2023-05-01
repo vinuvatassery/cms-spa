@@ -7,7 +7,7 @@ import {  Router ,ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/internal/Subject';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** Enums **/
-import { DependentTypeCode, ScreenType, FamilyAndDependentFacade } from '@cms/case-management/domain';
+import { DependentTypeCode, ScreenType, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
 import {  State } from '@progress/kendo-data-query';
@@ -49,10 +49,10 @@ CAClient = DependentTypeCode.CAClient;
   @Output() addExistingClientEvent = new EventEmitter<any>();
   public formUiStyle : UIFormStyle = new UIFormStyle();
   dependentValid$ = this.familyAndDependentFacade.dependentValid$;
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
     /**Constructor */
     constructor( private router: Router , private activatedRoute : ActivatedRoute,
-      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef) { }
+      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade) { }
 
     isEditFamilyMember!: boolean;
     isAddOrEditFamilyDependentDisplay!: boolean;

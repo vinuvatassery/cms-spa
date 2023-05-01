@@ -45,8 +45,9 @@ import { LovFacade, LovType } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit, OnDestroy {
-  @Input() isCerForm = false;
-
+  
+  @Input() isCerForm =false
+  @Input() clientCaseEligibilityId: string ='';
   /** Output Properties **/
   @Output() AppInfoChanged = new EventEmitter<{
     completedDataPoints: CompletionChecklist[];
