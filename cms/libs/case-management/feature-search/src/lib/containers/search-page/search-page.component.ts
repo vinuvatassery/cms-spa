@@ -56,11 +56,13 @@ export class SearchPageComponent implements OnInit {
           this.caseFacade.getSessionInfoByCaseEligibilityId(selectedValue.clientCaseEligibilityId).subscribe({
             next: (response: any) => {
               if (response) {
+                debugger
                 this.loaderService.hide();
                 this.router.navigate(['case-management/case-detail'], {
                   queryParams: {
                     sid: response.sessionId,
-                    eid: response.entityID
+                    eid: response.entityID,                   
+                    wtc: response?.workflowTypeCode
                   },
                 });
               }

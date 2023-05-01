@@ -399,7 +399,7 @@ export class CaseDataService {
     );
   }
   getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
-    return this.http.get(
+    return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseEligibilityId}/SessionSearch`);
   }
 
