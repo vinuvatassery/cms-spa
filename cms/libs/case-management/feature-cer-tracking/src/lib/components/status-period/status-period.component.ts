@@ -60,13 +60,6 @@ export class StatusPeriodComponent implements OnInit {
     };
   }
 
-  ngOnChanges(){
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
-    };
-  }
-
   pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
