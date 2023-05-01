@@ -115,8 +115,8 @@ export class CerListComponent implements OnInit, OnChanges {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.dateDropdownDisabled = true
-    this.loader = true;
+    this.dateDropdownDisabled = false
+    this.loader = true;    
     this.loadcerTrackingDates();
 
   }
@@ -190,7 +190,7 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   private loadCerTrackingList(): void {
-    this.dateDropdownDisabled = true
+    this.dateDropdownDisabled = false
     this.loaCerData(
       this.state.skip ?? 0,
       this.state.take ?? 0,
@@ -225,21 +225,28 @@ export class CerListComponent implements OnInit, OnChanges {
 
     this.cerTrackingDates$
       ?.pipe(
-        first((trackingDateList: any) => trackingDateList?.seletedDate != null)
+        first((trackingDateList: any) => trackingDateList != null)
       )
-      .subscribe((trackingDateList: any) => {
+      .subscribe((trackingDateList: any) => {      
         if (trackingDateList?.seletedDate) {
           this.loadDefSelectedateSubject.next(trackingDateList?.seletedDate);
           this.datesSubject.next(trackingDateList?.datesList);
           this.selectedDate = trackingDateList?.seletedDate;
           this.epDateOnChange(this.selectedDate);
         }
+        else
+        {    
+          this.datesSubject.next(trackingDateList?.datesList);  
+          this.loadDefSelectedateSubject.next(null);
+          this.loader = false;
+          this.dateDropdownDisabled = false
+        }
       });
   }
 
-  gridDataHandle() {   
+  gridDataHandle() {       
     this.cerTrackingData$.subscribe((data: any) => {    
-      this.gridCERDataSubject.next(data);
+      this.gridCERDataSubject.next(data);      
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
         this.dateDropdownDisabled = false
