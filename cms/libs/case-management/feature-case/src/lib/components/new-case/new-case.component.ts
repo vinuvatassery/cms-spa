@@ -141,8 +141,7 @@ export class NewCaseComponent implements OnInit  {
       else {
         this.loaderService.show();
         this.caseFacade.getSessionInfoByCaseEligibilityId(event.clientCaseEligibilityId).subscribe({
-          next: (response: any) => {
-            debugger
+          next: (response: any) => {            
             if (response) {
               this.loaderService.hide();
               this.router.navigate(['case-management/case-detail'], {
