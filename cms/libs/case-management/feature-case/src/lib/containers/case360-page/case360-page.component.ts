@@ -287,7 +287,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.caseFacade.getCaseStatusByClientId(clientId).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
-        if(response?.caseStatusCode == CaseStatusCode.incomplete || response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
+        if(response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
           this.caseFacade.setCaseReadOnly(true);
         }
         
