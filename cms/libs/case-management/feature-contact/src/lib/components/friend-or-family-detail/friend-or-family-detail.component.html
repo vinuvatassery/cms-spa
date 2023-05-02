@@ -94,7 +94,7 @@
   *ngIf="isDeactivateFriendOrFamilyOpened"
   (close)="onDeactivateFriendOrFamilyClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Deactivate Family Contact?"
+  title="Deactivate Alternate Contact?"
 >
   <case-management-deactivate-friend-or-family-confirmation [isEdit]="isEditValue" [clientContact]="contact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
 </kendo-dialog>

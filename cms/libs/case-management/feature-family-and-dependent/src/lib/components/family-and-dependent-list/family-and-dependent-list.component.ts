@@ -81,7 +81,7 @@ CAClient = DependentTypeCode.CAClient;
         if(!this.editbuttonEmitted)
         {
           this.editbuttonEmitted =true;
-        this.onEditFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
+          this.onEditFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
         }
       },
     },
@@ -219,7 +219,7 @@ pageselectionchange(data: any) {
   /** child event methods **/
   onFormDeleteclickEvent(event: any)
   {
-    this.onDeleteFamilyMemberClicked(event?.clientDependentId, event?.dependentTypeCode)
+    this.onDeleteFamilyMemberClicked(event?.clientRelationshipId, event?.dependentTypeCode)
   }
 
   addUpdateDependentHandle(dependent : any) {
@@ -229,7 +229,7 @@ pageselectionchange(data: any) {
     this.dependentAddNewGet$.pipe(first((addResponse: any ) => addResponse != null))
     .subscribe((addResponse: any) =>
     {
-      if(addResponse?.clientDependentId)
+      if(addResponse?.clientRelationshipId)
       {
         this.familyAndDependentFacade.dependentValidSubject.next(true);
         this.loadFamilyDependents()
@@ -238,12 +238,12 @@ pageselectionchange(data: any) {
 
     })
 
-    if(dependent?.clientDependentId)
+    if(dependent?.clientRelationshipId)
       {
         this.dependentUpdateNew$.pipe(first((updateResponse: any ) => updateResponse != null))
         .subscribe((updateResponse: any) =>
         {
-          if(updateResponse?.clientDependentId)
+          if(updateResponse?.clientRelationshipId)
           {
             this.loadFamilyDependents()
             this.onFamilyMemberClosed()
@@ -293,10 +293,10 @@ pageselectionchange(data: any) {
   {
     this.addExistingClientEvent.emit($event)
     this.editbuttonEmitted =false;
-      this.existdependentStatus$.pipe(first((updateResponse: any ) => updateResponse?.clientDependentId != null))
+      this.existdependentStatus$.pipe(first((updateResponse: any ) => updateResponse?.clientRelationshipId != null))
       .subscribe((updateResponse: any) =>
       {
-        if(updateResponse?.clientDependentId)
+        if(updateResponse?.clientRelationshipId)
         {
           this.loadFamilyDependents()
           this.onFamilyMemberClosed()
