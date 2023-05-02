@@ -222,7 +222,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     
     if(this.existFamilyMemberForm.valid)
     {
-      debugger;
       const existDepData =
       {
         clientId : this.existFamilyMemberForm?.controls["clientId"].value,
@@ -247,7 +246,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     this.familyMemberForm.markAllAsTouched();
    if(this.familyMemberForm.valid)
    {
-    debugger
       const dependent  = {
         concurrencyStamp: this.familyMemberForm?.controls["concurrencyStamp"].value,
         clientRelationshipId: this.familyMemberForm?.controls["clientDependentId"].value,
@@ -276,7 +274,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
       this.isExistDependent =false;
       this.dependentGet$.pipe(first((dependentData: any ) => dependentData?.clientRelationshipId != null))
       .subscribe((dependentData: any) =>
-      {  debugger;
+      {  
           if(dependentData?.clientRelationshipId)
           {             
             this.isOpenedNewFamilyMember =true;

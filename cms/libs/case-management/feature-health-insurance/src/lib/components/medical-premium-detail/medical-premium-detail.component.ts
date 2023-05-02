@@ -234,12 +234,12 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     );
     this.onHealthInsuranceTypeChanged();
     this.healthInsuranceForm.controls['insuranceStartDate'].setValue(
-      healthInsurancePolicy.startDate != null ? new Date(healthInsurancePolicy.startDate) : null
+      healthInsurancePolicy.insuranceStartDate != null ? new Date(healthInsurancePolicy.insuranceStartDate) : null
     );
 
     this.healthInsuranceForm.controls['insuranceEndDate'].setValue(
 
-      healthInsurancePolicy.endDate != null ? new Date(healthInsurancePolicy.endDate) : null
+      healthInsurancePolicy.insuranceEndDate != null ? new Date(healthInsurancePolicy.insuranceEndDate) : null
 
     );
     this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(
@@ -361,10 +361,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   private bindInsurance(healthInsurancePolicy: HealthInsurancePolicy) {
     if (this.medicareInsuranceInfoCheck || this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
       this.healthInsuranceForm.controls['insuranceStartDate'].setValue(
-        healthInsurancePolicy.startDate != null ? new Date(healthInsurancePolicy.startDate) : null
+        healthInsurancePolicy.insuranceStartDate != null ? new Date(healthInsurancePolicy.insuranceStartDate) : null
       );
       this.healthInsuranceForm.controls['insuranceEndDate'].setValue(
-        healthInsurancePolicy.endDate != null ? new Date(healthInsurancePolicy.endDate) : null
+        healthInsurancePolicy.insuranceEndDate != null ? new Date(healthInsurancePolicy.insuranceEndDate) : null
       );
       this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(
         healthInsurancePolicy.insuranceIdNbr
@@ -562,7 +562,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   }
 
   private validateOthersCoveredOnPlan() {
-    debugger;
     const othersCoveredOnPlanRequiredFields: Array<string> = [
       'relationshipCode',
       'firstName',
@@ -806,7 +805,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
 
   private populateInsurancePolicy() {
     {
-      debugger;
       this.healthInsurancePolicy = new HealthInsurancePolicy();
       this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.clientCaseEligibilityId = this.caseEligibilityId;
@@ -832,17 +830,16 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.metalLevelCode =
         this.healthInsuranceForm.controls['metalLevel'].value === null ? null : this.healthInsuranceForm.controls['metalLevel'].value?.lovCode;
       if (this.healthInsuranceForm.controls['insuranceStartDate'].value !== null) {
-        this.healthInsurancePolicy.startDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat);
+        this.healthInsurancePolicy.insuranceStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat);
       }
       else {
-        this.healthInsurancePolicy.startDate = null
+        this.healthInsurancePolicy.insuranceStartDate = null
       }
-      debugger;
       if (this.healthInsuranceForm.controls['insuranceEndDate'].value !== null) {
-        this.healthInsurancePolicy.endDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat);
+        this.healthInsurancePolicy.insuranceEndDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat);
       }
       else {
-        this.healthInsurancePolicy.endDate = null;
+        this.healthInsurancePolicy.insuranceEndDate = null;
       }
       this.setValuesBasedOnCareAssistPayingPremium();
       this.setValuesMedicare();
@@ -874,7 +871,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       person.enrolledInInsuranceFlag = StatusFlag.Yes;
     });
     this.healthInsuranceForm.value.newOthersCoveredOnPlan.forEach((x: any) => {
-      debugger;
       x.relationshipTypeCode = DependentTypeCode.Health;
       x.enrolledInInsuranceFlag = StatusFlag.Yes;
       x.clientCaseEligibilityId = this.caseEligibilityId;
@@ -928,8 +924,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.insuranceCarrierId = null;
       this.healthInsurancePolicy.insurancePlanId = null;
       this.healthInsurancePolicy.insuranceIdNbr = null;
-      this.healthInsurancePolicy.startDate = null;
-      this.healthInsurancePolicy.endDate = null;
+      this.healthInsurancePolicy.insuranceStartDate = null;
+      this.healthInsurancePolicy.insuranceEndDate = null;
       this.healthInsurancePolicy.othersCoveredOnPlanFlag = null;
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
       this.healthInsurancePolicy.policyHolderFirstName = null;
