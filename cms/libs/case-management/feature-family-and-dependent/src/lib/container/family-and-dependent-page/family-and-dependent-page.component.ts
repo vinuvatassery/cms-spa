@@ -47,7 +47,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   familyStatus! : StatusFlag
   isCerForm = false;
   prevClientCaseEligibilityId!: string;
-
+  haveTheyHaveFamilyMember!: string;
+  haveTheyHaveAdditionalFamilyMember! : string;
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -150,6 +151,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
         this.workflowFacade.enableSaveButton();
       }
     });
+  }
+
+  onDependentStatusChange(dependent: any, status: string) {
   }
 
   private save() {

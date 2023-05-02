@@ -14,6 +14,7 @@
                 class="form-control" 
                 value="Y"
                 name="havetheyhavefamilymember"
+                [(ngModel)]="haveTheyHaveFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -29,6 +30,7 @@
                 id="havetheyhavefamilymemberNo"
                 value="N" 
                 name="havetheyhavefamilymember"
+                [(ngModel)]="haveTheyHaveFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -39,41 +41,45 @@
           </div>
           </fieldset> 
         </div>
-        <div class="flex-col" *ngFor="let dependent of (dependentList$ | async)?.items; let i=index">
-          <fieldset class="k-form-fieldset">
-            <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
+        <div [hidden]="haveTheyHaveFamilyMember != 'Y'">
+          <div class="flex-col" *ngFor="let dependent of (dependentList$ | async)?.data; let i=index">
+            <fieldset class="k-form-fieldset">
+              <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
 
-          <div class="component-list-h comp-list-horizontal">
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton   aria-labelledby="dependent"
-                id="dependent{{i}}y"
-                class="form-control" 
-                value="Y"
-                name="dependent_{{i}}"
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="dependent{{i}}y"
-                text="Yes"
-              ></kendo-label>
-            </span>
-            <span class="app-radiobtnwidtext-wrapper">
-              <input
-                type="radio"
-                kendoRadioButton
-                aria-labelledby="dependent" 
-                id="dependent{{i}}n"
-                value="N" 
-                name="dependent_{{i}}"
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="dependent{{i}}n"
-                text="No"
-              ></kendo-label>
-            </span>
+            <div class="component-list-h comp-list-horizontal">
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton   aria-labelledby="dependent"
+                  id="dependent{{i}}y"
+                  class="form-control" 
+                  value="Y"
+                  name="dependent_{{i}}"
+                  (click)="onDependentStatusChange(dependent, 'Y')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="dependent{{i}}y"
+                  text="Yes"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="dependent" 
+                  id="dependent{{i}}n"
+                  value="N" 
+                  name="dependent_{{i}}"
+                  (click)="onDependentStatusChange(dependent, 'N')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="dependent{{i}}n"
+                  text="No"
+                ></kendo-label>
+              </span>
+            </div>
+            </fieldset> 
           </div>
-          </fieldset> 
         </div>
         <div class="flex-col">
           <fieldset class="k-form-fieldset">
@@ -85,7 +91,7 @@
                 id="havetheyhaveadditionalfamilymemberYes"
                 class="form-control" 
                 value="Y"
-                name="havetheyhaveadditionalfamilymember"
+                name="haveTheyHaveAdditionalFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -100,7 +106,7 @@
                 aria-labelledby="havetheyhaveadditionalfamilymemberNo" 
                 id="havetheyhaveadditionalfamilymemberNo"
                 value="N" 
-                name="havetheyhaveadditionalfamilymember"
+                name="haveTheyHaveAdditionalFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -113,7 +119,7 @@
         </div>
       </div>
       <div class="flex-row">
-        <div class="flex-col mb-2" *ngIf="isCerForm">
+        <div class="flex-col mb-2" *ngIf="isCerForm && haveTheyHaveAdditionalFamilyMember=='Y'">
         <h5 >Add new family members:</h5>
       </div>
         <div class="flex-col mb-1" *ngIf="!isCerForm">
