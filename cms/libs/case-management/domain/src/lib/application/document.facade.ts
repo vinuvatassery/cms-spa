@@ -14,11 +14,13 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 export class DocumentFacade {
   /** Private properties **/
   private documentsSubject = new BehaviorSubject<Document[]>([]);
-  private documentGridLoaderSubject = new BehaviorSubject<boolean>(false);
+  private documentGridLoaderSubject = new Subject<boolean>();
   private documentSubject = new Subject<any>();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   private documentsListSubject  = new Subject<any>();
+  private saveDocumentSubject = new Subject<any>();
+  private updateDocumentSubject = new Subject<any>();
   public sortValue = ' '
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
@@ -30,6 +32,8 @@ export class DocumentFacade {
   documentsList$ = this.documentsListSubject.asObservable();
   document$ = this.documentSubject.asObservable();
   documentGridLoader$ = this.documentGridLoaderSubject.asObservable();
+  saveDocumentResponse$ = this.saveDocumentSubject.asObservable();
+  updateDocumentResponse$ = this.updateDocumentSubject.asObservable();
   /** Constructor**/
   constructor(private readonly documentDataService: DocumentDataService,
     private loggingService : LoggingService,
@@ -49,12 +53,38 @@ export class DocumentFacade {
     });
   }
 
-  uploadDocument(doc: any) {
-    return this.documentDataService.uploadDocument(doc);
+  saveDocument(doc: any) {
+    this.loaderService.show();
+    this.documentDataService.saveDocument(doc).subscribe({
+      next: (response:any) => {
+        this.saveDocumentSubject.next(response);
+        if (response) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Document saved successfully.');
+          this.loaderService.hide();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        this.loaderService.hide();
+      },
+    });
   }
 
   updateDocument(doc: any) {
-    return this.documentDataService.updateDocument(doc);
+    this.loaderService.show();
+    this.documentDataService.updateDocument(doc).subscribe({
+      next: (response:any) => {
+        this.updateDocumentSubject.next(response);
+        if (response) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Document updated successfully.');
+          this.loaderService.hide();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        this.loaderService.hide();
+      },
+    });
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -140,6 +170,24 @@ export class DocumentFacade {
   }
 
   getDocumentByDocumentId(documentId: string) {
-    return this.documentDataService.getDocumentByDocumentId(documentId);
+    this.loaderService.show();
+    this.documentDataService.getDocumentByDocumentId(documentId).subscribe({
+      next: (documentResponse) => {
+        if(documentResponse){
+          this.documentSubject.next(documentResponse);
+          this.loaderService.hide();
+        }
+        else{
+          this.showHideSnackBar(SnackBarNotificationType.WARNING, 'Data Not Found')
+          this.loaderService.hide();
+        }
+      },
+      error: (err) => {
+        if (err) {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loaderService.hide();
+        }
+      },
+    });
   }
 }

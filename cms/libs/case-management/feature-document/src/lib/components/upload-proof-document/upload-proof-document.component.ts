@@ -21,7 +21,8 @@ export class UploadProofDocumentComponent implements OnInit {
   @Input() isEdit: boolean = false;
   @Input() documentId!: string;
   document$ = this.documentFacade.document$;
-
+  saveDocumentResponse$ = this.documentFacade.saveDocumentResponse$;
+  updateDocumentResponse$ = this.documentFacade.updateDocumentResponse$;
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
 
   public uploadFileSizeLimit = this.configurationProvider.appSettings.uploadFileSizeLimit;
@@ -95,7 +96,13 @@ export class UploadProofDocumentComponent implements OnInit {
         clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
         documentTypeCode: this.uploadform.controls['attachmentType'].value        
       };
-      return saveDocument;
+      this.documentFacade.saveDocument(saveDocument);
+      this.btnDisabled = false;
+      this.documentFacade.saveDocumentResponse$.subscribe((saveResponse: any) => {
+        if(saveResponse){
+          this.onAttachmentPopupClosed();
+        }        
+      }) 
     }
     else{
       let updateDocument : Document  = {
@@ -109,66 +116,14 @@ export class UploadProofDocumentComponent implements OnInit {
         clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
         documentTypeCode: this.uploadform.controls['attachmentType'].value        
       };
-      return updateDocument;
-    }
-    
-  } 
-  
-  private saveDocument(){
-    this.clientDocumentId = '';
-    const document = this.populateModel();
-    this.loaderService.show();
-    this.documentFacade
-    .uploadDocument(document)
-    .subscribe({
-      next: (data: any) => {
-        this.documentFacade.showHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          'Document saved successfully.'
-        );
-        this.onAttachmentPopupClosed();
-        this.loaderService.hide();
-        this.btnDisabled = false;
-      },
-      error: (error: any) => {
-        if (error) {
-          this.btnDisabled = false;
-          this.documentFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            error
-          );
-          this.loaderService.hide();
-        }
-      }
-    });
-  }
-
-  private updateDocument(){
-    const document = this.populateModel();
-    this.loaderService.show();
-    this.documentFacade
-    .updateDocument(document)
-    .subscribe({
-      next: (data: any) => {
-        this.documentFacade.showHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          'Document Updated successfully.'
-        );
-        this.onAttachmentPopupClosed();
-        this.loaderService.hide();
-        this.btnDisabled = false;
-      },
-      error: (error: any) => {
-        if (error) {
-          this.btnDisabled = false;
-          this.documentFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            error
-          );
-          this.loaderService.hide();
-        }
-      }
-    });
+      this.documentFacade.updateDocument(updateDocument);
+      this.btnDisabled = false;
+      this.documentFacade.updateDocumentResponse$.subscribe((updateResponse: any) => {
+        if(updateResponse){
+          this.onAttachmentPopupClosed();
+        }        
+      }) 
+    }   
   }
 
   private validateForm() {    
@@ -186,31 +141,10 @@ export class UploadProofDocumentComponent implements OnInit {
   }
 
   private getDocumentDataByDocumentId(){
-    this.loaderService.show();
-    this.documentFacade.getDocumentByDocumentId(this.documentId).subscribe({
-      next: (data) => {
-        if(data){
-          this.bindValues(data);
-          this.loaderService.hide();
-        }
-        else{
-          this.documentFacade.showHideSnackBar(
-            SnackBarNotificationType.WARNING,
-            'Data Not Found'
-          );
-          this.loaderService.hide();
-        }
-      },
-      error: (err) => {
-        if (err) {
-          this.documentFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            err
-          );
-          this.loaderService.hide();
-        }
-      },
-    });
+    this.documentFacade.getDocumentByDocumentId(this.documentId)
+    this.documentFacade.document$.subscribe((documentData: any) => {
+        this.bindValues(documentData);
+      }); 
   }
  
   private bindValues(document:Document){  
@@ -241,12 +175,10 @@ export class UploadProofDocumentComponent implements OnInit {
     this.validateForm();
     if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {      
       this.btnDisabled = true;
-      if(this.isEdit){
-        this.updateDocument();
+      if(!this.isEdit){
+        this.clientDocumentId = '';
       }
-      else{
-        this.saveDocument();
-      }
+      this.populateModel();      
     }
   } 
 

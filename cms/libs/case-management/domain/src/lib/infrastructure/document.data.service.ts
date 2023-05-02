@@ -7,6 +7,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { Subject } from 'rxjs/internal/Subject';
 /** Entities **/
 import { Document } from '../entities/document';
+import { ClientDocumnetEntityType } from '@cms/case-management/domain';
 /** Data services **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Injectable({ providedIn: 'root' })
@@ -48,15 +49,15 @@ export class DocumentDataService {
     ]);
   }
   
-  uploadDocument(doc: any) {
+  saveDocument(doc: any) {
     let documentFormData = new FormData();
-    documentFormData = this.bindFormData(doc, 'SAVE');
+    documentFormData = this.bindFormData(doc, ClientDocumnetEntityType.Save);
     return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
   }
 
   updateDocument(doc: any) {
     let documentFormData = new FormData();
-    documentFormData = this.bindFormData(doc, 'EDIT');
+    documentFormData = this.bindFormData(doc, ClientDocumnetEntityType.Edit);
     return this.http.put(this.getUrl(), documentFormData, { reportProgress: true });
   }
   
@@ -89,7 +90,7 @@ export class DocumentDataService {
 
   private bindFormData(doc: any, event: any): FormData {
     let documentFormData = new FormData();
-    if (event == "SAVE") {
+    if (event == ClientDocumnetEntityType.Save) {
       documentFormData.append("clientId", `${doc?.clientId}`);
       documentFormData.append("clientCaseId", doc?.clientCaseId ?? '');
       documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
