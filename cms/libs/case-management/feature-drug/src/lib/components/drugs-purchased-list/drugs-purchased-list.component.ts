@@ -3,7 +3,7 @@ import {
   OnInit,
   ViewEncapsulation,Input
 } from '@angular/core';
-import { DrugPharmacyFacade } from '@cms/case-management/domain';
+import { DrugPharmacyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 @Component({
@@ -27,6 +27,7 @@ export class DrugsPurchasedListComponent implements OnInit {
   public state!: State;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -56,7 +57,7 @@ export class DrugsPurchasedListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade) {}
+  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade, private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

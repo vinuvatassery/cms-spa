@@ -22,4 +22,6 @@ export class ClientCaseEligibility {
   fplPercentage: number = 0;
   justMemo: string = '';
   prevClientCaseEligibilityId: string | null = null;
+  cerReceivedDate = new Date();
+  cerSentDate  = new Date();
 }

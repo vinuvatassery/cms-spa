@@ -123,6 +123,7 @@
       icon="add"
       aria-label="add medical payment"
       (click)="openCoPaymentDetailsOpened()"
+      [disabled]="(isReadOnly$ | async) ? true : false"
     >
       Dental Payment
     </button>

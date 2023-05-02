@@ -79,7 +79,7 @@
         <div class="flex-row">
             <div class="flex-col mt-1">
                 <button kendoButton [primary]="true" icon="add"  
-                    aria-label="add pharmacy">
+                    aria-label="add pharmacy" [disabled]="(isReadOnly$ | async) ? true : false">
                     Pharmacy Claim
                 </button>
             </div>
