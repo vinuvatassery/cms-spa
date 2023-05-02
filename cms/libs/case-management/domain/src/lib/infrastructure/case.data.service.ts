@@ -407,10 +407,10 @@ export class CaseDataService {
     return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}/eligibility-periods`);
   }
 
-  loadCasesStatusByClientId(clientId: string) {
+  loadCasesStatusByClientEligibilityId(clientId: any, clientCaseEligibilityId: any) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/${clientId}/status`
+      `/case-management/clients/${clientId}/eligibility/${clientCaseEligibilityId}/status`
     );
   }
 }

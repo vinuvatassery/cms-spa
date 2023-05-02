@@ -619,7 +619,7 @@ export class CaseFacade {
     this.isCaseReadOnlySubject.next(isReadOnly);
   }
 
-  getCaseStatusByClientId(clientId: string) {
-    return this.caseDataService.loadCasesStatusByClientId(clientId);
+  getCaseStatusByClientEligibilityId(clientId: any, clientCaseEligibilityId: any) {
+    return this.caseDataService.loadCasesStatusByClientEligibilityId(clientId,clientCaseEligibilityId);
   }
 }
