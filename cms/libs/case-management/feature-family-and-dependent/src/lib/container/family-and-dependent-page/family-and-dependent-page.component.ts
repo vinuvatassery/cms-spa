@@ -201,7 +201,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   addUpdateDependentHandle(dependent : any) {
    const dependentData : Dependent = dependent;
    dependent.clientId =this.clientId ;
-    if(dependentData.clientDependentId && dependentData.clientDependentId !='')
+    if(dependentData.clientRelationshipId && dependentData.clientRelationshipId !='')
     {
       this.familyAndDependentFacade.updateNewDependent(this.clientCaseEligibilityId, dependentData);
     }
