@@ -1,9 +1,9 @@
 export interface Dependent {
-    clientDependentId  :  string  ,
+    clientRelationshipId  :  string  ,
     clientId  : number,
-    dependentTypeCode  :  string  ,
-    relationshipCode  :    string  ,
-    relationshipDescription    : string
+    relationshipTypeCode  :  string  ,
+    relationshipSubTypeCode  :    string  ,
+    OtherDesc    : string
     firstName  :    string  ,
     lastName  :   string  ,
     fullName  :   string  ,
