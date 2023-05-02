@@ -99,7 +99,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.profileClientId = this.route.snapshot.params['id'];
     if (this.profileClientId > 0) {
       this.clientHeaderVisibleSubject.next(true);
-      this.getCaseStatusDetails(this.profileClientId);
     }
   }
 
@@ -204,6 +203,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           if (clientHeader?.clientCaseId) {
             this.clientCaseId = clientHeader?.clientCaseId;
           }
+          this.getCaseStatusDetails();
           this.onTabClick(ClientProfileTabs.CLIENT_INFO);
         }
       });
@@ -282,12 +282,12 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.caseFacade.updateEligibilityGroup(group);
   }
 
-  getCaseStatusDetails(clientId:any) {
+  getCaseStatusDetails() {
     this.loaderService.show();
-    this.caseFacade.getCaseStatusByClientId(clientId).subscribe({
+    this.caseFacade.getCaseStatusByClientEligibilityId(this.profileClientId,this.clientCaseEligibilityId).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
-        if(response?.caseStatusCode == CaseStatusCode.incomplete || response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
+        if(response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
           this.caseFacade.setCaseReadOnly(true);
         }
         
