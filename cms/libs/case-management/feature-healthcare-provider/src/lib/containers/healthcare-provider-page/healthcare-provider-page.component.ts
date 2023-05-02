@@ -17,6 +17,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
   /** Public properties **/  
   private showProvidervalidationboxSubject = new Subject<boolean>();
+  private showProviderFlagGridSubject = new Subject<boolean>();
+  private cerFormSubject = new Subject<boolean>();
 
   healthCareProviderSearchList$  =this.healthProvider.healthCareProviderSearchList$;
   healthCareProviders$ = this.healthProvider.healthCareProviders$;
@@ -26,7 +28,13 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   loadExistingProvider$  =this.healthProvider.loadExistingProvider$;
   searchProviderLoaded$  =this.healthProvider.searchProviderLoaded$;
   showProvidervalidation$  =this.healthProvider.showProvidervalidation$;
+  healthCareProvideGetCerFlag$  =this.healthProvider.healthCareProvideGetCerFlag$;
+  healthCareProvideSetCerFlag$  =this.healthProvider.healthCareProvideSetCerFlag$;
+
   showProvidervalidationbox$  = this.showProvidervalidationboxSubject.asObservable();
+  showProviderFlagGrid$  = this.showProviderFlagGridSubject.asObservable();
+  cerForm$  = this.cerFormSubject.asObservable();
+
   isProvidersGridDisplay =true;
   pageSizes = this.healthProvider.gridPageSizes;
   sortValue  = this.healthProvider.sortValue;
@@ -37,6 +45,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   providersStatus!: StatusFlag;
   showProvidervalidationbox! : boolean;
   isCerForm = false;
+  prevClientCaseEligibilityId!: string;
+  clientCaseEligibilityId!: string;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;
@@ -78,10 +88,47 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
      .subscribe((session: any) => {      
       this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId  
       this.clientId = JSON.parse(session.sessionData).clientId  
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData)?.clientCaseEligibilityId;
+      this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;
+      if (this.prevClientCaseEligibilityId) 
+      {   
+         this.isCerForm = true;
+      }
       this.healthProvider.hideLoader(); 
-      this.loadProviderStatus();      
+      if(this.isCerForm === true)
+      {       
+         this.loadProviderCerStatus()
+      }
+      else
+      {
+        this.showProviderFlagGridSubject.next(true)
+        this.loadProviderStatus();      
+      }
+      this.cerFormSubject.next(this.isCerForm)
      });        
    } 
+
+   private loadProviderCerStatus()
+   {
+    this.healthProvider.loadProviderCerStatus(this.clientCaseEligibilityId)
+    this.healthCareProvideGetCerFlag$.pipe(
+      filter(x=> x)
+    )
+    .subscribe((x: string)=>
+    {  
+     if(x === StatusFlag.Yes)
+     {
+      this.loadProviderStatus();
+      this.showProviderFlagGridSubject.next(true)
+     }
+     else
+     {
+      this.showProviderFlagGridSubject.next(false)
+     }
+    });
+
+
+   }
 
    private loadProviderStatus() : void 
    {    

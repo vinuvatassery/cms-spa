@@ -44,8 +44,9 @@ export class HealthcareProviderDataService {
       `/case-management/healthcare-providers/${clientId}/provider-status`
     );
     
-  }
-  
+  } 
+
+
   ///3
   updateHealthCareProvidersFlag(clientId : number, nohealthCareProviderFlag : string)
   {
@@ -55,6 +56,18 @@ export class HealthcareProviderDataService {
     ,null);
   }
 
+
+  loadProviderCerStatus(clientCaseEligibilityId : string) {     
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientCaseEligibilityId}/cer-status`
+    );    
+  } 
+
+  updateHealthCareProvidersCerFlag(clientCaseEligibilityId : string, healthCareProviderCerFlag : string)
+  {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientCaseEligibilityId}/${healthCareProviderCerFlag}`,null);
+  }
 
 
   ///4
