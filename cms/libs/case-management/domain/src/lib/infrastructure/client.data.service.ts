@@ -158,12 +158,12 @@ export class ClientDataService {
   getPossibleAnswers(){
     return of([
       {
-        value: 'Yes',
+        value: 'YES',
         id: 1,
       },
 
       {
-        value: 'No',
+        value: 'NO',
         id: 2,
       },
 
