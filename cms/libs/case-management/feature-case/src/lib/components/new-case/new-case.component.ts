@@ -142,12 +142,14 @@ export class NewCaseComponent implements OnInit  {
         this.loaderService.show();
         this.caseFacade.getSessionInfoByCaseEligibilityId(event.clientCaseEligibilityId).subscribe({
           next: (response: any) => {
+            debugger
             if (response) {
               this.loaderService.hide();
               this.router.navigate(['case-management/case-detail'], {
                 queryParams: {
                   sid: response.sessionId,
-                  eid: response.entityID
+                  eid: response.entityID,                   
+                  wtc: response?.workflowTypeCode
                 },
               });
             }
