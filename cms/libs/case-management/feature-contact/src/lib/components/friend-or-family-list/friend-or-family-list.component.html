@@ -144,7 +144,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isFriendsorFamilyEdit ? 'Edit Friend or family Contact' : 'Add Friend or Family Contact'
+    isFriendsorFamilyEdit ? 'Edit Alternate Contact' : 'Add Alternate Contact'
   }}</kendo-dialog-titlebar>
   <case-management-friend-or-family-detail
   [selectedContact]="selectedContact"
@@ -161,7 +161,7 @@
   *ngIf="isDeactivateFriendOrFamilyOpened"
   (close)="onDeactivateFriendOrFamilyClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Deactivate Family Contact?"
+  title="Deactivate Alternate Contact?"
 >
   <case-management-deactivate-friend-or-family-confirmation [isEdit]="isEdit" [clientContact]="selectedContact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
 </kendo-dialog>
