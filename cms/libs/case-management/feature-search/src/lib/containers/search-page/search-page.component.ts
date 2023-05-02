@@ -55,8 +55,7 @@ export class SearchPageComponent implements OnInit {
           this.loaderService.show();
           this.caseFacade.getSessionInfoByCaseEligibilityId(selectedValue.clientCaseEligibilityId).subscribe({
             next: (response: any) => {
-              if (response) {
-                debugger
+              if (response) {                
                 this.loaderService.hide();
                 this.router.navigate(['case-management/case-detail'], {
                   queryParams: {
