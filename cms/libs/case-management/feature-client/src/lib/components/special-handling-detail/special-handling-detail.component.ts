@@ -130,6 +130,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           if (response) {
+            this.loaderService.hide();
             this.isShowForm = true;
             /**Populating Client */
         
@@ -167,7 +168,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
               response.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag;
             this.assignModelToForm(this.applicantInfo);
           }
-          this.loaderService.hide();
+         
         },
         error: (error: any) => {
           this.loaderService.hide();
@@ -466,6 +467,37 @@ export class SpecialHandlingDetailComponent implements OnInit {
       this.tareaCaseWorkerNoteCounter = 1;
     }
   }
+
+  deleteClientNote(item:any) { 
+    if(item.clientNotesId){
+      this.loaderService.show();
+      this.clientfacade.deleteClientNote(
+        this.profileClientId,
+        item.clientNotesId)
+         .subscribe({
+        next: (response: any) => {
+          if(response){
+            this.clientfacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Client Notes deleted successfully'
+            );
+            this.loadQueryParams();
+            this.clientfacade.hideLoader();
+          }
+        },
+        error: (error: any) => {
+          this.loaderService.hide();
+          this.clientfacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error)
+        }
+     })
+    }else {
+      this.onDeleteCaseWorkerNote(item.id)
+    }
+    
+  
+}
 
   onAddCaseWorkerNote() {
   

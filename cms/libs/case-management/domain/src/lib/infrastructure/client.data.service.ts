@@ -223,4 +223,7 @@ export class ClientDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/duplicate-check`,
       clientData,
     )}
+    removeClientNote(clientId: number, clientNoteId: string) {
+      return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes/${clientNoteId}`);
+    }
 }

@@ -290,4 +290,10 @@ export class ClientFacade {
   searchDuplicateClient(clientData:any){
     return this.clientDataService.searchDuplicateClient(clientData);
   }
+  deleteClientNote(clientId: any, clientNoteId: any) {
+    return this.clientDataService.removeClientNote(
+      clientId,
+      clientNoteId
+    );
+  }
 }

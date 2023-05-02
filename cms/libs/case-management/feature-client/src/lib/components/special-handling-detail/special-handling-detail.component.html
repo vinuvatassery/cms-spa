@@ -35,7 +35,7 @@
           >
             <span
               class="material-icons"
-              (click)="onDeleteCaseWorkerNote(item.id)"
+              (click)="deleteClientNote(item)"
               aria-label="delete case worker note"
               aria-hidden="true"
               >delete</span
@@ -88,18 +88,13 @@
                   text="{{ materials.value }}"
                   for="{{ materials.id }}"
                 ></kendo-label>
-                <!-- <kendo-floatinglabel
-                  *ngIf="materials.id === 1"
-                  text="Enter formats"
-                  class="small-input-form"
-                >
-                  <kendo-textbox aria-label="enter formats" placeholder="Enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-                </kendo-floatinglabel> -->
+            
                      <div class="flex-row">
              
             </div>
                
               </span>
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid ) ">An Alternate Format is Required.</kendo-formerror>        
               <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Alternate Format">
                   <kendo-dropdownlist  
@@ -111,7 +106,7 @@
                </kendo-dropdownlist>  
                 </kendo-floatinglabel>
               </div>
-              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid || !specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatOther'].disabled ">An Alternate Format is Required.</kendo-formerror>        
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatOther'].disabled ">A response is Required.</kendo-formerror>        
             </div>
        
           </div>
@@ -157,7 +152,7 @@
                   [maxlength]="50">  
                </kendo-textbox>
               </kendo-floatinglabel>
-             <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['interpreterType'].valid) && !specialCaseHandlingForm.controls['interpreterType'].disabled) && (specialCaseHandlingForm.controls['interpreterCode'].valid) ">Type of interpreter</kendo-formerror>        
+             <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['interpreterType'].valid) && !specialCaseHandlingForm.controls['interpreterType'].disabled) && (specialCaseHandlingForm.controls['interpreterCode'].valid) ">Type of interpreter is required.</kendo-formerror>        
               </div>
               </div>
             </div>
@@ -191,7 +186,7 @@
                 ></kendo-label>
              
               </span>
-              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['deafOrHearingCode'].valid) ">An interpreter is Required.</kendo-formerror>
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['deafOrHearingCode'].valid) ">Age is required.</kendo-formerror>
             </div>
             <div class="flex-row">
               <div class="flex-col flex-col-6">
