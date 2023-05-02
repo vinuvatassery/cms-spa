@@ -30,7 +30,7 @@ import { WorkflowTypeCode } from '../enums/workflow-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
-import { FormGroup } from '@angular/forms';
+
 import {
   ConfigurationProvider,
   LoaderService,
@@ -193,7 +193,7 @@ export class WorkflowFacade {
 
     this.workflowService.createNewSession(this.sessionData).subscribe({
       next: (sessionResp: any) => {        
-        if (sessionResp && sessionResp?.workflowSessionId) {
+        if (sessionResp && sessionResp?.workflowSessionId) {          
           this.router.navigate(['case-management/' + navigationPath], {
             queryParams: {
               sid: sessionResp?.workflowSessionId,
@@ -202,7 +202,10 @@ export class WorkflowFacade {
             },
           });
         }
+        if(!sessionResp?.sessionData?.prevClientCaseEligibilityId)
+        {
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
+        }
         this.hideLoader();
       },
       error: (err: any) => {
@@ -694,11 +697,11 @@ export class WorkflowFacade {
     this.isSaveButtonEnabledSubject.next(false);
   }
 
-  handleSendNewsLetterpopup(showHideValue: boolean, clientCaseId: any) {
+  handleSendNewsLetterpopup(showHideValue: boolean) {
     if (showHideValue) {
       this.showSendEmailLetterPopup(true);
     } else {
-      this.router.navigate([`/case-management/cases/case360/${clientCaseId}`]);
+      this.router.navigate([`/case-management/cases`]);
     }
   }
 }

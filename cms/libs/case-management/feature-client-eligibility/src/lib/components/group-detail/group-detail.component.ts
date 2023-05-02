@@ -1,13 +1,13 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries**/
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries**/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { GroupCode } from '@cms/case-management/domain';
+import { GroupCode, CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-group-detail',
@@ -32,9 +32,11 @@ export class GroupDetailComponent implements OnInit {
   groupCodes!: any[];
   groupCodesSubscription = new Subscription();
   isScheduledGroupChange$ = new BehaviorSubject(false);
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   /** Constructor **/
   constructor(private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
+    private readonly caseFacade: CaseFacade,
     private readonly notifySnackbarService: NotificationSnackbarService) { }
 
   /* Lifecycle events */

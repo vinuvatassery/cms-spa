@@ -129,7 +129,7 @@
         {{dataItem.eligibilityEndDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="assignedCwId" title="Case Worker" [width]="130" [sticky]="true">
+    <kendo-grid-column field="assignedCwId" title="Case Worker" [width]="130" >
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCwId"
           kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">

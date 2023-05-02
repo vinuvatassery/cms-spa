@@ -7,7 +7,7 @@ import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/k
 import { forkJoin, mergeMap, of, Subscription, tap, first, filter } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType, CaseStatusCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, StatusFlag, ButtonType, CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -29,6 +29,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isCerForm = false;
   clientCaseId: any;
   clientId: any;
+  clientCaseEligibilityId: any;
   clientCaseStatusData: any = {};
   prevClientCaseEligibilityId! : string;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -147,7 +148,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
   cancelCase() {
     this.loaderService.show()
-    this.caseFacade.updateCaseStatus(this.clientCaseId, CaseStatusCode.canceled).subscribe({
+    this.caseFacade.updateCaseStatus(this.clientCaseId, CaseStatusCode.canceled,this.clientCaseEligibilityId).subscribe({
       next: (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
@@ -193,9 +194,11 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
-        this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
+        this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+        this.clientId = JSON.parse(session.sessionData).clientId;
+        this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
         this.caseFacade.loadCasesById(this.clientCaseId);
-        JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
+        this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
         if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
       });
   }
@@ -293,7 +296,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     if (event === CommunicationEvents.Close) {
       this.isShowSendNewLetterPopup = false;
     }
-    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`);
+    this.router.navigateByUrl(`case-management/cases`);
   }
   public onPaste(): void {
     console.log("Paste");
@@ -411,7 +414,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
       this.loaderService.show();
-      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode).subscribe({
+      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();
           if (this.sendLetterFlag == StatusFlag.Yes) {

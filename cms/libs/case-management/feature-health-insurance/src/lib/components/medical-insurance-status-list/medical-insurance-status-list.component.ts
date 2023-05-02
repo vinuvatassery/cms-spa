@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { HealthInsurancePolicyFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-medical-insurance-status-list',
@@ -20,6 +20,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     {text: '20', value: 20},
     {text: 'All', value: 100}
   ];
+
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -46,7 +48,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
+  constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade, private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
