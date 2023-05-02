@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { HealthInsurancePolicyFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-medical-payment-list',
@@ -23,9 +23,9 @@ export class MedicalPaymentListComponent implements OnInit {
   ];
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   isPremiumPaymentDetailsOpened = false;
- 
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   /** Constructor **/
-  constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade) {}
+  constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

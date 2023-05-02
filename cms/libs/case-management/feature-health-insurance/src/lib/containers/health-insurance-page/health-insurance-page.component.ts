@@ -407,12 +407,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }
@@ -428,7 +428,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   private addHealthInsuranceStatusSubscription():void{
     this.healthInsuranceStatusSubscription = this.medicalHealthPlans$.subscribe((res)=>{
-      if(res.data.length>0){
+      if(res?.data?.length>0){
         this.isInsuranceAvailable = true;
         if(this.insuranceFlagForm.controls['currentInsuranceFlag'].value =='Y' ){
           this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);

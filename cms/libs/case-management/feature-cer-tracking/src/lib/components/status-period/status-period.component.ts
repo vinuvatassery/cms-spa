@@ -27,7 +27,7 @@ export class StatusPeriodComponent implements OnInit {
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -54,13 +54,6 @@ export class StatusPeriodComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
-    };
-  }
-
-  ngOnChanges(){
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value

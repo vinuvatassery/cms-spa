@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({

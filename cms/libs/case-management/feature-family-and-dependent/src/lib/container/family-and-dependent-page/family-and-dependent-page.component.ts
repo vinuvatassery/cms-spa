@@ -206,7 +206,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   addUpdateDependentHandle(dependent : any) {
    const dependentData : Dependent = dependent;
    dependent.clientId =this.clientId ;
-    if(dependentData.clientDependentId && dependentData.clientDependentId !='')
+    if(dependentData.clientRelationshipId && dependentData.clientRelationshipId !='')
     {
       this.familyAndDependentFacade.updateNewDependent(this.clientCaseEligibilityId, dependentData);
     }
@@ -250,7 +250,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.save().subscribe((response: any) => {
         if (response) {
           this.loaderService.hide();
-          this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         }
       })
     });

@@ -168,6 +168,7 @@ public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
       {
         needManager ='NULL'
       }
+      this.hideLoader()
         return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager ?? 'NULL', needManager ?? 'NULL')
     }
 

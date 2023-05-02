@@ -12,7 +12,7 @@ import {
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, FilterService } from '@progress/kendo-angular-grid';
 @Component({
@@ -93,7 +93,8 @@ export class CerListComponent implements OnInit, OnChanges {
     homeAddress:"Home Address",
     ssn:"SSN",
     insurancePolicyId:"Insurance Policy Id",
-    assignedCw:"Assigned to"
+    assignedCw:"Assigned to",
+    disEnrollmentDate:"Disenrollment Date"
   }
 
   public gridActions = [
@@ -114,8 +115,8 @@ export class CerListComponent implements OnInit, OnChanges {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.dateDropdownDisabled = true
-    this.loader = true;
+    this.dateDropdownDisabled = false
+    this.loader = true;    
     this.loadcerTrackingDates();
 
   }
@@ -149,7 +150,8 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();
   }
 
-  public dataStateChange(stateData: any): void {        
+  public dataStateChange(stateData: any): void {      
+     
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -178,7 +180,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];    
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
-    
+   
     this.loadCerTrackingList();
   }
   pageselectionchange(data: any) {
@@ -188,7 +190,7 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   private loadCerTrackingList(): void {
-    this.dateDropdownDisabled = true
+    this.dateDropdownDisabled = false
     this.loaCerData(
       this.state.skip ?? 0,
       this.state.take ?? 0,
@@ -223,21 +225,28 @@ export class CerListComponent implements OnInit, OnChanges {
 
     this.cerTrackingDates$
       ?.pipe(
-        first((trackingDateList: any) => trackingDateList?.seletedDate != null)
+        first((trackingDateList: any) => trackingDateList != null)
       )
-      .subscribe((trackingDateList: any) => {
+      .subscribe((trackingDateList: any) => {      
         if (trackingDateList?.seletedDate) {
           this.loadDefSelectedateSubject.next(trackingDateList?.seletedDate);
           this.datesSubject.next(trackingDateList?.datesList);
           this.selectedDate = trackingDateList?.seletedDate;
           this.epDateOnChange(this.selectedDate);
         }
+        else
+        {    
+          this.datesSubject.next(trackingDateList?.datesList);  
+          this.loadDefSelectedateSubject.next(null);
+          this.loader = false;
+          this.dateDropdownDisabled = false
+        }
       });
   }
 
-  gridDataHandle() {
-    this.cerTrackingData$.subscribe((data: any) => {
-      this.gridCERDataSubject.next(data);
+  gridDataHandle() {       
+    this.cerTrackingData$.subscribe((data: any) => {    
+      this.gridCERDataSubject.next(data);      
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
         this.dateDropdownDisabled = false
@@ -285,10 +294,12 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
+    
     this.gridFilter = filter;
   }
 
   groupFilterChange(value: any, filterService: FilterService): void {
+    
     filterService.filter({
         filters: [{
           field: "group",
@@ -299,6 +310,7 @@ export class CerListComponent implements OnInit, OnChanges {
     });
 }
 dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+  
   filterService.filter({
       filters: [{
         field: field,

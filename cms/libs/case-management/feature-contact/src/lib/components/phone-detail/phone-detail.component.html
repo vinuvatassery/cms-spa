@@ -13,7 +13,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Choose Phone Type">
           <kendo-dropdownlist formControlName="deviceTypeCode" (selectionChange)="deviceTypeSelectionChange($event)"
-            aria-label="Phone Type" [fillMode]="formUiStyle.dropDownFillMode"
+            aria-label="Choose Phone Type" [fillMode]="formUiStyle.dropDownFillMode"
             [data]="lovClientPhoneDeviceType$ | async" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
           </kendo-dropdownlist>
           <kendo-formerror *ngIf="clientPhoneForm?.hasError('required','deviceTypeCode') && isFormSubmitted">Phone type
@@ -31,7 +31,7 @@
       </div>
       <div class="flex-col mt-2" *ngIf="displayPhoneNote">
         <kendo-floatinglabel text="Note" class="pb-0">
-          <kendo-textarea formControlName="otherPhoneNote" [fillMode]="formUiStyle.inputFillMode" name="Phone Note"
+          <kendo-textarea formControlName="otherPhoneNote" [fillMode]="formUiStyle.inputFillMode" name="Phone Note"  resizable="both"
             aria-label="Phone Note"  [maxlength]="75" [rows]="2" [cols]="40" (valueChange)="onIncomeNoteValueChange($event)">
             <kendo-textarea-suffix class="justify-content-end">
               <kendo-formhint class="justify-content-end">{{noteCounter}}</kendo-formhint>

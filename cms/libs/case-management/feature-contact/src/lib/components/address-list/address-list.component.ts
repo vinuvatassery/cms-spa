@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 /** facades **/
-import { ClientAddress, ContactFacade, StatusFlag, AddressType } from '@cms/case-management/domain';
+import { ClientAddress, ContactFacade, StatusFlag, AddressType, CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-address-list',
@@ -30,6 +30,7 @@ export class AddressListComponent implements OnInit {
   showFormFieldsFlag:boolean = false;
   clientAddressId!:any;
   editAddressTypeText:string='';
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -72,7 +73,7 @@ export class AddressListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef) {}
+  constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
