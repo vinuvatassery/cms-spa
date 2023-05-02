@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 /** Facades **/
-import { DocumentFacade } from '@cms/case-management/domain';
+import { DocumentFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
@@ -19,6 +19,7 @@ export class DocumentListComponent implements OnInit {
   sortValue = this.documentFacade.sortValue;
   sortType = this.documentFacade.sortType;
   sort = this.documentFacade.sort;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   state!: State;
   formUiStyle: UIFormStyle = new UIFormStyle();
   isGridLoaderShow = true;
@@ -75,6 +76,7 @@ export class DocumentListComponent implements OnInit {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   /** Constructor **/
   constructor(private documentFacade: DocumentFacade,
+    private caseFacade: CaseFacade,
     private readonly loaderService: LoaderService,
     private route: ActivatedRoute, private readonly router: Router,public intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider) { }
