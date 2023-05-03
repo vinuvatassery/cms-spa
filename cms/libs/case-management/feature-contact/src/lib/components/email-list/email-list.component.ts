@@ -11,7 +11,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** facades **/
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
-
+import { CaseFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-email-list',
   templateUrl: './email-list.component.html',
@@ -65,7 +65,7 @@ export class EmailListComponent implements OnChanges {
   paperlessFlag!: any;
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public gridOption = [
     {
       buttonType: 'btn-h-primary',
@@ -119,6 +119,10 @@ export class EmailListComponent implements OnChanges {
       },
     },
   ];
+
+  constructor(private caseFacade: CaseFacade){
+    
+  }
 
   ngOnChanges(): void {
     this.state = {

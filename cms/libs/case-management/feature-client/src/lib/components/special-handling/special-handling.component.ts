@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
-import { ClientFacade } from '@cms/case-management/domain';
+import { ClientFacade, CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-special-handling',
@@ -12,9 +12,10 @@ export class SpecialHandlingComponent implements OnInit {
   /** Public properties **/
   specialHandlings$ = this.clientFacade.specialHandlings$;
   isEditSpecialHandlingPopup = false;
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   /** Constructor**/
-  constructor(private clientFacade: ClientFacade) {}
+  constructor(private clientFacade: ClientFacade,
+    private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

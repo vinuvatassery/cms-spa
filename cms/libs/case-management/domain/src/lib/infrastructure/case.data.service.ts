@@ -24,10 +24,10 @@ export class CaseDataService {
 
 
   /** Public methods **/
-  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string, columnName : any, filter : any) {
+  loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string, columnName : any, filter : any,  totalClientsCount : any) {
     return this.http.get<ClientProfileCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&ColumnName=${columnName}&Filter=${filter}`
+      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&ColumnName=${columnName}&Filter=${filter}&TotalCount=${totalClientsCount}`
     );
 
   }
@@ -399,11 +399,18 @@ export class CaseDataService {
     );
   }
   getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
-    return this.http.get(
+    return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseEligibilityId}/SessionSearch`);
   }
 
   loadEligibilityPeriods(clientCaseId: string){
     return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}/eligibility-periods`);
+  }
+
+  loadCasesStatusByClientEligibilityId(clientId: any, clientCaseEligibilityId: any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/clients/${clientId}/eligibility/${clientCaseEligibilityId}/status`
+    );
   }
 }

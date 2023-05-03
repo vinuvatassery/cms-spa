@@ -58,7 +58,7 @@ export class CaseManagerDataService {
     caseId: string,
     hasManager: string,
     needManager: string
-  ) {
+  ) {    
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/case-managers/${caseId}?hasManager=${hasManager}&needManager=${needManager}`,
       null

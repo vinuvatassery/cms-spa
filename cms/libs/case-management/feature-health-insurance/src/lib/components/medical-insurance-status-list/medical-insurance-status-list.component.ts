@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { HealthInsurancePolicyFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -18,6 +18,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   healthInsuranceStatus$ = this.insurancePolicyFacade.healthInsuranceStatus$;
   medicalHealthPlans$ = this.insurancePolicyFacade.medicalHealthPlans$;
   isCopyInsuranceConfirm = false;  
+
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -90,7 +92,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
-     private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef) {
+     private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 

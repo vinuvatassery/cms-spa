@@ -9,6 +9,7 @@
         (click)="onEditSpecialHandlingClicked()"
         title="Edit Special Handling"
         aria-label="edit special handling"
+        [disabled]="(isReadOnly$ | async) ? true : false"
       ></button>
     </div>
     <div class="flex-col">

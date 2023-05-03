@@ -11,6 +11,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject } from 'rxjs';
+import { CaseFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-case-manager-list',
   templateUrl: './case-manager-list.component.html',
@@ -70,6 +71,7 @@ export class CaseManagerListComponent implements OnChanges {
   clientCaseManagerId!: string;
   assignmentStartDate!: Date;
   assignmentEndDate: any;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public newAppActions = [
     {
       buttonType: 'btn-h-primary',
@@ -165,6 +167,7 @@ export class CaseManagerListComponent implements OnChanges {
     },
   ];
 
+  constructor(private caseFacade: CaseFacade){}
   /** Lifecycle hooks **/
 
   ngOnChanges(): void {

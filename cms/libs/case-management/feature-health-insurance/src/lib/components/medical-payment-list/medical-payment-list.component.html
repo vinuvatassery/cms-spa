@@ -137,6 +137,7 @@
       icon="add"
       aria-label="add medical premium"
       (click)="openPremiumPaymentDetailsOpened()"
+      [disabled]="(isReadOnly$ | async) ? true : false"
     >
 {{tabStatus === 'dnt-ins-prm-pym' ? 'Dental Premium' :'Medical Premium'}}
     </button>

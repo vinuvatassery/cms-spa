@@ -41,8 +41,7 @@ import {
   CompletionChecklist,
   NavigationType,
   PronounCode,
-  TransGenderCode,
-  WorkflowTypeCode,
+  TransGenderCode  
 } from '@cms/case-management/domain';
 import {
   LoaderService,
@@ -159,7 +158,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
             JSON.parse(session.sessionData)?.clientId ?? this.clientId;
           this.clientCaseEligibilityId = JSON.parse(
             session.sessionData
-          )?.clientCaseEligibilityId;          
+          )?.clientCaseEligibilityId;
           this.prevClientCaseEligibilityId = JSON.parse(
             session.sessionData
           )?.prevClientCaseEligibilityId;
@@ -178,7 +177,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  private initializeClientCaseEligibility() {    
+  private initializeClientCaseEligibility() {
     if (this.applicantInfo.client === undefined) {
       this.applicantInfo.client = new Client();
     }
@@ -201,7 +200,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId =
       this.clientCaseId;
 
-      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.prevClientCaseEligibilityId =
+    this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.prevClientCaseEligibilityId =
       this.prevClientCaseEligibilityId;
     this.loadApplicantInfo();
   }
@@ -221,6 +220,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe({
         next: (response) => {
           if (response) {
+            this.clientFacade.hideLoader()
             /**Populating Client */
             this.applicantInfo.client = response.client;
 
@@ -352,7 +352,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.message = 'Applicant info saved successfully';
         return this.clientFacade.save(this.applicantInfo).pipe(
           catchError((error: any) => {
-            if (error) {
+            if (error) {              
               this.clientFacade.showHideSnackBar(
                 SnackBarNotificationType.ERROR,
                 error
@@ -381,10 +381,21 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private populateClient() {
+  private populateClient() {    
     if (this.applicantInfo.client == undefined) {
       this.applicantInfo.client = new Client();
     }
+    if(this.isCerForm)
+    {
+      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.cerReceivedDate = new Date(
+        this.intl.formatDate(
+          this.appInfoForm.controls['cerReceivedDate'].value,
+          this.dateFormat
+        )
+      );
+    }
+   
+
     this.applicantInfo.client.firstName =
       this.appInfoForm.controls['firstName'].value.trim() === ''
         ? null
@@ -432,7 +443,6 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private populateClientCaseEligibility() {
-        
     if (this.applicantInfo.clientCaseEligibilityAndFlag === undefined) {
       this.applicantInfo.clientCaseEligibilityAndFlag =
         new ClientCaseEligibilityAndFlag();
@@ -444,11 +454,11 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility =
         new ClientCaseEligibility();
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.clientCaseId =
-        this.clientCaseId;        
+        this.clientCaseId;
     }
 
     this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.prevClientCaseEligibilityId =
-    this.prevClientCaseEligibilityId;
+      this.prevClientCaseEligibilityId;
 
     if (!this.isCerForm) {
       const isTransgenderYes =
@@ -477,7 +487,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.assignOfficialIdsNotApplicable();
     this.assignPrmInsNotApplicable();
 
-    if (!this.isCerForm) {   
+    if (!this.isCerForm) {
       this.assignRegisterToVote();
       this.assignMaterialInAlternateFormatCode();
       this.assignInterpreterCode();
@@ -926,7 +936,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private setValidationsSectionOne() {
+  private setValidationsSectionOne() {    
+    if (this.isCerForm) {
+      this.appInfoForm.controls['cerReceivedDate'].setValidators([
+        Validators.required,
+      ]);
+      this.appInfoForm.controls['cerReceivedDate'].updateValueAndValidity();
+    }
     this.appInfoForm.controls['firstName'].setValidators([Validators.required]);
     this.appInfoForm.controls['firstName'].updateValueAndValidity();
     this.appInfoForm.controls['dateOfBirth'].setValidators([
@@ -1469,15 +1485,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
               if (response) {
                 this.loaderService.hide();
                 this.workFlowFacade.handleSendNewsLetterpopup(
-                  statusResponse,
-                  this.clientCaseId
+                  statusResponse
                 );
               }
             });
           } else {
             this.workFlowFacade.handleSendNewsLetterpopup(
-              statusResponse,
-              this.clientCaseId
+              statusResponse
             );
           }
         }
