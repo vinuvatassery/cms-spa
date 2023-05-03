@@ -417,12 +417,6 @@ export class SpecialHandlingDetailComponent implements OnInit {
             otherControlerName
           ].updateValueAndValidity();
          
-          this.specialCaseHandlingForm.controls[
-            'materialInAlternateFormatOther'
-          ].setValidators(Validators.required);
-          this.specialCaseHandlingForm.controls[
-            'materialInAlternateFormatOther'
-          ].updateValueAndValidity();
           this.cdRef.detectChanges();
         } else {
           this.specialCaseHandlingForm.controls[otherControlerName].setValue(
@@ -439,6 +433,30 @@ export class SpecialHandlingDetailComponent implements OnInit {
           this.cdRef.detectChanges();
         }
       });
+  }
+  onChange(event:any){
+    if( this.specialCaseHandlingForm.controls[
+      'materialInAlternateFormatDesc'
+    ]?.value == 'OTHER'){
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatOther'
+      ].setValidators(Validators.required);
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatOther'
+      ].updateValueAndValidity();
+     }else {
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatOther'
+      ].setValue(null);
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatOther'
+      ].setValidators(null);
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatOther'
+      ].updateValueAndValidity();
+     }
+
+
   }
   private loadRdoMaterials() {
     this.clientfacade.loadRdoMaterials();
