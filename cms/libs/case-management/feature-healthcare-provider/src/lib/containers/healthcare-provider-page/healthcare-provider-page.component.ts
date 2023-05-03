@@ -47,6 +47,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   isCerForm = false;
   prevClientCaseEligibilityId!: string;
   clientCaseEligibilityId!: string;
+  treatstheirHIVchangedValue! : string
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;
@@ -111,18 +112,18 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
    private loadProviderCerStatus()
    {
     this.healthProvider.loadProviderCerStatus(this.clientCaseEligibilityId)
-    this.healthCareProvideGetCerFlag$.pipe(
-      filter(x=> x)
-    )
-    .subscribe((x: string)=>
+    this.healthCareProvideGetCerFlag$.pipe(first(x => x != null))
+    .subscribe((x: any)=>
     {  
      if(x === StatusFlag.Yes)
      {
+      this.treatstheirHIVchangedValue = StatusFlag.Yes
       this.loadProviderStatus();
       this.showProviderFlagGridSubject.next(true)
      }
      else
      {
+      this.treatstheirHIVchangedValue = StatusFlag.No
       this.showProviderFlagGridSubject.next(false)
      }
     });
@@ -309,6 +310,23 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
       return false;
     }
     return true;
+  }
+
+  treatstheirHIVSelected(event: Event) {
+    const status = (event.target as HTMLInputElement).value.toUpperCase()
+    this.healthProvider.setProviderCerStatus(this.clientCaseEligibilityId , status)
+    if(status === StatusFlag.No)
+    {
+      this.updateWorkFlowStatus();
+    }
+    this.healthCareProvideSetCerFlag$.pipe(
+      filter(x=> typeof x === 'boolean')
+    )
+    .subscribe((x: boolean)=>
+    {  
+      this.loadProviderCerStatus()
+    });
+   
   }
 
 }

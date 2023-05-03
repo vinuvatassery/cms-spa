@@ -59,14 +59,14 @@ export class HealthcareProviderDataService {
 
   loadProviderCerStatus(clientCaseEligibilityId : string) {     
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientCaseEligibilityId}/cer-status`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/cer/${clientCaseEligibilityId}/status`
     );    
   } 
 
   updateHealthCareProvidersCerFlag(clientCaseEligibilityId : string, healthCareProviderCerFlag : string)
   {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/${clientCaseEligibilityId}/${healthCareProviderCerFlag}`,null);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/healthcare-providers/cer/${clientCaseEligibilityId}/${healthCareProviderCerFlag}`,null);
   }
 
 

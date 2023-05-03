@@ -234,8 +234,8 @@ export class HealthcareProviderFacade {
     this.showLoader();
     this.healthcareProviderDataService.loadProviderCerStatus(clientCaseEligibilityId).subscribe({
       next: (providercerStatusGetResponse) => {
-        this.hideLoader();
-        this.healthCareProvideGetFlagSubject.next(providercerStatusGetResponse);
+        this.hideLoader();        
+        this.healthCareProvideGetCerFlagSubject.next(providercerStatusGetResponse?.healthcareProviderChangedFlag);
       },
       error: (err) => {  
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
@@ -249,7 +249,8 @@ export class HealthcareProviderFacade {
     .subscribe({
       next: (removeResponse) => {        
        
-        this.healthCareProvideSetCerFlagSubject.next(removeResponse);       
+        this.healthCareProvideSetCerFlagSubject.next(removeResponse);   
+        this.hideLoader();    
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      

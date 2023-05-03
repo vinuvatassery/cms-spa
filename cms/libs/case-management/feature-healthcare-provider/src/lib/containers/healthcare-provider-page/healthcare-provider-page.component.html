@@ -5,80 +5,50 @@
       <div class="flex-row" *ngIf="cerForm$ | async">
         <div class="flex-col">
           <fieldset class="k-form-fieldset">
-            <legend class="k-form-legend"><h5>Has the healthcare provider that treats their HIV changed?</h5></legend>
+            <legend class="k-form-legend">
+              <h5>Has the healthcare provider that treats their HIV changed?</h5>
+            </legend>
 
-          <div class="component-list-h comp-list-horizontal">
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton   aria-labelledby="treatstheirHIVchangedYes"
-                id="treatstheirHIVchangedYes"
-                class="form-control" 
-                value="Y"
-                
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="treatstheirHIVchangedYes"
-                text="Yes"
-              ></kendo-label>
-            </span>
-            <span class="app-radiobtnwidtext-wrapper">
-              <input
-                type="radio"
-                kendoRadioButton
-                aria-labelledby="treatstheirHIVchangedNo" 
-                id="treatstheirHIVchangedNo"
-                value="N" 
-                
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="treatstheirHIVchangedNo"
-                text="No"
-              ></kendo-label>
-            </span>
-          </div>
-          </fieldset> 
+            <div class="component-list-h comp-list-horizontal">
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton aria-labelledby="treatstheirHIVchangedYes" name="treatstheirHIVchanged" 
+                  id="treatstheirHIVchangedYes" class="form-control" value="Y"  (change)="treatstheirHIVSelected($event)" [(ngModel)]="treatstheirHIVchangedValue"/>
+                <kendo-label class="k-radio-label" for="treatstheirHIVchangedYes" text="Yes" ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton aria-labelledby="treatstheirHIVchangedNo" name="treatstheirHIVchanged"
+                  id="treatstheirHIVchangedNo" value="N" (change)="treatstheirHIVSelected($event)"  [(ngModel)]="treatstheirHIVchangedValue"/>
+                <kendo-label class="k-radio-label" for="treatstheirHIVchangedNo" text="No" ></kendo-label>
+              </span>
+            </div>
+          </fieldset>
         </div>
-         
-        </div>
+
+      </div>
       <div class="flex-row" *ngIf="showProviderFlagGrid$ | async">
         <div class="flex-col mb-1">
-          <span class="app-checkboxwidtext-wrapper">  
-          <input
-            type="checkbox"
-            kendoCheckBox
-            (click)="onProviderValueChanged()" 
-            id="noHealthcareProvider"
-            name="noHealthcareProvider"
-            aria-labelledby="noHealthcareProvider"
-            [checked]="healthCareProvideGetFlag$ | async"   
-          />
-          <kendo-label   for="noHealthcareProvider"
-            text="Client does not have any healthcare providers"></kendo-label>
+          <span class="app-checkboxwidtext-wrapper">
+            <input type="checkbox" kendoCheckBox (click)="onProviderValueChanged()" id="noHealthcareProvider"
+              name="noHealthcareProvider" aria-labelledby="noHealthcareProvider"
+              [checked]="healthCareProvideGetFlag$ | async" />
+            <kendo-label for="noHealthcareProvider" text="Client does not have any healthcare providers"></kendo-label>
           </span>
           <div class="flex-col">
-            <kendo-formerror *ngIf="showProvidervalidationbox$ | async">Healthcare Provider is Required</kendo-formerror>
-            </div>
+            <kendo-formerror *ngIf="showProvidervalidationbox$ | async">Healthcare Provider is
+              Required</kendo-formerror>
+          </div>
         </div>
-       
-        <div class="flex-col"  *ngIf="!isProvidersGridDisplay">
-          <case-management-health-care-provider-list          
-            [pageSizes]="pageSizes"
-            [sortValue]="sortValue"
-            [sortType]="sortType"
-            [sort]="sort"
-            [searchProviderLoaded$]="searchProviderLoaded$"
+
+        <div class="flex-col" *ngIf="!isProvidersGridDisplay">
+          <case-management-health-care-provider-list [pageSizes]="pageSizes" [sortValue]="sortValue"
+            [sortType]="sortType" [sort]="sort" [searchProviderLoaded$]="searchProviderLoaded$"
             [healthCareProviderSearchList$]="healthCareProviderSearchList$"
-            [removeHealthProvider$]="removeHealthProvider$"
-            [healthCareProvidersData$]="healthCareProviders$"
-            [addExistingProvider$]="addExistingProvider$"
-            [loadExistingProvider$]="loadExistingProvider$"
-            (deleteConfimedEvent)="handlePrvRemove($event)"    
-            (loadProvidersListEvent)="loadProvidersHandle($event)"          
+            [removeHealthProvider$]="removeHealthProvider$" [healthCareProvidersData$]="healthCareProviders$"
+            [addExistingProvider$]="addExistingProvider$" [loadExistingProvider$]="loadExistingProvider$"
+            (deleteConfimedEvent)="handlePrvRemove($event)" (loadProvidersListEvent)="loadProvidersHandle($event)"
             (searchTextEvent)="searchTextEventHandleer($event)"
             (addExistingProviderEvent)="addExistingProviderEventHandler($event)"
-            (getExistingProviderEvent)="getExistingProviderEventHandler($event)"
-          ></case-management-health-care-provider-list>
+            (getExistingProviderEvent)="getExistingProviderEventHandler($event)"></case-management-health-care-provider-list>
         </div>
       </div>
     </div>
