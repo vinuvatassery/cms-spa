@@ -123,6 +123,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
      }
      else
      {
+      this.updateWorkFlowStatus();
       this.treatstheirHIVchangedValue = StatusFlag.No
       this.showProviderFlagGridSubject.next(false)
      }
