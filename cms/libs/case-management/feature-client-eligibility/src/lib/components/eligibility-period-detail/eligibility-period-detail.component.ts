@@ -27,7 +27,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   @Input() isStatusPeriodEdit: boolean=false;
   @Output() isModalSavedClicked = new EventEmitter();
   /** Public properties **/
-  ddlStatus$ = this.lovFacade.eligibilityStatus$;
+  ddlStatus$ = this.lovFacade.eligibilityStatusCp$;
   disenrollmentReason$ = this.lovFacade.disenrollmentReason$
   showEligibilityStatusLoader = this.lovFacade.showLoaderOnEligibilityStatus$;
   ddlGroups$ =  this.caseFacade.ddlGroups$ ;
@@ -272,7 +272,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
 
   private loadLovs(){
-    this.lovFacade.getEligibilityStatusLovs();
+    this.lovFacade.getEligibilityStatusCpLovs();
     this.caseFacade.loadGroupCode();
     this.lovFacade.getDisenrollmentReasonLovs();    
   }
