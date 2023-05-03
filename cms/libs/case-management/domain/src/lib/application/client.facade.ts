@@ -280,8 +280,7 @@ export class ClientFacade {
   save(applicantInfo:ApplicantInfo) {    
       return this.clientDataService.save(applicantInfo);
   }
-  load(clientId:any,clientCaseId:any,eligibilityId:any) {   
-    this.showLoader();
+  load(clientId:any,clientCaseId:any,eligibilityId:any) { 
       return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
   update(applicantInfo:ApplicantInfo,clientId:any) {    
@@ -289,5 +288,11 @@ export class ClientFacade {
   }
   searchDuplicateClient(clientData:any){
     return this.clientDataService.searchDuplicateClient(clientData);
+  }
+  deleteClientNote(clientId: any, clientNoteId: any) {
+    return this.clientDataService.removeClientNote(
+      clientId,
+      clientNoteId
+    );
   }
 }
