@@ -159,21 +159,25 @@ export class ClientDataService {
     return of([
       {
         value: 'YES',
+        text:'Yes',
         id: 1,
       },
 
       {
         value: 'NO',
+        text:'No',
         id: 2,
       },
 
       {
-        value: 'Don’t know',
+        value: 'DONT_KNOW',
+        text:'Do not know',
         id: 3,
       },
 
       {
-        value: 'Don’t want to answer',
+        value: 'DONT_WANT',
+        text:'Do not want to answer',
         id: 4,
       },
     ]);

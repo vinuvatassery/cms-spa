@@ -70,6 +70,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
   textFieldDisable = true;
   ageMinLimit = 1;
   ageMaxLimit = 9999999999;
+  
   /** Constructor **/
   constructor(
     private clientfacade: ClientFacade,
@@ -98,7 +99,6 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.cdRef.detectChanges();
   }
   ngAfterViewInit() {
-    //this.cdRef.detectChanges();
   }
   private loadLovs() {
     this.lovFacade.getMaterialYesLovs();
@@ -111,6 +111,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.loadApplicantInfo();
   }
   private loadApplicantInfo() {
+
     this.loaderService.show();
     if (this.applicantInfo.client == undefined) {
       this.applicantInfo.client = new Client();
@@ -125,8 +126,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
       .load(
         this.profileClientId,
         this.clientCaseId,
-        this.clientCaseEligibilityId
-      )
+        this.clientCaseEligibilityId)
       .subscribe({
         next: (response: any) => {
           if (response) {
@@ -140,7 +140,6 @@ export class SpecialHandlingDetailComponent implements OnInit {
               this.tareacaseWorkerNote = response.clientNotes
               this.tareacaseWorkerNote.forEach ((clientNote:any,index:any) =>{
                 clientNote.id = index + 1})
-             console.log(this.tareacaseWorkerNote);
             }else {
               this.applicantInfo.ClientNotes = [];
             }
@@ -179,6 +178,10 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.applicantInfo.client.materialInAlternateFormatCode =
       this.specialCaseHandlingForm.controls[
         'materialInAlternateFormatCode'
+      ]?.value;
+      this.applicantInfo.client.materialInAlternateFormatDesc =
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatDesc'
       ]?.value;
       this.applicantInfo.client.materialInAlternateFormatOther =
       this.specialCaseHandlingForm.controls[
@@ -243,7 +246,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
 
             this.clientfacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Applicant info updated successfully'
+              'Special Handling  updated successfully'
             );
           }
         },
@@ -260,8 +263,8 @@ export class SpecialHandlingDetailComponent implements OnInit {
   buildSpecialCaseHandlingForm() {
     this.specialCaseHandlingForm = this.formBuilder.group({
       materialInAlternateFormatCode: ['', Validators.required],
-      materialInAlternateFormatDesc: [''],
-      materialInAlternateFormatOther: ['', Validators.required],
+      materialInAlternateFormatDesc: ['',Validators.required],
+      materialInAlternateFormatOther: ['',Validators.required],
       interpreterCode: ['', Validators.required],
       interpreterType: [''],
       deafOrHearingCode: ['', Validators.required],
@@ -287,12 +290,27 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.specialCaseHandlingForm.controls[
       'materialInAlternateFormatDesc'
     ].setValue(applicantInfo.client.materialInAlternateFormatDesc);
+   
     if (this.applicantInfo.client?.materialInAlternateFormatCode === 'YES') {
       this.specialCaseHandlingForm.controls[
-        'materialInAlternateFormatOther'
-      ].setValue(this.applicantInfo.client.materialInAlternateFormatOther);
+        'materialInAlternateFormatDesc'
+      ].setValue(this.applicantInfo.client.materialInAlternateFormatDesc);
     }else {
-      this.specialCaseHandlingForm.controls['materialInAlternateFormatOther'].disable();
+      this.specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disable();
+      
+    }
+    if (this.applicantInfo.client?.materialInAlternateFormatDesc === 'OTHER') {
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatOther'
+      ].setValue(applicantInfo.client.materialInAlternateFormatOther);
+    }else {
+      this.specialCaseHandlingForm.controls['materialInAlternateFormatOther'].setValue(
+        null
+      );
+      this.specialCaseHandlingForm.controls[
+        'materialInAlternateFormatOther'
+      ].setValidators(null);
+      this.specialCaseHandlingForm.controls['materialInAlternateFormatOther'].updateValueAndValidity();
       
     }
     this.specialCaseHandlingForm.controls['interpreterCode'].setValue(
@@ -397,6 +415,13 @@ export class SpecialHandlingDetailComponent implements OnInit {
           ].setValidators(Validators.required);
           this.specialCaseHandlingForm.controls[
             otherControlerName
+          ].updateValueAndValidity();
+         
+          this.specialCaseHandlingForm.controls[
+            'materialInAlternateFormatOther'
+          ].setValidators(Validators.required);
+          this.specialCaseHandlingForm.controls[
+            'materialInAlternateFormatOther'
           ].updateValueAndValidity();
           this.cdRef.detectChanges();
         } else {
