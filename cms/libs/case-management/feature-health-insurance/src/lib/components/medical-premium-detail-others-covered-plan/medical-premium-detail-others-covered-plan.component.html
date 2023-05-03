@@ -66,9 +66,9 @@
                             aria-label="Relationship to Client" 
                             [data]="relationshipList"  textField="lovDesc" [valuePrimitive]="true"
                             valueField="lovCode"
-                            formControlName="relationshipCode">
+                            formControlName="relationshipSubTypeCode">
                         </kendo-dropdownlist>
-                        <kendo-formerror *ngIf="!getPersonControl(i, 'relationshipCode')?.valid
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'relationshipSubTypeCode')?.valid
                   && isViewContentEditable==false">Relationship description is
                             required.</kendo-formerror>
                     </kendo-floatinglabel>
