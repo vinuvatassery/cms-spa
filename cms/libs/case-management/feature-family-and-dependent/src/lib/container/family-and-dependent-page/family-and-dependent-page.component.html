@@ -92,6 +92,7 @@
                 class="form-control" 
                 value="Y"
                 name="haveTheyHaveAdditionalFamilyMember"
+                [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -107,6 +108,7 @@
                 id="havetheyhaveadditionalfamilymemberNo"
                 value="N" 
                 name="haveTheyHaveAdditionalFamilyMember"
+                [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -139,7 +141,7 @@
           >
           </span>
         </div>
-        <div class="flex-col" *ngIf="!isFamilyGridDisplay">
+        <div class="flex-col" *ngIf="(!isCerForm && !isFamilyGridDisplay) || (isCerForm && haveTheyHaveAdditionalFamilyMember=='Y')">
           <case-management-family-and-dependent-list       
           [dependents$]="dependentList$"
           [dependentSearch$]="dependentSearch$"

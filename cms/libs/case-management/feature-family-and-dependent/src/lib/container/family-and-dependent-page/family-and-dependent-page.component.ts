@@ -154,6 +154,18 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   onDependentStatusChange(dependent: any, status: string) {
+    if(!!dependent.clientRelationshipId && status == 'N') {
+      this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId);
+      this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((dependentData: any) =>
+        {
+          if(dependentData ?? false)
+          {
+            this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId, 0,
+               this.pageSizes[0]?.value, this.sortValue, this.sortType);
+          }
+        });
+    }
   }
 
   private save() {
