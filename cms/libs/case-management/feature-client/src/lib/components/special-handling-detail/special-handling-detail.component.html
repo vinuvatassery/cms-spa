@@ -102,7 +102,7 @@
                    [fillMode]="formUiStyle.inputFillMode"
                   textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                   formControlName="materialInAlternateFormatDesc" 
-                  (valueChange)="detectOptionChange('materialInAlternateFormatCode','materialInAlternateFormatDesc')"              
+                  (valueChange)="onChange($event)"              
                    >
                </kendo-dropdownlist>  
                 </kendo-floatinglabel>
