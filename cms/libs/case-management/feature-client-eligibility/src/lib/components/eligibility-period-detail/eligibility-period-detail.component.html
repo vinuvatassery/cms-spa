@@ -1,7 +1,7 @@
 <kendo-dialog-titlebar  (close)="onModalCloseClicked()">{{ isEdit ? 'Edit Status Period Dates' : 'Start New Status Period' }}</kendo-dialog-titlebar>
 <div >  
 <section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
-  <p *ngIf="!isEdit" class="text-muted mb-2">
+  <p *ngIf="!isEdit && !isStatusPeriodEdit" class="text-muted mb-2">
     Except for PENDING, changing the status initiates a new Status Period. The
     new Status Period may not overlap with a previous one.
   </p>
@@ -10,8 +10,11 @@
     The new dates 1) may not overlap with another period, and 2) may not exclude a payment already associated with this period.
     If needed, contact your administrator for assistance.
   </p>
+  <p *ngIf="isStatusPeriodEdit" class="text-muted mb-2">
+    Edit the status period dates and group as needed then click "Update" to save the changes. Start and end dates may not overlap with another period
+  </p>
   <div class="flex-row">
-    <div class="flex-col" *ngIf="!isEdit">
+    <div class="flex-col" *ngIf="!isEdit && !isStatusPeriodEdit">
       <kendo-floatinglabel text="Status" class="inline-search-loader">
         <span *ngIf="showEligibilityStatusLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
         <kendo-dropdownlist   
@@ -114,10 +117,10 @@
       >
         CANCEL
       </button>
-      <button *ngIf="!isEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="startNewEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
+      <button *ngIf="!isEdit && !isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="startNewEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
         START
       </button>
-      <button *ngIf="isEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
+      <button *ngIf="isEdit || isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
         UPDATE
       </button>
     </div>
