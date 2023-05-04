@@ -7,7 +7,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  ChangeDetectorRef,
+  ChangeDetectorRef 
 } from '@angular/core';
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
@@ -42,9 +42,11 @@ export class CerListComponent implements OnInit, OnChanges {
   selectedDate!: any;
   loader = false;
   datesSubject = new Subject<any>();
+  titleSubject = new Subject<string>();
   cerTrackingDatesList$ = this.datesSubject.asObservable();
   loadDefSelectedateSubject = new Subject<any>();
   loadDefSelectedate$ = this.loadDefSelectedateSubject.asObservable();
+  title$ = this.titleSubject.asObservable();
   gridCERDataSubject = new Subject<any>();
   gridCERData$ = this.gridCERDataSubject.asObservable();
   public state!: State;
@@ -64,6 +66,7 @@ export class CerListComponent implements OnInit, OnChanges {
   filter! : any
   columnName!: any;
   selectedColumn!: any;
+  statusTitle ="Status"
 
   columns : any = {
     clientFullName:"Client Name",
@@ -101,7 +104,7 @@ export class CerListComponent implements OnInit, OnChanges {
     {
       buttonType: 'btn-h-primary',
       text: 'Re-send CER',
-      click: (eligibilityCer: any): void => { 
+      click: (eligibilityCer: any): void => {         
         this.selectedEligibilityCerId = eligibilityCer?.clientCaseEligibilityCerId;
         this.isPaperLessFlag = eligibilityCer?.paperlessFlag === StatusFlag.Yes;
         this.clientName = eligibilityCer?.clientFullName;
@@ -111,6 +114,7 @@ export class CerListComponent implements OnInit, OnChanges {
   ];
 
   constructor(private cdr:ChangeDetectorRef,private readonly cerTrackingFacade: CerTrackingFacade){
+   
   }
 
   /** Lifecycle hooks **/
@@ -149,7 +153,12 @@ export class CerListComponent implements OnInit, OnChanges {
     this.selectedDate = date;
     this.loadCerTrackingList();
   }
-
+  
+  setTitle(data : any)
+  {
+    this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
+    this.titleSubject.next(this.statusTitle)
+  }
   public dataStateChange(stateData: any): void {      
      
     if(stateData.filter?.filters.length > 0)
@@ -236,6 +245,7 @@ export class CerListComponent implements OnInit, OnChanges {
         }
         else
         {    
+          this.titleSubject.next(this.statusTitle)
           this.datesSubject.next(trackingDateList?.datesList);  
           this.loadDefSelectedateSubject.next(null);
           this.loader = false;
@@ -245,8 +255,10 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {       
-    this.cerTrackingData$.subscribe((data: any) => {    
-      this.gridCERDataSubject.next(data);      
+    this.cerTrackingData$.subscribe((data: any) => {          
+    this.statusTitle = data?.data[0]?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
+    this.titleSubject.next(this.statusTitle)
+      this.gridCERDataSubject.next(data);           
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
         this.dateDropdownDisabled = false
