@@ -199,6 +199,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           if (clientHeader?.clientCaseId) {
             this.clientCaseId = clientHeader?.clientCaseId;
           }
+          this.getCaseStatusDetails();
           this.onTabClick(ClientProfileTabs.CLIENT_INFO);
         }
       });
@@ -275,5 +276,25 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
   updateChangeGroup(group: any) {
     this.caseFacade.updateEligibilityGroup(group);
+  }
+
+  getCaseStatusDetails() {
+    this.loaderService.show();
+    this.caseFacade.getCaseStatusByClientEligibilityId(this.profileClientId,this.clientCaseEligibilityId).subscribe({
+      next: (response: any) => {
+        this.loaderService.hide();
+        if(response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
+          this.caseFacade.setCaseReadOnly(true);
+        }
+        
+        else{
+          this.caseFacade.setCaseReadOnly(false);
+        }
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      }
+    })
   }
 }

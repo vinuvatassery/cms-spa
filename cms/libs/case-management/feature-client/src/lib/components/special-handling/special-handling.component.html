@@ -25,16 +25,19 @@
           </kendo-grid-column>
           <kendo-grid-column field="answer" title="Answer" [width]="300">
           </kendo-grid-column>
-                <!-- grid Loader Template -->  
-       <ng-template kendoGridLoadingTemplate>
-        <common-grid-loader-component></common-grid-loader-component>
-       </ng-template>
-       <!-- grid No data Template -->  
-       <ng-template kendoGridNoRecordsTemplate>
-         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
-         </div>
-         <p>There is no data to display.</p>
-       </ng-template> 
+          <!-- grid Loader Template -->
+          <ng-template kendoGridLoadingTemplate>
+            <common-grid-loader-component></common-grid-loader-component>
+          </ng-template>
+          <!-- grid No data Template -->
+          <ng-template kendoGridNoRecordsTemplate>
+            <div>
+              <kendo-badge-container>
+                <span class="material-icons"> info </span>
+              </kendo-badge-container>
+            </div>
+            <p>There is no data to display.</p>
+          </ng-template>
         </kendo-grid>
       </div>
     </div>
@@ -48,5 +51,5 @@
   class="app-c-modal app-c-modal-lg app-c-modal-np"
   title="Edit Special Handling"
 >
-  <case-management-special-handling-detail></case-management-special-handling-detail>
+  <case-management-special-handling-detail (isSpecialHandlingPopupClose)="onSpecialHandlingPopupClose($event)"></case-management-special-handling-detail>
 </kendo-dialog>

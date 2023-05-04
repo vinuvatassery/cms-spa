@@ -34,4 +34,7 @@ export class SpecialHandlingComponent implements OnInit {
   onEditSpecialHandlingClicked() {
     this.isEditSpecialHandlingPopup = true;
   }
+  onSpecialHandlingPopupClose(event:any){
+      this.onEditSpecialHandlingClosed();
+  }
 }

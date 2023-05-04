@@ -120,6 +120,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showSendNewsLetterPopup();
     this.addSessionChangeSubscription();
     this.showCancelApplicationPopup();
+    this.resetReadOnlyView();
   }
 
   ngOnDestroy(): void {
@@ -458,5 +459,9 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   onContinueClick(){
     this.closeCancelApplicationPopup();
     this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+  }
+
+  resetReadOnlyView(){
+    this.caseFacade.setCaseReadOnly(false);
   }
 }

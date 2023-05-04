@@ -399,11 +399,18 @@ export class CaseDataService {
     );
   }
   getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
-    return this.http.get(
+    return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/cases/${clientCaseEligibilityId}/SessionSearch`);
   }
 
   loadEligibilityPeriods(clientCaseId: string){
     return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${clientCaseId}/eligibility-periods`);
+  }
+
+  loadCasesStatusByClientEligibilityId(clientId: any, clientCaseEligibilityId: any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/clients/${clientId}/eligibility/${clientCaseEligibilityId}/status`
+    );
   }
 }

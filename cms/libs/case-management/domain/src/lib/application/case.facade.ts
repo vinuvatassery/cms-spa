@@ -49,6 +49,7 @@ export class CaseFacade {
     false
   );
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  private isCaseReadOnlySubject = new BehaviorSubject<boolean>(false);
   private clientProfileImpInfoSubject  = new Subject<any>();
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private currentGroupSubject = new BehaviorSubject<any>(null);
@@ -607,5 +608,13 @@ export class CaseFacade {
 
   getCaseStatusById(clientCaseId: string) {
     return this.caseDataService.loadCasesStatusById(clientCaseId);
+  }
+
+  setCaseReadOnly(isReadOnly:any){
+    this.isCaseReadOnlySubject.next(isReadOnly);
+  }
+
+  getCaseStatusByClientEligibilityId(clientId: any, clientCaseEligibilityId: any) {
+    return this.caseDataService.loadCasesStatusByClientEligibilityId(clientId,clientCaseEligibilityId);
   }
 }

@@ -89,7 +89,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private loggingService: LoggingService,
     private router: Router,
     private intl: IntlService,
-    private configurationProvider: ConfigurationProvider
+    private configurationProvider: ConfigurationProvider,
   ) {}
 
   /** Lifecycle hooks **/
@@ -352,7 +352,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.message = 'Applicant info saved successfully';
         return this.clientFacade.save(this.applicantInfo).pipe(
           catchError((error: any) => {
-            if (error) {
+            if (error) {              
               this.clientFacade.showHideSnackBar(
                 SnackBarNotificationType.ERROR,
                 error
@@ -381,10 +381,21 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private populateClient() {
+  private populateClient() {    
     if (this.applicantInfo.client == undefined) {
       this.applicantInfo.client = new Client();
     }
+    if(this.isCerForm)
+    {
+      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.cerReceivedDate = new Date(
+        this.intl.formatDate(
+          this.appInfoForm.controls['cerReceivedDate'].value,
+          this.dateFormat
+        )
+      );
+    }
+   
+
     this.applicantInfo.client.firstName =
       this.appInfoForm.controls['firstName'].value.trim() === ''
         ? null

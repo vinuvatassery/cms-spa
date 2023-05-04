@@ -60,6 +60,7 @@
               kendoPopoverAnchor
               [popover]="onCaseManagerDetailsHovered"
               showOn="hover"
+              attr.aria-label="{{ clientProfile?.caseManagerName }}" 
               >{{clientProfile?.caseManagerName}}</a
             >
           </td>
