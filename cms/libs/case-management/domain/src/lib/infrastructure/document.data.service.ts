@@ -4,10 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { Subject } from 'rxjs/internal/Subject';
 /** Entities **/
 import { Document } from '../entities/document';
-import { ClientDocumnetEntityType } from '@cms/case-management/domain';
+import { ClientDocumnetEntityType } from '../enums/client-document-entity-type.enum';
 
 /** Data services **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
