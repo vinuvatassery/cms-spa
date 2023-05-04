@@ -22,5 +22,6 @@ export interface Dependent {
     isCareAssistFlag : string  ,
     memberType : string,
     fullCustomName :string,
-    dependentClientId : string
+    dependentClientId : string,
+    clientCaseEligibilityId: string,
 }

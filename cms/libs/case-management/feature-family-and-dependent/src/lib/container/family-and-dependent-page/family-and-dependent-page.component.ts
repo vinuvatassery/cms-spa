@@ -155,7 +155,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
 
   onDependentStatusChange(dependent: any, status: string) {
     if(!!dependent.clientRelationshipId && status == 'N') {
-      this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId);
+      this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId, this.isCerForm);
       this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((dependentData: any) =>
         {
@@ -222,6 +222,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   addUpdateDependentHandle(dependent : any) {
    const dependentData : Dependent = dependent;
    dependent.clientId =this.clientId ;
+   if (this.isCerForm) {
+    dependentData.clientCaseEligibilityId = this.prevClientCaseEligibilityId;
+   }
     if(dependentData.clientRelationshipId && dependentData.clientRelationshipId !='')
     {
       this.familyAndDependentFacade.updateNewDependent(this.clientCaseEligibilityId, dependentData);

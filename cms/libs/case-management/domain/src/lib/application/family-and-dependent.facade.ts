@@ -96,9 +96,9 @@ export class FamilyAndDependentFacade {
     this.loaderService.hide();
   }
 
-  deleteDependent(eligibilityId: string, dependentId: string): void {
+  deleteDependent(eligibilityId: string, dependentId: string, isCER: boolean = false): void {
     this.showLoader();
-    this.dependentDataService.deleteDependent(eligibilityId, dependentId).subscribe({
+    this.dependentDataService.deleteDependent(eligibilityId, dependentId, isCER).subscribe({
       next: (deleteResponse) => {
         if (deleteResponse ?? false) {
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent Removed Successfully')
