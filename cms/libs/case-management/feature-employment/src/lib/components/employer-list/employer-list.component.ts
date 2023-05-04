@@ -12,7 +12,7 @@ import {
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
-import { ClientEmployer, EmploymentFacade, ScreenType } from '@cms/case-management/domain';
+import { ClientEmployer, EmploymentFacade, ScreenType, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -48,7 +48,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   public sort = this.employmentFacade.sort;
   public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -65,7 +65,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
 

@@ -1,23 +1,19 @@
 <!-- Main Title Section -->
 <section class="app-l-mainTittle">
 
-  <h2> {{
-    isCerForm ? 'Renew Eligibility' : 'New Application' }}  - {{applicantName}}</h2>
+  <h2> {{isCerForm ? 'Renew Eligibility' : 'New Application' }}  - {{applicantName}}</h2>
   <p class="mt-2 mb-2" *ngIf="!isCerForm">
     Please complete all fields for this application, then click “Start” to go
     through the eligibility checklist. All items must be addressed before
     starting the application review.
   </p>
   <p class="mt-2 mb-2" *ngIf="isCerForm">
-    Please complete the CER by confirming whether there are any changes to the information below and making updates as needed. Once all updates are complete, click “Start” to go through the eligibility checklist. All items must be addressed before starting the eligibility review.
+    Please complete the CER by confirming whether there are any changes to the information below and making updates as needed.
+     Once all updates are complete, click “Start” to go through the eligibility checklist.
+      All items must be addressed before starting the eligibility review.
   </p>
 </section>
-<div class="flex-col flex-col-10" *ngIf="isCerForm">
-  <div class="info-banners blue-banner d-flex mt-2"  >
-    <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
-    <div><p>Application submitted by the client on XX/XX/XXXX</p></div>
-  </div>
- 
+<div class="flex-col flex-col-10" *ngIf="isCerForm"> 
   <div class="info-banners light-blue-banner d-flex mt-2 align-item-fstart mb-2"   >
      
     <div>
@@ -35,17 +31,19 @@
         <common-user-profile-card> </common-user-profile-card>
       </ng-template>
     </kendo-popover>
-    <p>This note is displaying from the Event Log or from the last CER process. Integer quis quam ac odio ornare aliquet. Donec volutpat, neque sit amet fringilla pulvinar, arcu odio feugiat augue.</p></div>
+    <p>This note is displaying from the Event Log or from the last CER process. Integer quis quam ac odio ornare aliquet. 
+      Donec volutpat, neque sit amet fringilla pulvinar, arcu odio feugiat augue.</p></div>
   </div>
   </div>
 <div class="client-data-block">
-  <h3>Applicant Info</h3>
   <div class="block-section">
     <case-management-client-edit-view
+    [isCerForm]="isCerForm"
     (AppInfoChanged)="updatePageCount($event)"
     (AdjustAttrChanged)="updateAdjustmentAttrCount($event)"
     (ValidateFields)="setAppInfoForm($event)"
     (ApplicantNameChange)="setApplicantName($event)"
+    [clientCaseEligibilityId]="clientCaseEligibilityId"
     ></case-management-client-edit-view>
   </div>   
 </div>

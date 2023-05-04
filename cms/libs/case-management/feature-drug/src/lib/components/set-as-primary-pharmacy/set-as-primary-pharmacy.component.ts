@@ -31,6 +31,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
   @Output() addNewPharmacyClick = new EventEmitter<any>();
   @Output() removePharmacyClick = new EventEmitter<any>();
   IsDeactivateSelectPrimaryPharmacies = false;
+  isPharmacyError = false;
   selectedPharmacy: any;
   selectedVendorId: string = '';
   selectedSearchedPharmacy: any;
@@ -58,6 +59,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
   }
   onChangePharmacy(selectedPharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
+    this.isPharmacyError = false;
     this.selectedPharmacy = this.pharmacies.find(
       (x) => x.vendorId == selectedPharmacy
     );
@@ -68,6 +70,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
   }
   onSearchTemplateClick(pharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
+    this.isPharmacyError = false;
     if (pharmacy.vendorId) {
       this.selectedSearchedPharmacy = pharmacy;
       this.selectedPharmacy = null;
@@ -76,7 +79,13 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     }
   }
   onAddNewPharmacy() {
+    if(!this.validate())
+    {
+      this.isPharmacyError = true;
+      return;
+    }
     if (this.IsDeactivateSelectPrimaryPharmacies) {
+      this.isPharmacyError = false;
       let isNewAdded = this.selectedSearchedPharmacy ? true : false;
       let newPharmacy = this.selectedSearchedPharmacy
         ? this.selectedSearchedPharmacy
@@ -90,7 +99,13 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     }
   }
   onRemovePharmacy() {
+    if(!this.validate())
+    {
+      this.isPharmacyError = true;
+      return;
+    }
     if (this.IsDeactivateSelectPrimaryPharmacies){
+      this.isPharmacyError = false;
       let isNewAdded = this.selectedSearchedPharmacy ? true : false;
       let newPharmacy = this.selectedSearchedPharmacy
       ? this.selectedSearchedPharmacy
@@ -103,5 +118,13 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
       this.removePharmacyClick.emit(null);
     }
     
+  }
+  validate()
+  {
+    if(!this.selectedSearchedPharmacy && !this.selectedPharmacy)
+    {
+      return false;
+    }
+    return true;
   }
 }

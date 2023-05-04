@@ -137,6 +137,7 @@
       icon="add"
       aria-label="add medical premium"
       (click)="openPremiumPaymentDetailsOpened()"
+      [disabled]="(isReadOnly$ | async) ? true : false"
     >
       Dental Premium
     </button>

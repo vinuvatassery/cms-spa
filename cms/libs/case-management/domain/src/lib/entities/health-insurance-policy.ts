@@ -15,8 +15,8 @@ export class HealthInsurancePolicy {
         policyHolderLastName: string | null = null;
         metalLevelCode: string | null = null;
         premiumAmt: number | null = null;
-        startDate?: string | null;
-        endDate?: string | null;
+        insuranceStartDate?: string | null;
+        insuranceEndDate?: string | null;
         careassistPayingPremiumFlag: string | null = null;
         premiumPaidThruDate?: string | null;
         premiumFrequencyCode: string | null = null;
