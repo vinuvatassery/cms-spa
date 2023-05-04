@@ -65,7 +65,9 @@ export class LovFacade {
   private lovClientPhoneDeviceTypeSubject = new Subject<Lov[]>();
   private showLoaderOnRelationType = new BehaviorSubject<boolean>(false);
   private eligibilityStatusSubject = new BehaviorSubject<Lov[]>([]);
+  private eligibilityStatusCpSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
+  private showLoaderOnEligibilityStatusCpSubject = new BehaviorSubject<boolean>(false);
   private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
   private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
   private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
@@ -109,7 +111,9 @@ export class LovFacade {
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
   lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  
   eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
+  eligibilityStatusCp$ = this.eligibilityStatusCpSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
+  showLoaderOnEligibilityStatusCp$ = this.showLoaderOnEligibilityStatusCpSubject.asObservable();
   showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
   disenrollmentReason$ = this.disenrollmentReasonSubject.asObservable();
   disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
@@ -576,8 +580,21 @@ getAttachmentTypesLovs(): void {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
-
 }
+getEligibilityStatusCpLovs(): void {
+  this.showLoaderOnEligibilityStatusCpSubject.next(true);
+  this.lovDataService.getLovsbyType(LovType.EligibilityStatusCp).subscribe({
+    next: (lovResponse) => {
+      this.eligibilityStatusCpSubject.next(lovResponse);
+      this.showLoaderOnEligibilityStatusCpSubject.next(false);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.showLoaderOnEligibilityStatusCpSubject.next(false);
+    },
+  });
+}
+
 }
 
 
