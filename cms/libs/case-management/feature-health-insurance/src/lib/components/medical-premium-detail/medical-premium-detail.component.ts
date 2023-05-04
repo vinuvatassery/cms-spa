@@ -1104,7 +1104,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
 
   /** Internal event methods **/
   onHealthInsuranceTypeChanged() {
-    debugger;
     this.insuranceEndDateIsgreaterthanStartDate = true;
     this.resetData();
     this.resetValidators();
@@ -1218,7 +1217,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
                 SnackBarNotificationType.SUCCESS,
                 'Insurance plan saved successfully.'
               );
-              debugger;
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
               this.isAddEditClicked.next(true);

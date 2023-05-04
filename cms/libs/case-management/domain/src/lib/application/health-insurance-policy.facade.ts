@@ -140,8 +140,8 @@ export class HealthInsurancePolicyFacade {
     return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
   }
 
-  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any) {
-    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId);
+  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any,insuranceStatus:string) {
+    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId,insuranceStatus);
   }
 
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
@@ -197,7 +197,6 @@ export class HealthInsurancePolicyFacade {
           if (medicalHealthPlansResponse['clientInsurancePolicies'] == null) {
             medicalHealthPlansResponse['clientInsurancePolicies'] = []
           }
-          debugger;
           const gridView: any = {
             data: medicalHealthPlansResponse['clientInsurancePolicies'],
             total: medicalHealthPlansResponse?.totalCount,

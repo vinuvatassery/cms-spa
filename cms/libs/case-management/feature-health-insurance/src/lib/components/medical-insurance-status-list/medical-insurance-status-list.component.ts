@@ -3,9 +3,10 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-medical-insurance-status-list',
@@ -14,11 +15,14 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 })
 
 export class MedicalInsuranceStatusListComponent implements OnInit {
+
+   /** Private properties **/
+  private dentalInsuranceListSubscription!: Subscription;
   /** Public properties **/
   healthInsuranceStatus$ = this.insurancePolicyFacade.healthInsuranceStatus$;
   medicalHealthPlans$ = this.insurancePolicyFacade.medicalHealthPlans$;
   isCopyInsuranceConfirm = false;  
-
+  medicalHealthPlansCount :any;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
@@ -59,8 +63,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       icon: "content_copy",
       type:"Copy",
       click: (): void => {
-        //this.onCopyInsuranceConfirmOpenClicked();
-      },
+      }
     },
     {
       buttonType:"btn-h-primary",
@@ -84,7 +87,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       icon: "delete",
       type: "Delete",
       click: (): void => {
-        //this.onDeleteConfirmOpenClicked()
       },
     }
     
@@ -98,8 +100,11 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    //this.loadHealthInsuranceStatus();
     this.priorityPopupShowSubscription();  
+    this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
+      this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
+
+    })
   }
   ngOnChanges(): void {
     this.state = {
@@ -110,24 +115,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       this.onDeleteConfirmCloseClicked();
       this.handleHealthInsuranceCloseClicked();
     }
-    //this.loadHealthInsurancePlans();
   }
-  // loadHealthInsurancePlans() {
-  //   this.insurancePolicyFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
-  //     this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
-  //     if(medicalHealthPolicy?.data?.length > 0)
-  //     this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
-  //     if(medicalHealthPolicy?.length > 0){
-  //       const item: CompletionChecklist = {
-  //         dataPointName: 'currentInsuranceFlag',
-  //         status: StatusFlag.Yes
-  //       };
-  //       this.workflowFacade.updateChecklist([item]);
-  //     }
-  //   })
-  // }
-  pageselectionchange(data: any) {
-    debugger;
+  
+  pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.sort ={ field : 'creationTime' ,  dir: 'asc' };
@@ -137,10 +127,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   handleHealthInsuranceOpenClicked(value: string) {
     this.isOpenedHealthInsuranceModal = true;
     switch (value) {
-      // case 'view':
-      //   this.dialogTitle = 'View';
-      //   this.isEdit = false;
-      //   break;
       case 'edit':
         this.dialogTitle = 'Edit';
         this.isEdit = true;
@@ -158,7 +144,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     else{
       this.loadHistoricalPlan.next(false);
     }
-    //this.loadInsurancePolicies();
   }
   isAddPriority(event:any)
   {
@@ -265,26 +250,21 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   private priorityPopupShowSubscription(){
     this.triggerPriorityPopup$.subscribe((value:boolean)=>{
-      if(value && this.isTriggerPriorityPopup){
-        this.isEditInsurancePriorityTitle = false;
-        this.insurancePriorityModalButtonText = 'Save';
-        this.onChangePriorityOpenClicked();
+      if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {      
+        if(value && this.isTriggerPriorityPopup){
+          this.isEditInsurancePriorityTitle = false;
+          this.insurancePriorityModalButtonText = 'Save';
+          this.onChangePriorityOpenClicked();
+        }
+        else
+        {
+          this.isEditInsurancePriorityTitle = true;
+          this.insurancePriorityModalButtonText = 'Update';
+        }
       }
-      else
-      {
-        this.isEditInsurancePriorityTitle = true;
-        this.insurancePriorityModalButtonText = 'Update';
-      }
+     
+     
     })
   }
 
-
-  /** Private methods **/
-
-  // onCopyInsuranceConfirmCloseClicked(){
-  //   this.isCopyInsuranceConfirm = false;
-  // }
-  // onCopyInsuranceConfirmOpenClicked(){
-  //   this.isCopyInsuranceConfirm = true;
-  // }
 }

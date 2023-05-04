@@ -39,6 +39,7 @@
   [insuranceStatus]="this.tabId"
   (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
   (deleteInsurancePlan)="deleteInsurancePolicy($event)"
+  (copyInsurancePlan) = "copyInsurancePolicy($event)"
   [closeDeleteModal]="closeDeleteModal"></case-management-medical-insurance-status-list>
 </div>
 

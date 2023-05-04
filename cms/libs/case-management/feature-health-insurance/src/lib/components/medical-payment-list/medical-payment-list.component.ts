@@ -33,7 +33,10 @@ export class MedicalPaymentListComponent implements OnInit {
   @Input() tabStatus:any;
    isReadOnly$=this.caseFacade.isCaseReadOnly$;
   /** Constructor **/
-  constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,private caseFacade: CaseFacade) {}
+  constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,private readonly formBuilder: FormBuilder,
+    private caseFacade: CaseFacade) {
+    this.premiumPaymentForm = this.formBuilder.group({});
+  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {

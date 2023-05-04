@@ -17,6 +17,8 @@ import { SnackBarNotificationType, NotificationSnackbarService, NotificationSour
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetHealthInsurancePriorityComponent implements OnInit {
+
+  @Input() insuranceStatus:any;
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() selectedInsurance: any;
@@ -43,10 +45,10 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void {  
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId)
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId,this.insuranceStatus)
     .subscribe({
       next: (data: any) => {
         this.gridList = data;
@@ -79,11 +81,11 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
-      if (insurance.dentalPlanFlag === "Y") {
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A dental plan cannot be the set Primary Insurance even if the only plan is dental.', NotificationSource.UI)
-        this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
-        return;
-      }
+      // if (insurance.dentalPlanFlag === "Y") {
+      //   this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A dental plan cannot be the set Primary Insurance even if the only plan is dental.', NotificationSource.UI)
+      //   this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
+      //   return;
+      // }
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }

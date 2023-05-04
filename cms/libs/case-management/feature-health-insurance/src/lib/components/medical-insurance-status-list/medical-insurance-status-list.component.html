@@ -41,26 +41,13 @@
             >
             {{ dataItem.insurancePlanName }}
           </button></ng-template>
-        </kendo-grid-column>
-        <kendo-grid-column field="priorityDesc" title="Priority" [width]="100">
-        </kendo-grid-column>
+        </kendo-grid-column>       
         <kendo-grid-column
           field="insuranceIdNumber"
           title="Insurance Id"
           [width]="120"
         >
         </kendo-grid-column>
-        <!-- <kendo-grid-column field="vendor" title="Vendor" [width]="120">
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button
-              kendoButton
-              class="card-link-button"
-              aria-label="medical insurance vendor"
-            >
-              {{ dataItem.vendor }}
-            </button>
-          </ng-template>
-        </kendo-grid-column> -->
         <kendo-grid-column
           field="insuranceCarrierName"
           title="Insurance Carrier"
@@ -88,26 +75,26 @@
         [width]="100"
       >
       </kendo-grid-column>
+      <kendo-grid-column
+      field="premiumAmt"
+      title="Premium Amount"
+      [width]="150"
+    >
+    </kendo-grid-column>
         <kendo-grid-column
-          field="otherCoveredOnPlan"
-          title="Other People On Plan"
-          [width]="100"
-        >
-        </kendo-grid-column>
-        <kendo-grid-column
-          field="premiumFrequencyCode"
+          field="premiumFrequencyDesc"
           title="Premium Frequency"
           [width]="150"
         >
         </kendo-grid-column>
         <kendo-grid-column field="paymentIdNumer" title="Payment ID" [width]="130">
         </kendo-grid-column>
-        <!-- <kendo-grid-column
-          field="policyHolder"
+        <kendo-grid-column
+          field=""
           title="Policy Holder"
           [width]="100"
         >
-        </kendo-grid-column> -->
+        </kendo-grid-column>
         <kendo-grid-column field="aptcCode" title="APTC?" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column
@@ -155,8 +142,7 @@
               class="TableActionPopup app-dropdown-action"
               buttonClass="k-icon-button"
               aria-label="more actions"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-            >
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
              
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttonDataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="buttonDataItem.text" [class]="buttonDataItem.buttonType" aria-hidden="false" 
@@ -176,11 +162,9 @@
         <div class="grid-custom-paginationtemplates d-flex"> 
           <div class="d-flex align-items-center"> 
             <label class="mr-1" for="RowsPerPage">Rows Per Page</label> 
-            <!-- <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-              [valuePrimitive]="true" [(value)]="pageSize" aria-label="Rows Per Page" id="RowsPerPage" ></kendo-dropdownlist> -->
               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
               [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"
-              (selectionChange)="pageselectionchange($event)" aria-label="Rows Per Page" id="RowsPerPage"></kendo-dropdownlist>
+              (selectionChange)="pageSelectionChange($event)" aria-label="Rows Per Page" id="RowsPerPage"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
   
@@ -231,6 +215,7 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
   [clientId] ="clientId"
   (isAddPriority)="isAddPriority($event)"
   (isAddEditClicked)="addOrEditClicked($event)"
+  [medicalHealthPlansCount]="medicalHealthPlansCount"
   [insuranceStatus]="insuranceStatus">
 </case-management-medical-premium-detail>
 </kendo-dialog>
@@ -243,7 +228,8 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
         ? 'Change Insurance Priority'
         : 'Select Insurance Priority'
     }}</kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" [selectedInsurance]="selectedInsurance" 
+  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" 
+  [selectedInsurance]="selectedInsurance" [insuranceStatus]="insuranceStatus"
    [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"
    (priorityAdded)="priorityAdded()"></case-management-set-health-insurance-priority>
 </kendo-dialog>

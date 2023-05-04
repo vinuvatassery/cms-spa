@@ -149,13 +149,8 @@ comment: [''],
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
   }
-  // getQueryParam() {
-  //   this.clientId = this.route.snapshot.queryParams['id']; 
-  //   this.clientCaseId = this.route.snapshot.queryParams['cid']; 
-  //   this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id']; 
-  // }
+ 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
-    debugger;
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
@@ -223,7 +218,6 @@ comment: [''],
     }
   }
   loadHistoricalData(isLoadHistoricalData:boolean){
-    debugger;
     this.isHistoricalDataLoad =isLoadHistoricalData;
     const gridDataRefinerValue = {
       skipCount: this.insurancePolicyFacade.skipCount,
@@ -235,10 +229,7 @@ comment: [''],
   }
 
   loadCopayEventHandle(gridDataRefinerValue: any){
-
   }
-
 }
-
 
 

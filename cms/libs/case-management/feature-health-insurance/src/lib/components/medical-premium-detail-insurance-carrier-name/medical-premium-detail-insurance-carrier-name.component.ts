@@ -39,8 +39,6 @@ public isLoading =false;
   }
 
   ngOnInit(): void {
-    debugger;
-   
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
       this.loadInsuranceCarrierName(InsuranceStatusType.dentalInsurance);   
     }
