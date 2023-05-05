@@ -54,7 +54,7 @@ export class HealthInsurancePolicyDataService {
   }
   copyInsurancePolicy(insurancePolicyId:any){
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy/${insurancePolicyId}`,{}
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policies/${insurancePolicyId}`,{}
     );
   }
   updateInsuranceFlags(insuranceFlagsData: any) {

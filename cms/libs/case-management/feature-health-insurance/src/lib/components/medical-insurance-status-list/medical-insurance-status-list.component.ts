@@ -75,13 +75,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       },
     },
     {
-      buttonType: "btn-h-primary",
-      text: "Change Priority",
-      icon: "format_line_spacing",
-      type: "priority",
-      click: (): void => {},
-    },
-    {
       buttonType: "btn-h-danger",
       text: "Delete Insurance",
       icon: "delete",
@@ -100,6 +93,15 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {    
+      this.gridOptionData.push({
+        buttonType: "btn-h-primary",
+        text: "Change Priority",
+        icon: "format_line_spacing",
+        type: "priority",
+        click: (): void => {},
+      })
+    }
     this.priorityPopupShowSubscription();  
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
@@ -117,6 +119,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     }
   }
   
+  ngOnDestroy(): void {
+    this.dentalInsuranceListSubscription.unsubscribe();
+  }
+
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
