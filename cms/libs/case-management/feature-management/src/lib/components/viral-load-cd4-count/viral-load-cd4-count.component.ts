@@ -57,7 +57,7 @@ export class ViralLoadCD4CountComponent implements OnChanges {
         this.state.take ?? 0,
         this.sortValue,
         this.sortType  ,
-        false      
+        this.historychkBoxChecked      
       );
     }
     loadLabResults(
