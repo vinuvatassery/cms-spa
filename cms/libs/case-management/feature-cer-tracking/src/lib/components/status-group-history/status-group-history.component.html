@@ -1,6 +1,6 @@
 <h4>Group History</h4>
 
-<kendo-grid [data]="statusGroupHistory" [loading]="loader">
+<kendo-grid [data]="statusGroupHistory$ | async" [loading]="loader">
     <kendo-grid-column field="groupCodeDesc" title="Group" [width]="100"></kendo-grid-column>
     <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>

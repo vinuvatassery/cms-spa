@@ -10,15 +10,15 @@
         <tbody>
             <tr>
                 <td class="greycolor"> Most Recent Transfer</td>
-                <td> {{ramSellInfo.mostRecentTransferDate}}</td>
+                <td> {{ramSellInfo?.mostRecentTransferDate| date:'MM/dd/yyyy'}}</td>
             </tr>
             <tr>
                 <td class="greycolor"> Card Requested</td>
-                <td> {{ramSellInfo.cardRequestStatus}}</td>
+                <td> {{ramSellInfo?.cardRequestStatus}}</td>
             </tr>
             <tr>
                 <td class="greycolor"> Date Card Last Sent</td>
-                <td> {{ramSellInfo.cardLastSentDate| date:'MM/dd/yyyy'}}</td>
+                <td> {{ramSellInfo?.cardLastSentDate| date:'MM/dd/yyyy'}}</td>
             </tr>
         </tbody>
     </table>

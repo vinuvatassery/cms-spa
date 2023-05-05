@@ -47,7 +47,7 @@
   (filterChange)="filterChange($event)"
   [loading]="isGridLoaderShow"
   [data]="cases | async">
-    <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
+    <kendo-grid-column field="clientFullName" title="Client Name" [width]="160" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
           (click)="onCaseClicked(dataItem)">
@@ -107,17 +107,6 @@
           </common-grid-cell-date-range-filter>
     </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"
-      [format]="{ date: 'MM-dd-yyyy' }" filter="date">
-      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <common-grid-cell-date-range-filter
-          [field]="'eligibilityEndDate'"
-          [filter]="filter"
-          [filterService]="filterService"
-        >
-        </common-grid-cell-date-range-filter>
-  </ng-template>
-    </kendo-grid-column>
     <kendo-grid-column field="email" title="Email" [width]="120" [hidden]="true">
     </kendo-grid-column>
     <kendo-grid-column field="phone" title="Phone" [width]="120" [hidden]="true">
@@ -129,7 +118,29 @@
     </kendo-grid-column>
     <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120" [hidden]="(selectedTab == tabOptions.MY_CASES)">
+    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"  [sticky]="(selectedTab == tabOptions.MY_CASES)"
+      [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter
+          [field]="'eligibilityEndDate'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+  </ng-template>
+    </kendo-grid-column>
+    
+
+    <kendo-grid-column field="caseManager" title="Case Manager"  [width]="160" [hidden]="true">
+    </kendo-grid-column>
+     <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120" [hidden]="true">
+    </kendo-grid-column>
+    <kendo-grid-column field="ssn" title="SSN" [width]="120" [hidden]="true">
+      <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.ssn | ssn }}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120" [sticky]="(selectedTab != tabOptions.MY_CASES)" [hidden]="(selectedTab == tabOptions.MY_CASES)">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
         kendoPopoverAnchor
@@ -148,16 +159,6 @@
           </kendo-popover>
       </ng-template>
 
-
-    </kendo-grid-column>
-    <kendo-grid-column field="caseManager" title="Case Manager"  [width]="160" [hidden]="true">
-    </kendo-grid-column>
-     <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120" [hidden]="true">
-    </kendo-grid-column>
-    <kendo-grid-column field="ssn" title="SSN" [width]="120" [hidden]="true">
-      <ng-template kendoGridCellTemplate let-dataItem>
-          {{ dataItem.ssn | ssn }}
-      </ng-template>
     </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
