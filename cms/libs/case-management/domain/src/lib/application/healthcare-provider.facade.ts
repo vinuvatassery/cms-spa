@@ -28,6 +28,7 @@ export class HealthcareProviderFacade {
   private healthCareProvideReactivateSubject = new Subject<any>();
   private healthCareProvideGetCerFlagSubject = new Subject<any>();
   private healthCareProvideSetCerFlagSubject = new Subject<any>();
+  private showAddNewProviderButtonSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -43,6 +44,7 @@ export class HealthcareProviderFacade {
   healthCareProvideReactivate$ = this.healthCareProvideReactivateSubject.asObservable();
   healthCareProvideGetCerFlag$ = this.healthCareProvideGetCerFlagSubject.asObservable();
   healthCareProvideSetCerFlag$ = this.healthCareProvideSetCerFlagSubject.asObservable();
+  showAddNewProvider$ = this.showAddNewProviderButtonSubject.asObservable();
 
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
@@ -153,7 +155,16 @@ export class HealthcareProviderFacade {
             data : healthCareProvidersResponse["items"] ,        
             total:  healthCareProvidersResponse["totalCount"]  
           };      
-
+          if(parseInt(healthCareProvidersResponse["items"].filter(function(item : any){
+            return item?.isDeleted === false;
+          }).length) > 0)
+          {          
+          this.showAddNewProviderButtonSubject.next(false);
+          }
+          else
+          {
+            this.showAddNewProviderButtonSubject.next(true);
+          }
           this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
           this.showProvidervalidationSubject.next(parseInt(healthCareProvidersResponse["totalCount"]) === 0);
           this.healthCareProvidersSubject.next(gridView);
