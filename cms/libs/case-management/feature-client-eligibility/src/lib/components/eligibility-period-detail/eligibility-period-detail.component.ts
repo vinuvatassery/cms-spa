@@ -139,6 +139,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       }
       let editEligibilityData = this.currentEligibility;
       if(this.isStatusPeriodEdit){
+        editEligibilityData.ClientCaseEligibilityGroupId = this.currentEligibility.ClientCaseEligibilityGroupId;
         editEligibilityData.groupCode = this.eligibilityPeriodForm.controls['group'].value;
         editEligibilityData.groupCodeId = this.groupList.filter((group:any)=>group.groupCode == editEligibilityData.groupCode)[0].groupCodeId;
         editEligibilityData.reasonCode = this.eligibilityPeriodForm.controls['reasonCode'].value;
@@ -357,13 +358,14 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.disableFields =[];
     }
     if(this.isStatusPeriodEdit){
-      if(this.currentEligibility.eligibilityStatusCode == EligibilityStatus.Disenrolled.toUpperCase()){
+      if(this.currentEligibility && this.currentEligibility.eligibilityStatusCode == EligibilityStatus.Disenrolled.toUpperCase()){
         this.disableFields = [
           'group',
+          'eligibilityStatus'
         ];
       }
       else{
-        this.disableFields =[];
+        this.disableFields =['eligibilityStatus'];
       }
      
     }
@@ -451,6 +453,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
     }
     if(this.isStatusPeriodEdit){
+      this.eligibilityPeriodForm.controls['eligibilityStatus'].setValue(currentEligibility.status);
       this.eligibilityPeriodForm.controls['group'].setValue(currentEligibility.groupCode);
       this.eligibilityPeriodForm.controls['group'].updateValueAndValidity()
     }
