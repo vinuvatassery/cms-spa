@@ -37,7 +37,7 @@
             aria-label="plan name"
             kendoPopoverAnchor
             [popover]="myPopover"
-            (click)="getCarrierContactInfo(dataItem.insuranceCarrierId,dataItem.insurancePlanName)"
+            (click)="getCarrierContactInfo(dataItem.insuranceVendorId,dataItem.insurancePlanName)"
             >
             {{ dataItem.insurancePlanName }}
           </button></ng-template>
@@ -64,7 +64,7 @@
               aria-label="carrier name"
               kendoPopoverAnchor
               [popover]="myPopover"
-              (click)="getCarrierContactInfo(dataItem.insuranceCarrierId,'')"
+              (click)="getCarrierContactInfo(dataItem.insuranceVendorId,'')"
               >
               {{ dataItem.insuranceCarrierName }}
             </button></ng-template>
@@ -208,7 +208,7 @@
       (click)="handleHealthInsuranceOpenClicked('add')"
       [disabled]="(isReadOnly$ | async) ? true : false"
     >
-    MEDICAL INSURANCE
+   {{buttonText}}
     </button>
   </div>
 

@@ -270,11 +270,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       healthInsurancePolicy.insuranceIdNbr
     );
     this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
-      healthInsurancePolicy.insuranceCarrierId
+      healthInsurancePolicy.insuranceVendorId
     );
 
-    if (healthInsurancePolicy.insuranceCarrierId) {
-      this.insuranceCarrierNameChange(healthInsurancePolicy.insuranceCarrierId);
+    if (healthInsurancePolicy.insuranceVendorId) {
+      this.insuranceCarrierNameChange(healthInsurancePolicy.insuranceVendorId);
     }
     this.healthInsuranceForm.controls['insurancePlanName'].setValue(
       healthInsurancePolicy.insurancePlanId
@@ -335,7 +335,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsuranceForm.controls['onQmbFlag'].setValue(healthInsurancePolicy.onQmbFlag === StatusFlag.Yes);
       if (this.medicareInsuranceInfoCheck) {
         this.insuranceCarrierNameChange(
-          healthInsurancePolicy.insuranceCarrierId as string
+          healthInsurancePolicy.insuranceVendorId as string
         );
       }
       
@@ -887,7 +887,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       /* End for default values */
 
       if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) return;
-      this.healthInsurancePolicy.insuranceCarrierId = this.healthInsuranceForm.controls['insuranceCarrierName'].value;
+      this.healthInsurancePolicy.insuranceVendorId = this.healthInsuranceForm.controls['insuranceCarrierName'].value;
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;
       this.healthInsurancePolicy.insuranceIdNbr =
@@ -987,7 +987,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.paymentIdNbrSameAsInsuranceIdNbrFlag = null;
       this.healthInsurancePolicy.paymentIdNbr = null;
       this.healthInsurancePolicy.premiumAmt = null;
-      this.healthInsurancePolicy.insuranceCarrierId = null;
+      this.healthInsurancePolicy.insuranceVendorId = null;
       this.healthInsurancePolicy.insurancePlanId = null;
       this.healthInsurancePolicy.insuranceIdNbr = null;
       this.healthInsurancePolicy.insuranceStartDate = null;
@@ -1134,7 +1134,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   insuranceCarrierNameData(data: any) {
     if (this.isEdit) {
       this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
-        this.healthInsurancePolicyCopy.insuranceCarrierId
+        this.healthInsurancePolicyCopy.insuranceVendorId
       );
     }
   }

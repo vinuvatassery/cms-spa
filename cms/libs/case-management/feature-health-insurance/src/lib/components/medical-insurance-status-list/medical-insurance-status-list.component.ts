@@ -54,6 +54,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   sort!:any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   isOpenedDeleteConfirm:boolean = false;
+  buttonText:string ="MEDICAL INSURANCE";
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   public gridOptionData = [
@@ -93,7 +94,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {    
+    if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {  
+      this.buttonText ="MEDICAL INSURANCE";  
       this.gridOptionData.push({
         buttonType: "btn-h-primary",
         text: "Change Priority",
@@ -101,6 +103,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
         type: "priority",
         click: (): void => {},
       })
+    }
+    else{
+      this.buttonText ="DENTAL INSURANCE"; 
     }
     this.priorityPopupShowSubscription();  
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{

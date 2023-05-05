@@ -40,7 +40,8 @@
   (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
   (deleteInsurancePlan)="deleteInsurancePolicy($event)"
   (copyInsurancePlan) = "copyInsurancePolicy($event)"
-  [closeDeleteModal]="closeDeleteModal"></case-management-medical-insurance-status-list>
+  [closeDeleteModal]="closeDeleteModal"
+  (loadHistoricalPlan)="loadHistoricalData($event)"></case-management-medical-insurance-status-list>
 </div>
 
 <div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS) || tabId === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS">
