@@ -48,6 +48,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
   isDeafTextBoxDisabled = true;
   isMaterialsTextBoxDisabled = true;
   isErrandsTextBoxDisabled = true;
+  isEmpty = false;
   materialsSelectedValue!: number;
   deafSelectedValue!: number;
   walkingSelectedValue!: number;
@@ -234,6 +235,13 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.applicantInfo.ClientNotes = this.tareacaseWorkerNote;
   }
   onUpdateSpecialCaseHandlingDetail() {
+    if(this.tareacaseWorkerNote.length > 0){
+     let isNoteEmpty= this.tareacaseWorkerNote.some(clientNote=>clientNote.note == "")
+     if(isNoteEmpty){
+      this.isEmpty=true;
+      return;
+     }
+    }
     this.setModelValuesForUpdate();
     this.loaderService.show();
     this.clientfacade

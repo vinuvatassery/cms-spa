@@ -35,7 +35,7 @@ export class ViralLoadCD4CountComponent implements OnChanges {
    
      /** Lifecycle hooks **/
      ngOnChanges(): void {
-      this.historychkBoxChecked = false;
+      this.historychkBoxChecked = true;
       this.state = {
         skip: 0,
         take: this.pageSizes[0]?.value,
@@ -57,7 +57,7 @@ export class ViralLoadCD4CountComponent implements OnChanges {
         this.state.take ?? 0,
         this.sortValue,
         this.sortType  ,
-        false      
+        this.historychkBoxChecked      
       );
     }
     loadLabResults(
