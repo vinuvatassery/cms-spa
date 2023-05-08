@@ -41,6 +41,7 @@ export class ClientEligibilityComponent implements OnInit {
   sessionId: any = "";
   clientId: any;
   clientCaseEligibilityId: string = "";
+  prevClientCaseEligibilityId: string = "";
   clientCaseId: any;
   eligibility: any;
   incomDocuments: any = [];
@@ -52,7 +53,7 @@ export class ClientEligibilityComponent implements OnInit {
   reviewQuestionCode = ReviewQuestionCode;
   acceptedApplicationStatus = true;
   btnDisabled = false;
-
+  isCerForm: boolean = false;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -166,6 +167,10 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientId = sessionData.clientId;
           this.eligibilityForm.controls['clientCaseEligibilityId'].setValue(this.clientCaseEligibilityId);
           this.loadDocumentsAndEligibility();
+          this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
+          if(this.prevClientCaseEligibilityId) {
+            this.isCerForm =  true;
+          }
         }
       });
   }

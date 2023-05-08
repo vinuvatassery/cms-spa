@@ -36,6 +36,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
   @Input() isEdit!: boolean;
+  @Input() isCerForm!: boolean;
   btnDisabled = false;
   dayOptions: Intl.DateTimeFormatOptions = {
     day: 'numeric',
@@ -56,6 +57,9 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if (this.isCerForm){
+      this.buttonText = "RENEW ELIGIBILITY";
+    }
     if (this.isEdit)
     {
       this.buttonText = "Update";
