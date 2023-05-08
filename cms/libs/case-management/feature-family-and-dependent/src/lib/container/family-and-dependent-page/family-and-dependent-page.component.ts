@@ -96,7 +96,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
      this.clientId = JSON.parse(session.sessionData).clientId;
      this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
      if(this.prevClientCaseEligibilityId) {
-        this.isCerForm =  true
+        this.isCerForm =  true;
+        this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId, 0,
+          this.pageSizes[0]?.value, this.sortValue, this.sortType);
      }
      this.loadDependentsStatus();
     });
@@ -111,7 +113,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       sortType : gridDataRefinerValue.sortType,
     }
 
-    if(!(this.isFamilyGridDisplay ?? false))
+    if(!(this.isFamilyGridDisplay ?? false) || this.isCerForm)
     {
       this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
     this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId
@@ -224,6 +226,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
    dependent.clientId =this.clientId ;
    if (this.isCerForm) {
     dependentData.clientCaseEligibilityId = this.prevClientCaseEligibilityId;
+   }
+   else {
+    dependentData.clientCaseEligibilityId = this.clientCaseEligibilityId;
    }
     if(dependentData.clientRelationshipId && dependentData.clientRelationshipId !='')
     {
