@@ -10,7 +10,7 @@
       [groupable]="false"
       [reorderable]="true"     
       [resizable]="true" 
-      [columnMenu]="{ filter: true }"
+      [columnMenu]="{ filter: false }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
 
@@ -27,7 +27,7 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="pNumber" title="PNUmber" [width]="100" *ngIf="managementTab"></kendo-grid-column>
-        <kendo-grid-column field="domainCode" title="Domain" [width]="100" *ngIf="managementTab"></kendo-grid-column>
+        <kendo-grid-column field="domainCode" title="Domain" [width]="100" *ngIf="managementTab || isCerForm"></kendo-grid-column>
         <kendo-grid-column field="assisterGroup" title="Assister Group" [width]="100"
           *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column *ngIf="managementTab" field="assignmentStartDate" title="Effective Date" [width]="100"
@@ -63,7 +63,8 @@
                 let-clientCaseId="clientCaseId">
                 <button 
                  kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                  aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId);" [disabled]="(isReadOnly$ | async) ? true : false">
+                  aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId,manager.clientCaseManagerId
+                  ,manager.assignmentStartDate,manager.assignmentEndDate);" [disabled]="(isReadOnly$ | async) ? true : false">
                   <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>

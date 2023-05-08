@@ -25,6 +25,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   @Input() loadExistingProvider$: any;
   @Input() searchProviderLoaded$: any;
   @Input() healthCareProvideReactivate$: any;
+  @Input() showAddNewProvider$ : any
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
   @Output() deactivateConfimEvent =  new EventEmitter<string>();

@@ -15,4 +15,5 @@ export class ApplicantInfo{
     clientSexualIdentityList:ClientSexualIdentity[]=[]
     clientRaceList:ClientRace[]=[]
     clientGenderList:ClientGender[]=[]
+    ClientNotes:any[] | [] = [];
 }
