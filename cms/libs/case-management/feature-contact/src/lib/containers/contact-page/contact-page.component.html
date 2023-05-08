@@ -1,7 +1,7 @@
 <div class="client-data-block" [ngClass]="isCerForm ? 'CerForm-contact-screen' : '' ">
   <h3>{{   isCerForm ? 'Mailing Address' : 'Contact Info' }}  </h3>
   <section>
-    <form [formGroup]="contactInfoForm" autocomplete="off">
+    <form [formGroup]="contactInfoForm" autocomplete="off" autoComplete='false'>
       <!-- Contact Email Details-->
       <div class="block-section block-section-two cer-mb-3" formGroupName="mailingAddress">
         <div class="flex-row" *ngIf="!isCerForm">
@@ -61,6 +61,7 @@
               formControlName="address1"
               (blur)="validateMailingAddress()"
               placeholder="Address Line 1"
+              autocomplete="off"
               > </kendo-textbox>
             </kendo-floatinglabel>   
             <p class="user-old-section" *ngIf="isCerForm"><b>Old Address line 1:</b> 123 Main St <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
@@ -82,6 +83,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
+              autocomplete="disabled"
               (blur)="validateMailingAddress()"
               placeholder="Address Line 2"
               > </kendo-textbox>
@@ -101,6 +103,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
+              autocomplete="off"
               (blur)="validateMailingAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -144,6 +147,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
+              autocomplete="off"
               (blur)="validateMailingAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -247,6 +251,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address1"
+              autocomplete="disabled"
               (blur)="validateHomeAddress()" placeholder="Address Line 1"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -270,6 +275,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
+              autocomplete="disabled"
               (blur)="validateHomeAddress()"  placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -291,6 +297,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
+              autocomplete="disabled"
               (blur)="validateHomeAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -316,6 +323,7 @@
               formControlName="state"              
               textField="stateName"
               valueField="stateCode"
+              
               [valuePrimitive]="true"
               (valueChange)="onStateChange($event)"
               (blur)="validateHomeAddress()"  placeholder="State"
@@ -340,6 +348,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
+              autocomplete="off"
               (blur)="validateHomeAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
