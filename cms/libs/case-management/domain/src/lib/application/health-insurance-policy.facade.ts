@@ -156,10 +156,16 @@ export class HealthInsurancePolicyFacade {
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
   }
-  loadCoPaysAndDeductibles() {
-    this.healthInsurancePolicyService.loadCoPaysAndDeductibles().subscribe({
+  loadCoPaysAndDeductibles(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+    this.showLoader()
+    this.healthInsurancePolicyService.loadCoPaysAndDeductibles(clientId,clientCaseId,clientCaseEligibilityId,gridDataRefinerValue).subscribe({
       next: (coPaysAndDeductiblesResponse) => {
-        this.coPaysAndDeductiblesSubject.next(coPaysAndDeductiblesResponse);
+        const gridView = {
+          data: coPaysAndDeductiblesResponse['items'],
+          total: coPaysAndDeductiblesResponse['totalCount'],
+        };
+        this.coPaysAndDeductiblesSubject.next(gridView);
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

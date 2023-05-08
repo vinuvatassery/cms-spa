@@ -60,8 +60,8 @@ export class HealthInsurancePolicyDataService {
   updateInsuranceFlags(insuranceFlagsData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
   }
-  loadCoPaysAndDeductibles() {
-    return of([
+  loadCoPaysAndDeductibles(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+    var itemsarray =   [
       {
         id: 1,
         serviceProvider: 'Provider Name',
@@ -127,7 +127,15 @@ export class HealthInsurancePolicyDataService {
         type: 'Payment',
         serviceDescription: 'Lorem ipsum description',
       },
-    ]);
+    ]
+
+    var total=itemsarray.length
+    return of({
+      items:itemsarray,
+      totalCount:total
+    }
+   
+    );
   }
   loadHealthInsuranceStatus() {
     return of([

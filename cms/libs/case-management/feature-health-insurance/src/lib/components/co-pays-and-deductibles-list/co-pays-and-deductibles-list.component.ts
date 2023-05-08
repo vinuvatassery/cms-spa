@@ -16,14 +16,6 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   coPaysAndDeductibles$ = this.insurancePolicyFacade.coPaysAndDeductibles$;
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public pageSize = 10;
-  public skip = 5;
-  public pageSizes = [
-    {text: '5', value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100}
-  ];
   isCoPaymentDetailsOpened = false;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
@@ -32,6 +24,12 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() tabStatus:any;
+
+  @Output() loadCoPayEvent  = new EventEmitter<any>();
+
+  public state!: State;
+  public pageSizes = this.insurancePolicyFacade.gridPageSizes;
+  public gridSkipCount = this.insurancePolicyFacade.skipCount;
   
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
@@ -41,17 +39,50 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCoPaysAndDeductibles();
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
+    this.loadCoPayDeductiblesData();
   }
 
   /** Private methods **/
-  private loadCoPaysAndDeductibles() {
-    this.insurancePolicyFacade.loadCoPaysAndDeductibles();
-  }
+
   openCoPaymentDetailsOpened(){
     this.isCoPaymentDetailsOpened = true;
   }
   closeCoPaymentDetailsOpened(){
     this.isCoPaymentDetailsOpened = false;
+  }
+
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadCoPayDeductiblesData();
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
+    this.loadCoPayDeductiblesData();
+  }
+
+   // Loading the grid data based on pagination
+   private loadCoPayDeductiblesData(): void {
+    this.loadCoPayDeductiblesList(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0
+    );
+  }
+
+  loadCoPayDeductiblesList(
+    skipCountValue: number,
+    maxResultCountValue: number
+  ) {
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      pagesize: maxResultCountValue,
+      tabId: this.tabStatus
+    };
+    this.loadCoPayEvent.next(gridDataRefinerValue);
   }
 }

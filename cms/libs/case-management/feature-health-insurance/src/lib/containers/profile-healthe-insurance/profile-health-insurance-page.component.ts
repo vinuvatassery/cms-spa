@@ -228,7 +228,9 @@ comment: [''],
   }
 
   loadCopayEventHandle(gridDataRefinerValue: any){
+    this.insurancePolicyFacade.loadCoPaysAndDeductibles(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,gridDataRefinerValue);
   }
+
 }
 
 
