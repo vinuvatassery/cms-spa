@@ -1,10 +1,10 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ClientProfileTabs, HealthInsurancePolicyFacade } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Component({
@@ -44,7 +44,6 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     this.buildForm();
     this.buildCopayPaymentForm();
     this.buildPremiumPaymentForm();
-    //this.getQueryParam();
   }
 
   /** Private properties **/
@@ -151,6 +150,7 @@ comment: [''],
   }
  
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
+    let typeParam ={type:'INSURANCEDEPENDENTS',insuranceStatusType:this.tabId};
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
@@ -160,8 +160,7 @@ comment: [''],
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.isHistoricalDataLoad? null: this.clientCaseEligibilityId,
-      'INSURANCEDEPENDENTS',
-      this.tabId,
+      typeParam,
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sortColumn,

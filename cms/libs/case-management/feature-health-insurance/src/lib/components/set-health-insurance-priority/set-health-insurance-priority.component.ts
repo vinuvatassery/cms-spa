@@ -81,11 +81,11 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
-      // if (insurance.dentalPlanFlag === "Y") {
-      //   this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A dental plan cannot be the set Primary Insurance even if the only plan is dental.', NotificationSource.UI)
-      //   this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
-      //   return;
-      // }
+      if (insurance.dentalPlanFlag === "Y") {
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'A dental plan cannot be the set Primary Insurance even if the only plan is dental.', NotificationSource.UI)
+        this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
+        return;
+      }
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }

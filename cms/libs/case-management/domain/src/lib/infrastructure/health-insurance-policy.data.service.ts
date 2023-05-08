@@ -265,7 +265,9 @@ export class HealthInsurancePolicyDataService {
       },
     ]);
   }
-  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any, type: string,insuranceStatusType:string, skipCount:any,pageSize:any, sortBy:any, sortType:any) {
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,typeParam:any, skipCount:any,pageSize:any, sortBy:any, sortType:any) {
+    let type =typeParam['type'];
+    let insuranceStatusType = typeParam['insuranceStatusType'];
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
