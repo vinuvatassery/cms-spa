@@ -54,7 +54,7 @@
           *ngIf="managementTab">
         </kendo-grid-column>
         <kendo-grid-column *ngIf="managementTab" field="startDate" title="Effective Date" [width]="100"
-          [sortable]="false">
+          >
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.startDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
@@ -127,7 +127,7 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button kendoButton [primary]="true" icon="add" (click)="onOpenProviderSearchClicked('',false)"
+        <button kendoButton [primary]="true" icon="add" (click)="onOpenProviderSearchClicked('',false)" *ngIf="showAddNewProvider$ | async"
           aria-label="add healthcare provider" [disabled]="(isReadOnly$ | async) ? true : false">
           Provider
         </button>
