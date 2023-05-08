@@ -25,7 +25,7 @@ export class FormsAndDocumentsComponent {
   }
 
   ngOnInit() {
-    this.templateManagementFacade.getDirectoryContent('Forms','').subscribe((documentlist: any) => {
+    this.templateManagementFacade.getDirectoryContent('Folder','').subscribe((documentlist: any) => {
       this.isShowLoader = false;
       this.loaderService.hide();
       if (!!documentlist && this.foldersTree.length == 0) {
@@ -47,13 +47,13 @@ export class FormsAndDocumentsComponent {
   }
 
   fetchSubfolders = (node: any) =>
-    this.templateManagementFacade.getDirectoryContent('Forms',node.documentTemplateId).pipe(map((response: any[]) => {
+    this.templateManagementFacade.getDirectoryContent('Folder',node.documentTemplateId).pipe(map((response: any[]) => {
       return node.files = this.folderstreeformatting(response);
     }));
 
-  hasFiles = function (data: any) {
-    return data.folderName==null?false:true;
-  }
+    hasFiles = function (data: any) {
+      return (data.typeCode.toUpperCase() === 'Folder'.toUpperCase() && data.templateSize === 0) ? true : false;
+    }
   /** Public methods **/
   showSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -92,7 +92,7 @@ export class FormsAndDocumentsComponent {
   folderstreeformatting(folderdata:any)
   {
   folderdata.forEach((element: any) => {
-    element.isFolder=element.folderName!=null;
+    element.isFolder = (element.typeCode.toUpperCase() === 'Folder'.toUpperCase() && element.templateSize === 0);
     element.templateSize=(element.templateSize/(1024 * 1024));
   });
 
