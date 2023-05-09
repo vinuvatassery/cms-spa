@@ -41,6 +41,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   showPharmacyRequiredValidation$ = new BehaviorSubject(false);
   isCerForm :any;
   showPharmacySection = true;
+  isCerText=false;
   prevClientCaseEligibilityId:any;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
@@ -96,7 +97,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       nonPreferredPharmacyCode: new FormControl(''),
       isClientNotUsingAnyPharmacy:new FormControl(false)
     });
-   
   }
 
   private loadPrescriptionDrug(): void {
@@ -305,9 +305,13 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
         this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.disable();
         this.showPharmacySection = true;
-        
+        this.isCerText=true;
+        }else {
+          this.isCerText=false;
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
+        this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.enable();
         }
-       
         this.changeDetector.detectChanges();
         const pharmacyFound = pharmacies?.length > 0;
         if (pharmacyFound) {
@@ -366,8 +370,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.drugPharmacyFacade.removeClientPharmacy(
       this.workflowFacade.clientId ?? 0,
       clientPharmacyId
-    );
-    this.buildForm();
+    ).then((isRemoved) =>{
+      if(isRemoved){
+        this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
+        this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
+      }
+     
+    })
+
+    
   }
 
   private addSaveForLaterSubscription(): void {

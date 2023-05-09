@@ -137,7 +137,7 @@
 
   <!-- Pharmacies -->
   <section >
-    <h5 class="text-capital mt-3" *ngIf="showPharmacySection">{{isCerForm ? 'Add, edit, or remove pharmacies as needed:' : 'Add Pharmacies'}} </h5>
+    <h5 class="text-capital mt-3" *ngIf="showPharmacySection && isCerText">{{isCerForm ? 'Add, edit, or remove pharmacies as needed:' : 'Add Pharmacies'}} </h5>
     <case-management-pharmacy-list
     [clientpharmacies$]="clientpharmacies$"
     [pharmacysearchResult$]="pharmacysearchResult$"
@@ -154,6 +154,7 @@
     (editPharmacyClick)="editPharmacy($event)"
     (removePharmacyClick)="removePharmacy($event)"
     [showPharmacyGrid]="showPharmacySection"
+    [isCer]="isCerForm"
     [clientId]="clientId"    
     ></case-management-pharmacy-list>
   </section>

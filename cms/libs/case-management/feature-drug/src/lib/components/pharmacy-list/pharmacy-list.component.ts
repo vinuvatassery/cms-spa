@@ -25,6 +25,7 @@ export class PharmacyListComponent implements OnInit {
   @Input() clientId: any;
   @Input() showPharmacyRequiredValidation$!: Observable<boolean>;
   @Input() showPharmacyGrid:any = true;
+  @Input() isCer:any = false;
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
   @Output() addPharmacyClick = new EventEmitter<string>();
