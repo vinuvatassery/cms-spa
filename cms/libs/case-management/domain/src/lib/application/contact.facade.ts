@@ -219,10 +219,11 @@ export class ContactFacade {
     });
   }
 
-  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string, prevClientCaseEligibilityId:string='') {
     return this.contactDataService.loadContactInfo(
       clientId,
-      clientCaseEligibilityId
+      clientCaseEligibilityId,
+      prevClientCaseEligibilityId
     );
   }
 
