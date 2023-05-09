@@ -13,7 +13,8 @@
                 id="havetheyhavefamilymemberYes"
                 class="form-control" 
                 value="Y"
-                
+                name="havetheyhavefamilymember"
+                [(ngModel)]="haveTheyHaveFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -28,7 +29,8 @@
                 aria-labelledby="havetheyhavefamilymemberNo" 
                 id="havetheyhavefamilymemberNo"
                 value="N" 
-                
+                name="havetheyhavefamilymember"
+                [(ngModel)]="haveTheyHaveFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
@@ -39,21 +41,62 @@
           </div>
           </fieldset> 
         </div>
+        <div [hidden]="haveTheyHaveFamilyMember != 'Y'">
+          <div class="flex-col" *ngFor="let dependent of (dependentList$ | async)?.data; let i=index">
+            <fieldset class="k-form-fieldset">
+              <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
+
+            <div class="component-list-h comp-list-horizontal">
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton   aria-labelledby="dependent"
+                  id="dependent{{i}}y"
+                  class="form-control" 
+                  value="Y"
+                  name="dependent_{{i}}"
+                  (click)="onDependentStatusChange(dependent, 'Y')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="dependent{{i}}y"
+                  text="Yes"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="dependent" 
+                  id="dependent{{i}}n"
+                  value="N" 
+                  name="dependent_{{i}}"
+                  (click)="onDependentStatusChange(dependent, 'N')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="dependent{{i}}n"
+                  text="No"
+                ></kendo-label>
+              </span>
+            </div>
+            </fieldset> 
+          </div>
+        </div>
         <div class="flex-col">
           <fieldset class="k-form-fieldset">
-            <legend class="k-form-legend"><h5>Is “Celine Dion (Spouse)” still in their family?</h5></legend>
+            <legend class="k-form-legend"><h5>Are there additionally people in their family?</h5></legend>
 
           <div class="component-list-h comp-list-horizontal">
             <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton   aria-labelledby="“CelineDionYes"
-                id="“CelineDionYes"
+              <input type="radio" kendoRadioButton   aria-labelledby="havetheyhaveadditionalfamilymemberYes"
+                id="havetheyhaveadditionalfamilymemberYes"
                 class="form-control" 
                 value="Y"
-                
+                name="haveTheyHaveAdditionalFamilyMember"
+                [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
-                for="“CelineDionYes"
+                for="havetheyhaveadditionalfamilymemberYes"
                 text="Yes"
               ></kendo-label>
             </span>
@@ -61,60 +104,24 @@
               <input
                 type="radio"
                 kendoRadioButton
-                aria-labelledby="“CelineDionNo" 
-                id="“CelineDionNo"
+                aria-labelledby="havetheyhaveadditionalfamilymemberNo" 
+                id="havetheyhaveadditionalfamilymemberNo"
                 value="N" 
-                
+                name="haveTheyHaveAdditionalFamilyMember"
+                [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
               />
               <kendo-label
                 class="k-radio-label"
-                for="“CelineDionNo"
+                for="havetheyhaveadditionalfamilymemberNo"
                 text="No"
               ></kendo-label>
             </span>
           </div>
           </fieldset> 
         </div>
-
-        <div class="flex-col">
-          <fieldset class="k-form-fieldset">
-            <legend class="k-form-legend"><h5>Is “Frank Ocean (Dependent)" still in their family?</h5></legend>
-
-          <div class="component-list-h comp-list-horizontal">
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton   aria-labelledby="“CelineDionYes"
-                id="“CelineDionYes"
-                class="form-control" 
-                value="Y"
-                
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="“CelineDionYes"
-                text="Yes"
-              ></kendo-label>
-            </span>
-            <span class="app-radiobtnwidtext-wrapper">
-              <input
-                type="radio"
-                kendoRadioButton
-                aria-labelledby="“CelineDionNo" 
-                id="“CelineDionNo"
-                value="N" 
-                
-              />
-              <kendo-label
-                class="k-radio-label"
-                for="“CelineDionNo"
-                text="No"
-              ></kendo-label>
-            </span>
-          </div>
-          </fieldset> 
-        </div>
-        </div>
+      </div>
       <div class="flex-row">
-        <div class="flex-col mb-2" *ngIf="isCerForm">
+        <div class="flex-col mb-2" *ngIf="isCerForm && haveTheyHaveAdditionalFamilyMember=='Y'">
         <h5 >Add new family members:</h5>
       </div>
         <div class="flex-col mb-1" *ngIf="!isCerForm">
@@ -134,7 +141,7 @@
           >
           </span>
         </div>
-        <div class="flex-col" *ngIf="!isFamilyGridDisplay">
+        <div class="flex-col" *ngIf="(!isCerForm && !isFamilyGridDisplay) || (isCerForm && haveTheyHaveAdditionalFamilyMember=='Y')">
           <case-management-family-and-dependent-list       
           [dependents$]="dependentList$"
           [dependentSearch$]="dependentSearch$"
