@@ -11,16 +11,17 @@
         </div>
         <div class="flex-row" *ngIf="isCerForm">
         <div class="flex-col">
+          <kendo-formfield>
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend"><h5>Has their mailing address changed?</h5></legend>
-
           <div class="component-list-h comp-list-horizontal">
             <span class="app-radiobtnwidtext-wrapper">
+           
               <input type="radio" kendoRadioButton   aria-labelledby="mailingaddresschangedYes"
                 id="mailingaddresschangedYes"
                 class="form-control" 
                 value="Y"
-                
+                formControlName="mailingAddressChangedFlag"
               />
               <kendo-label
                 class="k-radio-label"
@@ -35,7 +36,7 @@
                 aria-labelledby="mailingaddresschangedNo" 
                 id="mailingaddresschangedNo"
                 value="N" 
-                
+                formControlName="mailingAddressChangedFlag"
               />
               <kendo-label
                 class="k-radio-label"
@@ -45,10 +46,14 @@
             </span>
           </div>
           </fieldset>
-
-          <h5>Enter their new mailing address:</h5>
+          <kendo-formerror *ngIf="mailingAddress?.mailingAddressChangedFlag?.errors?.required">
+            Has their mailing address changed is required
+          </kendo-formerror>
+        </kendo-formfield>
+          <h5 *ngIf="mailingAddress?.mailingAddressChangedFlag?.value === 'Y'">Enter their new mailing address:</h5>
         </div>
         </div>
+        <div *ngIf="(isCerForm && mailingAddress?.mailingAddressChangedFlag?.value === 'Y') || !isCerForm">
         <div class="flex-row">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
@@ -64,7 +69,7 @@
               autocomplete="off"
               > </kendo-textbox>
             </kendo-floatinglabel>   
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Address line 1:</b> 123 Main St <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Address line 1:</b> {{ oldMailingAddress?.address1 }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('mailingAddress.address1',oldMailingAddress?.address1??'')">Use Old  </button></p>        
             <kendo-formerror *ngIf="mailingAddress?.address1?.errors?.required">
               Mailing Address is required
             </kendo-formerror>
@@ -88,6 +93,7 @@
               placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Address line 2:</b> {{ oldMailingAddress?.address2 }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('mailingAddress.address2',oldMailingAddress?.address2??'')">Use Old  </button></p>        
             <kendo-formerror *ngIf="mailingAddress?.address2?.errors?.pattern">
               Special characters are not allowed
             </kendo-formerror>
@@ -107,7 +113,7 @@
               (blur)="validateMailingAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old City:</b> City <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old City:</b> {{  oldMailingAddress?.city }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('mailingAddress.city',oldMailingAddress?.city??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="mailingAddress?.city?.errors?.required">
               Mailing City is required
@@ -134,8 +140,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> State <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
-
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> {{  oldMailingAddress?.state }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('mailingAddress.state',oldMailingAddress?.state??'')">Use Old  </button></p>        
             <kendo-formerror>Mailing State is required</kendo-formerror>
           </kendo-formfield>
           </div>
@@ -151,7 +156,7 @@
               (blur)="validateMailingAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Zip:</b> Zip <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Zip:</b> {{ oldMailingAddress?.zip }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('mailingAddress.zip',oldMailingAddress?.zip??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="mailingAddress?.zip?.errors?.required">
               Mailing Zip is required
@@ -179,10 +184,12 @@
         </div>       
         </div>
       </div>
+      </div>
       <h3 *ngIf="isCerForm"> Home Address   </h3>
       <div class="block-section block-section-two cer-mb-3"  formGroupName="homeAddress">
         <div class="flex-row" *ngIf="isCerForm">
           <div class="flex-col">
+            <kendo-formfield>
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend"><h5>Has their home address changed?</h5></legend>
   
@@ -192,7 +199,7 @@
                   id="homeaddresschangedYes"
                   class="form-control" 
                   value="Y"
-                  
+                  formControlName="homeAddressChangedFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -207,7 +214,7 @@
                   aria-labelledby="homeaddresschangedNo" 
                   id="homeaddresschangedNo"
                   value="N" 
-                  
+                  formControlName="homeAddressChangedFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -217,15 +224,17 @@
               </span>
             </div>
             </fieldset>
-  
-            <h5>Enter their new mailing address:</h5>
+            <kendo-formerror *ngIf="homeAddress?.homeAddressChangedFlag?.errors?.required">
+              Has their home address changed is required
+            </kendo-formerror>
+          </kendo-formfield>
+            <h5 *ngIf="homeAddress?.homeAddressChangedFlag?.value === 'Y'">Enter their new mailing address:</h5>
           </div>
           </div>
+      <div *ngIf="(isCerForm && homeAddress?.homeAddressChangedFlag?.value === 'Y') || !isCerForm">
         <div class="flex-row">
           <div class="flex-col flex-col-6 mat-split-list mt-2 justify-content-between">
             <h5 class="text-capital" *ngIf="!isCerForm">Home Address</h5>
-
-          
             <kendo-formfield>
             <span class="app-checkboxwidtext-wrapper">
               <input 
@@ -255,7 +264,7 @@
               (blur)="validateHomeAddress()" placeholder="Address Line 1"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Address line 1:</b> 123 Main St <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Address line 1:</b> {{  oldHomeAddress?.address1 }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('homeAddress.address1',oldHomeAddress?.address1??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="homeAddress?.address1?.errors?.required">
               Home Address is required
@@ -279,6 +288,7 @@
               (blur)="validateHomeAddress()"  placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Address line 2:</b> {{  oldHomeAddress?.address2 }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('homeAddress.address2',oldHomeAddress?.address2??'')">Use Old  </button></p>        
             <kendo-formerror *ngIf="homeAddress?.address2?.errors?.required">
               Address Line 2 is required
             </kendo-formerror>
@@ -301,7 +311,7 @@
               (blur)="validateHomeAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old City:</b> city <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old City:</b> {{  oldHomeAddress?.city }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('homeAddress.city',oldHomeAddress?.city??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
               Home City is required
@@ -330,7 +340,7 @@
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> State <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> {{ oldHomeAddress?.state }} <button aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('homeAddress.state',oldHomeAddress?.state??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="homeAddress?.state?.errors?.required">
               Home State is required
@@ -352,7 +362,7 @@
               (blur)="validateHomeAddress()"  placeholder="Zip"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Zip:</b> Zip <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Zip:</b> {{ oldHomeAddress?.zip }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('homeAddress.zip',oldHomeAddress?.zip??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="homeAddress?.zip?.errors?.required">
               Home Zip is required
@@ -385,7 +395,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Country:</b> Country <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old County:</b> {{ oldHomeAddress?.county }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('homeAddress.county',oldHomeAddress?.county??'')">Use Old  </button></p>        
 
             <kendo-formerror>Home County is required</kendo-formerror>
           </kendo-formfield>
@@ -472,7 +482,8 @@
           <kendo-formerror *ngIf="showAddressProofSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
           </div>
         </div>
-        <fieldset class="k-form-fieldset">  
+        </div>
+        <fieldset class="k-form-fieldset" *ngIf="!isCerForm">  
         <div class="flex-row mt-2">
           <div class="flex-col mat-split-list mt-2">
             <legend class="k-form-legend"> <h5 class="text-capital">How stable is your housing?</h5></legend> 
@@ -538,6 +549,7 @@
         <h5 class="text-capital mt-3 pt-2 mb-0" *ngIf="!isCerForm">   Phone & Email   </h5>
         <div class="flex-row" *ngIf="isCerForm">
           <div class="flex-col">
+          <kendo-formfield>
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend"><h5>Have their phone numbers changed?</h5></legend>
   
@@ -547,7 +559,7 @@
                   id="phonenumberchangedYes"
                   class="form-control" 
                   value="Y"
-                  
+                  formControlName="phoneNumberChangedFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -562,7 +574,7 @@
                   aria-labelledby="phonenumberchangedNo" 
                   id="phonenumberchangedNo"
                   value="N" 
-                  
+                  formControlName="phoneNumberChangedFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -572,10 +584,14 @@
               </span>
             </div>
             </fieldset>
-  
-            <h5>Enter their new phone numbers:</h5>
+            <kendo-formerror *ngIf="homePhone?.phoneNumberChangedFlag?.errors?.required">
+              Has their phone numbers changed is required
+            </kendo-formerror>
+          </kendo-formfield>
+            <h5 *ngIf="homePhone?.phoneNumberChangedFlag?.value === 'Y'">Enter their new phone numbers:</h5>
           </div>
           </div>
+          <div *ngIf="(isCerForm && homePhone?.phoneNumberChangedFlag?.value === 'Y') || !isCerForm">
         <div class="flex-row">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
@@ -593,7 +609,7 @@
               (valueChange)="removePhoneNumberValidation('homePhone')"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Home Phone:</b> Not applicable <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Home Phone:</b> {{getPhoneUseOldText(oldHomePhone)}} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldPhone('homePhone',oldHomePhone)">Use Old  </button></p> 
             <kendo-formerror *ngIf="homePhone?.phoneNbr?.errors?.required">
               Home Phone is required
             </kendo-formerror>
@@ -650,6 +666,8 @@
           </div>
         </div>
       </div>
+    </div>
+    <div *ngIf="(isCerForm && homePhone?.phoneNumberChangedFlag?.value === 'Y') || !isCerForm">
       <div class="block-section block-section-two" formGroupName="cellPhone">
         <div class="flex-row">
           <div class="flex-col flex-col-6">
@@ -668,7 +686,7 @@
               (valueChange)="removePhoneNumberValidation('cellPhone')"
               > </kendo-maskedtextbox>        
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Cell Phone:</b> (000) 000-0000, Detailed Message OK, SMS Text OK <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Cell Phone:</b> {{ getPhoneUseOldText(oldCellPhone) }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldPhone('cellPhone',oldCellPhone)">Use Old  </button></p> 
 
             <kendo-formerror *ngIf="cellPhone?.phoneNbr?.errors?.required">
               Cell Phone is required
@@ -726,6 +744,8 @@
           </div>
         </div>
       </div>
+    </div>
+    <div *ngIf="(isCerForm && homePhone?.phoneNumberChangedFlag?.value === 'Y') || !isCerForm">
       <div class="block-section block-section-two" formGroupName="workPhone">
         <div class="block-section ">
           <div class="flex-row">
@@ -745,7 +765,7 @@
                 (valueChange)="removePhoneNumberValidation('workPhone')"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Work Phone:</b> (111) 111-1111 <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Work Phone:</b> {{ getPhoneUseOldText(oldWorkPhone) }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldPhone('workPhone',oldWorkPhone)">Use Old  </button></p> 
 
               <kendo-formerror *ngIf="workPhone.phoneNbr.errors?.required">
                 Work Phone is required
@@ -804,6 +824,8 @@
           </div>
         </div>
       </div>
+    </div>
+    <div *ngIf="(isCerForm && homePhone?.phoneNumberChangedFlag?.value === 'Y') || !isCerForm">
       <div class="block-section block-section-two" formGroupName="otherPhone">
         <div class="block-section ">
           <div class="flex-row">
@@ -823,7 +845,7 @@
                 (valueChange)="removePhoneNumberValidation('otherPhone')"
                 > </kendo-maskedtextbox>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Other Phone:</b> Not applicable <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Other Phone:</b> {{ getPhoneUseOldText(oldOtherPhone) }} <button aria-label="client name" kendoButton look="flat" class="card-link-button"(click)="useOldPhone('otherPhone',oldOtherPhone)">Use Old  </button></p> 
 
               <kendo-formerror *ngIf="otherPhone.phoneNbr.errors?.required">
                 Other Phone is required
@@ -902,10 +924,12 @@
           </div>
         </div>
       </div>
+    </div>
       <div class="block-section block-section-two " formGroupName="email">
         <div class="block-section ">
           <div class="flex-row cer-top-space" *ngIf="isCerForm">
             <div class="flex-col">
+            <kendo-formfield>
               <fieldset class="k-form-fieldset">
                 <legend class="k-form-legend"><h5>Has their email address changed?</h5></legend>
     
@@ -915,7 +939,7 @@
                     id="emailaddresschangedYes"
                     class="form-control" 
                     value="Y"
-                    
+                    formControlName="emailAddressChangedFlag"
                   />
                   <kendo-label
                     class="k-radio-label"
@@ -930,7 +954,7 @@
                     aria-labelledby="emailaddresschangedNo" 
                     id="emailaddresschangedNo"
                     value="N" 
-                    
+                    formControlName="emailAddressChangedFlag" 
                   />
                   <kendo-label
                     class="k-radio-label"
@@ -940,10 +964,14 @@
                 </span>
               </div>
               </fieldset>
-    
-              <h5>Enter their new email:</h5>
+              <kendo-formerror *ngIf="email?.emailAddressChangedFlag?.errors?.required">
+                Has their email address changed is required
+              </kendo-formerror>
+            </kendo-formfield>
+              <h5 *ngIf="email?.emailAddressChangedFlag?.value === 'Y'">Enter their new email:</h5>
             </div>
             </div>
+            <div *ngIf="(isCerForm && email?.emailAddressChangedFlag?.value === 'Y') || !isCerForm">
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <kendo-formfield>
@@ -957,7 +985,7 @@
                 (blur)="loadPreferredContactMethod()" 
                 > </kendo-textbox>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Email Address:</b> myEmailAddress@domain.com <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Email Address:</b> {{getEmailUseOldText(oldEmail)}} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldEmail(oldEmail)">Use Old  </button></p> 
 
               <kendo-formerror *ngIf="email.email.errors?.required">
                 Email Address is required
@@ -1016,6 +1044,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div *ngIf="(isCerForm && (email?.emailAddressChangedFlag?.value === 'Y' || homePhone?.phoneNumberChangedFlag?.value === 'Y')) || !isCerForm">
         <div class="block-section mt-1">
           <h5 *ngIf="isCerForm">What is their preferred contact method?</h5>
           <div class="flex-row">
@@ -1031,7 +1061,7 @@
                 >
                 </kendo-dropdownlist>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method:</b> Cell Phone - (000) 000-0000 <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method:</b> {{oldPreferredContact | phone}} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('email.preferredContactMethod',oldPreferredContact??'')">Use Old  </button></p> 
 
               <kendo-formerror>Preferred contact is required</kendo-formerror>
             </kendo-formfield>
@@ -1039,21 +1069,21 @@
           </div>
         </div>
       </div>
-      
+    </div>
       <!-- Contact Family and dependent details -->
       <div class="block-section block-section-two" formGroupName="familyAndFriendsContact">
         <div class="flex-row cer-top-space" *ngIf="isCerForm">
           <div class="flex-col">
+          <kendo-formfield>
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend"><h5>Has their friend or family contact changed?</h5></legend>
-  
             <div class="component-list-h comp-list-horizontal">
               <span class="app-radiobtnwidtext-wrapper">
                 <input type="radio" kendoRadioButton   aria-labelledby="friendorfamilycontactchangedYes"
                   id="friendorfamilycontactchangedYes"
                   class="form-control" 
                   value="Y"
-                  
+                  formControlName="friendFamilyChangedFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -1068,7 +1098,7 @@
                   aria-labelledby="friendorfamilycontactchangedNo" 
                   id="friendorfamilycontactchangedNo"
                   value="N" 
-                  
+                  formControlName="friendFamilyChangedFlag"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -1078,28 +1108,17 @@
               </span>
             </div>
             </fieldset>
+            <kendo-formerror *ngIf="fAfContact?.friendFamilyChangedFlag?.errors?.required">
+              Has their friend or family contact is required
+            </kendo-formerror>
+          </kendo-formfield>
             <div class="new-fmly-ct">
-
-           
-            <h5>Enter their new contact:</h5>
-            <kendo-formfield>
-              <span class="app-checkboxwidtext-wrapper">
-                <input 
-                class="adjust-attr"
-                type="checkbox" 
-                id="noFriendOrFamilyContactFlag" 
-                name="familyAndFriendsContact_noFriendOrFamilyContactFlag"
-                kendoCheckBox       
-                formControlName="noFriendOrFamilyContactFlag"
-                aria-labelledby="noFriendOrFamilyContactFlag" 
-                />
-                <label class="k-checkbox-label" for="noFriendOrFamilyContactFlag">No friend or family contact</label>
-              </span>
-            </kendo-formfield>
+            <h5 *ngIf="fAfContact?.friendFamilyChangedFlag?.value === 'Y'">Enter their new contact:</h5>
           </div>
           </div>
           </div>
-        <div class="flex-row" *ngIf="!isCerForm">
+          <div *ngIf="(isCerForm && fAfContact?.friendFamilyChangedFlag?.value === 'Y') || !isCerForm">
+        <div class="flex-row">
           <div class="flex-col flex-col-6 mat-split-list mt-2 justify-content-between">
             <h5 class="text-capital">Alternate Contact</h5>
             <kendo-formfield>
@@ -1130,7 +1149,7 @@
               placeholder="Contact's Name"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Name: </b> Donald Summer <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Name: </b> {{oldFriendsOrFamilyContact?.contactName}} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('familyAndFriendsContact.contactName',oldFriendsOrFamilyContact?.contactName??'')">Use Old  </button></p> 
 
             <kendo-formerror *ngIf="fAfContact.contactName.errors?.required">
               Contact's Name is required
@@ -1157,7 +1176,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Relationship: </b>  Sibling <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Relationship: </b> {{oldFriendsOrFamilyContact?.contactRelationshipCode}} <button aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('familyAndFriendsContact.contactRelationshipCode',oldFriendsOrFamilyContact?.contactRelationshipCode??'')">Use Old  </button></p> 
 
             <kendo-formerror>Contact's Relationship to Client is required</kendo-formerror>
           </kendo-formfield>
@@ -1201,7 +1220,7 @@
               (valueChange)="removePhoneNumberValidation('contactPhoneNbr')"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Phone Number:</b> (333) 333-3333 <button aria-label="client name" kendoButton look="flat" class="card-link-button">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Phone Number:</b> {{oldFriendsOrFamilyContact?.contactPhoneNbr | phone}} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('familyAndFriendsContact.contactPhoneNbr',oldFriendsOrFamilyContact?.contactPhoneNbr??'')">Use Old  </button></p> 
 
              <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">
               Contact's Phone Number is required
@@ -1213,6 +1232,7 @@
           </div>
         </div>
       </div>
+    </div>
     </form>
   </section>
 </div>
