@@ -30,6 +30,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   showProvidervalidation$  =this.healthProvider.showProvidervalidation$;
   healthCareProvideGetCerFlag$  =this.healthProvider.healthCareProvideGetCerFlag$;
   healthCareProvideSetCerFlag$  =this.healthProvider.healthCareProvideSetCerFlag$;
+  showAddNewProvider$ = this.healthProvider.showAddNewProvider$;
 
   showProvidervalidationbox$  = this.showProvidervalidationboxSubject.asObservable();
   showProviderFlagGrid$  = this.showProviderFlagGridSubject.asObservable();

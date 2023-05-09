@@ -88,7 +88,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private loggingService: LoggingService,
     private router: Router,
     private intl: IntlService,
-    private configurationProvider: ConfigurationProvider
+    private configurationProvider: ConfigurationProvider,
   ) {}
 
   /** Lifecycle hooks **/

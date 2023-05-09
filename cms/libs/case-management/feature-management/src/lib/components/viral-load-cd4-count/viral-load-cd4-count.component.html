@@ -14,7 +14,7 @@
     <div class="app-c-table">
       <kendo-grid [data]="gridData$ | async" [pageSize]="state.take" [pageable]="true" [sortable]="true"
         [skip]="state.skip" [groupable]="false" [reorderable]="true" [loading]="loader" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
+        [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
 
         <kendo-grid-column field="result" title="Result" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="collectionDate" title="Date of Test" [width]="150">
