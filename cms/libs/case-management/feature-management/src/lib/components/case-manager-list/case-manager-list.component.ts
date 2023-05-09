@@ -41,6 +41,7 @@ export class CaseManagerListComponent implements OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() updateDatesCaseManager$: any;
+  @Input() isCerForm: any;
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -73,6 +74,26 @@ export class CaseManagerListComponent implements OnChanges {
   assignmentEndDate: any;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public newAppActions = [
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Un Assign Case Manager',
+      icon: 'delete',
+      buttonName: 'unAssignMngr',
+      click: (
+        clientCaseId: string,
+        caseManagerId: string,
+        clientCaseManagerId: string,
+        assignmentStartDate: Date
+      ): void => {
+        if (this.unAssignButttonEmitted === false) {
+          this.deleteCaseManagerCaseId = clientCaseId;
+          this.selectedCaseManagerId = caseManagerId;
+          this.assignmentStartDate = new Date(assignmentStartDate);
+          this.onUnAssignManagerClicked();
+          this.unAssignButttonEmitted = true;
+        }
+      },
+    },
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Case Manager',
@@ -166,10 +187,13 @@ export class CaseManagerListComponent implements OnChanges {
       },
     },
   ];
-
-  constructor(private caseFacade: CaseFacade){}
+constructor(private caseFacade: CaseFacade){}
   /** Lifecycle hooks **/
-
+  ngOnInit(): void {
+    if (!this.isCerForm) {
+      this.newAppActions = this.newAppActions.filter(x=>x.buttonName != 'unAssignMngr');
+    }
+  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -178,7 +202,6 @@ export class CaseManagerListComponent implements OnChanges {
     };
     this.loadCaseManagerssList();
   }
-
   /** Private methods **/
 
   private loadCaseManagerssList(): void {
