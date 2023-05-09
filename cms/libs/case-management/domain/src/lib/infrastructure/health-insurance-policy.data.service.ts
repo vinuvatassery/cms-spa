@@ -61,81 +61,8 @@ export class HealthInsurancePolicyDataService {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
   }
   loadCoPaysAndDeductibles(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
-    var itemsarray =   [
-      {
-        id: 1,
-        serviceProvider: 'Provider Name',
-        amount: '$350.00',
-        reversal: 'Lorem ipsum',
-        coverageStartDate: 'XX-XX-XXXX',
-        coverageEndDate: 'XX-XX-XXXX',
-        entryDate: 'XX-XX-XXXX',
-        warrant: 'XXXXXXXXXXX',
-        comment: 'Lorem comment',
-        type: 'Payment',
-        serviceDescription: 'Lorem ipsum description',
-      },
-      {
-        id: 2,
-        serviceProvider: 'Provider Name',
-        amount: '$350.00',
-        reversal: 'Lorem ipsum',
-        coverageStartDate: 'XX-XX-XXXX',
-        coverageEndDate: 'XX-XX-XXXX',
-        entryDate: 'XX-XX-XXXX',
-        warrant: 'XXXXXXXXXXX',
-        comment: 'Lorem comment',
-        type: 'Payment',
-        serviceDescription: 'Lorem ipsum description',
-      },
-      {
-        id: 3,
-        serviceProvider: 'Provider Name',
-        amount: '$350.00',
-        reversal: 'Lorem ipsum',
-        coverageStartDate: 'XX-XX-XXXX',
-        coverageEndDate: 'XX-XX-XXXX',
-        entryDate: 'XX-XX-XXXX',
-        warrant: 'XXXXXXXXXXX',
-        comment: 'Lorem comment',
-        type: 'Payment',
-        serviceDescription: 'Lorem ipsum description',
-      },
-      {
-        id: 4,
-        serviceProvider: 'Provider Name',
-        amount: '$350.00',
-        reversal: 'Lorem ipsum',
-        coverageStartDate: 'XX-XX-XXXX',
-        coverageEndDate: 'XX-XX-XXXX',
-        entryDate: 'XX-XX-XXXX',
-        warrant: 'XXXXXXXXXXX',
-        comment: 'Lorem comment',
-        type: 'Payment',
-        serviceDescription: 'Lorem ipsum description',
-      },
-      {
-        id: 5,
-        serviceProvider: 'Provider Name',
-        amount: '$350.00',
-        reversal: 'Lorem ipsum',
-        coverageStartDate: 'XX-XX-XXXX',
-        coverageEndDate: 'XX-XX-XXXX',
-        entryDate: 'XX-XX-XXXX',
-        warrant: 'XXXXXXXXXXX',
-        comment: 'Lorem comment',
-        type: 'Payment',
-        serviceDescription: 'Lorem ipsum description',
-      },
-    ]
-
-    var total=itemsarray.length
-    return of({
-      items:itemsarray,
-      totalCount:total
-    }
-   
-    );
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-requests?type=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}`);
   }
   loadHealthInsuranceStatus() {
     return of([

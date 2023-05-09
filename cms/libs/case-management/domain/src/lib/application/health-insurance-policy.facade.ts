@@ -159,7 +159,7 @@ export class HealthInsurancePolicyFacade {
   loadCoPaysAndDeductibles(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
     this.showLoader()
     this.healthInsurancePolicyService.loadCoPaysAndDeductibles(clientId,clientCaseId,clientCaseEligibilityId,gridDataRefinerValue).subscribe({
-      next: (coPaysAndDeductiblesResponse) => {
+      next: (coPaysAndDeductiblesResponse:any) => {
         const gridView = {
           data: coPaysAndDeductiblesResponse['items'],
           total: coPaysAndDeductiblesResponse['totalCount'],
@@ -167,7 +167,7 @@ export class HealthInsurancePolicyFacade {
         this.coPaysAndDeductiblesSubject.next(gridView);
         this.hideLoader();
       },
-      error: (err) => {
+      error: (err:any) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });

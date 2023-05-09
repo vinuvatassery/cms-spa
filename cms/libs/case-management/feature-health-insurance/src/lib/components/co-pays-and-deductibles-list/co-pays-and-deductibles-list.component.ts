@@ -83,8 +83,8 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   ) {
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      tabId: this.tabStatus
+      maxResultCount: maxResultCountValue,
+      type: "REGULAR_PAY"
     };
     this.loadCoPayEvent.next(gridDataRefinerValue);
   }
