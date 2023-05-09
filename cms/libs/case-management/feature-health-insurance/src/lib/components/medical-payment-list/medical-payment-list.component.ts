@@ -6,6 +6,8 @@ import { State } from '@progress/kendo-data-query';
 import { HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-medical-payment-list',
   templateUrl: './medical-payment-list.component.html',
@@ -34,7 +36,8 @@ export class MedicalPaymentListComponent implements OnInit {
    isReadOnly$=this.caseFacade.isCaseReadOnly$;
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,private readonly formBuilder: FormBuilder,
-    private caseFacade: CaseFacade) {
+    private caseFacade: CaseFacade,
+    private lovFacade: LovFacade,) {
     this.premiumPaymentForm = this.formBuilder.group({});
   }
 
@@ -51,7 +54,13 @@ export class MedicalPaymentListComponent implements OnInit {
     this.isPremiumPaymentDetailsOpened = false;
   }
 
- openPremiumPaymentDetailsOpened(){
+  openPremiumPaymentDetailsOpened(){
+    this.getPaymentRequestLov();
     this.isPremiumPaymentDetailsOpened = true;
+  }
+
+  getPaymentRequestLov(){
+    this.lovFacade.getPaymentRequestTypeLov();
+    this.lovFacade.getPaymentReversalLov();
   }
 }

@@ -67,6 +67,8 @@ export class LovFacade {
   private eligibilityStatusSubject = new BehaviorSubject<Lov[]>([]);
   private showLoaderOnEligibilityStatusSubject = new BehaviorSubject<boolean>(false);
   private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentRequestTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
 
       /** Public properties **/
@@ -112,6 +114,8 @@ export class LovFacade {
   showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
   disenrollmentReason$ = this.disenrollmentReasonSubject.asObservable();
   disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
+  paymentRequestType$ = this.paymentRequestTypeSubject.asObservable();
+  paymentReversal$ = this.paymentReversalSubject.asObservable();
 
 
 
@@ -572,6 +576,28 @@ getDisenrollmentReasonLovs(): void {
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       this.disenrollmentReasonStatusSubject.next(false);
+    },
+  });
+}
+
+getPaymentRequestTypeLov(): void {
+  this.lovDataService.getLovsbyType(LovType.PaymentRequestType).subscribe({
+    next: (lovResponse) => {
+      this.paymentRequestTypeSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+
+getPaymentReversalLov(): void {
+  this.lovDataService.getLovsbyType(LovType.PaymentRequestReversal).subscribe({
+    next: (lovResponse) => {
+      this.paymentReversalSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
 }

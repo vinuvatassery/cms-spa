@@ -37,6 +37,8 @@ import { IntlService } from '@progress/kendo-angular-intl';
 export class MedicalPremiumPaymentDetailComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle(); 
   isPremiumPaymentAddForm = true;
+  paymentRequestType$= this.lovFacade.paymentRequestType$;
+  paymentReversal$= this.lovFacade.paymentReversal$;
   @Input() premiumPaymentForm: FormGroup; 
   @Input() caseEligibilityId: any;
   @Input() clientId:any;

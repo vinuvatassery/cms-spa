@@ -6,6 +6,7 @@ import { State } from '@progress/kendo-data-query';
 import {  HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
   templateUrl: './co-pays-and-deductibles-list.component.html',
@@ -33,7 +34,8 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
-    private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade) {
+    private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade,
+    private lovFacade: LovFacade) {
    this.copayPaymentForm = this.formBuilder.group({});
  }
 
@@ -49,6 +51,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   /** Private methods **/
 
   openCoPaymentDetailsOpened(){
+    this.getPaymentRequestLov();
     this.isCoPaymentDetailsOpened = true;
   }
   closeCoPaymentDetailsOpened(){
@@ -84,5 +87,10 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
       tabId: this.tabStatus
     };
     this.loadCoPayEvent.next(gridDataRefinerValue);
+  }
+
+  getPaymentRequestLov(){
+    this.lovFacade.getPaymentRequestTypeLov();
+    this.lovFacade.getPaymentReversalLov();
   }
 }
