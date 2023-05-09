@@ -50,7 +50,8 @@
     [premiumPaymentForm]="premiumPaymentForm"
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
-  [tabStatus]="this.tabId" 
+  [tabStatus]="this.tabId"
+  (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)" 
   ></case-management-medical-payment-list>
 </div>
 
@@ -60,5 +61,6 @@
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId" 
+  (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)"
   ></case-management-medical-payment-list>
 </div>

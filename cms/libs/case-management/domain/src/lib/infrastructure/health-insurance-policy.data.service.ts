@@ -60,7 +60,7 @@ export class HealthInsurancePolicyDataService {
   updateInsuranceFlags(insuranceFlagsData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
   }
-  loadCoPaysAndDeductibles(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+  loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-requests?type=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}`);
   }

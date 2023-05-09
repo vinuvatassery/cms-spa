@@ -94,6 +94,11 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.state = {
+      skip: this.insurancePolicyFacade.skipCount,
+      take: this.insurancePolicyFacade.gridPageSizes[0]?.value
+    };
+    this.sort ={ field : 'creationTime' ,  dir: 'asc' };
     if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {  
       this.buttonText ="MEDICAL INSURANCE";  
       this.gridOptionData.push({
@@ -112,6 +117,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
 
     })
+    this.loadInsurancePolicies();
   }
   ngOnChanges(): void {
     this.state = {

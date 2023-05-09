@@ -17,6 +17,7 @@ export class HealthInsurancePolicyFacade {
   
   /** Private properties **/
   private coPaysAndDeductiblesSubject = new BehaviorSubject<any>([]);
+  private premiumPaymentsSubject = new BehaviorSubject<any>([]);
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
   private healthInsurancePolicySubject = new Subject<HealthInsurancePolicy>();
   private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
@@ -34,6 +35,7 @@ export class HealthInsurancePolicyFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
   coPaysAndDeductibles$ = this.coPaysAndDeductiblesSubject.asObservable();
+  premiumPayments$ = this.premiumPaymentsSubject.asObservable();
   healthFacadesnackbar$ = this.snackbarSubject.asObservable();
   healthInsurancePolicy$ = this.healthInsurancePolicySubject.asObservable();
   healthInsuranceStatus$ = this.healthInsuranceStatusSubject.asObservable();
@@ -156,9 +158,10 @@ export class HealthInsurancePolicyFacade {
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
   }
+  
   loadCoPaysAndDeductibles(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
     this.showLoader()
-    this.healthInsurancePolicyService.loadCoPaysAndDeductibles(clientId,clientCaseId,clientCaseEligibilityId,gridDataRefinerValue).subscribe({
+    this.healthInsurancePolicyService.loadPaymentRequest(clientId,clientCaseId,clientCaseEligibilityId,gridDataRefinerValue).subscribe({
       next: (coPaysAndDeductiblesResponse:any) => {
         const gridView = {
           data: coPaysAndDeductiblesResponse['items'],
@@ -172,6 +175,24 @@ export class HealthInsurancePolicyFacade {
       },
     });
   }
+
+  loadPremiumPayments(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+    this.showLoader()
+    this.healthInsurancePolicyService.loadPaymentRequest(clientId,clientCaseId,clientCaseEligibilityId,gridDataRefinerValue).subscribe({
+      next: (premiumPaymentsResponse:any) => {
+        const gridView = {
+          data: premiumPaymentsResponse['items'],
+          total: premiumPaymentsResponse['totalCount'],
+        };
+        this.premiumPaymentsSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err:any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
   loadHealthInsuranceStatus() {
     this.healthInsurancePolicyService.loadHealthInsuranceStatus().subscribe({
       next: (healthInsuranceStatusResponse) => {

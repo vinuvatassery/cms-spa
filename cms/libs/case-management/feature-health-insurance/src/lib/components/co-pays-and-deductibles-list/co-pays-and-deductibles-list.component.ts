@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import {  HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
+import {  HealthInsurancePolicyFacade, CaseFacade, PaymentRequestType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -84,7 +84,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
-      type: "REGULAR_PAY"
+      type: PaymentRequestType.RegularPay
     };
     this.loadCoPayEvent.next(gridDataRefinerValue);
   }
