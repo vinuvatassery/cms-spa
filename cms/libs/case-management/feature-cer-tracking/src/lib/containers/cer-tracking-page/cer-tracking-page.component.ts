@@ -1,7 +1,7 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 /** Facades **/
-import { CerTrackingFacade } from '@cms/case-management/domain';
+import { CerTrackingFacade, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-cer-tracking-page',
@@ -22,7 +22,7 @@ export class CerTrackingPageComponent implements OnInit {
   sendResponse$ = this.cerTrackingFacade.sendResponse$;
 
   /** Constructor**/
-  constructor(private readonly cerTrackingFacade: CerTrackingFacade) {}
+  constructor(private readonly cerTrackingFacade: CerTrackingFacade, private readonly workflowFacade:WorkflowFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -61,5 +61,20 @@ export class CerTrackingPageComponent implements OnInit {
 
   sendCerCount(cerId: any){
     this.cerTrackingFacade.sendCerCount(cerId);
+  }
+
+  createCerSession(eligibilityId:string)
+  {    
+    if(eligibilityId)
+    {
+     const cerSessionData = {
+        entityId: null,     
+        assignedCwUserId: null,
+        caseOriginCode: null,
+        caseStartDate: null,
+        clientCaseEligibilityId: eligibilityId,
+      };
+    this.workflowFacade.createNewSession(null ,cerSessionData)
+    }
   }
 }
