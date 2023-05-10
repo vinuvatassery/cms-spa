@@ -41,4 +41,6 @@ export enum LovType {
     EligibilityStatusCp ='ELIGIBILITY_STATUS_CP',
     PaymentRequestType ='PAYMENT_REQUEST_TYPE',
     PaymentRequestReversal ='PAYMENT_REQUEST_REVERSAL',
+    PremiumPaymentType ="PREMIUM_PAYMENT_TYPE",
+    PremiumPaymentReversal="PREMIUM_PAYMENT_REVERSAL"
   }
