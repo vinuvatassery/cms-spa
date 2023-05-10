@@ -115,11 +115,9 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     serviceDescription: [''],
     paymentAmount: [''],
     type: [''],
-    reversal: [''],
-    coverageStartDate: [''],
-    coverageEndDate: [''],
+    serviceStartDate: [''],
+    serviceEndDate: [''],
     entryDate: [''],
-    checkMailDate: [''],
     comment: [''],
     });
   }

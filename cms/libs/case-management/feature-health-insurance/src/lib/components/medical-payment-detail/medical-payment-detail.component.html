@@ -55,37 +55,26 @@
                 </div>
             </div>
             <div class="flex-col">
-                <kendo-floatinglabel text="Reversal">
-                    <kendo-dropdownlist formControlName="reversal" aria-label="Reversal" [fillMode]="formUiStyle.dropDownFillMode"
-                        [data]="paymentReversal$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
-                        [loading]="(paymentReversal$ | async)?.length===0">
-                    </kendo-dropdownlist>
-                </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!copayPaymentForm.controls['reversal'].valid">Reversal is
-                    required.</kendo-formerror>
-
-            </div>
-            <div class="flex-col">
                 <div class="flex-row">
                     <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Coverage Start Date">
+                        <kendo-floatinglabel text="Service Start Date">
                             <kendo-datepicker formControlName="coverageStartDate"
                                 [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder="">
+                                aria-label="Service Start Date" formatPlaceholder="formatPattern" placeholder="">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!copayPaymentForm.controls['coverageStartDate'].valid">Coverage Start
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceStartDate'].valid">Service Start
                             Date is required.</kendo-formerror>
 
                     </div>
                     <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Coverage End Date">
+                        <kendo-floatinglabel text="Service End Date">
                             <kendo-datepicker formControlName="coverageEndDate"
                                 [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder="">
+                                aria-label="Service End Date" formatPlaceholder="formatPattern" placeholder="">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!copayPaymentForm.controls['coverageStartDate'].valid">Coverage End
+                        <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceEndDate'].valid">Service End
                             Date is required.</kendo-formerror>
 
 
@@ -102,17 +91,6 @@
                             </kendo-datepicker>
                         </kendo-floatinglabel>
                         <kendo-formerror *ngIf="!copayPaymentForm.controls['entryDate'].valid">Entry Date is
-                            required.</kendo-formerror>
-
-                    </div>
-                    <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Check Mail Date">
-                            <kendo-datepicker formControlName="checkMailDate" [fillMode]="formUiStyle.dateInputFillMode"
-                                format="MM-dd-yyyy" aria-label="Check Mail Date" formatPlaceholder="formatPattern"
-                                placeholder="">
-                            </kendo-datepicker>
-                        </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!copayPaymentForm.controls['checkMailDate'].valid">Check Mail Date is
                             required.</kendo-formerror>
 
                     </div>

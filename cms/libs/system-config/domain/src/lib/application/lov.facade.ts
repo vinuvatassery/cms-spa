@@ -601,24 +601,14 @@ getEligibilityStatusCpLovs(): void {
   });
 }
 
-  getPaymentRequestTypeLov(): void {
-    this.lovDataService.getLovsbyType(LovType.PaymentRequestType).subscribe({
+  getCoPaymentRequestTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.CoPaymentType).subscribe({
       next: (lovResponse) => {
         this.paymentRequestTypeSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
-    });
-  }
-  getPaymentReversalLov(): void {
-    this.lovDataService.getLovsbyType(LovType.PaymentRequestReversal).subscribe({
-      next: (lovResponse) => {
-        this.paymentReversalSubject.next(lovResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      }
     });
   }
 
