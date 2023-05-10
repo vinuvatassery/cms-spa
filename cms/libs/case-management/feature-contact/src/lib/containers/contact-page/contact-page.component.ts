@@ -554,7 +554,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private setHomePhone(isPhoneChangedInCer:boolean){
+  private setHomePhone(isPhoneChangedInCer: boolean) {
     const homePhoneGroup = this.contactInfoForm.get('homePhone') as FormGroup;
     if ((homePhoneGroup.controls['applicableFlag']?.value ?? false) === false && (isPhoneChangedInCer || !this.isCerForm)) {
       homePhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
@@ -562,7 +562,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private setCellPhone(isPhoneChangedInCer:boolean){
+  private setCellPhone(isPhoneChangedInCer: boolean) {
     const cellPhoneGroup = this.contactInfoForm.get('cellPhone') as FormGroup;
     if ((cellPhoneGroup.controls['applicableFlag']?.value ?? false) === false && (isPhoneChangedInCer || !this.isCerForm)) {
       cellPhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
@@ -570,7 +570,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private setWorkPhone(isPhoneChangedInCer:boolean){
+  private setWorkPhone(isPhoneChangedInCer: boolean) {
     const workPhoneGroup = this.contactInfoForm.get('workPhone') as FormGroup;
     if ((workPhoneGroup.controls['applicableFlag']?.value ?? false) === false && (isPhoneChangedInCer || !this.isCerForm)) {
       workPhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
@@ -578,7 +578,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private setOtherPhone(isPhoneChangedInCer:boolean){
+  private setOtherPhone(isPhoneChangedInCer: boolean) {
     const otherPhoneGroup = this.contactInfoForm.get('otherPhone') as FormGroup;
     if ((otherPhoneGroup.controls['applicableFlag']?.value ?? false) === false && (isPhoneChangedInCer || !this.isCerForm)) {
       otherPhoneGroup.controls['phoneNbr'].setValidators([Validators.required, Validators.pattern('[0-9]+')]);
@@ -1543,13 +1543,24 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const homeAddressGroup = this.contactInfoForm.get('homeAddress') as FormGroup;
     if (value) {
       const mailingAddressGroup = this.contactInfoForm.get('mailingAddress') as FormGroup;
-      const address: ClientAddress = {
+      let address: ClientAddress = {
         address1: mailingAddressGroup?.controls['address1']?.value,
         address2: mailingAddressGroup?.controls['address2']?.value,
         city: mailingAddressGroup?.controls['city']?.value,
         state: mailingAddressGroup?.controls['state']?.value,
         zip: mailingAddressGroup?.controls['zip']?.value
       };
+
+      if (this.isCerForm && (mailingAddressGroup?.controls['mailingAddressChangedFlag']?.value != StatusFlag.Yes)) {
+        address = {
+          address1: this.oldMailingAddress?.address1,
+          address2: this.oldMailingAddress?.address2,
+          city: this.oldMailingAddress?.city,
+          state: this.oldMailingAddress?.state,
+          zip: this.oldMailingAddress?.zip
+        };
+      }
+
       this.setHomeAddress(address);
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
         this.homeAddressIsNotValid = this.mailingAddressIsNotValid;

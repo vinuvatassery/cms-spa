@@ -26,13 +26,13 @@ import { ProfileFamilyAndDependentPageComponent } from './container/profile-fami
     FamilyAndDependentDetailComponent,
     RemoveFamilyAndDependentConfirmationComponent,
     FamilyAndDependentPageComponent,
-    ProfileFamilyAndDependentPageComponent
+    ProfileFamilyAndDependentPageComponent,
   ],
   exports: [
     FamilyAndDependentListComponent,
     FamilyAndDependentDetailComponent,
     RemoveFamilyAndDependentConfirmationComponent,
-    ProfileFamilyAndDependentPageComponent
+    ProfileFamilyAndDependentPageComponent,
   ],
 })
 export class CaseManagementFeatureFamilyAndDependentModule {}

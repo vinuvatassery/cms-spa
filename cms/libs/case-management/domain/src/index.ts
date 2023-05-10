@@ -99,6 +99,7 @@ export * from './lib/enums/address-type.enum';
 export * from './lib/enums/client-profile-tabs.enum';
 export * from './lib/enums/client-note-type-code.enum';
 export * from './lib/enums/eligibility-status.enum';
+export * from './lib/enums/insurance-status-type.enum';
 
 
 /** Data services **/

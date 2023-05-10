@@ -5,5 +5,6 @@ export enum HealthInsurancePlan {
     GroupInsurancePlan ='GROUP_INSURANCE_PLAN',
     Veterans = 'VETERANS_ADMINISTRATION',
     QualifiedHealthPlan ='QUALIFIED_HEALTH_PLAN',
-    OffExchangePlan = 'OFF_EXCHANGE_PLAN'
+    OffExchangePlan = 'OFF_EXCHANGE_PLAN',
+    DentalInsurance ='DENTAL_INSURANCE'
 }

@@ -11,6 +11,7 @@ export class StatusGroupHistoryComponent implements OnInit {
 
   @Input() eligibilityId!: string;
   currentGroup$ = this.caseFacade.currentGroup$;
+  groupDeleted$ = this.caseFacade.groupDeleted$;
   ddlGroups$ = this.caseFacade.ddlGroups$;
   statusGroupHistory$: any = new Subject<any>();
 
@@ -77,6 +78,11 @@ export class StatusGroupHistoryComponent implements OnInit {
   onConfirmGroupDelete() {
     if (!!this.selectedGroupId) {
       this.caseFacade.deleteEligibilityGroup(this.selectedGroupId);
+      this.groupDeleted$.subscribe((res)=>{
+        if(!!res){
+          this.loadGroupHistory();
+        }
+      });
     }
     this.isGroupDeleteModalOpened = false;
     this.isGroupDetailOpened = false;
