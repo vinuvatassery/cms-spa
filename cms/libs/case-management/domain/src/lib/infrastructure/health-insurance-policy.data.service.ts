@@ -282,5 +282,11 @@ export class HealthInsurancePolicyDataService {
      return this.http.get(    
     `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-requests?type=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}`);
     }
+  savePaymentRequest(paymentRequest:any){
+    return this.http.post<PaymentRequest>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-request`,
+      paymentRequest
+    );
+  }
 
 }

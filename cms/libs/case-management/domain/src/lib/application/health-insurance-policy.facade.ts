@@ -268,34 +268,22 @@ export class HealthInsurancePolicyFacade {
 
   }
   loadPremiumPayments(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
-
     this.showLoader()
-
     this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
-
       next: (premiumPaymentsResponse: any) => {
-
         const gridView = {
-
           data: premiumPaymentsResponse['items'],
-
           total: premiumPaymentsResponse['totalCount'],
-
         };
-
         this.premiumPaymentsSubject.next(gridView);
-
         this.hideLoader();
-
       },
-
       error: (err: any) => {
-
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-
       },
-
     });
-
+  }
+  savePaymentRequest(paymentRequest:any){
+    return this.healthInsurancePolicyService.savePaymentRequest(paymentRequest);
   }
 }

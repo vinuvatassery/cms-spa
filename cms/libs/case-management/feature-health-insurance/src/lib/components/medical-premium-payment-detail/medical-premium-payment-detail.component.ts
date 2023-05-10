@@ -14,7 +14,8 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 /** Facades **/
 import {
   ClientDocumentFacade,
-  PaymentRequest
+  PaymentRequest,
+  HealthInsurancePolicyFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
@@ -46,15 +47,24 @@ export class MedicalPremiumPaymentDetailComponent {
       public readonly clientDocumentFacade: ClientDocumentFacade,
       private readonly loggingService: LoggingService,
       private readonly snackbarService: NotificationSnackbarService,
+      private insurancePolicyFacade: HealthInsurancePolicyFacade,
     ) {
       this.premiumPaymentForm = this.formBuilder.group({});
     }
 
     
     savePaymentDetailsClicked(){
-            this.validateForm(); 
+      this.validateForm(); 
       if (this.premiumPaymentForm.valid) {
-
+        this.populatePaymentRequest();
+        this.insurancePolicyFacade.savePaymentRequest(this.paymentRequest).subscribe({
+          next: () => {                       
+            
+          },
+          error: (error: any) => {
+            //this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+          }
+        })
       }
     };
     resetForm() {
@@ -72,7 +82,7 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm.controls['coverageEndDate'].setValidators([  Validators.required,  ]);
       this.premiumPaymentForm.controls['entryDate'].setValidators([  Validators.required,  ]);
       this.premiumPaymentForm.controls['serviceDescription'].setValidators([  Validators.required,  ]);
-      this.premiumPaymentForm.controls['checkMailDate'].setValidators([  Validators.required,  ]);
+      //this.premiumPaymentForm.controls['checkMailDate'].setValidators([  Validators.required,  ]);
       this.premiumPaymentForm.controls['comment'].setValidators([  Validators.required,  ]);
 
       this.premiumPaymentForm.controls['serviceProviderName'].updateValueAndValidity(); 
@@ -83,7 +93,7 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm.controls['coverageEndDate'].updateValueAndValidity();
       this.premiumPaymentForm.controls['entryDate'].updateValueAndValidity();
       this.premiumPaymentForm.controls['serviceDescription'].updateValueAndValidity();
-      this.premiumPaymentForm.controls['checkMailDate'].updateValueAndValidity();
+      //this.premiumPaymentForm.controls['checkMailDate'].updateValueAndValidity();
       this.premiumPaymentForm.controls['comment'].updateValueAndValidity();
     }
      populatePaymentRequest(){
