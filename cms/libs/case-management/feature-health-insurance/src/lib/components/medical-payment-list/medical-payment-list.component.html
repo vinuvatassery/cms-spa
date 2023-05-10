@@ -19,7 +19,7 @@
     <div class="app-c-table">
       <kendo-grid  [pageSize]="state.take" [pageable]="true" (dataStateChange)="dataStateChange($event)"  [data]="medicalPremiumPayments$ | async">
         <kendo-grid-column
-          field="providerName"
+          field="VendorName"
           title="Provider Name"
           [width]="150"
         >
@@ -29,7 +29,7 @@
               class="card-link-button"
               aria-label="provider name"
             >
-              {{ dataItem.providerName }}
+              {{ dataItem.VendorName }}
             </button>
           </ng-template>
         </kendo-grid-column>
