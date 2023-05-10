@@ -41,7 +41,8 @@ export class MedicalPremiumPaymentDetailComponent {
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() tabStatus:any;
-
+  paymentRequestType$= this.lovFacade.paymentRequestType$;
+  paymentReversal$= this.lovFacade.paymentReversal$;
     /** Constructor **/
     constructor(
       private formBuilder: FormBuilder,

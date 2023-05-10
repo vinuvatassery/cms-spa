@@ -41,9 +41,11 @@
                 </div>
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Type">
-                        <kendo-dropdownlist formControlName="type" aria-label="Type"
-                            [fillMode]="formUiStyle.dropDownFillMode">
-                        </kendo-dropdownlist>
+                        <kendo-dropdownlist formControlName="type" aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
+                                [data]="paymentRequestType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
+                                [loading]="(paymentRequestType$ | async)?.length===0">
+                        
+                            </kendo-dropdownlist>
                     </kendo-floatinglabel>
                     <kendo-formerror *ngIf="!premiumPaymentForm.controls['type'].valid">Type is
                         required.</kendo-formerror>

@@ -100,6 +100,7 @@ export * from './lib/enums/client-profile-tabs.enum';
 export * from './lib/enums/client-note-type-code.enum';
 export * from './lib/enums/eligibility-status.enum';
 export * from './lib/enums/insurance-status-type.enum';
+export * from './lib/enums/payment-request-type.enum';
 
 
 /** Data services **/

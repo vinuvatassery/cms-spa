@@ -277,4 +277,10 @@ export class HealthInsurancePolicyDataService {
     params = params.append('sortType',sortType);
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy?type=${type}&insuranceStatusType=${insuranceStatusType}`,{params:params});
   }
+
+  loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+     return this.http.get(    
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-requests?type=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}`);
+    }
+
 }

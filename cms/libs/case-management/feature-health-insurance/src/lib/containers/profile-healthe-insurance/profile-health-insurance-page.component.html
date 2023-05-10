@@ -16,7 +16,8 @@
   [copayPaymentForm]="copayPaymentForm"
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
-  [tabStatus]="this.tabId" 
+  [tabStatus]="this.tabId"
+  (loadCoPayEvent)="loadCopayEventHandle($event)" 
   ></case-management-co-pays-and-deductibles-list>
 </div>
 
@@ -27,7 +28,7 @@
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId"
-  (loadCopayEvent)="loadCopayEventHandle($event)" ></case-management-co-pays-and-deductibles-list>
+  (loadCopayEvent)="loadCopayEventHandle($event)"></case-management-co-pays-and-deductibles-list>
 </div>
 
 
@@ -50,6 +51,7 @@
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId" 
+  (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)"
   ></case-management-medical-payment-list>
 </div>
 
@@ -59,5 +61,6 @@
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId" 
+  (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)"
   ></case-management-medical-payment-list>
 </div>
