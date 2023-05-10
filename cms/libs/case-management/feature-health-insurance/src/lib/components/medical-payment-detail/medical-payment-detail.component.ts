@@ -64,23 +64,19 @@ export class MedicalPaymentDetailComponent {
       this.copayPaymentForm.controls['serviceProviderName'].setValidators([  Validators.required,  ]); 
       this.copayPaymentForm.controls['paymentAmount'].setValidators([  Validators.required,  ]);
       this.copayPaymentForm.controls['type'].setValidators([  Validators.required,  ]);
-      this.copayPaymentForm.controls['reversal'].setValidators([  Validators.required,  ]);
-      this.copayPaymentForm.controls['coverageStartDate'].setValidators([  Validators.required,  ]);
-      this.copayPaymentForm.controls['coverageEndDate'].setValidators([  Validators.required,  ]);
+      this.copayPaymentForm.controls['serviceStartDate'].setValidators([  Validators.required,  ]);
+      this.copayPaymentForm.controls['serviceEndDate'].setValidators([  Validators.required,  ]);
       this.copayPaymentForm.controls['entryDate'].setValidators([  Validators.required,  ]);
       this.copayPaymentForm.controls['serviceDescription'].setValidators([  Validators.required,  ]);
-      this.copayPaymentForm.controls['checkMailDate'].setValidators([  Validators.required,  ]);
       this.copayPaymentForm.controls['comment'].setValidators([  Validators.required,  ]);
 
       this.copayPaymentForm.controls['serviceProviderName'].updateValueAndValidity(); 
       this.copayPaymentForm.controls['paymentAmount'].updateValueAndValidity();
       this.copayPaymentForm.controls['type'].updateValueAndValidity();
-      this.copayPaymentForm.controls['reversal'].updateValueAndValidity();
-      this.copayPaymentForm.controls['coverageStartDate'].updateValueAndValidity();
-      this.copayPaymentForm.controls['coverageEndDate'].updateValueAndValidity();
+      this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
+      this.copayPaymentForm.controls['serviceEndDate'].updateValueAndValidity();
       this.copayPaymentForm.controls['entryDate'].updateValueAndValidity();
       this.copayPaymentForm.controls['serviceDescription'].updateValueAndValidity();
-      this.copayPaymentForm.controls['checkMailDate'].updateValueAndValidity();
       this.copayPaymentForm.controls['comment'].updateValueAndValidity();
       
  
