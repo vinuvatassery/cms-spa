@@ -48,7 +48,27 @@
               [for]="smokingCessationNo"
             ></kendo-label>
             </span>
-            <kendo-formerror *ngIf="!smokingCessationForm.controls['smokingCessation'].valid">Smoking Cessation is required.</kendo-formerror>
+            <span *ngIf="smokingCessationForm.controls['smokingCessation'].value == 'Did Not Answer'" class="app-radiobtnwidtext-wrapper">
+              <input
+                type="radio"
+                kendoRadioButton
+                name="smokingCessation"
+                aria-labelledby="smokingCessationDidNotAnswer"
+                id="smokingCessationDidNotAnswer" 
+                #smokingCessationDidNotAnswer
+                class="form-control" 
+                formControlName="smokingCessation"
+                value="Did Not Answer"
+              />
+              <kendo-label
+              class="k-radio-label"
+              text="Did Not Answer"
+              [for]="smokingCessationDidNotAnswer"
+            ></kendo-label>
+            </span>
+            <kendo-formerror *ngIf="!smokingCessationForm.controls['smokingCessation'].valid">
+              {{smokingCessationForm.controls['smokingCessation'].errors?.['DidNotAnswer'] ? 'Smoking Cessation answer is required.':'Smoking Cessation is required.'}}
+            </kendo-formerror>
           </div>
       
           </fieldset>
