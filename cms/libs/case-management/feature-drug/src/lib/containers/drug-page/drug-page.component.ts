@@ -427,6 +427,7 @@ onCheckClientPharmacies(event:any){
         'prescriptionDrugsForHivCode'
       ].value?.toUpperCase() == YesNoFlag.Yes.toUpperCase()
     ) {
+      this.showPharmacySection=true;
       this.nonPreferredFlagValidation = true;
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
@@ -453,6 +454,7 @@ onCheckClientPharmacies(event:any){
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
         ?.updateValueAndValidity();
+      this.showPharmacySection=false;
       this.nonPreferredFlagValidation = false;
       this.adjustAttributeChanged(false);
       this.showPharmacyRequiredValidation$.next(false);
