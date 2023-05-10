@@ -1,23 +1,30 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2"> Add a new dental premium </p>
+    <p class="text-muted mb-2" *ngIf="tabStatus === 'hlt-ins-co-pay'"> {{isPremiumPaymentAddForm ? 'Add a new medical premium':'Edit or delete dental premium'}} </p>
+    <p class="text-muted mb-2" *ngIf="tabStatus === 'dnt-ins-co-pay'"> {{isPremiumPaymentAddForm ? 'Add a new dental premium':'Edit or delete dental premium'}} </p>
+
+    <form [formGroup]="premiumPaymentForm">
     <div class="flex-row">
 
         <div class="flex-col">
             <kendo-floatinglabel text="Service Provider Name">
-                <kendo-textbox aria-label="Service Provider Name" formControlName="medicareBeneficiaryIdNbr"
-                    [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
+                <kendo-textbox aria-label="Service Provider Name" formControlName="serviceProviderName" aria-label="Service Provider Name"
+                [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceProviderName'].valid">Service Provider Name
+                is required.</kendo-formerror>
 
         </div>
         <div class="flex-col">
 
 
             <kendo-floatinglabel text="Service Description">
-                <kendo-textbox aria-label="Service Description" [disabled]="true"
+                <kendo-textbox formControlName="serviceDescription" aria-label="Service Description" [disabled]="true"
                     [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceDescription'].valid">Service Description is
+                required.</kendo-formerror>
 
         </div>
         <div class="flex-col">
@@ -25,44 +32,57 @@
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                        <kendo-textbox aria-label="Payment Amount" placeholder=""
+                        <kendo-textbox formControlName="premiumAmount" aria-label="Premium Amount" placeholder=""
                             [fillMode]="formUiStyle.inputFillMode">
                         </kendo-textbox>
-
+                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['premiumAmount'].valid">Payment Amount is
+                            required.</kendo-formerror>
                     </kendo-floatinglabel>
                 </div>
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Type">
-                        <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode">
+                        <kendo-dropdownlist formControlName="type" aria-label="Type"
+                            [fillMode]="formUiStyle.dropDownFillMode">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel>
-
+                    <kendo-formerror *ngIf="!premiumPaymentForm.controls['type'].valid">Type is
+                        required.</kendo-formerror>
                 </div>
             </div>
         </div>
         <div class="flex-col">
             <kendo-floatinglabel text="Reversal">
-                <kendo-dropdownlist aria-label="Reversal" [fillMode]="formUiStyle.dropDownFillMode">
+                <kendo-dropdownlist formControlName="reversal" aria-label="Reversal"
+                    [fillMode]="formUiStyle.dropDownFillMode">
                 </kendo-dropdownlist>
             </kendo-floatinglabel>
+            <kendo-formerror *ngIf="!premiumPaymentForm.controls['reversal'].valid">Reversal is
+                required.</kendo-formerror>
 
         </div>
         <div class="flex-col">
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Coverage Start Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                        <kendo-datepicker formControlName="coverageStartDate"
+                            [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder="">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
+                    <kendo-formerror *ngIf="!premiumPaymentForm.controls['coverageStartDate'].valid">Coverage Start
+                        Date is required.</kendo-formerror>
 
                 </div>
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Coverage End Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                        <kendo-datepicker formControlName="coverageEndDate"
+                            [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder="">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
+                    <kendo-formerror *ngIf="!premiumPaymentForm.controls['coverageStartDate'].valid">Coverage End
+                        Date is required.</kendo-formerror>
+
 
                 </div>
             </div>
@@ -71,18 +91,24 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Entry Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                            aria-label="Entry Date" formatPlaceholder="formatPattern" placeholder="">
+                        <kendo-datepicker formControlName="entryDate" [fillMode]="formUiStyle.dateInputFillMode"
+                            format="MM-dd-yyyy" aria-label="Entry Date" formatPlaceholder="formatPattern"
+                            placeholder="">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
+                    <kendo-formerror *ngIf="!premiumPaymentForm.controls['entryDate'].valid">Entry Date is
+                        required.</kendo-formerror>
 
                 </div>
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Check Mail Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                            aria-label="Check Mail Date" formatPlaceholder="formatPattern" placeholder="">
+                        <kendo-datepicker formControlName="checkMailDate" [fillMode]="formUiStyle.dateInputFillMode"
+                            format="MM-dd-yyyy" aria-label="Check Mail Date" formatPlaceholder="formatPattern"
+                            placeholder="">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
+                    <kendo-formerror *ngIf="!premiumPaymentForm.controls['checkMailDate'].valid">Check Mail Date is
+                        required.</kendo-formerror>
 
                 </div>
             </div>
@@ -90,22 +116,29 @@
 
         <div class="flex-col">
             <kendo-floatinglabel text="Comment">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode">
+                <kendo-textarea formControlName="comment" aria-label="Comment"
+                    [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textarea>
+                <kendo-formerror *ngIf="!premiumPaymentForm.controls['comment'].valid">Comment is
+                    required.</kendo-formerror>
+
             </kendo-floatinglabel>
         </div>
-
     </div>
+</form>
 </section>
 
 <kendo-dialog-actions>
+
+<kendo-dialog-actions>
     <div class="justify-content-between">
-        <div>          
+        <div>
+            <button  *ngIf="!isPremiumPaymentAddForm" kendoButton class="k-danger-link" aria-label="delete premium payment"> Delete </button>
+            <button *ngIf="!isPremiumPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="edit premium payment"> Edit </button>
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding PREMIUM "> Cancel
-            </button>
-            <button kendoButton [primary]="true" aria-label="add new PREMIUM "> Add </button>
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel premium payment"> Cancel  </button>
+            <button kendoButton [primary]="true" aria-label="save new premium payment" (click)="savePaymentDetailsClicked()"> Add</button>
 
         </div>
     </div>

@@ -10,7 +10,7 @@ export class VendorFacade {
     /** Public methods **/
 
 
-    loadAllVendors() {
-        return this.vendorDataService.loadAllVendors();
+    loadAllVendors(type:string) {
+        return this.vendorDataService.loadAllVendors(type);
       }
 }
