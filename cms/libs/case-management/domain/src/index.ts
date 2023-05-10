@@ -51,6 +51,7 @@ export * from './lib/entities/client-hiv-verification';
 export * from './lib/entities/active-sessions';
 export * from './lib/entities/client-note';
 export * from './lib/entities/session-data';
+export * from './lib/entities/payment-request';
 
 
 /** Enums **/
