@@ -14,15 +14,6 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 /** Facades **/
 import {
   ClientDocumentFacade,
-  HealthInsurancePolicyFacade,
-  HealthInsurancePolicy,
-  CarrierContactInfo,
-  InsurancePlanFacade,
-  StatusFlag,
-  HealthInsurancePlan,
-  DependentTypeCode,
-  PriorityCode,
-  InsuranceStatusType,
   PaymentRequest
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
@@ -95,8 +86,11 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm.controls['checkMailDate'].updateValueAndValidity();
       this.premiumPaymentForm.controls['comment'].updateValueAndValidity();
     }
-     populateModel(){
+     populatePaymentRequest(){
       this.paymentRequest = new PaymentRequest()
+      this.paymentRequest.clientId= this.clientId;
+      this.paymentRequest.paymentTypeCode =  this.premiumPaymentForm.controls['type'].value;
+      this.paymentRequest.amountRequested = this.premiumPaymentForm.controls['premiumAmount'].value;
      }
     loadPremiumPaymentDetails(){
     // this.bindValues(data);
