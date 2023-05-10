@@ -95,8 +95,7 @@ export class MedicalPaymentListComponent implements OnInit {
     this.loadPremiumPaymentEvent.next(gridDataRefinerValue);
   }
   getPaymentRequestLov() {
-    this.lovFacade.getPaymentRequestTypeLov();
-    this.lovFacade.getPaymentReversalLov();
-
+    this.lovFacade.getPremiumPaymentTypeLov();
+    this.lovFacade.getPremiumPaymentReversalLov();
   }
 }
