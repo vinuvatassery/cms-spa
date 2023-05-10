@@ -41,6 +41,7 @@ export class MedicalPremiumPaymentDetailComponent {
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() tabStatus:any;
+  paymentRequest !: PaymentRequest;
   paymentRequestType$= this.lovFacade.premiumPaymentType$;
   paymentReversal$= this.lovFacade.premiumPaymentReversal$;
     /** Constructor **/
@@ -59,6 +60,17 @@ export class MedicalPremiumPaymentDetailComponent {
 
     
     savePaymentDetailsClicked(){
+            this.validateForm(); 
+      if (this.premiumPaymentForm.valid) {
+
+      }
+    };
+    resetForm() {
+      this.premiumPaymentForm.reset();
+      this.premiumPaymentForm.updateValueAndValidity();
+    }
+  
+    validateForm(){
       this.premiumPaymentForm.markAllAsTouched();
       this.premiumPaymentForm.controls['serviceProviderName'].setValidators([  Validators.required,  ]); 
       this.premiumPaymentForm.controls['premiumAmount'].setValidators([  Validators.required,  ]);
@@ -81,21 +93,10 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm.controls['serviceDescription'].updateValueAndValidity();
       this.premiumPaymentForm.controls['checkMailDate'].updateValueAndValidity();
       this.premiumPaymentForm.controls['comment'].updateValueAndValidity();
-      
- 
-            if (this.premiumPaymentForm.valid) {
-              alert("success");
-              console.log("teaette",this.premiumPaymentForm);
-            } else{
-              alert("fail")
-            }
-    };
-    resetForm() {
-      this.premiumPaymentForm.reset();
-      this.premiumPaymentForm.updateValueAndValidity();
     }
-  
-
+     populateModel(){
+      this.paymentRequest = new PaymentRequest()
+     }
     loadPremiumPaymentDetails(){
     // this.bindValues(data);
     }
