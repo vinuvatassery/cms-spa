@@ -54,9 +54,10 @@
         </div>
         <div class="flex-col">
             <kendo-floatinglabel text="Reversal">
-                <kendo-dropdownlist formControlName="reversal" aria-label="Reversal"
-                    [fillMode]="formUiStyle.dropDownFillMode">
-                </kendo-dropdownlist>
+                <kendo-dropdownlist formControlName="reversal" aria-label="Reversal" [fillMode]="formUiStyle.dropDownFillMode"
+                [data]="paymentReversal$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
+                [loading]="(paymentReversal$ | async)?.length===0">
+            </kendo-dropdownlist>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="!premiumPaymentForm.controls['reversal'].valid">Reversal is
                 required.</kendo-formerror>
