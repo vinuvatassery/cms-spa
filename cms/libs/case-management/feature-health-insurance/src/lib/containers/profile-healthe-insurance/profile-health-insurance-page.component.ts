@@ -134,7 +134,6 @@ reversal: [''],
 coverageStartDate: [''],
 coverageEndDate: [''],
 entryDate: [''],
-checkMailDate: [''],
 comment: [''],
 });
   }
