@@ -31,13 +31,19 @@ export class StatusPeriodComponent implements OnInit {
   isStatusPeriodDetailOpened = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  isStatusPeriodEdit = false;
+  isCopyPeriod = false;
   public actions = [
     {
-      buttonType: "btn-h-danger",
-      text: "Remove Doc",
-      icon: "delete",
+      buttonType: "btn-h-primary",
+      text: "Copy Status Period",
+      icon: "content_copy",
       click: (dataItem: any): void => {
         //  this.onDeactivatePhoneNumberClicked()
+        if(dataItem.clientCaseEligibilityId){
+          this.isCopyPeriod = true;
+          this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId);
+        }
       },
     },
     {
@@ -46,6 +52,7 @@ export class StatusPeriodComponent implements OnInit {
       icon: "edit",
       click: (dataItem: any): void => {
         if(dataItem.clientCaseEligibilityId){
+          this.isStatusPeriodEdit = true;
           this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId);
         }
         //  this.isOpenDocAttachment = true
@@ -67,6 +74,11 @@ export class StatusPeriodComponent implements OnInit {
     };
     this.clientEligibilityFacade.eligibilityPeriodPopupOpen$.subscribe(response=>{
       this.isStatusPeriodDetailOpened = response;
+      if(!this.isStatusPeriodDetailOpened)
+      {
+        this.isStatusPeriodEdit = false;
+        this.isCopyPeriod = false;
+      }
       this.cdr.detectChanges();
     });
   }
@@ -103,12 +115,16 @@ export class StatusPeriodComponent implements OnInit {
 
   onStatusPeriodDetailClosed() {
     this.isStatusPeriodDetailOpened = false;
+    this.isStatusPeriodEdit = false;
+    this.isCopyPeriod = false;
     this.cdr.detectChanges();
   }
 
   onModalSaveAndClose(result:any){
     if(result){
       this.isStatusPeriodDetailOpened=false;
+      this.isStatusPeriodEdit = false;
+      this.isCopyPeriod = false;
       this.loadStatusPeriodData();
     }
   }
