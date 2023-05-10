@@ -89,8 +89,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
     this.loadCoPayEvent.next(gridDataRefinerValue);
   }
   getPaymentRequestLov() {
-    this.lovFacade.getPaymentRequestTypeLov();
-    this.lovFacade.getPaymentReversalLov();
+    this.lovFacade.getCoPaymentRequestTypeLov();
   }
 
 }
