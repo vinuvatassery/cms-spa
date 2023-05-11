@@ -18,6 +18,8 @@ export class SendLetterPageComponent {
   isOpenedPrint = false;
   isOpenedPrintPreview = false;
 
+
+
   /** Internal event methods **/
   onClosePrintClicked() {
     this.isOpenedPrint = false;

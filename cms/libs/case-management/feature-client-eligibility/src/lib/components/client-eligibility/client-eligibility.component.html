@@ -1,6 +1,11 @@
 <section class="app-l-mainTittle case-reviewsection" kendoTooltip [formGroup]="eligibilityForm">
-  <h2>Application Review - {{eligibility?.firstName}} {{eligibility?.lastName}}</h2>
-  <p class="mt-1 mb-3">
+  <h2>{{isCerForm === true ? 'Review Eligibility' : 'Application Review'}} - {{eligibility?.firstName}} {{eligibility?.lastName}}</h2>
+  <p class="mt-1 mb-3" *ngIf="isCerForm">
+    Please indicate whether the client has met the eligibility criteria below.
+    If eligible, specify Status, Group, Eligibility Period, and initiate the
+    approval notice. If declined, specify Status and initiate the ineligible notice
+  </p>
+  <p class="mt-1 mb-3" *ngIf="!isCerForm">
     Please indicate whether the applicant meets the eligibility criteria below.
     If approved, specify Status, Group, Eligibility Period, and initiate the
     approval notice. If rejected, specify Status and initiate the rejection
@@ -8,7 +13,7 @@
   </p>
   <div class="app-c-card app-c-card--border-box mb-2" *ngFor="let question of questions; let i = index">
     <div class="flex-row">
-      <div class="flex-col flex-col-8">
+      <div class="flex-col flex-col-8" >
         <h4 class="mb-1 mt-0">{{question.questionDesc}}</h4>
         <span class="card-buttons-wrap mb-1" *ngIf="question.questionCode===reviewQuestionCode.income">
           <span class="pr-3"><span class="text-bold">Household Size:</span> {{eligibility?.familySize}}</span>
@@ -77,6 +82,21 @@
       </div>
     </div>
   </div>
+  <div class="app-c-card app-c-card--border-box mb-2" *ngIf="isCerForm">
+    <div class="flex-row">
+      <div class="flex-col flex-col-8" >        
+            <h4 class="mb-0 mt-0">Leave a note to appear on the next CER</h4>        
+          <kendo-floatinglabel text="Note">
+            <kendo-textarea [fillMode]="formUiStyle.inputFillMode"
+              aria-label="note description" name="Note"
+              [rows]="5" [cols]="40" (blur)="notesChanged()">
+            </kendo-textarea>
+            <kendo-formhint class="justify-content-end">50/250</kendo-formhint>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="formSubmited">Note is required.</kendo-formerror>
+        </div>
+      </div>
+  </div>
   <div class="app-c-card app-c-card--border-box top-lg-space">
     <div class="flex-row">
       <div class="flex-col flex-col-8 align-items-center">
@@ -134,3 +154,10 @@
       </div>
     </div>
   </kendo-dialog-actions>
+</kendo-dialog>
+
+  <!-- Application Disenroll Modal Html-->
+<kendo-dialog *ngIf="isOpenDisenroll" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="isCloseDisenrollClicked()" > Disenroll client? </kendo-dialog-titlebar>
+  <case-management-disenroll-client (isCloseDisenrollModal)="handleClosAfterDisEnroll($event)"></case-management-disenroll-client>
+</kendo-dialog>
