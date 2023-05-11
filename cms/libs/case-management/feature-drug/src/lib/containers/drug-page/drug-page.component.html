@@ -1,5 +1,8 @@
 <div class="client-data-block">
+  <h2 hidden>Application</h2>
   <h3>{{isCerForm ? 'Pharmacies' : 'Prescription Drugs'}}</h3>
+  <h4 hidden>Pharmacies</h4>
+
   <form [formGroup]="prescriptionDrugForm">
   <section>
     <div class="flex-col mb-1" *ngIf="isCerForm">
