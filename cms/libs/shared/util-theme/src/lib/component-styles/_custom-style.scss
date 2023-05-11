@@ -728,3 +728,31 @@
     }
   }
 }
+
+
+
+
+.attachment-from-client-lists-container{
+  margin-bottom: 16px;
+  .attachment-from-client-lists{
+    display: grid;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid $grey-c;
+    align-items: center;
+    grid-template-columns: 30px 1fr 30px;
+    .material-icons{
+      color: $black-6;
+      font-size: 30px;
+    }
+  }
+}
+
+.hide_more-text{
+  >.k-button{
+    width: 30px;
+  }
+  .k-button-text{
+    display: none;
+  }
+}
