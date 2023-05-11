@@ -6,11 +6,27 @@
     <div class="flex-row">
 
         <div class="flex-col">
-            <kendo-floatinglabel text="Service Provider Name">
+            <!-- <kendo-floatinglabel text="Service Provider Name">
                 <kendo-textbox aria-label="Service Provider Name" formControlName="serviceProviderName" aria-label="Service Provider Name"
                 [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
-            </kendo-floatinglabel>
+            </kendo-floatinglabel> -->
+            <kendo-floatinglabel text="Service Provider Name" >   
+                <kendo-combobox   
+                aria-label="Service Provider Name"
+                [fillMode]="formUiStyle.dropDownFillMode"  
+                [loading] = "isVendorLoading$ | async"
+                formControlName="serviceProviderName"     
+                [data]="carrierNames$ | async"   
+                textField="vendorName" 
+                valueField="vendorId"
+                [valuePrimitive]="true"       
+                [filterable]="true"     
+                [kendoDropDownFilter]="caseOwnerfilterSettings"    
+                (valueChange)="serviceProviderNameChange($event)" 
+              >
+              </kendo-combobox>
+              </kendo-floatinglabel>
             <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceProviderName'].valid">Service Provider Name
                 is required.</kendo-formerror>
 
@@ -18,13 +34,52 @@
         <div class="flex-col">
 
 
-            <kendo-floatinglabel text="Service Description">
+            <!-- <kendo-floatinglabel text="Service Description">
                 <kendo-textbox formControlName="serviceDescription" aria-label="Service Description" [disabled]="true"
                     [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceDescription'].valid">Service Description is
-                required.</kendo-formerror>
+                required.</kendo-formerror> -->
+
+                <kendo-floatinglabel text="Insurance Plan Name" >   
+                    <kendo-combobox   
+                    aria-label="Insurance Plan Name"
+                    [fillMode]="formUiStyle.dropDownFillMode" 
+                    [loading] = "isPlanLoading" 
+                    formControlName="insurancePlanId"     
+                    [data]="insurancePlanList"   
+                    textField="insurancePlanName" 
+                    valueField="insurancePlanId"
+                    [valuePrimitive]="true"       
+                    [filterable]="true"     
+                    [kendoDropDownFilter]="caseOwnerfilterSettings" 
+                    (valueChange)="insurancePlanNameChange($event)"      
+                  >
+                  </kendo-combobox>
+                
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!premiumPaymentForm.controls['insurancePlanId'].valid">Insurance Plan Name is required.</kendo-formerror>
+
+        </div>
+        <div class="flex-col">
+                <kendo-floatinglabel text="Insurance Policy Name" >   
+                    <kendo-combobox   
+                    aria-label="Insurance Policy Name"
+                    [fillMode]="formUiStyle.dropDownFillMode" 
+                    [loading] = "isInsurancePoliciesLoading" 
+                    formControlName="insurancePolicyId"     
+                    [data]="insurancePoliciesList"   
+                    textField="policyValueField" 
+                    valueField="clientInsurancePolicyId"
+                    [valuePrimitive]="true"       
+                    [filterable]="true"     
+                    [kendoDropDownFilter]="caseOwnerfilterSettings"      
+                  >
+                  </kendo-combobox>
+                
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!premiumPaymentForm.controls['insurancePolicyId'].valid">Insurance Policy is required.</kendo-formerror>
 
         </div>
         <div class="flex-col">

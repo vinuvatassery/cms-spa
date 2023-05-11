@@ -111,29 +111,33 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   }
   private buildCopayPaymentForm() {
     this.copayPaymentForm = this.formBuilder.group({
-          serviceProviderName: [''],
-    serviceDescription: [''],
-    paymentAmount: [''],
-    type: [''],
-    serviceStartDate: [''],
-    serviceEndDate: [''],
-    entryDate: [''],
-    comment: [''],
+      serviceProviderName: [''],
+      serviceDescription: [''],
+      insurancePlanId: [''],
+      insurancePolicyId: [''],
+      paymentAmount: [''],
+      type: [''],
+      serviceStartDate: [''],
+      serviceEndDate: [''],
+      entryDate: [''],
+      comment: [''],
     });
   }
 
   buildPremiumPaymentForm(){
     this.premiumPaymentForm = this.formBuilder.group({
       serviceProviderName: [''],
-serviceDescription: [''],
-premiumAmount: [''],
-type: [''],
-reversal: [''],
-coverageStartDate: [''],
-coverageEndDate: [''],
-entryDate: [''],
-comment: [''],
-});
+      serviceDescription: [''],
+      insurancePlanId: [''],
+      insurancePolicyId: [''],
+      premiumAmount: [''],
+      type: [''],
+      reversal: [''],
+      coverageStartDate: [''],
+      coverageEndDate: [''],
+      entryDate: [''],
+      comment: [''],
+    });
   }
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();

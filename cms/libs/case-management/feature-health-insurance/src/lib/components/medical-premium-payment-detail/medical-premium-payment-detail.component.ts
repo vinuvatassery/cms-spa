@@ -15,13 +15,18 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import {
   ClientDocumentFacade,
   PaymentRequest,
-  HealthInsurancePolicyFacade
+  HealthInsurancePolicyFacade,
+  VendorFacade,
+  InsuranceStatusType,
+  InsurancePlanFacade,
+  ClientProfileTabs,
+  StatusFlag
 } from '@cms/case-management/domain';
-import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
-import { Subscription } from 'rxjs';
-import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 @Component({
   selector: 'case-management-medical-premium-payment-detail',
   templateUrl: './medical-premium-payment-detail.component.html',
@@ -37,21 +42,38 @@ export class MedicalPremiumPaymentDetailComponent {
   paymentRequest !: PaymentRequest;
   paymentRequestType$= this.lovFacade.premiumPaymentType$;
   paymentReversal$= this.lovFacade.premiumPaymentReversal$;
+  isVendorLoading$ =this.vendorFacade.isVendorLoading$;
+  carrierNames$ = this.vendorFacade.paymentRequestVendors$;
+  isPlanLoading:boolean =false;
+  isInsurancePoliciesLoading:boolean =false;
+  insurancePlanList!: any;
+  insurancePoliciesList!: any;
+  public caseOwnerfilterSettings: DropDownFilterSettings = {
+    caseSensitive: false,
+    operator: 'startsWith',
+  };
     /** Constructor **/
     constructor(
       private formBuilder: FormBuilder,
       private lovFacade: LovFacade,
       private changeDetector: ChangeDetectorRef,
       public intl: IntlService,
-      private configurationProvider: ConfigurationProvider,
       public readonly clientDocumentFacade: ClientDocumentFacade,
-      private readonly loggingService: LoggingService,
-      private readonly snackbarService: NotificationSnackbarService,
-      private insurancePolicyFacade: HealthInsurancePolicyFacade,
+      private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
+      private readonly vendorFacade: VendorFacade,
+      private insurancePlanFacade: InsurancePlanFacade,
     ) {
       this.premiumPaymentForm = this.formBuilder.group({});
     }
 
+    ngOnInit(){
+      if(this.tabStatus==ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS){
+        this.loadServiceProviderName(InsuranceStatusType.healthInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
+      }
+      else{
+        this.loadServiceProviderName(InsuranceStatusType.dentalInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
+      }
+    }
     
     savePaymentDetailsClicked(){
       this.validateForm(); 
@@ -117,5 +139,50 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm.controls['serviceDescription'].setValue(premiumPaymentDetails.serviceDescription);
       this.premiumPaymentForm.controls['checkMailDate'].setValue(premiumPaymentDetails.checkMailDate != null ? new Date(premiumPaymentDetails.checkMailDate) : null);
       this.premiumPaymentForm.controls['comment'].setValue(premiumPaymentDetails.comment);
+    }
+
+    private loadServiceProviderName(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
+      this.vendorFacade.loadPaymentRequestVendors(type,vendorType,clientId,clientCaseligibilityId);
+    }
+
+    public serviceProviderNameChange(value: string): void {
+      //this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
+      if(value){
+        this.isPlanLoading=true;
+        this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe({
+          next: (data: any) => {
+            this.insurancePlanList=data;
+            this.isPlanLoading=false;
+            this.changeDetector.detectChanges();
+          },
+          error: (err) => {
+            this.isPlanLoading=false;
+            this.changeDetector.detectChanges();
+            this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          }
+        });
+      }
+    }
+
+    public insurancePlanNameChange(value: string): void {
+      //this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
+      if(value){
+        this.isInsurancePoliciesLoading=true;
+        this.insurancePolicyFacade.loadInsurancePoliciesByPlanId(value,this.clientId,this.caseEligibilityId,(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS) ?  ClientProfileTabs.DENTAL_INSURANCE_STATUS: ClientProfileTabs.HEALTH_INSURANCE_STATUS  ).subscribe({
+          next: (data: any) => {
+            data.forEach((policy:any)=>{
+              policy["policyValueField"]=policy.insuranceCarrierName+ " - " + policy.insurancePlanName;
+            });
+            this.insurancePoliciesList=data;
+            this.isInsurancePoliciesLoading=false;
+            this.changeDetector.detectChanges();
+          },
+          error: (err) => {
+            this.isInsurancePoliciesLoading=false;
+            this.changeDetector.detectChanges();
+            this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          }
+        });
+      }
     }
 }

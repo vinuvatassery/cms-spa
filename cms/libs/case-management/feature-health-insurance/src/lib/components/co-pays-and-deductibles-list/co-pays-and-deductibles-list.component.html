@@ -17,11 +17,11 @@
               class="card-link-button"
               aria-label="service provider"
             >
-              {{ dataItem.serviceProvider }}
+            {{ dataItem.vendorName }}
             </button>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="amount" title="Amount" [width]="100">
+        <kendo-grid-column field="amountRequested" title="Amount" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column
           field="serviceDescription"
@@ -32,16 +32,22 @@
         <kendo-grid-column field="reversal" title="Reversal" [width]="120">
         </kendo-grid-column>
         <kendo-grid-column
-          field="coverageStartDate"
-          title="Coverage Start Date"
-          [width]="130"
-        >
-        </kendo-grid-column>
-        <kendo-grid-column
-          field="coverageEndDate"
-          title="Coverage End Date"
-          [width]="130"
-        >
+        field="serviceStartDate"
+        title="Service Start Date"
+        [width]="130"
+      >
+      <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.serviceStartDate | date:'MM/dd/YYYY' }}
+      </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="serviceEndDate"
+        title="Service End Date"
+        [width]="130"
+      >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.serviceEndDate | date:'MM/dd/YYYY' }}
+    </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="entryDate" title="Entry Date" [width]="130">
         </kendo-grid-column>

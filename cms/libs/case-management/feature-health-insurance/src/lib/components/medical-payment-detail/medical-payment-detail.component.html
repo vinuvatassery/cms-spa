@@ -5,27 +5,76 @@
         <div class="flex-row">
 
             <div class="flex-col">
-                <kendo-floatinglabel text="Service Provider Name">
-                    <kendo-textbox formControlName="serviceProviderName" aria-label="Service Provider Name"
-                        [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
-                </kendo-floatinglabel>
+                <kendo-floatinglabel text="Service Provider Name" >   
+                    <kendo-combobox   
+                    aria-label="Service Provider Name"
+                    [fillMode]="formUiStyle.dropDownFillMode"  
+                    [loading] = "isLoading$ | async"
+                    formControlName="serviceProviderName"     
+                    [data]="carrierNames$ | async"   
+                    textField="vendorName" 
+                    valueField="vendorId"
+                    [valuePrimitive]="true"       
+                    [filterable]="true"     
+                    [kendoDropDownFilter]="caseOwnerfilterSettings"   
+                    (valueChange)="serviceProviderNameChange($event)"  
+                  >
+                  </kendo-combobox>
+                  </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceProviderName'].valid">Service Provider Name
                     is required.</kendo-formerror>
             </div>
             <div class="flex-col">
 
 
-                <kendo-floatinglabel text="Service Description">
+                <!-- <kendo-floatinglabel text="Service Description">
                     <kendo-textbox formControlName="serviceDescription" aria-label="Service Description"
                         [disabled]="true" [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceDescription'].valid">Service Description is
-                    required.</kendo-formerror>
+                    required.</kendo-formerror> -->
 
+                    <kendo-floatinglabel text="Insurance Plan Name" >   
+                        <kendo-combobox   
+                        aria-label="Insurance Plan Name"
+                        [fillMode]="formUiStyle.dropDownFillMode" 
+                        [loading] = "isPlanLoading" 
+                        formControlName="insurancePlanId"     
+                        [data]="insurancePlanList"   
+                        textField="insurancePlanName" 
+                        valueField="insurancePlanId"
+                        [valuePrimitive]="true"       
+                        [filterable]="true"     
+                        [kendoDropDownFilter]="caseOwnerfilterSettings"  
+                        (valueChange)="insurancePlanNameChange($event)"    
+                      >
+                      </kendo-combobox>
+                    
+                      </kendo-floatinglabel>
+                      <kendo-formerror *ngIf="!copayPaymentForm.controls['insurancePlanId'].valid">Insurance Plan Name is required.</kendo-formerror>
 
             </div>
+            <div class="flex-col">
+                <kendo-floatinglabel text="Insurance Policy Name" >   
+                    <kendo-combobox   
+                    aria-label="Insurance Policy Name"
+                    [fillMode]="formUiStyle.dropDownFillMode" 
+                    [loading] = "isInsurancePoliciesLoading" 
+                    formControlName="insurancePolicyId"     
+                    [data]="insurancePoliciesList"   
+                    textField="policyValueField" 
+                    valueField="clientInsurancePolicyId"
+                    [valuePrimitive]="true"       
+                    [filterable]="true"     
+                    [kendoDropDownFilter]="caseOwnerfilterSettings"      
+                  >
+                  </kendo-combobox>
+                
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="!copayPaymentForm.controls['insurancePolicyId'].valid">Insurance Policy is required.</kendo-formerror>
+
+        </div>
             <div class="flex-col">
                 <div class="flex-row">
                     <div class="flex-col flex-col-6">
@@ -58,7 +107,7 @@
                 <div class="flex-row">
                     <div class="flex-col flex-col-6">
                         <kendo-floatinglabel text="Service Start Date">
-                            <kendo-datepicker formControlName="coverageStartDate"
+                            <kendo-datepicker formControlName="serviceStartDate"
                                 [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                                 aria-label="Service Start Date" formatPlaceholder="formatPattern" placeholder="">
                             </kendo-datepicker>
@@ -69,7 +118,7 @@
                     </div>
                     <div class="flex-col flex-col-6">
                         <kendo-floatinglabel text="Service End Date">
-                            <kendo-datepicker formControlName="coverageEndDate"
+                            <kendo-datepicker formControlName="serviceEndDate"
                                 [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                                 aria-label="Service End Date" formatPlaceholder="formatPattern" placeholder="">
                             </kendo-datepicker>
