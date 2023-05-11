@@ -1,7 +1,7 @@
 <div class="flex-row">
   <div class="flex-col">
     <div class="app-c-table">
-      <kendo-grid [pageSize]="5" [data]="clientpharmacies$ | async">
+      <kendo-grid [pageSize]="5" [data]="(clientpharmacies$ | async)" *ngIf="showPharmacyGrid && (clientpharmacies$ | async).length > 0">
         <kendo-grid-column
           field="pharmacyNameAndNumber"
           title="Pharmacy Name and Number"
@@ -33,6 +33,7 @@
                 {{dataItem.phone | phone}}
             </ng-template>
         </kendo-grid-column>
+        <kendo-grid-column *ngIf="isCer" field="fax" title="Fax" [width]="130"></kendo-grid-column>
         <kendo-grid-column
           field="contactName"
           title="Contact Name"
@@ -81,9 +82,9 @@
           <p>There is no data to display.</p>
         </ng-template>  
       </kendo-grid>
-      <kendo-formerror *ngIf="showPharmacyRequiredValidation$ | async">Pharmacies Required.</kendo-formerror>
+      <kendo-formerror *ngIf="(showPharmacyRequiredValidation$ | async)">Pharmacies Required.</kendo-formerror>
     </div>
-    <div class="flex-row">
+    <div class="flex-row" *ngIf="showPharmacyGrid">
       <div class="flex-col mt-1">
         <button
           kendoButton

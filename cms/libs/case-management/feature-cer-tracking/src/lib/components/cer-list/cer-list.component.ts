@@ -33,6 +33,7 @@ export class CerListComponent implements OnInit, OnChanges {
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
+  @Output() goToCerEvent = new EventEmitter<any>();
 
   /** Public properties **/
   isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
@@ -111,6 +112,13 @@ export class CerListComponent implements OnInit, OnChanges {
         this.isPaperLessFlag = eligibilityCer?.paperlessFlag === StatusFlag.Yes;
         this.clientName = eligibilityCer?.clientFullName;
         this.resendCer();
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Go to CER',
+      click: (eligibilityCer: any): void => { 
+        this.goToCerEvent.emit(eligibilityCer?.clientCaseEligibilityId);
       },
     }
   ];

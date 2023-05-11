@@ -125,7 +125,7 @@
       (click)="openCoPaymentDetailsOpened()"
       [disabled]="(isReadOnly$ | async) ? true : false"
     >
-      Dental Payment
+      {{tabStatus === 'dnt-ins-co-pay' ? 'Dental Payment' :'Medical Payment'}}
     </button>
   </div>
 </div>
@@ -133,6 +133,12 @@
 
 <kendo-dialog *ngIf="isCoPaymentDetailsOpened" (close)="closeCoPaymentDetailsOpened()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar> Add Dental Payment</kendo-dialog-titlebar>
-  <case-management-medical-payment-detail ></case-management-medical-payment-detail>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-co-pay'"> Add Medical Payment</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-co-pay'"> Add Dental Payment</kendo-dialog-titlebar>
+  <case-management-medical-payment-detail   
+  [copayPaymentForm]="copayPaymentForm" 
+  [caseEligibilityId]="caseEligibilityId"
+  [clientId] ="clientId"
+  [tabStatus]="tabStatus"
+   ></case-management-medical-payment-detail>
 </kendo-dialog>

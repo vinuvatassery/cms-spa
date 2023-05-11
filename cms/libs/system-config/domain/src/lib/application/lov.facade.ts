@@ -335,8 +335,18 @@ getIncomeFrequencyLovs():void{
 getProofOfIncomeTypesLov(parentCode : string) {
   return this.lovDataService.getLovsbyParent(LovType.ProofOfIncomeType, parentCode)
 }
-getInsuranceTypeLovs(): void {
+getHealthInsuranceTypeLovs(): void {
   this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
+    next: (loveInsuranceTypeResponse) => {
+      this.lovInsuranceTypeSubject.next(loveInsuranceTypeResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getDentalInsuranceTypeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.DentalInsuranceType).subscribe({
     next: (loveInsuranceTypeResponse) => {
       this.lovInsuranceTypeSubject.next(loveInsuranceTypeResponse);
     },

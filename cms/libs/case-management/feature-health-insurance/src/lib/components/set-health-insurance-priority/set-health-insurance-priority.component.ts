@@ -17,6 +17,8 @@ import { SnackBarNotificationType, NotificationSnackbarService, NotificationSour
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetHealthInsurancePriorityComponent implements OnInit {
+
+  @Input() insuranceStatus:any;
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() selectedInsurance: any;
@@ -43,10 +45,10 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void {  
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId)
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId,this.insuranceStatus)
     .subscribe({
       next: (data: any) => {
         this.gridList = data;

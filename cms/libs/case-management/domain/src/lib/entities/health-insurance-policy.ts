@@ -3,7 +3,7 @@ import { Dependent } from "./dependent";
 export class HealthInsurancePolicy {
         clientInsurancePolicyId: string | null = null;
         clientId: number | null = null;
-        insuranceCarrierId: string | null = null;
+        insuranceVendorId: string | null = null;
         clientCaseEligibilityId: string | null = null;
         insurancePlanId: string | null = null;
         clientMaximumId: string | null = null;
