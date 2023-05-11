@@ -321,7 +321,10 @@ export class CerListComponent implements OnInit, OnChanges {
       this.gridDataResult.data[res].eligibilityEndDate = new Date(this.gridDataResult?.data[res].eligibilityEndDate)
       }
     }
+    
+    const totalCount = this.gridDataResult?.total
     this.gridDataResult =  process(this.gridDataResult.data, this.state);
+    this.gridDataResult.total = totalCount
     this.gridCERDataSubject.next(this.gridDataResult);  
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
