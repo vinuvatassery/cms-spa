@@ -1,0 +1,50 @@
+<div *ngIf="!typeCode">
+  <kendo-floatinglabel text="Document Type Code"> </kendo-floatinglabel>
+    <kendo-dropdownlist
+                  aria-label="typeCode"
+                  [fillMode]="formUiStyle.dropDownFillMode"
+                  [data]="documentTypeCodeSubject$ | async"
+                  textField="lovDesc"
+                  valueField="lovCode"
+                  [ngModel]="selectedTypeCode"
+                  [valuePrimitive]="true"  placeholder="Type Code"
+                  (valueChange)="loadSubTypeCodeLov()"
+                  >
+    </kendo-dropdownlist>
+</div>
+<div  *ngIf="subTypeCodes.length>0">
+  <kendo-floatinglabel text="Document Sub Type Code"> </kendo-floatinglabel>
+    <kendo-dropdownlist
+                  aria-label="SubTypeCode"
+                  [fillMode]="formUiStyle.dropDownFillMode"
+                  [data]="subTypeCodes"
+                  textField="lovDesc"
+                  valueField="lovCode"
+                  [ngModel]="selectedsubTypeCode"
+                  [valuePrimitive]="true"  placeholder="Sub Type Code"
+                  >
+    </kendo-dropdownlist>
+</div>
+<kendo-fileselect
+            aria-label="proof of home address"
+            name="upload proof"
+            [disabled]="isDisabled"
+            [restrictions]="fileUploadRestrictions"
+            [multiple]="false"
+            (select)="handleFileSelected($event)"
+            (remove)="handleFileRemoved($event)"
+            [ngModel]="file"
+            [ngModelOptions]="{standalone: true}"
+            id="homeAddressProofUploaded"
+            #homeAddressProofUploaded>
+            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+              <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                  <a>{{ files[0].name }} </a>
+                </button>
+                <br>
+                <span>{{   files[0].size  | fileSize  }}</span>
+              </span>
+            </ng-template>
+</kendo-fileselect>

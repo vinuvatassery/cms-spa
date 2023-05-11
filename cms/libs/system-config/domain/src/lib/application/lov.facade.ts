@@ -70,6 +70,9 @@ export class LovFacade {
   private showLoaderOnEligibilityStatusCpSubject = new BehaviorSubject<boolean>(false);
   private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
   private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
+  private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+  private documentSubTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -108,7 +111,7 @@ export class LovFacade {
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
-  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  
+  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
   eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   eligibilityStatusCp$ = this.eligibilityStatusCpSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
@@ -116,6 +119,10 @@ export class LovFacade {
   showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
   disenrollmentReason$ = this.disenrollmentReasonSubject.asObservable();
   disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
+  documentTypeCodeSubject$ = this.documentTypeCodeSubject.asObservable();
+  documentSubTypeCodeSubject$ = this.documentSubTypeCodeSubject.asObservable();
+
+
 
 
 
@@ -592,6 +599,19 @@ getEligibilityStatusCpLovs(): void {
       this.showLoaderOnEligibilityStatusCpSubject.next(false);
     },
   });
+}
+getDocumentTypeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.DocumentTypeCode).subscribe({
+    next: (lovResponse) => {
+      this.documentTypeCodeSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getDocumentSubTypeLovs(parentCode : string) {
+  return this.lovDataService.getLovsbyParent(LovType.DocumentSubTypeCode, parentCode)
 }
 
 }
