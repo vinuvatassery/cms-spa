@@ -60,7 +60,7 @@ export class DocumentDataService {
   updateDocument(doc: any) {
     let documentFormData = new FormData();
     documentFormData = this.bindFormData(doc, ClientDocumnetEntityType.Edit);
-    return this.http.put(this.getUrl(), documentFormData, { reportProgress: true });
+    return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
   }
   
   getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: any, columnName: any) {
@@ -87,7 +87,7 @@ export class DocumentDataService {
 
   /** private methods**/
   private getUrl() {
-    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/`
+    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/upload`
   }
 
   private bindFormData(doc: any, event: any): FormData {
@@ -109,7 +109,9 @@ export class DocumentDataService {
       documentFormData.append("clientCaseEligibilityId", doc?.clientCaseEligibilityId ?? '');
       documentFormData.append("documentTypeCode", doc?.documentTypeCode ?? '');
       documentFormData.append("clientDocumentDescription", doc?.clientDocumentDescription ?? '');
-      documentFormData.append("document", doc?.document ?? '');
+      if (doc?.document != null && doc?.document !== "") {
+        documentFormData.append("document", doc?.document);
+      }
       documentFormData.append("documentName", doc?.documentName ?? '');
       documentFormData.append("documentSize", doc?.documentSize ?? '');
     }

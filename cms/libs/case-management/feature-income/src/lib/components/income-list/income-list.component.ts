@@ -269,6 +269,7 @@ onIncomeActionClicked(
       formData.append("clientCaseEligibilityId", this.clientCaseEligibilityId)
       formData.append("clientCaseId", this.clientCaseId)
       formData.append("EntityId", dataItem.clientDependentId)
+      formData.append("documentTypeCode", "DEPENDENT_PROOF_OF_SCHOOL")
       this.showHideImageUploadLoader(true, dataItem);
       this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
         next: (response: any) => {
