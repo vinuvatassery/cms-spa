@@ -37,6 +37,12 @@ export class MedicalPremiumPaymentDetailComponent {
   paymentRequest !: PaymentRequest;
   paymentRequestType$= this.lovFacade.premiumPaymentType$;
   paymentReversal$= this.lovFacade.premiumPaymentReversal$;
+  monthOptions: Intl.DateTimeFormatOptions = {
+    month: 'numeric',
+  };
+  yearOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+  };
     /** Constructor **/
     constructor(
       private formBuilder: FormBuilder,
@@ -52,7 +58,16 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm = this.formBuilder.group({});
     }
 
-    
+    ngOnInit(): void {
+      let monthFromDate = this.getDay(new Date(), 'en-US', this.monthOptions);
+      let yearFromDate = this.getDay(new Date(), 'en-US', this.yearOptions);
+    }
+
+    private getDay(date: Date, locale: string, options?: Intl.DateTimeFormatOptions): string {
+      const formatter = new Intl.DateTimeFormat(locale, options);
+      return formatter.format(date);
+    }
+
     savePaymentDetailsClicked(){
       this.validateForm(); 
       if (this.premiumPaymentForm.valid) {
