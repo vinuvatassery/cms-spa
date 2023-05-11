@@ -42,7 +42,13 @@ export class MedicalPremiumPaymentDetailComponent {
   paymentRequest !: PaymentRequest;
   paymentRequestType$= this.lovFacade.premiumPaymentType$;
   paymentReversal$= this.lovFacade.premiumPaymentReversal$;
-  isVendorLoading$ =this.vendorFacade.isVendorLoading$;
+  monthOptions: Intl.DateTimeFormatOptions = {
+    month: 'numeric',
+  };
+  yearOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+  };
+isVendorLoading$ =this.vendorFacade.isVendorLoading$;
   carrierNames$ = this.vendorFacade.paymentRequestVendors$;
   isPlanLoading:boolean =false;
   isInsurancePoliciesLoading:boolean =false;
@@ -51,8 +57,7 @@ export class MedicalPremiumPaymentDetailComponent {
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
     operator: 'startsWith',
-  };
-    /** Constructor **/
+  };    /** Constructor **/
     constructor(
       private formBuilder: FormBuilder,
       private lovFacade: LovFacade,
@@ -66,15 +71,22 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm = this.formBuilder.group({});
     }
 
-    ngOnInit(){
-      if(this.tabStatus==ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS){
+    ngOnInit(): void {
+      let monthFromDate = this.getDay(new Date(), 'en-US', this.monthOptions);
+      let yearFromDate = this.getDay(new Date(), 'en-US', this.yearOptions);
+ if(this.tabStatus==ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS){
         this.loadServiceProviderName(InsuranceStatusType.healthInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
       }
       else{
         this.loadServiceProviderName(InsuranceStatusType.dentalInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
       }
     }
-    
+
+    private getDay(date: Date, locale: string, options?: Intl.DateTimeFormatOptions): string {
+      const formatter = new Intl.DateTimeFormat(locale, options);
+      return formatter.format(date);
+    }
+
     savePaymentDetailsClicked(){
       this.validateForm(); 
       if (this.premiumPaymentForm.valid) {
