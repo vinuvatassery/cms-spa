@@ -289,9 +289,9 @@ export class HealthInsurancePolicyDataService {
     );
   }
 
-  loadInsurancePoliciesByPlanId(insurancePlanId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
+  loadInsurancePoliciesByProviderId(providerId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans/${insurancePlanId}/Insurance-policies?clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&dentalPlan=${isDental}`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans/${providerId}/Insurance-policies?clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&dentalPlan=${isDental}`);
   }
   
 

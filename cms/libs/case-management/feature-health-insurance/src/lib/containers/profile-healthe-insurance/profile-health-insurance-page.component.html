@@ -13,7 +13,6 @@
 
 <div class="block-section " *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_COPAY) || tabId === clientProfileTabs.HEALTH_INSURANCE_COPAY">
   <case-management-co-pays-and-deductibles-list
-  [copayPaymentForm]="copayPaymentForm"
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId"
@@ -24,7 +23,6 @@
 
 <div class="block-section " *ngIf="((tabId$ | async)=== clientProfileTabs.DENTAL_INSURANCE_COPAY) || tabId === clientProfileTabs.DENTAL_INSURANCE_COPAY">
   <case-management-co-pays-and-deductibles-list
-  [copayPaymentForm]="copayPaymentForm"
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId"
@@ -47,7 +45,6 @@
 
 <div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS) || tabId === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS">
   <case-management-medical-payment-list
-    [premiumPaymentForm]="premiumPaymentForm"
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId" 
@@ -57,7 +54,6 @@
 
 <div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS) || tabId === clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS">
   <case-management-medical-payment-list
-    [premiumPaymentForm]="premiumPaymentForm"
   [caseEligibilityId]="clientCaseEligibilityId"
   [clientId]="clientId"
   [tabStatus]="this.tabId" 

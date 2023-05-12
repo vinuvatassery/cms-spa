@@ -20,8 +20,8 @@
       <kendo-grid  [data]="medicalPremiumPayments$ | async"
       [pageSize]="state.take" [pageable]="true" (dataStateChange)="dataStateChange($event)">
         <kendo-grid-column
-          field="providerName"
-          title="Provider Name"
+          field="vendorName"
+          title="Service Provider"
           [width]="150"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -35,14 +35,14 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
-          field="serviceDescription"
+          field="serviceTypeDesc"
           title="Service Description"
           [width]="150"
         >
         </kendo-grid-column>
         <kendo-grid-column field="amountRequested" title="Amount" [width]="100">
         </kendo-grid-column>
-        <kendo-grid-column field="reversal" title="Reversal" [width]="120">
+        <kendo-grid-column field="reversalTypeDesc" title="Reversal" [width]="120">
         </kendo-grid-column>
         <kendo-grid-column
           field="serviceStartDate"
@@ -62,7 +62,19 @@
           {{ dataItem.serviceEndDate | date:'MM/dd/YYYY' }}
       </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="entryDate" title="Entry Date" [width]="130">
+        <kendo-grid-column
+        field="checkReconcileDate"
+        title="Check Request"
+        [width]="130"
+      >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.checkReconcileDate | date:'MM/dd/YYYY' }}
+    </ng-template>
+      </kendo-grid-column>
+        <kendo-grid-column field="txtDate" title="Entry Date" [width]="130">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.txtDate | date:'MM/dd/YYYY' }}
+        </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
           field="checkMailDate"
@@ -72,9 +84,9 @@
         </kendo-grid-column>
         <kendo-grid-column field="warrant" title="Warrant" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column field="comment" title="Comment" [width]="150">
+        <kendo-grid-column field="comments" title="Comment" [width]="150">
         </kendo-grid-column>
-        <kendo-grid-column field="type" title="Type" [width]="130">
+        <kendo-grid-column field="paymentTypeDesc" title="Type" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="50">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -87,9 +99,7 @@
               showOn="hover"
               aria-label="profile avatar"
             >
-              <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                <span class="profile-text-avatar">AK</span>
-              </div>
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
             </button>
             <kendo-popover
               #onUserProfileDetailsHovered
@@ -97,11 +107,10 @@
               position="left"
             >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card></common-user-profile-card>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </ng-template>
-          
         </kendo-grid-column>
 
 
@@ -155,10 +164,9 @@
 
 <kendo-dialog *ngIf="isPremiumPaymentDetailsOpened" (close)="closePremiumPaymentDetailsOpened()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add Insurance Premium Payment</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add a new medical premium</kendo-dialog-titlebar>
   <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add Insurance Premium Payment</kendo-dialog-titlebar>
   <case-management-medical-premium-payment-detail 
-  [premiumPaymentForm]="premiumPaymentForm"
   [caseEligibilityId]="caseEligibilityId"
   [clientId] ="clientId"
   [tabStatus]="tabStatus" 

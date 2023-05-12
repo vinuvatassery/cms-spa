@@ -26,7 +26,6 @@ export class MedicalPaymentListComponent implements OnInit {
   public state!: State;
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
-  @Input() premiumPaymentForm: FormGroup;
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() tabStatus: any;
@@ -37,7 +36,6 @@ export class MedicalPaymentListComponent implements OnInit {
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade, private readonly formBuilder: FormBuilder,
     private caseFacade: CaseFacade,
     private lovFacade: LovFacade,) {
-    this.premiumPaymentForm = this.formBuilder.group({});
   }
   /** Lifecycle hooks **/
 
@@ -46,7 +44,6 @@ export class MedicalPaymentListComponent implements OnInit {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
- console.log(this.tabStatus)
     this.loadPremiumPaymentData();
   }
 

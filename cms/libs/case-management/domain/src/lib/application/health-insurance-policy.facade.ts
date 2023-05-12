@@ -287,7 +287,7 @@ export class HealthInsurancePolicyFacade {
     return this.healthInsurancePolicyService.savePaymentRequest(paymentRequest);
   }
 
-  loadInsurancePoliciesByPlanId(insurancePlanId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
-   return this.healthInsurancePolicyService.loadInsurancePoliciesByPlanId(insurancePlanId, clientId, clientCaseEligibilityId, isDental);
+  loadInsurancePoliciesByProviderId(insurancePlanId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
+   return this.healthInsurancePolicyService.loadInsurancePoliciesByProviderId(insurancePlanId, clientId, clientCaseEligibilityId, isDental);
   }
 }

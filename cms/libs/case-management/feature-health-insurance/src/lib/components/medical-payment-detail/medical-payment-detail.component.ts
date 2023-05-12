@@ -40,12 +40,11 @@ import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 export class MedicalPaymentDetailComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isPaymentAddForm = true;
-  @Input() copayPaymentForm: FormGroup;
+  copayPaymentForm!: FormGroup;
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() tabStatus: any;
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
-  paymentReversal$ = this.lovFacade.paymentReversal$;
 
   isLoading$ = this.vendorFacade.isVendorLoading$;
   carrierNames$ = this.vendorFacade.paymentRequestVendors$;
@@ -76,6 +75,7 @@ export class MedicalPaymentDetailComponent {
 
   /** Lifecycle hooks **/
   ngOnInit(){
+    this.buildCoPaymentForm();
     if(this.tabStatus=='hlt-ins-co-pay'){
       this.loadServiceProviderName(InsuranceStatusType.healthInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
     }
@@ -84,55 +84,37 @@ export class MedicalPaymentDetailComponent {
     }
   }
 
-  savePaymentDetailsClicked() {
-    this.copayPaymentForm.markAllAsTouched();
-    this.copayPaymentForm.controls['serviceProviderName'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['paymentAmount'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['type'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['serviceEndDate'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['serviceDescription'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['comment'].setValidators([Validators.required,]);
+  // savePaymentDetailsClicked() {
+  //   this.copayPaymentForm.markAllAsTouched();
+  //   this.copayPaymentForm.controls['serviceProviderName'].setValidators([Validators.required,]);
+  //   this.copayPaymentForm.controls['paymentAmount'].setValidators([Validators.required,]);
+  //   this.copayPaymentForm.controls['type'].setValidators([Validators.required,]);
+  //   this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
+  //   this.copayPaymentForm.controls['serviceEndDate'].setValidators([Validators.required,]);
+  //   this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
+  //   this.copayPaymentForm.controls['serviceDescription'].setValidators([Validators.required,]);
+  //   this.copayPaymentForm.controls['comment'].setValidators([Validators.required,]);
 
-    this.copayPaymentForm.controls['serviceProviderName'].updateValueAndValidity();
-    this.copayPaymentForm.controls['paymentAmount'].updateValueAndValidity();
-    this.copayPaymentForm.controls['type'].updateValueAndValidity();
-    this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
-    this.copayPaymentForm.controls['serviceEndDate'].updateValueAndValidity();
-    this.copayPaymentForm.controls['entryDate'].updateValueAndValidity();
-    this.copayPaymentForm.controls['serviceDescription'].updateValueAndValidity();
-    this.copayPaymentForm.controls['comment'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['serviceProviderName'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['paymentAmount'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['type'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['serviceEndDate'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['entryDate'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['serviceDescription'].updateValueAndValidity();
+  //   this.copayPaymentForm.controls['comment'].updateValueAndValidity();
 
 
-    if (this.copayPaymentForm.valid) {
-      alert("success");
-      console.log("teaette", this.copayPaymentForm);
-    } else {
-      alert("fail")
-    }
-  };
+  //   if (this.copayPaymentForm.valid) {
+  //     alert("success");
+  //     console.log("teaette", this.copayPaymentForm);
+  //   } else {
+  //     alert("fail")
+  //   }
+  // };
   resetForm() {
     this.copayPaymentForm.reset();
     this.copayPaymentForm.updateValueAndValidity();
-  }
-
-
-  loadCopayPaymentDetails() {
-    // this.bindValues(data);
-  }
-
-  bindValues(copayPaymentDetails: any) {
-    this.copayPaymentForm.controls['serviceProviderName'].setValue(copayPaymentDetails.serviceProviderName);
-    this.copayPaymentForm.controls['paymentAmount'].setValue(copayPaymentDetails.paymentAmount);
-    this.copayPaymentForm.controls['type'].setValue(copayPaymentDetails.type);
-    this.copayPaymentForm.controls['reversal'].setValue(copayPaymentDetails.reversal);
-    this.copayPaymentForm.controls['coverageStartDate'].setValue(copayPaymentDetails.coverageStartDate != null ? new Date(copayPaymentDetails.coverageStartDate) : null);
-    this.copayPaymentForm.controls['coverageEndDate'].setValue(copayPaymentDetails.coverageEndDate != null ? new Date(copayPaymentDetails.coverageEndDate) : null);
-    this.copayPaymentForm.controls['entryDate'].setValue(copayPaymentDetails.entryDate != null ? new Date(copayPaymentDetails.entryDate) : null);
-    this.copayPaymentForm.controls['serviceDescription'].setValue(copayPaymentDetails.serviceDescription);
-    this.copayPaymentForm.controls['checkMailDate'].setValue(copayPaymentDetails.checkMailDate != null ? new Date(copayPaymentDetails.checkMailDate) : null);
-    this.copayPaymentForm.controls['comment'].setValue(copayPaymentDetails.comment);
   }
 
   private loadServiceProviderName(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
@@ -142,25 +124,8 @@ export class MedicalPaymentDetailComponent {
   public serviceProviderNameChange(value: string): void {
     //this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     if(value){
-      this.isPlanLoading=true;
-      this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe({
-        next: (data: any) => {
-          this.insurancePlanList=data;
-          this.isPlanLoading=false;
-        },
-        error: (err) => {
-          this.isPlanLoading=false;
-          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        }
-      });
-    }
-  }
-
-  public insurancePlanNameChange(value: string): void {
-    //this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
-    if(value){
       this.isInsurancePoliciesLoading=true;
-      this.insurancePolicyFacade.loadInsurancePoliciesByPlanId(value,this.clientId,this.caseEligibilityId,(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY) ?  ClientProfileTabs.DENTAL_INSURANCE_STATUS: ClientProfileTabs.HEALTH_INSURANCE_STATUS  ).subscribe({
+      this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value,this.clientId,this.caseEligibilityId,(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY) ?  ClientProfileTabs.DENTAL_INSURANCE_STATUS: ClientProfileTabs.HEALTH_INSURANCE_STATUS  ).subscribe({
         next: (data: any) => {
           data.forEach((policy:any)=>{
             policy["policyValueField"]=policy.insuranceCarrierName+ " - " + policy.insurancePlanName;
@@ -176,5 +141,56 @@ export class MedicalPaymentDetailComponent {
         }
       });
     }
+  }
+
+  setCoPaymentForm() {
+    var date = new Date();
+    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    this.copayPaymentForm.controls['serviceStartDate'].setValue(firstDay);
+    this.copayPaymentForm.controls['serviceEndDate'].setValue(lastDay);
+    this.copayPaymentForm.controls['serviceTypeCode'].setValue('TPA');
+    this.copayPaymentForm.controls['serviceDescription'].setValue('TPA');
+    this.copayPaymentForm.controls['entryDate'].setValue(date);
+    this.copayPaymentForm.controls['entryDate'].disable();
+    this.copayPaymentForm.controls['serviceDescription'].disable();
+
+  }
+
+  buildCoPaymentForm(){
+    this.copayPaymentForm = this.formBuilder.group({
+      vendorId: [''],
+      clientInsurancePolicyId: [''],
+      serviceDescription: [''],
+      serviceTypeCode: [''],
+      amountRequested: [''],
+      paymentTypeCode: [''],
+      serviceStartDate: [''],
+      serviceEndDate: [''],
+      entryDate: [''],
+      comments: [''],
+    });
+    
+    this.setCoPaymentForm();
+  }
+
+  savePaymentDetailsClicked() {
+    //this.validateForm();
+    //if (this.premiumPaymentForm.valid) {
+      //this.populatePaymentRequest();
+      let coPaymentData=this.copayPaymentForm.value;
+      coPaymentData["txtDate"]=new Date();
+      coPaymentData["clientId"] = this.clientId;
+      coPaymentData["clientCaseEligibilityId"] = this.caseEligibilityId;
+      this.insurancePolicyFacade.showLoader();
+      this.insurancePolicyFacade.savePaymentRequest(coPaymentData).subscribe({
+        next: () => {
+          this.insurancePolicyFacade.hideLoader();
+        },
+        error: (error: any) => {
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+      })
+    //}
   }
 }
