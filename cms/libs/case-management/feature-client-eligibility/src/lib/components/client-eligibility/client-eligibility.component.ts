@@ -25,6 +25,7 @@ export class ClientEligibilityComponent implements OnInit {
   @Input() isSaveAndContinueAcceptance!: boolean;
 
   @Output() getQuestionsResponse = new EventEmitter<any>();
+  @Output() cerNoteResponse = new EventEmitter<any>();
   @Output() changeApplicationAcceptedStatus = new EventEmitter<any>();
   @Output() changeIsSaveAndContinueAcceptance = new EventEmitter<any>();
 
@@ -56,7 +57,7 @@ export class ClientEligibilityComponent implements OnInit {
   btnDisabled = false;
   prevClientCaseEligibilityId: any;
   isCerForm = false;
-
+  cerNote = ''
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -129,6 +130,17 @@ export class ClientEligibilityComponent implements OnInit {
 
   notesChanged(){
     this.getQuestionsResponse.emit(this.questions);
+  }
+
+  cerNotesChanged()
+  {
+    const clientNote: any = {
+      clientCaseEligibilityId: this.clientCaseEligibilityId,
+      clientId: this.clientId,
+      note: this.cerNote,
+      NoteTypeCode:ClientNoteTypeCode.cerEligibility
+    };  
+    this.cerNoteResponse.emit(clientNote);
   }
 
   getQuestionDocuments(questionCode: string) {
@@ -333,19 +345,22 @@ export class ClientEligibilityComponent implements OnInit {
     const clientNote: any = {
        clientCaseEligibilityId: this.clientCaseEligibilityId,
        clientId: this.clientId,
-       note: '',
+       note: this.cerNote,
        NoteTypeCode:ClientNoteTypeCode.cerEligibility
      };    
      this.loaderService.show();
-     this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
-       next: (x:any) =>{
-         
-         this.loaderService.hide();       
-       },
-       error: (error:any) =>{
-         this.loaderService.hide();
-       }
-     });
+     if(this.cerNote)
+     {
+        this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
+          next: (x:any) =>{
+            
+            this.loaderService.hide();       
+          },
+          error: (error:any) =>{
+            this.loaderService.hide();
+          }
+        });
+    }
       
    }
 }
