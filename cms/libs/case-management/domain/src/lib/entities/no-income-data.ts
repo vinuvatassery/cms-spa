@@ -5,5 +5,5 @@ export class NoIncomeData {
   noIncomeSignatureNotedDate:Date|null= new Date;
   noIncomeClientSignedDate:Date|null= new Date;
   noIncomeNote:string|null = '';
-
+  isCERRequest:boolean = false;
 }

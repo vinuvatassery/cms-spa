@@ -1,5 +1,7 @@
 <div class="client-data-block" [ngClass]="isCerForm ? 'CerForm-contact-screen' : '' ">
+  <h2 hidden>Application</h2>
   <h3>{{   isCerForm ? 'Mailing Address' : 'Contact Info' }}  </h3>
+  <h4 hidden>Contact info</h4>
   <section>
     <form [formGroup]="contactInfoForm" autocomplete="off" autoComplete='false'>
       <!-- Contact Email Details-->
