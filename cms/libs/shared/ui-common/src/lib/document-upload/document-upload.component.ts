@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, } from '@angular/core';
+import { Component, ChangeDetectorRef, Output, EventEmitter, Input, OnInit, } from '@angular/core';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { IncomeFacade, StatusFlag, IncomeTypeCode,ClientDocumentFacade } from '@cms/case-management/domain';
@@ -19,7 +19,7 @@ export class DocumentUploadComponent  implements OnInit{
   @Input() typeCode!: any
   @Input() file!: any
   subTypeCodes: Lov[] = [];
-  selectedTypeCode = "";
+  selectedTypeCode! : any;
   selectedsubTypeCode = "";
   @Output() handleFileSelectEvent= new EventEmitter<any>();
   @Output() handleFileRemoveEvent= new EventEmitter<any>();
@@ -34,15 +34,12 @@ export class DocumentUploadComponent  implements OnInit{
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly configurationProvider: ConfigurationProvider,
-    public readonly clientDocumentFacade: ClientDocumentFacade
+    public readonly clientDocumentFacade: ClientDocumentFacade,
+    private readonly cdr: ChangeDetectorRef
   ) { }
 
     /** Lifecycle hooks **/
   ngOnInit(): void {
-    if(this.typeCode)
-    {
-      this.selectedTypeCode = this.typeCode;
-    }
     this.loadTypeCodeLov();
     this.loadSubTypeCodeLov();
   }
@@ -54,10 +51,11 @@ export class DocumentUploadComponent  implements OnInit{
     }
   }
   public loadSubTypeCodeLov() {
-    if(this.typeCode)
+    if(this.typeCode || this.selectedTypeCode)
     {
-      this.lov.getDocumentSubTypeLovs(this.typeCode).subscribe((Lov: Lov[]) => {
+      this.lov.getDocumentSubTypeLovs(this.typeCode ?? this.selectedTypeCode).subscribe((Lov: Lov[]) => {
         this.subTypeCodes = Lov;
+        this.cdr.detectChanges();
       });
     }
   }

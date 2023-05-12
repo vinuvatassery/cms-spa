@@ -39,7 +39,7 @@ export enum LovType {
     CaseReasonCode = 'CASE_REASON_CODE',
     DentalInsuranceType ='DENTAL_INSURANCE_TYPE',
     EligibilityStatusCp ='ELIGIBILITY_STATUS_CP',
-    DocumentTypeCode ='DOCUMENT_TYPE_CODE',
-    DocumentSubTypeCode ='DOCUMENT_SUB_TYPE_CODE'
+    DocumentTypeCode ='DOCUMENT_TYPE',
+    DocumentSubTypeCode ='DOCUMENT_SUB_TYPE'
 
   }

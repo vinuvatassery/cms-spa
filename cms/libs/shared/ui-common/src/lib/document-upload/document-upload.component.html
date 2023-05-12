@@ -1,4 +1,4 @@
-<div *ngIf="!typeCode">
+<div *ngIf="!typeCode || selectedTypeCode">
   <kendo-floatinglabel text="Document Type Code"> </kendo-floatinglabel>
     <kendo-dropdownlist
                   aria-label="typeCode"
@@ -6,7 +6,7 @@
                   [data]="documentTypeCodeSubject$ | async"
                   textField="lovDesc"
                   valueField="lovCode"
-                  [ngModel]="selectedTypeCode"
+                  [(ngModel)]="selectedTypeCode"
                   [valuePrimitive]="true"  placeholder="Type Code"
                   (valueChange)="loadSubTypeCodeLov()"
                   >
@@ -20,7 +20,7 @@
                   [data]="subTypeCodes"
                   textField="lovDesc"
                   valueField="lovCode"
-                  [ngModel]="selectedsubTypeCode"
+                  [(ngModel)]="selectedsubTypeCode"
                   [valuePrimitive]="true"  placeholder="Sub Type Code"
                   >
     </kendo-dropdownlist>
@@ -33,7 +33,7 @@
             [multiple]="false"
             (select)="handleFileSelected($event)"
             (remove)="handleFileRemoved($event)"
-            [ngModel]="file"
+            [(ngModel)]="file"
             [ngModelOptions]="{standalone: true}"
             id="homeAddressProofUploaded"
             #homeAddressProofUploaded>
