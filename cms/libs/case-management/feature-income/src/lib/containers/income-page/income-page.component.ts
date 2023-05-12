@@ -59,6 +59,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     noIncomeNote: new FormControl('', []),
   });
   isCerForm = false;
+  hasValidIncome = false;
+  prevClientCaseEligibilityId! : string;
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
@@ -143,6 +145,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       let isValid = true;
       this.submitIncomeDetailsForm();
       if (this.noIncomeDetailsForm.valid && isValid) {
+        this.noIncomeData.isCERRequest = this.isCerForm;
         this.loaderService.show();
         return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData);
       }
@@ -158,6 +161,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.noIncomeData.noIncomeClientSignedDate = null;
         this.noIncomeData.noIncomeSignatureNotedDate = null;
         this.noIncomeData.noIncomeNote = null;
+        this.noIncomeData.isCERRequest = this.isCerForm;
         this.loaderService.show();
         return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
         catchError((err: any) => {
@@ -258,6 +262,12 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
       this.incomeListRequiredValidation = false;
+      this.hasValidIncome=false;
+      var todayDate = new Date();
+      todayDate = new Date(`${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`)
+      if(this.incomeData.clientIncomes?.filter((x:any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length>0){
+        this.hasValidIncome=true;
+      }
       if (incomeresponse.noIncomeData!=null) {
         this.noIncomeFlag = true;
         this.noIncomeDetailsForm = new FormGroup({
@@ -364,6 +374,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
+          this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
+        if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
           const gridDataRefinerValue = {
             skipCount: this.incomeFacade.skipCount,
             pagesize: this.incomeFacade.gridPageSizes[0]?.value,
