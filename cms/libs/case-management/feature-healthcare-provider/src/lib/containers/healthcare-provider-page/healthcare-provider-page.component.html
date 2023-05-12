@@ -1,5 +1,8 @@
 <div class="client-data-block">
+  <h2 hidden>Application</h2>
   <h3>HIV Healthcare Provider</h3>
+  <h4 hidden>Provider</h4>
+
   <section>
     <div class="block-section pt-1">
       <div class="flex-row" *ngIf="cerForm$ | async">
@@ -41,6 +44,7 @@
 
         <div class="flex-col" *ngIf="!isProvidersGridDisplay">
           <case-management-health-care-provider-list [pageSizes]="pageSizes" [sortValue]="sortValue"
+           [showAddNewProvider$]="showAddNewProvider$"
             [sortType]="sortType" [sort]="sort" [searchProviderLoaded$]="searchProviderLoaded$"
             [healthCareProviderSearchList$]="healthCareProviderSearchList$"
             [removeHealthProvider$]="removeHealthProvider$" [healthCareProvidersData$]="healthCareProviders$"

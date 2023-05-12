@@ -10,7 +10,7 @@
       [groupable]="false"
       [reorderable]="true"     
       [resizable]="true" 
-      [columnMenu]="{ filter: true }"
+      [columnMenu]="{ filter: false }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
 
@@ -59,6 +59,7 @@
             <kendo-dropdownbutton [data]="newAppActions" icon="more-vertical" title="More option" *ngIf="!managementTab"
               class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
+              <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
                 let-clientCaseId="clientCaseId">
                 <button 
@@ -75,6 +76,7 @@
             <kendo-dropdownbutton [data]="tabActions" icon="more-vertical" title="More option" *ngIf="managementTab"
             class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
+            <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
               let-clientCaseId="clientCaseId">
               <button [hidden]="(manager.activeFlag === 'Y' && dataItem.buttonName==='reAssignMngr') || (manager.activeFlag === 'N' && dataItem.buttonName==='unAssignMngr')"

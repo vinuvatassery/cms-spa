@@ -26,6 +26,7 @@
               </kendo-textarea-suffix>
             </kendo-textarea>
           </kendo-floatinglabel>
+          <kendo-formerror *ngIf="item.note == '' && isEmpty ">Enter a note or remove the empty note field.</kendo-formerror>  
         </div>
         <div class="flex-col flex-col-1 py-0">
           <button
