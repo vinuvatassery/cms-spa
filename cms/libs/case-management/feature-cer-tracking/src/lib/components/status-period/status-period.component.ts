@@ -14,6 +14,7 @@ export class StatusPeriodComponent implements OnInit {
 
     @Input() clientCaseId!: any;
     @Input() clientId!: any;
+    @Input() clientCaseEligibilityId!: any;
 
     @Output() loadStatusPeriodEvent  = new EventEmitter<any>();
   /** Public properties **/
@@ -133,6 +134,13 @@ export class StatusPeriodComponent implements OnInit {
     this.selectedCaseId = clientCaseId;
     this.selectedEligibilityId = clientCaseEligibilityId;
     this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(true);
+  }
+  onStatusPeriodDetailClicked() {
+    this.isStatusPeriodEdit = false;
+    this.isCopyPeriod = false;
+    this.selectedCaseId = this.clientCaseId;
+    this.selectedEligibilityId = this.clientCaseEligibilityId;
+    this.isStatusPeriodDetailOpened = true;
   }
 }
 

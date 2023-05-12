@@ -100,6 +100,18 @@
   </ng-template>
 
             </kendo-grid>
+            <div class="mt-1">
+              <button
+                kendoButton
+                [primary]="true"
+                icon="add"
+                aria-label="add status"
+                (click)="onStatusPeriodDetailClicked()"
+              >
+                NEW STATUS
+              </button>
+            </div>
+
         </div>
 
     </div>
