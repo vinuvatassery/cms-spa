@@ -7,6 +7,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries **/
 import { VerificationFacade, ClientHivVerification, VerificationStatusCode, VerificationTypeCode, ProviderOption } from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class HivVerificationRequestComponent implements OnInit {
   public uploadRemoveUrl = 'removeUrl';
   /** Public properties **/
   providerValue$ = this.verificationFacade.providerValue$;
+  verificationMethod$ = this.lovFacade.verificationMethod$;
   providerOption:any;
   isSendRequest = false;
   isResendRequest = false;
@@ -36,6 +38,7 @@ export class HivVerificationRequestComponent implements OnInit {
 
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,
+    private readonly lovFacade: LovFacade,
     private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,){}
   /** Internal event methods **/
   ngOnInit(): void {
@@ -62,7 +65,7 @@ export class HivVerificationRequestComponent implements OnInit {
       }
       this.cdr.detectChanges();
     });
-   
+    this.lovFacade.getVerificationMethodLovs();
   }
   onSendRequestClicked() { 
     if (this.providerOption ===ProviderOption.HealthCareProvider) {
@@ -84,6 +87,10 @@ export class HivVerificationRequestComponent implements OnInit {
     this.isResendRequest = true;
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
   }
+
+  onClientAttachmentSelected(){
+  }
+  
   private populateModel(){
     this.clientHivVerification.clientId = this.clientId;
     this.clientHivVerification.verificationStatusCode = VerificationStatusCode.Pending;

@@ -35,7 +35,7 @@
         Once they submit the form, you will receive a notification to approve or deny it.</kendo-formhint>
     </div>
     </div>
-    <div class="flex-row" *ngIf="providerOption === 'UPLOAD_ATTACHMENT'">
+    <div class="flex-row" *ngIf="providerOption === 'ATTACH_FROM_COMPUTER'">
       <div class="flex-col flex-col-6">  
       <kendo-upload   #Uploadanattachment   id="Uploadanattachment" aria-label="upload proof" name="upload proof"
       [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false"  
@@ -50,6 +50,21 @@
       </kendo-upload>
       <kendo-formhint>Max file size 25MB</kendo-formhint>
     </div>
+    </div>
+    <div class="flex-row" *ngIf="providerOption === 'ATTACH_FROM_CLIENT_ATTACHMENTS'">
+      <div class="flex-col flex-col-6"> 
+        <kendo-floatinglabel text="Client Attachments">
+          <kendo-dropdownlist dropdownFieldautofocus aria-label="Client Attachments"
+            [fillMode]="formUiStyle.dropDownFillMode" [data]="verificationMethod$ | async"
+            (valueChange)="onClientAttachmentSelected()" textField="lovDesc"
+            valueField="lovCode"  [valuePrimitive]="true"
+            [loading] = "(verificationMethod$ | async)?.length===0" >
+            <ng-template kendoDropDownListItemTemplate let-dataItem>
+              <span class="template">{{ 'Document ' + dataItem.sequenceNbr }}</span> {{ dataItem.lovDesc }}
+            </ng-template>
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
     </div>
   </div>
 </section>
