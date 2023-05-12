@@ -72,40 +72,35 @@
       </div>
       <!-- Select file form client attachment --> 
       <div class="flex-col flex-col-8 mt-2 ml-1">
-      <button kendoButton [primary]="true" aria-label="Select File client attachment">
-        Choose From Attachments
-      </button>
-      <div class="attachment-from-client-lists-wrapper mt-2">
-        <div class="attachment-from-client-lists-container">
-
-          <div class="attachment-from-client-lists">
-            <span class="material-icons">
-              file_present
-            </span>
-            <div>
-              <span>DOCUMENT NAME</span> 
-
-            </div>
-            <kendo-dropdownbutton [data]="data" icon="more-vertical" title="More option" look="bare"
-              aria-label="more actions" class="small-i-btn app-dropdown-action hide_more-text"
-              [popupSettings]="{ popupClass: popupClass1, animate: true }">
-              <span hidden> More Option</span>
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                  aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-                  <label> {{ dataItem.text }} </label>
-                </button>
+        <kendo-floatinglabel text="Client Documents">
+         
+          <span *ngIf="showDocInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+          <kendo-multicolumncombobox         
+            [data]="clientDocList"
+            textField="clientDocumentsName"
+            valueField="clientDocumentsId"
+            autofocusfield
+            id="clientdocuments"
+            #searchcaseornew
+            [loading] = "showDocInputLoader" 
+            [fillMode]="formUiStyle.dropDownFillMode"
+            [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
+            [filterable]="true"
+         >
+            <kendo-combobox-column >
+              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+                <span  >{{ dataItem.clientDocumentsName }}</span>
               </ng-template>
-            </kendo-dropdownbutton>
-          </div>
-          <p>Uploaded by    
-            <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
-            Lisa McAuliffe
-          </button> 
-          on xx/xx/xxxxx</p>
-        </div>
+            </kendo-combobox-column>
+            <kendo-combobox-column  [width]="200">
+              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+                <span>  {{dataItem.documentType}}</span>
+              </ng-template>
+            </kendo-combobox-column>
+          </kendo-multicolumncombobox>
+        </kendo-floatinglabel>
+      <div class="attachment-from-client-lists-wrapper mt-2">
+         
         <div class="attachment-from-client-lists-container">
 
           <div class="attachment-from-client-lists">
