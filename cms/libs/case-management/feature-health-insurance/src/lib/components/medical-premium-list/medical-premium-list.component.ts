@@ -61,7 +61,6 @@ export class MedicalPremiumListComponent implements OnInit {
         this.handleHealthInsuranceOpenClicked('edit');
       },
     },
-
     {
       buttonType: "btn-h-primary",
       text: "Change Priority",

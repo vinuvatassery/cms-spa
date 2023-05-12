@@ -33,6 +33,7 @@ export class CerListComponent implements OnInit, OnChanges {
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
+  @Output() goToCerEvent = new EventEmitter<any>();
 
   /** Public properties **/
   isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
@@ -111,6 +112,13 @@ export class CerListComponent implements OnInit, OnChanges {
         this.isPaperLessFlag = eligibilityCer?.paperlessFlag === StatusFlag.Yes;
         this.clientName = eligibilityCer?.clientFullName;
         this.resendCer();
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Go to CER',
+      click: (eligibilityCer: any): void => { 
+        this.goToCerEvent.emit(eligibilityCer?.clientCaseEligibilityId);
       },
     }
   ];
@@ -313,7 +321,10 @@ export class CerListComponent implements OnInit, OnChanges {
       this.gridDataResult.data[res].eligibilityEndDate = new Date(this.gridDataResult?.data[res].eligibilityEndDate)
       }
     }
+    
+    const totalCount = this.gridDataResult?.total
     this.gridDataResult =  process(this.gridDataResult.data, this.state);
+    this.gridDataResult.total = totalCount
     this.gridCERDataSubject.next(this.gridDataResult);  
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;

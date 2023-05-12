@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade } from '@cms/case-management/domain';
+import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-carrier-name',
@@ -13,6 +13,7 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
 {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
+  @Input() insuranceStatus:any;
 
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
   @Output() insuranceCarrierNameData = new EventEmitter<any>();
@@ -38,12 +39,17 @@ public isLoading =false;
   }
 
   ngOnInit(): void {
-    this.loadInsuranceCarrierName();
+    if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
+      this.loadInsuranceCarrierName(InsuranceStatusType.dentalInsurance);   
+    }
+    else{  
+       this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);   
+    }
   }
 
-  private loadInsuranceCarrierName() {
+  private loadInsuranceCarrierName(type:string) {
     this.isLoading=true;
-    this.vendorFacade.loadAllVendors().subscribe({
+    this.vendorFacade.loadAllVendors(type).subscribe({
       next: (data: any) => {
         if (!Array.isArray(data)) return;
         this.sortCarrier(data);   

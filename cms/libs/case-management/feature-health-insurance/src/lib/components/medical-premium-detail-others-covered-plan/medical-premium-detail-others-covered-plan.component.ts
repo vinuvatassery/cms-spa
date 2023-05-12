@@ -43,7 +43,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   }
   private loadClientDependents() {
     this.familyAndDependentSubscription = this.familyAndDependentFacade.clientDependents$.subscribe((data: any) => {
-       if (!!data) {
+       if (data) {
         let dependents = data.filter((dep: any) => dep.relationshipTypeCode == 'D');
         const othersCoveredOnPlanSaved = this.healthInsuranceForm.controls['othersCoveredOnPlanSaved'].value;
         dependents.forEach((el: any) => {
@@ -52,7 +52,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
           else
             el.enrolledInInsuranceFlag = false;
         });
-        let dependentGroup = !!dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
+        let dependentGroup = dependents ? dependents.map((person: any) => this.formBuilder.group(person)) : [];
         let dependentForm = this.formBuilder.array(dependentGroup);
         this.healthInsuranceForm.setControl('othersCoveredOnPlan', dependentForm);
 

@@ -63,7 +63,8 @@ export class DependentDataService {
       ssn: dependent?.ssn,
       dob: dependent?.dob,
       enrolledInInsuranceFlag: dependent?.enrolledInInsuranceFlag,
-      concurrencyStamp: ""
+      concurrencyStamp: "",
+      clientCaseEligibilityId: dependent.clientCaseEligibilityId,
     }
 
     return this.http.post(
@@ -103,9 +104,9 @@ export class DependentDataService {
 
 
   //7 mark dependent as inactive
-  deleteDependent(eligibilityId: string, clientDependentId: string) {
+  deleteDependent(eligibilityId: string, clientDependentId: string, isCER: boolean = false) {
     return this.http.delete(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${clientDependentId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${clientDependentId}/${isCER}`
     );
   }
 
