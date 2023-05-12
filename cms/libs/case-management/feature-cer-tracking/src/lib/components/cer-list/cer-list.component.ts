@@ -12,7 +12,7 @@ import {
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State , process} from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State , filterBy, process} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
@@ -70,6 +70,8 @@ export class CerListComponent implements OnInit, OnChanges {
   statusTitle ="Status"
   addRemoveColumns="Default Columns"
   gridDataResult! : GridDataResult
+
+  filterData : CompositeFilterDescriptor={logic:'and',filters:[]};
 
   columns : any = {
     clientFullName:"Client Name",
@@ -203,8 +205,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();    
   }
   pageselectionchange(data: any) {
-    this.state.take = data.value;
-    this.state.skip = 0;
+    this.state.take = data.value;   
     this.loadCerTrackingList();
   }
 
@@ -320,11 +321,8 @@ export class CerListComponent implements OnInit, OnChanges {
       {     
       this.gridDataResult.data[res].eligibilityEndDate = new Date(this.gridDataResult?.data[res].eligibilityEndDate)
       }
-    }
-    
-    const totalCount = this.gridDataResult?.total
-    this.gridDataResult =  process(this.gridDataResult.data, this.state);
-    this.gridDataResult.total = totalCount
+    }  
+    this.gridDataResult.data = filterBy(this.gridDataResult.data, this.filterData)
     this.gridCERDataSubject.next(this.gridDataResult);  
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
@@ -332,7 +330,13 @@ export class CerListComponent implements OnInit, OnChanges {
       }
     });
   }
+  
+ public filterChange(filter: CompositeFilterDescriptor): void {
+  this.filterData = filter;
 
+  this.gridDataResult.data = filterBy(this.gridDataResult.data, filter)
+  this.gridCERDataSubject.next(this.gridDataResult);  
+ }
   public columnChange(e: ColumnVisibilityChangeEvent) {    
     const columnsRemoved = e?.columns.filter(x=> x.hidden).length
     const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
@@ -380,6 +384,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.isFiltered = false;
     this.columnsReordered = false;
     this.loader = true;
+    this.filterData = {logic:'and',filters:[]}
     this.loadCerTrackingList();
   } 
 
