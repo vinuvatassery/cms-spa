@@ -186,11 +186,10 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   }
   onExitFamilyFormLoad()
   {    
-   this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientDependentId != null))
+   this.dependentGetExisting$?.pipe(first((existDependentData: any ) => existDependentData?.clientRelationshipId != null))
    .subscribe((existDependentData: any) =>
    {  
-    
-       if(existDependentData?.clientDependentId)
+       if(existDependentData?.clientRelationshipId)
        {
         const fullName = existDependentData?.firstName + ' ' + existDependentData?.lastName
 
@@ -198,7 +197,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         
         this.fullClientName = fullName + ' DOB '+ ((dateOB.getMonth()+1) +'/'+dateOB.getDate()+'/'+dateOB.getFullYear() )+((existDependentData?.ssn=='' || existDependentData?.ssn==null) ?  "" :' SSN '+existDependentData?.ssn )
 
-        this.clientDependentId = existDependentData?.clientDependentId;
+        this.clientDependentId = existDependentData?.clientRelationshipId;
         this.dependentTypeCode = DependentTypeCode.CAClient;
          this.isAddFamilyMember =false;         
            this.existFamilyMemberForm.setValue(
@@ -206,9 +205,9 @@ export class FamilyAndDependentDetailComponent implements OnInit {
                clientId:  existDependentData?.dependentClientId ?? 0,  
                dependentClientId:  existDependentData?.dependentClientId ?? 0,     
                existRelationshipCode: existDependentData?.relationshipCode, 
-               clientDependentId: existDependentData?.clientDependentId,
+               clientDependentId: existDependentData?.clientRelationshipId,
                dependentType: DependentTypeCode.CAClient,
-               selectedClientDependentId :  existDependentData?.clientDependentId
+               selectedClientDependentId :  existDependentData?.clientRelationshipId
              }
            )
          
@@ -249,9 +248,9 @@ export class FamilyAndDependentDetailComponent implements OnInit {
    {
       const dependent  = {
         concurrencyStamp: this.familyMemberForm?.controls["concurrencyStamp"].value,
-        clientDependentId: this.familyMemberForm?.controls["clientDependentId"].value,
+        clientRelationshipId: this.familyMemberForm?.controls["clientDependentId"].value,
         clientId:  this.familyMemberForm?.controls["clientId"].value,     
-        relationshipCode: this.familyMemberForm?.controls["relationshipCode"].value,       
+        relationshipTypeCode: this.familyMemberForm?.controls["relationshipCode"].value,       
         firstName:  this.familyMemberForm?.controls["firstName"].value,
         lastName:  this.familyMemberForm?.controls["lastName"].value,       
         ssn:  this.familyMemberForm?.controls["ssn"].value?.replace('-', '').replace('-', ''),
@@ -273,20 +272,19 @@ export class FamilyAndDependentDetailComponent implements OnInit {
     {         
       
       this.isExistDependent =false;
-      this.dependentGet$?.pipe(first((dependentData: any ) => dependentData?.clientDependentId != null))
+      this.dependentGet$.pipe(first((dependentData: any ) => dependentData?.clientRelationshipId != null))
       .subscribe((dependentData: any) =>
       {  
-        
-          if(dependentData?.clientDependentId)
+          if(dependentData?.clientRelationshipId)
           {             
             this.isOpenedNewFamilyMember =true;
             this.isAddFamilyMember =false;
-            this.clientDependentId = dependentData?.clientDependentId;
+            this.clientDependentId = dependentData?.clientRelationshipId;
               this.dependentTypeCode = dependentData?.dependentTypeCode;
               this.familyMemberForm.setValue(
                 {
                   concurrencyStamp: dependentData?.concurrencyStamp,
-                  clientDependentId: dependentData?.clientDependentId,
+                  clientDependentId: dependentData?.clientRelationshipId,
                   clientId:  dependentData?.clientId,     
                   relationshipCode: dependentData?.relationshipCode,       
                   firstName:  dependentData?.firstName,

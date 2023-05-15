@@ -32,11 +32,13 @@ export class Client {
   walkingClimbingDifficultyCode: string | null = null;
   startAgeWalkingClimbingDifficulty: number | null = null;
   dressingBathingDifficultyCode: string | null = null;
+  isSpecialCaseHandlingUpdate:boolean | false = false;
   startAgeDressingBathingDifficulty: number | null = null;
   concentratingDifficultyCode: string | null = null;
   startAgeConcentratingDifficulty: number | null = null;
   errandsDifficultyCode: string | null = null;
   startAgeErrandsDifficulty: number | null = null;
+ 
 }
 
 export interface SpecialHandling {

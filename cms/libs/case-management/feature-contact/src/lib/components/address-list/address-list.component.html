@@ -74,7 +74,8 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="Option"
-          title="Option"
+          title="Options"
+          [columnMenu]="false"
           [width]="75"
           class="text-center"
         >
@@ -88,6 +89,7 @@
               title="More option"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
+            <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <ng-container *ngIf="buttondataItem.text === 'Deactivate Address' && dataItem.activeFlag ==='Y'; else otherButtons">
                   <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
@@ -181,7 +183,7 @@
   *ngIf="isDeleteAddressPopup"
   (close)="onDeleteAddressClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Delete home address?"
+  title="Delete Houseless Address?"
 >
   <case-management-delete-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModalAndReload($event)"></case-management-delete-address-confirmation>
 </kendo-dialog>

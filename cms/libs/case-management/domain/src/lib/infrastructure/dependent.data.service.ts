@@ -57,13 +57,14 @@ export class DependentDataService {
       clientDependentId: "00000000-0000-0000-0000-000000000000",
       clientId: dependent.clientId,
       dependentTypeCode: DependentTypeCode.Dependent,
-      relationshipCode: dependent?.relationshipCode,
+      relationshipCode: dependent?.relationshipTypeCode,
       firstName: dependent?.firstName,
       lastName: dependent?.lastName,
       ssn: dependent?.ssn,
       dob: dependent?.dob,
       enrolledInInsuranceFlag: dependent?.enrolledInInsuranceFlag,
-      concurrencyStamp: ""
+      concurrencyStamp: "",
+      clientCaseEligibilityId: dependent.clientCaseEligibilityId,
     }
 
     return this.http.post(
@@ -84,10 +85,10 @@ export class DependentDataService {
 
     const data =
     {
-      clientDependentId: dependent?.clientDependentId,
+      clientDependentId: dependent?.clientRelationshipId,
       clientId: dependent.clientId,
       dependentTypeCode: DependentTypeCode.Dependent,
-      relationshipCode: dependent?.relationshipCode,
+      relationshipCode: dependent?.relationshipTypeCode,
       firstName: dependent?.firstName,
       lastName: dependent?.lastName,
       ssn: dependent?.ssn,
@@ -96,16 +97,16 @@ export class DependentDataService {
       concurrencyStamp: dependent?.concurrencyStamp
     }
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${dependent.clientDependentId}`,
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${dependent.clientRelationshipId}`,
       data
     );
   }
 
 
   //7 mark dependent as inactive
-  deleteDependent(eligibilityId: string, clientDependentId: string) {
+  deleteDependent(eligibilityId: string, clientDependentId: string, isCER: boolean = false) {
     return this.http.delete(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${clientDependentId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${clientDependentId}/${isCER}`
     );
   }
 

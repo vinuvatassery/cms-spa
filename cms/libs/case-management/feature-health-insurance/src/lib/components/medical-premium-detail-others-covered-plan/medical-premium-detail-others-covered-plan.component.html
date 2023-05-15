@@ -42,7 +42,7 @@
                                 aria-labelledby="othersCoverdSelect" id="othersCoverdSelect{{i}}"
                                  />
                             <label class="k-checkbox-label" for="othersCoverdSelect{{i}}">{{person.value.firstName}}
-                                {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
+                                {{person.value.lastName}} ({{person.value.relationshipSubTypeDesc}})</label>
                         </span>
                     </div>
                 </div>
@@ -66,9 +66,9 @@
                             aria-label="Relationship to Client" 
                             [data]="relationshipList"  textField="lovDesc" [valuePrimitive]="true"
                             valueField="lovCode"
-                            formControlName="relationshipCode">
+                            formControlName="relationshipSubTypeCode">
                         </kendo-dropdownlist>
-                        <kendo-formerror *ngIf="!getPersonControl(i, 'relationshipCode')?.valid
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'relationshipSubTypeCode')?.valid
                   && isViewContentEditable==false">Relationship description is
                             required.</kendo-formerror>
                     </kendo-floatinglabel>

@@ -7,7 +7,7 @@ import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/k
 import { forkJoin, mergeMap, of, Subscription, tap, first, filter } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType, CaseStatusCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, StatusFlag, ButtonType, CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -121,6 +121,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showSendNewsLetterPopup();
     this.addSessionChangeSubscription();
     this.showCancelApplicationPopup();
+    this.resetReadOnlyView();
   }
 
   ngOnDestroy(): void {
@@ -198,7 +199,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
         this.clientId = JSON.parse(session.sessionData).clientId;
         this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
         this.caseFacade.loadCasesById(this.clientCaseId);
-        JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
+        this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
         if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
       });
   }
@@ -461,5 +462,9 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   onContinueClick(){
     this.closeCancelApplicationPopup();
     this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+  }
+
+  resetReadOnlyView(){
+    this.caseFacade.setCaseReadOnly(false);
   }
 }

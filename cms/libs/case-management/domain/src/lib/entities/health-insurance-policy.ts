@@ -3,7 +3,7 @@ import { Dependent } from "./dependent";
 export class HealthInsurancePolicy {
         clientInsurancePolicyId: string | null = null;
         clientId: number | null = null;
-        insuranceCarrierId: string | null = null;
+        insuranceVendorId: string | null = null;
         clientCaseEligibilityId: string | null = null;
         insurancePlanId: string | null = null;
         clientMaximumId: string | null = null;
@@ -15,8 +15,8 @@ export class HealthInsurancePolicy {
         policyHolderLastName: string | null = null;
         metalLevelCode: string | null = null;
         premiumAmt: number | null = null;
-        startDate?: string | null;
-        endDate?: string | null;
+        insuranceStartDate?: string | null;
+        insuranceEndDate?: string | null;
         careassistPayingPremiumFlag: string | null = null;
         premiumPaidThruDate?: string | null;
         premiumFrequencyCode: string | null = null;

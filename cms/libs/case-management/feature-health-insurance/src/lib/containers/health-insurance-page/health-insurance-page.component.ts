@@ -359,6 +359,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   }
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
+    let typeParam ={type:'INSURANCE',insuranceStatusType:'ALL'}
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
@@ -368,6 +369,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
+      typeParam,
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sortColumn,
@@ -428,7 +430,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   private addHealthInsuranceStatusSubscription():void{
     this.healthInsuranceStatusSubscription = this.medicalHealthPlans$.subscribe((res)=>{
-      if(res.data.length>0){
+      if(res?.data?.length>0){
         this.isInsuranceAvailable = true;
         if(this.insuranceFlagForm.controls['currentInsuranceFlag'].value =='Y' ){
           this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);

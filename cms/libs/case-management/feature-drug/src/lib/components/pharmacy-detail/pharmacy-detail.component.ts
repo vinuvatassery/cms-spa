@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Facades **/
-import { Pharmacy,DrugPharmacyFacade,PriorityCode } from '@cms/case-management/domain';
+import { Pharmacy,DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { Observable } from 'rxjs';
 @Component({

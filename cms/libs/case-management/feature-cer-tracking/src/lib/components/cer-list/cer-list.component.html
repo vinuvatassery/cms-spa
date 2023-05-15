@@ -21,8 +21,8 @@
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items">{{sortColumn}}</span>
   <span *ngIf="!isFiltered" class="sort-items">No Filters</span>
-  <span *ngIf="isFiltered" class="sort-items">Filtered by {{filteredBy}}</span>
-  <span *ngIf="!columnsReordered" class="sort-items">Default Columns</span>
+  <span *ngIf="isFiltered" class="sort-items">Filtered by {{filteredBy}}</span> 
+  <span class="sort-items">{{addRemoveColumns}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
   <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
     <a>Set to Default</a>
@@ -32,9 +32,9 @@
 <div class="app-c-table">
   <kendo-grid [data]="gridCERData$ | async" [pageSize]="state.take" [pageable]="true" [sortable]="true"
     [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader"
-    (columnVisibilityChange)="columnChange($event)" (filterChange)="filterChange($event)"
-    (columnReorder)="onColumnReorder($event)" (columnVisibilityChange)="columnChange($event)" [filter]="gridFilter">
+    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader" 
+    (filterChange)="filterChange($event)"  
+    (columnReorder)="onColumnReorder($event)" (columnVisibilityChange)="columnChange($event)" [filter]="state.filter">  
   
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="130" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -44,9 +44,15 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="clientId" title="Mem. ID" [width]="100">
+    <kendo-grid-column field="clientId" title="Mem. ID" [width]="100" filter="numeric">
     </kendo-grid-column>
-    <kendo-grid-column field="dob" title="Date of Birth" [width]="130">
+    <kendo-grid-column field="dob" title="Date of Birth" [width]="130" filter="date">  
+      <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+        <kendo-grid-date-filter-cell 
+         [column]="column" 
+         [filter]="filter">
+        </kendo-grid-date-filter-cell>
+      </ng-template>    
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.dob | date:'MM/dd/yyyy'}}
       </ng-template>
@@ -55,8 +61,9 @@
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="clientInsuranceFullName" title="Official Insurance Full Name" [width]="130"
       [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="eligibilityStatus" title="Current Status" [width]="130"></kendo-grid-column>
-    <kendo-grid-column field="cerSentDate" title="Date CER Sent"  [width]="130">
+    <kendo-grid-column field="eligibilityStatus" title="{{title$ | async}}"   [width]="130">     
+    </kendo-grid-column>
+    <kendo-grid-column field="cerSentDate" title="Date CER Sent"  [width]="130" filter="date">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.cerSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
@@ -66,28 +73,30 @@
         {{dataItem.cerReceivedDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="cerCompletedDate" title="Date CER Completed"  [width]="130">
+    <kendo-grid-column field="cerCompletedDate" title="Date CER Completed"  filter="date" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.cerCompletedDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="reminderSentDate" title="Reminder Sent Date" [width]="130">
+    <kendo-grid-column field="reminderSentDate" title="Reminder Sent Date" filter="date" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.reminderSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="cerResentDate" title="CER Re-Sent Date" [width]="130">
+    <kendo-grid-column field="cerResentDate" title="CER Re-Sent Date" filter="date" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.cerResentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="restrictedSentDate" title="Restricted Sent Date"  [width]="130">
+    <kendo-grid-column field="restrictedSentDate" title="Restricted Sent Date" filter="date"  [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.restrictedSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="spokenLanguage" title="Spoken Language" [width]="130"></kendo-grid-column>
-    <kendo-grid-column field="assignedCmId" title="Case Manager" [width]="130">
+    <kendo-grid-column field="spokenLanguage" title="Spoken Language" [hidden]="true" [width]="130"></kendo-grid-column>
+    <kendo-grid-column field="writtenLanguage" title="Written Language" [hidden]="true" [width]="130"></kendo-grid-column>
+    <kendo-grid-column field="englishProficiency" title="English Proficiency" [hidden]="true" [width]="130"></kendo-grid-column>
+    <kendo-grid-column field="assignedCm" title="Case Manager" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCmId"
           kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -100,7 +109,7 @@
         </kendo-popover>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="disEnrollmentDate" title="Disenrollment Date" [width]="160"
+    <kendo-grid-column field="disEnrollmentDate" title="Disenrollment Date"   [width]="160"
     [format]="{ date: 'MM-dd-yyyy' }" filter="date">
     <ng-template kendoGridCellTemplate let-dataItem>
       {{dataItem.disEnrollmentDate | date:'MM/dd/yyyy'}}
@@ -110,14 +119,16 @@
    ></kendo-grid-column>
     <kendo-grid-column field="pronouns" [sortable]="false" title="Pronouns" [width]="130"
       [hidden]="true"></kendo-grid-column>
+      <kendo-grid-column field="sexes" [sortable]="false"  [hidden]="true" title="Sexes" [width]="130"
+      [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="genders" [sortable]="false" title="Gender" [width]="130"
       [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="phone"  title="Phone" [width]="130" [hidden]="true"></kendo-grid-column>
+    <kendo-grid-column field="phone"  title="Phone" [width]="130" [hidden]="true" filter="numeric"></kendo-grid-column>
     <kendo-grid-column field="email"  title="Email" [width]="130" [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="homeAddress"  title="Home Address" [width]="130"
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="ssn"  title="SSN" [width]="130" [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="160" [hidden]="true"
+    <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date"  [width]="160" [hidden]="true"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.eilgibilityStartDate | date:'MM/dd/yyyy'}}
@@ -129,7 +140,7 @@
         {{dataItem.eligibilityEndDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="assignedCwId" title="Case Worker" [width]="130" [sticky]="true">
+    <kendo-grid-column field="assignedCw" title="Case Worker" [width]="130" >
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCwId"
           kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -145,14 +156,14 @@
         <common-grid-loader-component></common-grid-loader-component>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column title="Options" [sortable]="false" [width]="70" class="text-center" [sticky]="true"
-      [columnMenu]="false">
+    <kendo-grid-column title="Options" field="isHistorical" [sortable]="false" [width]="70" class="text-center" 
+     [sticky]="true"     [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="gridActions" icon="more-vertical" title="More Options"
+        <kendo-dropdownbutton [data]="gridActions" icon="more-vertical" title="More Options" *ngIf="dataItem.isHistorical==='N' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId"  
           class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button" aria-label="more actions"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-            <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
+            <button  kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
               aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="false">
               {{ buttondataItem.text }}
             </button>
