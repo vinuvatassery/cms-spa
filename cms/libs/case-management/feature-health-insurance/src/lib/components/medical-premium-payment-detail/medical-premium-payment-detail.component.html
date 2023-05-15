@@ -94,23 +94,35 @@
                     <kendo-floatinglabel text="Service Start Date">
                         <kendo-datepicker formControlName="serviceStartDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                            aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder="">
+                            aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder=""
+                            (valueChange)="startDateOnChange()">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid">Service Start
-                        Date is required.</kendo-formerror>
+                    <!-- <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid">Service Start
+                        Date is required.</kendo-formerror> -->
+                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && startDateIsFutureDate"> Future Date not allowed.</kendo-formerror>
+                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate"> Service Start Date is
+                            required.</kendo-formerror>
 
                 </div>
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Service End Date">
                         <kendo-datepicker formControlName="serviceEndDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                            aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder="">
+                            aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder=""
+                            (valueChange)="endDateValueChange($event)" (blur)="endDateOnChange()">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid">Service End
-                        Date is required.</kendo-formerror>
+                    <!-- <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid">Service End
+                        Date is required.</kendo-formerror> -->
 
+                        <kendo-formerror
+                        *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">
+                        Service End Date is required.
+                      </kendo-formerror>
+                      <kendo-formerror
+                        *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">Service End Date must be after Start Date.
+                      </kendo-formerror>
 
                 </div>
             </div>

@@ -18,11 +18,13 @@ export class MedicalPaymentListComponent implements OnInit {
 
   /** Public **/
   medicalPremiumPayments$ = this.insurancePolicyFacade.premiumPayments$;
+  triggeredPremiumPaymentSave$ = this.insurancePolicyFacade.triggeredPremiumPaymentSave$
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isPremiumPaymentDetailsOpened = false;
   @Output() loadPremiumPaymentEvent = new EventEmitter<any>();
+  @Output() loadTwelveMonthRecord = new EventEmitter<boolean>();
   public state!: State;
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
@@ -30,6 +32,7 @@ export class MedicalPaymentListComponent implements OnInit {
   @Input() clientId: any;
   @Input() tabStatus: any;
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
+  showTwelveMonthRecordFlag:boolean = false;
 
   /** Constructor **/
 
@@ -45,12 +48,29 @@ export class MedicalPaymentListComponent implements OnInit {
       take: this.pageSizes[0]?.value
     };
     this.loadPremiumPaymentData();
+    this.triggeredPremiumPaymentSave$.subscribe(data=>{
+      if(data){
+        this.closePremiumPaymentDetailsOpened();
+        this.loadPremiumPaymentData();
+      }
+    })
+    
   }
 
   /** Private methods **/
 
   private loadMedicalPremiumPayments() {
     this.insurancePolicyFacade.loadMedicalPremiumPayments();
+  }
+
+  handleShowHistoricalClick(){
+    // if(this.showTwelveMonthRecordFlag){
+    //   this.loadTwelveMonthRecord.next(true);
+    // }
+    // else{
+    //   this.loadTwelveMonthRecord.next(false);
+    // }
+    this.loadPremiumPaymentData();
   }
 
   closePremiumPaymentDetailsOpened() {
@@ -87,7 +107,8 @@ export class MedicalPaymentListComponent implements OnInit {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
       type: 'MEDICAL_PREMIUM',
-      dentalPlanFlag: (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS ) ? ClientProfileTabs.HEALTH_INSURANCE_STATUS : ClientProfileTabs.DENTAL_INSURANCE_STATUS
+      dentalPlanFlag: (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS ) ? ClientProfileTabs.HEALTH_INSURANCE_STATUS : ClientProfileTabs.DENTAL_INSURANCE_STATUS,
+      twelveMonthsRecords: this.showTwelveMonthRecordFlag
     };
 
     this.loadPremiumPaymentEvent.next(gridDataRefinerValue);

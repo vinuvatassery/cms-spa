@@ -8,6 +8,8 @@
         kendoCheckBox
         aria-labelledby="PaymentspremiumsWithinLast12Months"
         id="PaymentspremiumsWithinLast12Months"
+        [(ngModel)]="showTwelveMonthRecordFlag"        
+        (change)="handleShowHistoricalClick()"
       />
       <label class="k-checkbox-label" for="PaymentspremiumsWithinLast12Months"
         >Show only premiums within the last 12 months</label
@@ -164,8 +166,8 @@
 
 <kendo-dialog *ngIf="isPremiumPaymentDetailsOpened" (close)="closePremiumPaymentDetailsOpened()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add a new medical premium</kendo-dialog-titlebar>
-  <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add Insurance Premium Payment</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add insurance premium payment</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add insurance premium payment</kendo-dialog-titlebar>
   <case-management-medical-premium-payment-detail 
   [caseEligibilityId]="caseEligibilityId"
   [clientId] ="clientId"

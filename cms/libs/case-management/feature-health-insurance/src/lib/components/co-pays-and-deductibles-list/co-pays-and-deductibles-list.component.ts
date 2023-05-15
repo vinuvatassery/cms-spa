@@ -18,6 +18,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   /** Public properties **/
 
   coPaysAndDeductibles$ = this.insurancePolicyFacade.coPaysAndDeductibles$;
+  triggeredCoPaySave$ = this.insurancePolicyFacade.triggeredCoPaySave$
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isCoPaymentDetailsOpened = false;
@@ -47,6 +48,12 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
       take: this.pageSizes[0]?.value
     };
     this.loadCoPayDeductiblesData();
+    this.triggeredCoPaySave$.subscribe(data=>{
+      if(data){
+        this.closeCoPaymentDetailsOpened();
+        this.loadCoPayDeductiblesData();
+      }
+    })
   }
   /** Private methods **/
   openCoPaymentDetailsOpened() {
@@ -85,7 +92,8 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
       type: 'COPAYMENT',
-      dentalPlanFlag: (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_COPAY ) ? ClientProfileTabs.HEALTH_INSURANCE_STATUS : ClientProfileTabs.DENTAL_INSURANCE_STATUS
+      dentalPlanFlag: (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_COPAY ) ? ClientProfileTabs.HEALTH_INSURANCE_STATUS : ClientProfileTabs.DENTAL_INSURANCE_STATUS,
+      twelveMonthsRecords: false
     };
     this.loadCoPayEvent.next(gridDataRefinerValue);
   }

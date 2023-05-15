@@ -1,12 +1,8 @@
 /** Angular **/
 import {
   Component,
-  OnInit,
-  OnDestroy,
   ChangeDetectionStrategy,
   Input,
-  Output,
-  EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
@@ -15,19 +11,14 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import {
   ClientDocumentFacade,
   HealthInsurancePolicyFacade,
-  HealthInsurancePolicy,
-  CarrierContactInfo,
-  InsurancePlanFacade,
-  StatusFlag,
-  HealthInsurancePlan,
-  DependentTypeCode,
   PriorityCode,
   InsuranceStatusType,
   VendorFacade,
-  ClientProfileTabs
+  ClientProfileTabs,
+  PaymentRequest
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
+import {  LovFacade, LovType } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -56,6 +47,11 @@ export class MedicalPaymentDetailComponent {
     caseSensitive: false,
     operator: 'startsWith',
   };
+
+  statusEndDateIsGreaterThanStartDate: boolean = true;
+  paymentRequest !: PaymentRequest;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
+
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -68,7 +64,6 @@ export class MedicalPaymentDetailComponent {
     private readonly snackbarService: NotificationSnackbarService,
     private readonly vendorFacade: VendorFacade,
     private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
-    private insurancePlanFacade: InsurancePlanFacade,
   ) {
     this.copayPaymentForm = this.formBuilder.group({});
   }
@@ -83,35 +78,6 @@ export class MedicalPaymentDetailComponent {
       this.loadServiceProviderName(InsuranceStatusType.dentalInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
     }
   }
-
-  // savePaymentDetailsClicked() {
-  //   this.copayPaymentForm.markAllAsTouched();
-  //   this.copayPaymentForm.controls['serviceProviderName'].setValidators([Validators.required,]);
-  //   this.copayPaymentForm.controls['paymentAmount'].setValidators([Validators.required,]);
-  //   this.copayPaymentForm.controls['type'].setValidators([Validators.required,]);
-  //   this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
-  //   this.copayPaymentForm.controls['serviceEndDate'].setValidators([Validators.required,]);
-  //   this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
-  //   this.copayPaymentForm.controls['serviceDescription'].setValidators([Validators.required,]);
-  //   this.copayPaymentForm.controls['comment'].setValidators([Validators.required,]);
-
-  //   this.copayPaymentForm.controls['serviceProviderName'].updateValueAndValidity();
-  //   this.copayPaymentForm.controls['paymentAmount'].updateValueAndValidity();
-  //   this.copayPaymentForm.controls['type'].updateValueAndValidity();
-  //   this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
-  //   this.copayPaymentForm.controls['serviceEndDate'].updateValueAndValidity();
-  //   this.copayPaymentForm.controls['entryDate'].updateValueAndValidity();
-  //   this.copayPaymentForm.controls['serviceDescription'].updateValueAndValidity();
-  //   this.copayPaymentForm.controls['comment'].updateValueAndValidity();
-
-
-  //   if (this.copayPaymentForm.valid) {
-  //     alert("success");
-  //     console.log("teaette", this.copayPaymentForm);
-  //   } else {
-  //     alert("fail")
-  //   }
-  // };
   resetForm() {
     this.copayPaymentForm.reset();
     this.copayPaymentForm.updateValueAndValidity();
@@ -122,7 +88,6 @@ export class MedicalPaymentDetailComponent {
   }
 
   public serviceProviderNameChange(value: string): void {
-    //this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     if(value){
       this.isInsurancePoliciesLoading=true;
       this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value,this.clientId,this.caseEligibilityId,(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY) ?  ClientProfileTabs.DENTAL_INSURANCE_STATUS: ClientProfileTabs.HEALTH_INSURANCE_STATUS  ).subscribe({
@@ -144,9 +109,9 @@ export class MedicalPaymentDetailComponent {
   }
 
   setCoPaymentForm() {
-    var date = new Date();
-    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    let date = new Date();
+    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     this.copayPaymentForm.controls['serviceStartDate'].setValue(firstDay);
     this.copayPaymentForm.controls['serviceEndDate'].setValue(lastDay);
     this.copayPaymentForm.controls['serviceTypeCode'].setValue('TPA');
@@ -175,22 +140,99 @@ export class MedicalPaymentDetailComponent {
   }
 
   savePaymentDetailsClicked() {
-    //this.validateForm();
-    //if (this.premiumPaymentForm.valid) {
-      //this.populatePaymentRequest();
-      let coPaymentData=this.copayPaymentForm.value;
-      coPaymentData["txtDate"]=new Date();
-      coPaymentData["clientId"] = this.clientId;
-      coPaymentData["clientCaseEligibilityId"] = this.caseEligibilityId;
+    this.validateForm();
+    if (this.copayPaymentForm.valid) {
+      this.populatePaymentRequest();
       this.insurancePolicyFacade.showLoader();
-      this.insurancePolicyFacade.savePaymentRequest(coPaymentData).subscribe({
+      this.insurancePolicyFacade.savePaymentRequest(this.paymentRequest).subscribe({
         next: () => {
+          this.insurancePolicyFacade.triggeredCoPaySaveSubject.next(true);
           this.insurancePolicyFacade.hideLoader();
         },
         error: (error: any) => {
           this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
         }
       })
-    //}
+    }
+  }
+
+  populatePaymentRequest() {
+    this.paymentRequest = new PaymentRequest()
+    this.paymentRequest.clientId = this.clientId;
+    this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;    
+    this.paymentRequest.vendorId = this.copayPaymentForm.controls['vendorId'].value;
+    this.paymentRequest.clientInsurancePolicyId = this.copayPaymentForm.controls['clientInsurancePolicyId'].value;
+    this.paymentRequest.serviceTypeCode = this.copayPaymentForm.controls['serviceTypeCode'].value;
+    this.paymentRequest.amountRequested = this.copayPaymentForm.controls['amountRequested'].value;
+    this.paymentRequest.paymentTypeCode = this.copayPaymentForm.controls['paymentTypeCode'].value;
+    this.paymentRequest.paymentRequestTypeCode = 'Expense'
+    this.paymentRequest.serviceStartDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
+    this.paymentRequest.serviceEndDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 
+    this.paymentRequest.comments = this.copayPaymentForm.controls['comments'].value;
+  }
+
+  validateForm(){
+    this.copayPaymentForm.markAllAsTouched();  
+    this.copayPaymentForm.controls['vendorId'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['clientInsurancePolicyId'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['serviceDescription'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['serviceTypeCode'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['amountRequested'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['comments'].setValidators([Validators.required,]);
+
+    this.copayPaymentForm.controls['vendorId'].updateValueAndValidity();
+    this.copayPaymentForm.controls['clientInsurancePolicyId'].updateValueAndValidity();
+    this.copayPaymentForm.controls['serviceDescription'].updateValueAndValidity();
+    this.copayPaymentForm.controls['serviceTypeCode'].updateValueAndValidity();
+    this.copayPaymentForm.controls['amountRequested'].updateValueAndValidity();
+    this.copayPaymentForm.controls['paymentTypeCode'].updateValueAndValidity();
+    this.copayPaymentForm.controls['serviceDescription'].updateValueAndValidity();
+    this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
+    this.copayPaymentForm.controls['entryDate'].updateValueAndValidity();
+    this.copayPaymentForm.controls['comments'].updateValueAndValidity();
+  }
+
+  endDateValueChange(date: Date) {
+    this.statusEndDateIsGreaterThanStartDate = false;
+
+  }
+  startDateOnChange() {
+    if (this.copayPaymentForm.controls['serviceEndDate'].value !== null) {
+      this.endDateOnChange();
+    }
+  }
+  endDateOnChange() {
+    this.statusEndDateIsGreaterThanStartDate = true;
+    if (this.copayPaymentForm.controls['serviceStartDate'].value === null) {
+      this.copayPaymentForm.controls['serviceStartDate'].markAllAsTouched();
+      this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required]);
+      this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
+      
+      this.statusEndDateIsGreaterThanStartDate = false;
+    }
+    else if (this.copayPaymentForm.controls['serviceEndDate'].value !== null) {
+      const startDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.copayPaymentForm.controls['serviceStartDate'].value
+        )
+      );
+      const endDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.copayPaymentForm.controls['serviceEndDate'].value
+        )
+      );
+
+      if (startDate > endDate) {
+        this.copayPaymentForm.controls['serviceEndDate'].setErrors({ 'incorrect': true });
+        this.statusEndDateIsGreaterThanStartDate = false;
+      }
+      else {
+        this.statusEndDateIsGreaterThanStartDate = true;
+        this.copayPaymentForm.controls['serviceEndDate'].setErrors(null);
+      }
+    }
   }
 }

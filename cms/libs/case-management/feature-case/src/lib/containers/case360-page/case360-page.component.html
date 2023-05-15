@@ -98,8 +98,8 @@
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_STATUS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS }"
           *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>Insurance Status</button>
-        <button kendoButton (click)="onTabSelect(clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS)"
-          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS }"
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS }"
           *ifPermission='["Client_Profile_Dental_Premium_Payments_Tab_View_Only"]'>Premium Payments</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_COPAY)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_COPAY }"

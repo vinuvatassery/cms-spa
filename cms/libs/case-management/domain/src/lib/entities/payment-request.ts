@@ -2,14 +2,16 @@ export class PaymentRequest {
     paymentRequestId : string | null = null;
     clientId: number = 0;
     clientCaseEligibilityId : string | null = null;
+    clientInsurancePolicyId : string | null = null;
     batchId : string | null = null;
     vendorId : string | null = null;
     vendorAddressId : string | null = null;
     vendorCheckRequestId : string | null = null;
-    serviceStartDate :Date | null = null;
-    serviceEndDate :Date | null = null;
+    serviceStartDate :string | null = null;
+    serviceEndDate :string | null = null;
     scheduleDate :Date | null = null;
     paymentTypeCode : string | null = null;
+    reversalTypeCode : string | null = null;
     paymentRequestTypeCode : string | null = null;
     cptCode : string | null = null;
     pcaCode : string | null = null;
@@ -36,5 +38,6 @@ export class PaymentRequest {
     legacyPaymentRequestId: string | null = null;
     legacyFlag : string | null = null;
     vendorName : string | null = null;
+    comments:  string | null = null;
     creatorId : string | null = null;
 }

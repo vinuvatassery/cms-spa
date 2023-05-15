@@ -28,6 +28,8 @@ export class HealthInsurancePolicyFacade {
     []
   );
   private premiumPaymentsSubject = new BehaviorSubject<any>([]);
+  triggeredPremiumPaymentSaveSubject = new BehaviorSubject<boolean>(false);
+  triggeredCoPaySaveSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
@@ -46,6 +48,8 @@ export class HealthInsurancePolicyFacade {
   ddlMedicalHealthPalnPremiumFrequecy$ =
   this.ddlMedicalHealthPalnPremiumFrequecySubject.asObservable();
   premiumPayments$ = this.premiumPaymentsSubject.asObservable();
+  triggeredPremiumPaymentSave$ = this.triggeredPremiumPaymentSaveSubject.asObservable();
+  triggeredCoPaySave$ = this.triggeredCoPaySaveSubject.asObservable();
 
   public dateFields: Array<string> = [
     'startDate',
