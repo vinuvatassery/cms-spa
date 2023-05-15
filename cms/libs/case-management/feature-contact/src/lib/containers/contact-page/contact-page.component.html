@@ -434,7 +434,7 @@
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
-            <kendo-fileselect 
+            <!-- <kendo-fileselect 
             aria-label="proof of home address"  
             name="upload proof"
             [disabled]="isNoProofOfHomeChecked"
@@ -456,7 +456,15 @@
                 <span>{{   files[0].size  | fileSize  }}</span> 
               </span>
             </ng-template>
-          </kendo-fileselect>
+          </kendo-fileselect> -->
+          <common-document-upload
+          [typeCode]="'HOME_ADDRESS_PROOF'"
+          [isDisabled]="isNoProofOfHomeChecked"
+          [file]="homeAddressProofFile"
+          (handleFileSelectEvent)="handleFileSelected($event)"
+          (handleFileRemoveEvent)="handleFileRemoved($event)"
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          </common-document-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint> 
           <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of Home Address is required
           </kendo-formerror>

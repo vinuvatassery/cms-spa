@@ -42,6 +42,8 @@ export class UploadProofDocumentComponent implements OnInit {
   tareaUploadNotesharactersCount!: number;
   tareaUploadNotesCounter!: string;
   tareaUploadNote = '';
+  documentTypeCode!: any;
+  selectedTypeCode!: any;
   /** Constructor**/
 
   constructor(private readonly router: Router,
@@ -85,6 +87,7 @@ export class UploadProofDocumentComponent implements OnInit {
   }
 
   private populateModel(){
+    debugger;
     if(!this.isEdit){
       let saveDocument : Document  = {
         clientId: this.clientId,
@@ -94,7 +97,7 @@ export class UploadProofDocumentComponent implements OnInit {
         documentName: this.copyOfUploadedFiles[0].name,       
         documentSize: this.copyOfUploadedFiles[0].size ,
         clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
-        documentTypeCode: this.uploadform.controls['attachmentType'].value        
+        documentTypeCode: this.documentTypeCode ?? this.selectedTypeCode      
       };
       this.documentFacade.saveDocument(saveDocument);
       this.btnDisabled = false;
@@ -114,7 +117,7 @@ export class UploadProofDocumentComponent implements OnInit {
         documentName: this.copyOfUploadedFiles[0].name,       
         documentSize: this.copyOfUploadedFiles[0].size ,
         clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
-        documentTypeCode: this.uploadform.controls['attachmentType'].value        
+        documentTypeCode: this.documentTypeCode ?? this.selectedTypeCode       
       };
       this.documentFacade.updateDocument(updateDocument);
       this.btnDisabled = false;
@@ -150,6 +153,8 @@ export class UploadProofDocumentComponent implements OnInit {
   private bindValues(document:Document){  
     this.clientDocumentId = document.clientDocumentId;    
     this.uploadform.controls['attachmentType'].setValue(document.documentTypeCode);
+    this.selectedTypeCode = document.documentTypeCode;
+    this.documentTypeCode = document.documentTypeCode;
     this.documentName = document.documentName;
     this.uploadform.controls['clientDocumentDescription'].setValue(document.clientDocumentDescription);
     this.tareaUploadNote = this.uploadform.controls['clientDocumentDescription'].value;
@@ -172,8 +177,10 @@ export class UploadProofDocumentComponent implements OnInit {
   }
 
   SubmitForm() {
-    this.validateForm();
-    if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {      
+    debugger;
+    //this.validateForm();
+    //if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {  
+      if (this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {       
       this.btnDisabled = true;
       if(!this.isEdit){
         this.clientDocumentId = '';
@@ -183,6 +190,7 @@ export class UploadProofDocumentComponent implements OnInit {
   } 
 
   handleFileSelected(event: any) {
+    debugger;
     this.copyOfUploadedFiles = null;
     this.uploadedFileExceedsFileSizeLimit = false;
     this.copyOfUploadedFiles = [{
@@ -203,7 +211,11 @@ export class UploadProofDocumentComponent implements OnInit {
       this.isFileUploaded = false;
       this.uploadedFileExceedsFileSizeLimit = false; 
   } 
-
+  handleTypeCodeEvent(e:any)
+  {
+    debugger;
+    this.documentTypeCode = e;
+  }
   OnNoteValueChange(event: any): void{
     this.tareaUploadNotesharactersCount = event.length;
     this.tareaUploadNotesCounter = `${this.tareaUploadNotesharactersCount}/${this.tareaNotesMaxLength}`;

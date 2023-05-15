@@ -290,20 +290,24 @@ export class IncomeDetailComponent implements OnInit {
     this.closePopup.emit(this.isIncomeDetailsPopupOpen);
   }
 
-  handleFileSelected(event: any) {
+  handleFileSelected(event: any,fileType : string) {
     this.proofOfIncomeFiles = null;
     this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
     this.proofOfIncomeValidator = false;
-    this.documentTypeCode="PROOF_OF_INCOME";
    if(this.proofOfIncomeFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
    {
     this.proofOfIncomeValidatorSize=true;
    }
   }
 
-  handleFileRemoved(event: any) {
+  handleFileRemoved(event: any, fileType: string) {
     this.proofOfIncomeFiles = null;
+    this.documentTypeCode='';
+  }
+  handleTypeCodeEvent(e:any)
+  {
+    this.documentTypeCode=e;
   }
 
   // checking the validation

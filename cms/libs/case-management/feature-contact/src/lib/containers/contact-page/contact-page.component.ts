@@ -1464,12 +1464,17 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.closeValidationPopup(type);
     }
   }
+  handleTypeCodeEvent(e:any)
+  {
+    this.documentTypeCode=e;
+  }
+  
   handleFileSelected(e: SelectEvent) {
+    
     this.homeAddressProofFile = undefined;
     this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
     this.showAddressProofRequiredValidation = false;
-    this.documentTypeCode="HOME_ADDRESS_PROOF";
     this.showAddressProofSizeValidation = (this.uploadedHomeAddressProof?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     this.updateHomeAddressProofCount(true);
   }

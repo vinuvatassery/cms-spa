@@ -71,7 +71,9 @@ export class LovFacade {
   private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
   private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
   private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
-  
+  private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+  private documentSubTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -118,6 +120,8 @@ export class LovFacade {
   disenrollmentReason$ = this.disenrollmentReasonSubject.asObservable();
   disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
   attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
+  documentTypeCodeSubject$ = this.documentTypeCodeSubject.asObservable();
+  documentSubTypeCodeSubject$ = this.documentSubTypeCodeSubject.asObservable();
 
 
 
@@ -593,6 +597,19 @@ getEligibilityStatusCpLovs(): void {
       this.showLoaderOnEligibilityStatusCpSubject.next(false);
     },
   });
+}
+getDocumentTypeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.DocumentTypeCode).subscribe({
+    next: (lovResponse) => {
+      this.documentTypeCodeSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getDocumentSubTypeLovs(parentCode : string) {
+  return this.lovDataService.getLovsbyParent(LovType.DocumentSubTypeCode, parentCode)
 }
 
 }

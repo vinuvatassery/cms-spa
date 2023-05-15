@@ -1315,7 +1315,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         uid: ''
       }];
       this.isProofFileUploaded = true;
-      this.documentTypeCode ="PROOF_OF_PREMIUM";
       if (this.proofOfPremiumFiles[0].size > this.uploadFileSizeLimit) {
         this.handleFileRemoved(this.proofOfPremiumFiles, 'proof');
         this.proofOfPremiumExceedsFileSizeLimit = true;
@@ -1331,7 +1330,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         uid: ''
       }];
       this.isSummaryFileUploaded = true;
-      this.documentTypeCode ="COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE";
       if (this.copyOfSummaryFiles[0].size > this.uploadFileSizeLimit) {
         this.handleFileRemoved(this.copyOfInsuranceCardFiles, 'summary');
         this.summaryFilesExceedsFileSizeLimit = true;
@@ -1347,7 +1345,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         uid: ''
       }];
       this.isInsuranceFileUploaded = true;
-      this.documentTypeCode ="COPY_OF_INSURANCE_CARD";
       if (this.copyOfInsuranceCardFiles[0].size > this.uploadFileSizeLimit) {
         this.handleFileRemoved(this.copyOfInsuranceCardFiles, 'copyInsurance');
         this.insuranceCardFilesExceedsFileSizeLimit = true;
@@ -1363,7 +1360,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         uid: ''
       }];
       this.isMedicareCardFileUploaded = true;
-      this.documentTypeCode ="COPY_OF_MEDICARE_CARD";
       if (this.copyOfMedicareCardFiles[0].size > this.uploadFileSizeLimit) {
         this.handleFileRemoved(this.copyOfMedicareCardFiles, 'medicareCard');
         this.medicareCardFilesExceedsFileSizeLimit = true;
@@ -1405,6 +1401,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.isMedicareCardFileUploaded = false;
       }
     }
+  }
+  handleTypeCodeEvent(e:any)
+  {
+    this.documentTypeCode=e;
   }
 
   private onFileRemove(fileType: string) {
