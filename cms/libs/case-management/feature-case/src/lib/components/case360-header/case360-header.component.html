@@ -69,7 +69,7 @@
       >
       <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}%</span>
 
-      <span 
+      <span *ngIf="loadedClientHeader?.clientCaseEligibilityCerId"
       class="title-client-info c-pointer on-hover-t-primary"
       title="Open Client Eligibility Review"
       (click)="createCerSession()"
