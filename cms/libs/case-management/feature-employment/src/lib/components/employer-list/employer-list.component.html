@@ -105,7 +105,7 @@
     <!-- add employer button -->
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button *ngIf="isAddEmployerButtonDisplayed" kendoButton [primary]="true" icon="add" aria-label="add employer"
+        <button *ngIf="enableAddButton" kendoButton [primary]="true" icon="add" aria-label="add employer"
           (click)="onEmployerClicked(true)" [disabled]="(isReadOnly$ | async) ? true : false">
           Employer
         </button>
