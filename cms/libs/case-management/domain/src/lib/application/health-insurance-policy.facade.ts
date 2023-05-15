@@ -147,8 +147,8 @@ export class HealthInsurancePolicyFacade {
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
     return this.healthInsurancePolicyService.deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId);
   }
-  deleteInsurancePolicy(insurancePolicyId: any) {
-    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
+  deleteInsurancePolicy(insurancePolicyId: any, endDate? : Date , isCerForm = false) {
+    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId , endDate , isCerForm);
   }
   copyInsurancePolicy(insurancePolicyId: any) {
     return this.healthInsurancePolicyService.copyInsurancePolicy(insurancePolicyId);

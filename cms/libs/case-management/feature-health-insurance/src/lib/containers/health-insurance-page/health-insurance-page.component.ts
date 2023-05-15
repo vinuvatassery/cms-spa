@@ -406,6 +406,32 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   }
 
+  removeInsurancePolicy(value: any) {
+    if (value?.currentInsurancePolicyId != undefined) {
+      this.ShowLoader();
+      this.closeDeleteModal = false;
+      this.insurancePolicyFacade.deleteInsurancePolicy(value?.currentInsurancePolicyId ,value?.endDate, this.isCerForm).subscribe({
+        next: () => {
+          this.closeDeleteModal = true;
+          const gridDataRefinerValue = {
+            skipCount: this.insurancePolicyFacade.skipCount,
+            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            sortColumn: 'creationTime',
+            sortType: 'asc',
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy removed successfully");
+          this.HideLoader();
+          this.ref.detectChanges();
+        },
+        error: (error: any) => {
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+      })
+    }
+
+  }
+
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       if (this.checkValidations()) {

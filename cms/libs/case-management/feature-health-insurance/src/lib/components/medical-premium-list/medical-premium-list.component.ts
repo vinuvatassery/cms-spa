@@ -25,6 +25,7 @@ export class MedicalPremiumListComponent implements OnInit {
   isOpenedChangePriorityModal = false;
   isOpenedDeleteConfirm = false;
   isEdit!: boolean;
+  isOpenedRemoveConfirm = false;
   dialogTitle!: string;
   insuranceType!: string;
   columnOptionDisabled = false;
@@ -50,6 +51,7 @@ export class MedicalPremiumListComponent implements OnInit {
 
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
+  @Output() removeInsurancePlan = new EventEmitter<any>();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -70,15 +72,14 @@ export class MedicalPremiumListComponent implements OnInit {
     },
     {
       buttonType: "btn-h-danger",
-      text: "Delete Insurance",
+      text:  "Delete Insurance",
       icon: "delete",
       type: "Delete",
+      btnName : "delete",
       click: (): void => {
         this.onDeleteConfirmOpenClicked()
       },
-    },
-
-
+    } 
 
   ];
 
@@ -104,6 +105,7 @@ export class MedicalPremiumListComponent implements OnInit {
     if (this.closeDeleteModal) {
       this.onDeleteConfirmCloseClicked();
       this.handleHealthInsuranceCloseClicked();
+      this.onRemoveCloseClicked();
     }
     this.loadHealthInsurancePlans();
   }
@@ -140,7 +142,36 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   onDeleteConfirmOpenClicked() {
-    this.isOpenedDeleteConfirm = true;
+    if(this.isCerForm)
+    {
+      this.isOpenedRemoveConfirm = true;
+    }
+    else
+    {
+      this.isOpenedDeleteConfirm = true;
+    }
+  }
+
+  onRemoveConfirmCloseClicked(value : any) {    
+    if(value?.confirm === true)
+    {
+    this.isOpenedRemoveConfirm = false;
+      if(value?.endDate)
+      {
+          value.currentInsurancePolicyId =this.currentInsurancePolicyId
+          this.removeInsurancePlan.emit(value)
+      }
+    }
+    else  if(value?.confirm === false)
+    {
+    this.isOpenedRemoveConfirm = true;
+    }
+  }
+  onRemoveCloseClicked() {
+    this.isOpenedRemoveConfirm = false;
+  }
+  onRemoveConfirmOpenClicked() {
+    this.isOpenedRemoveConfirm = true;
   }
 
   /** External event methods **/

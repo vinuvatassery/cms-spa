@@ -49,8 +49,14 @@ export class HealthInsurancePolicyDataService {
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
   }
-  deleteInsurancePolicy(insurancePolicyId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
+  deleteInsurancePolicy(insurancePolicyId:any , endDate? : Date , isCerForm = false){
+    const options = {
+      body: {
+        endDate: endDate,
+        isCerForm : isCerForm
+      }
+    }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`,options);
   }
   copyInsurancePolicy(insurancePolicyId:any){
     return this.http.post(

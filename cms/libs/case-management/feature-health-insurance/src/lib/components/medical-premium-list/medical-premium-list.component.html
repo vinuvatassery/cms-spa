@@ -91,7 +91,7 @@
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
                   aria-hidden="false" (click)="handleOptionClick(dataItem,buttondataItem.type)">
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                  <label> {{ buttondataItem.text }} </label>
+                  <label> {{ buttondataItem.btnName === 'delete' && isCerForm === true ? 'Remove Insurance' : buttondataItem.text }} </label>
                 </button>
               </ng-template>
             </kendo-dropdownbutton>
@@ -192,4 +192,14 @@
       </div>
     </div>
   </kendo-dialog-actions>
+</kendo-dialog>
+
+
+<!-- Change Priority Modal -->
+<kendo-dialog *ngIf="isOpenedRemoveConfirm" (close)="onRemoveCloseClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
+  
+  <case-management-deactivate-premium-confirmation  
+   (deactivateConfimEvent)="onRemoveConfirmCloseClicked($event)">
+  </case-management-deactivate-premium-confirmation>
 </kendo-dialog>
