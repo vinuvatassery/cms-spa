@@ -1,7 +1,21 @@
 /** Angular **/
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-const routes: Routes = [];
+import { SendLetterPageComponent } from './containers/send-letter-page/send-letter-page.component';
+const routes: Routes = [  
+  {
+    path: 'disenroll',
+    component: SendLetterPageComponent,
+    data: {
+      title: 'Send Disenrollment Letter',
+    },
+  },
+  {
+    path: '',
+    redirectTo: 'eligibility',
+    pathMatch: 'full',
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

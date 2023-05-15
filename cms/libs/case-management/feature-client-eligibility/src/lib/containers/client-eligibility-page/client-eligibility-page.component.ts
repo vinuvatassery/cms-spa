@@ -15,7 +15,7 @@ import {
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { CompletionChecklist, ReviewQuestionResponseFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { ClientNoteTypeCode, CompletionChecklist, ReviewQuestionResponseFacade, SmokingCessationFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-client-eligibility-page',
@@ -30,6 +30,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
   savedAnswersList: any = [];
   questoinsResponse: any = [];
   acceptedApplicationStatus = true;
+  cerNote! : any
   /** Constructor **/
   constructor(
     private readonly workflowFacade: WorkflowFacade,
@@ -38,7 +39,8 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     private readonly ref: ChangeDetectorRef,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private readonly loggingService: LoggingService
+    private readonly loggingService: LoggingService,
+    private readonly smokingCessationFacade : SmokingCessationFacade    
   ) { }
 
   /** Lifecycle Hooks **/
@@ -105,7 +107,10 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     this.questoinsResponse = value;
     this.createWorkflowChecklist(value);
   }
-
+  cerNoteResponse(value : any)
+  {
+     this.cerNote = value;
+  }
   private save() {
     this.formSubmited = true; 
     this.ref.detectChanges();
@@ -126,7 +131,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     if (isAllQuestionsAnswered) {
       this.formSubmited = false;
       this.loaderService.show();
-      this.saveAndUpdate(questions).subscribe({
+      this.saveAndUpdate(questions, this.cerNote).subscribe({
         next: (data: any) => {
           if (data?.length > 0) {
             data.forEach((el: any) => {
@@ -149,7 +154,23 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
     });
     }
   }
-  saveAndUpdate(questoinsResponse: any) {
+  saveAndUpdate(questoinsResponse: any, clientNote : any) {  
+   
+    this.loaderService.show();
+    if(this.cerNote)
+    {
+       this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
+         next: (x:any) =>{
+           
+           this.loaderService.hide();       
+         },
+         error: (error:any) =>{
+           this.loaderService.hide();
+           this.loggingService.logException(error);
+         }
+       });
+   }
+
     if (questoinsResponse.some((m: any) => m.reviewQuestionResponseId !== undefined)) {
 
       return this.reviewQuestionResponseFacade.updateReviewQuestionResponse(questoinsResponse);

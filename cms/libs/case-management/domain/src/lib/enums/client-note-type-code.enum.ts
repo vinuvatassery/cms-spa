@@ -1,5 +1,6 @@
 export enum ClientNoteTypeCode {
     smokingCessationReferral = "SMOKING_CESSATION_REFERRAL",
     smokingCessation = "SMOKING_CESSATION",
-    specialHandling = "SPECIAL_HANDLING"
+    specialHandling = "SPECIAL_HANDLING",
+    cerEligibility="CER_ELIGIBILITY"
 }
