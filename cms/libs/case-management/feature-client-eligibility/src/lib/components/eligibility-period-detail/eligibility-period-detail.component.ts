@@ -211,7 +211,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   /** Private methods **/
   private getCurrentEligibility(){
     this.loaderService.show();
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,((this.isEdit || this.isStatusPeriodEdit) ? EligibilityRequestType.clientEligibilityInfo :EligibilityRequestType.acceptedEligibility)).subscribe(data=>{
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,((this.isEdit || this.isStatusPeriodEdit) ? EligibilityRequestType.clientEligibilityInfo : this.isCopyPeriod? EligibilityRequestType.copyEligibility :EligibilityRequestType.acceptedEligibility)).subscribe(data=>{
       this.currentEligibility = data;
       this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
       debugger;
@@ -278,6 +278,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   private setStartDateEndDateByStatus(status:string)
   {
+    debugger;
     let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);
     let dayFromDate = this.getDay(this.addDays(new Date(this.currentEligibility.eligibilityEndDate), 1), 'en-US', this.dayOptions);
     this.eligibilityPeriodForm.controls['statusStartDate'].reset();
@@ -448,7 +449,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(currentEligibility.eligibilityEndDate));
       this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
     }
-    if(this.isStatusPeriodEdit || this.isCopyPeriod){
+    if(this.isStatusPeriodEdit){
       this.eligibilityPeriodForm.controls['eligibilityStatus'].setValue(currentEligibility.status);
       this.eligibilityPeriodForm.controls['group'].setValue(currentEligibility.groupCode);
       this.eligibilityPeriodForm.controls['group'].updateValueAndValidity()
@@ -460,6 +461,9 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     else if(this.isCopyPeriod)
     {
       this.eligibilityPeriodForm.controls['eligibilityStatus'].setValue(currentEligibility.eligibilityStatusCode);
+      this.setStartDateEndDateByStatus(this.eligibilityPeriodForm.controls['eligibilityStatus'].value);
+      this.eligibilityPeriodForm.controls['group'].setValue(currentEligibility.groupCode);
+      this.eligibilityPeriodForm.controls['group'].updateValueAndValidity();
     }
   }
 
