@@ -32,7 +32,8 @@
 <div class="app-c-table">
   <kendo-grid [data]="gridCERData$ | async" [pageSize]="state.take" [pageable]="true" [sortable]="true"
     [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader"   
+    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader" 
+    (filterChange)="filterChange($event)"  
     (columnReorder)="onColumnReorder($event)" (columnVisibilityChange)="columnChange($event)" [filter]="state.filter">  
   
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="130" [sticky]="true">
