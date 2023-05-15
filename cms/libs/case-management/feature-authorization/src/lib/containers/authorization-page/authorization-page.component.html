@@ -1,5 +1,7 @@
-<case-management-authorization></case-management-authorization>
-
+<common-bread-crumb></common-bread-crumb>
+<case-management-authorization
+  (cerDateSignatureEvent)="loadDateSignature($event)"
+></case-management-authorization>
 <!-- Application Review -->
 <div class="client-data-block mt-4">
   <h3>{{isCerForm ?'Eligibility Review' : 'Application Review'}}</h3>

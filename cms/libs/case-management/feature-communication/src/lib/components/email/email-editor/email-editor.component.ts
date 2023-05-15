@@ -13,6 +13,10 @@ import {
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+
+/** External Libraries **/
+import { LoaderService } from '@cms/shared/util-core';
+
 @Component({
   selector: 'case-management-email-editor',
   templateUrl: './email-editor.component.html',
@@ -22,25 +26,29 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class EmailEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
-
+  @Input() loadInitialData = new EventEmitter();
+  @Input() editorValue!: any;
   /** Output properties  **/
-  @Output() editorValue = new EventEmitter<any>();
+  // @Output() editorValue = new EventEmitter<any>();
 
   /** Public properties **/
   @ViewChild('anchor') public anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
-  clientVariables$ = this.communicationFacade.clientVariables$;
+  // clientVariables$ = this.communicationFacade.clientVariables$;
   ddlEditorVariables$ = this.communicationFacade.ddlEditorVariables$;
   emailEditorvalue!: any;
   isSearchOpened = true;
   isShowPopupClicked = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
+  clientVariables!: any;
   /** Constructor **/
-  constructor(private readonly communicationFacade: CommunicationFacade) {}
+  constructor(private readonly communicationFacade: CommunicationFacade,
+    private readonly loaderService: LoaderService,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.dataEventSubscribed();
+    this.emailEditorValueEvent(this.editorValue);
     this.loadClientVariables();
     this.loadDdlEditorVariables();
   }
@@ -59,8 +67,21 @@ export class EmailEditorComponent implements OnInit {
     });
   }
 
+  // private loadClientVariables() {
+  //   this.communicationFacade.loadClientVariables();
+  //   this.communicationFacade.loadCERAuthorizationEmailEditVariables();
+  // }
+
   private loadClientVariables() {
-    this.communicationFacade.loadClientVariables();
+    //this.communicationFacade.loadClientVariables();
+    this.loaderService.show();
+    this.communicationFacade.loadCERAuthorizationEmailEditVariables()
+        .subscribe((variables: any) => {
+          if (variables) {
+            this.clientVariables = variables; 
+          }
+          this.loaderService.hide();
+        });
   }
 
   private loadDdlEditorVariables() {
@@ -95,5 +116,13 @@ export class EmailEditorComponent implements OnInit {
 
   onSearchClosed() {
     this.isSearchOpened = false;
+  }
+
+  emailEditorValueEvent(emailData:any){
+    this.emailEditorvalue = emailData.templateContent;
+  }
+
+  searchVariable(event: any){
+console.log(event);
   }
 }

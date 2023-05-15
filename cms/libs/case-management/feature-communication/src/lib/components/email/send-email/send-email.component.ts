@@ -13,6 +13,9 @@ import { CommunicationEvents, CommunicationFacade } from '@cms/case-management/d
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+/** External Libraries **/
+import { LoaderService } from '@cms/shared/util-core';
+
 @Component({
   selector: 'case-management-send-email',
   templateUrl: './send-email.component.html',
@@ -27,9 +30,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
   @Output() loadInitialData = new EventEmitter();
+  @Output() cerEmailContentEvent = new EventEmitter<any>(); 
+  @Output() emailEditorValueEvent = new EventEmitter<any>();
+  @Output() editorValue = new EventEmitter<any>();
 
   /** Public properties **/
-  emailEditorValueEvent = new EventEmitter<any>();
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any = [];
   emailContentValue: any;
@@ -42,30 +47,36 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   emailSubscription$ = new Subscription();
   formUiStyle: UIFormStyle = new UIFormStyle();
   isClearEmails=false;
+  selectedTemplate!: string;
+  templateData:any = [];
+  templateName: any = [];
+  currentEmailData:any;
 
   /** Constructor **/
-  constructor(private readonly communicationFacade: CommunicationFacade) { }
+  constructor(private readonly communicationFacade: CommunicationFacade,
+    private readonly loaderService: LoaderService,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.updateOpenSendEmailFlag();
-    this.loadDdlLetterTemplates();
+    //this.loadDdlLetterTemplates();
     this.loadDdlEmails();
-    this.addEmailSubscription();
+    this.loadEmailTemplates();
+    //this.addEmailSubscription();
   }
 
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
   }
   /** Private methods **/
-  private addEmailSubscription() {
-    this.emailSubscription$ = this.ddlEmails$.subscribe(() => {
-      if(!this.isClearEmails){
-        this.isShowToEmailLoader$.next(false);
-      }
-      this.isClearEmails =false;
-    });
-  }
+  // private addEmailSubscription() {
+  //   this.emailSubscription$ = this.ddlEmails$.subscribe(() => {
+  //     if(!this.isClearEmails){
+  //       this.isShowToEmailLoader$.next(false);
+  //     }
+  //     this.isClearEmails =false;
+  //   });
+  // }
 
   private updateOpenSendEmailFlag() {
     if (this.data) {
@@ -87,6 +98,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         console.log('err', err);
       },
     });
+  }
+
+  private loadEmailTemplates() {
+    this.loaderService.show();
+    this.communicationFacade.loadEmailTemplates(this.selectedTemplate ?? '')
+        .subscribe((data: any) => {
+          if (data) {
+            this.templateData = data
+            this.ddlTemplates = data;
+          }
+          this.loaderService.hide();
+        });
   }
 
   private loadDdlEmails() {
@@ -137,14 +160,19 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   /** External event methods **/
-  handleDdlEmailValueChange() {
+  handleDdlEmailValueChange(event: any) {
     this.isClearEmails =true;
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
-    this.loadInitialData.emit();
+    this.selectedTemplate = event;
+    this.editorValue.emit(event);
+    this.emailContentValue = event.templateContent;
+    this.handleEmailEditor(event);
   }
 
-  handleEmailEditor(event: any) {
-    this.emailContentValue = event;
+  handleEmailEditor(emailData: any) {
+    // this.editorValue.emit(emailData);
+    this.currentEmailData = emailData;
+    this.editorValue.emit(emailData);
   }
 }

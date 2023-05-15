@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'case-management-authorization-page',
@@ -7,6 +7,22 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorizationPageComponent {
-  btnDisabled = false; 
+  btnDisabled = true; 
   isCerForm = false;
+  dateSignature?:any;
+  @Input() cerDateSignatureEvent =  new EventEmitter();
+
+
+ngOnInit(): void 
+{
+}
+
+loadDateSignature(event : Date){
+  this.dateSignature = event;
+  if(this.dateSignature != null){
+    this.btnDisabled = false;
+  }else{
+    this.btnDisabled = true;
+  }
+}
 }

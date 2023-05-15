@@ -14,9 +14,9 @@
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlTemplates"
-            textField="value"
+            textField="templateDescription"
             valueField="key"
-            (valueChange)="handleDdlEmailValueChange()"
+            (valueChange)="handleDdlEmailValueChange($event)"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -57,8 +57,9 @@
         </div>
         <div class="flex-col  ">
           <case-management-email-editor
-            [dataEvent]="emailEditorValueEvent"
-            (editorValue)="handleEmailEditor($event)"
+          [dataEvent]="emailEditorValueEvent"
+          [editorValue]="currentEmailData"
+          (editorValue)="handleEmailEditor($event)"
             class="editor-lg-email"
           ></case-management-email-editor>
         </div>

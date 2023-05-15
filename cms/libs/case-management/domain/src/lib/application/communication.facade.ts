@@ -81,4 +81,14 @@ export class CommunicationFacade {
       },
     });
   }
+
+  loadEmailTemplates(selectedTemplate: string) {
+    return this.emailDataService.loadEmailTemplates(
+      selectedTemplate
+    );
+  }
+
+  loadCERAuthorizationEmailEditVariables() {
+    return this.emailDataService.loadCERAuthorizationEmailVariables();
+  }
 }
