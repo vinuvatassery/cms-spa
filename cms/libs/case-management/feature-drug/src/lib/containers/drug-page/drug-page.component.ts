@@ -35,7 +35,6 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   clientId: any;
   clientCaseId: any;
   nonPreferredFlagValidation = false;
-  isClientNotUsingAnyPharmacy = false;
   prescriptionInfo = {} as PrescriptionDrug;
   isPharmacyAdded = false;
   showPharmacyRequiredValidation$ = new BehaviorSubject(false);
@@ -308,7 +307,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isCerText=true;
         }else {
           this.isCerText=false;
-          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(true);
           this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
         this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.enable();
         }
