@@ -69,15 +69,25 @@
     <div class="flex-col">
       <p class="text-bold">Assigned Case Worker</p>
       <button
-        aria-label="assigned case worker"
-        kendoButton
-        class="k-primary-link text-t-normal text-underline"
-        kendoPopoverAnchor
-        [popover]="userCard"
-        showOn="hover"
-      >
-      {{clientEligibilityInfo.caseManagerName}}
-      </button>
+            kendoButton
+            [primary]="true"
+            class="avatar-sm-btn c-default"
+            kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered"
+            showOn="hover"
+            aria-label="profile avathar"
+          >
+          <common-user-photo-icon  [userId]="clientEligibilityInfo.caseManagerId"></common-user-photo-icon>
+          </button>
+          <kendo-popover
+            #onUserProfileDetailsHovered
+            width="330"
+            position="right"
+          >
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card [userId]="clientEligibilityInfo.caseManagerId"></common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
     </div>
   </div>
 </div>

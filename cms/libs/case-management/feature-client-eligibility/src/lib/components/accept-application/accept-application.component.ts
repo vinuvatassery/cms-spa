@@ -199,7 +199,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
       {
         const startdate = new Date(this.eligibilityForm.controls['eligibilityStartDate'].value);
         let today = this.getDay(startdate, 'en-US', this.dayOptions);
-        let enddate = startdate.setMonth(startdate.getMonth() + 6);
+        let enddate = startdate.setMonth(startdate.getMonth() + 3);
         let endDateValue = new Date(enddate);
         if (today == "1")
         {

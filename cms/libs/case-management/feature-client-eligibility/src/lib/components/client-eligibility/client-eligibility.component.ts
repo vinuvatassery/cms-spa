@@ -44,7 +44,6 @@ export class ClientEligibilityComponent implements OnInit {
   sessionId: any = "";
   clientId: any;
   clientCaseEligibilityId: string = "";
-  prevClientCaseEligibilityId: string = "";
   clientCaseId: any;
   eligibility: any;
   incomDocuments: any = [];
