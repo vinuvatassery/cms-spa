@@ -85,6 +85,7 @@
           <case-management-medical-premium-list [healthInsuranceForm]="healthInsuranceForm"
             [caseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"
             [triggerPriorityPopup$]="triggerPriorityPopup$" [closeDeleteModal]="closeDeleteModal"
+            [isCerForm]="isCerForm"
             (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
             (deleteInsurancePlan)="delteInsurancePolicy($event)">
           </case-management-medical-premium-list>

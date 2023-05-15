@@ -39,7 +39,6 @@ export class MedicalPremiumListComponent implements OnInit {
   carrierContactInfo:any;
   insurancePlanName:string='';
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  isCerForm = false;
   showInsuranceRequired = this.healthInsurancePolicyFacade.showInsuranceRequired$;
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
@@ -47,6 +46,7 @@ export class MedicalPremiumListComponent implements OnInit {
   @Input() caseEligibilityId: any;
   @Input() clientId:any;
   @Input() triggerPriorityPopup$!: Observable<boolean>;
+  @Input() isCerForm: boolean = false;
 
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
@@ -168,6 +168,10 @@ export class MedicalPremiumListComponent implements OnInit {
       case 'add':
         this.dialogTitle = 'Add';
         this.isEdit = false;
+        break;
+      case 'review':
+        this.dialogTitle = 'Review';
+        this.isEdit = true;
         break;
     }
   }

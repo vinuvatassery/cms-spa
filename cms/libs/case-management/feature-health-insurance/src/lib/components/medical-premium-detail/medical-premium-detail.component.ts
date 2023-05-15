@@ -237,6 +237,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.resetForm();
         this.loadHealthInsurancePolicy();
         break;
+      case 'Review':
+        this.isEdit = true;
+        this.buttonText = 'Save';
+        this.isDeleteEnabled = false;
+        this.isViewContentEditable = false;
+        this.resetForm();
+        this.loadHealthInsurancePolicy();
+        break;
       default:
         break;
     }
