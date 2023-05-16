@@ -88,6 +88,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   ddlInsuranceType!: string;
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   isEditViewPopup!: boolean;
+  isReviewPopup!:boolean;
   isEdit!: boolean;
   isDeleteEnabled!: boolean;
   isSubmitted: boolean = false;
@@ -219,6 +220,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       case 'View':
         this.isEditViewPopup = true;
         this.isViewContentEditable = true;
+        this.isReviewPopup=false;
         this.resetForm();
         this.loadHealthInsurancePolicy();
         break;
@@ -227,6 +229,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.buttonText = 'Add';
         this.isDeleteEnabled = false;
         this.isViewContentEditable = false;
+        this.isReviewPopup=false;
         this.resetForm();
         break;
       case 'Edit':
@@ -234,6 +237,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.buttonText = 'Update';
         this.isDeleteEnabled = true;
         this.isViewContentEditable = false;
+        this.isReviewPopup=false;
         this.resetForm();
         this.loadHealthInsurancePolicy();
         break;
@@ -242,6 +246,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.buttonText = 'Save';
         this.isDeleteEnabled = false;
         this.isViewContentEditable = false;
+        this.isReviewPopup=true;
         this.resetForm();
         this.loadHealthInsurancePolicy();
         break;
@@ -562,8 +567,16 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       }
     }
     this.validateOthersCoveredOnPlan();
+    this.cerValidation();
+  }
 
-
+  private cerValidation(){
+    if(this.isReviewPopup){
+      this.healthInsuranceForm.controls['cerReviewType'].setValidators([
+        Validators.required,
+      ]);
+      this.healthInsuranceForm.controls['cerReviewType'].updateValueAndValidity();
+    }
   }
 
   private validateFileSize() {
@@ -1004,6 +1017,11 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
       this.healthInsurancePolicy.policyHolderFirstName = null;
       this.healthInsurancePolicy.policyHolderLastName = null;
+    }
+
+    if(this.isReviewPopup){
+      this.healthInsurancePolicy.isCerReview = true;
+      this.healthInsurancePolicy.cerReviewType = this.healthInsuranceForm.controls['cerReviewType'].value;
     }
   }
 

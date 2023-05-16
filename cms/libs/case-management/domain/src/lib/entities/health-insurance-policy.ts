@@ -44,7 +44,7 @@ export class HealthInsurancePolicy {
         oonDrugs: string | null = null;
         concurrencyStamp: string | null = null;
         activeFlag: string | null = null;
-        creationTime?: string;       
+        creationTime?: string;
         proofOfPremiumFile: any = null;
         proofOfPremiumFileName: string = "";
         proofOfPremiumFileSize: number | null = null;
@@ -62,7 +62,7 @@ export class HealthInsurancePolicy {
         copyOfSummaryFileSize: number | null = null;
         copyOfSummaryFileTypeCode: string = "";
         copyOfSummaryFileId: string = "";
-        copyOfSummaryFilePath: string = "";        
+        copyOfSummaryFilePath: string = "";
         medicareCardFile: any = null;
         medicareCardFileName: string = "";
         medicareCardFileSize: number | null = null;
@@ -70,6 +70,8 @@ export class HealthInsurancePolicy {
         medicareCardFileId: string = "";
         medicareCardFilePath: string = "";
         othersCoveredOnPlan: Array<Dependent> = [];
+        isCerReview: boolean = false;
+        cerReviewType: string = ""; 
         //removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
 }
 
