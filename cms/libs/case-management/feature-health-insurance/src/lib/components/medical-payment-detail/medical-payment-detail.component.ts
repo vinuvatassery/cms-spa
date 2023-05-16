@@ -5,21 +5,20 @@ import {
   Input,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 /** Facades **/
 import {
   ClientDocumentFacade,
   HealthInsurancePolicyFacade,
-  PriorityCode,
   InsuranceStatusType,
   VendorFacade,
   ClientProfileTabs,
   PaymentRequest
 } from '@cms/case-management/domain';
-import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import {  LovFacade, LovType } from '@cms/system-config/domain';
-import { Subscription } from 'rxjs';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {  LovFacade } from '@cms/system-config/domain';
+
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
@@ -146,6 +145,20 @@ export class MedicalPaymentDetailComponent {
       this.insurancePolicyFacade.showLoader();
       this.insurancePolicyFacade.savePaymentRequest(this.paymentRequest).subscribe({
         next: () => {
+          if(this.tabStatus=='hlt-ins-co-pay'){
+            this.insurancePolicyFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Medical payment saved successfully.'
+            );
+          }
+          else{
+            this.insurancePolicyFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Dental payment saved successfully.'
+            );
+
+          }
+         
           this.insurancePolicyFacade.triggeredCoPaySaveSubject.next(true);
           this.insurancePolicyFacade.hideLoader();
         },
@@ -165,6 +178,7 @@ export class MedicalPaymentDetailComponent {
     this.paymentRequest.serviceTypeCode = this.copayPaymentForm.controls['serviceTypeCode'].value;
     this.paymentRequest.amountRequested = this.copayPaymentForm.controls['amountRequested'].value;
     this.paymentRequest.paymentTypeCode = this.copayPaymentForm.controls['paymentTypeCode'].value;
+    this.paymentRequest.txtDate = this.intl.formatDate(this.copayPaymentForm.controls['entryDate'].value, this.dateFormat); 
     this.paymentRequest.paymentRequestTypeCode = 'Expense'
     this.paymentRequest.serviceStartDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
     this.paymentRequest.serviceEndDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 

@@ -98,8 +98,6 @@
                             (valueChange)="startDateOnChange()">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
-                    <!-- <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid">Service Start
-                        Date is required.</kendo-formerror> -->
                         <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && startDateIsFutureDate"> Future Date not allowed.</kendo-formerror>
                         <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate"> Service Start Date is
                             required.</kendo-formerror>
@@ -113,10 +111,7 @@
                             (valueChange)="endDateValueChange($event)" (blur)="endDateOnChange()">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
-                    <!-- <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid">Service End
-                        Date is required.</kendo-formerror> -->
-
-                        <kendo-formerror
+                      <kendo-formerror
                         *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">
                         Service End Date is required.
                       </kendo-formerror>

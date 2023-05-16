@@ -1,15 +1,11 @@
 /** Angular **/
 import {
   Component,
-  OnInit,
-  OnDestroy,
   ChangeDetectionStrategy,
   Input,
-  Output,
-  EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 /** Facades **/
 import {
@@ -18,9 +14,7 @@ import {
   HealthInsurancePolicyFacade,
   VendorFacade,
   InsuranceStatusType,
-  InsurancePlanFacade,
   ClientProfileTabs,
-  StatusFlag
 } from '@cms/case-management/domain';
 import { SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -72,7 +66,6 @@ export class MedicalPremiumPaymentDetailComponent {
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly vendorFacade: VendorFacade,
-    private insurancePlanFacade: InsurancePlanFacade,
     private configurationProvider: ConfigurationProvider,
   ) {
     this.premiumPaymentForm = this.formBuilder.group({});
@@ -88,23 +81,21 @@ export class MedicalPremiumPaymentDetailComponent {
     }
   }
 
-  private getDay(date: Date, locale: string, options?: Intl.DateTimeFormatOptions): string {
-    const formatter = new Intl.DateTimeFormat(locale, options);
-    return formatter.format(date);
-  }
-
   savePaymentDetailsClicked() {
     this.validateForm();
     if (this.premiumPaymentForm.valid) {
       this.populatePaymentRequest();    
       this.insurancePolicyFacade.showLoader();
       this.insurancePolicyFacade.savePaymentRequest(this.paymentRequest).subscribe({
-        next: () => {          
+        next: () => {  
+          this.insurancePolicyFacade.showHideSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            'Insurance premium payment saved successfully.'
+          );        
           this.insurancePolicyFacade.triggeredPremiumPaymentSaveSubject.next(true);
           this.insurancePolicyFacade.hideLoader();
         },
-        error: (error: any) => {
-          
+        error: (error: any) => {          
           this.insurancePolicyFacade.triggeredPremiumPaymentSaveSubject.next(true);
           this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
         }
@@ -150,6 +141,7 @@ export class MedicalPremiumPaymentDetailComponent {
     this.paymentRequest.amountRequested = this.premiumPaymentForm.controls['amountRequested'].value;
     this.paymentRequest.paymentTypeCode = this.premiumPaymentForm.controls['paymentTypeCode'].value;
     this.paymentRequest.paymentRequestTypeCode = 'Expense'
+    this.paymentRequest.txtDate = this.intl.formatDate(this.premiumPaymentForm.controls['entryDate'].value, this.dateFormat); 
     this.paymentRequest.reversalTypeCode = this.premiumPaymentForm.controls['reversalTypeCode'].value;
     this.paymentRequest.serviceStartDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
     this.paymentRequest.serviceEndDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 
@@ -161,7 +153,6 @@ export class MedicalPremiumPaymentDetailComponent {
   }
 
   public serviceProviderNameChange(value: string): void {
-    //this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     if (value) {
       this.isInsurancePoliciesLoading = true;
       this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value, this.clientId, this.caseEligibilityId, (this.tabStatus == ClientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS) ? ClientProfileTabs.DENTAL_INSURANCE_STATUS : ClientProfileTabs.HEALTH_INSURANCE_STATUS).subscribe({

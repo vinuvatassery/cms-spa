@@ -87,9 +87,7 @@
                                 aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <!-- <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceStartDate'].valid">Service Start
-                            Date is required.</kendo-formerror> -->
-                            <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceStartDate'].valid && !copayPaymentForm.controls['serviceStartDate'].disabled"> Service Start Date is
+                           <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceStartDate'].valid && !copayPaymentForm.controls['serviceStartDate'].disabled"> Service Start Date is
                                 required.</kendo-formerror>
     
                     </div>
@@ -101,9 +99,7 @@
                                 (valueChange)="endDateValueChange($event)" (blur)="endDateOnChange()">
                             </kendo-datepicker>
                         </kendo-floatinglabel>
-                        <!-- <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceEndDate'].valid">Service End
-                            Date is required.</kendo-formerror> -->
-                            <kendo-formerror
+                               <kendo-formerror
                             *ngIf="!copayPaymentForm.controls['serviceEndDate'].valid && statusEndDateIsGreaterThanStartDate && !copayPaymentForm.controls['serviceEndDate'].disabled">
                             Service End Date is required.
                           </kendo-formerror>

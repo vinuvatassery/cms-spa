@@ -24,7 +24,7 @@ export class PaymentRequest {
     statusCode : string | null = null;
     sentTo : string | null = null;
     paymentMethodCode : string | null = null;
-    txtDate : Date | null = null;
+    txtDate : string | null = null;
     index: string | null = null;
     objectCode : string | null = null;
     gfaId : number | null = null;

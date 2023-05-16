@@ -1,11 +1,14 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter,OnDestroy } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
+
+/** External **/
+import { Subscription } from 'rxjs';
+
 /** Facades **/
-import { HealthInsurancePolicyFacade, CaseFacade, PaymentRequestType, ClientProfileTabs } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -34,6 +37,9 @@ export class MedicalPaymentListComponent implements OnInit {
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
   showTwelveMonthRecordFlag:boolean = false;
 
+  /** Private **/
+  private triggeredPremiumPaymentSubscription!: Subscription;
+
   /** Constructor **/
 
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade, private readonly formBuilder: FormBuilder,
@@ -48,28 +54,20 @@ export class MedicalPaymentListComponent implements OnInit {
       take: this.pageSizes[0]?.value
     };
     this.loadPremiumPaymentData();
-    this.triggeredPremiumPaymentSave$.subscribe(data=>{
-      if(data){
-        this.closePremiumPaymentDetailsOpened();
-        this.loadPremiumPaymentData();
-      }
-    })
+    this.registerTriggeredPremiumPaymentSubscription();
     
   }
 
+  ngOnDestroy(): void {
+    this.triggeredPremiumPaymentSubscription.unsubscribe();
+  }
   /** Private methods **/
 
   private loadMedicalPremiumPayments() {
     this.insurancePolicyFacade.loadMedicalPremiumPayments();
   }
 
-  handleShowHistoricalClick(){
-    // if(this.showTwelveMonthRecordFlag){
-    //   this.loadTwelveMonthRecord.next(true);
-    // }
-    // else{
-    //   this.loadTwelveMonthRecord.next(false);
-    // }
+  handleShowHistoricalClick(){  
     this.loadPremiumPaymentData();
   }
 
@@ -89,7 +87,6 @@ export class MedicalPaymentListComponent implements OnInit {
     this.state = stateData;
     this.loadPremiumPaymentData();
   }
-  // Loading the grid data based on pagination
 
   private loadPremiumPaymentData(): void {
     this.loadPremiumPaymentList(
@@ -98,6 +95,16 @@ export class MedicalPaymentListComponent implements OnInit {
     );
 
   }
+
+  private registerTriggeredPremiumPaymentSubscription(){
+    this.triggeredPremiumPaymentSubscription = this.triggeredPremiumPaymentSave$.subscribe(data=>{
+      if(data){
+        this.closePremiumPaymentDetailsOpened();
+        this.loadPremiumPaymentData();
+      }
+    })
+  }
+
   loadPremiumPaymentList(
     skipCountValue: number,
     maxResultCountValue: number
