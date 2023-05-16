@@ -1,1 +1,48 @@
-<p>disenroll-client works!</p>
+<div  [formGroup]="disEnrollForm">
+    <section class="k-dialog-body">
+      <p class="text-muted mb-2">
+        Their status will be set to DISENROLLED. Select the reason for disenrollment below, then you'll be prompted to send a notice after clicking "Disenroll"
+      </p>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel text="Reason for Disenrollment">
+            <kendo-dropdownlist
+            [fillMode]="formUiStyle.dropDownFillMode"
+            [data]="disenrollmentReason$  | async"
+            formControlName ="disenrollReasonCode"
+            textField ="lovDesc"
+            valueField ="lovCode"
+            [valuePrimitive]="true">
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!disEnrollForm.controls['disenrollReasonCode'].valid">Reason is required.</kendo-formerror>
+    
+        </div>   
+      </div>
+    </section>
+    </div>
+    
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button
+            kendoButton
+            aria-label="cancel send letter"
+            [primary]="true"
+            look="outline"
+            (click)="disEnroll(true)"
+          >
+            Cancel
+          </button>
+          <button
+            kendoButton
+            [primary]="true"
+            aria-label="initiate benefits"           
+            (click)="disEnroll(false)"
+          >
+          DISENROLL
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+    
