@@ -123,6 +123,7 @@ export class StatusPeriodComponent implements OnInit {
 
   onModalSaveAndClose(result:any){
     if(result){
+      this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
       this.isStatusPeriodDetailOpened=false;
       this.isStatusPeriodEdit = false;
       this.isCopyPeriod = false;

@@ -214,7 +214,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,((this.isEdit || this.isStatusPeriodEdit) ? EligibilityRequestType.clientEligibilityInfo : this.isCopyPeriod? EligibilityRequestType.copyEligibility :EligibilityRequestType.acceptedEligibility)).subscribe(data=>{
       this.currentEligibility = data;
       this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
-      debugger;
       if(this.isEdit || this.isStatusPeriodEdit || this.isCopyPeriod){
         this.bindEligibilityToForm(this.currentEligibility);
       }
@@ -278,7 +277,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   private setStartDateEndDateByStatus(status:string)
   {
-    debugger;
     let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);
     let dayFromDate = this.getDay(this.addDays(new Date(this.currentEligibility.eligibilityEndDate), 1), 'en-US', this.dayOptions);
     this.eligibilityPeriodForm.controls['statusStartDate'].reset();
@@ -440,7 +438,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
 
   private bindEligibilityToForm(currentEligibility:any){
-    debugger;
     if(currentEligibility.eligibilityStartDate){
       this.eligibilityPeriodForm.controls['statusStartDate'].setValue(new Date(currentEligibility.eligibilityStartDate));
       this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
