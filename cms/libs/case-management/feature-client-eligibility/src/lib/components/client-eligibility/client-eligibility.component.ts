@@ -195,6 +195,10 @@ export class ClientEligibilityComponent implements OnInit {
             this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(QuestionTypeCode.reviewChecklist);
           }
           this.loadDocumentsAndEligibility();
+          this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
+          if(this.prevClientCaseEligibilityId) {
+            this.isCerForm =  true;
+          }
         }
       });
   }
