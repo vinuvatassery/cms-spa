@@ -135,19 +135,20 @@ export class NewCaseComponent implements OnInit  {
 
   onClientSelected(event: any) {
     if (event) {
-      if (event.caseStatus == CaseStatusCode.accept) {
+      if (event.caseStatus !== CaseStatusCode.incomplete) {
         this.router.navigate([`/case-management/cases/case360/${event.clientId}`]);
       }
       else {
         this.loaderService.show();
-        this.caseFacade.getSessionInfoByCaseId(event.clientCaseId).subscribe({
-          next: (response: any) => {
+        this.caseFacade.getSessionInfoByCaseEligibilityId(event.clientCaseEligibilityId).subscribe({
+          next: (response: any) => {            
             if (response) {
               this.loaderService.hide();
               this.router.navigate(['case-management/case-detail'], {
                 queryParams: {
                   sid: response.sessionId,
-                  eid: response.entityID
+                  eid: response.entityID,                   
+                  wtc: response?.workflowTypeCode
                 },
               });
             }

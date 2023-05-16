@@ -7,14 +7,14 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  ChangeDetectorRef,
+  ChangeDetectorRef 
 } from '@angular/core';
-import { StatusFlag } from '@cms/case-management/domain';
+import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State , filterBy, process} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -33,6 +33,7 @@ export class CerListComponent implements OnInit, OnChanges {
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
+  @Output() goToCerEvent = new EventEmitter<any>();
 
   /** Public properties **/
   isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
@@ -42,9 +43,11 @@ export class CerListComponent implements OnInit, OnChanges {
   selectedDate!: any;
   loader = false;
   datesSubject = new Subject<any>();
+  titleSubject = new Subject<string>();
   cerTrackingDatesList$ = this.datesSubject.asObservable();
   loadDefSelectedateSubject = new Subject<any>();
   loadDefSelectedate$ = this.loadDefSelectedateSubject.asObservable();
+  title$ = this.titleSubject.asObservable();
   gridCERDataSubject = new Subject<any>();
   gridCERData$ = this.gridCERDataSubject.asObservable();
   public state!: State;
@@ -54,27 +57,82 @@ export class CerListComponent implements OnInit, OnChanges {
   isPaperLessFlag!:boolean;
   clientName!:string;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  sortColumn = "Client Name";
+  sortDir = "Ascending";
+  columnsReordered = false;
+  filteredBy = "";
+  searchValue = "";
+  isFiltered = false;
+  public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
+  filter! : any
+  columnName!: any;
+  selectedColumn!: any;
+  statusTitle ="Status"
+  addRemoveColumns="Default Columns"
+  gridDataResult! : GridDataResult
+
+  filterData : CompositeFilterDescriptor={logic:'and',filters:[]};
+
+  columns : any = {
+    clientFullName:"Client Name",
+    dob :"Date of Birth",  
+    clientOfficialIdFullName:"Official Id Full Name",
+    clientInsuranceFullName:"Name on Primary Insurance Card",
+    cerSentDate :"Date CER Sent",
+    cerReceivedDate : "Date CER Received",
+    cerCompletedDate : "Date CER Completed",
+    reminderSentDate : "Reminder SentDate",
+    cerResentDate : "CER Re-Sent Date",
+    restrictedSentDate : "Restricted Sent Date",
+    spokenLanguage : "Spoken Language" ,
+    assignedCmId : "Case Manager" ,
+    assignedCwId : "Case Worker" ,
+    pronouns:"Pronouns",
+    clientId:"Client ID",
+    urn:"URN",
+    preferredContact:"Preferred Contact",
+    eligibilityStatus:"Current Status",
+    group:"Group",
+    eilgibilityStartDate:"Eligibility Start Date",
+    eligibilityEndDate:"Eligibility End Date",
+    email:"Email",
+    phone:"Phone",
+    genders:"Gender",
+    homeAddress:"Home Address",
+    ssn:"SSN",
+    insurancePolicyId:"Insurance Policy Id",
+    assignedCw:"Assigned to",
+    disEnrollmentDate:"Disenrollment Date"
+  }
 
   public gridActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Re-send CER',
-      click: (eligibilityCer: any): void => { 
+      click: (eligibilityCer: any): void => {         
         this.selectedEligibilityCerId = eligibilityCer?.clientCaseEligibilityCerId;
         this.isPaperLessFlag = eligibilityCer?.paperlessFlag === StatusFlag.Yes;
         this.clientName = eligibilityCer?.clientFullName;
         this.resendCer();
       },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Go to CER',
+      click: (eligibilityCer: any): void => { 
+        this.goToCerEvent.emit(eligibilityCer?.clientCaseEligibilityId);
+      },
     }
   ];
 
-  constructor(private cdr:ChangeDetectorRef){
+  constructor(private cdr:ChangeDetectorRef,private readonly cerTrackingFacade: CerTrackingFacade){
+   
   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.dateDropdownDisabled = true
-    this.loader = true;
+    this.dateDropdownDisabled = false
+    this.loader = true;    
     this.loadcerTrackingDates();
 
   }
@@ -84,6 +142,7 @@ export class CerListComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+  
   }
   /** Private methods **/
   private loadcerTrackingDates() {
@@ -106,30 +165,59 @@ export class CerListComponent implements OnInit, OnChanges {
     this.selectedDate = date;
     this.loadCerTrackingList();
   }
-
-  public dataStateChange(stateData: any): void {
+  
+  setTitle(data : any)
+  {
+    this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
+    this.titleSubject.next(this.statusTitle)
+  }
+  public dataStateChange(stateData: any): void {      
+     
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+     
+        this.filter = stateFilter.value;
+     
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.columnName = "";
+      this.isFiltered = false
+    }
     this.loader = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.loadCerTrackingList();
+    this.sortColumn = this.columns[stateData.sort[0]?.field];    
+    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
+   
+    this.loadCerTrackingList();    
   }
   pageselectionchange(data: any) {
-    this.state.take = data.value;
-    this.state.skip = 0;
+    this.state.take = data.value;   
     this.loadCerTrackingList();
   }
 
   private loadCerTrackingList(): void {
-    this.dateDropdownDisabled = true
+    this.dateDropdownDisabled = false
     this.loaCerData(
       this.state.skip ?? 0,
       this.state.take ?? 0,
       this.sortValue,
       this.sortType
     );
-
+   
   }
 
   loaCerData(
@@ -144,38 +232,122 @@ export class CerListComponent implements OnInit, OnChanges {
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-    };
+    };    
+    if(this.selectedDate)
+    {
     this.loadCerTrackingListEvent.next(gridDataRefinerValue);
+    }
     this.gridDataHandle()
   }
-
+  onColumnReorder(event:any)
+  {
+    this.columnsReordered = true;
+  }
   loadCerTrackingDateListHandle() {
 
     this.cerTrackingDates$
       ?.pipe(
-        first((trackingDateList: any) => trackingDateList?.seletedDate != null)
+        first((trackingDateList: any) => trackingDateList != null)
       )
-      .subscribe((trackingDateList: any) => {
+      .subscribe((trackingDateList: any) => {      
         if (trackingDateList?.seletedDate) {
           this.loadDefSelectedateSubject.next(trackingDateList?.seletedDate);
           this.datesSubject.next(trackingDateList?.datesList);
           this.selectedDate = trackingDateList?.seletedDate;
           this.epDateOnChange(this.selectedDate);
         }
+        else
+        {    
+          this.titleSubject.next(this.statusTitle)
+          this.datesSubject.next(trackingDateList?.datesList);  
+          this.loadDefSelectedateSubject.next(null);
+          this.loader = false;
+          this.dateDropdownDisabled = false
+        }
       });
   }
 
-  gridDataHandle() {
-    this.cerTrackingData$.subscribe((data: any) => {
-      this.gridCERDataSubject.next(data);
+  gridDataHandle() {       
+    this.cerTrackingData$.subscribe((data: GridDataResult) => {          
+    this.statusTitle = data?.data[0]?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
+    this.titleSubject.next(this.statusTitle)
+    this.gridDataResult = data    
+    for (var res in this.gridDataResult?.data) { 
+      if(this.gridDataResult?.data[res].dob)
+      {     
+      this.gridDataResult.data[res].dob = new Date(this.gridDataResult?.data[res].dob)
+      }
+      if(this.gridDataResult?.data[res].cerSentDate)
+      {     
+      this.gridDataResult.data[res].cerSentDate = new Date(this.gridDataResult?.data[res].cerSentDate)
+      }
+
+      if(this.gridDataResult?.data[res].cerReceivedDate)
+      {     
+      this.gridDataResult.data[res].cerReceivedDate = new Date(this.gridDataResult?.data[res].cerReceivedDate)
+      }
+
+      if(this.gridDataResult?.data[res].cerCompletedDate)
+      {     
+      this.gridDataResult.data[res].cerCompletedDate = new Date(this.gridDataResult?.data[res].cerCompletedDate)
+      }
+
+      if(this.gridDataResult?.data[res].reminderSentDate)
+      {     
+      this.gridDataResult.data[res].reminderSentDate = new Date(this.gridDataResult?.data[res].reminderSentDate)
+      }
+
+      if(this.gridDataResult?.data[res].cerResentDate)
+      {     
+      this.gridDataResult.data[res].cerResentDate = new Date(this.gridDataResult?.data[res].cerResentDate)
+      }
+
+      if(this.gridDataResult?.data[res].restrictedSentDate)
+      {     
+      this.gridDataResult.data[res].restrictedSentDate = new Date(this.gridDataResult?.data[res].restrictedSentDate)
+      }
+
+      if(this.gridDataResult?.data[res].disEnrollmentDate)
+      {     
+      this.gridDataResult.data[res].disEnrollmentDate = new Date(this.gridDataResult?.data[res].disEnrollmentDate)
+      }
+
+      if(this.gridDataResult?.data[res].eilgibilityStartDate)
+      {     
+      this.gridDataResult.data[res].eilgibilityStartDate = new Date(this.gridDataResult?.data[res].eilgibilityStartDate)
+      }
+
+      if(this.gridDataResult?.data[res].eligibilityEndDate)
+      {     
+      this.gridDataResult.data[res].eligibilityEndDate = new Date(this.gridDataResult?.data[res].eligibilityEndDate)
+      }
+    }  
+    this.gridDataResult.data = filterBy(this.gridDataResult.data, this.filterData)
+    this.gridCERDataSubject.next(this.gridDataResult);  
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
         this.dateDropdownDisabled = false
       }
     });
   }
+  
+ public filterChange(filter: CompositeFilterDescriptor): void {
+  this.filterData = filter;
 
-  public columnChange(e: ColumnVisibilityChangeEvent) {
+  this.gridDataResult.data = filterBy(this.gridDataResult.data, filter)
+  this.gridCERDataSubject.next(this.gridDataResult);  
+ }
+  public columnChange(e: ColumnVisibilityChangeEvent) {    
+    const columnsRemoved = e?.columns.filter(x=> x.hidden).length
+    const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
+    if(columnsAdded > 0 || columnsRemoved > 0)
+    {
+      this.addRemoveColumns = columnsAdded + " columns added and "+columnsRemoved+"  columns removed"
+    }
+    else
+    {
+      this.addRemoveColumns = "Default Columns"
+    }
     this.cdr.detectChanges()
   }
 
@@ -189,4 +361,31 @@ export class CerListComponent implements OnInit, OnChanges {
   sendCer(){
     this.sendCersEvent.emit(this.selectedEligibilityCerId);
   }
+
+  setToDefault()
+  {      
+    this.pageSizes = this.cerTrackingFacade.gridPageSizes;
+    this.sortValue  = this.cerTrackingFacade.sortValue;
+    this.sortType  = this.cerTrackingFacade.sortType;
+    this.sort  = this.cerTrackingFacade.sort;
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort
+      };
+    this.gridFilter = {logic:'and',filters:[]}
+    this.sortColumn = this.columns[this.sort[0]?.field];
+    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending':  'Descending';
+    
+    this.filter = "";
+    this.columnName = "";
+    this.selectedColumn = "ALL";
+    this.searchValue = "";
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    this.loader = true;
+    this.filterData = {logic:'and',filters:[]}
+    this.loadCerTrackingList();
+  } 
+
 }

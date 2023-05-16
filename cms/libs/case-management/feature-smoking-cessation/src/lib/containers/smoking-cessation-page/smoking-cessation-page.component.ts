@@ -1,6 +1,6 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef, AfterViewInit, } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators,AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
@@ -42,7 +42,8 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     note: ''
   };
   isDisabled = true;
-
+  prevClientCaseEligibilityId! : any;
+  isCerForm = false;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(
@@ -91,11 +92,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId
+          this.prevClientCaseEligibilityId = JSON.parse(
+            session.sessionData
+          )?.prevClientCaseEligibilityId;
+          if (this.prevClientCaseEligibilityId) {
+            this.isCerForm = true;
+          }
           this.loadSmokingCessation();
         }
       });
   }
-  /** Private methods **/
+  /** Private methods **/ 
   public buildForm() {
     this.smokingCessationForm = new FormGroup({
       smokingCessation: new FormControl('', []),
@@ -118,6 +125,10 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
           }
           else if (response.smokingCessationNotApplicableFlag == StatusFlag.No) {
             this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.No)
+            this.isDisabled = true;
+          }
+          else if(this.isCerForm){
+            this.smokingCessationForm.controls["smokingCessation"].setValue(YesNoFlag.DidNotAnswer)
             this.isDisabled = true;
           }
           this.changeDetector.detectChanges();
@@ -178,10 +189,10 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     }
     return of(false)
   }
-
+  
   public validate() {
     this.smokingCessationForm.markAllAsTouched();
-    this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required]);
+    this.smokingCessationForm.controls["smokingCessation"].setValidators([Validators.required,this.smokingCessationValueValidator()]);
     this.smokingCessationForm.controls["smokingCessation"].updateValueAndValidity();
     if (this.smokingCessationForm.value.smokingCessation === YesNoFlag.Yes) {
       this.smokingCessation.smokingCessationNotApplicableFlag = StatusFlag.Yes;
@@ -194,6 +205,17 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
       this.smokingCessation.note = '';
     }
   }
+  smokingCessationValueValidator(): ValidatorFn {
+    return (control:AbstractControl) : ValidationErrors | null => {
+
+        const value = control.value;
+
+        if (!value) {
+            return null;
+        }
+        return value === YesNoFlag.DidNotAnswer ? {DidNotAnswer:true}: null;
+    }
+}
   private updateFormCompleteCount(prev: any, curr: any) {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.smokingCessationForm.controls).forEach(key => {
@@ -243,12 +265,12 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }

@@ -34,6 +34,7 @@ export class EmailDetailComponent implements OnInit {
   btnDisabled = false;
   selectedclientEmailId!: string;
   isDeleted = false;
+ 
   /** Constructor **/
   constructor(private formBuilder: FormBuilder) {}
 
@@ -117,4 +118,5 @@ export class EmailDetailComponent implements OnInit {
   formEmailClose() {
     this.formEmailCloseEvent.emit();
   }
+
 }

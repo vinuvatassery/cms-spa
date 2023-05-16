@@ -5,7 +5,8 @@ import {
   ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender,
   ClientRace, ClientSexualIdentity, ClientCaseEligibilityFlag,
   ClientCaseEligibilityAndFlag, YesNoFlag, ControlPrefix,
-  MaterialFormat, PronounCode, TransGenderCode, ApplicantInfo
+  MaterialFormat, PronounCode, TransGenderCode, ApplicantInfo,
+  CaseFacade
 } from '@cms/case-management/domain';
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
@@ -33,10 +34,12 @@ export class ClientReadOnlyViewComponent implements OnInit{
   caseManagerHoverDataItem! : any
   appInfoForm!: FormGroup;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   constructor(
       private loaderService: LoaderService,
       private loggingService: LoggingService,
       private clientFacade: ClientFacade,
+      private caseFacade: CaseFacade,
       private intl: IntlService,
       private configurationProvider: ConfigurationProvider){}
    /** Lifecycle hooks **/

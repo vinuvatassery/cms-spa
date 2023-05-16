@@ -1,6 +1,6 @@
 <div class="flex-row mt-2">
   <div class="flex-col flex-space-bw align-items-center">
-    <h5 class="title-md mb-0 text-capital">Friend or Family Contact</h5>
+    <h5 class="title-md mb-0 text-capital">ALTERNATE CONTACT</h5>
     <div>
     <span class="app-checkboxwidtext-wrapper">
       <input
@@ -19,7 +19,7 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [kendoGridBinding]="gridView" [rowClass]="rowClass" [loading]="isGridLoaderShow">
+      <kendo-grid [resizable]="true" [kendoGridBinding]="gridView" [rowClass]="rowClass" [loading]="isGridLoaderShow">
         <kendo-grid-column field="firstName" title="Name" [width]="250">
         </kendo-grid-column>
         <kendo-grid-column
@@ -91,16 +91,17 @@
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
+            <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <div *ngIf="dataItem.activeFlag ==='Y' ; else deleteButton">
-                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
                     <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
                 </div>
                 <ng-template #deleteButton>
                   <div *ngIf="buttondataItem.text === 'Delete Contact'">
-                    <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                    <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
                       <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                       <label>   {{ buttondataItem.text }} </label>
                   </button>
@@ -110,16 +111,16 @@
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
-             <!-- grid Loader Template -->  
+             <!-- grid Loader Template -->
              <ng-template kendoGridLoadingTemplate>
               <common-grid-loader-component></common-grid-loader-component>
              </ng-template>
-             <!-- grid No data Template -->  
+             <!-- grid No data Template -->
              <ng-template kendoGridNoRecordsTemplate>
                <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
                </div>
                <p>There is no data to display.</p>
-             </ng-template> 
+             </ng-template>
       </kendo-grid>
     </div>
   </div>
@@ -130,6 +131,7 @@
       icon="add"
       (click)="onFriendOrFamilyDetailClicked(false)"
       aria-label="add friend or family"
+      [disabled]="(isReadOnly$ | async) ? true : false"
     >
     CONTACT
     </button>
@@ -143,7 +145,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isFriendsorFamilyEdit ? 'Edit Friend or family Contact' : 'Add Friend or Family Contact'
+    isFriendsorFamilyEdit ? 'Edit Alternate Contact' : 'Add Alternate Contact'
   }}</kendo-dialog-titlebar>
   <case-management-friend-or-family-detail
   [selectedContact]="selectedContact"
@@ -160,7 +162,7 @@
   *ngIf="isDeactivateFriendOrFamilyOpened"
   (close)="onDeactivateFriendOrFamilyClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Deactivate Family Contact?"
+  title="Deactivate Alternate Contact?"
 >
   <case-management-deactivate-friend-or-family-confirmation [isEdit]="isEdit" [clientContact]="selectedContact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
 </kendo-dialog>

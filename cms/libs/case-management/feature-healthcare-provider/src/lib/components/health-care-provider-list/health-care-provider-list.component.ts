@@ -4,7 +4,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
-
+import { CaseFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-health-care-provider-list',
   templateUrl: './health-care-provider-list.component.html',
@@ -25,6 +25,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   @Input() loadExistingProvider$: any;
   @Input() searchProviderLoaded$: any;
   @Input() healthCareProvideReactivate$: any;
+  @Input() showAddNewProvider$ : any
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
   @Output() deactivateConfimEvent =  new EventEmitter<string>();
@@ -59,6 +60,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   reactivateButtonEmitted =false;
   clientProviderId! :any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -111,7 +113,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
     }
   ];
 
-  
+  constructor(private caseFacade: CaseFacade){}
+
   /** Lifecycle hooks **/
   
   ngOnChanges(): void {     

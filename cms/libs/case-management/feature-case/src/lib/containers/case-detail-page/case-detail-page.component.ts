@@ -7,7 +7,7 @@ import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/k
 import { forkJoin, mergeMap, of, Subscription, tap, first, filter } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType, CaseStatusCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, StatusFlag, ButtonType, CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -26,11 +26,12 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   private showConfirmationPopupSubscription !: Subscription; public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
-
+  isCerForm = false;
   clientCaseId: any;
   clientId: any;
+  clientCaseEligibilityId: any;
   clientCaseStatusData: any = {};
-
+  prevClientCaseEligibilityId! : string;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
   openedSaveLater = false;
@@ -55,6 +56,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isSubmitted: boolean = false;
   sendLetterFlag!: any;
   cancelApplicationFlag!: boolean;
+  workflowType! :string
   data: Array<any> = [
     {
       text: '',
@@ -70,7 +72,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
       },
     },
     {
-      buttonType: "btn-h-primary",
+      buttonType: "btn-h-danger",
       text: "DISCARD CHANGES",
       icon: "do_disturb_alt",
       click: (): void => {
@@ -119,6 +121,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.showSendNewsLetterPopup();
     this.addSessionChangeSubscription();
     this.showCancelApplicationPopup();
+    this.resetReadOnlyView();
   }
 
   ngOnDestroy(): void {
@@ -146,7 +149,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   }
   cancelCase() {
     this.loaderService.show()
-    this.caseFacade.updateCaseStatus(this.clientCaseId, CaseStatusCode.canceled).subscribe({
+    this.caseFacade.updateCaseStatus(this.clientCaseId, CaseStatusCode.canceled,this.clientCaseEligibilityId).subscribe({
       next: (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
@@ -175,7 +178,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   getCase() {
     this.case$.subscribe((caseData: any) => {
       this.clientCaseId = caseData.clientCaseId;
-      if (caseData.caseStatusCode === CaseStatusCode.new ||
+      if (
         caseData.caseStatusCode === CaseStatusCode.incomplete ||
         caseData.caseStatusCode === CaseStatusCode.review) {
         this.showDelete = true;
@@ -192,8 +195,12 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
       .subscribe((session: any) => {
-        this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
+        this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+        this.clientId = JSON.parse(session.sessionData).clientId;
+        this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
         this.caseFacade.loadCasesById(this.clientCaseId);
+        this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
+        if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
       });
   }
   hideButton(type: any) {
@@ -215,11 +222,11 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.workflowFacade.discardChanges(true);
   }
   /** Private Methods */
-  private loadQueryParams() {
-    const workflowType: string = WorkflowTypeCode.NewCase;
+  private loadQueryParams() {    
+    this.workflowType  = this.route.snapshot.queryParams['wtc'];
     const entityId: string = this.route.snapshot.queryParams['eid'];
     this.sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkflowSession(workflowType, entityId, this.sessionId);
+    this.workflowFacade.loadWorkflowSession(this.workflowType, entityId, this.sessionId);
   }
 
   private loadDdlCommonAction() {
@@ -290,7 +297,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     if (event === CommunicationEvents.Close) {
       this.isShowSendNewLetterPopup = false;
     }
-    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`);
+    this.router.navigateByUrl(`case-management/cases`);
   }
   public onPaste(): void {
     console.log("Paste");
@@ -408,7 +415,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
       this.loaderService.show();
-      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode).subscribe({
+      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();
           if (this.sendLetterFlag == StatusFlag.Yes) {
@@ -455,5 +462,9 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   onContinueClick(){
     this.closeCancelApplicationPopup();
     this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+  }
+
+  resetReadOnlyView(){
+    this.caseFacade.setCaseReadOnly(false);
   }
 }

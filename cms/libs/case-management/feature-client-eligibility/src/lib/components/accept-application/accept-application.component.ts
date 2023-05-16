@@ -36,7 +36,11 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
   @Input() clientCaseEligibilityId: string = '';
   @Output() isCloseModalEvent = new EventEmitter();
   @Input() isEdit!: boolean;
+  @Input() isCerForm!: boolean;
   btnDisabled = false;
+  dayOptions: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+  };
 
   /** Constructor **/
   constructor(
@@ -53,6 +57,9 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if (this.isCerForm){
+      this.buttonText = "RENEW ELIGIBILITY";
+    }
     if (this.isEdit)
     {
       this.buttonText = "Update";
@@ -191,10 +198,19 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
       if(this.eligibilityForm.controls['eligibilityStartDate'].value)
       {
         const startdate = new Date(this.eligibilityForm.controls['eligibilityStartDate'].value);
-        let enddate = startdate.setMonth(startdate.getMonth() + 6);
-        const endDateValue = new Date(enddate);
-        const newEndDateValue = new Date(endDateValue.getFullYear(), endDateValue.getMonth() + 1, 0)
-        this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(newEndDateValue));
+        let today = this.getDay(startdate, 'en-US', this.dayOptions);
+        let enddate = startdate.setMonth(startdate.getMonth() + 3);
+        let endDateValue = new Date(enddate);
+        if (today == "1")
+        {
+          endDateValue.setDate(endDateValue.getDate() - 1);
+          this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(endDateValue));
+        }
+        else
+        {
+          const newEndDateValue = new Date(endDateValue.getFullYear(), endDateValue.getMonth() + 1, 0)
+          this.eligibilityForm.controls['eligibilityEndDate'].setValue(new Date(newEndDateValue));
+        }
       }
 
     }
@@ -277,6 +293,10 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
     if(endDate<=startDate && this.eligibilityForm.controls['eligibilityEndDate'].value ){
       this.eligibilityForm.controls['eligibilityEndDate'].setErrors({'incorrect':true})
     }
+  }
+  private getDay(date: Date, locale: string, options?: Intl.DateTimeFormatOptions): string {
+    const formatter = new Intl.DateTimeFormat(locale, options);
+    return formatter.format(date);
   }
 
 

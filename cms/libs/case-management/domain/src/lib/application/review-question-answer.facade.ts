@@ -35,7 +35,7 @@ export class ReviewQuestionAnswerFacade {
         this.loaderService.show();
         this.reviewQuestionAnswerDataService.getReviewQuestionAnswerByQuestionTypeCode(questionTypeCode).subscribe({
             next: (response) => {
-                this.loaderService.hide();
+                this.loaderService.hide();               
                 this.reviewQuestionAnswersSubject.next(response);
             },
             error: (err) => {

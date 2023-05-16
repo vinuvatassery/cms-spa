@@ -12,7 +12,7 @@ import {
 } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 /** Internal libraries **/
 import { DrugPharmacyFacade, WorkflowFacade, PharmacyPriority, PriorityCode, } from '@cms/case-management/domain';
 import { Lov, LovFacade } from '@cms/system-config/domain';
@@ -30,6 +30,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
   @Input() clientpharmacies:any[] = [];
   @Input() pharmacyPriorityModalButtonText: any;
   @Input() clientId: any;
+  @Input() isShowHistoricalData: any;
   /** Output properties  **/
   @Output() closeChangePriority = new EventEmitter();
 
@@ -121,7 +122,10 @@ export class SetPharmacyPriorityComponent implements OnInit {
   }
 
   private loadClientPharmacies(){
-      this.savePriorityObjectList =JSON.parse(JSON.stringify(this.clientpharmacies));
+    this.savePriorityObjectList =JSON.parse(JSON.stringify(this.clientpharmacies.filter(i =>i.activeFlag == 'Y')));
+    this.savePriorityObjectList.forEach((pharmacyData: any) => {
+      pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
+    })
       this.cdr.detectChanges();
       for(let priority of this.savePriorityObjectList){
           priority.priorityCode = priority.priorityCode?.replace(/\s/g, '');
@@ -161,13 +165,15 @@ export class SetPharmacyPriorityComponent implements OnInit {
         next: (x:any) =>{
           if(x){
             this.loaderService.hide();
-            this.drugPharmacyFacade.loadClientPharmacyList(this.clientId);
+            this.drugPharmacyFacade.loadClientPharmacyList(this.clientId,false,this.isShowHistoricalData);
+            this.drugPharmacyFacade.newAddedPharmacySubject.next(true);
             this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
             this.onCloseChangePriorityClicked();
           }
         },
         error: (error:any) =>{
           this.btnDisabled = false;
+          this.drugPharmacyFacade.newAddedPharmacySubject.next(true);
           this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.ERROR , error)
         }
       });

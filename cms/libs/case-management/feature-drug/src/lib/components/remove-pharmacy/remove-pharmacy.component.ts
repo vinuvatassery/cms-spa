@@ -9,7 +9,7 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 export class RemovePharmacyComponent {
   /** Input properties **/
   @Input() clientPharmacyId!: string;
-
+  @Input() isShowHistoricalData: any;
   /** Output properties **/
   @Output() removeConfirmEvent = new EventEmitter<any>();
 

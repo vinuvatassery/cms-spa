@@ -45,8 +45,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
-
-
+  isCerForm = false;
+  prevClientCaseEligibilityId!: string;
+  haveTheyHaveFamilyMember!: string;
+  haveTheyHaveAdditionalFamilyMember! : string;
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -91,7 +93,13 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     .subscribe((session: any) => {
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
      this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId
-     this.clientId = JSON.parse(session.sessionData).clientId
+     this.clientId = JSON.parse(session.sessionData).clientId;
+     this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
+     if(this.prevClientCaseEligibilityId) {
+        this.isCerForm =  true;
+        this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId, 0,
+          this.pageSizes[0]?.value, this.sortValue, this.sortType);
+     }
      this.loadDependentsStatus();
     });
   }
@@ -105,7 +113,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       sortType : gridDataRefinerValue.sortType,
     }
 
-    if(!(this.isFamilyGridDisplay ?? false))
+    if(!(this.isFamilyGridDisplay ?? false) || this.isCerForm)
     {
       this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
     this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId
@@ -145,6 +153,21 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
         this.workflowFacade.enableSaveButton();
       }
     });
+  }
+
+  onDependentStatusChange(dependent: any, status: string) {
+    if(!!dependent.clientRelationshipId && status == 'N') {
+      this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId, this.isCerForm);
+      this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+        .subscribe((dependentData: any) =>
+        {
+          if(dependentData ?? false)
+          {
+            this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId, 0,
+               this.pageSizes[0]?.value, this.sortValue, this.sortType);
+          }
+        });
+    }
   }
 
   private save() {
@@ -201,7 +224,13 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   addUpdateDependentHandle(dependent : any) {
    const dependentData : Dependent = dependent;
    dependent.clientId =this.clientId ;
-    if(dependentData.clientDependentId && dependentData.clientDependentId !='')
+   if (this.isCerForm) {
+    dependentData.clientCaseEligibilityId = this.prevClientCaseEligibilityId;
+   }
+   else {
+    dependentData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+   }
+    if(dependentData.clientRelationshipId && dependentData.clientRelationshipId !='')
     {
       this.familyAndDependentFacade.updateNewDependent(this.clientCaseEligibilityId, dependentData);
     }
@@ -245,7 +274,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.save().subscribe((response: any) => {
         if (response) {
           this.loaderService.hide();
-          this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         }
       })
     });

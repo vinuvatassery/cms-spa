@@ -12,7 +12,7 @@ import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { UserDefaultRoles } from '@cms/case-management/domain';
+import { CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-phone-list',
@@ -63,6 +63,7 @@ export class PhoneListComponent implements OnChanges {
   historychkBoxChecked = false;
   loader = false;
   hasPhoneDeletePermission =false;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public gridOption = [
@@ -120,7 +121,8 @@ export class PhoneListComponent implements OnChanges {
   ];
  /** Constructor**/
  constructor( 
-  private readonly userManage: UserManagementFacade
+  private readonly userManage: UserManagementFacade,
+  private caseFacade: CaseFacade
 ) {}
   ngOnChanges(): void {
     this.state = {
@@ -163,7 +165,7 @@ export class PhoneListComponent implements OnChanges {
       sortType: sortTypeValue,
       showDeactivated: this.historychkBoxChecked,
     };
-    this.loader = true;
+    this.loader = false;
     this.loadClientPhonesListEvent.next(gridDataRefinerValue);
   }
 
@@ -332,5 +334,6 @@ this.reloadEmailsEvent.emit();
       this.sortType,
       this.historychkBoxChecked
     );
+    this.loader = true;
   }
 }

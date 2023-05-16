@@ -11,9 +11,9 @@
     </p>
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel text="Phone Type">
+        <kendo-floatinglabel text="Choose Phone Type">
           <kendo-dropdownlist formControlName="deviceTypeCode" (selectionChange)="deviceTypeSelectionChange($event)"
-            aria-label="Phone Type" [fillMode]="formUiStyle.dropDownFillMode"
+            aria-label="Choose Phone Type" [fillMode]="formUiStyle.dropDownFillMode"
             [data]="lovClientPhoneDeviceType$ | async" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
           </kendo-dropdownlist>
           <kendo-formerror *ngIf="clientPhoneForm?.hasError('required','deviceTypeCode') && isFormSubmitted">Phone type
@@ -31,10 +31,10 @@
       </div>
       <div class="flex-col mt-2" *ngIf="displayPhoneNote">
         <kendo-floatinglabel text="Note" class="pb-0">
-          <kendo-textarea formControlName="otherPhoneNote" [fillMode]="formUiStyle.inputFillMode" name="Phone Note"
-            aria-label="Phone Note" [rows]="2" [cols]="40">
+          <kendo-textarea formControlName="otherPhoneNote" [fillMode]="formUiStyle.inputFillMode" name="Phone Note"  resizable="both"
+            aria-label="Phone Note"  [maxlength]="75" [rows]="2" [cols]="40" (valueChange)="onIncomeNoteValueChange($event)">
             <kendo-textarea-suffix class="justify-content-end">
-              <kendo-formhint class="justify-content-end">0/750</kendo-formhint>
+              <kendo-formhint class="justify-content-end">{{noteCounter}}</kendo-formhint>
 
             </kendo-textarea-suffix>
           </kendo-textarea>
@@ -74,7 +74,7 @@
         </button>
       </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="false" look="outline" aria-label="cancel adding phone detail"
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
           [disabled]="btnDisabled" (click)="onDeactivatePhoneNumberClosed()" type='button'>
           Cancel
         </button>

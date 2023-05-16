@@ -9,6 +9,7 @@
         (click)="onEditClientInformationClicked()"
         title="Edit Client Info"
         aria-label="edit client info"
+        [disabled]="(isReadOnly$ | async) ? true : false"
       ></button>
     </div>
   </div>
@@ -60,6 +61,7 @@
               kendoPopoverAnchor
               [popover]="onCaseManagerDetailsHovered"
               showOn="hover"
+              attr.aria-label="{{ clientProfile?.caseManagerName }}" 
               >{{clientProfile?.caseManagerName}}</a
             >
           </td>

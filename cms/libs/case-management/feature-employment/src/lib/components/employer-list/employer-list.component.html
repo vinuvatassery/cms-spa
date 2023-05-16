@@ -61,7 +61,7 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                   [class]="buttondataItem.buttonType" aria-hidden="false"
-                  (click)="onEmployerActionClicked(dataItem,buttondataItem.type)">
+                  (click)="onEmployerActionClicked(dataItem,buttondataItem.type)" [disabled]="(isReadOnly$ | async) ? true : false">
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                   <label> {{ buttondataItem.text }} </label>
                 </button>
@@ -105,8 +105,8 @@
     <!-- add employer button -->
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button *ngIf="isAddEmployerButtonDisplayed" kendoButton [primary]="true" icon="add" aria-label="add employer"
-          (click)="onEmployerClicked(true)">
+        <button *ngIf="enableAddButton" kendoButton [primary]="true" icon="add" aria-label="add employer"
+          (click)="onEmployerClicked(true)" [disabled]="(isReadOnly$ | async) ? true : false">
           Employer
         </button>
 

@@ -22,10 +22,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   sessionId! : string;
   clientId ! : number
   clientCaseEligibilityId ! : string
+  prevClientCaseEligibilityId!: string
   hasManager! :string
   needManager! : string
   hasManagerValidation =false;
   needManagerValidation =false;
+  isCerForm = false;
 
   gridVisibleSubject = new Subject<boolean>();
   showCaseManagers$ = this.gridVisibleSubject.asObservable();
@@ -45,6 +47,11 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   assignCaseManagerStatus$ = this.caseManagerFacade.assignCaseManagerStatus$;
   removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
   userImage$ = this.userManagementFacade.userImage$;
+
+  pageSizes = this.caseManagerFacade.gridPageSizes;
+  sortValue = this.caseManagerFacade.sortValue;
+  sortType = this.caseManagerFacade.sortType;
+  sort = this.caseManagerFacade.sort;
 
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -90,7 +97,13 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         .subscribe((session: any) => {      
          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
          this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-         this.clientId = JSON.parse(session.sessionData).clientId            
+         this.clientId = JSON.parse(session.sessionData).clientId       
+         this.prevClientCaseEligibilityId = JSON.parse(
+          session.sessionData
+        )?.prevClientCaseEligibilityId;
+        if (this.prevClientCaseEligibilityId) {
+          this.isCerForm = true;
+        }     
          this.getCaseManagerStatus()
         });        
       } 
@@ -128,20 +141,55 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   handleNeedManagerRadioChange($event : any)
-  {
+  {    
     this.caseManagerFacade.updateWorkFlow(true)
     this.validate();
+   
   }
 
   hasManagerChangeEvent(status : boolean)
-  {    
-     //show hide grid
-     this.gridVisibleSubject.next(status);
+  {   
+    this.gridVisibleSubject.next(status); 
+    let needMngr 
+    if(!this.hasManager)
+    {
+      needMngr = status ===true ? 'Y' : 'N'
+    }
+    else{ needMngr = this.hasManager}   
+      this.caseManagerFacade.updateCaseManagerStatus
+    (this.clientCaseId , needMngr , 'N')
+     
+    .subscribe({
+      next: (updateDateManagerResponse) => {
+       
+      this.caseManagerFacade.hideLoader() 
+     },
+       error: (err) => {
+        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.caseManagerFacade.hideLoader() 
+       },
+     })    
   }
-  loadCaseManagers()
-  {
-    this.caseManagerFacade.loadCaseManagers(this.clientCaseId);
+
+  loadCaseManagers(gridDataRefinerValue: any): void {   
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+
+    this.pageSizes = this.caseManagerFacade.gridPageSizes;
+    this.caseManagerFacade.loadCaseManagers(
+      this.clientCaseId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+      false
+    );   
   }
+ 
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
@@ -206,10 +254,11 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
       return status;
      }
 
- removecaseManagerHandler(deleteCaseManagerCaseId : string)
-  {    
-    this.caseManagerFacade.removeCaseManager(deleteCaseManagerCaseId)
-  }
+     removecaseManagerHandler(data : any)
+     {    
+       this.caseManagerFacade.removeCaseManager(this.clientCaseId, data?.endDate, data?.assignedcaseManagerId)
+     }
+   
 
   searchTextEventHandler(text : string)
   {
@@ -247,12 +296,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }

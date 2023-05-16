@@ -51,6 +51,7 @@ export * from './lib/entities/client-hiv-verification';
 export * from './lib/entities/active-sessions';
 export * from './lib/entities/client-note';
 export * from './lib/entities/grid-state'
+export * from './lib/entities/session-data';
 
 
 /** Enums **/
@@ -101,6 +102,7 @@ export * from './lib/enums/client-note-type-code.enum';
 export * from './lib/enums/eligibility-status.enum';
 export * from './lib/enums/module-code.enum';
 export * from './lib/enums/grid-state-key.enum';
+export * from './lib/enums/insurance-status-type.enum';
 
 
 /** Data services **/

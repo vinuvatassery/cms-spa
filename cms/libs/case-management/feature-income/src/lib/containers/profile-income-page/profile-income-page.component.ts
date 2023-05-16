@@ -26,6 +26,7 @@ export class ProfileIncomePageComponent implements OnInit {
   clientId!: number;
   clientCaseEligibilityId!: any; 
   tabId! : any
+  historyStatus: boolean = false;
   /** Lifecycle hooks **/
   ngOnInit() {   
     this.loadQueryParams()
@@ -77,5 +78,9 @@ export class ProfileIncomePageComponent implements OnInit {
   onPeriodSelectionChange(value: any) {
     this.clientCaseEligibilityId = value.id;
     this.loadIncomes();
+  }
+
+  updateHistoryStatus(historyStatus: boolean) {
+    this.historyStatus = historyStatus;
   }
 }

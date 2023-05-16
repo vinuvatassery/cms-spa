@@ -7,7 +7,7 @@ import {
   WorkflowFacade,
 } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
-import { Subject, Subscription, filter } from 'rxjs';
+import { Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'case-management-profile-healthcare-provider-page',
@@ -29,6 +29,7 @@ export class ProfileHealthcareProviderPageComponent implements OnInit {
   searchProviderLoaded$ = this.healthProvider.searchProviderLoaded$;
   showProvidervalidation$ = this.healthProvider.showProvidervalidation$;
   healthCareProvideReactivate$ = this.healthProvider.healthCareProvideReactivate$;
+  showAddNewProvider$ = this.healthProvider.showAddNewProvider$;
   showProvidervalidationbox$ =
     this.showProvidervalidationboxSubject.asObservable();
   isProvidersGridDisplay = true;

@@ -1,114 +1,92 @@
 <div class="client-data-block">
+  <h2 hidden>Application</h2>
+
   <h3>Health Insurance</h3>
+  <h4 hidden>Insurance</h4>
+
   <section>
     <div class="block-section">
       <div class="flex-row">
+        <div class="flex-col mb-2" *ngIf="isCerForm">
+          <span>
+            <input class="adjust-attr" type="checkbox" kendoCheckBox aria-labelledby="Clientdoesnothavehealthinsurance"
+              name="Client does not have health insurance" id="Clientdoesnothavehealthinsurance" />
+            <label class="k-checkbox-label" for="Clientdoesnothavehealthinsurance">Client does not have health
+              insurance</label>
+          </span>
+        </div>
         <form [formGroup]="insuranceFlagForm">
           <div class="flex-col mb-1">
             <fieldset class="k-form-fieldset">
-              <legend class="k-form-legend"><h5>Do they currently have health insurance?</h5></legend>
+              <legend class="k-form-legend">
+                <h5> Do they currently have health insurance? </h5>
+              </legend>
 
-            <div class="component-list-h">
-              <span class="app-radiobtnwidtext-wrapper">
-                <input
-                  type="radio"
-                  kendoRadioButton
-                  name="currentInsuranceFlag"
-                  aria-labelledby="currentlyHaveHealthInsuranceYes"
-                  id="currentlyHaveHealthInsuranceYes"
-                  class="form-control"
-                  formControlName="currentInsuranceFlag"
-                  value="Y"
-                  (change)="onCurrentInsuranceChange('Y')"
-                />
-                <kendo-label
-                  class="k-radio-label"
-                  for="currentlyHaveHealthInsuranceYes"
-                  text="Yes"
-                ></kendo-label>
-              </span>
-              <span class="app-radiobtnwidtext-wrapper">
-                <input
-                  type="radio"
-                  kendoRadioButton
-                  aria-labelledby="currentlyHaveHealthInsuranceNo"
-                  name="currentInsuranceFlag"
-                  id="currentlyHaveHealthInsuranceNo"
-                  value="N"
-                  formControlName="currentInsuranceFlag"
-                  (change)="onCurrentInsuranceChange('N')"
-                />
-                <kendo-label
-                  class="k-radio-label"
-                  for="currentlyHaveHealthInsuranceNo"
-                  text="No"
-                ></kendo-label>
-              </span>
-            </div>
+              <div class="component-list-h">
+                <span class="app-radiobtnwidtext-wrapper">
+                  <input type="radio" kendoRadioButton name="currentInsuranceFlag"
+                    aria-labelledby="currentlyHaveHealthInsuranceYes" id="currentlyHaveHealthInsuranceYes"
+                    class="form-control" formControlName="currentInsuranceFlag" value="Y"
+                    (change)="onCurrentInsuranceChange('Y')" />
+                  <kendo-label class="k-radio-label" for="currentlyHaveHealthInsuranceYes" text="Yes"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                  <input type="radio" kendoRadioButton aria-labelledby="currentlyHaveHealthInsuranceNo"
+                    name="currentInsuranceFlag" id="currentlyHaveHealthInsuranceNo" value="N"
+                    formControlName="currentInsuranceFlag" (change)="onCurrentInsuranceChange('N')" />
+                  <kendo-label class="k-radio-label" for="currentlyHaveHealthInsuranceNo" text="No"></kendo-label>
+                </span>
+              </div>
+              <kendo-formerror *ngIf="!insuranceFlagForm.controls['currentInsuranceFlag'].valid">
+                A Response is required.
+              </kendo-formerror>
             </fieldset>
+
           </div>
-          <kendo-formerror   *ngIf="!insuranceFlagForm.controls['currentInsuranceFlag'].valid"      >
-            A Response is required.
-        </kendo-formerror>
+
           <div class="flex-col mb-1">
 
             <fieldset class="k-form-fieldset">
-              <legend class="k-form-legend"><h5>Are they eligible for a group policy (through employer or spouse,
-                partner, or parent’s employer)?</h5></legend>
-            <div class="component-list-h">
+              <legend class="k-form-legend">
+                <h5>Are they eligible for a group policy (through employer or spouse,
+                  partner, or parent’s employer)?</h5>
+              </legend>
+              <div class="component-list-h">
 
-              <span class="app-radiobtnwidtext-wrapper">
-                <input
-                  type="radio"
-                  kendoRadioButton
-                  aria-labelledby="eligibleForGroupPolicyYes"
-                  name="groupPolicyEligibleFlag"
-                  id="eligibleForGroupPolicyYes"
-                  value="Y"
-                  [checked]="groupPolicyEligible == 'Y'"
-                  formControlName="groupPolicyEligibleFlag"
-                  (change)="onGroupInsuranceChange()"
-                />
-                <kendo-label
-                  class="k-radio-label"
-                  for="eligibleForGroupPolicyYes"
-                  text="Yes"
-                ></kendo-label>
-              </span>
-              <span class="app-radiobtnwidtext-wrapper">
-                <input
-                  type="radio"
-                  kendoRadioButton
-                  aria-labelledby="eligibleForGroupPolicyNo"
-                  name="groupPolicyEligibleFlag"
-                  id="eligibleForGroupPolicyNo"
-                  value="N"
-                  [checked]="groupPolicyEligible == 'N'"
-                  formControlName="groupPolicyEligibleFlag"
-                  (change)="onGroupInsuranceChange()"
-                />
-                <kendo-label
-                  class="k-radio-label"
-                  for="eligibleForGroupPolicyNo"
-                  text="No"
-                ></kendo-label>
-              </span>
-            </div>
+                <span class="app-radiobtnwidtext-wrapper">
+                  <input type="radio" kendoRadioButton aria-labelledby="eligibleForGroupPolicyYes"
+                    name="groupPolicyEligibleFlag" id="eligibleForGroupPolicyYes" value="Y"
+                    [checked]="groupPolicyEligible == 'Y'" formControlName="groupPolicyEligibleFlag"
+                    (change)="onGroupInsuranceChange()" />
+                  <kendo-label class="k-radio-label" for="eligibleForGroupPolicyYes" text="Yes"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                  <input type="radio" kendoRadioButton aria-labelledby="eligibleForGroupPolicyNo"
+                    name="groupPolicyEligibleFlag" id="eligibleForGroupPolicyNo" value="N"
+                    [checked]="groupPolicyEligible == 'N'" formControlName="groupPolicyEligibleFlag"
+                    (change)="onGroupInsuranceChange()" />
+                  <kendo-label class="k-radio-label" for="eligibleForGroupPolicyNo" text="No"></kendo-label>
+                </span>
+              </div>
+              <kendo-formerror *ngIf="!insuranceFlagForm.controls['groupPolicyEligibleFlag'].valid">
+                A Response is required.
+              </kendo-formerror>
             </fieldset>
-          </div>
-          <kendo-formerror   *ngIf="!insuranceFlagForm.controls['groupPolicyEligibleFlag'].valid">
-            A Response is required.
-        </kendo-formerror>
-        </form>
 
-        <div *ngIf="showTable"  class="flex-col">
-          <h5 class="text-capital">Insurance Plans</h5>
-          <case-management-medical-premium-list  [healthInsuranceForm]="healthInsuranceForm"
-            [caseEligibilityId]="clientCaseEligibilityId"
-            [clientId]="clientId"
-            [triggerPriorityPopup$]="triggerPriorityPopup$"
-            [closeDeleteModal]="closeDeleteModal" (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
-            (deleteInsurancePlan)="delteInsurancePolicy($event)" >
+          </div>
+
+        </form>
+        <div *ngIf="isCerForm" class="flex-col flex-col-8">
+          <p><b>Please 1) review and update insurance the client still has, 2) remove insurance they no longer have, and
+              3) add new insurance they now have:</b></p>
+        </div>
+        <div *ngIf="showTable" class="flex-col">
+          <h5 *ngIf="!isCerForm" class="text-capital">Insurance Plans</h5>
+          <case-management-medical-premium-list [healthInsuranceForm]="healthInsuranceForm"
+            [caseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"
+            [triggerPriorityPopup$]="triggerPriorityPopup$" [closeDeleteModal]="closeDeleteModal"
+            (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
+            (deleteInsurancePlan)="delteInsurancePolicy($event)">
           </case-management-medical-premium-list>
         </div>
 

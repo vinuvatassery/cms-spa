@@ -47,10 +47,10 @@
   (filterChange)="filterChange($event)"
   [loading]="isGridLoaderShow"
   [data]="cases | async">
-    <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
+    <kendo-grid-column field="clientFullName" title="Client Name" [width]="160" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
-          routerLink="case360/{{ dataItem.clientId }}">
+          (click)="onCaseClicked(dataItem)">
           {{ dataItem.clientFullName }}
         </button>
       </ng-template>
@@ -59,15 +59,12 @@
     </kendo-grid-column>
     <kendo-grid-column field="insuranceFullName" title="Name on Primary Insurance Card"  [width]="160" [hidden]="true">
     </kendo-grid-column>
+    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
+    </kendo-grid-column>
     <kendo-grid-column field="pronouns" title="Pronouns"   [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="clientId" title="Client ID" [width]="120"></kendo-grid-column>
     <kendo-grid-column field="urn" title="URN" [width]="110"></kendo-grid-column>
-    <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="130">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.preferredContact?.includes('@')?dataItem.preferredContact: dataItem.preferredContact | phone  }}
-      </ng-template>
-    </kendo-grid-column>
     <kendo-grid-column field="caseStatus" title="Status" [width]="120">
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
@@ -110,7 +107,18 @@
           </common-grid-cell-date-range-filter>
     </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"
+    <kendo-grid-column field="email" title="Email" [width]="120" [hidden]="true">
+    </kendo-grid-column>
+    <kendo-grid-column field="phone" title="Phone" [width]="120" [hidden]="true">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.phone | phone }}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true">
+    </kendo-grid-column>
+    <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
+    </kendo-grid-column>
+    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"  [sticky]="(selectedTab == tabOptions.MY_CASES)"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <common-grid-cell-date-range-filter
@@ -121,25 +129,18 @@
         </common-grid-cell-date-range-filter>
   </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="email" title="Email" [width]="120" [hidden]="true">
+    
+
+    <kendo-grid-column field="caseManager" title="Case Manager"  [width]="160" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="phone" title="Phone" [width]="120" [hidden]="true">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{ dataItem.phone | phone }}
-      </ng-template>
-    </kendo-grid-column>
-    <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true">
-    </kendo-grid-column>
-    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
-    </kendo-grid-column>
-    <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
+     <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120" [hidden]="true">
     </kendo-grid-column>
     <kendo-grid-column field="ssn" title="SSN" [width]="120" [hidden]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.ssn | ssn }}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column *ngIf="selectedTab === 1 || selectedTab === 2" field="assignedCw" title="Assigned to" [width]="120">
+    <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120" [sticky]="(selectedTab != tabOptions.MY_CASES)" [hidden]="(selectedTab == tabOptions.MY_CASES)">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
         kendoPopoverAnchor
@@ -158,9 +159,7 @@
           </kendo-popover>
       </ng-template>
 
-
     </kendo-grid-column>
-
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">

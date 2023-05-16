@@ -26,10 +26,13 @@ export class Case360HeaderComponent implements OnInit {
   @Input() groupUpdated$!: Observable<any>;
   @Output() loadChangeGroupEvent = new EventEmitter<string>();
   @Output() updateChangeGroupEvent = new EventEmitter<any>();
+  @Output() createCerSessionEvent = new EventEmitter<string>();
+ 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
   isGroupDetailOpened$ = new BehaviorSubject<boolean>(false);
   isEditEligibilityFlag!:boolean;
+  groupChangeTitle !: string;
 
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
@@ -60,10 +63,6 @@ export class Case360HeaderComponent implements OnInit {
     this.isStatusPeriodDetailOpened = true;
   }
 
-  onGroupDetailClosed() {
-    this.isGroupDetailOpened$.next(false);
-  }
-
   onGroupDetailClicked(eligibilityId: string) {
     if (eligibilityId) {
       this.loadChangeGroupEvent.emit(eligibilityId);
@@ -87,6 +86,7 @@ export class Case360HeaderComponent implements OnInit {
 
   onGroupChangeCancelClicked() {
     this.isGroupDetailOpened$.next(false);
+    this.groupChangeTitle ='';    
   }
 
   addGroupUpdatedSubscription() {
@@ -94,8 +94,13 @@ export class Case360HeaderComponent implements OnInit {
       if(value){
       this.isGroupDetailOpened$.next(false);
         this.loadClientProfileInfoEvent.emit();
+        this.groupChangeTitle ='';
       }  
     })
+  }
+
+  checkIfSCheduledGroup(isScheduled:boolean){
+    this.groupChangeTitle =  isScheduled ? 'Edit Scheduled Group Change':'Change Group';
   }
 
   onModalSaveAndClose(result:any){
@@ -104,5 +109,16 @@ export class Case360HeaderComponent implements OnInit {
       this.loadClientProfileInfoEvent.emit() 
     }
   }
+
+  createCerSession()
+  {
+    //2169 iii.	If the Eligibility has been disenrolled for the CER the link will disable
+    if(this.loadedClientHeader?.caseStatus!=='DISENROLLED')
+    {
+    this.createCerSessionEvent.emit()
+    }
+  }
+
+  
 
 }

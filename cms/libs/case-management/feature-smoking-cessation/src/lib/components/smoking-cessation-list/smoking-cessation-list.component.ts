@@ -1,6 +1,6 @@
 import { Component,Input,OnInit,ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {ClientNoteTypeCode, SmokingCessationFacade} from '@cms/case-management/domain';
+import {ClientNoteTypeCode, SmokingCessationFacade, CaseFacade} from '@cms/case-management/domain';
 import { FormBuilder, FormGroup } from '@angular/forms';
 @Component({
   selector: 'case-management-smoking-cessation-list',
@@ -19,11 +19,13 @@ export class SmokingCessationListComponent implements OnInit {
   gridSmokingData:any=[];
   smokingForm: FormGroup;
   isShowHistorical: boolean=false;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
    /** Constructor**/
    constructor(
     private readonly smokingCessationFacade : SmokingCessationFacade,
     private readonly formBuilder: FormBuilder,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly caseFacade: CaseFacade,
   ) { 
     this.smokingForm = this.formBuilder.group({smokingCessationNote: ['']});
   }

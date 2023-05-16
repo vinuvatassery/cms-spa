@@ -21,6 +21,7 @@ export class HealthInsurancePolicyFacade {
   private healthInsurancePolicySubject = new Subject<HealthInsurancePolicy>();
   private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
   private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
+  showInsuranceRequiredSubject  = new BehaviorSubject<boolean>(false);
   private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
   private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
   private ddlMedicalHealthPalnPremiumFrequecySubject = new BehaviorSubject<any>(
@@ -36,6 +37,7 @@ export class HealthInsurancePolicyFacade {
   healthFacadesnackbar$ = this.snackbarSubject.asObservable();
   healthInsurancePolicy$ = this.healthInsurancePolicySubject.asObservable();
   healthInsuranceStatus$ = this.healthInsuranceStatusSubject.asObservable();
+  showInsuranceRequired$ = this.showInsuranceRequiredSubject.asObservable();
   medicalPremiumPayments$ = this.medicalPremiumPaymentsSubject.asObservable();
   triggerPriorityPopup$ = this.triggerPriorityPopupSubject.asObservable();
   medicalHealthPolicy$ = this.medicalHealthPolicySubject.asObservable();
@@ -138,8 +140,8 @@ export class HealthInsurancePolicyFacade {
     return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
   }
 
-  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any) {
-    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId);
+  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any,insuranceStatus:string) {
+    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId,insuranceStatus);
   }
 
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
@@ -147,6 +149,9 @@ export class HealthInsurancePolicyFacade {
   }
   deleteInsurancePolicy(insurancePolicyId: any) {
     return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
+  }
+  copyInsurancePolicy(insurancePolicyId: any) {
+    return this.healthInsurancePolicyService.copyInsurancePolicy(insurancePolicyId);
   }
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
@@ -183,9 +188,9 @@ export class HealthInsurancePolicyFacade {
     });
   }
   
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
     this.showLoader();
-    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize,sortBy,sortType).subscribe({
+    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam, skipCount, pageSize,sortBy,sortType).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {

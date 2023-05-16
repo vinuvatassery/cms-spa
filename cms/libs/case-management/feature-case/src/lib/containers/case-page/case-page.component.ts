@@ -29,6 +29,7 @@ export class CasePageComponent implements OnInit {
   formButtonDisabled! : boolean
   columnDroplist$ = this.lovFacade.ColumnDroplistlov$;
   searchLoaderVisibility$ = this.caseFacade.searchLoaderVisibility$;
+  totalClientsCount!:number | null;
   moduleCode:any = ModuleCode;
 
   /** Public properties for case popup**/
@@ -76,7 +77,6 @@ export class CasePageComponent implements OnInit {
   /** Internal event methods **/
   onTabSelected(e: any) {
     this.selectedTab = e.index;
-
     switch(this.selectedTab) {
       case CaseScreenTab.CER_TRACKING: {
         this.isRightReminderBarEnabled = false;
@@ -85,16 +85,19 @@ export class CasePageComponent implements OnInit {
       case CaseScreenTab.MY_CASES: {
         //associated with the logged in caseworker,
         this.isRightReminderBarEnabled = true;
+        this.totalClientsCount = null;
          break;
       }
       case CaseScreenTab.RECENT: {
         //recently worked on by the logged in caseworker
         this.isRightReminderBarEnabled = true;
+        this.totalClientsCount = this.caseFacade.totalClientsCount;
         break;
      }
      case CaseScreenTab.ALL: {
       //All of the clients in the system
       this.isRightReminderBarEnabled = true;
+      this.totalClientsCount = null;
       break;
      }
       default:
@@ -144,10 +147,11 @@ export class CasePageComponent implements OnInit {
       sort : gridDataRefinerValue.sortColumn,
       sortType : gridDataRefinerValue.sortType,
       columnName : gridDataRefinerValue.columnName,
-      filter : gridDataRefinerValue.filter
+      filter : gridDataRefinerValue.filter,
+      totalClientsCount : this.totalClientsCount,
     }
     this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, gridDataRefiner.columnName, gridDataRefiner.filter);
+    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, gridDataRefiner.columnName, gridDataRefiner.filter, gridDataRefiner.totalClientsCount);
   }
 
   loadColumnDroplist()
@@ -157,10 +161,10 @@ export class CasePageComponent implements OnInit {
 
       /** grid event methods **/
 
-    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any)
+    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, totalClientsCount : any)
      {
        this.pageSizes = this.caseFacade.gridPageSizes;
-        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter);
+        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter, totalClientsCount);
      }
 
 }

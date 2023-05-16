@@ -1,9 +1,11 @@
 /** Angular **/
 import {
   Component,
+  OnInit,
   ChangeDetectionStrategy,
   Output,
   Input,
+  ViewChild,
   EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -11,6 +13,7 @@ import {
 import {
   DrugPharmacyFacade,
   WorkflowFacade,
+  PriorityCode
 } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -20,13 +23,15 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   templateUrl: './set-as-primary-pharmacy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetAsPrimaryPharmacyComponent {
+export class SetAsPrimaryPharmacyComponent implements OnInit {
+  @ViewChild('autocomplete') autocomplete: any;
   @Output() closeSelectNewPrimaryPharmacies = new EventEmitter();
   @Input() clientPharmacyDetails!: any;
   @Input() pharmacies: any[] = [];
   @Output() addNewPharmacyClick = new EventEmitter<any>();
   @Output() removePharmacyClick = new EventEmitter<any>();
   IsDeactivateSelectPrimaryPharmacies = false;
+  isPharmacyError = false;
   selectedPharmacy: any;
   selectedVendorId: string = '';
   selectedSearchedPharmacy: any;
@@ -38,7 +43,14 @@ export class SetAsPrimaryPharmacyComponent {
     private readonly ref: ChangeDetectorRef,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private workflowFacade: WorkflowFacade
-  ) {}
+  ) {
+    
+  }
+    /** Lifecycle hooks **/
+    ngOnInit(): void{
+  
+      this.pharmacies = this.pharmacies.filter(pharmacy => pharmacy.priorityCode != PriorityCode.Primary && pharmacy.activeFlag === 'Y');
+    }
   onCloseSelectNewPrimaryPharmaciesClicked() {
     this.closeSelectNewPrimaryPharmacies.emit();
   }
@@ -47,15 +59,18 @@ export class SetAsPrimaryPharmacyComponent {
   }
   onChangePharmacy(selectedPharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
+    this.isPharmacyError = false;
     this.selectedPharmacy = this.pharmacies.find(
       (x) => x.vendorId == selectedPharmacy
     );
     this.selectedSearchedPharmacy = null;
     this.selectedPharmacyForEdit = '';
+    this.autocomplete?.reset();
     this.ref.detectChanges();
   }
   onSearchTemplateClick(pharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
+    this.isPharmacyError = false;
     if (pharmacy.vendorId) {
       this.selectedSearchedPharmacy = pharmacy;
       this.selectedPharmacy = null;
@@ -64,7 +79,13 @@ export class SetAsPrimaryPharmacyComponent {
     }
   }
   onAddNewPharmacy() {
+    if(!this.validate())
+    {
+      this.isPharmacyError = true;
+      return;
+    }
     if (this.IsDeactivateSelectPrimaryPharmacies) {
+      this.isPharmacyError = false;
       let isNewAdded = this.selectedSearchedPharmacy ? true : false;
       let newPharmacy = this.selectedSearchedPharmacy
         ? this.selectedSearchedPharmacy
@@ -73,17 +94,37 @@ export class SetAsPrimaryPharmacyComponent {
         isNewAdded: isNewAdded,
         newPharmacy: newPharmacy,
       });
+    }else {
+      this.addNewPharmacyClick.emit(null);
     }
   }
   onRemovePharmacy() {
-   
-    let isNewAdded = this.selectedSearchedPharmacy ? true : false;
-    let newPharmacy = this.selectedSearchedPharmacy
-    ? this.selectedSearchedPharmacy
-    : this.selectedPharmacy;
-    this.removePharmacyClick.emit({
-      isNewAdded: isNewAdded,
-      newPharmacy: newPharmacy,
-    });
+    if(!this.validate())
+    {
+      this.isPharmacyError = true;
+      return;
+    }
+    if (this.IsDeactivateSelectPrimaryPharmacies){
+      this.isPharmacyError = false;
+      let isNewAdded = this.selectedSearchedPharmacy ? true : false;
+      let newPharmacy = this.selectedSearchedPharmacy
+      ? this.selectedSearchedPharmacy
+      : this.selectedPharmacy;
+      this.removePharmacyClick.emit({
+        isNewAdded: isNewAdded,
+        newPharmacy: newPharmacy,
+      });
+    }else {
+      this.removePharmacyClick.emit(null);
+    }
+    
+  }
+  validate()
+  {
+    if(!this.selectedSearchedPharmacy && !this.selectedPharmacy)
+    {
+      return false;
+    }
+    return true;
   }
 }

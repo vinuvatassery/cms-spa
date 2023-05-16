@@ -20,6 +20,13 @@ const routes: Routes = [
     },
   },
   {
+    path: 'send-disenroll-letter',
+    component: SendLetterPageComponent,
+    data: {
+      title: 'Send Disenrollment Letter',
+    },
+  },
+  {
     path: '',
     redirectTo: 'eligibility',
     pathMatch: 'full',

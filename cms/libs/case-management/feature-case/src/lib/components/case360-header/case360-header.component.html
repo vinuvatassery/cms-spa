@@ -68,6 +68,13 @@
         >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eligibilityEndDate}}</span
       >
       <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}%</span>
+
+      <span *ngIf="loadedClientHeader?.clientCaseEligibilityCerId"
+      class="title-client-info c-pointer on-hover-t-primary"
+      title="Open Client Eligibility Review"
+      (click)="createCerSession()"
+      >Open CER</span
+    >
     </div>
   </section>
 
@@ -83,7 +90,9 @@
      </kendo-popover>
 
   <!-- Banners -->
-  <case-management-case360-header-notifications></case-management-case360-header-notifications>
+  <case-management-case360-header-notifications 
+  *ngIf="loadedClientHeader?.clientCaseEligibilityCerId && loadedClientHeader?.caseStatus!=='DISENROLLED'"
+  ></case-management-case360-header-notifications>
 </div>
 
 <!-- Status Period Detail Modal -->
@@ -104,15 +113,16 @@
 <!-- Eligibility Group Detail Modal -->
 <kendo-dialog
   *ngIf="isGroupDetailOpened$ | async "
-  (close)="onGroupDetailClosed()"
+  (close)="onGroupChangeCancelClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   kendoTooltip
 >
-  <kendo-dialog-titlebar> Change Group </kendo-dialog-titlebar>
-  <case-management-group-detail 
+<kendo-dialog-titlebar> {{ groupChangeTitle }} </kendo-dialog-titlebar>
+  <case-management-group-detail
     [currentGroup$]="currentGroup$" 
     [ddlGroups$] ="ddlGroups$"
     (updateGroup)="onGroupChangeUpdateClicked($event)"
     (cancelGroupChange)="onGroupChangeCancelClicked()"
+    (checkIfSCheduled)="checkIfSCheduledGroup($event)"
     ></case-management-group-detail>
 </kendo-dialog>

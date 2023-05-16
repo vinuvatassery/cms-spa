@@ -1,9 +1,11 @@
 <div class="client-data-block">
+  <h2 hidden>Application</h2>
   <h3>Authorization</h3>
+  <h4 hidden>Authorization Notice</h4>
+
   <section class="pt-1">
-    <p>
-      Send the application to the applicant to sign. They may also sign through
-      their online portal.
+    <p> 
+     {{isCerForm?  'Send the CER to the client to sign. They may also sign through their online portal.':'Send the application to the applicant to sign. They may also sign through  their online portal.'}}
     </p>
     <div class="flex-row">
       <div class="flex-col mt-2 mb-2">

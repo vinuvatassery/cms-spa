@@ -1,15 +1,19 @@
+<div *ngIf="currentGroup$ | async">
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
+    <p class="text-muted mb-2" *ngIf="!(isScheduledGroupChange$ | async)">
       Changing the group may affect the client’s benefits. Select a future start
       date to schedule the change.
     </p>
-    <div class="flex-row" [formGroup]="groupForm" *ngIf="currentGroup$ | async">
+    <p class="text-muted mb-2" *ngIf="isScheduledGroupChange$ | async">
+      The new Group scheduled for the start date below. You may edit or delete this change.
+    </p>
+    <div class="flex-row" [formGroup]="groupForm">
       <div class="flex-col">
         <kendo-formfield>
           <kendo-floatinglabel text="New Group">
             <kendo-dropdownlist aria-label="New Group" [fillMode]="formUiStyle.dropDownFillMode"
-              formControlName="groupCodeId" [data]="groupCodes" textField="groupCodeDesc"
-              valueField="groupCodeId" [valuePrimitive]="true" placeholder="New Group"></kendo-dropdownlist>
+              formControlName="groupCodeId" [data]="groupCodes" textField="groupCodeDesc" valueField="groupCodeId"
+              [valuePrimitive]="true" placeholder="New Group"></kendo-dropdownlist>
           </kendo-floatinglabel>
           <kendo-formerror>
             New Group is required
@@ -33,14 +37,41 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
+      <button *ngIf="showDeleteOption" kendoButton aria-label="delete client’s benefits" [primary]="true" look="outline"
+        (click)="onDeleteGroupChange()" [disabled]="(isReadOnly$ | async) ? true : false">
+        Delete
+      </button>
       <div class="justify-content-end">
         <button kendoButton aria-label="cancel client’s benefits" [primary]="true" look="outline"
           (click)="onCancelGroupChange()">
           Cancel
         </button>
-        <button kendoButton aria-label="change client’s benefits" [primary]="true" (click)="onUpdateGroup()">
+        <button kendoButton aria-label="change client’s benefits" [primary]="true" (click)="onUpdateGroup()" [disabled]="(isReadOnly$ | async) ? true : false">
           Change
         </button>
       </div>
     </div>
   </kendo-dialog-actions>
+</div>
+
+<div *ngIf="!(currentGroup$ | async)">
+  <section class="k-dialog-body">
+    <div class="flex-row" [formGroup]="groupForm">
+      <div class="flex-col">
+        <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+      </div>
+      <div class="flex-col">
+        <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <kendo-skeleton shape="text" animation="pulse" width="10%"></kendo-skeleton>
+      <div class="justify-content-end">
+        <kendo-skeleton shape="text" animation="pulse" width="10%"></kendo-skeleton>
+        <kendo-skeleton shape="text" animation="pulse" width="10%"></kendo-skeleton>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</div>
