@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicantInfo } from '../entities/applicant-info';
+import { NewIDCardRequest } from '../entities/new-Id-card-request';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
@@ -212,6 +213,13 @@ export class ClientDataService {
       applicantInfo,
 
     )}
+    sendNewIdCard(newIDCardRequest : NewIDCardRequest){
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/SendIdCard`,
+        newIDCardRequest,
+  
+      )
+    }
     load(clientId:any,caseId:any,eligibilityId:any){
       return this.http.get<ApplicantInfo>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/cases/${caseId}/eligibility-periods/${eligibilityId}`,);
