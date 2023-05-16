@@ -6,6 +6,7 @@ import { State } from '@progress/kendo-data-query';
 import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
@@ -31,7 +32,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   public state!: State;
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
-
+  carrierContactInfo!: any;
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
@@ -100,4 +101,20 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
     this.lovFacade.getCoPaymentRequestTypeLov();
   }
 
+  getCarrierContactInfo(carrierId:string){
+    this.carrierContactInfo='';
+    this.insurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
+      next: (data) => {
+        this.carrierContactInfo=data;
+      },
+      error: (err) => {
+        if (err) {
+          this.insurancePolicyFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      },
+    });
+  }
 }
