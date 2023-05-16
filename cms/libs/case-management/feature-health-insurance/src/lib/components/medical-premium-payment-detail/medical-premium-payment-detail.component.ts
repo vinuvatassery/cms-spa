@@ -117,8 +117,7 @@ export class MedicalPremiumPaymentDetailComponent {
     this.premiumPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);    
     this.premiumPaymentForm.controls['reversalTypeCode'].setValidators([Validators.required,]);
     this.premiumPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
-    this.premiumPaymentForm.controls['entryDate'].setValidators([Validators.required,]);    
-    this.premiumPaymentForm.controls['comments'].setValidators([Validators.required,]);
+    this.premiumPaymentForm.controls['entryDate'].setValidators([Validators.required,]); 
 
     this.premiumPaymentForm.controls['vendorId'].updateValueAndValidity();
     this.premiumPaymentForm.controls['clientInsurancePolicyId'].updateValueAndValidity();
@@ -128,8 +127,7 @@ export class MedicalPremiumPaymentDetailComponent {
     this.premiumPaymentForm.controls['paymentTypeCode'].updateValueAndValidity();    
     this.premiumPaymentForm.controls['reversalTypeCode'].updateValueAndValidity();
     this.premiumPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
-    this.premiumPaymentForm.controls['entryDate'].updateValueAndValidity();   
-    this.premiumPaymentForm.controls['comments'].updateValueAndValidity();
+    this.premiumPaymentForm.controls['entryDate'].updateValueAndValidity(); 
   }
   populatePaymentRequest() {
     this.paymentRequest = new PaymentRequest()
