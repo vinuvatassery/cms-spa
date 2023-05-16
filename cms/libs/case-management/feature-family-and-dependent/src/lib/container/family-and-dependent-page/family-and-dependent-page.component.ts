@@ -19,6 +19,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Public Methods **/
   dependentList$ = this.familyAndDependentFacade.dependents$;
+  previousRelationList$ = this.familyAndDependentFacade.previousRelations$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
   dependentSearch$ = this.familyAndDependentFacade.dependentSearch$;
   ddlRelationships$ = this.lovFacade.lovRelationShip$;
@@ -97,8 +98,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
      this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
      if(this.prevClientCaseEligibilityId) {
         this.isCerForm =  true;
-        this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId, 0,
-          this.pageSizes[0]?.value, this.sortValue, this.sortType);
+        this.familyAndDependentFacade.loadPreviousRelations(this.prevClientCaseEligibilityId, this.clientId);
+        // this.laodCERRelationStatus();
      }
      this.loadDependentsStatus();
     });

@@ -44,7 +44,7 @@
           </fieldset> 
         </div>
         <div [hidden]="haveTheyHaveFamilyMember != 'Y'">
-          <div class="flex-col" *ngFor="let dependent of (dependentList$ | async)?.data; let i=index">
+          <div class="flex-col" *ngFor="let dependent of (previousRelationList$ | async)?.data; let i=index">
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
 

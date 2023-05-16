@@ -32,6 +32,27 @@ export class DependentDataService {
 
   }
 
+  loadPreviousRelations(previousEligibilityId: string, clientId: number) {
+    return this.http.get<Dependent[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/clients/${clientId}/eligibility-periods/${previousEligibilityId}/dependents`
+    );
+  }
+
+  updateFamilyChangedStatus(previousEligibilityId: string, friendFamilyChangedFlag: string) {
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${previousEligibilityId}/familyChanged-status?friendFamilyChangedFlag=${friendFamilyChangedFlag}`
+      , null);
+  }
+
+  updateAdditionalFamilyStatus(previousEligibilityId: string, hasAdditionalFamilyFlag: string) {
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${previousEligibilityId}/additionalFamily-status?hasAdditionalFamilyFlag=${hasAdditionalFamilyFlag}`
+      , null);
+  }
+
   ///2load dependent status  for checkbox
   loadDependentsStatus(eligibilityId: string) {
     return this.http.get<Dependent[]>(

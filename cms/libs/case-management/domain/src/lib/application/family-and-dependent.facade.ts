@@ -30,6 +30,7 @@ export class FamilyAndDependentFacade {
   private dependentSearchSubject = new Subject<any>();
   private ddlRelationshipsSubject = new Subject<any>();
   private dependentsSubject = new Subject<any>();
+  private previousRelationsSubject = new Subject<any>();
   private clientDependentsSubject = new Subject<any>();
   private productsSubject = new Subject<any>();
   private existdependentStatusSubject =   new Subject<any>();
@@ -47,6 +48,7 @@ export class FamilyAndDependentFacade {
   dependentSearch$ = this.dependentSearchSubject.asObservable();
   ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   dependents$ = this.dependentsSubject.asObservable();
+  previousRelations$ = this.previousRelationsSubject.asObservable();
   clientDependents$ = this.clientDependentsSubject.asObservable();
   existdependentStatus$ = this.existdependentStatusSubject.asObservable();
   dependentStatusGet$ = this.dependentStatusGetSubject.asObservable();
@@ -197,6 +199,21 @@ export class FamilyAndDependentFacade {
           dataPointName: 'family_dependents',
           status: StatusFlag.No
         }]);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+  loadPreviousRelations(previousEligibilityId: string, clientId: number): void {
+    this.showLoader();
+    this.dependentDataService.loadPreviousRelations(previousEligibilityId, clientId).subscribe({
+      next: (relationResponse: any) => {
+        if (relationResponse) {
+          this.previousRelationsSubject.next(relationResponse['data']);
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
