@@ -195,7 +195,6 @@ export class MedicalPaymentDetailComponent {
     this.copayPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['comments'].setValidators([Validators.required,]);
 
     this.copayPaymentForm.controls['vendorId'].updateValueAndValidity();
     this.copayPaymentForm.controls['clientInsurancePolicyId'].updateValueAndValidity();
@@ -206,7 +205,6 @@ export class MedicalPaymentDetailComponent {
     this.copayPaymentForm.controls['serviceDescription'].updateValueAndValidity();
     this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
     this.copayPaymentForm.controls['entryDate'].updateValueAndValidity();
-    this.copayPaymentForm.controls['comments'].updateValueAndValidity();
   }
 
   endDateValueChange(date: Date) {
