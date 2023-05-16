@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-medical-payment-list',
@@ -36,7 +37,7 @@ export class MedicalPaymentListComponent implements OnInit {
   @Input() tabStatus: any;
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
   showTwelveMonthRecordFlag:boolean = false;
-
+  carrierContactInfo!: any;
   /** Private **/
   private triggeredPremiumPaymentSubscription!: Subscription;
 
@@ -123,5 +124,22 @@ export class MedicalPaymentListComponent implements OnInit {
   getPaymentRequestLov() {
     this.lovFacade.getPremiumPaymentTypeLov();
     this.lovFacade.getPremiumPaymentReversalLov();
+  }
+
+  getCarrierContactInfo(carrierId:string){
+    this.carrierContactInfo='';
+    this.insurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
+      next: (data) => {
+        this.carrierContactInfo=data;
+      },
+      error: (err) => {
+        if (err) {
+          this.insurancePolicyFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      },
+    });
   }
 }
