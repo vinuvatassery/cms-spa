@@ -54,6 +54,7 @@ export class CaseFacade {
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private currentGroupSubject = new BehaviorSubject<any>(null);
   private groupUpdatedSubject = new BehaviorSubject<any>(false);
+  private groupDeletedSubject = new BehaviorSubject<boolean>(false);
   private ddlEligPeriodsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
@@ -81,6 +82,7 @@ export class CaseFacade {
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   currentGroup$ =  this.currentGroupSubject.asObservable();
   groupUpdated$ = this.groupUpdatedSubject.asObservable();
+  groupDeleted$ = this.groupDeletedSubject.asObservable();
   ddlEligPeriods$ = this.ddlEligPeriodsSubject.asObservable();
   isCaseReadOnly$ = this.isCaseReadOnlySubject.asObservable();
 
@@ -283,6 +285,7 @@ export class CaseFacade {
     this.showLoader();
     return this.caseDataService.deleteEligibilityGroup(groupId).pipe(
       catchError((err: any) => {
+        this.groupDeletedSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         return of(false);
       })
@@ -290,6 +293,7 @@ export class CaseFacade {
       this.hideLoader();
       if (response) {
         this.currentGroupSubject.next(null);
+        this.groupDeletedSubject.next(true);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group deleted successfully');
       }
     });

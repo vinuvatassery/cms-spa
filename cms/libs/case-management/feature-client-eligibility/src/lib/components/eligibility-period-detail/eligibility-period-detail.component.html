@@ -14,7 +14,7 @@
     Edit the status period dates and group as needed then click "Update" to save the changes. Start and end dates may not overlap with another period
   </p>
   <div class="flex-row">
-    <div class="flex-col" *ngIf="!isEdit && !isStatusPeriodEdit">
+    <div class="flex-col" *ngIf="!isEdit">
       <kendo-floatinglabel text="Status" class="inline-search-loader">
         <span *ngIf="showEligibilityStatusLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
         <kendo-dropdownlist   
@@ -27,8 +27,8 @@
         [valuePrimitive]="true"> 
       </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid && eligibilityStatusAllowed">Status is required.</kendo-formerror>
-      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid && !eligibilityStatusAllowed">Status not allowed.</kendo-formerror>
+      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid && !eligibilityPeriodForm.controls['eligibilityStatus'].disabled && eligibilityStatusAllowed">Status is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['eligibilityStatus'].valid && !eligibilityPeriodForm.controls['eligibilityStatus'].disabled && !eligibilityStatusAllowed">Status not allowed.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Status Start Date">

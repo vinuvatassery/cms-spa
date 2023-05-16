@@ -3,6 +3,7 @@ export interface Dependent {
     clientId  : number,
     relationshipTypeCode  :  string  ,
     relationshipSubTypeCode  :    string  ,
+    relationshipSubTypeDesc : string,
     OtherDesc    : string
     firstName  :    string  ,
     lastName  :   string  ,
@@ -22,5 +23,6 @@ export interface Dependent {
     isCareAssistFlag : string  ,
     memberType : string,
     fullCustomName :string,
-    dependentClientId : string
+    dependentClientId : string,
+    clientCaseEligibilityId: string,
 }

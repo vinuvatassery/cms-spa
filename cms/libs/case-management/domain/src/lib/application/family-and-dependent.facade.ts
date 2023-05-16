@@ -96,12 +96,12 @@ export class FamilyAndDependentFacade {
     this.loaderService.hide();
   }
 
-  deleteDependent(eligibilityId: string, dependentId: string): void {
+  deleteDependent(eligibilityId: string, dependentId: string, isCER: boolean = false): void {
     this.showLoader();
-    this.dependentDataService.deleteDependent(eligibilityId, dependentId).subscribe({
+    this.dependentDataService.deleteDependent(eligibilityId, dependentId, isCER).subscribe({
       next: (deleteResponse) => {
         if (deleteResponse ?? false) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent Removed Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Relationship Removed Successfully')
         }
         this.dependentdeleteSubject.next(deleteResponse);
         this.hideLoader();
@@ -117,7 +117,7 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.addNewDependent(eligibilityId, dependent).subscribe({
       next: (addNewdependentsResponse) => {
         if (addNewdependentsResponse) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New Dependent Added Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New Relationship Added Successfully')
         }
 
         this.dependentAddNewSubject.next(addNewdependentsResponse);
@@ -134,7 +134,7 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.updateNewDependent(eligibilityId, dependent).subscribe({
       next: (updateNewdependentsResponse) => {
         if (updateNewdependentsResponse) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent data Updated')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Relationship data Updated')
         }
 
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
@@ -260,7 +260,7 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.addExistingDependent(eligibilityId, data).subscribe({
       next: (dependentStatusResponse) => {
         if (dependentStatusResponse) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent added successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Relationship added successfully')
         }
 
         this.existdependentStatusSubject.next(dependentStatusResponse);

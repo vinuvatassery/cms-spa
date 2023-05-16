@@ -5,23 +5,24 @@ import { CaseFacade, FamilyAndDependentFacade, ScreenType } from '@cms/case-mana
 
 @Component({
   selector: 'case-management-profile-family-and-dependent-page',
-  templateUrl: './profile-family-and-dependent-page.component.html', 
+  templateUrl: './profile-family-and-dependent-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileFamilyAndDependentPageComponent implements OnInit{
   dependentList$ = this.familyAndDependentFacade.dependents$;
-  screenName = ScreenType.Case360Page; 
+  screenName = ScreenType.Case360Page;
   eligibilityPeriodData$ = this.caseFacade.ddlEligPeriods$
   historyClientCaseEligibilityId!: string;
   clientCaseId!: string;
   clientId!: number;
-  clientCaseEligibilityId!: any; 
+  clientCaseEligibilityId!: any;
   tabId! : any
   pageSizes = this.familyAndDependentFacade.gridPageSizes;
   sortValue  = this.familyAndDependentFacade.sortValue;
   sortType  = this.familyAndDependentFacade.sortType;
   sort  = this.familyAndDependentFacade.sort;
   eligibilityPeriodData: any = [];
+  historyStatus: boolean = false;
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -33,7 +34,7 @@ export class ProfileFamilyAndDependentPageComponent implements OnInit{
 
     /** Lifecycle hooks **/
     ngOnInit() {
-   
+
       this.loadQueryParams()
       this.loadDdlFamilyAndDependentEP();
     }
@@ -44,14 +45,14 @@ export class ProfileFamilyAndDependentPageComponent implements OnInit{
     loadQueryParams()
     {
       this.clientId = this.route.snapshot.queryParams['id'];
-      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];    
-      this.tabId = this.route.snapshot.queryParams['tid'];  
-      this.clientCaseId = this.route.snapshot.queryParams['cid'];  
-      this.historyClientCaseEligibilityId = this.clientCaseEligibilityId 
-      this.caseFacade.loadEligibilityPeriods(this.clientCaseId)   
+      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
+      this.tabId = this.route.snapshot.queryParams['tid'];
+      this.clientCaseId = this.route.snapshot.queryParams['cid'];
+      this.historyClientCaseEligibilityId = this.clientCaseEligibilityId
+      this.caseFacade.loadEligibilityPeriods(this.clientCaseId)
     }
 
-    
+
   loadDependentsHandle( gridDataRefinerValue : any ): void {
     const gridDataRefiner =
     {
@@ -71,5 +72,8 @@ export class ProfileFamilyAndDependentPageComponent implements OnInit{
   onDependentPeriodSelectionChange(value: any) {
     this.clientCaseEligibilityId = value.id;
     this.loadDependentsData(this.clientCaseEligibilityId, this.clientId, null, this.pageSizes, this.sortValue, this.sortType );
-  } 
+  }
+  updateHistoryStatus(historyStatus: boolean) {
+    this.historyStatus = historyStatus;
+  }
 }

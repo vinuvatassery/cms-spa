@@ -22,10 +22,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   sessionId! : string;
   clientId ! : number
   clientCaseEligibilityId ! : string
+  prevClientCaseEligibilityId!: string
   hasManager! :string
   needManager! : string
   hasManagerValidation =false;
   needManagerValidation =false;
+  isCerForm = false;
 
   gridVisibleSubject = new Subject<boolean>();
   showCaseManagers$ = this.gridVisibleSubject.asObservable();
@@ -95,7 +97,13 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         .subscribe((session: any) => {      
          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
          this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-         this.clientId = JSON.parse(session.sessionData).clientId            
+         this.clientId = JSON.parse(session.sessionData).clientId       
+         this.prevClientCaseEligibilityId = JSON.parse(
+          session.sessionData
+        )?.prevClientCaseEligibilityId;
+        if (this.prevClientCaseEligibilityId) {
+          this.isCerForm = true;
+        }     
          this.getCaseManagerStatus()
         });        
       } 

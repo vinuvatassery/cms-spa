@@ -1,8 +1,8 @@
 <section class="k-dialog-body">
   <div class="flex-row">
     <div class="flex-col">
-      <p class="mb-1" *ngIf="!isPaperLess"> It will be sent to {{clientName}}'s mailing address </p>
-      <p class="mb-1" *ngIf="isPaperLess"> It will be sent to {{clientName}} via email</p>
+      <p class="mb-1" *ngIf="!paperless"> It will be sent to {{client}}'s mailing address </p>
+      <p class="mb-1" *ngIf="paperless"> It will be sent to {{client}} via email</p>
     </div>
   </div>
 </section>

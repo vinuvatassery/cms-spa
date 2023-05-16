@@ -24,6 +24,7 @@ export class IncomeListComponent implements OnInit {
   @Input() clientId: any;
   @Input() clientCaseId: any;
   @Input() isClientProfileTab: boolean = false;
+  @Input() isCerForm: boolean = false;
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() loadIncomeListEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
