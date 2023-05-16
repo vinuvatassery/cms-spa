@@ -162,16 +162,6 @@ export class HealthInsurancePolicyFacade {
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
   }
-  // loadCoPaysAndDeductibles() {
-  //   this.healthInsurancePolicyService.loadCoPaysAndDeductibles().subscribe({
-  //     next: (coPaysAndDeductiblesResponse) => {
-  //       this.coPaysAndDeductiblesSubject.next(coPaysAndDeductiblesResponse);
-  //     },
-  //     error: (err) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-  //     },
-  //   });
-  // }
   loadHealthInsuranceStatus() {
     this.healthInsurancePolicyService.loadHealthInsuranceStatus().subscribe({
       next: (healthInsuranceStatusResponse) => {
