@@ -30,7 +30,7 @@ export class DocumentUploadComponent  implements OnInit{
   fileUploadRestrictions: FileRestrictions = {
     maxFileSize: this.configurationProvider.appSettings.uploadFileSizeLimit,
   };
-  
+
 
    /** Constructor **/
    constructor(
@@ -41,12 +41,16 @@ export class DocumentUploadComponent  implements OnInit{
     private readonly configurationProvider: ConfigurationProvider,
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly cdr: ChangeDetectorRef
-  ) { 
+  ) {
     this.selectedTypeCode = this.currentTypeCode;
   }
 
     /** Lifecycle hooks **/
   ngOnInit(): void {
+    if(this.currentTypeCode)
+    {
+      this.selectedTypeCode = this.currentTypeCode;
+    }
     this.loadTypeCodeLov();
     this.loadSubTypeCodeLov();
   }
@@ -58,6 +62,10 @@ export class DocumentUploadComponent  implements OnInit{
     }
   }
   public loadSubTypeCodeLov() {
+    if(this.currentTypeCode)
+    {
+      this.selectedTypeCode = this.currentTypeCode;
+    }
     if(this.typeCode || this.selectedTypeCode)
     {
       this.lov.getDocumentSubTypeLovs(this.typeCode ?? this.selectedTypeCode).subscribe((Lov: Lov[]) => {
