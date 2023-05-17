@@ -31,7 +31,7 @@
 <!-- Create New Reminder Popup -->
 <kendo-dialog kendoRippleContainer *ngIf="isNewReminderOpened" (close)="onNewReminderClosed()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Create New Reminder for Donna" kendoTooltip>
-  <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
+  <productivity-tools-reminder-detail  [clientId] = "clientId"  (closeReminderEvent)="onNewReminderClosed()" ></productivity-tools-reminder-detail>
 </kendo-dialog>
 
 <!-- Send New Letter Modal -->

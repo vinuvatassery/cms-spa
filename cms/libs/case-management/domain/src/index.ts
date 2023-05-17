@@ -51,6 +51,7 @@ export * from './lib/entities/client-hiv-verification';
 export * from './lib/entities/active-sessions';
 export * from './lib/entities/client-note';
 export * from './lib/entities/session-data';
+export * from './lib/entities/client-reminder';
 
 
 /** Enums **/
@@ -130,6 +131,7 @@ export * from './lib/infrastructure/insurance-plan.data.service';
 export * from './lib/infrastructure/health-insurance-policy.data.service';
 export * from './lib/infrastructure/review-question-answer.data.service';
 export * from './lib/infrastructure/review-question-response.data.service';
+export * from './lib/infrastructure/client-reminder.service';
 
 
 
@@ -166,6 +168,7 @@ export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
 export * from './lib/application/review-question-answer.facade';
 export * from './lib/application/review-question-response.facade';
+export * from './lib/application/client-reminder.facade';
 
 
 

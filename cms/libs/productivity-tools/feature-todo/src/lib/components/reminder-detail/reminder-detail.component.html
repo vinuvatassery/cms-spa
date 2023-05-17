@@ -1,17 +1,21 @@
-<section class="k-dialog-body">
+<section class="k-dialog-body" [formGroup]="clientReminderForm">
   <p class="text-muted">All fields are required unless otherwise stated.</p>
   <section>
     <div class="flex-row">
       <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="Date of Birth">
+        <kendo-floatinglabel text="Due Date">
           <kendo-datepicker
             format="MM-dd-yyyy"
             [fillMode]="formUiStyle.dateInputFillMode"
-            [(ngModel)]="currentDate"
+            formControlName="dueDate"
             formatPlaceholder="formatPattern"
+            (select)="dateValidate($event)" (keyup)="dateValidate($event)"
+            placeholder=""
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="dateValidator">Due Date cannot be less than Current Date.</kendo-formerror>
+        <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid">Due Date is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Time (Optional)">
@@ -19,6 +23,7 @@
             format="hh:mm"
             [fillMode]="formUiStyle.dateInputFillMode"
             formatPlaceholder="formatPattern"
+            formControlName="time"
           ></kendo-timepicker>
         </kendo-floatinglabel>
       </div>
@@ -31,6 +36,7 @@
             resizable="auto"
             [maxlength]="tareaRemindermaxLength"
             [value]="tareaReminderDescription"
+            formControlName="description"
             (valueChange)="onTareaReminderValueChange($event)"
           >
             <kendo-textarea-suffix class="justify-content-end">
@@ -38,9 +44,11 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid">Description is required.</kendo-formerror>
+
       </div>
       
-      <div class="flex-col mt-3">
+      <div class="flex-col mt-3" *ngIf="isShow">
         <div class="autoSelect-search mat-form-no-b-space">
           <div class="global-search">
             <span
@@ -70,7 +78,7 @@
           </div>
         </div>
       </div>
-        <div class="flex-col mt-3"  >
+        <div class="flex-col mt-3" *ngIf="isShow"  >
           <div class="global-search mat-form-no-b-space">
             <span
               class="material-icons global-search-icon"
@@ -106,8 +114,10 @@
           <input
             type="checkbox"
             id="addToOutlookCalender"
+            formControlName="addToOutlookCalender"
             kendoCheckBox
             aria-labelledby="addToOutlookCalender"
+
           />
           <label class="k-checkbox-label" for="addToOutlookCalender"
             >Add to Outlook Calendar</label
@@ -123,11 +133,12 @@
       kendoButton
       [primary]="true"
       look="outline"
+      (click)="onCloseReminderClicked()"
       aria-label="cancel creating reminder"
     >
       Cancel
     </button>
-    <button kendoButton [primary]="true" aria-label="create reminder">
+    <button kendoButton [primary]="true" (click)="save()" aria-label="create reminder">
       Create
     </button>
   </section>
