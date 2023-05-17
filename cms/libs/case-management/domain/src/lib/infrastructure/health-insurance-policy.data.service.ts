@@ -280,12 +280,12 @@ export class HealthInsurancePolicyDataService {
 
   loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
      return this.http.get(    
-    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-requests?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=
     ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`);
     }
   savePaymentRequest(paymentRequest:any){
     return this.http.post<PaymentRequest>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-request`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments`,
       paymentRequest
     );
   }
