@@ -121,7 +121,7 @@
           *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>Case Managers</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_PROVIDER)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_PROVIDER }"
-          *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>Healthcare Providers</button>
+          *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>HIV Healthcare Providers</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_CD4)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_CD4 }"
           *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>CD4 Count</button>

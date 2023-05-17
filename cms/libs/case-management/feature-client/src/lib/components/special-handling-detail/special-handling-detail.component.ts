@@ -143,6 +143,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
                 clientNote.id = index + 1})
             }else {
               this.applicantInfo.ClientNotes = [];
+              this.tareacaseWorkerNote = [];
             }
             
             /* Populate Client Case Eligibility */
@@ -532,7 +533,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
               SnackBarNotificationType.SUCCESS,
               'Client Notes deleted successfully'
             );
-            this.loadQueryParams();
+            this.loadApplicantInfo();
             this.clientfacade.hideLoader();
           }
         },
