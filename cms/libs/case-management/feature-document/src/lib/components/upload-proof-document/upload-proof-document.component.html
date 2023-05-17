@@ -1,7 +1,7 @@
 
 <form class="form-group" (ngSubmit)="SubmitForm()" [formGroup]="uploadform">
     <section class="k-dialog-body">
-  
+
       <div class="flex-row">
         <div class="flex-col mb-2">
           <p *ngIf="!isEdit">Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
@@ -10,7 +10,7 @@
         <div class="flex-col mb-2" *ngIf="isEdit">
           <legend class="k-form-legend">  <h5>Attachment Name:</h5> {{this.documentName}} </legend>
         </div>
-  
+
         <input type="hidden" formControlName="concurrencyStamp">
         <input type="hidden" formControlName="clientId">
         <!-- <div class="flex-col">
@@ -47,6 +47,7 @@
           <common-document-upload
           [file]="copyOfUploadedFiles"
           [typeCodeLabel]="'Attachment Type'"
+          [subTypeCodeLabel]="'Attachment Sub Type'"
           [currentTypeCode]="selectedTypeCode"
           (handleFileSelectEvent)="handleFileSelected($event)"
           (handleFileRemoveEvent)="handleFileRemoved($event)"
@@ -78,7 +79,7 @@
             Attachment note is required
           </kendo-formerror>
         </div>
-  
+
       </div>
     </section>
     <kendo-dialog-actions>
