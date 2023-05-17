@@ -2,6 +2,7 @@ import { Component,Input,OnInit,ChangeDetectionStrategy,ChangeDetectorRef } from
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {ClientNoteTypeCode, SmokingCessationFacade, CaseFacade} from '@cms/case-management/domain';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-smoking-cessation-list',
   templateUrl: './smoking-cessation-list.component.html', 
@@ -80,7 +81,10 @@ export class SmokingCessationListComponent implements OnInit {
     this.smokingCessationFacade.showLoader();
     this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
       next: (x:any) =>{
-        
+        this.smokingCessationFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Smoking Cesation Note  Added successfully'
+        );
         this.smokingCessationFacade.hideLoader();
         this.closeAddReferralSmokingCessationClicked();
         this.loadGridData();
