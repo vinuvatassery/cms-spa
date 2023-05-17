@@ -121,11 +121,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
-    adjustControls.forEach((control: any) => {
-      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
-    });
-
+    this.addAdjustedAttributeChangeEvents();
     this.workflowFacade.enableSaveButton();
   }
 
@@ -171,6 +167,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+
+  private addAdjustedAttributeChangeEvents() {
+    const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
+    adjustControls.forEach((control: any) => {
+      control.addEventListener('click', this.adjustAttributeChanged.bind(this));
+      //}
+    });
+  }
+
   private adjustAttributeChanged(event: Event) {
     const data: CompletionChecklist = {
       dataPointName: (event.target as HTMLInputElement).name,
@@ -182,6 +187,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private adjustAttributeInit(updateOnWorkflow: boolean) {
     const initialAdjustment: CompletionChecklist[] = [];
+    this.updateCerAdjustAttribute(initialAdjustment);
     const adjustControls = this.elementRef.nativeElement.querySelectorAll('.adjust-attr');
     adjustControls.forEach((control: any) => {
       const data: CompletionChecklist = {
@@ -197,6 +203,36 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.updateWorkflowChecklist(updateOnWorkflow);
+  }
+
+  updateCerAdjustAttribute(initialAdjustment: CompletionChecklist[]) {
+    if (this.isCerForm) {
+      const mailingAddressChangedFlag: CompletionChecklist = { dataPointName: 'mailingAddress_mailingAddressChangedFlag', status: this.contactInfoForm.get('mailingAddress.mailingAddressChangedFlag')?.value ?? StatusFlag.No };
+      const homeAddressChangedFlag: CompletionChecklist = { dataPointName: 'homeAddress_homeAddressChangedFlag', status: this.contactInfoForm.get('homeAddress.homeAddressChangedFlag')?.value ?? StatusFlag.No };
+      const homePhoneChangedFlag: CompletionChecklist = { dataPointName: 'homePhone_phoneNumberChangedFlag', status: this.contactInfoForm.get('homePhone.phoneNumberChangedFlag')?.value ?? StatusFlag.No };
+      const emailChangedFlag: CompletionChecklist = { dataPointName: 'email_emailAddressChangedFlag', status: this.contactInfoForm.get('email.emailAddressChangedFlag')?.value ?? StatusFlag.No };
+      const familyAndFriendsContactChangedFlag: CompletionChecklist = { dataPointName: 'familyAndFriendsContact_friendFamilyChangedFlag', status: this.contactInfoForm.get('familyAndFriendsContact.friendFamilyChangedFlag')?.value ?? StatusFlag.No };
+      initialAdjustment.push(mailingAddressChangedFlag, homeAddressChangedFlag, homePhoneChangedFlag, emailChangedFlag, familyAndFriendsContactChangedFlag);
+    }
+  }
+
+
+  adjustCerChangeFlagValues(fieldName: string, value: string) {
+    if (!fieldName || !value) return;
+    const data: CompletionChecklist = {
+      dataPointName: fieldName,
+      status: value
+    };
+
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+    if (fieldName === 'homePhone_phoneNumberChangedFlag' || fieldName === 'email_emailAddressChangedFlag') {
+      this.loadPreferredContactMethod();
+    }
+
+    setTimeout(() => {
+      this.addAdjustedAttributeChangeEvents();
+      this.adjustAttributeInit(true);
+    }, 300);
   }
 
   private loadDdlRelationships() {
@@ -325,26 +361,32 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private addPreferredContact(contact: any) {
     const preferredContact: string[] = [];
-    if (contact?.isValidHomePhone) {
+    const isPhoneValid = !this.isCerForm || (this.isCerForm && (this.contactInfoForm.get('homePhone.phoneNumberChangedFlag')?.value === StatusFlag.Yes));
+    if (contact?.isValidHomePhone && isPhoneValid) {
       this.addPreferredList(preferredContact, contact?.homePhone?.value);
     }
-    if (contact?.isValidCellPhone) {
+    if (contact?.isValidCellPhone && isPhoneValid) {
       this.addPreferredList(preferredContact, contact?.cellPhone?.value);
     }
-    if (contact?.isValidWorkPhone) {
+    if (contact?.isValidWorkPhone && isPhoneValid) {
       this.addPreferredList(preferredContact, contact?.workPhone?.value);
     }
-    if (contact?.isValidOtherPhone) {
+    if (contact?.isValidOtherPhone && isPhoneValid) {
       this.addPreferredList(preferredContact, contact?.otherPhone?.value);
     }
-    if (contact?.isValidEmail) {
+    this.addEmailToPreferredList(preferredContact, contact);
+    this.preferredContactMethods = preferredContact;
+    this.resetPreferredContact(preferredContact);
+  }
+
+  private addEmailToPreferredList(preferredContact: string[], contact: any) {
+    const isEmailValid = !this.isCerForm || (this.isCerForm && (this.contactInfoForm.get('email.emailAddressChangedFlag')?.value === StatusFlag.Yes));
+    if (contact?.isValidEmail && isEmailValid) {
       const match = contact?.email?.value?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/);
       if (match) {
         preferredContact.push(contact?.email?.value ?? '');
       }
     }
-    this.preferredContactMethods = preferredContact;
-    this.resetPreferredContact(preferredContact);
   }
 
   private addPreferredList(preferredContact: string[], phone: any) {
@@ -1189,7 +1231,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.validateMailingAddress(true);
       this.validateHomeAddress(true);
     }
-    this.adjustAttributeInit(!this.isEdit);
+
+    setTimeout(() => {
+      this.adjustAttributeInit(!this.isEdit);
+    }, 300);
+
   }
 
   private setMailAndHomeAddress() {
