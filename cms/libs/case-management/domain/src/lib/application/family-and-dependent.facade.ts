@@ -98,9 +98,9 @@ export class FamilyAndDependentFacade {
     this.loaderService.hide();
   }
 
-  deleteDependent(eligibilityId: string, dependentId: string, isCER: boolean = false): void {
+  deleteDependent(eligibilityId: string, dependentId: string, isCER: boolean = false, status?: String): void {
     this.showLoader();
-    this.dependentDataService.deleteDependent(eligibilityId, dependentId, isCER).subscribe({
+    this.dependentDataService.deleteDependent(eligibilityId, dependentId, isCER, status).subscribe({
       next: (deleteResponse) => {
         if (deleteResponse ?? false) {
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Relationship Removed Successfully')
@@ -221,7 +221,17 @@ export class FamilyAndDependentFacade {
 
   updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string) {
     this.showLoader();
-    return this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents)
+    return this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents);
+  }
+
+  updateFamilyChangedStatus(previousEligibilityId : string ,friendFamilyChangedFlag : string) {
+    this.showLoader();
+    return this.dependentDataService.updateFamilyChangedStatus(previousEligibilityId , friendFamilyChangedFlag);
+  }
+
+  updateAdditionalFamilyStatus(previousEligibilityId : string ,hasAdditionalFamilyFlag : string) {
+    this.showLoader();
+    return this.dependentDataService.updateAdditionalFamilyStatus(previousEligibilityId , hasAdditionalFamilyFlag);
   }
 
   loadDependentsStatus(clientCaseEligibilityId : string) : void {

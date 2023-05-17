@@ -123,12 +123,18 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   private loadDependentsStatus() : void {
+    if(this.isCerForm) {
+      this.familyAndDependentFacade.loadDependentsStatus(this.prevClientCaseEligibilityId);
+    }
+    else {
       this.familyAndDependentFacade.loadDependentsStatus(this.clientCaseEligibilityId);
+    }
       this.checkBoxSubscription=
-      this.dependentStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe((x: boolean)=>
+      this.dependentStatus$.subscribe((x: any)=>
     {
-      this.isFamilyGridDisplay = x
-
+      this.isFamilyGridDisplay = x.noDependentFlag;
+      this.haveTheyHaveFamilyMember = x.friendFamilyChangedFlag;
+      this.haveTheyHaveAdditionalFamilyMember = x.hasAdditionalFamilyFlag;
     });
     this.dependentList$.subscribe(dependents=>{
       if(dependents.total > 0){
@@ -157,18 +163,35 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   onDependentStatusChange(dependent: any, status: string) {
-    if(!!dependent.clientRelationshipId && status == 'N') {
-      this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId, this.isCerForm);
+    if(!!dependent.clientRelationshipId) {
+      this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId, this.isCerForm, status);
       this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((dependentData: any) =>
         {
           if(dependentData ?? false)
           {
-            this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId, 0,
-               this.pageSizes[0]?.value, this.sortValue, this.sortType);
+            this.familyAndDependentFacade.loadPreviousRelations(this.prevClientCaseEligibilityId, this.clientId);
           }
         });
     }
+  }
+
+  onFamilyMemberStatusChange(status: string) {
+    this.familyAndDependentFacade.updateFamilyChangedStatus
+    (this.prevClientCaseEligibilityId, status).subscribe((isSaved) => {
+      if (isSaved ?? false) {
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Family Changed Status Updated');
+      }
+    });
+  }
+
+  onAdditionalFamilyStatusChange(status: string) {
+    this.familyAndDependentFacade.updateAdditionalFamilyStatus
+    (this.prevClientCaseEligibilityId, status).subscribe((isSaved) => {
+      if (isSaved ?? false) {
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Additional Family Status Updated');
+      }
+    });
   }
 
   private save() {
