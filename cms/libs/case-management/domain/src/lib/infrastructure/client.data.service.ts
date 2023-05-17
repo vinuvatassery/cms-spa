@@ -215,7 +215,7 @@ export class ClientDataService {
     )}
     sendNewIdCard(newIDCardRequest : NewIDCardRequest){
       return this.http.post(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/SendIdCard`,
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/sendidcard`,
         newIDCardRequest,
   
       )
