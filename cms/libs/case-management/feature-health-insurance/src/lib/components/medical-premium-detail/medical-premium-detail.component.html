@@ -192,7 +192,7 @@
             [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
         </div>
         <div
-          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && healthInsuranceForm.controls['insuranceCarrierName'].value">
+          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.DentalInsurance  && healthInsuranceForm.controls['insuranceCarrierName'].value">
           <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo"></case-management-medical-carrier-contact-info>
         </div>
         <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">

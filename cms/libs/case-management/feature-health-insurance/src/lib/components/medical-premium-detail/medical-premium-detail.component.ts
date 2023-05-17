@@ -1177,6 +1177,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.loggingService.logException(err);
       }
     });
+    if(this.ddlInsuranceType !== this.InsurancePlanTypes.DentalInsurance ){
     this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
       next: (data) => {
         this.carrierContactInfo = data;
@@ -1191,6 +1192,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         }
       },
     });
+  }
   }
   onMedicareCoverageTypeChanged() {
     if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("P") || this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("M")) {
