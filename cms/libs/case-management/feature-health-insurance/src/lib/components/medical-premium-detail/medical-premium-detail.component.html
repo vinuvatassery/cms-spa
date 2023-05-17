@@ -122,7 +122,7 @@
           [typeCode]="'COPY_OF_MEDICARE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'medicareCard')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'medicareCard')"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleMedicareTypeCodeEvent($event)">
           </common-document-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="medicareCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
@@ -243,7 +243,7 @@
           [typeCode]="'PROOF_OF_PREMIUM'"
           (handleFileSelectEvent)="handleFileSelected($event,'proof')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'proof')"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleProofTypeCodeEvent($event)">
           </common-document-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
@@ -280,7 +280,7 @@
           [typeCode]="'COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE'"
           (handleFileSelectEvent)="handleFileSelected($event,'summary')"
           (handleFileRemoveEvent)="handleFileRemoved($event, 'summary')"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleSummaryTypeCodeEvent($event)">
           </common-document-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="summaryFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a smaller

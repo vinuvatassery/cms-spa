@@ -105,7 +105,7 @@
           </kendo-upload> -->
           <common-document-upload
           [typeCode]="'PROOF_OF_INCOME'"
-          [file]="proofOfIncomeFiles"
+          [file]="uploadedIncomeFile"
           (handleFileSelectEvent)="handleFileSelected($event,'docproof')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'docproof')"
           (handleTypeCodeEvent)="handleTypeCodeEvent($event)">

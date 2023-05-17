@@ -110,6 +110,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   cICTypeCode: string = "";
   pOPTypeCode: string = "";
   cOSTypeCode: string = "";
+  medicareTypeCode: string = "";
   isInsuranceFileUploaded: boolean = true;
   isProofFileUploaded: boolean = true;
   isSummaryFileUploaded: boolean = true;
@@ -970,7 +971,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.medicareCardFile = this.copyOfMedicareCardFiles[0].document.rawFile;
       this.healthInsurancePolicy.medicareCardFileName = this.copyOfMedicareCardFiles[0].name;
       this.healthInsurancePolicy.medicareCardFileSize = this.copyOfMedicareCardFiles[0].size;
-      this.healthInsurancePolicy.medicareCardFileTypeCode = 'CMC';
+      this.healthInsurancePolicy.medicareCardFileTypeCode = this.medicareTypeCode;
       this.healthInsurancePolicy.medicareCardFileId = this.copyOfMedicareCardFiles[0].uid;
     }
     else if (this.copyOfMedicareCardFiles?.length > 0 && this.copyOfMedicareCardFiles[0].uid != "") {
@@ -1470,7 +1471,19 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   }
   handleTypeCodeEvent(e:any)
   {
-    this.documentTypeCode=e;
+    this.cICTypeCode=e;
+  }
+  handleSummaryTypeCodeEvent(e:any)
+  {
+    this.cOSTypeCode=e;
+  }
+  handleMedicareTypeCodeEvent(e:any)
+  {
+    this.medicareTypeCode=e;
+  }
+  handleProofTypeCodeEvent(e:any)
+  {
+    this.pOPTypeCode=e;
   }
 
   private onFileRemove(fileType: string) {
