@@ -150,6 +150,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
+       this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Health Insurance Status Updated');
         this.workflowFacade.navigate(navigationType);
         this.HideLoader();
       } else {
@@ -327,6 +328,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.adjustInsurancePlansAttributes(currentInsuranceValue == StatusFlag.Yes ? StatusFlag.Yes : StatusFlag.No);
     this.saveHealthInsuranceFlag().subscribe({
       next: (response: any) => {
+        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Health Insurance Flags Updated');
         if (currentInsuranceValue == StatusFlag.Yes) {
           this.showTable = true;
           const gridDataRefinerValue = {
