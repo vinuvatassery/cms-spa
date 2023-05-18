@@ -31,7 +31,6 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   clientCaseId!: any;
   healthInsuranceForm!: FormGroup;
   copayPaymentForm!: FormGroup;
-  premiumPaymentForm!: FormGroup;
   tabId! : any
   clientId: any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
@@ -42,8 +41,6 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     this.routeChangeSubscription();
     this.loadQueryParams()
     this.buildForm();
-    this.buildCopayPaymentForm();
-    this.buildPremiumPaymentForm();
   }
 
   /** Private properties **/
@@ -55,16 +52,9 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     this.clientId = this.route.snapshot.queryParams['id'];
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
     this.clientCaseId = this.route.snapshot.queryParams['cid'];  
-    this.tabId = this.route.snapshot.queryParams['tid'];  
+    this.tabId = this.route.snapshot.queryParams['tid']; 
     this.tabIdSubject.next(this.tabId);
-    const gridDataRefinerValue = {
-      skipCount: this.insurancePolicyFacade.skipCount,
-      pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
-      sortColumn: 'creationTime',
-      sortType: 'asc',
-    };
     this.isHistoricalDataLoad = false;
-    this.loadHealthInsuranceHandle(gridDataRefinerValue);
   }
 
   private routeChangeSubscription() {
@@ -116,35 +106,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     });
 
   }
-  private buildCopayPaymentForm() {
-    this.copayPaymentForm = this.formBuilder.group({
-          serviceProviderName: [''],
-    serviceDescription: [''],
-    paymentAmount: [''],
-    type: [''],
-    reversal: [''],
-    coverageStartDate: [''],
-    coverageEndDate: [''],
-    entryDate: [''],
-    checkMailDate: [''],
-    comment: [''],
-    });
-  }
 
-  buildPremiumPaymentForm(){
-    this.premiumPaymentForm = this.formBuilder.group({
-      serviceProviderName: [''],
-serviceDescription: [''],
-premiumAmount: [''],
-type: [''],
-reversal: [''],
-coverageStartDate: [''],
-coverageEndDate: [''],
-entryDate: [''],
-checkMailDate: [''],
-comment: [''],
-});
-  }
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
   }
@@ -227,8 +189,13 @@ comment: [''],
     this.loadHealthInsuranceHandle(gridDataRefinerValue);
   }
 
-  loadCopayEventHandle(gridDataRefinerValue: any){
+  loadCopayEventHandle(gridDataRefinerValue: any) {
+    this.insurancePolicyFacade.loadCoPaysAndDeductibles(this.clientId, this.clientCaseId, this.clientCaseEligibilityId, gridDataRefinerValue);
   }
+  loadPremiumPaymentEventHandle(gridDataRefinerValue: any) {
+    this.insurancePolicyFacade.loadPremiumPayments(this.clientId, this.clientCaseId, this.clientCaseEligibilityId, gridDataRefinerValue);
+  }
+
 }
 
 

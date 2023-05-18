@@ -7,12 +7,13 @@
   <section>
     <div class="flex-col mb-1" *ngIf="isCerForm">
       <span>
-        <input class="adjust-attr" type="checkbox" kendoCheckBox aria-labelledby="Clientisnotusinganypharmacies"
-          name="Client is not using any pharmacies" id="Clientisnotusinganypharmacies" />
+        <input class="adjust-attr" type="checkbox"   kendoCheckBox aria-labelledby="Clientisnotusinganypharmacies"
+          name="Client is not using any pharmacies" (click)="onCheckClientPharmacies($event)" formControlName="isClientNotUsingAnyPharmacy" id="Clientisnotusinganypharmacies" />
         <label class="k-checkbox-label" for="Clientisnotusinganypharmacies">Client is not using any
           pharmacies</label>
       </span>
     </div>
+    <ng-container *ngIf="isCerForm == false">
       <fieldset class="k-form-fieldset">
         <legend class="k-form-legend"> <h5 class="mt-1">
           Are they currently taking prescription drugs for HIV (anti-retrovirals)?
@@ -69,74 +70,77 @@
         </kendo-formfield>
       </div>
       </fieldset>
-  </section>
-  <section *ngIf="showPharmacySection | async">
+      <section *ngIf="showPharmacySection">
  
-    <fieldset class="k-form-fieldset">
-      <legend class="k-form-legend">
-        <h5>
-          Does health insurance require a particular CAREAssist non-preferred pharmacy (e.g. Medco, Kaiser, or specified mail order)?
-        </h5>
-    </legend>
-     
-    <div class="component-list-h">
-      <kendo-formfield>
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          formControlName="nonPreferredPharmacyCode"
-          value="YES" 
-          name="nonPreferredPharmacyCode"
-          id="requiresNonPreferredPharmacyYes"
-        />
-        <kendo-label
-          class="k-radio-label"
-          for="requiresNonPreferredPharmacyYes"
-          text="Yes"
-        ></kendo-label>
-      </span>
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          formControlName="nonPreferredPharmacyCode"
-          value="NO" 
-          name="nonPreferredPharmacyCode"
-          id="requiresNonPreferredPharmacyNo"
-        />
-        <kendo-label
-          class="k-radio-label"
-          for="requiresNonPreferredPharmacyNo"
-          text="No"
-        ></kendo-label>
-      </span>
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton 
-          formControlName="nonPreferredPharmacyCode"
-          value="DO_NOT_KNOW"
-          name="nonPreferredPharmacyCode"
-          id="requiresNonPreferredPharmacyDontKnow"
-        />
-        <kendo-label
-          class="k-radio-label" 
-          text="Do not know"
-          for="requiresNonPreferredPharmacyDontKnow"
-        ></kendo-label>
-      </span>
-      <kendo-formerror   *ngIf="nonPreferredFlagValidation">Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
-    </kendo-formfield>
-    </div>
-    </fieldset>
+        <fieldset class="k-form-fieldset">
+          <legend class="k-form-legend">
+            <h5>
+              Does health insurance require a particular CAREAssist non-preferred pharmacy (e.g. Medco, Kaiser, or specified mail order)?
+            </h5>
+        </legend>
+         
+        <div class="component-list-h">
+          <kendo-formfield>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input
+              type="radio"
+              kendoRadioButton
+              formControlName="nonPreferredPharmacyCode"
+              value="YES" 
+              name="nonPreferredPharmacyCode"
+              id="requiresNonPreferredPharmacyYes"
+            />
+            <kendo-label
+              class="k-radio-label"
+              for="requiresNonPreferredPharmacyYes"
+              text="Yes"
+            ></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input
+              type="radio"
+              kendoRadioButton
+              formControlName="nonPreferredPharmacyCode"
+              value="NO" 
+              name="nonPreferredPharmacyCode"
+              id="requiresNonPreferredPharmacyNo"
+            />
+            <kendo-label
+              class="k-radio-label"
+              for="requiresNonPreferredPharmacyNo"
+              text="No"
+            ></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input
+              type="radio"
+              kendoRadioButton 
+              formControlName="nonPreferredPharmacyCode"
+              value="DO_NOT_KNOW"
+              name="nonPreferredPharmacyCode"
+              id="requiresNonPreferredPharmacyDontKnow"
+            />
+            <kendo-label
+              class="k-radio-label" 
+              text="Do not know"
+              for="requiresNonPreferredPharmacyDontKnow"
+            ></kendo-label>
+          </span>
+          <kendo-formerror   *ngIf="nonPreferredFlagValidation">Health insurance requires a particular non-preferred pharmacy is required</kendo-formerror>
+        </kendo-formfield>
+        </div>
+        </fieldset>
+      </section>
+    </ng-container>
+ 
   </section>
+
  
 </form>
 
   <!-- Pharmacies -->
-  <section *ngIf="showPharmacySection | async">
-    <h5 class="text-capital mt-3">{{isCerForm ? 'Add, edit, or remove pharmacies as needed:' : 'Add Pharmacies'}} </h5>
+  <section >
+    <h5 class="text-capital mt-3" *ngIf="showPharmacySection && isCerText">{{isCerForm ? 'Add, edit, or remove pharmacies as needed:' : 'Add Pharmacies'}} </h5>
     <case-management-pharmacy-list
     [clientpharmacies$]="clientpharmacies$"
     [pharmacysearchResult$]="pharmacysearchResult$"
@@ -152,6 +156,8 @@
     (editPharmacyInit)="editPharmacyInit($event)"
     (editPharmacyClick)="editPharmacy($event)"
     (removePharmacyClick)="removePharmacy($event)"
+    [showPharmacyGrid]="showPharmacySection"
+    [isCer]="isCerForm"
     [clientId]="clientId"    
     ></case-management-pharmacy-list>
   </section>

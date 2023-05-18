@@ -12,7 +12,7 @@
         <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
-              <span class="preferred-phoneNo" title="Primacy Pharmacy Name" *ngIf="dataItem.priorityCode === priority ">
+              <span class="preferred-phoneNo" title="Primacy Pharmacy Name" *ngIf="dataItem.priorityCode === priority && dataItem.activeFlag === 'Y'">
                <span class="material-icons icon-size-md" aria-label="Primacy Pharmacy Name" aria-hidden="true" >star</span>
               </span>
               <span class="pl-3">{{ dataItem.pharmacyName }}</span></div> 

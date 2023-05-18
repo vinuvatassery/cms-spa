@@ -32,7 +32,8 @@
 <div class="app-c-table">
   <kendo-grid [data]="gridCERData$ | async" [pageSize]="state.take" [pageable]="true" [sortable]="true"
     [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader"   
+    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [loading]="loader" 
+    (filterChange)="filterChange($event)"  
     (columnReorder)="onColumnReorder($event)" (columnVisibilityChange)="columnChange($event)" [filter]="state.filter">  
   
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="130" [sticky]="true">
@@ -158,7 +159,7 @@
     <kendo-grid-column title="Options" field="isHistorical" [sortable]="false" [width]="70" class="text-center" 
      [sticky]="true"     [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="gridActions" icon="more-vertical" title="More Options" *ngIf="dataItem.isHistorical==='N'"  
+        <kendo-dropdownbutton [data]="gridActions" icon="more-vertical" title="More Options" *ngIf="dataItem.isHistorical==='N' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId"  
           class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button" aria-label="more actions"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>

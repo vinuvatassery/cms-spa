@@ -4,6 +4,7 @@ export class ClientEligibilityInfo{
   insuranceFullName :string = '';
   officialIdFullName :string = '';
   status :string = '';
+  eligibilityStatusCode :string = '';
   group :string = '';
   eligibilityStartDate :string = '';
   eligibilityEndDate :string = '';
