@@ -82,13 +82,17 @@ export class CommunicationFacade {
     });
   }
 
-  loadEmailTemplates(selectedTemplate: string) {
+  loadEmailTemplates(typeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      selectedTemplate
+      typeCode
     );
   }
 
   loadCERAuthorizationEmailEditVariables() {
     return this.emailDataService.loadCERAuthorizationEmailVariables();
+  }
+
+  generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any) {
+    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate);
   }
 }

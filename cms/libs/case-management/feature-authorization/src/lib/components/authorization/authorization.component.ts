@@ -1,13 +1,12 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 /** Enums **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 /** External Libraries **/
-import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
-import { ConfigurationProvider, LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
-import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { CommunicationEvents, ScreenType, StatusFlag } from '@cms/case-management/domain';
 import { Subscription} from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 
@@ -42,7 +41,7 @@ export class AuthorizationComponent   {
   @Output() cerDateSignatureEvent = new EventEmitter<any>(); 
   prevClientCaseEligibilityId!: string;
   contactInfo!: ContactInfo;
-  isGoPaperlessOpted: boolean = true;
+  isGoPaperlessOpted: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
     /** Private properties **/
     private currentSessionSubscription !: Subscription;
@@ -56,6 +55,7 @@ export class AuthorizationComponent   {
     private readonly contactFacade: ContactFacade,
     private readonly route: ActivatedRoute,
     public intl: IntlService,
+    private readonly ref: ChangeDetectorRef
   ) {   }
 
   /** Lifecycle hooks **/
@@ -92,18 +92,15 @@ export class AuthorizationComponent   {
           if (data) {
             this.contactInfo = data;
             if(this.contactInfo != null && this.contactInfo != undefined && this.contactInfo.clientCaseEligibility != undefined && this.contactInfo.clientCaseEligibility != null){
-              if(this.contactInfo.clientCaseEligibility.paperlessFlag === 'Y')
+              if(this.contactInfo.clientCaseEligibility.paperlessFlag === StatusFlag.Yes)
               {
                 this.isGoPaperlessOpted = true;
               }else{
                 this.isGoPaperlessOpted = false; 
               }
-              setInterval(() => {
-                this.printFlag()
-                }, 5000);
+                this.ref.detectChanges();
             }
           }
-          this.loaderService.hide();
         });
   }
 
@@ -187,9 +184,5 @@ export class AuthorizationComponent   {
     this.copyOfSignedApplicationSizeValidation=true;
     this.copyOfSignedApplication = null;
    }
-  }
-
-  printFlag(){
-    console.log(this.isGoPaperlessOpted);
   }
 }

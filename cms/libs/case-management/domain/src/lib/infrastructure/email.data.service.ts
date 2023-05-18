@@ -79,9 +79,9 @@ export class EmailDataService {
     ]);
   }
 
-  loadEmailTemplates(selectedTemplate: string) {
+  loadEmailTemplates(typeCode: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${selectedTemplate}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms`
     );
   }
 
@@ -90,5 +90,11 @@ export class EmailDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/variables`
     );
   }
+
+  replaceAndGenerateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any) {
+      return this.http.post<string>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/docgen/GenerateText/${clientId}/${clientCaseEligibilityId}`,selectedTemplate
+      );
+    }
 }
  

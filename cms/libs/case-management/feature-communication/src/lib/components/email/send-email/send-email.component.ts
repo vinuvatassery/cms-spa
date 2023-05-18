@@ -7,14 +7,16 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 /** External Libraries **/
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-send-email',
@@ -47,36 +49,69 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   emailSubscription$ = new Subscription();
   formUiStyle: UIFormStyle = new UIFormStyle();
   isClearEmails=false;
-  selectedTemplate!: string;
+  selectedTemplate!: any;
   templateData:any = [];
   templateName: any = [];
   currentEmailData:any;
+  showEmailPreview: boolean = false;
+  previewEmailContent!: any;
+  isCerForm = false;
+  prevClientCaseEligibilityId!: string;
+  cerAuthorizationEmailTypeCode!: string;
+  /** Private properties **/
+  private currentSessionSubscription !: Subscription;
 
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
-    private readonly loaderService: LoaderService,) { }
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly ref: ChangeDetectorRef,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private workflowFacade: WorkflowFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.updateOpenSendEmailFlag();
-    //this.loadDdlLetterTemplates();
     this.loadDdlEmails();
     this.loadEmailTemplates();
-    //this.addEmailSubscription();
   }
 
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
   }
-  /** Private methods **/
-  // private addEmailSubscription() {
-  //   this.emailSubscription$ = this.ddlEmails$.subscribe(() => {
-  //     if(!this.isClearEmails){
-  //       this.isShowToEmailLoader$.next(false);
-  //     }
-  //     this.isClearEmails =false;
-  //   });
-  // }
+
+  private loadCurrentSession() {
+    const sessionId = this.route.snapshot.queryParams['sid'];
+    this.loaderService.show();
+    this.workflowFacade.loadWorkFlowSessionData(sessionId);
+    this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
+      if (resp) {
+        this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
+        if (this.prevClientCaseEligibilityId) {
+          this.isCerForm = true;
+        }
+        this.loaderService.hide();
+      }
+    });
+  }
+
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+        const err= subtitle;    
+        this.loggingService.logException(err)
+      }  
+        this.notificationSnackbarService.manageSnackBar(type,subtitle)
+        this.hideLoader();   
+  }
+
+  hideLoader()
+  {
+    this.loaderService.hide();
+  }
 
   private updateOpenSendEmailFlag() {
     if (this.data) {
@@ -102,10 +137,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private loadEmailTemplates() {
     this.loaderService.show();
-    this.communicationFacade.loadEmailTemplates(this.selectedTemplate ?? '')
+    this.cerAuthorizationEmailTypeCode = 'CER_AUTHORIZATION_EMAIL';
+    this.communicationFacade.loadEmailTemplates(this.cerAuthorizationEmailTypeCode ?? '')
         .subscribe((data: any) => {
           if (data) {
-            this.templateData = data
             this.ddlTemplates = data;
           }
           this.loaderService.hide();
@@ -128,15 +163,15 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isOpenSendEmailClicked = true;
   }
 
-  onSaveForLaterClicked() {
-    this.isOpenSendEmailClicked = false;
+  onSaveForLaterClicked() { 
     this.isShowSaveForLaterPopupClicked = true;
   }
 
-  onPreviewEmailClicked() {
-    this.isOpenSendEmailClicked = false;
+  onPreviewEmailClicked() { 
     this.isShowPreviewEmailPopupClicked = true;
-    this.emailEditorValueEvent.emit(true);
+    this.emailEditorValueEvent.emit(this.currentEmailData);
+    this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+    this.generateText(this.selectedTemplate);
   }
 
   onSendEmailConfirmationDialogClicked(event: any) {
@@ -165,14 +200,44 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
     this.selectedTemplate = event;
-    this.editorValue.emit(event);
+    // this.editorValue.emit(event);
     this.emailContentValue = event.templateContent;
     this.handleEmailEditor(event);
+    this.ref.detectChanges();
   }
 
   handleEmailEditor(emailData: any) {
-    // this.editorValue.emit(emailData);
     this.currentEmailData = emailData;
-    this.editorValue.emit(emailData);
+  }
+  onClosePreviewEmail(){
+    this.isShowPreviewEmailPopupClicked = false;
+  }
+
+  showEmailPreviewContent(event: any){
+    this.previewEmailContent = event;
+    this.showEmailPreview = true;
+  }
+
+  private generateText(emailData: any){
+    this.loaderService.show();
+    this.loadCurrentSession();
+    const clientId = this.workflowFacade.clientId ?? 0;
+    const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '')
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+            this.currentEmailData = data;
+            this.emailContentValue = this.currentEmailData;
+            this.emailEditorValueEvent.emit(this.emailContentValue);
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+        },
+      });
   }
 }
+

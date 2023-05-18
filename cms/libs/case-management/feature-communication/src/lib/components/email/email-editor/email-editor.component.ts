@@ -9,10 +9,12 @@ import {
   EventEmitter,
   Input,
   Output,
+  ViewEncapsulation
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { EditorComponent } from '@progress/kendo-angular-editor';
 
 /** External Libraries **/
 import { LoaderService } from '@cms/shared/util-core';
@@ -22,25 +24,28 @@ import { LoaderService } from '@cms/shared/util-core';
   templateUrl: './email-editor.component.html',
   styleUrls: ['./email-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class EmailEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
   @Input() loadInitialData = new EventEmitter();
-  @Input() editorValue!: any;
+  @Input() currentValue!: any;
   /** Output properties  **/
-  // @Output() editorValue = new EventEmitter<any>();
+  @Output() editorValue = new EventEmitter<any>();
+
 
   /** Public properties **/
-  @ViewChild('anchor') public anchor!: ElementRef;
+  @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
-  // clientVariables$ = this.communicationFacade.clientVariables$;
   ddlEditorVariables$ = this.communicationFacade.ddlEditorVariables$;
   emailEditorvalue!: any;
   isSearchOpened = true;
   isShowPopupClicked = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   clientVariables!: any;
+  previewValue!: any;
+  showpreviewEmail: boolean = false;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,) {}
@@ -48,9 +53,15 @@ export class EmailEditorComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.dataEventSubscribed();
-    this.emailEditorValueEvent(this.editorValue);
+    this.emailEditorValueEvent(this.currentValue);
     this.loadClientVariables();
     this.loadDdlEditorVariables();
+  }
+
+  ngOnChanges(){
+    if(this.currentValue){
+      this.emailEditorValueEvent(this.currentValue);
+    }
   }
 
   /** Private methods **/
@@ -58,7 +69,8 @@ export class EmailEditorComponent implements OnInit {
     this.dataEvent.subscribe({
       next: (event: any) => {
         if (event) {
-          this.editorValue.emit(this.emailEditorvalue);
+          this.currentValue.templateContent = this.emailEditorvalue;
+          this.editorValue.emit(this.currentValue);
         }
       },
       error: (err: any) => {
@@ -67,13 +79,7 @@ export class EmailEditorComponent implements OnInit {
     });
   }
 
-  // private loadClientVariables() {
-  //   this.communicationFacade.loadClientVariables();
-  //   this.communicationFacade.loadCERAuthorizationEmailEditVariables();
-  // }
-
   private loadClientVariables() {
-    //this.communicationFacade.loadClientVariables();
     this.loaderService.show();
     this.communicationFacade.loadCERAuthorizationEmailEditVariables()
         .subscribe((variables: any) => {
@@ -88,41 +94,42 @@ export class EmailEditorComponent implements OnInit {
     this.communicationFacade.loadDdlEditorVariables();
   }
 
-  private contains(target: any): boolean {
-    return (
-      this.anchor.nativeElement.contains(target) ||
-      (this.popup ? this.popup.nativeElement.contains(target) : false)
-    );
-  }
-
-  @HostListener('document:click', ['$event'])
-  private onDocumentClick(event: any): void {
-    if (!this.contains(event.target)) {
-      this.onToggle(false);
+  @HostListener('document:keydown', ['$event'])
+    public keydown(event: KeyboardEvent): void {
+        if (event.code === 'Escape') {
+            this.onToggle(false);
+        }
     }
-  }
 
-  @HostListener('keydown', ['$event'])
-  private onKeydown(event: any): void {
-    this.onToggle(false);
-  }
+    @HostListener('document:click', ['$event'])
+    public documentClick(event: any): void {
+        if (!this.contains(event.target)) {
+            this.onToggle(false);
+        }
+    }
 
-  /** Internal event methods **/
-  onToggle(show?: boolean): void {
-    this.isShowPopupClicked =
-      show !== undefined ? show : !this.isShowPopupClicked;
-    this.isSearchOpened = true;
-  }
+    public onToggle(show?: boolean): void {
+        this.isShowPopupClicked = show !== undefined ? show : !this.isShowPopupClicked;
+    }
+
+    private contains(target: EventTarget): boolean {
+        return (
+            this.anchor.nativeElement.contains(target) ||
+            (this.popup ? this.popup.nativeElement.contains(target) : false)
+        );
+    }
 
   onSearchClosed() {
-    this.isSearchOpened = false;
+    this.isShowPopupClicked = false;
   }
 
   emailEditorValueEvent(emailData:any){
     this.emailEditorvalue = emailData.templateContent;
   }
 
-  searchVariable(event: any){
-console.log(event);
+  public BindVariableToEditor(editor: EditorComponent, item: any) {
+    editor.exec('insertText', { text: '{{' +item + '}}' });
+    editor.value = editor.value.replace(/#CURSOR#/, item);
+    this.onSearchClosed();
   }
 }
