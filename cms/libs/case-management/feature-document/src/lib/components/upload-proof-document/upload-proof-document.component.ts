@@ -158,7 +158,7 @@ export class UploadProofDocumentComponent implements OnInit {
     this.documentName = document.documentName;
     this.uploadform.controls['clientDocumentDescription'].setValue(document.clientDocumentDescription);
     this.tareaUploadNote = this.uploadform.controls['clientDocumentDescription'].value;
-    this.tareaUploadNotesharactersCount = this.tareaUploadNote.length;
+    this.tareaUploadNotesharactersCount = (this.tareaUploadNote?.length===undefined)?0:this.tareaUploadNote?.length;
     this.tareaUploadNotesCounter = `${this.tareaUploadNotesharactersCount}/${this.tareaNotesMaxLength}`;
     this.copyOfUploadedFiles = [
       {
@@ -178,8 +178,8 @@ export class UploadProofDocumentComponent implements OnInit {
 
   SubmitForm() {
     debugger;
-    //this.validateForm();
-    //if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {  
+    this.validateForm();
+    if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {  
       if (this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {       
       this.btnDisabled = true;
       if(!this.isEdit){
@@ -187,7 +187,8 @@ export class UploadProofDocumentComponent implements OnInit {
       }
       this.populateModel();      
     }
-  } 
+  }
+} 
 
   handleFileSelected(event: any) {
     debugger;
