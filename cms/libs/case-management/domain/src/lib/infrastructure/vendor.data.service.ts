@@ -13,4 +13,9 @@ export class VendorDataService{
         return this.http.get<Vendor>(
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors?type=${type}`);
       }
+
+      loadPayemntRequestVendors(type:string, vendorType:string, clientId: any, clientCaseligibilityId: any){
+        return this.http.get<Vendor>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors?type=${type}&vendorType=${vendorType}&clientId=${clientId}&eligibilityId=${clientCaseligibilityId}`);
+      }
 }

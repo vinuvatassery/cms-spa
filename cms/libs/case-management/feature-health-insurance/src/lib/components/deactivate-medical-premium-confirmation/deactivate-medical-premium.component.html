@@ -1,0 +1,45 @@
+<kendo-dialog-titlebar  type="button" (click)="onDeactivateConfirm(false)"> Remove Health Insurance ? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+      It will still live in the client's profile as a historical record.
+   
+    </p>
+
+    <div class="flex-row">
+        <div class="flex-col flex-col-9">
+          <kendo-floatinglabel text="Insurance End Date">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
+             format="MM-dd-yyyy" 
+            formatPlaceholder="formatPattern"              
+            aria-label="Insurance End Date"
+            placeholder=""
+            [(ngModel)]="endDate">
+            </kendo-datepicker>       
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="showError">End Date is required</kendo-formerror>
+        </div>            
+      </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton      
+          look="outline"
+          type="button"
+          aria-label="cancel removing insurance"
+          (click)="onDeactivateConfirm(false)"
+        >
+          CANCEL
+        </button>
+        <button
+          kendoButton  [primary]="true"        
+          aria-label="remove insurance"
+          (click)="onDeactivateConfirm(true)"
+        >
+        REMOVE
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+
