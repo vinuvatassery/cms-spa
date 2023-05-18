@@ -266,7 +266,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     })
   }
   private saveGridState(){
-    const loginUserGridState: any = {
+    const gridState: any = {
       gridStateKey: GridStateKey.GRID_STATE,
       gridStateValue: JSON.stringify(this.state),
       moduleCode:this.module,
@@ -274,7 +274,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       userId:this.loginUserId
     };
     this.gridFacade.hideLoader();
-    this.gridFacade.createLoginUserGridState(loginUserGridState).subscribe({
+    this.gridFacade.createGridState(gridState).subscribe({
       next: (x:any) =>{
         this.gridFacade.hideLoader();
       },
@@ -285,7 +285,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
   private getGridState(){
     this.gridFacade.hideLoader();
-    this.gridFacade.loadLoginUserGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
+    this.gridFacade.loadGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
       next: (x:any) =>{
         if(x){
           this.state=JSON.parse(x?.gridStateValue || '{}') ;

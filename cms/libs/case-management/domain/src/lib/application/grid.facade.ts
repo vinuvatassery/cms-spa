@@ -35,11 +35,11 @@ export class GridFacade {
   hideLoader() {
     this.loaderService.hide();
   }
-  loadLoginUserGridState(userId:any,gridStateKey:string,moduleCode:string) {
-    return this.GridDataService.loadLoginUserGridState(userId,gridStateKey,moduleCode);
+  loadGridState(userId:any,gridStateKey:string,moduleCode:string) {
+    return this.GridDataService.loadGridState(userId,gridStateKey,moduleCode);
   }
-  createLoginUserGridState(gridState: GridState) {
-    return this.GridDataService.createLoginUserGridState(gridState);
+  createGridState(gridState: GridState) {
+    return this.GridDataService.createGridState(gridState);
   }
 
 }
