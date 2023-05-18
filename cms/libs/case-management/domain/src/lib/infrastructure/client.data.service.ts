@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicantInfo } from '../entities/applicant-info';
+import { NewIDCardRequest } from '../entities/new-Id-card-request';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
@@ -158,22 +159,26 @@ export class ClientDataService {
   getPossibleAnswers(){
     return of([
       {
-        value: 'Yes',
+        value: 'YES',
+        text:'Yes',
         id: 1,
       },
 
       {
-        value: 'No',
+        value: 'NO',
+        text:'No',
         id: 2,
       },
 
       {
-        value: 'Don’t know',
+        value: 'DONT_KNOW',
+        text:'Do not know',
         id: 3,
       },
 
       {
-        value: 'Don’t want to answer',
+        value: 'DONT_WANT',
+        text:'Do not want to answer',
         id: 4,
       },
     ]);
@@ -208,6 +213,13 @@ export class ClientDataService {
       applicantInfo,
 
     )}
+    sendNewIdCard(newIDCardRequest : NewIDCardRequest){
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/sendidcard`,
+        newIDCardRequest,
+  
+      )
+    }
     load(clientId:any,caseId:any,eligibilityId:any){
       return this.http.get<ApplicantInfo>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/cases/${caseId}/eligibility-periods/${eligibilityId}`,);
@@ -223,4 +235,7 @@ export class ClientDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/duplicate-check`,
       clientData,
     )}
+    removeClientNote(clientId: number, clientNoteId: string) {
+      return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes/${clientNoteId}`);
+    }
 }

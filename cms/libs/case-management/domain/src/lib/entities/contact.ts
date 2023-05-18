@@ -16,9 +16,9 @@ export interface ClientAddress {
   state?: string;
   zip?: string;
   county?: string;
-  startDate?:Date;
+  startDate?: Date;
   concurrencyStamp?: string;
-  activeFlag?:string;
+  activeFlag?: string;
 }
 
 export interface ClientPhone {
@@ -62,7 +62,8 @@ export interface ContactInfo {
   preferredContactCode?: string;
   friendsOrFamilyContact?: FriendsOrFamilyContact;
   clientCaseEligibility?: ClientCaseElgblty;
-  homeAddressProof?:HomeAddressProof;
+  homeAddressProof?: HomeAddressProof;
+  isCer?:boolean;
 }
 
 export interface ClientCaseElgblty {
@@ -70,23 +71,29 @@ export interface ClientCaseElgblty {
   homeAddressProofFlag?: any;
   housingStabilityCode?: string;
   paperlessFlag?: string;
+  mailingAddressChangedFlag?: string;
+  homeAddressChangedFlag?: string;
+  emailAddressChangedFlag?: string;
+  phoneNumberChangedFlag?: string;
+  friendFamilyChangedFlag?: string;
+  previousClientEligibilityId?: string;
   elgbtyFlagConcurrencyStamp?: string;
   elgbtyConcurrencyStamp?: string;
 }
 
-export interface HomeAddressProof{
+export interface HomeAddressProof {
   documentId?: string;
   clientCaseId?: string;
   documentName?: string;
-  documentSize?:number;
-  documentPath  ?: string;
+  documentSize?: number;
+  documentPath?: string;
   document?: File;
   concurrencyStamp?: string;
 }
 
-export interface PreferredContactLov{
-  lovCode:string,
-  lovDesc:string,
+export interface PreferredContactLov {
+  lovCode: string,
+  lovDesc: string,
 }
 
 export interface FriendsOrFamilyContactClientProfile {

@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ApplicantInfo } from '../entities/applicant-info';
+import { NewIDCardRequest } from '../entities/new-Id-card-request';
 /** Data services **/
 import { ClientDataService } from '../infrastructure/client.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
@@ -29,7 +30,8 @@ export class ClientFacade {
   private rdoDressedorBathedSubject = new BehaviorSubject<any[]>([]);
   private rdoConcentrationSubject = new BehaviorSubject<any[]>([]);
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
-  private specialHandlingsSubject = new BehaviorSubject<any>([]);  
+  private specialHandlingsSubject = new BehaviorSubject<any>([]); 
+  private sendNewIDCardSubject = new BehaviorSubject<any>([]);  
   appInfoFormSubject = new BehaviorSubject<any>([]);
   applicationInfoSubject = new Subject<any>();
   pronounListSubject = new  BehaviorSubject<any>([]);
@@ -55,6 +57,7 @@ export class ClientFacade {
   appInfoForm$ = this.appInfoFormSubject.asObservable();
   applicantInfo$ = this.applicationInfoSubject.asObservable();
   pronounList$ = this.pronounListSubject.asObservable();
+  sendNewIDCard$ = this.sendNewIDCardSubject.asObservable();
 
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -277,10 +280,10 @@ export class ClientFacade {
       },
     });
   }
-  save(applicantInfo:ApplicantInfo) {
+  save(applicantInfo:ApplicantInfo) {    
       return this.clientDataService.save(applicantInfo);
   }
-  load(clientId:any,clientCaseId:any,eligibilityId:any) {
+  load(clientId:any,clientCaseId:any,eligibilityId:any) { 
       return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
   update(applicantInfo:ApplicantInfo,clientId:any) {    
@@ -288,5 +291,27 @@ export class ClientFacade {
   }
   searchDuplicateClient(clientData:any){
     return this.clientDataService.searchDuplicateClient(clientData);
+  }
+  deleteClientNote(clientId: any, clientNoteId: any) {
+    return this.clientDataService.removeClientNote(
+      clientId,
+      clientNoteId
+    );
+  }
+  sendNewIdCard(clientId: number):void{
+    var newIDCardRequest = new NewIDCardRequest();
+    newIDCardRequest.clientId = clientId;
+    this.showLoader();
+    this.clientDataService.sendNewIdCard(newIDCardRequest).subscribe({
+      next: (sendNewIDCardResponse) => {
+        this.sendNewIDCardSubject.next(sendNewIDCardResponse);
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New card has sent')
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
   }
 }

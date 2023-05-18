@@ -26,6 +26,9 @@ export class HealthcareProviderFacade {
   private searchProviderLoadedSubject = new Subject<boolean>();
   private showProvidervalidationSubject = new Subject<boolean>();
   private healthCareProvideReactivateSubject = new Subject<any>();
+  private healthCareProvideGetCerFlagSubject = new Subject<any>();
+  private healthCareProvideSetCerFlagSubject = new Subject<any>();
+  private showAddNewProviderButtonSubject = new Subject<boolean>();
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -39,6 +42,10 @@ export class HealthcareProviderFacade {
   searchProviderLoaded$ = this.searchProviderLoadedSubject.asObservable();
   showProvidervalidation$ = this.showProvidervalidationSubject.asObservable();
   healthCareProvideReactivate$ = this.healthCareProvideReactivateSubject.asObservable();
+  healthCareProvideGetCerFlag$ = this.healthCareProvideGetCerFlagSubject.asObservable();
+  healthCareProvideSetCerFlag$ = this.healthCareProvideSetCerFlagSubject.asObservable();
+  showAddNewProvider$ = this.showAddNewProviderButtonSubject.asObservable();
+
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
@@ -148,7 +155,16 @@ export class HealthcareProviderFacade {
             data : healthCareProvidersResponse["items"] ,        
             total:  healthCareProvidersResponse["totalCount"]  
           };      
-
+          if(parseInt(healthCareProvidersResponse["items"].filter(function(item : any){
+            return item?.isDeleted === false;
+          }).length) > 0)
+          {          
+          this.showAddNewProviderButtonSubject.next(false);
+          }
+          else
+          {
+            this.showAddNewProviderButtonSubject.next(true);
+          }
           this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
           this.showProvidervalidationSubject.next(parseInt(healthCareProvidersResponse["totalCount"]) === 0);
           this.healthCareProvidersSubject.next(gridView);
@@ -222,6 +238,35 @@ export class HealthcareProviderFacade {
     }];
 
     this.workflowFacade.updateChecklist(workFlowdata);
+  }
+
+  ///CER
+  loadProviderCerStatus(clientCaseEligibilityId : string,) : void {
+    this.showLoader();
+    this.healthcareProviderDataService.loadProviderCerStatus(clientCaseEligibilityId).subscribe({
+      next: (providercerStatusGetResponse) => {
+        this.hideLoader();        
+        this.healthCareProvideGetCerFlagSubject.next(providercerStatusGetResponse?.healthcareProviderChangedFlag);
+      },
+      error: (err) => {  
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  }
+
+  setProviderCerStatus(clientCaseEligibilityId : string ,  cerStatus : string): void {    
+    this.showLoader();
+    this.healthcareProviderDataService.updateHealthCareProvidersCerFlag(clientCaseEligibilityId, cerStatus)
+    .subscribe({
+      next: (removeResponse) => {        
+       
+        this.healthCareProvideSetCerFlagSubject.next(removeResponse);   
+        this.hideLoader();    
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
+      },
+    });
   }
  
 }

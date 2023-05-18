@@ -1,7 +1,7 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 /** Facades **/
-import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
+import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 @Component({
@@ -14,6 +14,7 @@ export class StatusPeriodComponent implements OnInit {
 
     @Input() clientCaseId!: any;
     @Input() clientId!: any;
+    @Input() clientCaseEligibilityId!: any;
 
     @Output() loadStatusPeriodEvent  = new EventEmitter<any>();
   /** Public properties **/
@@ -25,32 +26,46 @@ export class StatusPeriodComponent implements OnInit {
   public gridSkipCount = this.statusPeriodFacade.skipCount;
   public sort = this.statusPeriodFacade.sort;
   public state!: State;
+  selectedEligibilityId!: any;
+  selectedCaseId!: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  isStatusPeriodDetailOpened = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  isStatusPeriodEdit = false;
+  isCopyPeriod = false;
   public actions = [
     {
       buttonType: "btn-h-primary",
-      text: "Edit Doc",
+      text: "Copy Status Period",
+      icon: "content_copy",
+      click: (dataItem: any): void => {
+        //  this.onDeactivatePhoneNumberClicked()
+        if(dataItem.clientCaseEligibilityId){
+          this.isCopyPeriod = true;
+          this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId);
+        }
+      },
+    },
+    {
+      buttonType: "btn-h-primary",
+      text: "Edit Status Period",
       icon: "edit",
-      click: (): void => {
+      click: (dataItem: any): void => {
+        if(dataItem.clientCaseEligibilityId){
+          this.isStatusPeriodEdit = true;
+          this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId);
+        }
         //  this.isOpenDocAttachment = true
       },
-    },
-
-    {
-      buttonType: "btn-h-danger",
-      text: "Remove Doc",
-      icon: "delete",
-      click: (): void => {
-        //  this.onDeactivatePhoneNumberClicked()
-      },
-    },
+    }
   ];
   /** Constructor **/
   constructor(
     private readonly statusPeriodFacade: StatusPeriodFacade,
-    private caseFacade: CaseFacade) { }
+    private caseFacade: CaseFacade,
+    private cdr: ChangeDetectorRef,
+    private clientEligibilityFacade: ClientEligibilityFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -58,13 +73,15 @@ export class StatusPeriodComponent implements OnInit {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-  }
-
-  ngOnChanges(){
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
-    };
+    this.clientEligibilityFacade.eligibilityPeriodPopupOpen$.subscribe(response=>{
+      this.isStatusPeriodDetailOpened = response;
+      if(!this.isStatusPeriodDetailOpened)
+      {
+        this.isStatusPeriodEdit = false;
+        this.isCopyPeriod = false;
+      }
+      this.cdr.detectChanges();
+    });
   }
 
   pageselectionchange(data: any) {
@@ -95,6 +112,36 @@ export class StatusPeriodComponent implements OnInit {
       pagesize: maxResultCountValue
     };
     this.loadStatusPeriodEvent.next(gridDataRefinerValue);
+  }
+
+  onStatusPeriodDetailClosed() {
+    this.isStatusPeriodDetailOpened = false;
+    this.isStatusPeriodEdit = false;
+    this.isCopyPeriod = false;
+    this.cdr.detectChanges();
+  }
+
+  onModalSaveAndClose(result:any){
+    if(result){
+      this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
+      this.isStatusPeriodDetailOpened=false;
+      this.isStatusPeriodEdit = false;
+      this.isCopyPeriod = false;
+      this.loadStatusPeriodData();
+    }
+  }
+
+  onEditEligibilityPeriodClicked(clientCaseId: any, clientCaseEligibilityId: any) {
+    this.selectedCaseId = clientCaseId;
+    this.selectedEligibilityId = clientCaseEligibilityId;
+    this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(true);
+  }
+  onStatusPeriodDetailClicked() {
+    this.isStatusPeriodEdit = false;
+    this.isCopyPeriod = false;
+    this.selectedCaseId = this.clientCaseId;
+    this.selectedEligibilityId = this.clientCaseEligibilityId;
+    this.isStatusPeriodDetailOpened = true;
   }
 }
 

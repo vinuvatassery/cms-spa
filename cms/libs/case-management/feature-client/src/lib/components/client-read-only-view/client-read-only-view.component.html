@@ -9,6 +9,7 @@
         (click)="onEditClientInformationClicked()"
         title="Edit Client Info"
         aria-label="edit client info"
+        [disabled]="(isReadOnly$ | async) ? true : false"
       ></button>
     </div>
   </div>

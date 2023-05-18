@@ -8,7 +8,7 @@
     </div>
     <div class="flex-col mt-1">
         <div class="app-c-table">
-            <kendo-grid [pageSize]="5" [pageable]="true" [data]="drugPurchases$ | async">
+            <kendo-grid [resizable]="true" [pageSize]="5" [pageable]="true" [data]="drugPurchases$ | async">
                 <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="100">
                 </kendo-grid-column>
                 <kendo-grid-column field="pharmacyName" title="Pharmacy" [width]="180"></kendo-grid-column>
@@ -79,7 +79,7 @@
         <div class="flex-row">
             <div class="flex-col mt-1">
                 <button kendoButton [primary]="true" icon="add"  
-                    aria-label="add pharmacy">
+                    aria-label="add pharmacy" [disabled]="(isReadOnly$ | async) ? true : false">
                     Pharmacy Claim
                 </button>
             </div>

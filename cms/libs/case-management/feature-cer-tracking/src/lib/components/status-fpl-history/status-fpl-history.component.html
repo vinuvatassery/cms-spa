@@ -1,6 +1,6 @@
 <h4>FPL History</h4>
 
-<kendo-grid [data]="statusFplHistory" [loading]="loader">
+<kendo-grid [data]="statusFplHistory$ | async" [loading]="loader" [resizable]="true">
     <kendo-grid-column field="fplPercentage" title="FPL" [width]="100"></kendo-grid-column>
     <kendo-grid-column field="fplStartDate" title="Start Date" [width]="100">
       <ng-template kendoGridCellTemplate let-dataItem>

@@ -103,14 +103,14 @@
     </kendo-grid-column>
     <kendo-grid-column
     *ngIf="isAddOrEditFamilyDependentDisplay"
-      field="ClientDependentId"
+      field="ClientRelationshipId"
       title="Options"
       [width]="70"
       class="text-center"
       [sortable]="false"
       [columnMenu]="false"
     >
-      <ng-template kendoGridCellTemplate let-dependent let-ClientDependentId="field">
+      <ng-template kendoGridCellTemplate let-dependent let-ClientRelationshipId="field">
         <kendo-dropdownbutton
           [data]=  "actions"
           icon="more-vertical"
@@ -120,10 +120,10 @@
           aria-label="more actions"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }"
         >
-
-        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-ClientDependentId="ClientDependentId">
+        <span hidden> More Option</span>
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-ClientRelationshipId="ClientRelationshipId">
           <button kendoButton  look="flat" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" [class]="dataItem.buttonType" aria-hidden="false"
-          (click)="dataItem.click(dependent.clientDependentId,dependent.dependentTypeCode)">
+          (click)="dataItem.click(dependent.clientRelationshipId,dependent.dependentTypeCode)" [disabled]="(isReadOnly$ | async) ? true : false">
             <span class="material-icons" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
             <label>   {{ dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText  }} </label>
         </button>
@@ -172,6 +172,7 @@
       icon="add"
       (click)="onFamilyMemberClicked()"
       aria-label="add family member"
+      [disabled]="(isReadOnly$ | async) ? true : false"
     >
       Family Member
     </button>

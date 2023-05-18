@@ -12,7 +12,7 @@ import {
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
-import { ClientEmployer, EmploymentFacade, ScreenType } from '@cms/case-management/domain';
+import { ClientEmployer, EmploymentFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -29,11 +29,11 @@ export class EmployerListComponent implements OnInit, OnChanges {
   @Input() clientId: any;
   @Input() clientCaseId: any;
   @Input() isClientProfileTab: boolean = false;
+  @Input() enableAddButton: boolean = true;
   @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/
   filterable = false;
-  isAddEmployerButtonDisplayed!: boolean;
   isAdd = true;
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
@@ -48,7 +48,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   public sort = this.employmentFacade.sort;
   public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -65,12 +65,11 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
-    this.addEmployerButtonDisplay();
     this.employmentValid$.subscribe(response=>{
       this.isEmployerAvailable = response;
       this.cdr.detectChanges();
@@ -143,13 +142,6 @@ export class EmployerListComponent implements OnInit, OnChanges {
   // updating the grid data
   updateEmploymentHandle(employements: any) {
     this.loadEmployments();
-  }
-  private addEmployerButtonDisplay() {
-    if (this.data === ScreenType.Case360Page) {
-      this.isAddEmployerButtonDisplayed = false;
-    } else {
-      this.isAddEmployerButtonDisplayed = true;
-    }
   }
 
   // employer detail popup close handler

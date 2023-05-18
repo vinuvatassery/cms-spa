@@ -70,7 +70,7 @@
         <kendo-grid-column
           field="effectiveDate"
           title="Effective Date"
-          [width]="100" [sortable]="false"
+          [width]="100" 
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
@@ -103,6 +103,7 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="clientEmailId"
+          [columnMenu]="false"
           title="Options"
           [width]="75"
           class="text-center"
@@ -117,12 +118,12 @@
             aria-label="more actions"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }"
           >
-          
+          <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientEmailId="clientEmailId">
               <button kendoButton  [hidden]="(clientEmail.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
               ||(clientEmail.preferredFlag === 'Y' && dataItem.buttonName ==='preferred')" 
               look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
-              (click)="dataItem.click(clientEmail?.clientEmailId)">
+              (click)="dataItem.click(clientEmail?.clientEmailId)" [disabled]="(isReadOnly$ | async) ? true : false">
                 <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                 <label>   {{ dataItem.text }} </label>
             </button> 
@@ -170,6 +171,7 @@
       icon="add"
       (click)="onEmailAddressDetailClicked(false,'')"
       aria-label="add email address"
+      [disabled]="(isReadOnly$ | async) ? true : false"
     >
       Email Address
     </button>

@@ -22,10 +22,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   sessionId! : string;
   clientId ! : number
   clientCaseEligibilityId ! : string
+  prevClientCaseEligibilityId!: string
   hasManager! :string
   needManager! : string
   hasManagerValidation =false;
   needManagerValidation =false;
+  isCerForm = false;
 
   gridVisibleSubject = new Subject<boolean>();
   showCaseManagers$ = this.gridVisibleSubject.asObservable();
@@ -95,7 +97,13 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         .subscribe((session: any) => {      
          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
          this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-         this.clientId = JSON.parse(session.sessionData).clientId            
+         this.clientId = JSON.parse(session.sessionData).clientId       
+         this.prevClientCaseEligibilityId = JSON.parse(
+          session.sessionData
+        )?.prevClientCaseEligibilityId;
+        if (this.prevClientCaseEligibilityId) {
+          this.isCerForm = true;
+        }     
          this.getCaseManagerStatus()
         });        
       } 
@@ -133,15 +141,34 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   handleNeedManagerRadioChange($event : any)
-  {
+  {    
     this.caseManagerFacade.updateWorkFlow(true)
     this.validate();
+   
   }
 
   hasManagerChangeEvent(status : boolean)
-  {    
-     //show hide grid
-     this.gridVisibleSubject.next(status);
+  {   
+    this.gridVisibleSubject.next(status); 
+    let needMngr 
+    if(!this.hasManager)
+    {
+      needMngr = status ===true ? 'Y' : 'N'
+    }
+    else{ needMngr = this.hasManager}   
+      this.caseManagerFacade.updateCaseManagerStatus
+    (this.clientCaseId , needMngr , 'N')
+     
+    .subscribe({
+      next: (updateDateManagerResponse) => {
+       
+      this.caseManagerFacade.hideLoader() 
+     },
+       error: (err) => {
+        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.caseManagerFacade.hideLoader() 
+       },
+     })    
   }
 
   loadCaseManagers(gridDataRefinerValue: any): void {   
@@ -269,12 +296,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }

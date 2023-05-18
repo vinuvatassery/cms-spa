@@ -2,12 +2,12 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** External Libraries**/
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries**/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { GroupCode } from '@cms/case-management/domain';
+import { GroupCode, CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-group-detail',
@@ -24,15 +24,19 @@ export class GroupDetailComponent implements OnInit {
   @Output() cancelGroupChange = new EventEmitter();
   @Output() deleteGroupChange = new EventEmitter();
   @Output() deleteGroup = new EventEmitter<any>();
+  @Output() checkIfSCheduled = new EventEmitter<boolean>();
   /** Public properties **/
   currentDate = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate());
   formUiStyle: UIFormStyle = new UIFormStyle();
   groupForm!: FormGroup;
   groupCodes!: any[];
   groupCodesSubscription = new Subscription();
+  isScheduledGroupChange$ = new BehaviorSubject(false);
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   /** Constructor **/
   constructor(private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
+    private readonly caseFacade: CaseFacade,
     private readonly notifySnackbarService: NotificationSnackbarService) { }
 
   /* Lifecycle events */
@@ -53,10 +57,19 @@ export class GroupDetailComponent implements OnInit {
   private addCurrentGroupSubscription() {
     this.currentGroup$.subscribe((group: any) => {
       if (group) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const groupDate = new Date(group.groupStartDate);
+        groupDate.setHours(0, 0, 0, 0);
+
+        const isScheduled = groupDate > today
+        this.isScheduledGroupChange$.next(isScheduled);
+        this.checkIfSCheduled.emit(isScheduled);
+
         this.groupForm.patchValue({
           groupCodeId: group.groupCodeId,
-          //groupStartDate: new Date(group.groupStartDate)
-        });
+          groupStartDate: groupDate > today ? new Date(group.groupStartDate) : this.currentDate
+        });       
       }
     });
   }
@@ -70,7 +83,7 @@ export class GroupDetailComponent implements OnInit {
 
   /* Internal events */
   onCancelGroupChange() {
-    this.cancelGroupChange.emit()
+    this.cancelGroupChange.emit();    
   }
 
   onDeleteGroupChange() {

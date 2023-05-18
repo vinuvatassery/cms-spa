@@ -4,7 +4,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 /** Internal Libraries **/
-import { ClientPharmacy, Pharmacy } from '@cms/case-management/domain';
+import { ClientPharmacy, Pharmacy, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -24,7 +24,8 @@ export class PharmacyListComponent implements OnInit {
   @Input() searchLoaderVisibility$!: Observable<boolean>;
   @Input() clientId: any;
   @Input() showPharmacyRequiredValidation$!: Observable<boolean>;
-
+  @Input() showPharmacyGrid:any = true;
+  @Input() isCer:any = false;
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
   @Output() addPharmacyClick = new EventEmitter<string>();
@@ -47,6 +48,7 @@ export class PharmacyListComponent implements OnInit {
   addButtonEmitted = false;
   clientpharmacies:any[] = []
   public state!: State;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -88,7 +90,7 @@ export class PharmacyListComponent implements OnInit {
   clientPharmacyCount!:number;
 
   /** Constructor **/
-  constructor() {
+  constructor(private caseFacade: CaseFacade) {
     this.isOpenChangePriorityClicked$.next(false);
     this.isOpenPharmacyClicked$.next(false);
     this.isRemoveClientPharmacyClicked$.next(false);

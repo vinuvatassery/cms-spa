@@ -3,7 +3,7 @@ import { Dependent } from "./dependent";
 export class HealthInsurancePolicy {
         clientInsurancePolicyId: string | null = null;
         clientId: number | null = null;
-        insuranceCarrierId: string | null = null;
+        insuranceVendorId: string | null = null;
         clientCaseEligibilityId: string | null = null;
         insurancePlanId: string | null = null;
         clientMaximumId: string | null = null;
@@ -15,8 +15,8 @@ export class HealthInsurancePolicy {
         policyHolderLastName: string | null = null;
         metalLevelCode: string | null = null;
         premiumAmt: number | null = null;
-        startDate?: string | null;
-        endDate?: string | null;
+        insuranceStartDate?: string | null;
+        insuranceEndDate?: string | null;
         careassistPayingPremiumFlag: string | null = null;
         premiumPaidThruDate?: string | null;
         premiumFrequencyCode: string | null = null;
@@ -44,7 +44,7 @@ export class HealthInsurancePolicy {
         oonDrugs: string | null = null;
         concurrencyStamp: string | null = null;
         activeFlag: string | null = null;
-        creationTime?: string;       
+        creationTime?: string;
         proofOfPremiumFile: any = null;
         proofOfPremiumFileName: string = "";
         proofOfPremiumFileSize: number | null = null;
@@ -62,7 +62,7 @@ export class HealthInsurancePolicy {
         copyOfSummaryFileSize: number | null = null;
         copyOfSummaryFileTypeCode: string = "";
         copyOfSummaryFileId: string = "";
-        copyOfSummaryFilePath: string = "";        
+        copyOfSummaryFilePath: string = "";
         medicareCardFile: any = null;
         medicareCardFileName: string = "";
         medicareCardFileSize: number | null = null;
@@ -70,6 +70,7 @@ export class HealthInsurancePolicy {
         medicareCardFileId: string = "";
         medicareCardFilePath: string = "";
         othersCoveredOnPlan: Array<Dependent> = [];
+        isCerReview: boolean = false;
         //removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
 }
 

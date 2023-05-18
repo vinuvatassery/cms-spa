@@ -3,7 +3,7 @@
 
         <div class="app-c-table">
 
-            <kendo-grid [pageSize]="state.take" [pageable]="true" [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
+            <kendo-grid [pageSize]="state.take" [pageable]="true" [resizable]="true" [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
                 <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
                     <section>
                         <case-management-status-ramsell-info [clientId]="clientId"></case-management-status-ramsell-info>
@@ -42,7 +42,7 @@
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                             [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar of Anil Kumar">
-                            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+                            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
                         </button>
                         <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
                             <ng-template kendoPopoverBodyTemplate>
@@ -51,18 +51,18 @@
                         </kendo-popover>
                     </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="Option" title="Options" [width]="50" class="text-center">
+                <kendo-grid-column field="Option" title="Options" [width]="70" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More Options"
                             class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
                             aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 
-                            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                                <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
-                                    [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                                <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
                                     <span class="material-icons"
-                                        [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-                                    <label> {{ dataItem.text }} </label>
+                                        [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                                    <label> {{ buttondataItem.text }} </label>
                                 </button>
                             </ng-template>
                         </kendo-dropdownbutton>
@@ -88,11 +88,11 @@
     </div>
   </div>
 </ng-template>
-  <!-- grid Loader Template -->  
+  <!-- grid Loader Template -->
  <ng-template kendoGridLoadingTemplate>
    <common-grid-loader-component></common-grid-loader-component>
   </ng-template>
-  <!-- grid No data Template -->  
+  <!-- grid No data Template -->
   <ng-template kendoGridNoRecordsTemplate>
     <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
     </div>
@@ -100,7 +100,36 @@
   </ng-template>
 
             </kendo-grid>
+            <div class="mt-1">
+              <button
+                kendoButton
+                [primary]="true"
+                icon="add"
+                aria-label="add status"
+                (click)="onStatusPeriodDetailClicked()"
+              >
+                NEW STATUS
+              </button>
+            </div>
+
         </div>
 
     </div>
 </div>
+
+<!-- Status Period Detail Modal -->
+<kendo-dialog
+  *ngIf="isStatusPeriodDetailOpened"
+  (close)="onStatusPeriodDetailClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  kendoTooltip
+>
+  <case-management-eligibility-period-detail
+  [clientId]="clientId"
+  [clientCaseEligibilityId]="selectedEligibilityId"
+  [clientCaseId]="selectedCaseId"
+  [isEdit]="false"
+  [isStatusPeriodEdit]="isStatusPeriodEdit"
+  [isCopyPeriod]="isCopyPeriod"
+  (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
+</kendo-dialog>

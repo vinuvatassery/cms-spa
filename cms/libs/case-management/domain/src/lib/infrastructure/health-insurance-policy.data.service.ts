@@ -42,15 +42,34 @@ export class HealthInsurancePolicyDataService {
       healthInsurancePolicies
     );
   }
-  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any) {
+  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any,insuranceStatus:string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/clients/${clientId}/eligibility/${clientCaseEligibilityId}/priority`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/clients/${clientId}/eligibility/${clientCaseEligibilityId}/priority?type=${insuranceStatus}`);
   }
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
   }
-  deleteInsurancePolicy(insurancePolicyId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
+  deleteInsurancePolicy(insurancePolicyId:any , endDate? : Date , isCerForm = false){
+    const options = {
+      body: {
+        endDate: endDate,
+        isCerForm : isCerForm
+      }
+    }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`,options);
+  }
+  
+  copyInsurancePolicy(insurancePolicyId:any){
+    return this.http.post(
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policies/${insurancePolicyId}`,{}
+    );
+  }
+
+  copyHealthInsurancePolicy(insurancePolicyId:any, insurancePolicy: any = {}){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policies/${insurancePolicyId}`
+      ,insurancePolicy
+    );
   }
   updateInsuranceFlags(insuranceFlagsData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-flags`, insuranceFlagsData);
@@ -260,7 +279,9 @@ export class HealthInsurancePolicyDataService {
       },
     ]);
   }
-  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,skipCount:any,pageSize:any, sortBy:any, sortType:any) {
+  loadMedicalHealthPlans(clientId:any,clientCaseEligibilityId:any,typeParam:any, skipCount:any,pageSize:any, sortBy:any, sortType:any) {
+    let type =typeParam['type'];
+    let insuranceStatusType = typeParam['insuranceStatusType'];
     let params = new HttpParams();
     params = params.append('clientId',clientId);
     params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);
@@ -268,6 +289,25 @@ export class HealthInsurancePolicyDataService {
     params = params.append('maxResultCount',pageSize);
     params = params.append('sorting',sortBy);
     params = params.append('sortType',sortType);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy`,{params:params});
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/health-insurance-policy?type=${type}&insuranceStatusType=${insuranceStatusType}`,{params:params});
   }
+
+  loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+     return this.http.get(    
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=
+    ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`);
+    }
+  savePaymentRequest(paymentRequest:any){
+    return this.http.post<PaymentRequest>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments`,
+      paymentRequest
+    );
+  }
+
+  loadInsurancePoliciesByProviderId(providerId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors/${providerId}/insurance-policies?clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&dentalPlan=${isDental}`);
+  }
+  
+
 }

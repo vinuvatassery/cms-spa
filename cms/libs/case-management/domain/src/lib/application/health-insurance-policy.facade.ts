@@ -27,6 +27,9 @@ export class HealthInsurancePolicyFacade {
   private ddlMedicalHealthPalnPremiumFrequecySubject = new BehaviorSubject<any>(
     []
   );
+  private premiumPaymentsSubject = new BehaviorSubject<any>([]);
+  triggeredPremiumPaymentSaveSubject = new BehaviorSubject<boolean>(false);
+  triggeredCoPaySaveSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
@@ -44,6 +47,9 @@ export class HealthInsurancePolicyFacade {
   medicalHealthPlans$ = this.medicalHealthPlansSubject.asObservable();
   ddlMedicalHealthPalnPremiumFrequecy$ =
   this.ddlMedicalHealthPalnPremiumFrequecySubject.asObservable();
+  premiumPayments$ = this.premiumPaymentsSubject.asObservable();
+  triggeredPremiumPaymentSave$ = this.triggeredPremiumPaymentSaveSubject.asObservable();
+  triggeredCoPaySave$ = this.triggeredCoPaySaveSubject.asObservable();
 
   public dateFields: Array<string> = [
     'startDate',
@@ -140,28 +146,41 @@ export class HealthInsurancePolicyFacade {
     return this.healthInsurancePolicyService.setHealthInsurancePolicyPriority(healthInsurancePolicies);
   }
 
-  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any) {
-    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId);
+  getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any,insuranceStatus:string) {
+    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId,insuranceStatus);
   }
 
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
     return this.healthInsurancePolicyService.deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId);
   }
-  deleteInsurancePolicy(insurancePolicyId: any) {
-    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
+  deleteInsurancePolicy(insurancePolicyId: any, endDate? : Date , isCerForm = false) {
+    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId , endDate , isCerForm);
+  }
+
+  copyInsurancePolicy(insurancePolicyId: any) {
+    return this.healthInsurancePolicyService.copyInsurancePolicy(insurancePolicyId);
+  }
+
+  copyHealthInsurancePolicy(insurancePolicyId: any, healthInsurancePolicy: any = {}) {
+    const formData = new FormData();
+    if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
+      formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.copyOfSummaryFile) {
+      formData.append('CopyOfSummaryFile', healthInsurancePolicy?.copyOfSummaryFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.proofOfPremiumFile) {
+      formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.medicareCardFile) {
+      formData.append('MedicareCardFile', healthInsurancePolicy?.medicareCardFile ?? '');
+    }
+    this.formDataAppendObject(formData, healthInsurancePolicy);
+
+    return this.healthInsurancePolicyService.copyHealthInsurancePolicy(insurancePolicyId, formData);
   }
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);
-  }
-  loadCoPaysAndDeductibles() {
-    this.healthInsurancePolicyService.loadCoPaysAndDeductibles().subscribe({
-      next: (coPaysAndDeductiblesResponse) => {
-        this.coPaysAndDeductiblesSubject.next(coPaysAndDeductiblesResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      },
-    });
   }
   loadHealthInsuranceStatus() {
     this.healthInsurancePolicyService.loadHealthInsuranceStatus().subscribe({
@@ -185,9 +204,9 @@ export class HealthInsurancePolicyFacade {
     });
   }
   
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
     this.showLoader();
-    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, skipCount, pageSize,sortBy,sortType).subscribe({
+    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam, skipCount, pageSize,sortBy,sortType).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {
@@ -242,5 +261,47 @@ export class HealthInsurancePolicyFacade {
         fd.append(k, obj[i]);
       }
     }
+  }
+
+  loadCoPaysAndDeductibles(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
+    this.showLoader()
+    this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
+      next: (coPaysAndDeductiblesResponse: any) => {
+        const gridView = {
+          data: coPaysAndDeductiblesResponse['items'],
+          total: coPaysAndDeductiblesResponse['totalCount'],
+        };
+        this.coPaysAndDeductiblesSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+
+    });
+
+  }
+  loadPremiumPayments(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
+    this.showLoader()
+    this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
+      next: (premiumPaymentsResponse: any) => {
+        const gridView = {
+          data: premiumPaymentsResponse['items'],
+          total: premiumPaymentsResponse['totalCount'],
+        };
+        this.premiumPaymentsSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  savePaymentRequest(paymentRequest:any){
+    return this.healthInsurancePolicyService.savePaymentRequest(paymentRequest);
+  }
+
+  loadInsurancePoliciesByProviderId(insurancePlanId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
+   return this.healthInsurancePolicyService.loadInsurancePoliciesByProviderId(insurancePlanId, clientId, clientCaseEligibilityId, isDental);
   }
 }

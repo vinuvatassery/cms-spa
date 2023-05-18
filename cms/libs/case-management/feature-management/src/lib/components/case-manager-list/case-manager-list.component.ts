@@ -11,6 +11,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject } from 'rxjs';
+import { CaseFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-case-manager-list',
   templateUrl: './case-manager-list.component.html',
@@ -40,6 +41,7 @@ export class CaseManagerListComponent implements OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() updateDatesCaseManager$: any;
+  @Input() isCerForm: any;
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -70,7 +72,28 @@ export class CaseManagerListComponent implements OnChanges {
   clientCaseManagerId!: string;
   assignmentStartDate!: Date;
   assignmentEndDate: any;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public newAppActions = [
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Unassign Case Manager',
+      icon: 'delete',
+      buttonName: 'unAssignMngr',
+      click: (
+        clientCaseId: string,
+        caseManagerId: string,
+        clientCaseManagerId: string,
+        assignmentStartDate: Date
+      ): void => {
+        if (this.unAssignButttonEmitted === false) {
+          this.deleteCaseManagerCaseId = clientCaseId;
+          this.selectedCaseManagerId = caseManagerId;
+          this.assignmentStartDate = new Date(assignmentStartDate);
+          this.onUnAssignManagerClicked();
+          this.unAssignButttonEmitted = true;
+        }
+      },
+    },
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Case Manager',
@@ -103,7 +126,7 @@ export class CaseManagerListComponent implements OnChanges {
   public tabActions = [
     {
       buttonType: 'btn-h-danger',
-      text: 'Un Assign Case Manager',
+      text: 'Unassign Case Manager',
       icon: 'delete',
       buttonName: 'unAssignMngr',
       click: (
@@ -123,7 +146,7 @@ export class CaseManagerListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Re Assign Case Manager',
+      text: 'Re-assign Case Manager',
       icon: 'delete',
       buttonName: 'reAssignMngr',
       click: (
@@ -164,9 +187,13 @@ export class CaseManagerListComponent implements OnChanges {
       },
     },
   ];
-
+constructor(private caseFacade: CaseFacade){}
   /** Lifecycle hooks **/
-
+  ngOnInit(): void {
+    if (!this.isCerForm) {
+      this.newAppActions = this.newAppActions.filter(x=>x.buttonName != 'unAssignMngr');
+    }
+  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -175,7 +202,6 @@ export class CaseManagerListComponent implements OnChanges {
     };
     this.loadCaseManagerssList();
   }
-
   /** Private methods **/
 
   private loadCaseManagerssList(): void {

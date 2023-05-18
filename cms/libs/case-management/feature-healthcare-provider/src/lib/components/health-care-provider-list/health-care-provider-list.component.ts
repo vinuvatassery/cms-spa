@@ -4,7 +4,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
-
+import { CaseFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-health-care-provider-list',
   templateUrl: './health-care-provider-list.component.html',
@@ -25,6 +25,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   @Input() loadExistingProvider$: any;
   @Input() searchProviderLoaded$: any;
   @Input() healthCareProvideReactivate$: any;
+  @Input() showAddNewProvider$ : any
 
   @Output() deleteConfimedEvent =  new EventEmitter<string>();
   @Output() deactivateConfimEvent =  new EventEmitter<string>();
@@ -59,10 +60,11 @@ export class HealthCareProviderListComponent implements  OnChanges {
   reactivateButtonEmitted =false;
   clientProviderId! :any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType:"btn-h-primary",
-      text: "Edit Provider",
+      text: "Edit",
       icon: "edit",
       click: (clientProviderId : string): void => {     
         if(!this.editbuttonEmitted)
@@ -75,7 +77,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
    
     {
       buttonType:"btn-h-danger",
-      text: "Remove Provider",
+      text: "Remove",
       icon: "delete",
       click: (clientProviderId : string): void => {    
         if(!this.deletebuttonEmitted)
@@ -87,7 +89,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Provider',
+      text: 'Deactivate',
       icon: 'block',
       buttonName: 'deactivate',
       click: (clientProviderId: string): void => {
@@ -99,7 +101,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Reactivate Provider',
+      text: 'Reactivate',
       icon: 'done',
       buttonName: 'reactivate',
       click: (clientProviderId: string): void => {
@@ -111,7 +113,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
     }
   ];
 
-  
+  constructor(private caseFacade: CaseFacade){}
+
   /** Lifecycle hooks **/
   
   ngOnChanges(): void {     

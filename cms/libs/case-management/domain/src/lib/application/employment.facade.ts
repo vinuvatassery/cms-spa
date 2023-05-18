@@ -33,6 +33,7 @@ export class EmploymentFacade {
   private employersDetailsSubject = new BehaviorSubject<any>([]);
   private employmentStatusGetSubject = new Subject<any>();
   private employersStatusSubject = new BehaviorSubject<any>([]);
+  private prvEmployersSubject = new Subject<any>();
   employmentValidSubject = new Subject<boolean>();
   /** Public properties **/
   employers$ = this.employersSubject.asObservable();
@@ -40,6 +41,7 @@ export class EmploymentFacade {
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
   employersStatus$ = this.employersStatusSubject.asObservable();
   employmentValid$ = this.employmentValidSubject.asObservable();
+  prvEmployers$ = this.prvEmployersSubject.asObservable();
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -127,6 +129,32 @@ export class EmploymentFacade {
       });
   }
 
+  loadPrevEmployers(clientId : any,prvClientCaseEligibilityId: string,){
+    this.showLoader();
+    this.employersDataService
+    .loadEmploymentService(
+      clientId,
+      prvClientCaseEligibilityId,
+      0,
+      1000,
+      '',
+      '',
+      true
+    )
+    .subscribe({
+      next: (employersResponse: any) => {
+        if (employersResponse) {      
+          this.prvEmployersSubject.next(employersResponse['items']);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
   // Loading the employmet details based on employerid
   loadEmployersDetails(clientId : string, clientEmployerId: string) {
     return this.employersDataService.loadEmployersDetailsService(
@@ -154,8 +182,8 @@ export class EmploymentFacade {
   }
 
   // updating the unemployment stats
-  unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-    return this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed);
+  employmentUpdate(clientCaseEligibilityId: string, employmentData: any) {
+    return this.employersDataService.employmentUpdateService(clientCaseEligibilityId, employmentData);
   }
 
   updateWorkFlowCount(status: StatusFlag) {
@@ -165,6 +193,24 @@ export class EmploymentFacade {
     }];
 
     this.workflowFacade.updateChecklist(workFlowdata);
+  }
+
+  validateOldEmployers(prvEmployers: any){
+    let isValid = true;
+    prvEmployers.forEach((emp:any) => {
+      emp.cerReviewStatusCodeRequired = false;
+      emp.endDateRequired = false;
+      if(!emp.cerReviewStatusCode || emp.cerReviewStatusCode === 'PENDING'){
+        isValid = false;
+        emp.cerReviewStatusCodeRequired = true;
+      }
+      else if(emp.cerReviewStatusCode === 'INACTIVE' && !emp.endDate){
+        isValid = false;
+        emp.endDateRequired = true;
+      }
+    });
+    this.prvEmployersSubject.next(prvEmployers);
+    return isValid;
   }
 
 }

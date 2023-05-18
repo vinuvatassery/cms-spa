@@ -14,3 +14,4 @@ export * from './lib/components/set-health-insurance-priority/set-health-insuran
 export * from './lib/components/co-pays-and-deductibles-list/co-pays-and-deductibles-list.component';
 export * from './lib/components/co-pays-and-deductibles-detail/co-pays-and-deductibles-detail.component';
 export * from './lib/components/medical-premium-payment-detail/medical-premium-payment-detail.component';
+export * from './lib/components/deactivate-medical-premium-confirmation/deactivate-medical-premium.component';

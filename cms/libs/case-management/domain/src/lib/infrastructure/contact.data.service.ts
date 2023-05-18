@@ -127,10 +127,8 @@ export class ContactDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts`);
   }
 
-
-
-  loadContactInfo(clientId: number, clientCaseEligibilityId: string) {
-    return this.http.get<ContactInfo>(this.getUrl(clientId, clientCaseEligibilityId));
+  loadContactInfo(clientId: number, clientCaseEligibilityId: string, prevClientCaseEligibilityId:string) {
+    return this.http.get<ContactInfo>(`${this.getUrl(clientId, clientCaseEligibilityId)}&prvEligibilityId=${prevClientCaseEligibilityId}`);
   }
 
   createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {

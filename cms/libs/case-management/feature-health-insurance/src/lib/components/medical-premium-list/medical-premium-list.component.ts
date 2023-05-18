@@ -5,7 +5,7 @@ import { State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
-import { CompletionChecklist, HealthInsurancePolicyFacade,StatusFlag,WorkflowFacade} from '@cms/case-management/domain';
+import { CompletionChecklist, HealthInsurancePolicyFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -25,31 +25,33 @@ export class MedicalPremiumListComponent implements OnInit {
   isOpenedChangePriorityModal = false;
   isOpenedDeleteConfirm = false;
   isEdit!: boolean;
+  isOpenedRemoveConfirm = false;
   dialogTitle!: string;
   insuranceType!: string;
   columnOptionDisabled = false;
   public pageSizes = this.healthInsurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.healthInsurancePolicyFacade.skipCount;
   public state!: State;
-  sort!:any;
+  sort!: any;
   currentInsurancePolicyId: any;
   selectedInsurance: any;
-  medicalHealthPlansCount :any;
-  gridList=[];
-  carrierContactInfo:any;
-  insurancePlanName:string='';
+  medicalHealthPlansCount: any;
+  gridList = [];
+  carrierContactInfo: any;
+  insurancePlanName: string = '';
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  isCerForm = false;
   showInsuranceRequired = this.healthInsurancePolicyFacade.showInsuranceRequired$;
   /** Input properties **/
   @Input() healthInsuranceForm: FormGroup;
   @Input() closeDeleteModal: boolean = false;
   @Input() caseEligibilityId: any;
-  @Input() clientId:any;
+  @Input() clientId: any;
   @Input() triggerPriorityPopup$!: Observable<boolean>;
+  @Input() isCerForm: boolean = false;
 
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
+  @Output() removeInsurancePlan = new EventEmitter<any>();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -61,25 +63,23 @@ export class MedicalPremiumListComponent implements OnInit {
         this.handleHealthInsuranceOpenClicked('edit');
       },
     },
-
     {
       buttonType: "btn-h-primary",
       text: "Change Priority",
       icon: "format_line_spacing",
       type: "priority",
-      click: (): void => {},
-    },
+      click: (): void => { },
+    },   
     {
       buttonType: "btn-h-danger",
       text: "Delete Insurance",
       icon: "delete",
       type: "Delete",
+      btnName: "delete",
       click: (): void => {
         this.onDeleteConfirmOpenClicked()
       },
-    },
-
-
+    }
 
   ];
 
@@ -96,6 +96,17 @@ export class MedicalPremiumListComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.priorityPopupShowSubscription();
+    if (this.isCerForm) {
+      this.actions.push({
+        buttonType: "btn-h-primary",
+        text: "Copy Insurance",
+        icon: "content_copy",
+        type: "Copy",
+        click: (): void => {
+          this.handleHealthInsuranceOpenClicked('copy');
+        },
+      });
+    }
   }
   ngOnChanges(): void {
     this.state = {
@@ -105,20 +116,20 @@ export class MedicalPremiumListComponent implements OnInit {
     if (this.closeDeleteModal) {
       this.onDeleteConfirmCloseClicked();
       this.handleHealthInsuranceCloseClicked();
+      this.onRemoveCloseClicked();
     }
     this.loadHealthInsurancePlans();
   }
   /** Internal event methods **/
 
-  private priorityPopupShowSubscription(){
-    this.triggerPriorityPopup$.subscribe((value:boolean)=>{
-      if(value && this.isTriggerPriorityPopup){
+  private priorityPopupShowSubscription() {
+    this.triggerPriorityPopup$.subscribe((value: boolean) => {
+      if (value && this.isTriggerPriorityPopup) {
         this.isEditInsurancePriorityTitle = false;
         this.insurancePriorityModalButtonText = 'Save';
         this.onChangePriorityOpenClicked();
       }
-      else
-      {
+      else {
         this.isEditInsurancePriorityTitle = true;
         this.insurancePriorityModalButtonText = 'Update';
       }
@@ -129,7 +140,7 @@ export class MedicalPremiumListComponent implements OnInit {
     this.isOpenedChangePriorityModal = false;
     this.isTriggerPriorityPopup = false;
   }
-  priorityAdded(){
+  priorityAdded() {
     this.loadInsurancePolicies();
   }
   onChangePriorityOpenClicked() {
@@ -141,7 +152,31 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   onDeleteConfirmOpenClicked() {
-    this.isOpenedDeleteConfirm = true;
+    if (this.isCerForm) {
+      this.isOpenedRemoveConfirm = true;
+    }
+    else {
+      this.isOpenedDeleteConfirm = true;
+    }
+  }
+
+  onRemoveConfirmCloseClicked(value: any) {
+    if (value?.confirm === true) {
+      this.isOpenedRemoveConfirm = false;
+      if (value?.endDate) {
+        value.currentInsurancePolicyId = this.currentInsurancePolicyId
+        this.removeInsurancePlan.emit(value)
+      }
+    }
+    else if (value?.confirm === false) {
+      this.isOpenedRemoveConfirm = true;
+    }
+  }
+  onRemoveCloseClicked() {
+    this.isOpenedRemoveConfirm = false;
+  }
+  onRemoveConfirmOpenClicked() {
+    this.isOpenedRemoveConfirm = true;
   }
 
   /** External event methods **/
@@ -170,15 +205,23 @@ export class MedicalPremiumListComponent implements OnInit {
         this.dialogTitle = 'Add';
         this.isEdit = false;
         break;
+      case 'review':
+        this.dialogTitle = 'Review';
+        this.isEdit = true;
+        break;
+      case 'copy':
+        this.dialogTitle = 'Copy';
+        this.isEdit = true;
+        break;
     }
   }
 
   loadHealthInsurancePlans() {
     this.healthInsurancePolicyFacade.medicalHealthPlans$.subscribe((medicalHealthPolicy: any) => {
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
-      if(medicalHealthPolicy?.data?.length > 0)
-      this.gridList=medicalHealthPolicy.data.map((x:any) => Object.assign({}, x));
-      if(medicalHealthPolicy?.length > 0){
+      if (medicalHealthPolicy?.data?.length > 0)
+        this.gridList = medicalHealthPolicy.data.map((x: any) => Object.assign({}, x));
+      if (medicalHealthPolicy?.length > 0) {
         const item: CompletionChecklist = {
           dataPointName: 'currentInsuranceFlag',
           status: StatusFlag.Yes
@@ -192,13 +235,13 @@ export class MedicalPremiumListComponent implements OnInit {
   pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.sort ={ field : 'creationTime' ,  dir: 'asc' };
+    this.sort = { field: 'creationTime', dir: 'asc' };
     this.loadInsurancePolicies();
   }
 
   public dataStateChange(stateData: any): void {
     this.state = stateData;
-    this.sort ={ field : stateData?.sort[0]?.field ?? 'creationTime' ,  dir: stateData?.sort[0]?.dir  ?? 'asc'  };
+    this.sort = { field: stateData?.sort[0]?.field ?? 'creationTime', dir: stateData?.sort[0]?.dir ?? 'asc' };
     this.loadInsurancePolicies();
   }
   // Loading the grid data based on pagination
@@ -236,39 +279,45 @@ export class MedicalPremiumListComponent implements OnInit {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.onDeleteConfirmOpenClicked();
     }
-    if (type == 'Edit') {
+    else if (type == 'Edit') {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
-        this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
+      this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
     }
-    if (type == 'priority') {
-      this.selectedInsurance=dataItem;
+    else if (type == 'priority') {
+      this.selectedInsurance = dataItem;
       this.onChangePriorityOpenClicked()
     }
+    else if(type == 'Copy'){
+      this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.handleHealthInsuranceOpenClicked('copy');
+      this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
+      this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
+    }
+
     this.cdr.detectChanges();
   }
-  deleteButonClicked(deleteButonClicked:any){
-    if(deleteButonClicked){
+  deleteButonClicked(deleteButonClicked: any) {
+    if (deleteButonClicked) {
       this.onDeleteConfirmOpenClicked();
     }
   }
-  addOrEditClicked(addEditButonClicked:any){
-    if(addEditButonClicked){
-     this.loadInsurancePolicies();
+  addOrEditClicked(addEditButonClicked: any) {
+    if (addEditButonClicked) {
+      this.loadInsurancePolicies();
     }
   }
-  isAddPriority(event:any)
-  {
+  isAddPriority(event: any) {
     this.isTriggerPriorityPopup = event;
   }
-  getCarrierContactInfo(carrierId:string,insurancePlanName:string){
-    this.carrierContactInfo='';
-    this.insurancePlanName='';
+  getCarrierContactInfo(carrierId: string, insurancePlanName: string) {
+    this.carrierContactInfo = '';
+    this.insurancePlanName = '';
     this.healthInsurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
       next: (data) => {
-        this.carrierContactInfo=data;
-        this.insurancePlanName=insurancePlanName;
+        this.carrierContactInfo = data;
+        this.insurancePlanName = insurancePlanName;
       },
       error: (err) => {
         if (err) {

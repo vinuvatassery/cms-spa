@@ -13,10 +13,12 @@ import {
   ScreenType,
   CaseFacade,
   ClientProfileTabs,
-  WorkflowFacade
+  WorkflowFacade,
+  CaseStatusCode
 } from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
+import { LoaderService, LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -71,7 +73,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly caseFacade: CaseFacade,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly workFlowFacade : WorkflowFacade
+    private readonly workFlowFacade : WorkflowFacade,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
   ) {}
 
   /** Lifecycle hooks **/
@@ -199,6 +203,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           if (clientHeader?.clientCaseId) {
             this.clientCaseId = clientHeader?.clientCaseId;
           }
+          this.getCaseStatusDetails();
           this.onTabClick(ClientProfileTabs.CLIENT_INFO);
         }
       });
@@ -275,5 +280,25 @@ export class Case360PageComponent implements OnInit, OnDestroy {
 
   updateChangeGroup(group: any) {
     this.caseFacade.updateEligibilityGroup(group);
+  }
+
+  getCaseStatusDetails() {
+    this.loaderService.show();
+    this.caseFacade.getCaseStatusByClientEligibilityId(this.profileClientId,this.clientCaseEligibilityId).subscribe({
+      next: (response: any) => {
+        this.loaderService.hide();
+        if(response?.caseStatusCode == CaseStatusCode.reject || response?.caseStatusCode == CaseStatusCode.disenrolled){
+          this.caseFacade.setCaseReadOnly(true);
+        }
+        
+        else{
+          this.caseFacade.setCaseReadOnly(false);
+        }
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      }
+    })
   }
 }

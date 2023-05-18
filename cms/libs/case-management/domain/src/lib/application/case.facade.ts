@@ -49,10 +49,12 @@ export class CaseFacade {
     false
   );
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  private isCaseReadOnlySubject = new BehaviorSubject<boolean>(false);
   private clientProfileImpInfoSubject  = new Subject<any>();
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private currentGroupSubject = new BehaviorSubject<any>(null);
   private groupUpdatedSubject = new BehaviorSubject<any>(false);
+  private groupDeletedSubject = new BehaviorSubject<boolean>(false);
   private ddlEligPeriodsSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
@@ -80,18 +82,21 @@ export class CaseFacade {
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   currentGroup$ =  this.currentGroupSubject.asObservable();
   groupUpdated$ = this.groupUpdatedSubject.asObservable();
+  groupDeleted$ = this.groupDeletedSubject.asObservable();
   ddlEligPeriods$ = this.ddlEligPeriodsSubject.asObservable();
+  isCaseReadOnly$ = this.isCaseReadOnlySubject.asObservable();
 
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  public sortValue = 'eilgibilityStartDate';
-  public sortType = 'desc';
+  public totalClientsCount = 50;
+  public sortValue = 'clientFullName';
+  public sortType = 'asc';
   public sort: SortDescriptor[] = [
     {
       field: this.sortValue,
-      dir: 'desc',
+      dir: 'asc',
     },
   ];
   activeSession!: ActiveSessions[];
@@ -168,6 +173,12 @@ export class CaseFacade {
       case ClientProfileTabs.DENTAL_INSURANCE_STATUS:
       case ClientProfileTabs.DENTAL_INSURANCE_COPAY:
       case ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS:
+        this.router.navigate(
+          [redirectUrl + '/health-insurance/profile'],
+          query
+        );
+        break;
+      case ClientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS:
         this.router.navigate(
           [redirectUrl + '/health-insurance/profile'],
           query
@@ -280,6 +291,7 @@ export class CaseFacade {
     this.showLoader();
     return this.caseDataService.deleteEligibilityGroup(groupId).pipe(
       catchError((err: any) => {
+        this.groupDeletedSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         return of(false);
       })
@@ -287,6 +299,7 @@ export class CaseFacade {
       this.hideLoader();
       if (response) {
         this.currentGroupSubject.next(null);
+        this.groupDeletedSubject.next(true);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group deleted successfully');
       }
     });
@@ -343,7 +356,8 @@ export class CaseFacade {
     sort: string,
     sortType: string,
     columnName: any,
-    filter: any
+    filter: any,
+    totalClientsCount : any
   ): void {
     this.searchLoaderVisibilitySubject.next(true);
     this.caseDataService
@@ -354,7 +368,8 @@ export class CaseFacade {
         sort,
         sortType,
         columnName,
-        filter
+        filter,
+        totalClientsCount
       )
       .subscribe({
         next: (casesResponse: any) => {
@@ -598,8 +613,9 @@ export class CaseFacade {
   getSessionInfoByCaseEligibilityId(clientCaseEligibilityId: any) {
     return this.caseDataService.getSessionInfoByCaseEligibilityId(clientCaseEligibilityId);
   }
-  updateCaseStatus(clientCaseId: any, caseStatusCode: any) {
+  updateCaseStatus(clientCaseId: any, caseStatusCode: any, clientCaseEligibilityId: any) {
     const caseData = {
+      clientCaseEligibilityId: clientCaseEligibilityId,
       caseStatusCode: caseStatusCode,
     };
     return this.caseDataService.updateCaseStatus(caseData, clientCaseId);
@@ -607,5 +623,13 @@ export class CaseFacade {
 
   getCaseStatusById(clientCaseId: string) {
     return this.caseDataService.loadCasesStatusById(clientCaseId);
+  }
+
+  setCaseReadOnly(isReadOnly:any){
+    this.isCaseReadOnlySubject.next(isReadOnly);
+  }
+
+  getCaseStatusByClientEligibilityId(clientId: any, clientCaseEligibilityId: any) {
+    return this.caseDataService.loadCasesStatusByClientEligibilityId(clientId,clientCaseEligibilityId);
   }
 }
