@@ -49,6 +49,7 @@
           [typeCodeLabel]="'Attachment Type'"
           [subTypeCodeLabel]="'Attachment Sub Type'"
           [currentTypeCode]="selectedTypeCode"
+          [formSubmitted]="isSubmitted"
           (handleFileSelectEvent)="handleFileSelected($event)"
           (handleFileRemoveEvent)="handleFileRemoved($event)"
           (handleTypeCodeEvent)="handleTypeCodeEvent($event)">

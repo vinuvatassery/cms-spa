@@ -20,6 +20,7 @@ export class DocumentUploadComponent  implements OnInit{
   @Input() typeCodeLabel!: string;
   @Input() subTypeCodeLabel!: string;
   @Input() currentTypeCode!: string;
+  @Input() formSubmitted!: boolean;
   subTypeCodes: Lov[] = [];
   selectedTypeCode! : any;
   selectedsubTypeCode = "";

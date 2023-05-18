@@ -12,6 +12,9 @@
                     (valueChange)="loadSubTypeCodeLov()" >
       </kendo-dropdownlist>
     </kendo-floatinglabel>
+    <kendo-formerror *ngIf="!currentTypeCode && formSubmitted">
+      {{typeCodeLabel}} is required.
+    </kendo-formerror>
   </div>
   <div  *ngIf="subTypeCodes.length>0">
     <kendo-floatinglabel text="{{subTypeCodeLabel}}"> 
