@@ -83,7 +83,7 @@ export class SmokingCessationListComponent implements OnInit {
       next: (x:any) =>{
         this.smokingCessationFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
-          'Smoking Cesation Note  Added successfully'
+          'Smoking Cesation note added'
         );
         this.smokingCessationFacade.hideLoader();
         this.closeAddReferralSmokingCessationClicked();

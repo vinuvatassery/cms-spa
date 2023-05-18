@@ -69,7 +69,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
-        this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,'Verification Status Updated');
+        this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,'HIV Verification status updated');
         this.workflowFacade.navigate(navigationType);
       } else {
         this.workflowFacade.enableSaveButton();

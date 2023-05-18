@@ -24,7 +24,7 @@ export class DeleteAddressConfirmationComponent {
           if(response){
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Address Deleted successfully'
+              'Address deleted'
             );
             this.contactFacade.hideLoader();
             this.closeDeleteModal();
