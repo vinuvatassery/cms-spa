@@ -52,6 +52,7 @@ export * from './lib/entities/active-sessions';
 export * from './lib/entities/client-note';
 export * from './lib/entities/grid-state'
 export * from './lib/entities/session-data';
+export * from './lib/entities/payment-request';
 
 
 /** Enums **/
@@ -103,6 +104,7 @@ export * from './lib/enums/eligibility-status.enum';
 export * from './lib/enums/module-code.enum';
 export * from './lib/enums/grid-state-key.enum';
 export * from './lib/enums/insurance-status-type.enum';
+export * from './lib/enums/payment-request-type.enum';
 
 
 /** Data services **/

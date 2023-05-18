@@ -42,7 +42,7 @@
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                             [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar of Anil Kumar">
-                            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+                            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
                         </button>
                         <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
                             <ng-template kendoPopoverBodyTemplate>
@@ -88,11 +88,11 @@
     </div>
   </div>
 </ng-template>
-  <!-- grid Loader Template -->  
+  <!-- grid Loader Template -->
  <ng-template kendoGridLoadingTemplate>
    <common-grid-loader-component></common-grid-loader-component>
   </ng-template>
-  <!-- grid No data Template -->  
+  <!-- grid No data Template -->
   <ng-template kendoGridNoRecordsTemplate>
     <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
     </div>
@@ -100,6 +100,18 @@
   </ng-template>
 
             </kendo-grid>
+            <div class="mt-1">
+              <button
+                kendoButton
+                [primary]="true"
+                icon="add"
+                aria-label="add status"
+                (click)="onStatusPeriodDetailClicked()"
+              >
+                NEW STATUS
+              </button>
+            </div>
+
         </div>
 
     </div>
@@ -117,6 +129,7 @@
   [clientCaseEligibilityId]="selectedEligibilityId"
   [clientCaseId]="selectedCaseId"
   [isEdit]="false"
-  [isStatusPeriodEdit]="true"
+  [isStatusPeriodEdit]="isStatusPeriodEdit"
+  [isCopyPeriod]="isCopyPeriod"
   (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
 </kendo-dialog>

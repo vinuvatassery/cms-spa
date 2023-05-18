@@ -320,8 +320,7 @@ table,
     td {
       padding: $size-xl $size-xx;
       border-bottom: 1px solid $theme-border;
-      border-top: 1px solid $theme-border;
-      position: relative;
+      border-top: 1px solid $theme-border; 
       &:first-child {
         background: material-color($hive-neutral-palette, 100);
         font-size: $font-size-s;

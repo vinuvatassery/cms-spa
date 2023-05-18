@@ -98,8 +98,8 @@
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_STATUS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS }"
           *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>Insurance Status</button>
-        <button kendoButton (click)="onTabSelect(clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS)"
-          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS }"
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS)"
+          [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS }"
           *ifPermission='["Client_Profile_Dental_Premium_Payments_Tab_View_Only"]'>Premium Payments</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_COPAY)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_COPAY }"
@@ -121,7 +121,7 @@
           *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>Case Managers</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_PROVIDER)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_PROVIDER }"
-          *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>Healthcare Providers</button>
+          *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>HIV Healthcare Providers</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_CD4)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_CD4 }"
           *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>CD4 Count</button>
