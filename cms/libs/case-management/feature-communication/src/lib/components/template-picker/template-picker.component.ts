@@ -18,8 +18,11 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class TemplatePickerComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
+  @Input() valueField!: any;
+  @Input() textField!: any;
 
   /** Output properties  **/
+  @Output() handleDdlLetterValueChange= new EventEmitter<any>();
   @Output() openDdlLetterEvent = new EventEmitter();
 
   /** Public properties **/
@@ -31,26 +34,28 @@ export class TemplatePickerComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadDropdownLetterTemplates();
+    //debugger;
+    //this.loadDropdownLetterTemplates();
   }
 
   /** Private methods **/
-  private loadDropdownLetterTemplates() {
-    this.communicationFacade.loadDdlLetterTemplates();
-    this.ddlLetterTemplates$.subscribe({
-      next: (res) => {
-        this.ddlTemplates = res.filter((templates: any) => {
-          return templates.screenName === this.data;
-        });
-      },
-      error: (err) => {
-        console.log('err', err);
-      },
-    });
-  }
+  // private loadDropdownLetterTemplates() {
+  //   this.communicationFacade.loadDdlLetterTemplates();
+  //   this.ddlLetterTemplates$.subscribe({
+  //     next: (res) => {
+  //       this.ddlTemplates = res.filter((templates: any) => {
+  //         return templates.screenName === this.data;
+  //       });
+  //     },
+  //     error: (err) => {
+  //       console.log('err', err);
+  //     },
+  //   });
+  // }
 
   /** External event methods **/
-  handleDdlLetterValueChange() {
-    this.openDdlLetterEvent.emit();
+  handleDdlLetterValueChangeEvent(e:any) {
+    //this.openDdlLetterEvent.emit(e);
+    this.handleDdlLetterValueChange.emit(e);
   }
 }

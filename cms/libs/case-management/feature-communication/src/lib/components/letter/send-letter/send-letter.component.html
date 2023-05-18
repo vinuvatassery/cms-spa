@@ -6,8 +6,13 @@
     </p>
     <div class="flex-row pb-2">
       <div class="flex-col">
-        <case-management-template-picker [data]="data"
-          (openDdlLetterEvent)="handleOpenTemplateClicked()"></case-management-template-picker>
+        <case-management-template-picker 
+          [data]="letterTemplatedata"
+          [valueField] ="'documentTemplateId'"
+          [textField]="'templateDescription'"
+          (handleDdlLetterValueChange)="handleDdlLetterValueChange($event)">
+          (openDdlLetterEvent)="handleOpenTemplateClicked()">
+        </case-management-template-picker>
       </div>
       <div *ngIf="isOpenLetterTemplate" class="mt-2">
         <div class="flex-col mb-2">
@@ -34,6 +39,7 @@
         </div>
         <div class="flex-col">
           <case-management-letter-editor [dataEvent]="letterEditorValueEvent"
+             [datatemplate]="selectedTemplate"
             (editorValue)="handleLetterEditor($event)"></case-management-letter-editor>
         </div>
       </div>

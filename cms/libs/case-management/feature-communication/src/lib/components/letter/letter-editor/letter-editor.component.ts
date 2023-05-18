@@ -13,6 +13,7 @@ import {
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-letter-editor',
   templateUrl: './letter-editor.component.html',
@@ -22,27 +23,32 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class LetterEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
- 
+  @Input() loadInitialData = new EventEmitter();
+  @Input() editorValue!: any;
+  @Input() datatemplate!: any;
   /** Output properties  **/
-  @Output() editorValue = new EventEmitter<any>();
+  // @Output() editorValue = new EventEmitter<any>();
 
   /** Public properties **/
   @ViewChild('anchor') public anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
-  clientVariables$ = this.communicationFacade.clientVariables$;
+  //clientVariables$ = this.communicationFacade.clientVariables$;
   ddlEditorVariables$ = this.communicationFacade.ddlEditorVariables$;
   letterEditorValue!: any;
   isSearchOpened = true;
   isShowPopupClicked = false;
+  clientVariables!: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
-  constructor(private readonly communicationFacade: CommunicationFacade) {}
+  constructor(private readonly communicationFacade: CommunicationFacade,private readonly loaderService: LoaderService,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    console.log(this.datatemplate);
     this.dataEventSubscribed();
     this.loadClientVariables();
     this.loadDdlEditorVariables();
+    this.letterEditorValueEvent(this.editorValue);
   }
 
   /** Private methods **/
@@ -58,11 +64,16 @@ export class LetterEditorComponent implements OnInit {
       },
     });
   }
-
   private loadClientVariables() {
-    this.communicationFacade.loadClientVariables();
+    this.loaderService.show();
+    this.communicationFacade.loadCERAuthorizationEmailEditVariables()
+        .subscribe((variables: any) => {
+          if (variables) {
+            this.clientVariables = variables; 
+          }
+          this.loaderService.hide();
+        });
   }
-
   private loadDdlEditorVariables() {
     this.communicationFacade.loadDdlEditorVariables();
   }
@@ -95,6 +106,10 @@ export class LetterEditorComponent implements OnInit {
 
   onSearchclosed() {
     this.isSearchOpened = false;
+  }
+
+  letterEditorValueEvent(letterData:any){
+    this.letterEditorValue = letterData.templateContent;
   }
   
 }

@@ -90,5 +90,10 @@ export class EmailDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/variables`
     );
   }
+  loadLetterTemplates(selectedTemplate: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${selectedTemplate}`
+    );
+  }
 }
  

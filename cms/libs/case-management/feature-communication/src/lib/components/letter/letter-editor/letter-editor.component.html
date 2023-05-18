@@ -47,9 +47,8 @@
           <ul
             class="var-list-item"
             aria-label="client variables"
-            *ngFor="let item of clientVariables$ | async"
-          >
-            <li aria-label="client variables item">{{ item }}</li>
+            *ngFor="let item of clientVariables">
+          <li *ngIf="item.lovDesc =='Client Variables'"  aria-label="client variables item">{{ item.lovCode }}</li>
           </ul>
         </section>
         <section>
@@ -57,16 +56,26 @@
           <ul
             class="var-list-item"
             aria-label="my variables"
-            *ngFor="let item of clientVariables$ | async"
+            *ngFor="let item of clientVariables"
           >
-            <li aria-label="my variables item">{{ item }}</li>
+          <li *ngIf="item.lovDesc =='My Variables'" aria-label="my variables item">{{ item.lovCode }}</li>
+          </ul>
+        </section>
+        <section>
+          <h5>Other Variables</h5>
+          <ul
+            class="var-list-item"
+            aria-label="other variables"
+            *ngFor="let item of clientVariables"
+          >
+            <li *ngIf="item.lovDesc =='Other variables'" aria-label="other variables item">{{ item.lovCode }}</li>
           </ul>
         </section>
       </div>
     </div>
   </kendo-popup>
   <!-- Editor -->
-  <kendo-editor [(value)]="letterEditorValue">
+  <kendo-editor [(value)]="editorValue">
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>
         <kendo-toolbar-button

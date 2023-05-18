@@ -91,4 +91,11 @@ export class CommunicationFacade {
   loadCERAuthorizationEmailEditVariables() {
     return this.emailDataService.loadCERAuthorizationEmailVariables();
   }
+
+  loadLetterTemplates(selectedTemplate: string) {
+    return this.emailDataService.loadLetterTemplates(
+      selectedTemplate
+    );
+  }
+
 }

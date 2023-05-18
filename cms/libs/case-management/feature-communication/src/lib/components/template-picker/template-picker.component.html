@@ -2,10 +2,10 @@
 <kendo-floatinglabel text="Letter Templates">
   <kendo-dropdownlist
   [fillMode]="formUiStyle.dropDownFillMode"
-    [data]="ddlTemplates"
-    textField="value"
-    valueField="key"
-    (valueChange)="handleDdlLetterValueChange()"
+    [data]="data"
+    textField="{{textField}}"
+    valueField="{{valueField}}"
+    (valueChange)="handleDdlLetterValueChangeEvent($event)"
   >
   </kendo-dropdownlist>
 </kendo-floatinglabel>
