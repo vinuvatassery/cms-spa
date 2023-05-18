@@ -54,6 +54,27 @@
       "@cms/case-management/feature-family-and-dependent": [
         "libs/case-management/feature-family-and-dependent/src/index.ts"
       ],
+      "@cms/case-management/feature-financial-insurance-premiums": [
+        "libs/case-management/feature-financial-insurance-premiums/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-management": [
+        "libs/case-management/feature-financial-management/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-medical-claims": [
+        "libs/case-management/feature-financial-medical-claims/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-pharmacy-claims": [
+        "libs/case-management/feature-financial-pharmacy-claims/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-replenishment": [
+        "libs/case-management/feature-financial-replenishment/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-vendor": [
+        "libs/case-management/feature-financial-vendor/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-vendor-refund": [
+        "libs/case-management/feature-financial-vendor-refund/src/index.ts"
+      ],
       "@cms/case-management/feature-health-insurance": [
         "libs/case-management/feature-health-insurance/src/index.ts"
       ],

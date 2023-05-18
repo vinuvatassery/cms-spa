@@ -26,9 +26,12 @@ const routes: Routes = [
   {
     path: 'financial-management',
     loadChildren: () =>
-      import('@cms/financial-management/feature-home').then(
-        (m) => m.FinancialManagementFeatureHomeModule
+      import('@cms/case-management/feature-financial-management').then(
+        (m) => m.CaseManagementFeatureFinancialManagementModule
       ),
+      data: {
+        title: 'Financial Management',
+      },
     canLoad: [AutoLoginAllRoutesGuard],
   },
   {

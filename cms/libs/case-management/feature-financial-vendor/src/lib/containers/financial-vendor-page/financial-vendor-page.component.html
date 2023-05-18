@@ -1,0 +1,55 @@
+<h1>Financial Management</h1><div>new profile button</div>
+
+<kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
+    <kendo-tabstrip-tab title="Manufacturers" [selected]="true">
+        <ng-template kendoTabContent>
+          <div class="block-section mt-1">
+            <div class="flex-col flex-space-bw align-items-center mb-1">   
+            </div>
+           <cms-financial-vendors-list [vendorTypeCode]="vendorTypeCode"></cms-financial-vendors-list>
+          </div>
+        </ng-template>  
+      </kendo-tabstrip-tab>
+
+      <kendo-tabstrip-tab title="Medical Providers">
+        <ng-template kendoTabContent>
+          <div class="block-section mt-1">
+            <div class="flex-col flex-space-bw align-items-center mb-1">   
+            </div>
+            <cms-financial-vendors-list></cms-financial-vendors-list>
+          </div>
+        </ng-template>  
+      </kendo-tabstrip-tab>
+
+      <kendo-tabstrip-tab title="Insurance Vendors">
+        <ng-template kendoTabContent>
+          <div class="block-section mt-1">
+            <div class="flex-col flex-space-bw align-items-center mb-1">   
+            </div>
+            <cms-financial-vendors-list></cms-financial-vendors-list>
+          </div>
+        </ng-template>  
+      </kendo-tabstrip-tab>
+
+      <kendo-tabstrip-tab title="Pharmacies">
+        <ng-template kendoTabContent>
+          <div class="block-section mt-1">
+            <div class="flex-col flex-space-bw align-items-center mb-1">   
+            </div>
+            <cms-financial-vendors-list></cms-financial-vendors-list>
+          </div>
+        </ng-template>  
+      </kendo-tabstrip-tab>
+
+      <kendo-tabstrip-tab title="Dental Providers">
+        <ng-template kendoTabContent>
+          <div class="block-section mt-1">
+            <div class="flex-col flex-space-bw align-items-center mb-1">   
+            </div>
+            <cms-financial-vendors-list></cms-financial-vendors-list>
+          </div>
+        </ng-template>  
+      </kendo-tabstrip-tab>
+</kendo-tabstrip>
+
+<cms-financial-reminder></cms-financial-reminder>

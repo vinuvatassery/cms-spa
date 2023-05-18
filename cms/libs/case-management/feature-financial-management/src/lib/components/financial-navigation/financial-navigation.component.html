@@ -1,0 +1,29 @@
+<ul class="kendo-list-base with-heading-label">
+    <li class="kendo-list-items" routerLink="/financial-management/vendors" [routerLinkActive]="['active-item']"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span>Financial Management</span>
+    </li>
+
+    <li class="sections-heading bold-text text-capital mt-1 pl-2">
+        Income
+    </li>
+    <li class="kendo-list-items" [routerLinkActive]="['active-item']" routerLink="/financial-management/replenishment">
+       Replenishment Model
+    </li>
+    <li class="kendo-list-items" [routerLinkActive]="['active-item']" routerLink="/financial-management/vendor-refund">
+        Vendor Refunds
+    </li>
+
+    <li class="sections-heading bold-text text-capital mt-1 pl-2">
+        Expenses
+    </li>
+    <li class="kendo-list-items" [routerLinkActive]="['active-item']" routerLink="/financial-management/medical-claims">
+        Medical Claims
+    </li>
+    <li class="kendo-list-items" [routerLinkActive]="['active-item']" routerLink="/financial-management/insurance-premiums">
+        Insurance Premiums
+    </li>
+    <li class="kendo-list-items" [routerLinkActive]="['active-item']" routerLink="/financial-management/pharmacy-claims">
+        Pharmacy Claims
+    </li>
+</ul>
