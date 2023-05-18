@@ -11,12 +11,25 @@
       [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
 
-      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="75" [sortable]="false">
+      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="90" [sortable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton look="flat"  themeColor="error" class="card-link-button" aria-label="Start Review"> <span class="material-icons">
-            error  </span>Start Review   </button>
-          <button kendoButton look="flat"  themeColor="success" class="card-link-button" aria-label="Reviewed">  <span class="material-icons">
-            check_circle </span>  Reviewed   </button>
+          <button  
+            *ngIf="dataItem.cerReviewStatusCode === 'PENDING' || dataItem.cerReviewStatusCode === 'START_REVIEW'" 
+            kendoButton look="flat"  
+            themeColor="error" 
+            class="card-link-button" 
+            aria-label="Start Review"
+            (click)="handleHealthInsuranceOpenClicked('review')"
+            (click)="handleInsuranceType(dataItem)"> 
+            <span class="material-icons"> error  </span>Start Review   </button>
+          <button  
+            *ngIf="dataItem.cerReviewStatusCode === 'REVIEWED'" 
+            kendoButton look="flat"  
+            themeColor="success" 
+            class="card-link-button" 
+            aria-label="Reviewed">  
+            <span class="material-icons"> check_circle </span>  Reviewed   
+          </button>
         
         </ng-template>
       </kendo-grid-column>
@@ -78,7 +91,7 @@
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
                   aria-hidden="false" (click)="handleOptionClick(dataItem,buttondataItem.type)">
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                  <label> {{ buttondataItem.text }} </label>
+                  <label> {{ buttondataItem.btnName === 'delete' && isCerForm === true ? 'Remove Insurance' : buttondataItem.text }} </label>
                 </button>
               </ng-template>
             </kendo-dropdownbutton>
@@ -179,4 +192,14 @@
       </div>
     </div>
   </kendo-dialog-actions>
+</kendo-dialog>
+
+
+<!-- Change Priority Modal -->
+<kendo-dialog *ngIf="isOpenedRemoveConfirm" (close)="onRemoveCloseClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
+  
+  <case-management-deactivate-premium-confirmation  
+   (deactivateConfimEvent)="onRemoveConfirmCloseClicked($event)">
+  </case-management-deactivate-premium-confirmation>
 </kendo-dialog>

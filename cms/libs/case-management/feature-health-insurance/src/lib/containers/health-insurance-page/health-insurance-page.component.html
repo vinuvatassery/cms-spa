@@ -1,16 +1,12 @@
 <div class="client-data-block">
+  <h2 hidden>Application</h2>
+
   <h3>Health Insurance</h3>
+  <h4 hidden>Insurance</h4>
+
   <section>
     <div class="block-section">
       <div class="flex-row">
-        <div class="flex-col mb-2" *ngIf="isCerForm">
-          <span>
-            <input class="adjust-attr" type="checkbox" kendoCheckBox aria-labelledby="Clientdoesnothavehealthinsurance"
-              name="Client does not have health insurance" id="Clientdoesnothavehealthinsurance" />
-            <label class="k-checkbox-label" for="Clientdoesnothavehealthinsurance">Client does not have health
-              insurance</label>
-          </span>
-        </div>
         <form [formGroup]="insuranceFlagForm">
           <div class="flex-col mb-1">
             <fieldset class="k-form-fieldset">
@@ -81,8 +77,10 @@
           <case-management-medical-premium-list [healthInsuranceForm]="healthInsuranceForm"
             [caseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId"
             [triggerPriorityPopup$]="triggerPriorityPopup$" [closeDeleteModal]="closeDeleteModal"
+            [isCerForm]="isCerForm"
             (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
-            (deleteInsurancePlan)="delteInsurancePolicy($event)">
+            (deleteInsurancePlan)="delteInsurancePolicy($event)"
+            (removeInsurancePlan)="removeInsurancePolicy($event)">
           </case-management-medical-premium-list>
         </div>
 

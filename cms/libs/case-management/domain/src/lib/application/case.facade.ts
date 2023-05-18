@@ -178,6 +178,12 @@ export class CaseFacade {
           query
         );
         break;
+      case ClientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS:
+        this.router.navigate(
+          [redirectUrl + '/health-insurance/profile'],
+          query
+        );
+        break;
       case ClientProfileTabs.DRUGS_PHARMACIES:
       case ClientProfileTabs.DRUGS_PURCHASED:
         this.router.navigate(

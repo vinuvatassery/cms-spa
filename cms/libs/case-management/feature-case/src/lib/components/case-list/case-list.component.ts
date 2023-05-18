@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade,CaseScreenTab, CaseStatusCode } from '@cms/case-management/domain';
+import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
@@ -301,7 +301,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.router.navigate(['case-management/case-detail'], {
         queryParams: {
           sid: session?.sessionId,
-          eid: session?.entityId
+          eid: session?.entityId,
+          wtc: WorkflowTypeCode.NewCase
         }
       });
     }
