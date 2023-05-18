@@ -100,7 +100,6 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
      if(this.prevClientCaseEligibilityId) {
         this.isCerForm =  true;
         this.familyAndDependentFacade.loadPreviousRelations(this.prevClientCaseEligibilityId, this.clientId);
-        // this.laodCERRelationStatus();
      }
      this.loadDependentsStatus();
     });
