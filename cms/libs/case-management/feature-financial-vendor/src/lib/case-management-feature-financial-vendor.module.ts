@@ -8,7 +8,7 @@ import { ClientsComponent } from './components/clients/clients.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { VendorProfileHeaderComponent } from './components/vendor-profile-header/vendor-profile-header.component';
 import { CaseManagementFeatureFinancialVendorRoutingModule } from './case-management-feature-financial-vendor.routing.module';
-
+import { ProductivityToolsFeatureTodoModule } from '@cms/productivity-tools/feature-todo';
 import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
@@ -22,6 +22,7 @@ import { FinancialReminderComponent } from './components/financial-reminder/fina
     SharedUiCommonModule,
     CommonModule,
     CaseManagementFeatureFinancialVendorRoutingModule,
+    ProductivityToolsFeatureTodoModule
   ],
   declarations: [
     FinancialVendorPageComponent,

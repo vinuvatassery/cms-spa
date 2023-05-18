@@ -1,8 +1,36 @@
+<div class="inner-split-wrapper" kendoRippleContainer [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}">
+    <!-- Navigation Menu Section -->
+    <div class="inner-split_left">
+        <cms-financial-navigation></cms-financial-navigation>
+        <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span
+                class="material-icons">
+                menu_open
+            </span>
+        </button>
+    </div>
+    <div class="inner-split_right">
+        <!-- Breadcrumb Section -->
+        <section class="app-l-breadcrumb py-0 fixed-top-breadcrumb">
+            <div class="d-flex">
+                <button class="createcase-mobile-menu-btn" (click)="openInnerLeftMenu()"> <span class="material-icons">
+                        list
+                    </span>
+                </button>
+
+                <common-bread-crumb></common-bread-crumb>
+            </div>
+        </section>
+        <!-- Page details Section -->
+        <section class="systemconfig-components">
+           
+            <router-outlet></router-outlet>
+            <!-- //NOSONAR <system-config-roles-and-permissions-list></system-config-roles-and-permissions-list> -->
+        </section>
+    </div>
+</div>
 
 
-<cms-financial-navigation></cms-financial-navigation>
-<common-bread-crumb></common-bread-crumb>
 
 
-<router-outlet></router-outlet>
 
+<

@@ -12,7 +12,12 @@ export class FinancialPageComponent {
   // financial-navigation component
   //  router outlet
   //  reminder component(reuse)
+  isInnerLeftMenuOpen = false;
   constructor(route: Router, activeRoute : ActivatedRoute) {
     route.navigate(['vendors'], {relativeTo: activeRoute})
+  }
+
+  openInnerLeftMenu(){
+    this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
   }
 }

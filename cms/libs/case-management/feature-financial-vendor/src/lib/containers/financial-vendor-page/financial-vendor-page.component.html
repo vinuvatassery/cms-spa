@@ -1,55 +1,128 @@
-<h1>Financial Management</h1><div>new profile button</div>
+<div class=" pt-0">
+  <!-- Main Title Section -->
 
-<kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
-    <kendo-tabstrip-tab title="Manufacturers" [selected]="true">
-        <ng-template kendoTabContent>
-          <div class="block-section mt-1">
-            <div class="flex-col flex-space-bw align-items-center mb-1">   
-            </div>
-           <cms-financial-vendors-list [vendorTypeCode]="vendorTypeCode"></cms-financial-vendors-list>
-          </div>
-        </ng-template>  
-      </kendo-tabstrip-tab>
+  <kendo-dropdownbutton aria-label="new case" kendoButton icon="add" themeColor="primary" class="add-new-button"
+    [data]="data">
+    New Profile
+  </kendo-dropdownbutton>
+  <section class="app-l-mainTittle">
+    <h1 class="maintitle_withicon text-bold">
+      <span class="material-icons sidebar-menu_icon"> monetization_on </span>
+      Financial Management
+    </h1>
+  </section>
+  <section class="app-l-client-wrapper ">
+    <div class="app-l-client-left">
+      <section class="app-l-wrapper">
 
-      <kendo-tabstrip-tab title="Medical Providers">
-        <ng-template kendoTabContent>
-          <div class="block-section mt-1">
-            <div class="flex-col flex-space-bw align-items-center mb-1">   
-            </div>
-            <cms-financial-vendors-list></cms-financial-vendors-list>
-          </div>
-        </ng-template>  
-      </kendo-tabstrip-tab>
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          class="app-c-tab case-360-tab">
+          <kendo-tabstrip-tab title="Manufacturers" [selected]="true">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list [vendorTypeCode]="vendorTypeCode"></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
 
-      <kendo-tabstrip-tab title="Insurance Vendors">
-        <ng-template kendoTabContent>
-          <div class="block-section mt-1">
-            <div class="flex-col flex-space-bw align-items-center mb-1">   
-            </div>
-            <cms-financial-vendors-list></cms-financial-vendors-list>
-          </div>
-        </ng-template>  
-      </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Medical Providers">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
 
-      <kendo-tabstrip-tab title="Pharmacies">
-        <ng-template kendoTabContent>
-          <div class="block-section mt-1">
-            <div class="flex-col flex-space-bw align-items-center mb-1">   
-            </div>
-            <cms-financial-vendors-list></cms-financial-vendors-list>
-          </div>
-        </ng-template>  
-      </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Insurance Vendors">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
 
-      <kendo-tabstrip-tab title="Dental Providers">
-        <ng-template kendoTabContent>
-          <div class="block-section mt-1">
-            <div class="flex-col flex-space-bw align-items-center mb-1">   
-            </div>
-            <cms-financial-vendors-list></cms-financial-vendors-list>
-          </div>
-        </ng-template>  
-      </kendo-tabstrip-tab>
-</kendo-tabstrip>
+          <kendo-tabstrip-tab title="Pharmacies">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
 
-<cms-financial-reminder></cms-financial-reminder>
+          <kendo-tabstrip-tab title="Dental Providers">
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+
+      </section>
+    </div>
+    <!-- Right Reminders-->
+    <div class="app-l-client-right todo-list">
+      <!-- <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list> -->
+      <cms-financial-reminder class="reminder-list-case-wrap"></cms-financial-reminder>
+    </div>
+  </section>
+</div>
+
+<kendo-dialog kendoRippleContainer *ngIf="isVendorDetailFormShow" (close)="clickCloseVendorDetails()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
+  <cms-contacts></cms-contacts>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isOpenDeleteTODOItem" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Delete TO DO item? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+      This feature is part of a future scope of work for the ORCares project.
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
+        </button>
+        <button kendoButton class="k-error-button" aria-label="cancel case">
+          Delete
+        </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isOpenDeleteTODOItem" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Edit TO DO Item </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+      This feature is part of a future scope of work for the ORCares project.
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-start d-flex">
+        <button kendoButton class="k-danger-link" aria-label="Remove"> Remove </button>
+
+      </div>
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="update or add phone detail"> Update </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
