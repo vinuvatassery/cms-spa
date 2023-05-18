@@ -209,7 +209,10 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.loadPreviousRelations(previousEligibilityId, clientId).subscribe({
       next: (relationResponse: any) => {
         if (relationResponse) {
-          this.previousRelationsSubject.next(relationResponse['data']);
+          let dataView: any = {
+            data : relationResponse
+          };
+          this.previousRelationsSubject.next(dataView);
         }
         this.hideLoader();
       },

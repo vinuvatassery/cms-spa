@@ -50,6 +50,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   prevClientCaseEligibilityId!: string;
   haveTheyHaveFamilyMember!: string;
   haveTheyHaveAdditionalFamilyMember! : string;
+  previousRelationsList: any = [];
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -132,7 +133,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.checkBoxSubscription=
       this.dependentStatus$.subscribe((x: any)=>
     {
-      this.isFamilyGridDisplay = x.noDependentFlag;
+      this.isFamilyGridDisplay = x.noDependentFlag == StatusFlag.Yes ? true : false;
       this.haveTheyHaveFamilyMember = x.friendFamilyChangedFlag;
       this.haveTheyHaveAdditionalFamilyMember = x.hasAdditionalFamilyFlag;
     });
@@ -143,6 +144,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       else{
         this.isDependentAvailable = false;        
       }
+    });
+    this.previousRelationList$.subscribe((resp: any)=> {
+      this.previousRelationsList = resp.data;
     });
   }
   private addSaveSubscription(): void {
@@ -246,14 +250,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
 /** child event methods **/
 
   addUpdateDependentHandle(dependent : any) {
-   const dependentData : Dependent = dependent;
-   dependent.clientId =this.clientId ;
-   if (this.isCerForm) {
-    dependentData.clientCaseEligibilityId = this.prevClientCaseEligibilityId;
-   }
-   else {
+    const dependentData : Dependent = dependent;
+    dependent.clientId = this.clientId;
     dependentData.clientCaseEligibilityId = this.clientCaseEligibilityId;
-   }
     if(dependentData.clientRelationshipId && dependentData.clientRelationshipId !='')
     {
       this.familyAndDependentFacade.updateNewDependent(this.clientCaseEligibilityId, dependentData);
