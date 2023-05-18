@@ -68,7 +68,7 @@ export class UploadProofDocumentComponent implements OnInit {
   private registerFormData() {
     this.uploadform = this.formBuilder.group({
       concurrencyStamp: [''],
-      attachmentType: ['', Validators.required],
+      attachmentType: [''],
       clientDocumentDescription: ['', Validators.required],
       clientId: [0,]
     });
@@ -87,7 +87,6 @@ export class UploadProofDocumentComponent implements OnInit {
   }
 
   private populateModel(){
-    debugger;
     if(!this.isEdit){
       let saveDocument : Document  = {
         clientId: this.clientId,
@@ -177,7 +176,6 @@ export class UploadProofDocumentComponent implements OnInit {
   }
 
   SubmitForm() {
-    debugger;
     this.validateForm();
     if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {  
       if (this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {       
@@ -191,7 +189,6 @@ export class UploadProofDocumentComponent implements OnInit {
 } 
 
   handleFileSelected(event: any) {
-    debugger;
     this.copyOfUploadedFiles = null;
     this.uploadedFileExceedsFileSizeLimit = false;
     this.copyOfUploadedFiles = [{
@@ -214,7 +211,6 @@ export class UploadProofDocumentComponent implements OnInit {
   } 
   handleTypeCodeEvent(e:any)
   {
-    debugger;
     this.documentTypeCode = e;
   }
   OnNoteValueChange(event: any): void{

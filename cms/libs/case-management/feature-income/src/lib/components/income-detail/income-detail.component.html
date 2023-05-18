@@ -87,22 +87,6 @@
 
         </div>
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
-          <!-- <kendo-upload aria-label="upload proof" name="upload proof"
-            [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
-            #incomeUploadedProof [ngModel]="uploadedIncomeFile" [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl">
-            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-
-                <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
-                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
-                  <a>{{ files[0].name }} </a>
-                </button>
-
-                <br>
-                <span>{{   files[0].size | fileSize  }}</span>
-              </span>
-            </ng-template>
-          </kendo-upload> -->
           <common-document-upload
           [typeCode]="'PROOF_OF_INCOME'"
           [file]="uploadedIncomeFile"

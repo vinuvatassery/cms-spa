@@ -7,43 +7,13 @@
           <p *ngIf="!isEdit">Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
           <p *ngIf="isEdit">Make changes as needed then click "Update".</p>
         </div>
-        <div class="flex-col mb-2" *ngIf="isEdit">
+        <div class="flex-col" *ngIf="isEdit">
           <legend class="k-form-legend">  <h5>Attachment Name:</h5> {{this.documentName}} </legend>
         </div>
 
         <input type="hidden" formControlName="concurrencyStamp">
         <input type="hidden" formControlName="clientId">
-        <!-- <div class="flex-col">
-          <kendo-floatinglabel text="Attachment Type">
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlAttachmentTypes$ | async"
-                                textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" formControlName="attachmentType">
-            </kendo-dropdownlist>
-            <kendo-formerror *ngIf="uploadform?.hasError('required','attachmentType') && isSubmitted">
-              Attachment
-              Type
-              is required
-            </kendo-formerror>
-          </kendo-floatinglabel>
-        </div> -->
-        <div class="flex-col mt-2">
-          <!-- <kendo-upload aria-label="copy Of attachment" name="copyOfattachment" #copyOfAttachment
-                        [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)"
-                        [ngModel]="copyOfUploadedFiles" [ngModelOptions]="{standalone: true}"
-                        [restrictions]="uploadFileRestrictions.fileRestrictions"
-                        [removeUrl]="uploadRemoveUrl"
-                        (remove)="handleFileRemoved(copyOfUploadedFiles)">
-            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-              <span (click)="documentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-                <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                        class="card-link-button">
-                  <a>{{ files[0].name }} </a>
-                </button>
-                <br>
-                <span>{{files[0].size | fileSize}}</span>
-              </span>
-            </ng-template>
-          </kendo-upload> -->
+        <div class="flex-col mt-1">
           <common-document-upload
           [file]="copyOfUploadedFiles"
           [typeCodeLabel]="'Attachment Type'"

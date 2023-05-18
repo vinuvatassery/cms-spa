@@ -107,23 +107,6 @@
         </div>
         <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="healthInsuranceForm.controls['onLisFlag'].value==='Y'">
           <h5 class="text-capital">Copy of Medicare Card</h5>
-          <!-- <kendo-upload aria-label="copy of insurance" name="copyOfMediacreCard" [disabled]="isViewContentEditable"
-            [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'medicareCard')"
-            (remove)="handleFileRemoved(copyOfMedicareCardFiles, 'medicareCard')" #copyOfInsurance
-            [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfMedicareCardFiles" [ngModelOptions]="{standalone: true}"
-            [restrictions]="uploadFileRestrictions.fileRestrictions">
-            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-                <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                  class="card-link-button">
-                  <a>{{ files[0].name }} </a>
-                </button>
-                <br>
-                <span>{{files[0].size | fileSize}}</span>
-              </span>
-            </ng-template>
-          </kendo-upload> -->
           <common-document-upload
           [file]="copyOfMedicareCardFiles"
           [typeCode]="'COPY_OF_MEDICARE_CARD'"
@@ -228,23 +211,6 @@
       <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare)
           && healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
         <h5 class="text-capital">Proof of premium amount</h5>
-        <!-- <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
-          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'proof')"
-          (remove)="handleFileRemoved(proofOfPremiumFiles, 'proof')" #proofOfPremium [removeUrl]="uploadRemoveUrl"
-          [ngModel]="proofOfPremiumFiles" [ngModelOptions]="{standalone: true}"
-          [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                class="card-link-button">
-                <a>{{ files[0].name }} </a>
-              </button>
-              <br>
-              <span>{{files[0].size | fileSize}}</span>
-            </span>
-          </ng-template>
-        </kendo-upload> -->
         <common-document-upload
           [file]="proofOfPremiumFiles"
           [typeCode]="'PROOF_OF_PREMIUM'"
@@ -265,23 +231,6 @@
       <div class="flex-col mb-2  file-uploads"
         *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra">
         <h5 class="text-capital">Copy of Summary of Benefits</h5>
-        <!-- <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
-          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
-          (remove)="handleFileRemoved(copyOfSummaryFiles, 'summary')" #copyOfSummary [removeUrl]="uploadRemoveUrl"
-          [ngModel]="copyOfSummaryFiles" [ngModelOptions]="{standalone: true}"
-          [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                class="card-link-button">
-                <a>{{ files[0].name }} </a>
-              </button>
-              <br>
-              <span>{{files[0].size | fileSize}}</span>
-            </span>
-          </ng-template>
-        </kendo-upload> -->
         <common-document-upload
           [file]="copyOfSummaryFiles"
           [typeCode]="'COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE'"
@@ -301,23 +250,6 @@
       <div class="flex-col mb-2 mt-2 file-uploads"
         *ngIf="ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || (medicareInsuranceInfoCheck && ddlInsuranceType === InsurancePlanTypes.Medicare)">
         <h5 class="text-capital">Copy of Insurance Card</h5>
-        <!-- <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
-          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
-          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance');" #copyOfInsurance
-          [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
-          [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                class="card-link-button">
-                <a>{{ files[0].name }} </a>
-              </button>
-              <br>
-              <span>{{files[0].size | fileSize}}</span>
-            </span>
-          </ng-template>
-        </kendo-upload> -->
         <common-document-upload
           [file]="copyOfInsuranceCardFiles"
           [typeCode]="'COPY_OF_INSURANCE_CARD'"
