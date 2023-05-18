@@ -2,7 +2,7 @@
   <div class="flex-col flex-space-bw align-items-center mb-1">
     <h2 class="title-md mb-0 text-bold">Status Periods</h2>
     <div>
-      <span class="app-checkboxwidtext-wrapper"> 
+      <span class="app-checkboxwidtext-wrapper">
         <input
           type="checkbox"
           kendoCheckBox
@@ -18,7 +18,7 @@
     </div>
 
   </div>
-  <case-management-status-period [clientId]="profileClientId" [clientCaseId]="clientCaseId" (loadStatusPeriodEvent)="loadStatusPeriodData($event)"> </case-management-status-period>
+  <case-management-status-period [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="profileClientId" [clientCaseId]="clientCaseId" (loadStatusPeriodEvent)="loadStatusPeriodData($event)"> </case-management-status-period>
 </div>
 
 

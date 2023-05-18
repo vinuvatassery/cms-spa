@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles  } from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles,ModuleCode  } from '@cms/case-management/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
 import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
@@ -30,7 +30,7 @@ export class CasePageComponent implements OnInit {
   columnDroplist$ = this.lovFacade.ColumnDroplistlov$;
   searchLoaderVisibility$ = this.caseFacade.searchLoaderVisibility$;
   totalClientsCount!:number | null;
-
+  moduleCode:any = ModuleCode;
 
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
