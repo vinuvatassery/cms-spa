@@ -17,7 +17,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
 /** External Libraries **/
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-email-editor',
@@ -31,9 +31,9 @@ export class EmailEditorComponent implements OnInit {
   @Input() dataEvent!: EventEmitter<any>;
   @Input() loadInitialData = new EventEmitter();
   @Input() currentValue!: any;
+
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
-
 
   /** Public properties **/
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
@@ -46,9 +46,11 @@ export class EmailEditorComponent implements OnInit {
   clientVariables!: any;
   previewValue!: any;
   showpreviewEmail: boolean = false;
+
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
-    private readonly loaderService: LoaderService,) {}
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -82,12 +84,18 @@ export class EmailEditorComponent implements OnInit {
   private loadClientVariables() {
     this.loaderService.show();
     this.communicationFacade.loadCERAuthorizationEmailEditVariables()
-        .subscribe((variables: any) => {
-          if (variables) {
-            this.clientVariables = variables; 
-          }
-          this.loaderService.hide();
-        });
+    .subscribe({
+      next: (variables: any) =>{
+        if (variables) {
+          this.clientVariables = variables; 
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+    },
+  });
   }
 
   private loadDdlEditorVariables() {

@@ -9,7 +9,7 @@ import {
   OnDestroy,
   ChangeDetectorRef
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -67,9 +67,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
-    private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private workflowFacade: WorkflowFacade,) { }
+    private readonly workflowFacade: WorkflowFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -139,12 +138,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     this.cerAuthorizationEmailTypeCode = 'CER_AUTHORIZATION_EMAIL';
     this.communicationFacade.loadEmailTemplates(this.cerAuthorizationEmailTypeCode ?? '')
-        .subscribe((data: any) => {
-          if (data) {
-            this.ddlTemplates = data;
-          }
-          this.loaderService.hide();
-        });
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+          this.ddlTemplates = data;
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+    },
+  });
   }
 
   private loadDdlEmails() {
@@ -200,7 +205,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
     this.selectedTemplate = event;
-    // this.editorValue.emit(event);
     this.emailContentValue = event.templateContent;
     this.handleEmailEditor(event);
     this.ref.detectChanges();

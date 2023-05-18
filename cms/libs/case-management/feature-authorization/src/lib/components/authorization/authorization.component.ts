@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 /** External Libraries **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService } from '@cms/shared/util-core';
 import { CommunicationEvents, ScreenType, StatusFlag } from '@cms/case-management/domain';
 import { Subscription} from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -49,12 +49,11 @@ export class AuthorizationComponent   {
   constructor(
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
-    private workflowFacade: WorkflowFacade,
+    private readonly workflowFacade: WorkflowFacade,
     private readonly loggingService: LoggingService,
-    private readonly snackbarService: NotificationSnackbarService,
     private readonly contactFacade: ContactFacade,
     private readonly route: ActivatedRoute,
-    public intl: IntlService,
+    private readonly intl: IntlService,
     private readonly ref: ChangeDetectorRef
   ) {   }
 
@@ -73,35 +72,44 @@ export class AuthorizationComponent   {
     const sessionId = this.route.snapshot.queryParams['sid'];
     this.loaderService.show();
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
-    this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
-      if (resp) {
-        this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
-        if (this.prevClientCaseEligibilityId) {
-          this.isCerForm = true
+    this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$
+    .subscribe({
+      next: (resp: any) =>{
+        if (resp) {
+          this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
+          if (this.prevClientCaseEligibilityId) {
+            this.isCerForm = true
+          }
+          this.loadContactInfo();
         }
-        this.loadContactInfo();
-        this.loaderService.hide();
-      }
-    });
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+    },
+  });
   }
   
   private loadContactInfo(isFormFillRequired = true) {
     this.loaderService.show();
       this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '')
-        .subscribe((data: ContactInfo) => {
+      .subscribe({
+        next: (data: any) =>{
           if (data) {
-            this.contactInfo = data;
-            if(this.contactInfo != null && this.contactInfo != undefined && this.contactInfo.clientCaseEligibility != undefined && this.contactInfo.clientCaseEligibility != null){
-              if(this.contactInfo.clientCaseEligibility.paperlessFlag === StatusFlag.Yes)
+              if(data?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes)
               {
                 this.isGoPaperlessOpted = true;
-              }else{
-                this.isGoPaperlessOpted = false; 
-              }
                 this.ref.detectChanges();
+              }
             }
-          }
-        });
+        this.loaderService.hide();
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      },
+    });
   }
 
   /** Internal event methods **/
